@@ -154,7 +154,7 @@ def main() -> int:
         if result.get("screened_out"):
             s = result["screen"]
             print(f"\n{result['pair']} FILTERED at stage 1 — score {s['score']}/5: {s['reason']}")
-            print("(Score < 4: no deep analysis run, not logged to tracker.)")
+            print(f"(Score < 4: logged as #{result['id']:04d} with NO_TRADE status — no deep analysis run.)")
             if args.raw:
                 print("\nRAW EVIDENCE BUNDLE:")
                 print(json.dumps(result["bundle"], indent=2))
