@@ -8,7 +8,27 @@
       "PowerShell(python _cot_probe.py)",
       "PowerShell(python main.py --health EUR/USD GBP/JPY)",
       "PowerShell(python -c \"from src import technical; import json; print\\(json.dumps\\(technical.analyse\\('EUR','USD'\\), indent=2\\)\\)\")",
-      "PowerShell(python main.py GBPUSD USDJPY AUDUSD EURGBP)"
+      "PowerShell(python main.py GBPUSD USDJPY AUDUSD EURGBP)",
+      "Bash(git add *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(git commit *)",
+      "Bash(git push *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "git add -A; $msg = (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'); git diff --cached --quiet; if ($LASTEXITCODE -ne 0) { git commit -m \"Auto-commit: $msg\"; git push origin main } ",
+            "shell": "powershell",
+            "timeout": 30,
+            "statusMessage": "Pushing changes to GitHub..."
+          }
+        ]
+      }
     ]
   }
 }
