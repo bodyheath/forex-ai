@@ -24,7 +24,7 @@ _SESSION_NZT = {
     "AUD": ("Sydney",   "7am – 12pm NZT"),
     "NZD": ("Sydney",   "7am – 12pm NZT"),
 }
-_SESSION_PRIORITY = ["EUR", "GBP", "CHF", "JPY", "USD", "CAD", "AUD", "NZD"]
+_SESSION_PRIORITY = ["EUR", "GBP", "CHF", "AUD", "NZD", "JPY", "USD", "CAD"]
 
 
 def _session_time(pair: str) -> tuple:
