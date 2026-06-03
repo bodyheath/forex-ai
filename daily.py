@@ -66,16 +66,20 @@ def _log_line(handle, msg: str) -> None:
 def _telegram(message: str) -> None:
     if not config.TELEGRAM_TOKEN or not config.TELEGRAM_CHAT_ID:
         return
-    try:
-        url = f"https://api.telegram.org/bot{config.TELEGRAM_TOKEN}/sendMessage"
-        data = urllib.parse.urlencode({
-            "chat_id": config.TELEGRAM_CHAT_ID,
-            "text": message,
-            "parse_mode": "HTML",
-        }).encode()
-        urllib.request.urlopen(urllib.request.Request(url, data=data), timeout=10)
-    except Exception:
-        pass
+    recipients = [config.TELEGRAM_CHAT_ID]
+    if config.TELEGRAM_CHAT_ID_2:
+        recipients.append(config.TELEGRAM_CHAT_ID_2)
+    url = f"https://api.telegram.org/bot{config.TELEGRAM_TOKEN}/sendMessage"
+    for chat_id in recipients:
+        try:
+            data = urllib.parse.urlencode({
+                "chat_id": chat_id,
+                "text": message,
+                "parse_mode": "HTML",
+            }).encode()
+            urllib.request.urlopen(urllib.request.Request(url, data=data), timeout=10)
+        except Exception:
+            pass
 
 
 def _fmt_price(v) -> str:
