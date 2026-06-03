@@ -89,6 +89,38 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .alert-time{background:rgba(63,185,80,.09);border:1px solid rgba(63,185,80,.28);
   border-radius:8px;padding:12px 16px;font-size:13px;font-weight:600;
   color:var(--green);display:flex;align-items:center;gap:10px}
+
+/* ── Watch-list cards (amber) ─────────────────────────────────────────────── */
+.watch-section{margin-bottom:32px}
+.watch-section-title{color:var(--amber);font-size:17px;font-weight:700;margin:0 0 16px;
+  display:flex;align-items:center;gap:8px}
+.watch-card{
+  background:linear-gradient(135deg,rgba(210,153,34,.10) 0%,rgba(210,153,34,.03) 100%);
+  border:2px solid var(--amber);border-radius:14px;padding:20px 24px;margin-bottom:14px}
+.watch-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.watch-badge{background:var(--amber);color:#0a0f14;font-weight:900;font-size:11px;
+  text-transform:uppercase;letter-spacing:.12em;padding:4px 12px;border-radius:20px}
+.watch-pair{font-size:22px;font-weight:800;color:var(--fg)}
+.watch-dir{font-size:18px;font-weight:700}
+.watch-dir.buy{color:var(--green)}.watch-dir.sell{color:var(--red)}
+.watch-conf{font-size:13px;color:var(--amber);font-weight:600;margin-left:auto}
+.watch-thesis{font-size:13px;color:var(--mut);margin-top:8px;line-height:1.5}
+
+/* ── Best opportunity card (blue) ────────────────────────────────────────── */
+.best-section{margin-bottom:32px}
+.best-section-title{color:var(--blue);font-size:17px;font-weight:700;margin:0 0 16px;
+  display:flex;align-items:center;gap:8px}
+.best-card{
+  background:linear-gradient(135deg,rgba(88,166,255,.10) 0%,rgba(88,166,255,.03) 100%);
+  border:2px solid var(--blue);border-radius:14px;padding:20px 24px}
+.best-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.best-badge{background:var(--blue);color:#0a0f14;font-weight:900;font-size:11px;
+  text-transform:uppercase;letter-spacing:.12em;padding:4px 12px;border-radius:20px}
+.best-pair{font-size:22px;font-weight:800;color:var(--fg)}
+.best-dir{font-size:18px;font-weight:700}
+.best-dir.buy{color:var(--green)}.best-dir.sell{color:var(--red)}
+.best-conf{font-size:13px;color:var(--blue);font-weight:600;margin-left:auto}
+.best-reason{font-size:13px;color:var(--mut);margin-top:8px;line-height:1.5}
 """
 
 
