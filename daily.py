@@ -6,6 +6,7 @@ Sequence:
      momentum, and upcoming economic events; pick the top 10.
   3. Analyse each selected pair (Haiku stage-1 screen → Sonnet deep analysis).
   4. Regenerate the HTML dashboard.
+  5. Send a Telegram summary message.
 
 Each pair is fault-isolated: one failure (rate limit, bad symbol) is logged and the
 run continues. A per-run log is written to data/reports/daily_<date>.log.
@@ -13,6 +14,8 @@ run continues. A per-run log is written to data/reports/daily_<date>.log.
 
 import sys
 import traceback
+import urllib.parse
+import urllib.request
 from datetime import datetime
 
 # Force UTF-8 stdout/stderr so analyst output with em-dashes/emoji never crashes
@@ -33,6 +36,22 @@ def _log_line(handle, msg: str) -> None:
     print(line)
     handle.write(line + "\n")
     handle.flush()
+
+
+def _telegram(message: str) -> None:
+    """Send a Telegram message. Silently skips if credentials are not configured."""
+    if not config.TELEGRAM_TOKEN or not config.TELEGRAM_CHAT_ID:
+        return
+    try:
+        url = f"https://api.telegram.org/bot{config.TELEGRAM_TOKEN}/sendMessage"
+        data = urllib.parse.urlencode({
+            "chat_id": config.TELEGRAM_CHAT_ID,
+            "text": message,
+            "parse_mode": "HTML",
+        }).encode()
+        urllib.request.urlopen(urllib.request.Request(url, data=data), timeout=10)
+    except Exception:  # noqa: BLE001
+        pass  # never let a notification failure break the run
 
 
 def run() -> int:
@@ -70,6 +89,7 @@ def run() -> int:
         # 3. Analyse each selected pair (two-stage: Haiku screen → Sonnet deep).
         actionable = []
         filtered_count = 0
+        deep_results = []
         for pair in pairs_today:
             try:
                 result = service.analyse_and_log(pair, log=lambda m: _log_line(logf, m))
@@ -82,6 +102,7 @@ def run() -> int:
                 p = result["parsed"]
                 verdict = f"{p['trade_this']} | conf {p['confidence']} | {p['direction']}"
                 _log_line(logf, f"#{result['id']} {result['pair']}: {verdict}")
+                deep_results.append(result)
                 if p["trade_this"] == "YES":
                     actionable.append(f"{result['pair']} {p['direction']} (conf {p['confidence']})")
             except Exception as exc:  # noqa: BLE001
@@ -104,7 +125,38 @@ def run() -> int:
         else:
             _log_line(logf, "No actionable setups today (all TRADE_THIS: NO).")
         _log_line(logf, "=== Daily run complete ===")
+
+        # 5. Telegram summary.
+        _send_telegram_summary(date, pairs_today, filtered_count, deep_results, actionable)
+
     return 0
+
+
+def _send_telegram_summary(date, pairs_today, filtered_count, deep_results, actionable):
+    passed = len(pairs_today) - filtered_count
+    lines = [f"<b>forex-ai daily run — {date}</b>"]
+    lines.append(f"Pairs screened: {len(pairs_today)} | filtered: {filtered_count} | deep analysis: {passed}")
+    lines.append("")
+
+    if deep_results:
+        lines.append("<b>Deep analysis results:</b>")
+        for r in deep_results:
+            p = r["parsed"]
+            trade = p.get("trade_this", "?")
+            conf = p.get("confidence", "?")
+            direction = p.get("direction") or "—"
+            marker = "🟢" if trade == "YES" else "⚪"
+            lines.append(f"{marker} {r['pair']}  {direction}  conf {conf}/10  → {trade}")
+    else:
+        lines.append("All pairs filtered at stage 1 — no deep analysis today.")
+
+    lines.append("")
+    if actionable:
+        lines.append("🔔 <b>ACTIONABLE:</b> " + "  |  ".join(actionable))
+    else:
+        lines.append("No actionable setups today.")
+
+    _telegram("\n".join(lines))
 
 
 if __name__ == "__main__":
