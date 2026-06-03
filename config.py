@@ -44,6 +44,7 @@ FRED_API_KEY = os.getenv("FRED_API_KEY", "")
 MY_EMAIL = os.getenv("MY_EMAIL", "")
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
+TELEGRAM_CHAT_ID_2 = os.getenv("TELEGRAM_CHAT_ID_2", "")
 
 # Stage-2 deep-analysis model. Override with CLAUDE_MODEL in .env.
 CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-6")
