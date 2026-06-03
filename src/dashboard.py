@@ -1,6 +1,7 @@
 """Generate a self-contained HTML dashboard (no server, no external assets) from
 the trades spreadsheet: headline performance stats, a by-confidence breakdown, a
 cumulative-R equity curve (inline SVG), and a table of every recommendation.
+Active YES-trade setups are shown in prominent green alert cards at the very top.
 """
 
 import html
@@ -8,6 +9,34 @@ from datetime import datetime
 
 import config
 from src import tracker
+
+# ---------------------------------------------------------------------------
+# Session windows in NZT (NZST = UTC+12) keyed by currency.
+# Priority order: if a pair contains multiple currencies, the first match wins.
+# ---------------------------------------------------------------------------
+_SESSION_NZT = {
+    "EUR": ("London",   "5pm – 9pm NZT"),
+    "GBP": ("London",   "5pm – 9pm NZT"),
+    "CHF": ("London",   "5pm – 9pm NZT"),
+    "JPY": ("Tokyo",    "9am – 2pm NZT"),
+    "USD": ("New York", "10pm – 2am NZT"),
+    "CAD": ("New York", "10pm – 2am NZT"),
+    "AUD": ("Sydney",   "7am – 12pm NZT"),
+    "NZD": ("Sydney",   "7am – 12pm NZT"),
+}
+_SESSION_PRIORITY = ["EUR", "GBP", "CHF", "JPY", "USD", "CAD", "AUD", "NZD"]
+
+
+def _session_time(pair: str) -> tuple:
+    """Return (session_name, nzt_range) for the pair's primary trading session."""
+    cleaned = pair.upper().replace("/", "").replace("-", "")
+    base = cleaned[:3]
+    quote = cleaned[3:6] if len(cleaned) >= 6 else ""
+    for ccy in _SESSION_PRIORITY:
+        if ccy in (base, quote):
+            return _SESSION_NZT[ccy]
+    return "London", "5pm – 9pm NZT"
+
 
 _CSS = """
 :root{--bg:#0e1117;--card:#171b22;--line:#262c36;--fg:#e6edf3;--mut:#8b949e;
@@ -33,6 +62,33 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .BREAKEVEN,.SKIPPED,.EXPIRED{background:rgba(210,153,34,.15);color:var(--amber)}
 .buy{color:var(--green)}.sell{color:var(--red)}.pos{color:var(--green)}.neg{color:var(--red)}
 .foot{color:var(--mut);font-size:12px;margin-top:24px}
+
+/* ── YES-trade alert cards ────────────────────────────────────────────────── */
+.alert-section{margin-bottom:32px}
+.alert-section-title{color:var(--green);font-size:17px;font-weight:700;margin:0 0 16px;
+  display:flex;align-items:center;gap:8px}
+.alert-card{
+  background:linear-gradient(135deg,rgba(63,185,80,.11) 0%,rgba(63,185,80,.04) 100%);
+  border:2px solid var(--green);border-radius:14px;padding:24px 28px;margin-bottom:16px;
+  box-shadow:0 0 40px rgba(63,185,80,.20),inset 0 1px 0 rgba(63,185,80,.15)}
+.alert-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.alert-badge{background:var(--green);color:#0a0f14;font-weight:900;font-size:11px;
+  text-transform:uppercase;letter-spacing:.12em;padding:5px 14px;border-radius:20px;
+  white-space:nowrap}
+.alert-pair{font-size:26px;font-weight:800;color:var(--fg);letter-spacing:-.02em}
+.alert-dir{font-size:22px;font-weight:800}
+.alert-dir.buy{color:var(--green)}.alert-dir.sell{color:var(--red)}
+.alert-meta{font-size:12px;color:var(--mut);margin-left:auto;text-align:right;
+  line-height:1.6}
+.alert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:14px;margin-bottom:18px}
+.alert-item .k{color:var(--mut);font-size:11px;text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:4px}
+.alert-item .v{font-size:18px;font-weight:700;color:var(--fg)}
+.alert-item .v.red{color:var(--red)}.alert-item .v.grn{color:var(--green)}
+.alert-time{background:rgba(63,185,80,.09);border:1px solid rgba(63,185,80,.28);
+  border-radius:8px;padding:12px 16px;font-size:13px;font-weight:600;
+  color:var(--green);display:flex;align-items:center;gap:10px}
 """
 
 
@@ -41,6 +97,62 @@ def _f(v, nd=2):
         return f"{float(v):.{nd}f}"
     except (TypeError, ValueError):
         return "-"
+
+
+def _active_setups(rows) -> str:
+    """Render prominent green cards for any OPEN YES-trade recommendations."""
+    open_yes = [r for r in rows if r.get("trade_this") == "YES" and r.get("status") == "OPEN"]
+    if not open_yes:
+        return ""
+
+    cards = []
+    for r in sorted(open_yes, key=lambda x: int(x.get("id", 0)), reverse=True):
+        pair      = r.get("pair", "")
+        direction = (r.get("direction") or "").upper()
+        dcls      = "buy" if direction == "BUY" else "sell"
+        conf      = r.get("confidence") or "—"
+        entry     = r.get("entry") or "—"
+        stop      = r.get("stop_loss") or "—"
+        target    = r.get("target") or "—"
+        rr_raw    = r.get("reward_risk") or ""
+        try:
+            rr = f"{float(rr_raw):.2f}:1"
+        except (TypeError, ValueError):
+            rr = "—"
+        session, window = _session_time(pair)
+        date = (r.get("timestamp") or "")[:10]
+
+        cards.append(
+            f'<div class="alert-card">'
+            f'<div class="alert-head">'
+            f'<span class="alert-badge">🚨 TRADE THIS</span>'
+            f'<span class="alert-pair">{html.escape(pair)}</span>'
+            f'<span class="alert-dir {dcls}">{html.escape(direction)}</span>'
+            f'<span class="alert-meta">#{html.escape(str(r.get("id","")))} &middot; {html.escape(date)}<br>'
+            f'Confidence: {html.escape(str(conf))}/10</span>'
+            f'</div>'
+            f'<div class="alert-grid">'
+            f'<div class="alert-item"><div class="k">Entry Price</div>'
+            f'<div class="v">{html.escape(str(entry))}</div></div>'
+            f'<div class="alert-item"><div class="k">Stop Loss</div>'
+            f'<div class="v red">{html.escape(str(stop))}</div></div>'
+            f'<div class="alert-item"><div class="k">Target</div>'
+            f'<div class="v grn">{html.escape(str(target))}</div></div>'
+            f'<div class="alert-item"><div class="k">Reward : Risk</div>'
+            f'<div class="v">{html.escape(rr)}</div></div>'
+            f'</div>'
+            f'<div class="alert-time">⏰&nbsp; Best entry: '
+            f'<strong>{html.escape(session)} session</strong>'
+            f'&ensp;&mdash;&ensp;{html.escape(window)}</div>'
+            f'</div>'
+        )
+
+    return (
+        '<div class="alert-section">'
+        '<div class="alert-section-title">⚡ Active Trade Setups</div>'
+        + "".join(cards)
+        + '</div>'
+    )
 
 
 def _stat_cards(stats: dict) -> str:
@@ -160,18 +272,24 @@ def generate() -> str:
     stats = learning.compute_stats()
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-    body = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>forex-ai dashboard</title><style>{_CSS}</style></head><body>
-<h1>forex-ai &mdash; performance dashboard</h1>
-<p class="sub">Generated {now} &middot; {len(rows)} recommendations logged &middot; NOT financial advice</p>
-<div class="grid">{_stat_cards(stats)}</div>
-<section><h2>Equity curve</h2>{_equity_curve(rows)}</section>
-<section><h2>Win rate by confidence score</h2>{_by_confidence(rows)}</section>
-<section><h2>All recommendations</h2>{_rows_table(rows)}</section>
-<p class="foot">Columns T/F/S/P/M = technical, fundamental, sentiment, positioning, macro scores.
-Record an outcome with: <code>python main.py --close ID WIN|LOSS [exit_price]</code></p>
-</body></html>"""
+    active_html = _active_setups(rows)
+
+    body = (
+        f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
+        f'<meta name="viewport" content="width=device-width,initial-scale=1">'
+        f'<title>forex-ai dashboard</title><style>{_CSS}</style></head><body>'
+        f'<h1>forex-ai &mdash; performance dashboard</h1>'
+        f'<p class="sub">Generated {now} &middot; {len(rows)} recommendations logged'
+        f' &middot; NOT financial advice</p>'
+        f'{active_html}'
+        f'<div class="grid">{_stat_cards(stats)}</div>'
+        f'<section><h2>Equity curve</h2>{_equity_curve(rows)}</section>'
+        f'<section><h2>Win rate by confidence score</h2>{_by_confidence(rows)}</section>'
+        f'<section><h2>All recommendations</h2>{_rows_table(rows)}</section>'
+        f'<p class="foot">Columns T/F/S/P/M = technical, fundamental, sentiment, positioning, macro scores.'
+        f' Record an outcome with: <code>python main.py --close ID WIN|LOSS [exit_price]</code></p>'
+        f'</body></html>'
+    )
 
     config.DASHBOARD_HTML.write_text(body, encoding="utf-8")
     return str(config.DASHBOARD_HTML)
