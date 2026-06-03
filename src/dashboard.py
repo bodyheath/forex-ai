@@ -193,6 +193,97 @@ def _active_setups(rows) -> str:
     )
 
 
+def _watch_list_section(rows, today: str) -> str:
+    """Render amber cards for today's NO trades with confidence 5-6."""
+    candidates = [
+        r for r in rows
+        if (r.get("timestamp") or "")[:10] == today
+        and r.get("trade_this") != "YES"
+        and r.get("status") not in ("NO_TRADE",)  # exclude stage-1 filtered rows
+    ]
+    # Filter to conf 5-6 and sort descending by confidence.
+    watch = []
+    for r in candidates:
+        try:
+            c = int(float(r.get("confidence") or 0))
+        except (TypeError, ValueError):
+            continue
+        if 5 <= c <= 6:
+            watch.append((c, r))
+    watch.sort(key=lambda x: x[0], reverse=True)
+    watch = watch[:3]
+
+    if not watch:
+        return ""
+
+    cards = []
+    for conf_val, r in watch:
+        pair  = r.get("pair", "")
+        direction = (r.get("direction") or "").upper()
+        dcls  = "buy" if direction == "BUY" else "sell"
+        kt    = html.escape(r.get("key_thesis") or "")
+        thesis_text = (kt[:200] + "…") if len(kt) > 200 else kt
+        cards.append(
+            f'<div class="watch-card">'
+            f'<div class="watch-head">'
+            f'<span class="watch-badge">👀 WATCHING</span>'
+            f'<span class="watch-pair">{html.escape(pair)}</span>'
+            f'<span class="watch-dir {dcls}">{html.escape(direction)}</span>'
+            f'<span class="watch-conf">Confidence: {conf_val}/10</span>'
+            f'</div>'
+            + (f'<div class="watch-thesis">{thesis_text}</div>' if thesis_text else '')
+            + f'</div>'
+        )
+
+    return (
+        '<div class="watch-section">'
+        '<div class="watch-section-title">👀 Watch List — Approaching Signal</div>'
+        + "".join(cards)
+        + '</div>'
+    )
+
+
+def _best_opportunity_section(rows, today: str) -> str:
+    """Render a single blue card for today's highest-confidence pair."""
+    today_rows = [r for r in rows if (r.get("timestamp") or "")[:10] == today]
+    if not today_rows:
+        return ""
+
+    best = None
+    best_conf = -1
+    for r in today_rows:
+        try:
+            c = int(float(r.get("confidence") or 0))
+        except (TypeError, ValueError):
+            c = 0
+        if c > best_conf:
+            best_conf = c
+            best = r
+
+    if best is None or best_conf == 0:
+        return ""
+
+    pair      = best.get("pair", "")
+    direction = (best.get("direction") or "").upper()
+    dcls      = "buy" if direction == "BUY" else "sell"
+    kt        = html.escape(best.get("key_thesis") or "")
+    reason    = (kt[:250] + "…") if len(kt) > 250 else kt
+
+    return (
+        '<div class="best-section">'
+        '<div class="best-section-title">⭐ Best Opportunity Today</div>'
+        '<div class="best-card">'
+        '<div class="best-head">'
+        f'<span class="best-badge">⭐ BEST TODAY</span>'
+        f'<span class="best-pair">{html.escape(pair)}</span>'
+        f'<span class="best-dir {dcls}">{html.escape(direction)}</span>'
+        f'<span class="best-conf">Score: {best_conf}/10</span>'
+        '</div>'
+        + (f'<div class="best-reason">{reason}</div>' if reason else '')
+        + '</div></div>'
+    )
+
+
 def _stat_cards(stats: dict) -> str:
     wr = stats["win_rate"]
     wr_txt = f"{wr*100:.0f}%" if wr is not None else "-"
