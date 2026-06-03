@@ -1,0 +1,121 @@
+I'll work through each layer systematically before producing the final output.
+
+---
+
+## INTERNAL ANALYSIS WORKTHROUGH
+
+### 1. TECHNICAL LAYER
+
+**Daily timeframe:**
+- Last close: 0.78575
+- Trend: "mixed/range" — price is between SMA50 (0.78343) and SMA200 (0.78798). Price sits above SMA20 and SMA50 but *below* SMA200. No clean trend.
+- RSI14: 53.1 — neutral, no signal
+- MACD: Bullish, but histogram is tiny (1.1e-05) — barely above zero, almost no conviction
+- Bollinger: Inside bands — no mean-reversion signal
+- ATR14: 0.00377 — moderate volatility
+
+**4H timeframe:**
+- Trend: Uptrend with golden-cross structure (price > SMA50 > SMA200) — this is genuinely bullish
+- RSI14: 62.6 — elevated but not overbought
+- MACD: Bullish with decent histogram (0.000528)
+- Bollinger: Inside bands
+- Recent 20-bar high: 0.78836 — resistance nearby
+
+**Assessment:** The 4H is constructively bullish, but the daily is genuinely mixed — price is below the daily SMA200 (0.78798), which is a meaningful headwind. The daily MACD is barely bullish. The conflict between timeframes limits confidence. R1 on daily pivots (0.7897) and the 20-day high (0.79078) represent nearby resistance.
+
+**Technical Score: 5.5/10** — 4H is bullish but daily trend is mixed/range, with the SMA200 as overhead resistance just above current price. Low-conviction MACD on daily.
+
+---
+
+### 2. FUNDAMENTAL LAYER
+
+- USD rate: 3.62% (flat trend)
+- CHF rate: -0.04% (falling trend — SNB cutting)
+- Differential: +3.66% in favour of USD (strong carry case for long USD/CHF)
+- SNB on falling rate path further widens the differential over time
+- USD flat — Fed holding, no cuts priced in near term per bond trader headline
+- De-dollarisation narrative is a headwind (CNBC article about family offices pulling USD exposure)
+
+**Assessment:** The rate differential is strongly in favour of long USD/CHF at +3.66%, and the SNB is still cutting while the Fed holds. This is a solid fundamental case for USD/CHF longs. However, de-dollarisation noise and a flat USD index are mild headwinds.
+
+**Fundamental Score: 7/10** — Clear carry advantage and diverging central bank paths, tempered by de-dollarisation narrative and a stagnant DXY.
+
+---
+
+### 3. SENTIMENT LAYER
+
+**USD headlines:**
+- Bond traders betting on Fed hike (jobs data check incoming) — mildly USD bullish
+- "Stronger dollar" mentioned in gold-slips headline
+- US-Iran geopolitical uncertainty — risk-off could be CHF-positive (safe haven)
+- AI job cuts, de-dollarisation worries — mixed to mildly negative for USD
+- Powell acceptance remarks — neutral/institutional
+
+**CHF headlines:**
+- UBS job cuts — mildly negative for CHF economy
+- De-dollarisation trade pulling money *out of USD* — potentially CHF-positive as safe haven
+- No CHF-specific monetary policy headlines
+- Retail sentiment contrarian check: **UNAVAILABLE** — cannot count this
+
+**Assessment:** USD sentiment is mixed — some hawkish signals (rate hike bets, stronger dollar) but offset by geopolitical risk (US-Iran) which historically boosts CHF as a safe haven. The de-dollarisation CNBC story is notable. Net sentiment is roughly neutral to slightly USD-positive, but geopolitical risk is a genuine wildcard that could suddenly flip to CHF-positive. Retail contrarian data unavailable — must treat as cautionary.
+
+**Sentiment Score: 5/10** — Too mixed, geopolitical risk-off could benefit CHF, retail contrarian data absent.
+
+---
+
+### 4. POSITIONING LAYER (COT)
+
+- CHF specs: Net SHORT -35,140 contracts
+- Percentile in 1-year range: 38th percentile (mid-range)
+- Not at extreme — no contrarian reversal signal
+- USD COT data: **UNAVAILABLE** (data is 4+ years stale — absolutely cannot count this)
+
+**Assessment:** CHF specs are net short which directionally aligns with a long USD/CHF trade. However, at only 38th percentile of the 1-year range, this is not an extreme positioning that would generate a strong contrarian or momentum signal. USD COT is unavailable — this is a material gap. Only one side of positioning is available.
+
+**Positioning Score: 5/10** — CHF shorts align with direction but are mid-range, not extreme. USD COT unavailable, reducing confidence materially.
+
+---
+
+### 5. MACRO CONTEXT
+
+- VIX: 15.32 and falling — risk-on environment, which typically weakens safe-haven CHF → bullish USD/CHF
+- WTI crude: $97.63 but *falling* — falling oil can be mixed; not a strong USD signal
+- US 10Y yield: 4.45% flat
+- US 2Y yield: 3.98% falling — this is a mild concern; falling front-end yields could reduce USD carry advantage at the margin
+- 2s10s curve: +0.47% — positively sloped, not recessionary signal; moderate risk-on
+- Trade-weighted DXY: 118.878, trend flat — USD not gaining broad momentum
+- Gold falling (mentioned in headlines) — can indicate reduced safe-haven demand for CHF too, mildly supportive of USD/CHF longs
+- US-Iran uncertainty: geopolitical risk event that could suddenly spike VIX and send money into CHF as safe haven — significant risk factor
+
+**Assessment:** The macro environment is moderately supportive — risk-on (falling VIX), positively sloped yield curve, and gold dipping (reducing CHF haven demand). However, falling 2Y yields and flat DXY are concerns. Geopolitical wildcard is real.
+
+**Macro Score: 6/10** — Risk-on environment helps, but flat DXY, falling 2Y yields, and geopolitical uncertainty cap the score.
+
+---
+
+### 6. AGREEING SOURCES COUNT
+
+Requirements: ≥4 agreeing sources AND confidence ≥7/10
+
+| Layer | Score | Agreeing with BUY USD/CHF? |
+|-------|-------|---------------------------|
+| Technical | 5.5/10 | **NO** — mixed/range on daily, SMA200 overhead resistance |
+| Fundamental | 7/10 | **YES** — strong carry, diverging CB paths |
+| Sentiment | 5/10 | **NO** — too mixed, geopolitical CHF-haven risk |
+| Positioning | 5/10 | **PARTIAL** — CHF shorts align but USD data unavailable; cannot fully count |
+| Macro | 6/10 | **MARGINAL** — risk-on helps but flat DXY and falling 2Y yields are headwinds |
+
+**Clearly agreeing sources: 1 (Fundamental only)**
+**Marginal/partial: Macro and Positioning**
+**Not agreeing: Technical, Sentiment**
+
+Even being generous, I cannot get to 4 clearly agreeing sources. The technical picture on the daily timeframe is range-bound with the SMA200 as immediate overhead resistance. Sentiment is ambiguous. Positioning lacks USD data. This fails the 4-source threshold.
+
+### OVERALL CONFIDENCE ASSESSMENT
+
+- Fundamental is the strongest case (7/10) — carry is real and significant
+- But technical conflicts (daily range, SMA200 overhead) per SYSTEM MEMORY pattern #3: "Technical signal conflicts with interest-rate differential direction → mixed results, fundamentals tend to win over weeks → LOWER CONFIDENCE"
+- Missing USD COT data — per instructions, cannot count absent data as confidence
+- NFP/Jobs data coming this week (mentioned in multiple headlines) — per SYSTEM MEMORY pattern #2: "Entering right before a high-impact data release → whipsaw risk severe"
+
+**Overall Confidence: 5.5/10** — Does not meet the 7/10 

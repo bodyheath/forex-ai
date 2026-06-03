@@ -1,0 +1,117 @@
+I'll work through each analytical layer systematically before producing the output.
+
+---
+
+## INTERNAL ANALYSIS WORKTHROUGH
+
+### 1. TECHNICAL ANALYSIS
+
+**Daily TF:**
+- Price (215.19) > SMA20 (213.61) > SMA50 (214.05) > SMA200 (211.08) → clean golden-cross uptrend ✅
+- RSI14: 63.0 → elevated but NOT overbought. Bullish momentum intact, room to run ✅
+- MACD: bullish, positive histogram ✅
+- Bollinger: inside bands on daily → no stretch warning on daily
+- Price is right at R1 pivot (215.176) — resistance right here ⚠️
+- ATR: 0.889 — moderate daily volatility
+
+**4H TF:**
+- Price > SMA50 > SMA200 → uptrend confirmed ✅
+- RSI14: **76.8** → OVERBOUGHT. Significant mean-reversion warning 🔴
+- MACD: bullish but histogram tiny (0.057) — momentum fading 4H ⚠️
+- Bollinger: **at/above upper band** → stretched, mean-reversion risk DOWN 🔴
+- Price is literally at the 20-period recent high (215.32 ceiling) ⚠️
+- 4H ATR: 0.24 — tight 4H bars
+
+**Technical Assessment:** The daily trend is bullish and well-structured, but the 4H picture is screaming overbought — RSI 76.8, price at upper Bollinger, right at pivot R1, at 20-bar highs. This is NOT a clean entry point for a long. A short-term pullback to 213.60–214.05 area is likely before any continuation. Going long here means chasing at the high. Going short conflicts with the daily trend. This is a technically awkward spot.
+
+**Technical Score: 5/10** — Trend is good, but entry timing is poor. 4H overbought conditions and upper band stretch lower the actionable quality significantly. Cannot chase.
+
+---
+
+### 2. FUNDAMENTAL ANALYSIS
+
+- GBP rate: 3.729%, trend: **flat**
+- JPY rate: 0.727%, trend: **rising**
+- Rate differential: +3.002% favouring GBP long ✅ (carry supports long GBP/JPY)
+- BUT: JPY rate is RISING — the differential is **narrowing** over time. This is a structural headwind for carry longs. ⚠️
+- BoE is flat/possibly easing cycle beginning (rate at 3.729 vs prior highs) — GBP carry appeal may erode further ⚠️
+- GBP headlines: defence criticism, BoE commentary on stablecoins — nothing macro-moving. Neutral.
+- The carry trade is positive but the trajectory (JPY hiking, BoE flat) means this edge is shrinking.
+
+**Fundamental Score: 6/10** — Carry still favours long, but narrowing differential is a medium-term headwind. BoE flat, BOJ hiking = structural pressure on carry.
+
+---
+
+### 3. SENTIMENT ANALYSIS
+
+**GBP headlines (9 articles):**
+- Defence spending criticism (mildly negative for UK governance)
+- BoE stablecoin commentary (neutral/slightly irrelevant to FX)
+- Innovation funding (neutral)
+- Nothing macro-significant for GBP direction
+- **Overall GBP sentiment: Neutral to slightly negative**
+
+**JPY headlines (10 articles):**
+- Nikkei hitting all-time highs above 67,000 (AI/SoftBank boom) 📈
+- Japan/South Korea stocks at records
+- Risk-on equity environment in Japan
+- **A surging Nikkei historically weakens JPY** (risk-on = yen carry trades funded) — this is actually slightly bearish JPY = slightly bullish GBP/JPY ✅
+- But Nikkei at records with BOJ hiking is a complex picture
+
+**Retail sentiment contrarian check: UNAVAILABLE** — cannot count this source.
+
+**Sentiment Assessment:** Nikkei at all-time highs in a risk-on environment = JPY weakness bias. GBP is neutral. Net effect is mildly supportive of GBP/JPY long direction. However, the data is thin and the retail contrarian check is missing.
+
+**Sentiment Score: 6/10** — Mildly supportive via JPY weakness in risk-on, but GBP newsflow is irrelevant noise. No retail extreme data available. Cannot score higher without retail positioning data.
+
+---
+
+### 4. POSITIONING (COT DATA)
+
+**GBP positioning:**
+- Net SHORT: -61,398 contracts
+- Percentile: 22nd → not extreme, mid-range short. Not a strong contrarian signal either way.
+- Speculators are net short GBP but not at extremes ⚠️
+
+**JPY positioning:**
+- Net SHORT: -114,667 contracts
+- Percentile: **0th** → AT THE EXTREME BOTTOM of the 1-year range
+- "Crowded short" — highest-ever short JPY positioning in the past year
+- **This is a massive contrarian RED FLAG for short JPY (= long GBP/JPY)** 🔴
+- Crowded JPY shorts historically unwind violently, causing sharp JPY rallies (GBP/JPY drops)
+- This is the most important COT signal in the dataset
+
+**Positioning Assessment:** JPY is at maximum speculative short — this is the exact positioning setup that precedes violent JPY short-squeezes. Anyone long GBP/JPY is on the same side as an extremely crowded trade. This materially raises the risk of a sharp reversal. This is a BEARISH signal for going long, or at minimum a massive risk factor.
+
+**Positioning Score: 3/10** — JPY crowded short at 0th percentile is a severe warning. GBP shorts mid-range (not helpful as contrarian support either). This layer actively argues AGAINST adding long exposure here.
+
+---
+
+### 5. MACRO CONTEXT
+
+**VIX: 15.32, falling** → Risk-on environment ✅ (mild positive for GBP/JPY long)
+**WTI Oil: $97.63, falling** → Falling oil = mildly disinflationary, mixed for GBP, reduces JPY import cost concerns (mildly JPY neutral-positive) ⚠️
+**US 10Y yield: 4.45%, flat** → Neutral
+**US 2Y yield: 3.98%, falling** → Markets pricing more Fed cuts ahead → risk-on, USD weakness potential → broadly supports risk assets ✅
+**2s10s curve: +0.47%** → Positively sloped, NOT inverted → no recession signal, supports risk-on ✅
+**DXY: 118.878, flat** → USD not driving strong directional flows either way
+**Nikkei at record highs** → Risk-on confirmed, typically JPY-negative (carry funded) ✅
+
+**Macro Assessment:** The macro environment is risk-on (falling VIX, rising equities, non-inverted curve, falling 2Y yields). This is generally constructive for GBP/JPY longs via JPY weakness. However, falling oil and a flat/rising JPY rate suggest the yen's fundamental case is strengthening gradually. Risk-on is the dominant near-term signal.
+
+**Macro Score: 6.5/10** — Risk-on supports the pair, but the macro picture is not overwhelmingly bullish. Falling oil and BOJ hiking are offsetting factors.
+
+---
+
+### 6. RISK ASSESSMENT
+
+**High-impact events:** It's June 1, 2026 (Monday). Need to flag:
+- Week starts with potential UK/Japan data releases
+- BOJ policy trajectory is live and any surprise hawkish commentary would devastate longs
+- NFP (US) typically first Friday — approaching end of week
+- UK PMI/manufacturing data could be this week
+- Japan wage data / inflation prints are live risk
+
+**ATR Analysis:**
+- Daily ATR: 0.889 — this means a normal daily range is ~89 pips
+- 4H ATR: 0.24 — tight 4H bars suggest consolidation/top formation possible

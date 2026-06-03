@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(pip *)",
+      "PowerShell(pip install *)",
+      "PowerShell(python _smoke.py)",
+      "PowerShell(python main.py EUR/USD)",
+      "PowerShell(python _cot_probe.py)",
+      "PowerShell(python main.py --health EUR/USD GBP/JPY)",
+      "PowerShell(python -c \"from src import technical; import json; print\\(json.dumps\\(technical.analyse\\('EUR','USD'\\), indent=2\\)\\)\")",
+      "PowerShell(python main.py GBPUSD USDJPY AUDUSD EURGBP)"
+    ]
+  }
+}

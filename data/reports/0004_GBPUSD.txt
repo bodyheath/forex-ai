@@ -1,0 +1,116 @@
+I'll work through each analytical layer systematically before producing the output.
+
+---
+
+## INTERNAL REASONING
+
+### 1. TECHNICAL ANALYSIS
+
+**Daily timeframe:**
+- Price: 1.3464, classified as "mixed/range" — price and MAs not aligned
+- SMA20: 1.34252, SMA50: 1.34975, SMA200: 1.34272 — price is sandwiched between all three, no clean trend
+- RSI14: 50.5 — dead neutral, no signal
+- MACD: bullish cross, but histogram is tiny (0.000505) — barely bullish, no conviction
+- Bollinger: inside bands — no mean-reversion signal
+- ATR14: 0.00599 — moderate volatility
+- 20-day range: 1.33039–1.35326 — price sitting mid-range at 1.3464
+
+**4-Hour timeframe:**
+- Same "mixed/range" classification
+- RSI14: 55.6 — slightly bullish but far from extreme
+- MACD: bullish but histogram near-zero (0.000006) — essentially flat
+- Bollinger: inside bands
+- SMA20/50/200 all clustered between 1.34543–1.3489, price at 1.3464 is below the 4H SMA200
+
+**Key levels:**
+- Daily pivot: 1.34466, R1: 1.34846, S1: 1.34172
+- 4H pivot: 1.34688, price just below 4H pivot
+- Recent high: 1.35326, recent low: 1.33039
+
+**Assessment:** No clean directional signal. Ranging, neutral RSI, near-zero MACD histogram. The only mildly bullish signal is the MACD cross on both timeframes, but without confirmation from RSI, Bollinger, or trend. **Technical Score: 4/10** (mild bullish MACD not enough to score higher given everything else neutral/conflicting)
+
+---
+
+### 2. FUNDAMENTAL ANALYSIS
+
+- BoE rate: 3.729%, Fed rate: 3.620%
+- Rate differential: +0.109% favouring GBP (very small carry advantage)
+- Both rates trending **flat** — no divergence catalyst
+- Carry is essentially zero — 0.11%/year is negligible
+- No clear fundamental driver for a move in either direction
+
+**Assessment:** Fundamentals are nearly perfectly balanced. Tiny carry favour for GBP but both central banks on hold. No divergence. **Fundamental Score: 5/10** — slight GBP advantage but economically irrelevant at 0.11%.
+
+---
+
+### 3. SENTIMENT ANALYSIS
+
+**GBP headlines:** Defence spending debate (negative for fiscal sentiment), BoE economist on stablecoins (irrelevant), UK AI model access issues — generally uninspiring, slightly negative tinge.
+
+**USD headlines:** Powell remarks (ex-Fed Chair, muted), bond traders betting on Fed hike (USD positive), gold slipping on stronger dollar (USD positive), US-Iran uncertainty, Bitcoin ETF outflows. The USD headlines carry a modest hawkish/stronger-USD bias: "bond traders betting on Fed rate hike," "stronger dollar," "gold slipping."
+
+**Retail sentiment contrarian check:** UNAVAILABLE — cannot count this.
+
+**Assessment:** GBP headlines are neutral-to-mildly-negative. USD headlines have a slight hawkish lean (Fed hike speculation, stronger dollar narrative). Net sentiment is mildly bearish GBP/USD. But the signals are weak and many headlines are off-topic. Retail positioning data is unavailable — cannot contribute. **Sentiment Score: 4/10** — slight USD-positive lean but weak signal quality, missing retail data.
+
+---
+
+### 4. POSITIONING (COT)
+
+- GBP net speculator position: **-61,398 (net SHORT)**
+- 1-year range: -93,221 to +51,634
+- Percentile: 22nd — toward the short extreme but not extreme (not flagged)
+- At 22nd percentile, large specs are meaningfully short GBP but haven't reached capitulation levels
+- USD COT: **UNAVAILABLE** (data 1,582 days stale — cannot use)
+
+**Interpretation:** Specs are net short GBP at the 22nd percentile of the 1-year range. This is modestly bearish for GBP (trend-following longs are not yet in), but not at an extreme that would trigger a contrarian squeeze signal. Without USD positioning data, I cannot assess the other side. One data point partially supportive of downside (specs already short GBP), but not extreme enough for a clean contrarian signal. USD data is missing — CANNOT count as agreeing source.
+
+**Positioning Score: 4/10** — specs net short GBP but not extreme; USD side unavailable.
+
+---
+
+### 5. MACRO CONTEXT
+
+- **VIX: 15.32 and falling** — risk-on environment. Risk-on generally mildly favours GBP over USD (USD is the safe haven).
+- **WTI crude: $97.63, falling** — UK is energy importer; falling oil is slightly GBP-positive, USD-neutral.
+- **US 10Y yield: 4.45%, flat** — no strong dollar support from yields moving higher.
+- **US 2Y yield: 3.98%, falling** — short-end rates falling slightly, somewhat USD-negative (reduces carry for USD).
+- **2s10s curve: +0.47%** — positively sloped, not inverted; signals no imminent US recession fear. Risk-on supportive.
+- **Trade-weighted USD: 118.878, flat** — dollar going nowhere directionally.
+- Bond trader headline mentions "bets on Fed hike" — this is a contrasting signal vs the falling 2Y yield. Conflicting.
+- US-Iran uncertainty (geopolitical risk) — could flip to risk-off quickly.
+
+**Assessment:** Macro is mildly risk-on (VIX falling, curve positive), which slightly favours GBP/USD upside, but USD index is flat and yields are flat. No strong directional macro catalyst. **Macro Score: 5/10** — mild risk-on tilt but no conviction.
+
+---
+
+### 6. RISK ASSESSMENT
+
+**Key upcoming events (next 48 hours from June 1, 2026):**
+- **US Non-Farm Payrolls (NFP)** — the headline "Bond Trader Bets on Fed Hike Poised for Gut Check From Jobs Data" explicitly references a key jobs report this week. NFP is typically released the first Friday of the month. June 1 is a Monday, so NFP could be **June 6** — just outside 48hrs. However, ADP employment and other jobs-related data may fall within the window. Need to flag this.
+- US ISM Manufacturing (June 1, Monday) — within 48 hours
+- US-Iran geopolitical situation remains fluid
+- UK PMI/data — check calendar; likely UK PMI data around this period
+
+**ATR context:** Daily ATR 0.00599 (~59 pips), 4H ATR 0.00166 (~16 pips). Moderate volatility.
+
+**Invalidation:** Any clear trend break — daily close above 1.3533 or below 1.3304 would define the range.
+
+---
+
+### AGREEING SOURCES COUNT
+
+For a directional trade, I need to assess which sources actually agree on a direction:
+
+**For a BUY (long GBP/USD):**
+- Technical: MACD mildly bullish on both TFs, but trend is ranging — WEAK partial agreement (not clean)
+- Fundamental: Tiny carry favour for GBP — WEAK partial agreement
+- Sentiment: Mildly USD-positive (bearish GBP/USD) — DISAGREES
+- Positioning: Specs net short GBP — could argue contrarian long, but NOT at extreme — ambiguous
+- Macro: Mild risk-on (VIX falling) — WEAK partial agreement
+- Retail contrarian: UNAVAILABLE
+
+**For a SELL (short GBP/USD):**
+- Technical: Ranging, no clean bearish signal — DOES NOT agree
+- Fundamental: Slight GBP carry advantage — DISAGREES with sell
+- Sentiment: Slight USD-positive lean — WEAK agreement

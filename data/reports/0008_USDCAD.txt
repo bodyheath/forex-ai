@@ -1,0 +1,102 @@
+I'll work through each layer systematically before producing the final output.
+
+---
+
+## LAYER-BY-LAYER ANALYSIS
+
+### 1. TECHNICAL ANALYSIS
+
+**Daily TF:**
+- Last close: 1.3852 — above SMA20 (1.3788), SMA50 (1.3716), SMA200 (1.3772). Bullish structure, but the system flags "mixed/range" because MAs are not cleanly stacked.
+- RSI14: 67.1 — approaching overbought (not yet above 70, but close). Not a buy signal at this level.
+- MACD: Bullish (MACD > signal), histogram +0.000285. Weak bullish momentum, histogram is tiny.
+- Bollinger: Inside bands — no mean-reversion signal either way.
+- Price is near 20-day high (1.3870). Resistance overhead is thin but close.
+- Daily pivot R1 = 1.3863, R2 = 1.3885. Price at 1.3852 is already pressing against R1. Limited upside headroom before next resistance.
+
+**4H TF:**
+- Uptrend confirmed: price > SMA50 > SMA200, golden-cross structure.
+- RSI14: **75.4 — overbought territory.** This is a meaningful red flag on the 4H.
+- MACD: Bullish, histogram +0.000555. But RSI divergence risk is high at these levels.
+- Bollinger: Inside bands — not extended enough to signal reversal, but RSI is screaming caution.
+- 4H R1 = 1.3853, R2 = 1.3857. Price is essentially AT 4H resistance right now.
+
+**Assessment:** The uptrend structure is intact and fundamentally supportive, but the 4H RSI at 75.4 is a clear overbought warning. Price is pressing against multiple pivot resistance levels. This is NOT a clean entry for longs — you'd be buying into overbought momentum at resistance. A SHORT setup (mean reversion) is technically more justified but goes against fundamentals (see below). **Technical Score: 5/10** — trend is bullish but entry timing is poor; overbought 4H RSI and price at resistance reduce confidence sharply.
+
+---
+
+### 2. FUNDAMENTAL ANALYSIS
+
+- Fed rate: 3.62%, flat trend.
+- BoC rate: 2.27%, **falling trend**.
+- Rate differential: +1.348% in favour of USD (carry favours long USD/CAD).
+- Canada headline: **Surprise technical recession** (two consecutive quarters of annualised contraction). This is significantly CAD-negative.
+- BoC falling rates + recession = structurally bearish CAD, bullish USD/CAD.
+- Fed is flat; bond market is pricing potential Fed hike (per headlines), which would widen differential further.
+
+**Assessment:** Fundamentals are clearly bullish USD/CAD. The rate differential, BoC easing bias, and Canada's technical recession all point the same direction. **Fundamental Score: 8/10.**
+
+---
+
+### 3. SENTIMENT ANALYSIS
+
+**USD headlines:**
+- "Stronger dollar" referenced in gold article — mild USD positive.
+- Fed hike bets being tested by jobs data — uncertainty, not conviction.
+- US-Iran geopolitical uncertainty — risk-off mixed signal.
+- Headlines are mostly noise (crypto, AI jobs, arbitrage). Not decisively USD bullish or bearish.
+- **USD sentiment: Mildly positive/neutral.**
+
+**CAD headlines:**
+- "Canada enters surprise technical recession" — strongly CAD negative.
+- Bank earnings beat but stocks didn't rally — reflects underlying uncertainty.
+- BoC rate trend falling.
+- Multiple NRB exchange rate articles (irrelevant noise).
+- **CAD sentiment: Moderately negative — recession headline is material.**
+
+**Retail sentiment:** UNAVAILABLE — cannot count as agreeing source.
+
+**Assessment:** News flow is modestly supportive of USD/CAD upside, primarily driven by the CAD recession headline. USD side is mixed. No extreme retail positioning data available. **Sentiment Score: 6/10** — directionally aligned but not overwhelming conviction; retail extreme check unavailable.
+
+---
+
+### 4. POSITIONING (COT DATA)
+
+- CAD speculator positioning: Net SHORT -68,882 contracts. Percentile rank: **46% of 1-year range** — mid-range, not extreme. No contrarian reversal signal; speculators are already short CAD, which aligns with the bullish USD/CAD thesis but offers no additional edge from an extreme-unwind catalyst.
+- USD Dollar Index COT: **UNAVAILABLE** (stale 2022 data — must not be counted).
+
+**Assessment:** Only one side of the COT is usable. CAD short positioning is mid-range — aligned with direction but not at an extreme that would provide extra conviction. USD COT is unavailable. Per the rules, I cannot count this as a fully agreeing source. **Positioning Score: 5/10** — partial alignment, one data stream missing, no extreme positioning catalyst.
+
+---
+
+### 5. MACRO CONTEXT
+
+- **WTI crude oil: $97.63, falling trend.** This is significant. CAD is a petrocurrency — falling oil is bearish CAD, supportive of USD/CAD upside. ✅ Aligns with long USD/CAD.
+- **VIX: 15.32, falling.** Risk-on environment. In risk-on, commodity currencies (CAD) can sometimes strengthen. However, Canada's recession narrative overrides typical risk-on CAD support. Mixed.
+- **US 10Y yield: 4.45%, flat.** US 2Y yield: 3.98%, falling. Curve: +0.47% (not inverted). The falling 2Y suggests the market is not fully pricing Fed hikes — somewhat USD neutral-to-negative. But bond traders betting on Fed hike (per headlines) adds uncertainty.
+- **Trade-weighted USD index: 118.878, flat.** Dollar broadly flat — no strong directional tailwind.
+- **2s10s at +0.47%:** Positively sloped, not signalling imminent recession risk for the US — supportive of USD.
+- **Seasonal:** June is historically mixed for USD/CAD. No strong seasonal edge.
+
+**Assessment:** Falling oil is a genuine macro tailwind for USD/CAD. VIX falling is mildly mixed. USD broadly flat limits upside potential. **Macro Score: 6/10** — oil provides the key supportive signal; other macro factors are neutral to mixed.
+
+---
+
+### 6. RISK ASSESSMENT
+
+**Agreeing sources count:**
+1. Fundamentals (rate differential + BoC easing + CAD recession) ✅
+2. Technical trend direction (daily/4H uptrend, golden cross) — PARTIAL; overbought RSI and price at resistance reduce this
+3. Sentiment (CAD recession headline, modestly USD-positive) ✅
+4. COT - CAD only, mid-range short ⚠️ (partial, not extreme, USD data unavailable)
+5. Macro - oil falling supportive ✅
+
+**Full agreeing sources (meeting the standard):** Fundamentals ✅, Sentiment ✅, Macro (oil signal) ✅ = **3 clean sources.** Technical is partially aligned but severely compromised by overbought 4H RSI and price at resistance. COT is partial. We do **not** have 4 fully agreeing clean sources.
+
+**High-impact events in next 48 hours:**
+- US Jobs report (NFP) mentioned in headlines — this is potentially imminent (bond trader article references "key jobs report this week"). If NFP is due within 48 hours, this is a **severe whipsaw risk** per System Memory pattern #2.
+- US-Iran geopolitical situation unresolved — risk of sudden risk-off move.
+
+**Volatility:**
+- Daily ATR: 0.00408. 4H ATR: 0.0014. Current price at recent highs — a stop below S1 (1.3805) would need ~47 pips of room. Target to R2 area (~1.3885) offers only ~33 pips. R:R for a long here is **less than 1:1** — poor.
+- A short (mean reversion from overbought) conflicts with fundamentals — System Memory pattern #

@@ -1,0 +1,111 @@
+I'll work through each analytical layer systematically before producing the output.
+
+---
+
+## PRE-OUTPUT REASONING
+
+### LAYER 1 — TECHNICAL ANALYSIS
+
+**Daily timeframe:**
+- Trend: Downtrend (price < SMA50 < SMA200, death-cross structure) — **bearish structural bias**
+- RSI(14): 53.1 — neutral, no oversold/overbought signal
+- MACD: Bullish (MACD > signal, hist +0.000347) — **bullish signal, but very small histogram = weak**
+- Bollinger Bands: Inside bands — no mean-reversion signal
+- Price (0.91511) vs SMA50 (0.91636): price below SMA50 — bearish
+- Price vs SMA200 (0.92056): price well below — bearish
+- Recent 20-day range: 0.90873–0.91789; price is in upper half of range
+
+**4H timeframe:**
+- Trend: Mixed/range — no clean directional bias
+- RSI(14): 69.4 — **approaching overbought** (just below 70 threshold), warns against new longs
+- MACD: Bullish (hist +0.000458) — bullish but price near resistance
+- Bollinger Bands: Inside bands
+- Price (0.91511) vs 4H SMA200 (0.91456): price just above — marginal
+- 4H R1 pivot: 0.91578 — price is close to resistance
+- 4H R2: 0.91636 — aligns almost exactly with daily SMA50 (0.91636) — **significant resistance confluence**
+
+**Summary:** The structural trend is bearish (death cross, price below all key MAs on daily). The short-term MACD is bullishly crossed but the histogram is tiny and losing momentum. The 4H RSI at 69.4 is flashing an overbought warning. Price is approaching a key resistance cluster (0.91574–0.91636). This looks like a counter-trend bounce nearing exhaustion rather than a genuine bullish reversal. Technical picture is **conflicted** — short-term bullish momentum against a medium-term bearish structure. A buy here chases a bounce into overhead resistance; a sell aligns with structure but risks being early.
+
+**Technical Score: 4/10** — The conflict between short-term MACD and medium-term death-cross structure, combined with RSI approaching overbought at resistance, makes this ambiguous and dangerous for either direction.
+
+---
+
+### LAYER 2 — FUNDAMENTAL ANALYSIS
+
+- ECB rate: 2.0% (flat trend)
+- SNB rate: -0.04% (falling trend)
+- Differential: +2.04% in favour of EUR (positive carry for long EUR/CHF)
+- The CHF rate is already effectively at zero/negative and still falling — this is fundamentally **supportive of long EUR/CHF** (carry favours EUR, SNB easing)
+- However, CHF is a safe-haven currency. In risk-off environments CHF tends to strengthen regardless of rates
+- ECB rate trend is "flat" — no further easing signal. SNB is falling — divergence supports EUR/CHF upside over the medium term
+- The 2.04% positive carry is a meaningful structural tailwind for longs
+
+**Fundamental Score: 6/10** — The carry and rate differential clearly favour long EUR/CHF. However, the ECB is flat (not hiking), and CHF's safe-haven status can overwhelm rate differentials in stress episodes. Fundamentals are moderately bullish but not compellingly so.
+
+---
+
+### LAYER 3 — SENTIMENT ANALYSIS
+
+**EUR headlines (11 articles):**
+- Mostly unrelated to EUR directly (Japan/Korea stocks, weather, sports, wills)
+- EU cash limit + digital euro pilot: mildly EUR-relevant, ambiguous
+- ECB warning on stablecoins: regulatory focus, not directionally significant
+- No strong EUR bullish or bearish catalysts visible
+- Sentiment: **neutral to mildly cautious**
+
+**CHF headlines (12 articles):**
+- UBS job cuts (post-Credit Suisse integration): mildly CHF-negative (banking sector stress)
+- "Gulf War III" pushing gold into bear market: this is significant — gold falling is typically CHF-negative (both are safe havens). If gold is in a bear market, safe-haven demand for CHF may also be reduced
+- De-dollarisation trade (family offices pulling from USD): ambiguous for CHF
+- NFP jobs report coming: USD event, not directly CHF
+- Nepal FX rates (irrelevant noise)
+- **Key signal: Gold in a bear market could reduce CHF safe-haven demand → mildly supportive of EUR/CHF**
+
+**Retail sentiment contrarian check:** UNAVAILABLE — cannot count this source.
+
+**Sentiment Score: 5/10** — Headlines are largely noise. The gold bear market signal is the most relevant item and is mildly supportive of EUR/CHF. Not enough directional conviction. Retail contrarian data absent — this source CANNOT be counted as agreeing.
+
+---
+
+### LAYER 4 — POSITIONING (COT)
+
+**EUR:**
+- Net long: +29,426
+- 1Y range percentile: 20th — **this means positioning is near the LOW end of the 1-year range (not heavily long, actually relatively modest longs)**
+- Not extreme: confirmed
+
+**CHF:**
+- Net short: -35,140
+- 1Y range percentile: 38th — mid-range
+- Note: The 1Y high for CHF is -20,056 (least short) and 1Y low is -44,198 (most short). Current -35,140 at 38th percentile means specs are **moderately short CHF** but not at extremes
+
+**Interpretation for EUR/CHF:**
+- EUR longs are at only 20th percentile of their range — not crowded long
+- CHF is net short at 38th percentile — moderate short CHF positioning aligns with long EUR/CHF direction
+- Neither position is at an extreme requiring contrarian caution
+- Positioning **modestly supports** long EUR/CHF but without conviction
+
+**Positioning Score: 5/10** — Alignment with long EUR/CHF direction exists but positioning is mid-range, not providing a strong contrarian or confirmatory signal.
+
+---
+
+### LAYER 5 — MACRO CONTEXT
+
+- **VIX: 15.32, falling** — risk-on environment. Lower VIX = reduced demand for safe havens like CHF = **bullish EUR/CHF**
+- **WTI Oil: $97.63, falling** — falling oil can be mixed; for EUR/CHF it's less direct, but falling oil reduces inflationary pressure in Europe potentially allowing ECB to stay pat or cut — slight negative for EUR fundamentals
+- **US 10Y yield: 4.45%, flat** — neutral
+- **US 2Y yield: 3.98%, falling** — falling short-end yields suggest Fed easing expectations → generally risk-on, USD softness, supports EUR broadly
+- **2s10s curve: +0.47%** — positively sloped (not inverted), suggesting reduced recession/risk-off fears — **supportive of risk-on, bearish CHF**
+- **USD index: 118.878, flat** — USD stable, not providing strong cross-pair direction
+- **Gold in bear market** (from headlines) — reduced safe-haven premium → **bullish EUR/CHF**
+- **Seasonal:** June is historically mixed for EUR/CHF; no strong seasonal tailwind identifiable
+- **Risk-on environment overall** — falling VIX, rising equity markets (Japan/Korea at records), positive yield curve = **CHF safe-haven demand suppressed**
+
+**Macro Score: 6/10** — Risk-on macro environment supports EUR/CHF longs. Falling VIX, positive yield curve, gold weakness all reduce CHF safe-haven appeal. However, oil at $97 and the Iran ceasefire fragility noted in headlines keeps geopolitical risk alive, which could spike CHF demand abruptly.
+
+---
+
+### RISK ASSESSMENT
+
+**Upcoming events (next 48 hours from ~June 1, 2026):**
+- **US NFP (Non-Farm Payrolls)** is mentioned in multiple headlines as coming "this week" with a "Friday" release — this is within the next few

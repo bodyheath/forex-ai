@@ -1,0 +1,81 @@
+# EUR/CAD ANALYSIS
+
+---
+
+## PRE-ANALYSIS REASONING
+
+Let me work through each layer before scoring.
+
+### TECHNICAL LAYER
+- **Daily trend:** "Mixed/range" — price and MAs not aligned. SMA20 (1.6041), SMA50 (1.6043), SMA200 (1.6089) are essentially flat/clustered. Price at 1.61264 is above all MAs but the trend classification is explicitly "mixed/range." This is not a clean trending structure.
+- **4H trend:** Uptrend — price > SMA50 > SMA200, golden-cross structure. Bullish.
+- **RSI daily:** 62.4 — elevated but not overbought. Neutral-to-bullish tilt.
+- **RSI 4H:** 64.8 — approaching overbought territory. Warning sign.
+- **MACD:** Bullish on both timeframes, but histogram is tiny (0.000889 daily, 0.000325 4H) — momentum is weak/fading.
+- **Bollinger Bands:** Inside bands on daily (neutral). AT/ABOVE upper band on 4H — this is a mean-reversion warning. Price stretched to the upside on the shorter timeframe.
+- **MAs:** SMA20/SMA50 nearly identical on daily (1.6041 vs 1.6043) — very flat, no directional conviction at daily level. Price at 1.61264 is above recent 20-period high (1.6131) — barely breaking out but the 4H BB stretch tempers enthusiasm.
+- **Pivot levels (4H):** Current price (1.61264) is essentially AT R1 (1.61299). Very little room before the next resistance (R2: 1.6137). Price is squeezed between current level and R2.
+- **ATR:** Daily ATR 0.00551, 4H ATR 0.00192. Low volatility environment. Tight ranges.
+
+**Conflicts:** 4H BB upper band stretch + RSI approaching overbought on 4H vs. bullish MACD on both frames. Daily trend is "mixed/range" which fundamentally undermines a directional long bias. The price is at R1 on the 4H — a poor entry point for a long. A short (mean reversion from BB upper) has some logic on the 4H but the daily MACD is bullish.
+
+**Technical score: 5/10** — Mixed signals, conflicting timeframes, price at resistance, no clean entry for either direction.
+
+---
+
+### FUNDAMENTAL LAYER
+- **ECB rate:** 2.0%, trend flat
+- **BoC rate:** 2.272%, trend falling
+- **Rate differential:** -0.272% — EUR earns LESS carry than CAD. Marginally negative for EUR/CAD longs.
+- **BoC falling:** If BoC continues cutting, the differential narrows further in EUR's favour over time — this is a mild medium-term positive for EUR/CAD.
+- **Canada in technical recession:** The news confirms Canada entered a surprise technical recession (two consecutive quarters of contraction). This is CAD-negative and EUR/CAD bullish from a fundamental standpoint.
+- **ECB flat:** ECB is on hold. Not cutting aggressively. Relative stability.
+
+The carry is slightly negative for EUR/CAD longs but the macro fundamental picture (Canada recession + BoC falling rates) is EUR/CAD supportive. Mixed but leaning slightly EUR-positive fundamentally.
+
+**Fundamental score: 5.5/10** — Canada recession is EUR/CAD bullish, but ECB flat stance and negative carry partially offset. No overwhelming directional force.
+
+---
+
+### SENTIMENT LAYER
+- **EUR headlines:** Largely irrelevant to EUR/CAD (sports, AI, Japan stocks, crypto). ECB warnings about stablecoins — neutral to mildly cautious. EU cash limits — minor regulatory signal. **No strong directional EUR sentiment.**
+- **CAD headlines:** "Canada enters surprise technical recession" — explicitly CAD-negative. Bank earnings beat but stocks didn't rally — muted. BoC-related commentary implies further cuts. Mixed-to-negative for CAD.
+- **Retail sentiment contrarian check:** UNAVAILABLE — cannot count this.
+- **Net sentiment read:** CAD negative (recession headline), EUR neutral. Mild EUR/CAD bullish tilt from sentiment, but not overwhelming.
+
+**Sentiment score: 5/10** — Canada recession is the key signal but broader EUR sentiment is noise. Retail positioning contrarian check unavailable reduces confidence. Score kept modest.
+
+---
+
+### POSITIONING LAYER (COT)
+- **EUR futures (CME):** Net LONG +29,426 contracts. But at only 20th percentile of 1-year range (range: -7,541 to +180,305). This means speculators are lightly long EUR — far from extreme. No contrarian squeeze signal, no overcrowding. Mild positive for EUR direction (they're long but not committed).
+- **CAD futures (CME):** Net SHORT -68,882 contracts. At 46th percentile of range (-159,512 to +36,159). Mid-range short. Not extreme — no forced covering squeeze imminent. Speculators are short CAD (bullish for EUR/CAD) but this isn't at an extreme washout level.
+- **Alignment:** Both point EUR/CAD bullish (long EUR, short CAD) but neither is at an extreme that would generate a high-conviction contrarian or momentum signal.
+
+**Positioning score: 5.5/10** — Both point the same direction (EUR/CAD up) but neither is extreme enough to be a strong independent signal.
+
+---
+
+### MACRO LAYER
+- **VIX 15.32, falling:** Risk-on environment. Falling VIX favours carry and risk assets. EUR is not a typical risk-on beneficiary but CAD (commodity) could benefit from risk-on... however oil is falling, which undermines CAD support.
+- **WTI crude $97.63, falling trend:** Oil falling is CAD-negative (Canada is a major oil exporter). This is supportive of EUR/CAD upside.
+- **US 10Y yield 4.45%, flat; US 2Y 3.98%, falling:** Yield curve at +0.47 (not inverted). Falling short-end yields suggest Fed easing expectations — generally USD-negative, potentially broader risk-on supportive.
+- **Trade-weighted USD flat at 118.878:** No strong USD directional pressure to distort cross pairs.
+- **2s10s +0.47 (not inverted):** Not signalling recession in the US — moderate risk appetite.
+- **Risk environment:** Risk-on (falling VIX, rising equities in Japan/S.Korea per headlines). In risk-on, EUR/CAD can be a toss-up since both are risk-sensitive. However, oil falling hurts CAD more than EUR.
+- **Seasonal tendencies:** No specific seasonal data available for EUR/CAD in June.
+
+**Macro score: 5.5/10** — Falling oil is the clearest macro signal favouring EUR/CAD upside. Risk-on environment is ambiguous for this cross. No strong seasonal data.
+
+---
+
+### SOURCE COUNT CHECK (for BUY EUR/CAD direction)
+1. **Technical:** MIXED — 4H uptrend structure yes, but daily mixed/range, price at R1, 4H BB stretched. **Does NOT clearly agree. ❌**
+2. **Fundamental:** Mild lean bullish (Canada recession, BoC falling rates). Carry negative but narrative positive. **Partial/weak agree — too ambiguous. ❌**
+3. **Sentiment:** Mild EUR/CAD bullish (CAD recession negative). Retail contrarian check UNAVAILABLE. **Partial only, not a clean agree. ❌**
+4. **Positioning:** Both EUR long + CAD short, same direction. Neither extreme. **Weak agree. ✓ (barely)**
+5. **Macro:** Falling oil = CAD negative. Risk-on ambiguous. **Weak agree. ✓ (barely)**
+
+**Strict count of clearly agreeing sources: 2 out of 5 (positioning and macro lean bullish, but weakly). Fundamentals and sentiment are too ambiguous to count as clean agreements. Technical is explicitly conflicted.**
+
+This does NOT meet the 4-source threshold required for a trade recommendation.

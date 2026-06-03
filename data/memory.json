@@ -1,0 +1,22 @@
+[
+  {
+    "source": "seed",
+    "pattern": "Trades taken with confidence below 7 or fewer than 4 agreeing sources",
+    "outcome": "Historically low win rate. Do not trade these."
+  },
+  {
+    "source": "seed",
+    "pattern": "Entering right before a high-impact data release (NFP, CPI, central bank decision)",
+    "outcome": "Whipsaw risk is severe; edge from analysis is overwhelmed by event volatility."
+  },
+  {
+    "source": "seed",
+    "pattern": "Technical signal conflicts with the interest-rate differential direction",
+    "outcome": "Mixed results - fundamentals tend to win over weeks. Lower confidence on such conflicts."
+  },
+  {
+    "source": "auto",
+    "pattern": "No closed trades recorded yet",
+    "outcome": "No empirical edge data available. Rely on seed priors and demand the full 7+/4-source bar before trading."
+  }
+]

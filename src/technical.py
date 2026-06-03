@@ -1,0 +1,186 @@
+"""Technical layer.
+
+Fetches OHLC candles from Twelve Data (daily + native 4h interval) and computes
+indicators locally: RSI, MACD, Bollinger Bands, SMA50/200, ATR, recent
+support/resistance and classic pivot points.
+
+Computing locally (rather than calling per-indicator endpoints) keeps us to two
+API calls per pair and means the indicator definitions are explicit and auditable.
+Twelve Data's free tier (~800 calls/day, 8/min) comfortably covers this.
+"""
+
+import numpy as np
+import pandas as pd
+import requests
+
+import config
+from src import cache
+
+_TD_URL = "https://api.twelvedata.com/time_series"
+_TIMEOUT = 30
+
+
+def _td_request(symbol: str, interval: str, outputsize: int) -> dict:
+    """Call Twelve Data time_series with caching and error/rate-limit detection."""
+    key = f"TD:{symbol}:{interval}:{outputsize}"
+    cached = cache.get(key)
+    if cached is not None:
+        return cached
+
+    resp = requests.get(
+        _TD_URL,
+        params={
+            "symbol": symbol,
+            "interval": interval,
+            "outputsize": outputsize,
+            "format": "JSON",
+            "apikey": config.TWELVE_DATA_KEY,
+        },
+        timeout=_TIMEOUT,
+    )
+    if resp.status_code == 429:
+        raise RuntimeError("Twelve Data rate limit reached (free tier 8/min, ~800/day). Try again shortly.")
+    resp.raise_for_status()
+    data = resp.json()
+
+    # Twelve Data signals problems with {"status": "error", "code": ..., "message": ...}
+    if isinstance(data, dict) and data.get("status") == "error":
+        raise RuntimeError(f"Twelve Data error ({data.get('code')}): {data.get('message')}")
+
+    cache.set(key, data)
+    return data
+
+
+def _frame_from_td(data: dict) -> pd.DataFrame:
+    """Convert a Twelve Data time_series payload into a sorted OHLC frame."""
+    values = data.get("values") if isinstance(data, dict) else None
+    if not values:
+        raise RuntimeError("Twelve Data returned no candles: " + str(data)[:200])
+    df = pd.DataFrame(values)
+    df["datetime"] = pd.to_datetime(df["datetime"])
+    df = df.set_index("datetime").sort_index()  # API returns newest-first
+    for col in ("open", "high", "low", "close"):
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+    return df[["open", "high", "low", "close"]].dropna()
+
+
+# ---------------------------------------------------------------------------
+# Indicator math
+# ---------------------------------------------------------------------------
+def _rsi(close: pd.Series, period: int = 14) -> pd.Series:
+    delta = close.diff()
+    gain = delta.clip(lower=0)
+    loss = -delta.clip(upper=0)
+    avg_gain = gain.ewm(alpha=1 / period, adjust=False).mean()
+    avg_loss = loss.ewm(alpha=1 / period, adjust=False).mean()
+    rs = avg_gain / avg_loss.replace(0, np.nan)
+    return 100 - 100 / (1 + rs)
+
+
+def _macd(close: pd.Series):
+    ema12 = close.ewm(span=12, adjust=False).mean()
+    ema26 = close.ewm(span=26, adjust=False).mean()
+    macd = ema12 - ema26
+    signal = macd.ewm(span=9, adjust=False).mean()
+    return macd, signal, macd - signal
+
+
+def _atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
+    prev_close = df["close"].shift(1)
+    tr = pd.concat(
+        [
+            df["high"] - df["low"],
+            (df["high"] - prev_close).abs(),
+            (df["low"] - prev_close).abs(),
+        ],
+        axis=1,
+    ).max(axis=1)
+    return tr.ewm(alpha=1 / period, adjust=False).mean()
+
+
+def _pivots(prev: pd.Series) -> dict:
+    """Classic floor-trader pivots from the last completed candle."""
+    p = (prev["high"] + prev["low"] + prev["close"]) / 3
+    return {
+        "pivot": round(p, 5),
+        "r1": round(2 * p - prev["low"], 5),
+        "s1": round(2 * p - prev["high"], 5),
+        "r2": round(p + (prev["high"] - prev["low"]), 5),
+        "s2": round(p - (prev["high"] - prev["low"]), 5),
+    }
+
+
+def _trend(close: pd.Series, sma50: float, sma200: float) -> str:
+    last = close.iloc[-1]
+    if np.isnan(sma200):
+        bias = "above" if last > sma50 else "below"
+        return f"price {bias} SMA50 (insufficient history for SMA200)"
+    if sma50 > sma200 and last > sma50:
+        return "uptrend (price > SMA50 > SMA200, golden-cross structure)"
+    if sma50 < sma200 and last < sma50:
+        return "downtrend (price < SMA50 < SMA200, death-cross structure)"
+    return "mixed / range (price and MAs not aligned)"
+
+
+def _summarise(df: pd.DataFrame, label: str) -> dict:
+    if len(df) < 30:
+        return {"timeframe": label, "status": "insufficient data"}
+    close = df["close"]
+    sma20 = close.rolling(20).mean()
+    std20 = close.rolling(20).std()
+    sma50 = close.rolling(50).mean().iloc[-1]
+    sma200 = close.rolling(200).mean().iloc[-1] if len(close) >= 200 else float("nan")
+    rsi = _rsi(close)
+    macd, signal, hist = _macd(close)
+    atr = _atr(df)
+    last = close.iloc[-1]
+
+    macd_state = "bullish (MACD > signal)" if macd.iloc[-1] > signal.iloc[-1] else "bearish (MACD < signal)"
+    bb_upper = (sma20 + 2 * std20).iloc[-1]
+    bb_lower = (sma20 - 2 * std20).iloc[-1]
+    if last >= bb_upper:
+        bb_state = "at/above upper band (stretched, mean-reversion risk down)"
+    elif last <= bb_lower:
+        bb_state = "at/below lower band (stretched, mean-reversion risk up)"
+    else:
+        bb_state = "inside bands"
+
+    return {
+        "timeframe": label,
+        "last_close": round(last, 5),
+        "trend": _trend(close, sma50, sma200),
+        "rsi14": round(rsi.iloc[-1], 1),
+        "macd": macd_state,
+        "macd_hist": round(hist.iloc[-1], 6),
+        "bollinger": bb_state,
+        "sma20": round(sma20.iloc[-1], 5),
+        "sma50": round(sma50, 5),
+        "sma200": (round(sma200, 5) if not np.isnan(sma200) else "n/a"),
+        "atr14": round(atr.iloc[-1], 5),
+        "recent_high_20": round(df["high"].tail(20).max(), 5),
+        "recent_low_20": round(df["low"].tail(20).min(), 5),
+        "pivots_from_last_candle": _pivots(df.iloc[-2]),
+    }
+
+
+def analyse(base: str, quote: str) -> dict:
+    """Return a technical summary dict for base/quote, or an error marker."""
+    if not config.TWELVE_DATA_KEY:
+        return {
+            "status": "UNAVAILABLE",
+            "error": "TWELVE_DATA_KEY not set in .env. Get a free key at "
+            "https://twelvedata.com/pricing and add it to .env.",
+        }
+
+    symbol = f"{base}/{quote}"
+    try:
+        daily = _frame_from_td(_td_request(symbol, "1day", 400))
+        four_h = _frame_from_td(_td_request(symbol, "4h", 500))
+        return {
+            "status": "ok",
+            "source": "Twelve Data",
+            "daily": _summarise(daily, "Daily"),
+            "4h": _summarise(four_h, "4-Hour"),
+        }
+    except Exception as exc:  # noqa: BLE001 - degrade gracefully
+        return {"status": "UNAVAILABLE", "error": str(exc)}

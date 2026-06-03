@@ -1,0 +1,112 @@
+I'll work through each analytical layer systematically before producing the output.
+
+---
+
+## INTERNAL WORKING (Pre-Output Analysis)
+
+### 1. TECHNICAL ANALYSIS
+
+**Daily timeframe:**
+- Trend: Mixed/range — price (1.16411) is below SMA50 (1.16971) and SMA200 (1.16837) but above SMA20 (1.16339). No clean directional alignment. This is NOT a clean trend environment.
+- RSI14: 46.5 — neutral, no oversold/overbought signal
+- MACD: Bullish (MACD > signal), histogram +0.000399 — weakly bullish but histogram is tiny
+- Bollinger Bands: Inside bands — no mean-reversion signal; mid-range
+- Daily pivots: Price at 1.16411 is near pivot (1.1635), between S1 (1.1605) and R1 (1.16625)
+
+**4-Hour timeframe:**
+- Trend: Downtrend — price < SMA50 < SMA200, described as death-cross structure. Bearish.
+- RSI14: 47.1 — neutral
+- MACD: Bearish (MACD < signal), histogram -0.000236 — weakly bearish
+- Bollinger Bands: Inside bands — no signal
+- ATR14 (4h): 0.00132 — relatively low volatility
+
+**Summary:** Daily is mixed/conflicted (daily MACD weakly bullish but price below key MAs), 4H is in downtrend with bearish MACD. These two timeframes are in conflict with each other. No strong momentum signal in either direction. RSI is neutral on both. No extreme band touches. This is a low-conviction technical environment.
+
+**Technical Score: 4/10** — Conflicting signals between timeframes, no extreme levels, range-bound price action, no clean setup.
+
+---
+
+### 2. FUNDAMENTAL ANALYSIS
+
+- ECB rate: 2.00%, trend flat
+- Fed rate: 3.62%, trend flat
+- Rate differential: -1.62% (EUR earns less than USD)
+- Carry: Negative for EUR/USD longs. Holding EUR/USD long costs ~1.62%/year in carry. This is a structural headwind for EUR bulls.
+- Both central banks are flat — no imminent divergence catalyst either way.
+- USD COT is UNAVAILABLE so dollar fundamental positioning is incomplete.
+- Bond market: 10Y yield at 4.45% (flat), 2Y at 3.98% (falling). 2s10s curve at +0.47% — positively sloped, not inverted. The falling 2Y yield could imply market pricing some eventual Fed easing, which would be mildly USD-negative long term.
+- A headline mentions bond traders betting on a Fed HIKE based on jobs data — if NFP is strong, this could strengthen USD significantly.
+
+**Fundamental Score: 4/10** — Rate differential firmly favours USD (negative carry for EUR longs). Both banks flat, no catalyst. Possible NFP-driven USD strength. No compelling fundamental case for EUR longs.
+
+---
+
+### 3. SENTIMENT ANALYSIS
+
+**EUR headlines:** Dominated by crypto/stablecoin stories (ECB warnings about stablecoins, EU cash limits, digital euro), completely irrelevant non-EUR stories (Scotland football, weather). Only ~2-3 articles are even tangentially EUR-relevant. Tone is slightly cautious for EUR (ECB warning about stablecoins, dollar colony fears — ironically slightly EUR-negative in framing). No strong positive EUR catalyst.
+
+**USD headlines:** Mixed. One headline mentions "stronger dollar" alongside gold slipping. Bond trader article suggests potential Fed hike bets on jobs data — modestly USD bullish. Iran/geopolitical uncertainty is present but not clearly directional. Bitcoin weakness on ETF outflows suggests mild risk-off, which could be slightly USD positive.
+
+**Retail sentiment contrarian signal:** UNAVAILABLE — cannot count this.
+
+**News tone summary:** USD has a slight edge (stronger dollar mentioned, Fed hike bets) vs EUR (no meaningful positive catalysts). Overall sentiment is low-signal, but marginally USD-positive.
+
+**Sentiment Score: 4/10** — Headlines are mostly noise and irrelevant to EUR/USD. No strong directional sentiment signal. Retail contrarian data unavailable. Cannot score higher than 4.
+
+---
+
+### 4. POSITIONING (COT)
+
+- EUR speculator position: Net LONG +29,426 contracts
+- 1-year range: -7,541 to +180,305
+- Percentile: 20th percentile — this means positioning is near the LOW end of the 1-year range. Speculators are modestly net long but far from extreme long. At 20th percentile, there is NO contrarian reversal signal from crowded longs.
+- USD COT: UNAVAILABLE (data 1,582 days old — completely stale, cannot use)
+
+**Interpretation:** EUR speculator longs are at the 20th percentile. Not crowded. No strong contrarian signal in either direction. USD data missing entirely. This layer is partial at best.
+
+**Positioning Score: 4/10** — Only one side of the pair available. EUR positioning is mid-to-low range (not extreme). USD data is completely unavailable. Cannot derive a high-confidence signal.
+
+---
+
+### 5. MACRO CONTEXT
+
+- VIX: 15.32 and falling — risk-on environment. Generally mild positive for EUR/USD (risk assets tend to be bought when VIX falls).
+- WTI Oil: 97.63, falling. Falling oil is generally USD-neutral to mildly positive (reduces inflation pressure, potentially softens Fed hawkishness long term).
+- US 10Y yield: 4.45%, flat. High real yields support USD structurally.
+- US 2Y yield: 3.98%, falling — implies some softening in near-term Fed expectations, which could be mildly EUR/USD supportive.
+- 2s10s curve: +0.47% — positively sloped, not recessionary. Moderate risk-on signal.
+- Trade-weighted DXY: 118.878, flat. Dollar not trending strongly in either direction.
+- Iran uncertainty: Geopolitical risk present (ceasefire extension decision pending) — could create sudden risk-off if deal falls through, which would typically strengthen USD.
+- Asian stocks hitting records on AI boom — risk-on globally.
+- Seasonal tendency for EUR/USD in June: Historically mixed, no strong seasonal edge.
+- Gold slipping on stronger dollar is a mild conflicting signal (gold falling = mild USD support = mild EUR/USD bearish).
+
+**Macro Score: 5/10** — VIX falling and risk-on is mildly EUR/USD positive, but high USD yields, flat DXY, geopolitical tail risk (Iran), and gold weakness on strong dollar partially offset. No overwhelming macro case.
+
+---
+
+### 6. RISK ASSESSMENT
+
+**Upcoming events in next 48 hours (based on context clues in data):**
+- NFP (Non-Farm Payrolls) appears imminent — the bond trader headline specifically mentions "gut check from jobs data this week" and references the jobs report. This is CRITICAL. NFP is a high-impact event that creates severe whipsaw risk (System Memory Pattern #2 explicitly warns against this).
+- Iran ceasefire decision pending — binary geopolitical risk event.
+- Gold futures data (August contract mentioned) suggests active macro positioning.
+- Powell remarks noted — Fed communication risk.
+
+**Volatility:**
+- Daily ATR: 0.00449 (~45 pips). Normal for EUR/USD.
+- 4H ATR: 0.00132 (~13 pips per 4 hours). Low intraday volatility.
+- VIX at 15.32 — moderate, not elevated.
+
+**Trade invalidation:**
+- For a BUY: Break below 1.15774 (recent 20-day low) / S2 at 1.15775
+- For a SELL: Break above 1.17215 (recent 20-day high) / SMA50 at 1.16971
+
+---
+
+### AGREEMENT TALLY
+
+Let me count how many independent sources agree on a direction:
+
+**For SELL EUR/USD (most logical given rate differential):**
+1. Technical (4H): PARTIAL agreement — 4H is in downtrend with bearish MA

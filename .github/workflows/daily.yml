@@ -1,0 +1,49 @@
+name: Daily Forex Analysis
+
+on:
+  schedule:
+    # 6 am NZST (UTC+12, April–September).
+    # Change to '0 17 * * *' for NZDT (UTC+13, September–April).
+    - cron: '0 18 * * *'
+  workflow_dispatch: # also lets you trigger a run manually from the Actions tab
+
+jobs:
+  analyse:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # needed to push updated dashboard and data back to the repo
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run daily analysis
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TWELVE_DATA_KEY: ${{ secrets.TWELVE_DATA_KEY }}
+          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          MY_EMAIL: ${{ secrets.MY_EMAIL }}
+        run: python daily.py
+
+      - name: Copy dashboard to GitHub Pages
+        run: |
+          mkdir -p docs
+          cp data/dashboard.html docs/index.html
+
+      - name: Commit and push results
+        run: |
+          git config user.name "forex-ai[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "chore: daily analysis $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
