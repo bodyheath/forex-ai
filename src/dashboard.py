@@ -131,6 +131,12 @@ def _f(v, nd=2):
         return "-"
 
 
+def _most_recent_date(rows) -> str:
+    """Return the date string of the most recently logged row, or today."""
+    dates = [(r.get("timestamp") or "")[:10] for r in rows if r.get("timestamp")]
+    return max(dates) if dates else datetime.now().strftime("%Y-%m-%d")
+
+
 def _active_setups(rows) -> str:
     """Render prominent green cards for any OPEN YES-trade recommendations."""
     open_yes = [r for r in rows if r.get("trade_this") == "YES" and r.get("status") == "OPEN"]
