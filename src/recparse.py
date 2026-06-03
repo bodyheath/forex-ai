@@ -107,4 +107,5 @@ def parse(report: str) -> dict:
         "key_thesis": f["KEY_THESIS"] or None,
         "risk_factors": f["RISK_FACTORS"] or None,
         "news_warning": f["NEWS_WARNING"] or None,
+        "best_entry_time": f["BEST_ENTRY_TIME"] or None,
     }
