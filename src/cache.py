@@ -18,8 +18,12 @@ def _path_for(key: str) -> Path:
     return config.CACHE_DIR / f"{digest}.json"
 
 
-def get(key: str):
-    """Return the cached value for `key`, or None if missing/expired."""
+def get(key: str, ttl_hours: float = None):
+    """Return the cached value for `key`, or None if missing/expired.
+
+    If `ttl_hours` is provided it overrides config.CACHE_TTL_HOURS for this
+    specific lookup, allowing callers to request a longer or shorter TTL.
+    """
     path = _path_for(key)
     if not path.exists():
         return None
@@ -28,7 +32,8 @@ def get(key: str):
     except (json.JSONDecodeError, OSError):
         return None
     age_hours = (time.time() - payload.get("_cached_at", 0)) / 3600.0
-    if age_hours > config.CACHE_TTL_HOURS:
+    effective_ttl = ttl_hours if ttl_hours is not None else config.CACHE_TTL_HOURS
+    if age_hours > effective_ttl:
         return None
     return payload.get("value")
 
