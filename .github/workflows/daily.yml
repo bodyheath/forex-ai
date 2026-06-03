@@ -41,6 +41,7 @@ jobs:
         run: |
           mkdir -p docs
           cp data/dashboard.html docs/index.html
+          cp data/trades.csv docs/trades.csv
 
       - name: Commit and push results
         run: |
