@@ -17,6 +17,7 @@ FIELDS = [
     "confidence", "technical", "fundamental", "sentiment", "positioning", "macro",
     "entry", "target", "stop_loss", "reward_risk", "trade_this", "data_sources",
     "status", "exit_price", "r_multiple", "pips", "closed_at", "notes", "report_file",
+    "key_thesis", "best_entry_time",
 ]
 
 # status values: NO_TRADE | OPEN | WIN | LOSS | BREAKEVEN | SKIPPED | EXPIRED
