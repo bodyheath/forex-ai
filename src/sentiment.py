@@ -12,7 +12,7 @@ from src import cache
 
 _URL = "https://newsapi.org/v2/everything"
 _TIMEOUT = 30
-_MAX_HEADLINES = 12
+_MAX_HEADLINES = 8
 
 
 def _headlines_for(ccy: str) -> dict:
