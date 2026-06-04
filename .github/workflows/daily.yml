@@ -37,10 +37,10 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_CHAT_ID_2: ${{ secrets.TELEGRAM_CHAT_ID_2 }}
-          CLAUDE_MODEL: ${{ secrets.CLAUDE_MODEL }}
-          HAIKU_MODEL: ${{ secrets.HAIKU_MODEL }}
-          ACCOUNT_BALANCE: ${{ secrets.ACCOUNT_BALANCE }}
-          ACCOUNT_CURRENCY: ${{ secrets.ACCOUNT_CURRENCY }}
+          CLAUDE_MODEL: ${{ secrets.CLAUDE_MODEL || 'claude-sonnet-4-6' }}
+          HAIKU_MODEL: ${{ secrets.HAIKU_MODEL || 'claude-haiku-4-5-20251001' }}
+          ACCOUNT_BALANCE: ${{ secrets.ACCOUNT_BALANCE || '10000' }}
+          ACCOUNT_CURRENCY: ${{ secrets.ACCOUNT_CURRENCY || 'USD' }}
         run: python daily.py
 
       - name: Copy dashboard to GitHub Pages
