@@ -44,9 +44,14 @@ ALPHA_VANTAGE_KEY = os.getenv("ALPHA_VANTAGE_KEY", "")  # legacy / unused
 NEWS_API_KEY = os.getenv("NEWS_API_KEY", "")
 FRED_API_KEY = os.getenv("FRED_API_KEY", "")
 MY_EMAIL = os.getenv("MY_EMAIL", "")
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
+TELEGRAM_TOKEN   = os.getenv("TELEGRAM_TOKEN", "")
+TELEGRAM_CHAT_ID  = os.getenv("TELEGRAM_CHAT_ID", "")
 TELEGRAM_CHAT_ID_2 = os.getenv("TELEGRAM_CHAT_ID_2", "")
+
+ACCOUNT_BALANCE  = float(os.getenv("ACCOUNT_BALANCE", "10000"))
+ACCOUNT_CURRENCY = os.getenv("ACCOUNT_CURRENCY", "USD")
+
+RISK_PROFILE_FILE = DATA_DIR / "risk_profile.json"
 
 # Stage-2 deep-analysis model. Override with CLAUDE_MODEL in .env.
 CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-6")
