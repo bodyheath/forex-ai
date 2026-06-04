@@ -315,7 +315,7 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         ev = _event_boost(base, quote, events)
         sess = _session_score(base, quote, utc_hour)
         tier = _tier_score(pair, base, quote)
-        pre = ev * 1.5 + sess * 1.2 + tier * 1.0
+        pre = ev * 1.5 + sess * 1.2 + tier * 2.0   # tier weight matches final composite
         prescore_list.append((pair, base, quote, pre))
 
     prescore_list.sort(key=lambda x: x[3], reverse=True)
