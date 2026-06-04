@@ -399,6 +399,9 @@ def run() -> int:
             universe_size=universe_size,
             total_scanned=len(analysed_pairs),
             deep_results=deep_results,
+            closed_today=closed_today,
+            new_patterns=new_patterns,
+            stats=learning_stats,
         )
 
     return 0
