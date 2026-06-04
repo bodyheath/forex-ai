@@ -659,25 +659,27 @@ def _send_telegram_summary(
                 "Check that the selector returned pairs and the log file for details."
             )
 
-        no_sec.append("\n<b>What the system is waiting for:</b>")
-        waiting = []
-        score6 = [r for r in near_misses if _conf(r) == 6]
-        if score6:
-            p6 = ", ".join(r["pair"] for r in score6[:2])
-            waiting.append(f"• {p6} at 6/10 — one layer confirmation away from a full alert")
-        score5 = [r for r in near_misses if _conf(r) == 5]
-        if score5 and not score6:
-            p5 = ", ".join(r["pair"] for r in score5[:2])
-            waiting.append(f"• {p5} at 5/10 — needs 2+ layer improvements")
-        weak_tech = [r for r in near_misses[:5] if (r["parsed"].get("technical_score") or 10) < 5]
-        if weak_tech:
-            waiting.append("• Clearer trend structure across most pairs (technicals weak)")
-        if stage1_filtered and not near_misses:
-            waiting.append("• Pairs need stronger technical + fundamental alignment to pass Stage 1 screening")
-        if not waiting:
-            waiting.append("• Full confluence across Technical + Fundamental + Sentiment + Positioning + Macro")
-        for w in waiting:
-            no_sec.append(w)
+        # Only show "waiting for" section when we have real analysis data to draw from
+        if near_misses or stage1_filtered:
+            no_sec.append("\n<b>What the system is waiting for:</b>")
+            waiting = []
+            score6 = [r for r in near_misses if _conf(r) == 6]
+            if score6:
+                p6 = ", ".join(r["pair"] for r in score6[:2])
+                waiting.append(f"• {p6} at 6/10 — one layer confirmation away from a full alert")
+            score5 = [r for r in near_misses if _conf(r) == 5]
+            if score5 and not score6:
+                p5 = ", ".join(r["pair"] for r in score5[:2])
+                waiting.append(f"• {p5} at 5/10 — needs 2+ layer improvements")
+            weak_tech = [r for r in near_misses[:5] if (r["parsed"].get("technical_score") or 10) < 5]
+            if weak_tech:
+                waiting.append("• Clearer trend structure across most pairs (technicals weak)")
+            if stage1_filtered and not near_misses:
+                waiting.append("• Pairs need stronger technical + fundamental alignment to pass Stage 1 screening")
+            if not waiting:
+                waiting.append("• Full confluence across Technical + Fundamental + Sentiment + Positioning + Macro")
+            for w in waiting:
+                no_sec.append(w)
         all_sections.append(no_sec)
 
     # ── WATCH LIST ─────────────────────────────────────────────────────────────
