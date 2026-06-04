@@ -908,8 +908,11 @@ def run() -> int:
             f"Analysis complete: universe={universe_size} · "
             f"stage-1 filtered={filtered_count} · "
             f"deep-analysed={passed} · "
-            f"meaningful(conf>=5)={len(meaningful)}",
+            f"meaningful(conf>=5)={len(meaningful)} · "
+            f"failed(exception)={len(failed_pairs)}",
         )
+        if failed_pairs:
+            _log_line(logf, f"[DIAG] Failed pairs (API/exception): {failed_pairs}")
 
         actionable = [
             f"{r['pair']} {r['parsed']['direction']} (conf {r['parsed']['confidence']})"
