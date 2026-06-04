@@ -63,6 +63,19 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .buy{color:var(--green)}.sell{color:var(--red)}.pos{color:var(--green)}.neg{color:var(--red)}
 .foot{color:var(--mut);font-size:12px;margin-top:24px}
 
+/* ── Risk profile section ──────────────────────────────────────────────────── */
+.risk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
+.risk-card{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:14px}
+.risk-card .k{color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.risk-card .v{font-size:20px;font-weight:700}
+.mode-normal{color:var(--blue)}.mode-enhanced{color:var(--green)}.mode-reduced{color:var(--amber)}
+.mode-streak_protection,.mode-capital_protection{color:var(--red)}
+.risk-bar-wrap{background:var(--line);border-radius:4px;height:8px;overflow:hidden;margin-top:6px}
+.risk-bar{height:100%;border-radius:4px;background:var(--green);transition:width .3s}
+.risk-bar.warn{background:var(--amber)}.risk-bar.danger{background:var(--red)}
+.risk-warn{background:rgba(248,81,73,.10);border:1px solid var(--red);border-radius:8px;
+  padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:10px}
+
 /* ── Learning feed ─────────────────────────────────────────────────────────── */
 .learn-list{list-style:none;margin:0;padding:0}
 .learn-item{padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;
