@@ -263,10 +263,9 @@ def run() -> int:
         _log_line(logf, f"=== Daily run {date} | universe: {universe_size} pairs ===")
 
         # 3. Analyse initial batch (top 15).
-        filtered_count   = 0
-        deep_results     = []
-        analysed_pairs   = set()
-        force_deep_pairs: set = set()
+        filtered_count = 0
+        deep_results   = []
+        analysed_pairs = set()
 
         def _process_batch(pairs):
             nonlocal filtered_count
