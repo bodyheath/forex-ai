@@ -475,9 +475,15 @@ def _send_telegram_summary(
     all_sections: list[list[str]] = []
 
     # ── HEADER ─────────────────────────────────────────────────────────────────
+    header_line2 = (
+        f"Universe: {universe_size} pairs · Screened: {total_scanned} · "
+        f"Deep analysed: {len(deep_results)}"
+    )
+    if failed_pairs:
+        header_line2 += f" · <b>⚠️ {len(failed_pairs)} analysis error(s)</b>"
     all_sections.append([
         f"<b>🤖 Forex AI — {date}</b>",
-        f"<i>Universe: {universe_size} pairs · Screened: {total_scanned} · Deep analysed: {len(deep_results)}</i>",
+        f"<i>{header_line2}</i>",
     ])
 
     # ── MARKET CONTEXT ─────────────────────────────────────────────────────────
