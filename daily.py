@@ -257,6 +257,9 @@ def run() -> int:
             _log_line(logf, f"Smart selection failed ({exc}) — falling back to watchlist.")
             pairs_today = list(config.WATCHLIST)
 
+        # Top 10 by pre-score always reach deep analysis regardless of stage-1 result.
+        force_deep_pairs = set(pairs_today[:10])
+
         _log_line(logf, f"=== Daily run {date} | universe: {universe_size} pairs ===")
 
         # 3. Analyse initial batch (top 15).
