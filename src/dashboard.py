@@ -422,6 +422,107 @@ def _rows_table(rows) -> str:
     return "".join(out)
 
 
+def _risk_section() -> str:
+    """Render the risk profile panel from risk_profile.json."""
+    import json as _json
+    try:
+        if not config.RISK_PROFILE_FILE.exists():
+            return ""
+        profile = _json.loads(config.RISK_PROFILE_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return ""
+
+    bal  = profile.get("estimated_balance", 0)
+    peak = profile.get("peak_balance", bal)
+    cur  = profile.get("account_currency", "USD")
+    mode = profile.get("risk_mode", "normal")
+    cl   = profile.get("consecutive_losses", 0)
+    cw   = profile.get("consecutive_wins", 0)
+    wr   = profile.get("last_5_win_rate")
+    tot  = profile.get("total_open_pct", 0.0)
+
+    from src import risk_manager as _rm
+    mode_risk = _rm.MODE_RISK.get(mode, 1.0)
+    dd        = (peak - bal) / peak * 100 if peak > 0 else 0.0
+
+    wr_txt = f"{wr*100:.0f}%" if wr is not None else "—"
+    bar_pct = min(tot / _rm.MAX_DAILY_RISK * 100, 100)
+    bar_cls = "danger" if bar_pct >= 100 else "warn" if bar_pct >= 60 else ""
+
+    sym = {"USD":"$","EUR":"€","GBP":"£"}.get(cur, f"{cur} ")
+    cards = [
+        ("Account balance", f'{sym}{bal:,.2f}'),
+        ("Peak balance",    f'{sym}{peak:,.2f}'),
+        ("Risk per trade",  f'{mode_risk:.2f}%'),
+        ("Last-5 win rate", wr_txt),
+        ("Open exposure",   f'{tot:.1f}% / {_rm.MAX_DAILY_RISK:.0f}%'),
+        ("Drawdown",        f'{dd:.1f}%'),
+    ]
+    cards_html = "".join(
+        f'<div class="risk-card"><div class="k">{html.escape(k)}</div>'
+        f'<div class="v">{html.escape(str(v))}</div></div>'
+        for k, v in cards
+    )
+
+    # Mode badge
+    mode_lbl  = mode.replace("_", " ").title()
+    mode_html = (
+        f'<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">'
+        f'<span style="font-size:13px;color:var(--mut)">Risk mode:</span>'
+        f'<span class="pill mode-{mode}" style="font-size:13px">{html.escape(mode_lbl)}</span>'
+        f'</div>'
+    )
+
+    # Streak
+    if cw > 1:
+        streak = f'🔥 {cw} consecutive wins'
+    elif cl > 0:
+        streak = f'⚠️ {cl} consecutive loss{"es" if cl > 1 else ""}'
+    else:
+        streak = 'No active streak'
+
+    # Exposure bar
+    bar_html = (
+        f'<div style="margin-bottom:12px">'
+        f'<div style="font-size:11px;color:var(--mut);text-transform:uppercase;'
+        f'letter-spacing:.04em;margin-bottom:4px">Open exposure</div>'
+        f'<div class="risk-bar-wrap"><div class="risk-bar {bar_cls}" '
+        f'style="width:{bar_pct:.0f}%"></div></div>'
+        f'<div style="font-size:11px;color:var(--mut);margin-top:3px">'
+        f'{tot:.1f}% of {_rm.MAX_DAILY_RISK:.0f}% daily limit</div>'
+        f'</div>'
+    )
+
+    # Warnings
+    warnings = []
+    if mode == "capital_protection":
+        warnings.append(f'🔴 CAPITAL PROTECTION MODE — drawdown {dd:.1f}% from peak')
+    elif mode == "streak_protection":
+        warnings.append('🔴 STREAK PROTECTION MODE — 3+ consecutive losses')
+    elif mode == "reduced":
+        warnings.append('🟡 REDUCED RISK — last-5 win rate below 40%')
+    elif mode == "enhanced":
+        warnings.append('🟢 ENHANCED RISK — last-5 win rate above 70%')
+    if tot >= _rm.MAX_DAILY_RISK:
+        warnings.append(f'🔴 RISK LIMIT REACHED — {tot:.1f}% open exposure at {_rm.MAX_DAILY_RISK:.0f}% limit')
+    warn_html = "".join(
+        f'<div class="risk-warn">{html.escape(w)}</div>' for w in warnings
+    )
+
+    return (
+        '<section>'
+        '<h2>⚖️ Risk Management Profile</h2>'
+        + warn_html
+        + mode_html
+        + f'<div class="risk-grid">{cards_html}</div>'
+        + bar_html
+        + f'<p style="font-size:12px;color:var(--mut);margin-top:4px">'
+        + f'Streak: {html.escape(streak)} &middot; '
+        + f'Updated: {html.escape(profile.get("updated_at","")[:10])}</p>'
+        + '</section>'
+    )
+
+
 def _learning_feed_section() -> str:
     """Render all memory.json patterns as a plain-English feed."""
     from src import memory as _memory
