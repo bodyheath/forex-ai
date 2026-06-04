@@ -17,7 +17,11 @@
       "Bash(git stash *)",
       "Bash(python -m py_compile src/outcome_checker.py src/outcome_analyst.py config.py src/tracker.py daily.py src/dashboard.py)",
       "Bash(python -c ' *)",
-      "Bash(python -m py_compile src/risk_manager.py config.py daily.py src/dashboard.py src/outcome_analyst.py)"
+      "Bash(python -m py_compile src/risk_manager.py config.py daily.py src/dashboard.py src/outcome_analyst.py)",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('daily.py', encoding='utf-8'\\).read\\(\\)\\); print\\('daily.py OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('config.py', encoding='utf-8'\\).read\\(\\)\\); print\\('config.py OK'\\)\")",
+      "Bash(gh workflow *)",
+      "PowerShell(gh workflow *)"
     ]
   },
   "hooks": {

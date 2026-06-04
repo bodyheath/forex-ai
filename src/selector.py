@@ -41,14 +41,21 @@ _SESSION_UTC = {
     "ZAR": (6, 15), "TRY": (6, 16),
 }
 
+# Tier scores use a deliberately wide range so the tier weight dominates the
+# composite and guarantees majors always outrank exotics regardless of
+# short-term volatility.  An exotic pair would need ~7 % more daily movement
+# than a major to overcome the gap — essentially impossible in normal markets.
 _TIER_SCORES = {
-    "EUR/USD": 3.0, "GBP/USD": 3.0, "USD/JPY": 3.0, "USD/CHF": 2.8,
-    "USD/CAD": 2.8, "AUD/USD": 2.8, "NZD/USD": 2.5,
-    "EUR/JPY": 2.5, "GBP/JPY": 2.5, "EUR/GBP": 2.5, "AUD/JPY": 2.3,
-    "EUR/AUD": 2.2, "EUR/CAD": 2.2, "GBP/AUD": 2.2, "GBP/CAD": 2.2,
-    "EUR/CHF": 2.2, "CAD/JPY": 2.2, "CHF/JPY": 2.2, "AUD/CAD": 2.0,
-    "AUD/NZD": 2.0, "AUD/CHF": 2.0, "GBP/CHF": 2.0, "NZD/JPY": 2.0,
-    "NZD/CAD": 1.8, "NZD/CHF": 1.8, "GBP/NZD": 1.8,
+    # G7 majors — always the first picks
+    "EUR/USD": 8.0, "GBP/USD": 8.0, "USD/JPY": 8.0,
+    "AUD/USD": 7.5, "USD/CAD": 7.5, "NZD/USD": 7.0, "USD/CHF": 7.0,
+    # Key crosses among the eight core currencies — second tier
+    "EUR/GBP": 6.5, "EUR/JPY": 6.5, "GBP/JPY": 6.5,
+    "AUD/JPY": 6.0, "EUR/AUD": 5.5, "EUR/CAD": 5.5,
+    "GBP/AUD": 5.0, "GBP/CAD": 5.0, "CAD/JPY": 5.0, "CHF/JPY": 5.0,
+    "EUR/CHF": 5.0, "AUD/CAD": 4.5, "AUD/NZD": 4.5,
+    "AUD/CHF": 4.0, "GBP/CHF": 4.0, "NZD/JPY": 4.0,
+    "NZD/CAD": 4.0, "NZD/CHF": 4.0, "GBP/NZD": 4.0,
 }
 _CORE_CURRENCIES = {"EUR", "GBP", "USD", "JPY", "CHF", "AUD", "NZD", "CAD"}
 
