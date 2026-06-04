@@ -444,10 +444,12 @@ def _send_telegram_summary(
     new_patterns: list = None,
     stats: dict = None,
     risk_data: dict = None,
+    stage1_filtered: list = None,
 ) -> None:
     """Build and send the fully detailed daily Telegram notification."""
-    closed_today = closed_today or []
-    new_patterns = new_patterns or []
+    closed_today    = closed_today    or []
+    new_patterns    = new_patterns    or []
+    stage1_filtered = stage1_filtered or []
 
     yes_trades  = [r for r in deep_results if r["parsed"].get("trade_this") == "YES"]
     watch_list  = sorted(
