@@ -625,8 +625,13 @@ def _send_telegram_summary(
             except (TypeError, ValueError):
                 risk_profit = f"Risk {risk_amt:,.0f} {cur}  ({pct:.2f}% account)"
 
-            bet     = (p.get("best_entry_time") or "").strip()
-            bet_out = (bet[:80] if bet else _session_label(pair))
+            bet = (p.get("best_entry_time") or "").strip()
+            if bet:
+                # Normalise whatever Claude wrote — replace legacy "NZT" label
+                bet_clean = bet.replace("NZT", "Auckland time").replace("nzt", "Auckland time")[:80]
+                bet_out   = f"Today {today_short}, {bet_clean}"
+            else:
+                bet_out = f"Today {today_short}, {_session_label(pair)}"
 
             kt = (p.get("key_thesis") or "").strip()
             kt_out = (kt[:280] + "…") if len(kt) > 280 else kt
