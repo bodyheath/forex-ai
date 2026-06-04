@@ -151,7 +151,9 @@ def _build_user_message(pair: str, bundle: dict) -> str:
         "",
         "Respond with ONLY the OUTPUT FORMAT fields. "
         "Start with PAIR: and end with TRADE_THIS:. "
-        "No preamble, no commentary. Give BEST_ENTRY_TIME in NZT.",
+        "No preamble, no commentary. "
+        "Give BEST_ENTRY_TIME as a session name and time range in Auckland time "
+        "(New Zealand — UTC+13 NZDT in summer Sep–Apr, UTC+12 NZST in winter Apr–Sep).",
     ]
     return "\n".join(parts)
 
