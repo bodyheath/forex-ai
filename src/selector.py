@@ -350,7 +350,7 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
             + directional * 0.5
             + ev_boost * 1.6
             + sess * 0.8
-            + tier * 0.4
+            + tier * 2.0   # raised from 0.4 — dominates to ensure majors rank above exotics
         )
         pair_scores[pair] = {
             "score": round(composite, 3),
