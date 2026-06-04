@@ -191,3 +191,57 @@ def analyse(base: str, quote: str) -> dict:
         }
     except Exception as exc:  # noqa: BLE001 - degrade gracefully
         return {"status": "UNAVAILABLE", "error": str(exc)}
+
+
+def warm_cache(pairs: list, log=print) -> None:
+    """Pre-fetch and cache candle data for all pairs before analysis begins.
+
+    Fetches daily (400 candles) and 4h (500 candles) data for every pair,
+    pacing at 7 API calls per 62 seconds to stay within the Twelve Data
+    free-tier rate limit (8 calls/min).  Pairs whose data is already fresh
+    in the 24-hour cache are skipped — no wasted calls.
+
+    After this returns, every subsequent call to analyse() is a pure cache
+    hit: no live API calls and no rate-limit risk during analysis.
+    """
+    if not config.TWELVE_DATA_KEY:
+        log("Technical pre-fetch skipped: TWELVE_DATA_KEY not set.")
+        return
+
+    # Determine which (pair, interval) combinations need a live fetch.
+    needed = []
+    for pair in pairs:
+        for interval, outputsize in (("1day", 400), ("4h", 500)):
+            key = f"TD:{pair}:{interval}:{outputsize}"
+            if cache.get(key, ttl_hours=_CACHE_TTL) is None:
+                needed.append((pair, interval, outputsize))
+
+    if not needed:
+        log(
+            f"Technical pre-fetch: all {len(pairs)} pair(s) already cached "
+            f"({_CACHE_TTL:.0f}h TTL) — no API calls needed."
+        )
+        return
+
+    log(
+        f"Technical pre-fetch: {len(needed)} API call(s) needed "
+        f"for {len(pairs)} pair(s) — pacing at 7 calls per 62s ..."
+    )
+
+    api_n  = 0
+    errors = 0
+    for pair, interval, outputsize in needed:
+        # Pause before the 8th, 15th, 22nd … call to stay under 8/min.
+        if api_n > 0 and api_n % 7 == 0:
+            log(f"  Rate-limit pause 62s ({api_n} calls made so far) ...")
+            time.sleep(62)
+        try:
+            _td_request(pair, interval, outputsize)
+            log(f"  Cached {pair} {interval}")
+        except Exception as exc:  # noqa: BLE001
+            log(f"  Failed  {pair} {interval}: {exc}")
+            errors += 1
+        api_n += 1
+
+    status = "complete" if errors == 0 else f"complete with {errors} error(s)"
+    log(f"Technical pre-fetch {status}: {api_n} API call(s) made.")
