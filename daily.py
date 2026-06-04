@@ -864,11 +864,22 @@ def _send_telegram_summary(
         all_sections.append(weekly)
 
     # ── FOOTER ─────────────────────────────────────────────────────────────────
-    all_sections.append([
+    try:
+        from src import analyst as _anl
+        api_key_line = _anl.key_status()
+    except Exception:
+        api_key_line = ""
+
+    footer = [
         "",
         "━━━━━━━━━━━━━━━━━━━━━",
-        f"<i>⏰ Next scan tomorrow {_fmt_date_short_nz(tomorrow_ak)} at 6am Auckland time</i>",
-    ])
+    ]
+    if api_key_line:
+        footer.append(f"<i>{api_key_line}</i>")
+    footer.append(
+        f"<i>⏰ Next scan tomorrow {_fmt_date_short_nz(tomorrow_ak)} at 6am Auckland time</i>"
+    )
+    all_sections.append(footer)
 
     _send_in_parts(all_sections)
 
