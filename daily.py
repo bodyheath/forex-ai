@@ -260,9 +260,10 @@ def run() -> int:
         _log_line(logf, f"=== Daily run {date} | universe: {universe_size} pairs ===")
 
         # 3. Analyse initial batch (top 15).
-        filtered_count = 0
-        deep_results   = []
-        analysed_pairs = set()
+        filtered_count   = 0
+        deep_results     = []
+        analysed_pairs   = set()
+        force_deep_pairs: set = set()
 
         def _process_batch(pairs):
             nonlocal filtered_count
@@ -270,7 +271,7 @@ def run() -> int:
                 if pair in analysed_pairs:
                     continue
                 analysed_pairs.add(pair)
-                result = _analyse_pair(pair, logf)
+                result = _analyse_pair(pair, logf, force_deep=pair in force_deep_pairs)
                 if result is None:
                     continue
                 if result.get("screened_out"):
