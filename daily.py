@@ -280,6 +280,18 @@ def _send_telegram_summary(
                 f"({wins}W / {losses}L, {dec} decisive trades)"
             )
 
+    # ── Risk Dashboard ────────────────────────────────────────────────────────
+    if risk_data and risk_data.get("profile"):
+        lines.append("")
+        lines.append("━━━━━━━━━━━━━━━━━━━━━")
+        from src import risk_manager as _rm
+        for ln in _rm.risk_dashboard_lines(
+            risk_data["profile"],
+            risk_data.get("risk_state", {}),
+            risk_data.get("exposure", {}),
+        ):
+            lines.append(ln)
+
     # ── Footer ────────────────────────────────────────────────────────────────
     lines.append("")
     lines.append("━━━━━━━━━━━━━━━━━━━━━")
