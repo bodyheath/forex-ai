@@ -5,8 +5,8 @@ and daily.py (automation)."""
 from src import pipeline, recparse, tracker
 
 
-def analyse_and_log(pair: str, log=print) -> dict:
-    result = pipeline.run(pair, log=log)
+def analyse_and_log(pair: str, log=print, force_deep: bool = False) -> dict:
+    result = pipeline.run(pair, log=log, force_deep=force_deep)
     if result.get("screened_out"):
         # Log screened pairs so every run produces visible output in trades.csv
         # and the dashboard always reflects today's analysis, even when no pairs
