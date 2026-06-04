@@ -1,9 +1,12 @@
 name: Daily Forex Analysis
 
 on:
+  push:
+    branches:
+      - main
   schedule:
-    - cron: '5 17 * * *'  # 6am NZDT (UTC+13, Oct–Apr daylight saving)
-    - cron: '5 18 * * *'  # 6am NZST (UTC+12, Apr–Oct standard time)
+    - cron: '5 17 * * 1-5'  # 6am NZDT (UTC+13, Oct–Apr daylight saving), weekdays only
+    - cron: '5 18 * * 1-5'  # 6am NZST (UTC+12, Apr–Oct standard time), weekdays only
   workflow_dispatch: # also lets you trigger a run manually from the Actions tab
 
 jobs:
