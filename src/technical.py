@@ -9,6 +9,8 @@ API calls per pair and means the indicator definitions are explicit and auditabl
 Twelve Data's free tier (~800 calls/day, 8/min) comfortably covers this.
 """
 
+import time
+
 import numpy as np
 import pandas as pd
 import requests
@@ -19,11 +21,16 @@ from src import cache
 _TD_URL = "https://api.twelvedata.com/time_series"
 _TIMEOUT = 30
 
+# Candle data is fetched once per daily run and reused for 24 hours.
+# This keeps all 30 API calls (15 pairs × 2 timeframes) within the free-tier
+# daily budget and avoids re-hitting the 8-calls/min rate limit during analysis.
+_CACHE_TTL = 24.0  # hours
+
 
 def _td_request(symbol: str, interval: str, outputsize: int) -> dict:
     """Call Twelve Data time_series with caching and error/rate-limit detection."""
     key = f"TD:{symbol}:{interval}:{outputsize}"
-    cached = cache.get(key)
+    cached = cache.get(key, ttl_hours=_CACHE_TTL)
     if cached is not None:
         return cached
 
