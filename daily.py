@@ -639,10 +639,25 @@ def _send_telegram_summary(
                     kt_50 = (kt[:90] + "…") if len(kt) > 90 else kt
                     if kt_50:
                         no_sec.append(f"   <i>{kt_50}</i>")
+        elif failed_pairs:
+            no_sec.append("⚠️ <b>Analysis failed for all pairs — likely a configuration error:</b>")
+            no_sec.append(
+                f"  All {len(failed_pairs)} pairs threw exceptions before returning results. "
+                f"This almost always means <b>CLAUDE_MODEL</b> or <b>ANTHROPIC_API_KEY</b> "
+                f"is missing or empty in the GitHub Actions environment."
+            )
+            no_sec.append(f"\n<b>Pairs attempted:</b> {', '.join(failed_pairs[:10])}")
+            no_sec.append(
+                "\n<b>To fix:</b> Open GitHub → Settings → Secrets and variables → Actions. "
+                "Check that ANTHROPIC_API_KEY is set. CLAUDE_MODEL and HAIKU_MODEL are "
+                "optional — if not set, defaults (claude-sonnet-4-6 / claude-haiku-4-5-20251001) "
+                "are now used automatically."
+            )
         else:
-            # Should never reach here because we always analyse at least some pairs,
-            # but guard gracefully just in case.
-            no_sec.append("No pairs were analysed today — check API connectivity and logs.")
+            no_sec.append(
+                "No pairs were analysed and none failed with exceptions. "
+                "Check that the selector returned pairs and the log file for details."
+            )
 
         no_sec.append("\n<b>What the system is waiting for:</b>")
         waiting = []
