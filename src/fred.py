@@ -14,7 +14,7 @@ def latest(series_id: str):
     """Return (value, date) for the most recent non-missing observation, or
     (None, None) if the series is unavailable."""
     key = f"FRED:{series_id}"
-    cached = cache.get(key)
+    cached = cache.get(key, ttl_hours=12.0)
     if cached is None:
         try:
             resp = requests.get(
