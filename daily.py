@@ -547,17 +547,40 @@ def _send_telegram_summary(
             stop_raw  = p.get("stop_loss")
             tgt_raw   = p.get("target")
             rr_raw    = p.get("reward_risk")
-            arrow     = "📈" if direction == "BUY" else "📉"
 
             sz       = _sizes.get(pair, {})
             adj_stop = sz.get("adj_stop") or stop_raw
             adj_tgt  = sz.get("adj_target") or tgt_raw
 
+            # R:R as a number so we can compute the profit target in dollar terms
+            rr_num = None
             try:
-                rr_val = abs(float(adj_tgt) - float(entry_raw)) / abs(float(entry_raw) - float(adj_stop))
-                rr_str = f"{rr_val:.2f}:1"
+                rr_num = abs(float(adj_tgt) - float(entry_raw)) / abs(float(entry_raw) - float(adj_stop))
+                rr_str = f"{rr_num:.2f}:1"
             except (TypeError, ValueError, ZeroDivisionError):
-                rr_str = f"{float(rr_raw):.2f}:1" if rr_raw is not None else "—"
+                try:
+                    rr_num = float(rr_raw)
+                    rr_str = f"{rr_num:.2f}:1"
+                except (TypeError, ValueError):
+                    rr_str = "—"
+
+            # Dollar risk and potential profit for the action header
+            risk_amt = float(sz.get("risk_amount") or 0)
+            cur      = sz.get("currency", "USD")
+            pct      = sz.get("risk_pct", 1.0)
+            try:
+                profit_amt = risk_amt * rr_num if rr_num else None
+                if profit_amt:
+                    risk_profit = (
+                        f"Risk {risk_amt:,.0f} {cur} to make {profit_amt:,.0f} {cur}"
+                    )
+                else:
+                    risk_profit = f"Risk {risk_amt:,.0f} {cur}  ({pct:.2f}% account)"
+            except (TypeError, ValueError):
+                risk_profit = f"Risk {risk_amt:,.0f} {cur}  ({pct:.2f}% account)"
+
+            bet     = (p.get("best_entry_time") or "").strip()
+            bet_out = (bet[:80] if bet else _session_label(pair))
 
             kt = (p.get("key_thesis") or "").strip()
             kt_out = (kt[:280] + "…") if len(kt) > 280 else kt
@@ -566,34 +589,32 @@ def _send_telegram_summary(
             rf_parts = [x.strip() for x in rf.replace(";", "\n").split("\n") if x.strip()][:2]
             rf_out   = "; ".join(rf_parts) if rf_parts else (rf[:100] if rf else "None identified")
 
-            bet     = (p.get("best_entry_time") or "").strip()
-            bet_out = (bet[:80] if bet else _session_label(pair))
+            action_icon = "🟢" if direction == "BUY" else "🔴"
 
             block = [
                 "",
-                f"{arrow} <b>{pair} — {direction}</b>  |  Confidence: <b>{conf}/10</b>",
+                # ── Action header — the first thing seen when the phone lights up ──
+                f"{action_icon} <b>ACTION: {direction} {pair} NOW AT {_fmt_price(entry_raw)}</b>",
+                f"<b>Set stop loss at {_fmt_price(adj_stop)}</b>",
+                f"<b>Set take profit at {_fmt_price(adj_tgt)}</b>",
+                f"<b>{risk_profit}</b>",
+                f"<b>Best entry window: {bet_out}</b>",
+                "",
+                # ── Supporting detail ──
+                f"Confidence: <b>{conf}/10</b>  ·  R:R: <b>{rr_str}</b>",
                 f"<code>Scores │ {_score_breakdown_line(p)}</code>",
-                f"Entry:     <code>{_fmt_price(entry_raw)}</code>",
-                f"Stop:      <code>{_fmt_price(adj_stop)}</code>",
-                f"Target:    <code>{_fmt_price(adj_tgt)}</code>",
-                f"R:R Ratio: <b>{rr_str}</b>",
             ]
             if sz.get("atr_note"):
                 block.append(f"📐 ATR adj: {sz['atr_note']}")
             if sz.get("lots"):
-                cur = sz.get("currency", "USD")
-                amt = sz.get("risk_amount", 0)
-                pct = sz.get("risk_pct", 1.0)
                 block.append(
-                    f"📦 Size: <code>{sz['lots']} lots</code>  "
-                    f"Risk: <b>{amt:,.2f} {cur} ({pct:.2f}%)</b>"
+                    f"📦 Size: <code>{sz['lots']} lots</code>  ({pct:.2f}% account risk)"
                 )
             if sz.get("correlated"):
                 block.append("⚠️ <i>Correlated pair — position halved to manage exposure</i>")
             if _exposure.get("limit_reached"):
                 block.append("🔴 <i>Risk limit reached — no new trades recommended</i>")
             block += [
-                f"⏰ Entry window: {bet_out}",
                 f"📊 Volatility: {_get_volatility_info(r)}",
                 f"🔀 MTF align: {_get_mtf_alignment(r, direction)}",
                 f"📅 Seasonal: {_get_seasonal_tendency(r)}",
@@ -601,7 +622,7 @@ def _send_telegram_summary(
             if kt_out:
                 block.append(f"📝 Thesis: {kt_out}")
             block.append(f"⚠️ Risk factors: {rf_out}")
-            alert_sec += [l for l in block if l != ""]
+            alert_sec += [ln for ln in block if ln != ""]
     else:
         alert_sec.append("No pairs met the 7+ confidence threshold today.")
     all_sections.append(alert_sec)
