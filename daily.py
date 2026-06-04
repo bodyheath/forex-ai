@@ -487,6 +487,7 @@ def _send_telegram_summary(
     risk_data: dict = None,
     stage1_filtered: list = None,
     failed_pairs: list = None,
+    credit_data: dict = None,
 ) -> None:
     """Build and send the fully detailed daily Telegram notification."""
     closed_today    = closed_today    or []
