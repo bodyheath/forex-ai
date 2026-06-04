@@ -35,7 +35,8 @@ for _d in (DATA_DIR, CACHE_DIR, REPORTS_DIR):
 # ---------------------------------------------------------------------------
 load_dotenv(ROOT / ".env")
 
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+ANTHROPIC_API_KEY   = os.getenv("ANTHROPIC_API_KEY", "")
+ANTHROPIC_API_KEY_2 = os.getenv("ANTHROPIC_API_KEY_2", "")  # fallback — partner account
 # Twelve Data is the primary price source for the technical layer (free tier
 # ~800 calls/day, 8/min, and a native 4h interval). Get a free key at
 # https://twelvedata.com/pricing  ->  put it in .env as TWELVE_DATA_KEY.
