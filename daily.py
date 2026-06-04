@@ -515,6 +515,11 @@ def _send_telegram_summary(
     ctx = _derive_market_context(deep_results, risk_data)
     all_sections: list[list[str]] = []
 
+    # Auckland time references used throughout the message
+    now_ak      = _auckland_now()
+    tomorrow_ak = now_ak + timedelta(days=1)
+    today_short = _fmt_date_short_nz(now_ak)      # "Thursday 4 June"
+
     # ── HEADER ─────────────────────────────────────────────────────────────────
     header_line2 = (
         f"Universe: {universe_size} pairs · Screened: {total_scanned} · "
@@ -523,7 +528,7 @@ def _send_telegram_summary(
     if failed_pairs:
         header_line2 += f" · <b>⚠️ {len(failed_pairs)} analysis error(s)</b>"
     all_sections.append([
-        f"<b>🤖 Forex AI — {date}</b>",
+        f"<b>🤖 Forex AI — {_fmt_date_nz(now_ak)} — Auckland time</b>",
         f"<i>{header_line2}</i>",
     ])
 
