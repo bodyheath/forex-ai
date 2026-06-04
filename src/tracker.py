@@ -113,7 +113,9 @@ def _compute_result(row: dict, status: str, exit_price):
     target = _to_float(row.get("target"))
     direction = (row.get("direction") or "").upper()
 
-    if status in ("SKIPPED", "EXPIRED"):
+    if status == "SKIPPED":
+        return "", ""
+    if status == "EXPIRED" and _to_float(exit_price) is None:
         return "", ""
     if status == "BREAKEVEN":
         return 0.0, 0.0
