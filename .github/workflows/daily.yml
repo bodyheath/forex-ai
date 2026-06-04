@@ -2,9 +2,8 @@ name: Daily Forex Analysis
 
 on:
   schedule:
-    # 6 am NZST (UTC+12, April–September).
-    # Change to '0 17 * * *' for NZDT (UTC+13, September–April).
-    - cron: '0 18 * * *'
+    - cron: '0 17 * * *'  # 6am NZDT (UTC+13, Oct–Apr daylight saving)
+    - cron: '0 18 * * *'  # 6am NZST (UTC+12, Apr–Oct standard time)
   workflow_dispatch: # also lets you trigger a run manually from the Actions tab
 
 jobs:
