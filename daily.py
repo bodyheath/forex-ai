@@ -10,7 +10,7 @@ Sequence:
      batches of 10 until either 3 meaningful results exist or 25 pairs have
      been deeply analysed.
   5. Regenerate the HTML dashboard.
-  6. Send a Telegram summary in the standard three-section format.
+  6. Send a fully detailed Telegram summary explaining every result.
 
 Each pair is fault-isolated: one failure is logged and the run continues.
 A per-run log is written to data/reports/daily_<date>.log.
@@ -20,7 +20,7 @@ import sys
 import traceback
 import urllib.parse
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timedelta
 
 for _stream in (sys.stdout, sys.stderr):
     try:
@@ -46,7 +46,7 @@ _SESSION_PRIORITY = ["EUR", "GBP", "CHF", "AUD", "NZD", "JPY", "USD", "CAD"]
 
 def _session_label(pair: str) -> str:
     cleaned = pair.upper().replace("/", "").replace("-", "")
-    base = cleaned[:3]
+    base  = cleaned[:3]
     quote = cleaned[3:6] if len(cleaned) >= 6 else ""
     for ccy in _SESSION_PRIORITY:
         if ccy in (base, quote):
@@ -57,7 +57,7 @@ def _session_label(pair: str) -> str:
 
 def _log_line(handle, msg: str) -> None:
     stamp = datetime.now().strftime("%H:%M:%S")
-    line = f"[{stamp}] {msg}"
+    line  = f"[{stamp}] {msg}"
     print(line)
     handle.write(line + "\n")
     handle.flush()
@@ -73,8 +73,8 @@ def _telegram(message: str) -> None:
     for chat_id in recipients:
         try:
             data = urllib.parse.urlencode({
-                "chat_id": chat_id,
-                "text": message,
+                "chat_id":    chat_id,
+                "text":       message,
                 "parse_mode": "HTML",
             }).encode()
             urllib.request.urlopen(urllib.request.Request(url, data=data), timeout=10)
@@ -90,7 +90,6 @@ def _fmt_price(v) -> str:
 
 
 def _conf(result: dict) -> int:
-    """Return confidence score as int (0 if unparseable)."""
     try:
         return int(result["parsed"].get("confidence") or 0)
     except (TypeError, ValueError):
@@ -98,7 +97,6 @@ def _conf(result: dict) -> int:
 
 
 def _analyse_pair(pair: str, logf, force_deep: bool = False) -> dict | None:
-    """Run analyse_and_log for one pair; return result or None on exception."""
     try:
         return service.analyse_and_log(pair, log=lambda m: _log_line(logf, m), force_deep=force_deep)
     except Exception as exc:
@@ -106,6 +104,318 @@ def _analyse_pair(pair: str, logf, force_deep: bool = False) -> dict | None:
         traceback.print_exc(file=logf)
         return None
 
+
+# ── Telegram context helpers ───────────────────────────────────────────────────
+
+def _derive_market_context(deep_results: list, risk_data: dict) -> dict:
+    """Derive overall market environment from analysis results and macro bundles."""
+    ctx: dict = {
+        "risk_env":      "⚖️ neutral",
+        "vix":           None,
+        "vix_trend":     None,
+        "yield_curve":   None,
+        "oil":           None,
+        "strongest_ccy": None,
+        "weakest_ccy":   None,
+        "ccy_scores":    {},
+    }
+
+    for r in deep_results:
+        try:
+            signals  = r["bundle"]["macro"]["signals"]
+            vix_data = signals.get("VIX (volatility index)", {})
+            if isinstance(vix_data, dict) and vix_data.get("value") is not None:
+                ctx["vix"]       = float(vix_data["value"])
+                ctx["vix_trend"] = vix_data.get("trend", "unknown")
+            oil_data = signals.get("WTI crude oil ($/bbl)", {})
+            if isinstance(oil_data, dict) and oil_data.get("value") is not None:
+                ctx["oil"] = float(oil_data["value"])
+            crv_data = signals.get("US 2s10s curve (10Y-2Y, %)", {})
+            if isinstance(crv_data, dict) and crv_data.get("value") is not None:
+                ctx["yield_curve"] = float(crv_data["value"])
+            if ctx["vix"] is not None:
+                break
+        except (KeyError, TypeError, ValueError):
+            continue
+
+    if ctx["vix"] is not None:
+        if ctx["vix"] > 25:
+            ctx["risk_env"] = "⚠️ risk-off"
+        elif ctx["vix"] < 15:
+            ctx["risk_env"] = "🟢 risk-on"
+        else:
+            ctx["risk_env"] = "⚖️ neutral"
+    if ctx["yield_curve"] is not None and ctx["yield_curve"] < 0 and "risk-off" not in ctx["risk_env"]:
+        ctx["risk_env"] += " (yield curve inverted)"
+
+    ccy_score: dict[str, float] = {}
+    for r in deep_results:
+        p    = r["parsed"]
+        conf = _conf(r)
+        if conf < 4:
+            continue
+        pair  = r["pair"]
+        clean = pair.upper().replace("/", "").replace("-", "")
+        if len(clean) < 6:
+            continue
+        base, quote = clean[:3], clean[3:6]
+        direction   = (p.get("direction") or "").upper()
+        weight      = float(conf - 3)
+        if direction == "BUY":
+            ccy_score[base]  = ccy_score.get(base,  0.0) + weight
+            ccy_score[quote] = ccy_score.get(quote, 0.0) - weight
+        elif direction == "SELL":
+            ccy_score[base]  = ccy_score.get(base,  0.0) - weight
+            ccy_score[quote] = ccy_score.get(quote, 0.0) + weight
+
+    if ccy_score:
+        ctx["ccy_scores"]    = ccy_score
+        ctx["strongest_ccy"] = max(ccy_score, key=lambda c: ccy_score[c])
+        ctx["weakest_ccy"]   = min(ccy_score, key=lambda c: ccy_score[c])
+
+    return ctx
+
+
+def _score_breakdown_line(parsed: dict) -> str:
+    """Compact one-line score breakdown: T:8  F:7  S:6  P:N/A  M:8"""
+    def _s(key):
+        v = parsed.get(key)
+        return str(v) if v is not None else "N/A"
+    return (
+        f"T:{_s('technical_score')}  "
+        f"F:{_s('fundamental_score')}  "
+        f"S:{_s('sentiment_score')}  "
+        f"P:{_s('positioning_score')}  "
+        f"M:{_s('macro_score')}"
+    )
+
+
+def _what_needs_to_change(parsed: dict) -> str:
+    """For a 5-6 conf watch pair, explain the specific thing that would trigger a full alert."""
+    scores = {
+        "Technical":   parsed.get("technical_score"),
+        "Fundamental": parsed.get("fundamental_score"),
+        "Sentiment":   parsed.get("sentiment_score"),
+        "Positioning": parsed.get("positioning_score"),
+        "Macro":       parsed.get("macro_score"),
+    }
+    missing = [k for k, v in scores.items() if v is None]
+    present = {k: v for k, v in scores.items() if v is not None}
+    weak    = {k: v for k, v in present.items() if v < 7}
+
+    parts = []
+    if missing:
+        parts.append(f"Restore {' + '.join(missing)} data (missing layers cap confidence)")
+    if weak:
+        for name, score in sorted(weak.items(), key=lambda x: x[1])[:2]:
+            if score <= 4:
+                parts.append(f"{name} needs a catalyst (currently {score}/10 — very weak)")
+            elif score == 5:
+                parts.append(f"{name} at {score}/10 — needs momentum shift to 7+")
+            else:
+                parts.append(f"{name} at {score}/10 — one more confirmation triggers alert")
+    if not parts:
+        parts.append("All layers close — wait for price to reach key level or momentum to build")
+    return "; ".join(parts)
+
+
+def _rejection_reason(result: dict) -> str:
+    """Explain exactly why a pair was rejected from trade alerts."""
+    parsed    = result["parsed"]
+    conf      = parsed.get("confidence")
+    direction = (parsed.get("direction") or "?").upper()
+    scores = {
+        "Technical":   parsed.get("technical_score"),
+        "Fundamental": parsed.get("fundamental_score"),
+        "Sentiment":   parsed.get("sentiment_score"),
+        "Positioning": parsed.get("positioning_score"),
+        "Macro":       parsed.get("macro_score"),
+    }
+    missing = [k for k, v in scores.items() if v is None]
+    low     = sorted(
+        [(k, v) for k, v in scores.items() if v is not None and v <= 4],
+        key=lambda x: x[1],
+    )[:2]
+
+    reasons = []
+    if low:
+        reasons += [f"{k} weak ({v}/10)" for k, v in low]
+    if missing:
+        reasons.append(f"missing {'+'.join(missing)}")
+    if not reasons:
+        present = [v for v in scores.values() if v is not None]
+        if present:
+            avg = sum(present) / len(present)
+            reasons.append(f"avg layer score {avg:.1f}/10 — insufficient confluence")
+    reason_str = "; ".join(reasons) if reasons else "insufficient confluence"
+    return f"conf {conf}/10 {direction} — {reason_str}"
+
+
+def _get_volatility_info(result: dict) -> str:
+    """ATR-based volatility description."""
+    try:
+        atr   = float(result["bundle"]["technical"]["daily"]["atr14"])
+        entry = result["parsed"].get("entry")
+        pair  = result.get("pair", "")
+        dec   = 3 if "JPY" in pair.upper() else 5
+        if entry:
+            atr_pct = atr / float(entry) * 100
+            level   = "High" if atr_pct > 1.0 else ("Normal" if atr_pct > 0.5 else "Low")
+            return f"{level} (ATR14: {atr:.{dec}f}, {atr_pct:.2f}% daily range)"
+        return f"ATR14: {atr:.5f}"
+    except (KeyError, TypeError, ValueError, ZeroDivisionError):
+        return "data unavailable"
+
+
+def _get_mtf_alignment(result: dict, direction: str) -> str:
+    """Check if D1 and 4H trends align with the trade direction."""
+    try:
+        daily = result["bundle"]["technical"]["daily"]
+        h4    = result["bundle"]["technical"].get("h4") or {}
+
+        def _trend(tech: dict) -> str | None:
+            c = tech.get("close")
+            s = tech.get("sma50")
+            if c is None or s is None:
+                return None
+            return "bullish" if float(c) > float(s) else "bearish"
+
+        d_trend  = _trend(daily)
+        h_trend  = _trend(h4)
+        expected = "bullish" if direction.upper() == "BUY" else "bearish"
+
+        if d_trend and h_trend:
+            if d_trend == h_trend == expected:
+                return f"✅ D1+4H both {d_trend} — aligned with {direction}"
+            elif d_trend == h_trend:
+                return f"⚠️ D1+4H both {d_trend} — contrary to {direction}"
+            return f"⚠️ Mixed (D1: {d_trend}, 4H: {h_trend})"
+        if d_trend:
+            return f"D1: {d_trend} (4H unavailable)"
+        return "data unavailable"
+    except (KeyError, TypeError, ValueError):
+        return "data unavailable"
+
+
+def _get_seasonal_tendency(result: dict) -> str:
+    """Check key_thesis for seasonal or historical tendency mentions."""
+    kt = (result["parsed"].get("key_thesis") or "")
+    keywords = [
+        "seasonal", "historically", "tends to", "typical", "calendar",
+        "month-end", "quarter-end", "year-end", "rebalancing",
+        "summer", "winter", "spring", "autumn",
+    ]
+    kt_lower = kt.lower()
+    for kw in keywords:
+        if kw in kt_lower:
+            for sentence in kt.split("."):
+                if kw in sentence.lower() and len(sentence.strip()) > 10:
+                    s = sentence.strip()
+                    return (s[:100] + "…") if len(s) > 100 else s
+    return "Not specifically assessed"
+
+
+def _weekly_performance_section(date: str) -> list:
+    """Return weekly summary lines on Monday, else empty list."""
+    try:
+        dt = datetime.strptime(date, "%Y-%m-%d")
+    except ValueError:
+        return []
+    if dt.weekday() != 0:  # 0 = Monday
+        return []
+
+    try:
+        from src import tracker
+        rows   = tracker.load()
+        cutoff = (dt - timedelta(days=7)).strftime("%Y-%m-%d")
+        recent = [
+            r for r in rows
+            if r.get("status") in ("WIN", "LOSS", "BREAKEVEN")
+            and (r.get("closed_at") or r.get("timestamp", ""))[:10] >= cutoff
+        ]
+    except Exception:
+        return []
+
+    lines = [
+        "",
+        "━━━━━━━━━━━━━━━━━━━━━",
+        "📅 <b>WEEKLY PERFORMANCE SUMMARY</b>",
+    ]
+    if not recent:
+        lines.append("No closed trades in the past 7 days — system still building history.")
+        return lines
+
+    wins  = [r for r in recent if r.get("status") == "WIN"]
+    losses = [r for r in recent if r.get("status") == "LOSS"]
+    total = len(recent)
+    wr    = len(wins) / total * 100 if total else 0
+
+    def _r(row):
+        try:
+            return float(row.get("r_multiple") or 0)
+        except (TypeError, ValueError):
+            return 0.0
+
+    total_r = sum(_r(r) for r in recent)
+    best    = max(recent, key=_r) if recent else None
+    worst   = min(recent, key=_r) if recent else None
+
+    lines.append(
+        f"7-day: <b>{len(wins)}W / {len(losses)}L</b>  "
+        f"Win rate: <b>{wr:.0f}%</b>  Net: <b>{total_r:+.2f}R</b>"
+    )
+    if best:
+        lines.append(
+            f"🏆 Best:  #{best.get('id')} {best.get('pair')} "
+            f"{best.get('direction','')} — {_r(best):+.2f}R"
+        )
+    if worst and worst is not best:
+        lines.append(
+            f"💔 Worst: #{worst.get('id')} {worst.get('pair')} "
+            f"{worst.get('direction','')} — {_r(worst):+.2f}R"
+        )
+
+    try:
+        from src import tracker as _tk  # noqa: F811
+        prev_cutoff = (dt - timedelta(days=14)).strftime("%Y-%m-%d")
+        prev = [
+            r for r in rows
+            if r.get("status") in ("WIN", "LOSS")
+            and prev_cutoff <= (r.get("closed_at") or r.get("timestamp", ""))[:10] < cutoff
+        ]
+        if prev:
+            prev_wr = sum(1 for r in prev if r.get("status") == "WIN") / len(prev) * 100
+            delta   = wr - prev_wr
+            icon    = "📈" if delta > 5 else ("📉" if delta < -5 else "➡️")
+            lines.append(f"Win rate trend: {prev_wr:.0f}% → {wr:.0f}% {icon}")
+    except Exception:
+        pass
+
+    lines.append("👁 This week: watch for central bank speeches and high-impact data releases.")
+    return lines
+
+
+def _send_in_parts(sections: list) -> None:
+    """Combine sections into ≤4000-char Telegram messages; send each separately."""
+    MAX = 4000
+    current: list[str] = []
+    cur_len = 0
+
+    for sec in sections:
+        sec_text = "\n".join(sec)
+        sec_len  = len(sec_text)
+        if current and cur_len + sec_len > MAX:
+            _telegram("\n".join(current))
+            current = []
+            cur_len = 0
+        current.extend(sec)
+        cur_len += sec_len
+
+    if current:
+        _telegram("\n".join(current))
+
+
+# ── Main summary builder ───────────────────────────────────────────────────────
 
 def _send_telegram_summary(
     date: str,
@@ -117,40 +427,88 @@ def _send_telegram_summary(
     stats: dict = None,
     risk_data: dict = None,
 ) -> None:
-    """Build and send the Telegram message (3 trade sections + learning + risk)."""
+    """Build and send the fully detailed daily Telegram notification."""
+    closed_today = closed_today or []
+    new_patterns = new_patterns or []
+
     yes_trades  = [r for r in deep_results if r["parsed"].get("trade_this") == "YES"]
     watch_list  = sorted(
         [r for r in deep_results
          if r["parsed"].get("trade_this") != "YES" and 5 <= _conf(r) <= 6],
         key=_conf, reverse=True,
-    )[:3]
-
-    best = None
-    if deep_results:
-        best = max(deep_results, key=_conf)
-
-    lines = []
-
-    # ── Header ───────────────────────────────────────────────────────────────
-    lines.append(
-        f"<b>Forex AI — {date}</b>\n"
-        f"<i>Scanned {universe_size} total pairs · Deep analysed {len(deep_results)} pairs</i>"
+    )[:4]
+    near_misses = sorted(
+        [r for r in deep_results if r["parsed"].get("trade_this") != "YES"],
+        key=_conf, reverse=True,
     )
 
-    # Build sizing lookup keyed by pair (populated from risk_data if available).
-    _sizes = {}
-    _exposure = {}
-    _risk_state = {}
+    _sizes, _exposure, _risk_state = {}, {}, {}
     if risk_data:
         for s in (risk_data.get("sized_trades") or []):
             _sizes[s["pair"]] = s
         _exposure   = risk_data.get("exposure", {})
         _risk_state = risk_data.get("risk_state", {})
 
-    # ── Section 1: TRADE ALERTS ──────────────────────────────────────────────
-    lines.append("")
-    lines.append("━━━━━━━━━━━━━━━━━━━━━")
-    lines.append("🚨 <b>SECTION 1 — TRADE ALERTS</b>")
+    ctx = _derive_market_context(deep_results, risk_data)
+    all_sections: list[list[str]] = []
+
+    # ── HEADER ─────────────────────────────────────────────────────────────────
+    all_sections.append([
+        f"<b>🤖 Forex AI — {date}</b>",
+        f"<i>Universe: {universe_size} pairs · Screened: {total_scanned} · Deep analysed: {len(deep_results)}</i>",
+    ])
+
+    # ── MARKET CONTEXT ─────────────────────────────────────────────────────────
+    ctx_sec = [
+        "",
+        "━━━━━━━━━━━━━━━━━━━━━",
+        "🌍 <b>MARKET CONTEXT</b>",
+    ]
+    vix_str = f"VIX {ctx['vix']:.1f}" if ctx["vix"] else "VIX unavailable"
+    ctx_sec.append(f"Environment: <b>{ctx['risk_env']}</b>  ({vix_str})")
+    if ctx["yield_curve"] is not None:
+        curve_note = "inverted — caution" if ctx["yield_curve"] < 0 else "normal"
+        ctx_sec.append(f"Yield curve 2s10s: {ctx['yield_curve']:+.2f}%  ({curve_note})")
+    if ctx["oil"]:
+        ctx_sec.append(f"WTI Oil: ${ctx['oil']:.1f}/bbl")
+    if ctx["strongest_ccy"] and ctx["weakest_ccy"]:
+        sc = ctx["strongest_ccy"]
+        wc = ctx["weakest_ccy"]
+        ctx_sec += [
+            f"💪 Strongest: <b>{sc}</b>  (composite signal +{ctx['ccy_scores'].get(sc, 0):.0f})",
+            f"📉 Weakest:   <b>{wc}</b>  (composite signal {ctx['ccy_scores'].get(wc, 0):.0f})",
+        ]
+    elif deep_results:
+        ctx_sec.append("Currency strength: signals insufficient to rank today.")
+
+    # Collect news/event warnings from all analyses
+    nw_list = []
+    for r in deep_results:
+        nw = (r["parsed"].get("news_warning") or "").strip()
+        if nw and len(nw) > 5:
+            nw_list.append(f"{r['pair']}: {nw[:70]}")
+    if nw_list:
+        ctx_sec.append("⚡ <b>Event warnings (next 48h):</b>")
+        for nw in nw_list[:3]:
+            ctx_sec.append(f"  · {nw}")
+
+    n_a = len(yes_trades)
+    n_w = len(watch_list)
+    if n_a:
+        summary = f"{n_a} high-conviction setup{'s' if n_a > 1 else ''} identified. Execute with strict risk controls."
+    elif n_w:
+        summary = f"No triggers yet — {n_w} pair{'s' if n_w > 1 else ''} watching for confirmation."
+    else:
+        summary = "No qualifying setups today — staying in cash is a valid position."
+    ctx_sec.append(f"\n<i>📌 {summary}</i>")
+    all_sections.append(ctx_sec)
+
+    # ── TRADE ALERTS ───────────────────────────────────────────────────────────
+    alert_sec = [
+        "",
+        "━━━━━━━━━━━━━━━━━━━━━",
+        f"🚨 <b>TRADE ALERTS</b>  ({n_a} setup{'s' if n_a != 1 else ''})",
+    ]
     if yes_trades:
         for r in yes_trades:
             p         = r["parsed"]
@@ -162,143 +520,227 @@ def _send_telegram_summary(
             tgt_raw   = p.get("target")
             rr_raw    = p.get("reward_risk")
             arrow     = "📈" if direction == "BUY" else "📉"
-            session   = _session_label(pair)
-            bet_raw   = p.get("best_entry_time") or ""
-            bet       = bet_raw[:80] if bet_raw else session
 
-            sz = _sizes.get(pair, {})
+            sz       = _sizes.get(pair, {})
             adj_stop = sz.get("adj_stop") or stop_raw
             adj_tgt  = sz.get("adj_target") or tgt_raw
 
-            # Re-derive R:R from (possibly ATR-adjusted) levels.
             try:
-                rr = f"{abs(float(adj_tgt) - float(entry_raw)) / abs(float(entry_raw) - float(adj_stop)):.2f}:1"
+                rr_val = abs(float(adj_tgt) - float(entry_raw)) / abs(float(entry_raw) - float(adj_stop))
+                rr_str = f"{rr_val:.2f}:1"
             except (TypeError, ValueError, ZeroDivisionError):
-                rr = f"{float(rr_raw):.2f}:1" if rr_raw is not None else "—"
+                rr_str = f"{float(rr_raw):.2f}:1" if rr_raw is not None else "—"
 
-            trade_lines = [
+            kt = (p.get("key_thesis") or "").strip()
+            kt_out = (kt[:280] + "…") if len(kt) > 280 else kt
+
+            rf = (p.get("risk_factors") or "").strip()
+            rf_parts = [x.strip() for x in rf.replace(";", "\n").split("\n") if x.strip()][:2]
+            rf_out   = "; ".join(rf_parts) if rf_parts else (rf[:100] if rf else "None identified")
+
+            bet     = (p.get("best_entry_time") or "").strip()
+            bet_out = (bet[:80] if bet else _session_label(pair))
+
+            block = [
                 "",
-                f"{arrow} <b>{pair} — {direction}</b>",
-                f"Confidence:  <b>{conf}/10</b>",
-                f"Entry:       <code>{_fmt_price(entry_raw)}</code>",
-                f"Stop Loss:   <code>{_fmt_price(adj_stop)}</code>",
-                f"Target:      <code>{_fmt_price(adj_tgt)}</code>",
-                f"Reward:Risk  <b>{rr}</b>",
+                f"{arrow} <b>{pair} — {direction}</b>  |  Confidence: <b>{conf}/10</b>",
+                f"<code>Scores │ {_score_breakdown_line(p)}</code>",
+                f"Entry:     <code>{_fmt_price(entry_raw)}</code>",
+                f"Stop:      <code>{_fmt_price(adj_stop)}</code>",
+                f"Target:    <code>{_fmt_price(adj_tgt)}</code>",
+                f"R:R Ratio: <b>{rr_str}</b>",
             ]
             if sz.get("atr_note"):
-                trade_lines.append(f"📐 ATR adj:   {sz['atr_note']}")
+                block.append(f"📐 ATR adj: {sz['atr_note']}")
             if sz.get("lots"):
                 cur = sz.get("currency", "USD")
                 amt = sz.get("risk_amount", 0)
                 pct = sz.get("risk_pct", 1.0)
-                trade_lines.append(
-                    f"📦 Position: <code>{sz['lots']} lots</code> — "
-                    f"Risk: {amt:,.2f} {cur} ({pct:.2f}%)"
+                block.append(
+                    f"📦 Size: <code>{sz['lots']} lots</code>  "
+                    f"Risk: <b>{amt:,.2f} {cur} ({pct:.2f}%)</b>"
                 )
             if sz.get("correlated"):
-                trade_lines.append("⚠️ <i>CORRELATED POSITION — size halved to manage total exposure</i>")
+                block.append("⚠️ <i>Correlated pair — position halved to manage exposure</i>")
             if _exposure.get("limit_reached"):
-                trade_lines.append("🔴 <i>RISK LIMIT REACHED — open exposure at limit</i>")
-            trade_lines.append(f"⏰ <b>{bet}</b>")
-            lines += trade_lines
-    else:
-        lines.append("No pairs met the 7+ confidence threshold today.")
-
-    # ── Section 2: WATCH LIST ────────────────────────────────────────────────
-    lines.append("")
-    lines.append("━━━━━━━━━━━━━━━━━━━━━")
-    lines.append("👀 <b>SECTION 2 — WATCH LIST</b>  <i>(confidence 5-6, approaching signal)</i>")
-    if watch_list:
-        for r in watch_list:
-            p    = r["parsed"]
-            pair = r["pair"]
-            conf = p.get("confidence") or "?"
-            dirn = (p.get("direction") or "—").upper()
-            kt   = (p.get("key_thesis") or "").strip()
-            note = (kt[:120] + "…") if len(kt) > 120 else kt
-            lines += [
-                "",
-                f"⏳ <b>{pair}</b> {dirn} — conf <b>{conf}/10</b>",
-                f"   {note}" if note else "   Analysis available.",
+                block.append("🔴 <i>Risk limit reached — no new trades recommended</i>")
+            block += [
+                f"⏰ Entry window: {bet_out}",
+                f"📊 Volatility: {_get_volatility_info(r)}",
+                f"🔀 MTF align: {_get_mtf_alignment(r, direction)}",
+                f"📅 Seasonal: {_get_seasonal_tendency(r)}",
             ]
+            if kt_out:
+                block.append(f"📝 Thesis: {kt_out}")
+            block.append(f"⚠️ Risk factors: {rf_out}")
+            alert_sec += [l for l in block if l != ""]
     else:
-        lines.append("No pairs in the 5-6 confidence range today.")
+        alert_sec.append("No pairs met the 7+ confidence threshold today.")
+    all_sections.append(alert_sec)
 
-    # ── Section 3: BEST OPPORTUNITY TODAY ────────────────────────────────────
-    lines.append("")
-    lines.append("━━━━━━━━━━━━━━━━━━━━━")
-    lines.append("⭐ <b>SECTION 3 — BEST OPPORTUNITY TODAY</b>")
-    if best:
-        p      = best["parsed"]
-        pair   = best["pair"]
-        conf   = p.get("confidence") or "?"
-        dirn   = (p.get("direction") or "—").upper()
-        arrow  = "📈" if dirn == "BUY" else "📉"
-        kt     = (p.get("key_thesis") or "").strip()
-        reason = (kt[:150] + "…") if len(kt) > 150 else kt
-        lines += [
+    # ── NO SETUP EXPLANATION (only when no trade alerts) ───────────────────────
+    if not yes_trades:
+        no_sec = [
             "",
-            f"{arrow} <b>{pair}</b> — {dirn}  conf <b>{conf}/10</b>",
-            f"   {reason}" if reason else "   See full analysis in dashboard.",
+            "━━━━━━━━━━━━━━━━━━━━━",
+            "💤 <b>WHY NO SETUPS TODAY</b>",
         ]
-    else:
-        lines.append("No pairs were deeply analysed today.")
-
-    # ── Section 4: LEARNING UPDATE ────────────────────────────────────────────
-    closed_today  = closed_today  or []
-    new_patterns  = new_patterns  or []
-    if closed_today or new_patterns:
-        lines.append("")
-        lines.append("━━━━━━━━━━━━━━━━━━━━━")
-        lines.append("🧠 <b>SECTION 4 — LEARNING UPDATE</b>")
-        if closed_today:
-            lines.append("<b>Trades closed today:</b>")
-            for t in closed_today:
-                s = (t.get("status") or "").upper()
-                arrow = "✅" if s == "WIN" else "❌" if s == "LOSS" else "⏰"
-                rm = t.get("r_multiple")
-                try:
-                    r_txt = f" ({float(rm):+.2f}R)" if rm not in (None, "") else ""
-                except (TypeError, ValueError):
-                    r_txt = ""
-                lines.append(
-                    f"  {arrow} #{t.get('id')} {t.get('pair')} "
-                    f"{t.get('direction','')} — {s}{r_txt}"
-                )
-        if new_patterns:
-            lines.append(f"💡 <b>{len(new_patterns)} new pattern(s) learned:</b>")
-            for p in new_patterns:
-                lines.append(f"  · {p[:100]}{'…' if len(p) > 100 else ''}")
-        if stats:
-            wr = stats.get("win_rate")
-            wr_txt = f"{wr*100:.0f}%" if wr is not None else "n/a"
-            dec = stats.get("decisive", 0)
-            wins = stats.get("wins", 0)
-            losses = stats.get("losses", 0)
-            lines.append(
-                f"📊 Overall win rate: <b>{wr_txt}</b> "
-                f"({wins}W / {losses}L, {dec} decisive trades)"
+        top3 = near_misses[:3]
+        if top3:
+            no_sec.append("<b>Top 3 pairs closest to a signal — and why each was rejected:</b>")
+            for i, r in enumerate(top3, 1):
+                reason = _rejection_reason(r)
+                kt     = (r["parsed"].get("key_thesis") or "").strip()
+                kt_50  = (kt[:90] + "…") if len(kt) > 90 else kt
+                no_sec.append(f"\n<b>{i}. {r['pair']}</b>")
+                no_sec.append(f"   {reason}")
+                if kt_50:
+                    no_sec.append(f"   <i>{kt_50}</i>")
+        else:
+            no_sec.append(
+                "All pairs filtered at Stage 1 — no pair had sufficient technical "
+                "and fundamental signals to warrant deep analysis."
             )
 
-    # ── Risk Dashboard ────────────────────────────────────────────────────────
+        no_sec.append("\n<b>What the system is waiting for:</b>")
+        waiting = []
+        score6 = [r for r in near_misses if _conf(r) == 6]
+        if score6:
+            p6 = ", ".join(r["pair"] for r in score6[:2])
+            waiting.append(f"• {p6} at 6/10 — one layer confirmation away from a full alert")
+        score5 = [r for r in near_misses if _conf(r) == 5]
+        if score5 and not score6:
+            p5 = ", ".join(r["pair"] for r in score5[:2])
+            waiting.append(f"• {p5} at 5/10 — needs 2+ layer improvements")
+        weak_tech = [r for r in near_misses[:5] if (r["parsed"].get("technical_score") or 10) < 5]
+        if weak_tech:
+            waiting.append("• Clearer trend structure across most pairs (technicals weak)")
+        if not waiting:
+            waiting.append("• Full confluence: Technical + Fundamental + Sentiment + Positioning + Macro")
+        for w in waiting:
+            no_sec.append(w)
+        all_sections.append(no_sec)
+
+    # ── WATCH LIST ─────────────────────────────────────────────────────────────
+    watch_sec = [
+        "",
+        "━━━━━━━━━━━━━━━━━━━━━",
+        "👀 <b>WATCH LIST</b>  (confidence 5–6, approaching signal)",
+    ]
+    if watch_list:
+        for r in watch_list:
+            p     = r["parsed"]
+            pair  = r["pair"]
+            conf  = p.get("confidence") or "?"
+            dirn  = (p.get("direction") or "—").upper()
+            arrow = "📈" if dirn == "BUY" else "📉"
+            watch_sec += [
+                "",
+                f"{arrow} <b>{pair}</b> {dirn}  conf <b>{conf}/10</b>",
+                f"<code>Scores │ {_score_breakdown_line(p)}</code>",
+                f"🔑 To trigger alert: {_what_needs_to_change(p)}",
+            ]
+    else:
+        watch_sec.append("No pairs in the 5–6 confidence range today.")
+    all_sections.append(watch_sec)
+
+    # ── LEARNING UPDATE ─────────────────────────────────────────────────────────
+    learn_sec = [
+        "",
+        "━━━━━━━━━━━━━━━━━━━━━",
+        "🧠 <b>LEARNING UPDATE</b>",
+    ]
+    if closed_today:
+        learn_sec.append("<b>Trades auto-closed today:</b>")
+        for t in closed_today:
+            s     = (t.get("status") or "").upper()
+            arrow = "✅" if s == "WIN" else "❌" if s == "LOSS" else "⏰"
+            rm    = t.get("r_multiple")
+            try:
+                r_txt = f" ({float(rm):+.2f}R)" if rm not in (None, "") else ""
+            except (TypeError, ValueError):
+                r_txt = ""
+            try:
+                pips    = t.get("pips")
+                pip_txt = f" | {float(pips):.1f}p" if pips not in (None, "") else ""
+            except (TypeError, ValueError):
+                pip_txt = ""
+            learn_sec.append(
+                f"  {arrow} #{t.get('id')} {t.get('pair')} "
+                f"{t.get('direction', '')} — {s}{r_txt}{pip_txt}"
+            )
+    else:
+        learn_sec.append("No trades auto-closed today.")
+
+    if new_patterns:
+        learn_sec.append(
+            f"\n💡 <b>{len(new_patterns)} new pattern{'s' if len(new_patterns) > 1 else ''} learned:</b>"
+        )
+        for pat in new_patterns[:3]:
+            learn_sec.append(f"  · {(pat[:110] + '…') if len(pat) > 110 else pat}")
+
+    if stats:
+        wr     = stats.get("win_rate")
+        wr_txt = f"{wr*100:.0f}%" if wr is not None else "n/a"
+        dec    = stats.get("decisive", 0)
+        wins   = stats.get("wins", 0)
+        losses = stats.get("losses", 0)
+        cl     = _risk_state.get("consecutive_losses", 0)
+        cw     = _risk_state.get("consecutive_wins", 0)
+
+        if cw >= 2:
+            streak = f"🔥 {cw} consecutive wins"
+        elif cl >= 2:
+            streak = f"⚠️ {cl} consecutive losses"
+        elif cw == 1:
+            streak = "1 win (potential streak forming)"
+        elif cl == 1:
+            streak = "1 loss (watching for streak)"
+        else:
+            streak = "No streak active"
+
+        _mode_desc = {
+            "capital_protection": "⬇️ 0.25%/trade — drawdown >10% from peak",
+            "streak_protection":  "⬇️ 0.25%/trade — 3+ consecutive losses",
+            "reduced":            "⬇️ 0.50%/trade — last-5 win rate <40%",
+            "normal":             "➡️ 1.00%/trade — standard conditions",
+            "enhanced":           "⬆️ 1.50%/trade — last-5 win rate >70%",
+        }
+        risk_mode = _risk_state.get("risk_mode", "normal")
+        learn_sec += [
+            f"\n📊 Win rate: <b>{wr_txt}</b>  ({wins}W / {losses}L · {dec} decisive trades)",
+            f"🔁 Streak: {streak}",
+            f"⚙️ Risk setting: {_mode_desc.get(risk_mode, risk_mode)}",
+        ]
+    all_sections.append(learn_sec)
+
+    # ── RISK DASHBOARD ──────────────────────────────────────────────────────────
     if risk_data and risk_data.get("profile"):
-        lines.append("")
-        lines.append("━━━━━━━━━━━━━━━━━━━━━")
+        risk_sec = ["", "━━━━━━━━━━━━━━━━━━━━━"]
         from src import risk_manager as _rm
-        for ln in _rm.risk_dashboard_lines(
+        risk_sec += _rm.risk_dashboard_lines(
             risk_data["profile"],
             risk_data.get("risk_state", {}),
             risk_data.get("exposure", {}),
-        ):
-            lines.append(ln)
+        )
+        all_sections.append(risk_sec)
 
-    # ── Footer ────────────────────────────────────────────────────────────────
-    lines.append("")
-    lines.append("━━━━━━━━━━━━━━━━━━━━━")
-    lines.append("<i>Next scan 6am NZT tomorrow</i>")
+    # ── WEEKLY PERFORMANCE (Monday only) ───────────────────────────────────────
+    weekly = _weekly_performance_section(date)
+    if weekly:
+        all_sections.append(weekly)
 
-    _telegram("\n".join(lines))
+    # ── FOOTER ─────────────────────────────────────────────────────────────────
+    all_sections.append([
+        "",
+        "━━━━━━━━━━━━━━━━━━━━━",
+        "<i>⏰ Next scan 6am NZT tomorrow</i>",
+    ])
 
+    _send_in_parts(all_sections)
+
+
+# ── Daily run ──────────────────────────────────────────────────────────────────
 
 def run() -> int:
     missing = config.missing_keys()
@@ -306,14 +748,11 @@ def run() -> int:
         print("ERROR: missing API keys in .env: " + ", ".join(missing), file=sys.stderr)
         return 2
 
-    date = datetime.now().strftime("%Y-%m-%d")
+    date     = datetime.now().strftime("%Y-%m-%d")
     log_path = config.REPORTS_DIR / f"daily_{date}.log"
     with log_path.open("a", encoding="utf-8") as logf:
 
         # 0. Automatic outcome detection + win/loss analysis.
-        #    Must run before the learning refresh so newly closed trades are
-        #    included in the stats and any extracted patterns land in memory
-        #    before today's analysis reads memory.render().
         closed_today = []
         new_patterns = []
         try:
@@ -328,7 +767,7 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Outcome step failed: {exc}")
 
-        # 1. Learn from prior outcomes (includes trades just closed above).
+        # 1. Learn from prior outcomes.
         learning_stats = None
         try:
             learning_stats = learning.update_memory()
@@ -342,13 +781,10 @@ def run() -> int:
             _log_line(logf, f"Learning step failed: {exc}")
 
         # 2. Smart pair selection from the full universe.
-        universe_size = len(selector.UNIVERSE)  # fallback default for log header
-        ranked_all = []
+        universe_size = len(selector.UNIVERSE)
+        ranked_all    = []
         try:
-            selection = selector.select_pairs(
-                top_n=15,
-                log=lambda m: _log_line(logf, m),
-            )
+            selection     = selector.select_pairs(top_n=15, log=lambda m: _log_line(logf, m))
             pairs_today   = selection["selected"]
             ranked_all    = selection["ranked"]
             universe_size = selection["universe_size"]
@@ -362,15 +798,13 @@ def run() -> int:
             _log_line(logf, f"Smart selection failed ({exc}) — falling back to watchlist.")
             pairs_today = list(config.WATCHLIST)
 
-        # Top 10 by pre-score always reach deep analysis regardless of stage-1 result.
         force_deep_pairs = set(pairs_today[:10])
-
         _log_line(logf, f"=== Daily run {date} | universe: {universe_size} pairs ===")
 
         # 3. Analyse initial batch (top 15).
         filtered_count = 0
         deep_results   = []
-        analysed_pairs = set()
+        analysed_pairs: set = set()
 
         def _process_batch(pairs):
             nonlocal filtered_count
@@ -397,13 +831,13 @@ def run() -> int:
 
         _process_batch(pairs_today)
 
-        # 4. Auto-expand: ensure at least 3 meaningful results or 25 deep-analysed.
+        # 4. Auto-expand until 3 meaningful results or 25 deep-analysed.
         meaningful = [r for r in deep_results if _conf(r) >= 5]
-        next_idx = 15  # next position in ranked_all to draw from
+        next_idx   = 15
 
         while len(meaningful) < 3 and len(deep_results) < 25 and next_idx < len(ranked_all):
             extra_pairs = [p for p, _ in ranked_all[next_idx:next_idx + 10]]
-            next_idx += 10
+            next_idx   += 10
             _log_line(
                 logf,
                 f"Expanding: {len(deep_results)} deep results so far, "
