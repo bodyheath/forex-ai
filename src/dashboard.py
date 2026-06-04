@@ -456,9 +456,10 @@ def generate() -> str:
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
 
     today = _most_recent_date(rows)
-    active_html = _active_setups(rows)
-    watch_html  = _watch_list_section(rows, today)
-    best_html   = _best_opportunity_section(rows, today)
+    active_html   = _active_setups(rows)
+    watch_html    = _watch_list_section(rows, today)
+    best_html     = _best_opportunity_section(rows, today)
+    learning_html = _learning_feed_section()
 
     body = (
         f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
@@ -473,6 +474,7 @@ def generate() -> str:
         f'<div class="grid">{_stat_cards(stats)}</div>'
         f'<section><h2>Equity curve</h2>{_equity_curve(rows)}</section>'
         f'<section><h2>Win rate by confidence score</h2>{_by_confidence(rows)}</section>'
+        f'{learning_html}'
         f'<section><h2>All recommendations</h2>{_rows_table(rows)}</section>'
         f'<p class="foot">Columns T/F/S/P/M = technical, fundamental, sentiment, positioning, macro scores.'
         f' Record an outcome with: <code>python main.py --close ID WIN|LOSS [exit_price]</code></p>'
