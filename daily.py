@@ -115,8 +115,9 @@ def _send_telegram_summary(
     closed_today: list = None,
     new_patterns: list = None,
     stats: dict = None,
+    risk_data: dict = None,
 ) -> None:
-    """Build and send the Telegram message (3 trade sections + learning update)."""
+    """Build and send the Telegram message (3 trade sections + learning + risk)."""
     yes_trades  = [r for r in deep_results if r["parsed"].get("trade_this") == "YES"]
     watch_list  = sorted(
         [r for r in deep_results
