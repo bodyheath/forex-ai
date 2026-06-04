@@ -26,7 +26,7 @@ STALE_DAYS = 30
 def _series_for(market_name: str) -> list:
     """Recent weekly COT rows for an EXACT market name, newest first."""
     key = f"COT:exact:{market_name}"
-    cached = cache.get(key)
+    cached = cache.get(key, ttl_hours=12.0)
     if cached is not None:
         return cached
     try:
