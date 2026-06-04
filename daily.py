@@ -921,11 +921,13 @@ def run() -> int:
 
         _process_batch(pairs_today)
 
-        # 4. Auto-expand until 3 meaningful results or 25 deep-analysed.
+        # 4. Auto-expand: if fewer than 3 meaningful results after the first 10,
+        # pull the next 5 from the ranked list and screen them through Haiku too.
+        # Cap at 15 deep-analysed pairs total to contain costs.
         meaningful = [r for r in deep_results if _conf(r) >= 5]
-        next_idx   = 15
+        next_idx   = 10
 
-        while len(meaningful) < 3 and len(deep_results) < 25 and next_idx < len(ranked_all):
+        while len(meaningful) < 3 and len(deep_results) < 15 and next_idx < len(ranked_all):
             extra_pairs = [p for p, _ in ranked_all[next_idx:next_idx + 10]]
             next_idx   += 10
             _log_line(
