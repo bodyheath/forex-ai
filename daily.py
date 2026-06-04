@@ -867,7 +867,7 @@ def _send_telegram_summary(
     all_sections.append([
         "",
         "━━━━━━━━━━━━━━━━━━━━━",
-        "<i>⏰ Next scan 6am NZT tomorrow</i>",
+        f"<i>⏰ Next scan tomorrow {_fmt_date_short_nz(tomorrow_ak)} at 6am Auckland time</i>",
     ])
 
     _send_in_parts(all_sections)
