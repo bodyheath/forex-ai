@@ -928,8 +928,8 @@ def run() -> int:
         next_idx   = 10
 
         while len(meaningful) < 3 and len(deep_results) < 15 and next_idx < len(ranked_all):
-            extra_pairs = [p for p, _ in ranked_all[next_idx:next_idx + 10]]
-            next_idx   += 10
+            extra_pairs = [p for p, _ in ranked_all[next_idx:next_idx + 5]]
+            next_idx   += 5
             _log_line(
                 logf,
                 f"Expanding: {len(deep_results)} deep results so far, "
