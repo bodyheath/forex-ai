@@ -31,28 +31,69 @@ for _stream in (sys.stdout, sys.stderr):
 import config
 from src import dashboard, learning, selector, service
 
-_SESSION_NZT = {
-    "EUR": ("London",   "5pm – 9pm NZT"),
-    "GBP": ("London",   "5pm – 9pm NZT"),
-    "CHF": ("London",   "5pm – 9pm NZT"),
-    "JPY": ("Tokyo",    "9am – 2pm NZT"),
-    "USD": ("New York", "10pm – 2am NZT"),
-    "CAD": ("New York", "10pm – 2am NZT"),
-    "AUD": ("Sydney",   "7am – 12pm NZT"),
-    "NZD": ("Sydney",   "7am – 12pm NZT"),
+# Trading session windows expressed in Auckland time (no DST suffix — the
+# _auckland_now() helper handles NZST/NZDT automatically).
+_SESSION_AUCKLAND = {
+    "EUR": ("London",   "5pm – 9pm"),
+    "GBP": ("London",   "5pm – 9pm"),
+    "CHF": ("London",   "5pm – 9pm"),
+    "JPY": ("Tokyo",    "9am – 2pm"),
+    "USD": ("New York", "10pm – 2am"),
+    "CAD": ("New York", "10pm – 2am"),
+    "AUD": ("Sydney",   "7am – 12pm"),
+    "NZD": ("Sydney",   "7am – 12pm"),
 }
 _SESSION_PRIORITY = ["EUR", "GBP", "CHF", "AUD", "NZD", "JPY", "USD", "CAD"]
 
 
+# ── Auckland / New Zealand time helpers ────────────────────────────────────────
+
+def _auckland_now() -> datetime:
+    """Return the current datetime in Auckland (Pacific/Auckland) time.
+
+    Uses Python's zoneinfo module (stdlib since 3.9) which reads the IANA
+    timezone database and handles NZST (UTC+12, April–September) and
+    NZDT (UTC+13, September–April) automatically.  Falls back to a manual
+    offset approximation when zoneinfo is unavailable.
+    """
+    try:
+        from zoneinfo import ZoneInfo
+        return datetime.now(ZoneInfo("Pacific/Auckland"))
+    except Exception:
+        # Manual fallback: rough approximation only
+        utc  = datetime.now(__import__("datetime").timezone.utc)
+        off  = 13 if utc.month in (10, 11, 12, 1, 2, 3) else 12
+        from datetime import timezone
+        return utc.astimezone(timezone(timedelta(hours=off)))
+
+
+def _fmt_time_nz(dt: datetime) -> str:
+    """6am  or  6:08am  (no leading zero, no :00 on the hour)."""
+    h    = dt.hour % 12 or 12
+    ampm = "am" if dt.hour < 12 else "pm"
+    return f"{h}:{dt.minute:02d}{ampm}" if dt.minute else f"{h}{ampm}"
+
+
+def _fmt_date_nz(dt: datetime) -> str:
+    """Thursday 4 June 2026"""
+    return f"{dt.strftime('%A')} {dt.day} {dt.strftime('%B')} {dt.year}"
+
+
+def _fmt_date_short_nz(dt: datetime) -> str:
+    """Thursday 4 June  (no year)"""
+    return f"{dt.strftime('%A')} {dt.day} {dt.strftime('%B')}"
+
+
 def _session_label(pair: str) -> str:
+    """Return e.g. 'London session 5pm – 9pm Auckland time' for a pair."""
     cleaned = pair.upper().replace("/", "").replace("-", "")
     base  = cleaned[:3]
     quote = cleaned[3:6] if len(cleaned) >= 6 else ""
     for ccy in _SESSION_PRIORITY:
         if ccy in (base, quote):
-            name, window = _SESSION_NZT[ccy]
-            return f"{name} session — {window}"
-    return "London session — 5pm – 9pm NZT"
+            name, window = _SESSION_AUCKLAND[ccy]
+            return f"{name} session {window} Auckland time"
+    return "London session 5pm – 9pm Auckland time"
 
 
 def _log_line(handle, msg: str) -> None:
