@@ -440,7 +440,48 @@ def run() -> int:
             _log_line(logf, "No actionable setups today (all TRADE_THIS: NO).")
         _log_line(logf, "=== Daily run complete ===")
 
-        # 6. Telegram summary.
+        # 6. Risk management — size YES trades and update risk profile.
+        risk_data = {}
+        try:
+            from src import risk_manager
+            risk_profile = risk_manager.load_profile()
+            risk_state   = risk_manager.compute_risk_state(risk_profile)
+            exposure     = risk_manager.compute_open_exposure(risk_profile)
+
+            sized = []
+            for r in deep_results:
+                if r["parsed"].get("trade_this") == "YES":
+                    sized.append(risk_manager.size_trade_from_result(
+                        r, risk_profile, risk_state
+                    ))
+            sized = risk_manager.apply_correlation_checks(sized)
+
+            risk_profile.update({
+                "risk_mode":          risk_state["risk_mode"],
+                "consecutive_losses": risk_state["consecutive_losses"],
+                "consecutive_wins":   risk_state["consecutive_wins"],
+                "last_5_win_rate":    risk_state["last_5_win_rate"],
+                "total_open_pct":     exposure["total_pct"],
+            })
+            risk_manager.save_profile(risk_profile)
+
+            risk_data = {
+                "profile":      risk_profile,
+                "risk_state":   risk_state,
+                "exposure":     exposure,
+                "sized_trades": sized,
+            }
+            _log_line(
+                logf,
+                f"Risk: mode={risk_state['risk_mode']} "
+                f"risk={risk_state['base_risk_pct']:.2f}% "
+                f"open_exposure={exposure['total_pct']:.1f}% "
+                f"streak_loss={risk_state['consecutive_losses']}"
+            )
+        except Exception as exc:
+            _log_line(logf, f"Risk management step failed: {exc}")
+
+        # 7. Telegram summary.
         _send_telegram_summary(
             date=date,
             universe_size=universe_size,
@@ -449,6 +490,7 @@ def run() -> int:
             closed_today=closed_today,
             new_patterns=new_patterns,
             stats=learning_stats,
+            risk_data=risk_data,
         )
 
     return 0
