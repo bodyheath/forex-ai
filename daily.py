@@ -840,9 +840,23 @@ def run() -> int:
         force_deep_pairs = set(pairs_today)
         _log_line(logf, f"=== Daily run {date} | universe: {universe_size} pairs ===")
 
+        # ── Startup diagnostics — log exactly what config values are in use ──
+        _log_line(logf, f"[DIAG] CLAUDE_MODEL={repr(config.CLAUDE_MODEL)}")
+        _log_line(logf, f"[DIAG] HAIKU_MODEL={repr(config.HAIKU_MODEL)}")
+        _log_line(logf, (
+            f"[DIAG] ANTHROPIC_API_KEY="
+            f"{'set (len=' + str(len(config.ANTHROPIC_API_KEY)) + ')' if config.ANTHROPIC_API_KEY else 'MISSING OR EMPTY'}"
+        ))
+        _log_line(logf, (
+            f"[DIAG] TWELVE_DATA_KEY="
+            f"{'set (len=' + str(len(config.TWELVE_DATA_KEY)) + ')' if config.TWELVE_DATA_KEY else 'not set — will use UNIVERSE fallback'}"
+        ))
+        _log_line(logf, f"[DIAG] force_deep_pairs ({len(force_deep_pairs)}): {sorted(force_deep_pairs)}")
+
         # 3. Analyse initial batch (top 15).
         filtered_count  = 0
         stage1_filtered: list = []   # pairs rejected by stage-1 (expansion batches only)
+        failed_pairs:    list = []   # pairs where _analyse_pair returned None (exception)
         deep_results    = []
         analysed_pairs: set = set()
 
@@ -854,6 +868,7 @@ def run() -> int:
                 analysed_pairs.add(pair)
                 result = _analyse_pair(pair, logf, force_deep=pair in force_deep_pairs)
                 if result is None:
+                    failed_pairs.append(pair)
                     continue
                 if result.get("screened_out"):
                     filtered_count += 1
