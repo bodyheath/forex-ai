@@ -37,6 +37,7 @@ jobs:
           MY_EMAIL: ${{ secrets.MY_EMAIL }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID_2: ${{ secrets.TELEGRAM_CHAT_ID_2 }}
           CLAUDE_MODEL: ${{ secrets.CLAUDE_MODEL }}
           HAIKU_MODEL: ${{ secrets.HAIKU_MODEL }}
         run: python daily.py
