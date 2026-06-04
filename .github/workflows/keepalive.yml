@@ -1,0 +1,12 @@
+name: Keep-alive
+
+on:
+  schedule:
+    - cron: '0 9 * * 0'  # Every Sunday at 9:00 UTC
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Keep workflows active
+        run: date
