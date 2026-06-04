@@ -871,7 +871,8 @@ def run() -> int:
         print("ERROR: missing API keys in .env: " + ", ".join(missing), file=sys.stderr)
         return 2
 
-    date     = datetime.now().strftime("%Y-%m-%d")
+    now_ak   = _auckland_now()                    # all date logic uses Auckland time
+    date     = now_ak.strftime("%Y-%m-%d")
     log_path = config.REPORTS_DIR / f"daily_{date}.log"
     with log_path.open("a", encoding="utf-8") as logf:
 
