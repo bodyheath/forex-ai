@@ -63,6 +63,20 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .buy{color:var(--green)}.sell{color:var(--red)}.pos{color:var(--green)}.neg{color:var(--red)}
 .foot{color:var(--mut);font-size:12px;margin-top:24px}
 
+/* ── Learning feed ─────────────────────────────────────────────────────────── */
+.learn-list{list-style:none;margin:0;padding:0}
+.learn-item{padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;
+  line-height:1.5;display:flex;gap:12px;align-items:flex-start}
+.learn-item:last-child{border-bottom:none}
+.src-tag{padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;
+  letter-spacing:.06em;white-space:nowrap;flex-shrink:0;margin-top:2px;text-transform:uppercase}
+.src-seed{background:rgba(88,166,255,.15);color:var(--blue)}
+.src-auto{background:rgba(210,153,34,.15);color:var(--amber)}
+.src-outcome{background:rgba(63,185,80,.15);color:var(--green)}
+.src-user{background:rgba(139,148,158,.15);color:var(--mut)}
+.learn-pattern{font-weight:600;color:var(--fg);margin-bottom:2px}
+.learn-outcome{color:var(--mut);font-size:12px}
+
 /* ── YES-trade alert cards ────────────────────────────────────────────────── */
 .alert-section{margin-bottom:32px}
 .alert-section-title{color:var(--green);font-size:17px;font-weight:700;margin:0 0 16px;
