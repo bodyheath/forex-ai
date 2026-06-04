@@ -48,15 +48,17 @@ TELEGRAM_TOKEN   = os.getenv("TELEGRAM_TOKEN", "")
 TELEGRAM_CHAT_ID  = os.getenv("TELEGRAM_CHAT_ID", "")
 TELEGRAM_CHAT_ID_2 = os.getenv("TELEGRAM_CHAT_ID_2", "")
 
-ACCOUNT_BALANCE  = float(os.getenv("ACCOUNT_BALANCE", "10000"))
-ACCOUNT_CURRENCY = os.getenv("ACCOUNT_CURRENCY", "USD")
+ACCOUNT_BALANCE  = float(os.getenv("ACCOUNT_BALANCE") or "10000")
+ACCOUNT_CURRENCY = os.getenv("ACCOUNT_CURRENCY") or "USD"
 
 RISK_PROFILE_FILE = DATA_DIR / "risk_profile.json"
 
 # Stage-2 deep-analysis model. Override with CLAUDE_MODEL in .env.
-CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-6")
+# Using `or` (not the default= arg) so that an empty string from GitHub Actions
+# secrets falls back to the default rather than forwarding "" to the API.
+CLAUDE_MODEL = os.getenv("CLAUDE_MODEL") or "claude-sonnet-4-6"
 # Stage-1 screener model — fast/cheap, only sees tech+fundamental.
-HAIKU_MODEL = os.getenv("HAIKU_MODEL", "claude-haiku-4-5-20251001")
+HAIKU_MODEL = os.getenv("HAIKU_MODEL") or "claude-haiku-4-5-20251001"
 
 # Cache time-to-live in hours. Caching keeps repeated same-day runs fast and well
 # inside the Twelve Data free-tier rate limits (8/min, ~800/day).
