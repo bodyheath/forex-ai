@@ -1101,7 +1101,27 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Risk management step failed: {exc}")
 
-        # 7. Telegram summary.
+        # 7. Fetch API credit balances before building the Telegram message.
+        credit_data = {}
+        try:
+            from src import billing as _bill
+            _log_line(logf, "Checking Anthropic credit balances ...")
+            primary_bal = _bill.fetch_balance(config.ANTHROPIC_API_KEY)
+            backup_bal  = _bill.fetch_balance(config.ANTHROPIC_API_KEY_2)
+            credit_data = {
+                "primary_balance": primary_bal,
+                "backup_balance":  backup_bal,
+            }
+            _log_line(
+                logf,
+                f"Credit balances — primary: "
+                f"{'$%.2f' % primary_bal if primary_bal is not None else 'unavailable'}  "
+                f"backup: {'$%.2f' % backup_bal if backup_bal is not None else 'unavailable'}"
+            )
+        except Exception as exc:
+            _log_line(logf, f"Credit balance check failed: {exc}")
+
+        # 8. Telegram summary.
         _send_telegram_summary(
             date=date,
             universe_size=universe_size,
@@ -1113,6 +1133,7 @@ def run() -> int:
             risk_data=risk_data,
             stage1_filtered=stage1_filtered,
             failed_pairs=failed_pairs,
+            credit_data=credit_data,
         )
 
     return 0
