@@ -39,6 +39,8 @@ jobs:
           TELEGRAM_CHAT_ID_2: ${{ secrets.TELEGRAM_CHAT_ID_2 }}
           CLAUDE_MODEL: ${{ secrets.CLAUDE_MODEL }}
           HAIKU_MODEL: ${{ secrets.HAIKU_MODEL }}
+          ACCOUNT_BALANCE: ${{ secrets.ACCOUNT_BALANCE }}
+          ACCOUNT_CURRENCY: ${{ secrets.ACCOUNT_CURRENCY }}
         run: python daily.py
 
       - name: Copy dashboard to GitHub Pages
