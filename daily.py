@@ -985,6 +985,7 @@ def run() -> int:
             stats=learning_stats,
             risk_data=risk_data,
             stage1_filtered=stage1_filtered,
+            failed_pairs=failed_pairs,
         )
 
     return 0
