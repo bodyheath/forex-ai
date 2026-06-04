@@ -834,12 +834,16 @@ def run() -> int:
             _log_line(logf, f"Smart selection failed ({exc}) — falling back to watchlist.")
             pairs_today = list(config.WATCHLIST)
 
-        force_deep_pairs = set(pairs_today[:10])
+        # All top-15 selected pairs bypass the Haiku stage-1 screener and go
+        # straight to Sonnet deep analysis.  Expansion pairs (rank 16+) still
+        # go through stage-1 first to contain API costs on wide sweeps.
+        force_deep_pairs = set(pairs_today)
         _log_line(logf, f"=== Daily run {date} | universe: {universe_size} pairs ===")
 
         # 3. Analyse initial batch (top 15).
-        filtered_count = 0
-        deep_results   = []
+        filtered_count  = 0
+        stage1_filtered: list = []   # pairs rejected by stage-1 (expansion batches only)
+        deep_results    = []
         analysed_pairs: set = set()
 
         def _process_batch(pairs):
@@ -854,6 +858,7 @@ def run() -> int:
                 if result.get("screened_out"):
                     filtered_count += 1
                     s = result["screen"]
+                    stage1_filtered.append(result)   # store for Telegram WHY section
                     _log_line(
                         logf,
                         f"  {result['pair']}: FILTERED stage-1 "
