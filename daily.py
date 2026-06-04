@@ -263,14 +263,33 @@ def run() -> int:
     log_path = config.REPORTS_DIR / f"daily_{date}.log"
     with log_path.open("a", encoding="utf-8") as logf:
 
-        # 1. Learn from prior outcomes first.
+        # 0. Automatic outcome detection + win/loss analysis.
+        #    Must run before the learning refresh so newly closed trades are
+        #    included in the stats and any extracted patterns land in memory
+        #    before today's analysis reads memory.render().
+        closed_today = []
+        new_patterns = []
         try:
-            stats = learning.update_memory()
+            from src import outcome_checker, outcome_analyst
+            closed_today = outcome_checker.check_open_trades(
+                log=lambda m: _log_line(logf, m)
+            )
+            if closed_today:
+                new_patterns = outcome_analyst.run_outcome_analysis(
+                    closed_today, log=lambda m: _log_line(logf, m)
+                )
+        except Exception as exc:
+            _log_line(logf, f"Outcome step failed: {exc}")
+
+        # 1. Learn from prior outcomes (includes trades just closed above).
+        learning_stats = None
+        try:
+            learning_stats = learning.update_memory()
             _log_line(
                 logf,
-                f"Learning refreshed: {stats['closed']} closed trades, "
-                f"win rate {('%.0f%%' % (stats['win_rate'] * 100)) if stats['win_rate'] is not None else 'n/a'}, "
-                f"{stats['patterns_written']} auto-patterns written.",
+                f"Learning refreshed: {learning_stats['closed']} closed trades, "
+                f"win rate {('%.0f%%' % (learning_stats['win_rate'] * 100)) if learning_stats['win_rate'] is not None else 'n/a'}, "
+                f"{learning_stats['patterns_written']} auto-patterns written.",
             )
         except Exception as exc:
             _log_line(logf, f"Learning step failed: {exc}")
