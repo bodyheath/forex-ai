@@ -39,7 +39,7 @@ def gather(base: str, quote: str, log=print) -> dict:
     }
 
 
-def run(pair: str, log=print) -> dict:
+def run(pair: str, log=print, force_deep: bool = False) -> dict:
     base, quote = parse_pair(pair)
     canonical = f"{base}/{quote}"
     log(f"Gathering live data for {canonical}:")
@@ -54,7 +54,7 @@ def run(pair: str, log=print) -> dict:
     screen = analyst.screen(canonical, bundle)
     log(f"  Screen score: {screen['score']}/5 — {screen['reason']}")
 
-    if screen["score"] < 4:
+    if not force_deep and screen["score"] < 4:
         log(f"  Filtered out (score {screen['score']} < 4). Skipping deep analysis.")
         return {
             "pair": canonical,
