@@ -573,6 +573,7 @@ def generate() -> str:
     active_html   = _active_setups(rows)
     watch_html    = _watch_list_section(rows, today)
     best_html     = _best_opportunity_section(rows, today)
+    risk_html     = _risk_section()
     learning_html = _learning_feed_section()
 
     body = (
@@ -586,6 +587,7 @@ def generate() -> str:
         f'{watch_html}'
         f'{best_html}'
         f'<div class="grid">{_stat_cards(stats)}</div>'
+        f'{risk_html}'
         f'<section><h2>Equity curve</h2>{_equity_curve(rows)}</section>'
         f'<section><h2>Win rate by confidence score</h2>{_by_confidence(rows)}</section>'
         f'{learning_html}'
