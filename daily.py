@@ -209,6 +209,42 @@ def _send_telegram_summary(
     else:
         lines.append("No pairs were deeply analysed today.")
 
+    # ── Section 4: LEARNING UPDATE ────────────────────────────────────────────
+    closed_today  = closed_today  or []
+    new_patterns  = new_patterns  or []
+    if closed_today or new_patterns:
+        lines.append("")
+        lines.append("━━━━━━━━━━━━━━━━━━━━━")
+        lines.append("🧠 <b>SECTION 4 — LEARNING UPDATE</b>")
+        if closed_today:
+            lines.append("<b>Trades closed today:</b>")
+            for t in closed_today:
+                s = (t.get("status") or "").upper()
+                arrow = "✅" if s == "WIN" else "❌" if s == "LOSS" else "⏰"
+                rm = t.get("r_multiple")
+                try:
+                    r_txt = f" ({float(rm):+.2f}R)" if rm not in (None, "") else ""
+                except (TypeError, ValueError):
+                    r_txt = ""
+                lines.append(
+                    f"  {arrow} #{t.get('id')} {t.get('pair')} "
+                    f"{t.get('direction','')} — {s}{r_txt}"
+                )
+        if new_patterns:
+            lines.append(f"💡 <b>{len(new_patterns)} new pattern(s) learned:</b>")
+            for p in new_patterns:
+                lines.append(f"  · {p[:100]}{'…' if len(p) > 100 else ''}")
+        if stats:
+            wr = stats.get("win_rate")
+            wr_txt = f"{wr*100:.0f}%" if wr is not None else "n/a"
+            dec = stats.get("decisive", 0)
+            wins = stats.get("wins", 0)
+            losses = stats.get("losses", 0)
+            lines.append(
+                f"📊 Overall win rate: <b>{wr_txt}</b> "
+                f"({wins}W / {losses}L, {dec} decisive trades)"
+            )
+
     # ── Footer ────────────────────────────────────────────────────────────────
     lines.append("")
     lines.append("━━━━━━━━━━━━━━━━━━━━━")
