@@ -409,6 +409,46 @@ def _rows_table(rows) -> str:
     return "".join(out)
 
 
+def _learning_feed_section() -> str:
+    """Render all memory.json patterns as a plain-English feed."""
+    from src import memory as _memory
+    try:
+        records = _memory.load()
+    except Exception:
+        return ""
+    if not records:
+        return ""
+
+    tag_map = {
+        "seed":    ("SEED",    "src-seed"),
+        "auto":    ("AUTO",    "src-auto"),
+        "outcome": ("OUTCOME", "src-outcome"),
+        "user":    ("USER",    "src-user"),
+    }
+    items = []
+    for r in records:
+        src = (r.get("source") or "user").lower()
+        label, cls = tag_map.get(src, ("USER", "src-user"))
+        pattern = html.escape(r.get("pattern") or "")
+        outcome = html.escape(r.get("outcome") or "")
+        items.append(
+            f'<li class="learn-item">'
+            f'<span class="src-tag {cls}">{label}</span>'
+            f'<div>'
+            f'<div class="learn-pattern">{pattern}</div>'
+            + (f'<div class="learn-outcome">{outcome}</div>' if outcome else "")
+            + f'</div></li>'
+        )
+
+    return (
+        '<section>'
+        '<h2>🧠 System Memory — Learned Patterns</h2>'
+        '<ul class="learn-list">'
+        + "".join(items)
+        + '</ul></section>'
+    )
+
+
 def generate() -> str:
     from src import learning
     rows = tracker.load()
