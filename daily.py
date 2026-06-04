@@ -859,6 +859,16 @@ def run() -> int:
             _log_line(logf, f"Smart selection failed ({exc}) — falling back to watchlist.")
             pairs_today = list(config.WATCHLIST)
 
+        # Pre-fetch technical data for all selected pairs in one controlled batch
+        # BEFORE analysis starts.  This keeps the 8-calls/min Twelve Data rate
+        # limit from being hit during analysis and warms the 24-hour cache so
+        # every technical.analyse() call is a pure cache hit.
+        try:
+            from src import technical as _tech
+            _tech.warm_cache(pairs_today, log=lambda m: _log_line(logf, m))
+        except Exception as exc:
+            _log_line(logf, f"Technical pre-fetch failed (analysis will still run): {exc}")
+
         # All top-15 selected pairs bypass the Haiku stage-1 screener and go
         # straight to Sonnet deep analysis.  Expansion pairs (rank 16+) still
         # go through stage-1 first to contain API costs on wide sweeps.
