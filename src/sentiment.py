@@ -19,7 +19,7 @@ def _headlines_for(ccy: str) -> dict:
     meta = config.CURRENCIES.get(ccy, {})
     terms = meta.get("news_terms") or ccy
     key = f"NEWS:{ccy}:{terms}"
-    cached = cache.get(key)
+    cached = cache.get(key, ttl_hours=12.0)
     if cached is None:
         try:
             resp = requests.get(
