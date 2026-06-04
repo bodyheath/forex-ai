@@ -233,6 +233,13 @@ def run_outcome_analysis(closed_trades: list, log=print) -> list:
                 new_patterns.append(pattern)
                 log(f"  Pattern learned: {pattern[:80]}{'...' if len(pattern) > 80 else ''}")
 
+            # Update estimated account balance in risk profile.
+            try:
+                from src import risk_manager
+                risk_manager.update_balance_from_outcome(trade)
+            except Exception:
+                pass
+
         except Exception as exc:
             log(f"  Outcome analysis failed for #{rec_id} {pair}: {exc}")
 
