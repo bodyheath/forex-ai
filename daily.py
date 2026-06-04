@@ -220,7 +220,17 @@ def _what_needs_to_change(parsed: dict) -> str:
 
 
 def _rejection_reason(result: dict) -> str:
-    """Explain exactly why a pair was rejected from trade alerts."""
+    """Explain exactly why a pair was rejected — plain English, layer by layer."""
+    # Stage-1 screener rejection (never went to deep analysis)
+    if result.get("screened_out"):
+        s      = result.get("screen", {})
+        score  = s.get("score", "?")
+        reason = (s.get("reason") or "").strip()
+        if not reason:
+            reason = "Technical and fundamental signals both below minimum threshold"
+        return f"Stage 1 screener score {score}/5 — {reason}"
+
+    # Deep-analysed but below 7+ confidence
     parsed    = result["parsed"]
     conf      = parsed.get("confidence")
     direction = (parsed.get("direction") or "?").upper()
@@ -232,23 +242,31 @@ def _rejection_reason(result: dict) -> str:
         "Macro":       parsed.get("macro_score"),
     }
     missing = [k for k, v in scores.items() if v is None]
-    low     = sorted(
-        [(k, v) for k, v in scores.items() if v is not None and v <= 4],
+    below   = sorted(
+        [(k, v) for k, v in scores.items() if v is not None and v < 7],
         key=lambda x: x[1],
-    )[:2]
+    )
 
-    reasons = []
-    if low:
-        reasons += [f"{k} weak ({v}/10)" for k, v in low]
+    parts = []
+    for k, v in below[:3]:
+        if v <= 2:
+            parts.append(f"{k} very weak ({v}/10 — no clear signal)")
+        elif v <= 4:
+            parts.append(f"{k} weak ({v}/10 — below threshold)")
+        elif v <= 5:
+            parts.append(f"{k} at {v}/10 — needs upward momentum")
+        else:
+            parts.append(f"{k} at {v}/10 — needs one more confirmation to reach 7+")
     if missing:
-        reasons.append(f"missing {'+'.join(missing)}")
-    if not reasons:
+        parts.append(f"{' and '.join(missing)} data unavailable (caps overall confidence)")
+    if not parts:
         present = [v for v in scores.values() if v is not None]
         if present:
             avg = sum(present) / len(present)
-            reasons.append(f"avg layer score {avg:.1f}/10 — insufficient confluence")
-    reason_str = "; ".join(reasons) if reasons else "insufficient confluence"
-    return f"conf {conf}/10 {direction} — {reason_str}"
+            parts.append(f"average layer score {avg:.1f}/10 — confluence just below trade threshold")
+
+    reason_str = "; ".join(parts) if parts else "overall confluence insufficient for a trade"
+    return f"Confidence {conf}/10 {direction} — {reason_str}"
 
 
 def _get_volatility_info(result: dict) -> str:
