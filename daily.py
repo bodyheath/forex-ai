@@ -864,6 +864,24 @@ def _send_telegram_summary(
     if weekly:
         all_sections.append(weekly)
 
+    # ── CREDIT BALANCE ─────────────────────────────────────────────────────────
+    try:
+        from src import billing as _bill, analyst as _anl
+        credit_data  = credit_data or {}
+        active_label = "Backup" if _anl._fallback_triggered else "Primary"
+        credit_sec   = _bill.build_credit_section(
+            primary_balance = credit_data.get("primary_balance"),
+            backup_balance  = credit_data.get("backup_balance"),
+            primary_name    = config.ANTHROPIC_ACCOUNT_NAME,
+            backup_name     = config.ANTHROPIC_ACCOUNT_NAME_2,
+            active_key      = active_label,
+            daily_cost_usd  = config.DAILY_COST_USD,
+            has_backup_key  = bool(config.ANTHROPIC_API_KEY_2),
+        )
+        all_sections.append(credit_sec)
+    except Exception:
+        pass  # never let billing display break the message send
+
     # ── FOOTER ─────────────────────────────────────────────────────────────────
     try:
         from src import analyst as _anl
