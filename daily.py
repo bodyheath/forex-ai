@@ -966,6 +966,7 @@ def run() -> int:
             new_patterns=new_patterns,
             stats=learning_stats,
             risk_data=risk_data,
+            stage1_filtered=stage1_filtered,
         )
 
     return 0
