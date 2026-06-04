@@ -605,22 +605,36 @@ def _send_telegram_summary(
             "━━━━━━━━━━━━━━━━━━━━━",
             "💤 <b>WHY NO SETUPS TODAY</b>",
         ]
-        top3 = near_misses[:3]
-        if top3:
-            no_sec.append("<b>Top 3 pairs closest to a signal — and why each was rejected:</b>")
-            for i, r in enumerate(top3, 1):
-                reason = _rejection_reason(r)
-                kt     = (r["parsed"].get("key_thesis") or "").strip()
-                kt_50  = (kt[:90] + "…") if len(kt) > 90 else kt
-                no_sec.append(f"\n<b>{i}. {r['pair']}</b>")
-                no_sec.append(f"   {reason}")
-                if kt_50:
-                    no_sec.append(f"   <i>{kt_50}</i>")
-        else:
+
+        # Build a unified ranked list: deep-analysed pairs first (sorted by conf
+        # desc), then stage-1 filtered pairs (sorted by screener score desc).
+        # Both lists carry enough info to explain the rejection in plain English.
+        def _s1_sort_key(r):
+            return float(r.get("screen", {}).get("score") or 0)
+
+        combined = list(near_misses) + sorted(stage1_filtered, key=_s1_sort_key, reverse=True)
+        top5     = combined[:5]
+
+        if top5:
             no_sec.append(
-                "All pairs filtered at Stage 1 — no pair had sufficient technical "
-                "and fundamental signals to warrant deep analysis."
+                f"<b>Top {len(top5)} pair{'s' if len(top5) > 1 else ''} that came "
+                f"closest — and exactly why each was rejected:</b>"
             )
+            for i, r in enumerate(top5, 1):
+                pair   = r["pair"]
+                reason = _rejection_reason(r)
+                no_sec.append(f"\n<b>{i}. {pair}</b>")
+                no_sec.append(f"   {reason}")
+                # For deep-analysed pairs, show a snippet of the thesis
+                if not r.get("screened_out"):
+                    kt    = (r["parsed"].get("key_thesis") or "").strip()
+                    kt_50 = (kt[:90] + "…") if len(kt) > 90 else kt
+                    if kt_50:
+                        no_sec.append(f"   <i>{kt_50}</i>")
+        else:
+            # Should never reach here because we always analyse at least some pairs,
+            # but guard gracefully just in case.
+            no_sec.append("No pairs were analysed today — check API connectivity and logs.")
 
         no_sec.append("\n<b>What the system is waiting for:</b>")
         waiting = []
@@ -635,8 +649,10 @@ def _send_telegram_summary(
         weak_tech = [r for r in near_misses[:5] if (r["parsed"].get("technical_score") or 10) < 5]
         if weak_tech:
             waiting.append("• Clearer trend structure across most pairs (technicals weak)")
+        if stage1_filtered and not near_misses:
+            waiting.append("• Pairs need stronger technical + fundamental alignment to pass Stage 1 screening")
         if not waiting:
-            waiting.append("• Full confluence: Technical + Fundamental + Sentiment + Positioning + Macro")
+            waiting.append("• Full confluence across Technical + Fundamental + Sentiment + Positioning + Macro")
         for w in waiting:
             no_sec.append(w)
         all_sections.append(no_sec)
