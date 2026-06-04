@@ -112,8 +112,11 @@ def _send_telegram_summary(
     universe_size: int,
     total_scanned: int,
     deep_results: list,
+    closed_today: list = None,
+    new_patterns: list = None,
+    stats: dict = None,
 ) -> None:
-    """Build and send the three-section Telegram message."""
+    """Build and send the Telegram message (3 trade sections + learning update)."""
     yes_trades  = [r for r in deep_results if r["parsed"].get("trade_this") == "YES"]
     watch_list  = sorted(
         [r for r in deep_results
