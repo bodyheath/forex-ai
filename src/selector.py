@@ -134,12 +134,19 @@ def _session_score(base: str, quote: str, utc_hour: int) -> float:
 
 
 def _tier_score(pair: str, base: str, quote: str) -> float:
-    """Return liquidity tier score for this pair."""
+    """Return liquidity-tier score for this pair.
+
+    Scores span 0.1–8.0 so that the weighted tier term dominates the composite
+    and majors always rank above exotics.  Pairs involving any non-core
+    currency (CZK, DKK, HUF, PLN, SEK, NOK, HKD, SGD, etc.) receive 0.1,
+    meaning they require ~7 % more daily movement than a major to compete —
+    a threshold almost never reached in normal market conditions.
+    """
     if pair in _TIER_SCORES:
         return _TIER_SCORES[pair]
     if base in _CORE_CURRENCIES and quote in _CORE_CURRENCIES:
-        return 1.5
-    return 0.8
+        return 1.5   # both G10 but not a predefined cross — still tradeable
+    return 0.1       # at least one exotic currency — strongly deprioritise
 
 
 def _event_boost(base: str, quote: str, events: list) -> float:
