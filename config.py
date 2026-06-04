@@ -35,8 +35,11 @@ for _d in (DATA_DIR, CACHE_DIR, REPORTS_DIR):
 # ---------------------------------------------------------------------------
 load_dotenv(ROOT / ".env")
 
-ANTHROPIC_API_KEY   = os.getenv("ANTHROPIC_API_KEY", "")
-ANTHROPIC_API_KEY_2 = os.getenv("ANTHROPIC_API_KEY_2", "")  # fallback — partner account
+ANTHROPIC_API_KEY    = os.getenv("ANTHROPIC_API_KEY", "")
+ANTHROPIC_API_KEY_2  = os.getenv("ANTHROPIC_API_KEY_2", "")   # fallback — partner account
+ANTHROPIC_ACCOUNT_NAME   = os.getenv("ANTHROPIC_ACCOUNT_NAME",   "Primary")  # display name for primary
+ANTHROPIC_ACCOUNT_NAME_2 = os.getenv("ANTHROPIC_ACCOUNT_NAME_2", "Backup")   # display name for backup
+DAILY_COST_USD = float(os.getenv("DAILY_COST_USD") or "0.05")  # estimated $/run for runway calc
 # Twelve Data is the primary price source for the technical layer (free tier
 # ~800 calls/day, 8/min, and a native 4h interval). Get a free key at
 # https://twelvedata.com/pricing  ->  put it in .env as TWELVE_DATA_KEY.
