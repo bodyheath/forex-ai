@@ -884,6 +884,13 @@ def run() -> int:
     now_ak   = _auckland_now()                    # all date logic uses Auckland time
     date     = now_ak.strftime("%Y-%m-%d")
     log_path = config.REPORTS_DIR / f"daily_{date}.log"
+
+    # Reset fallback key state so each run starts on the primary key.
+    try:
+        from src import analyst as _anl
+        _anl.reset_key_state()
+    except Exception:
+        pass
     with log_path.open("a", encoding="utf-8") as logf:
 
         # 0. Automatic outcome detection + win/loss analysis.
