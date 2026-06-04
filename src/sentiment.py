@@ -40,7 +40,7 @@ def _headlines_for(ccy: str) -> dict:
                     "title": a.get("title"),
                     "source": (a.get("source") or {}).get("name"),
                     "published": a.get("publishedAt"),
-                    "desc": (a.get("description") or "")[:200],
+                    "desc": (a.get("description") or "")[:80],
                 }
                 for a in payload.get("articles", [])
             ]
