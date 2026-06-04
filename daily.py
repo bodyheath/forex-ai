@@ -97,10 +97,10 @@ def _conf(result: dict) -> int:
         return 0
 
 
-def _analyse_pair(pair: str, logf) -> dict | None:
+def _analyse_pair(pair: str, logf, force_deep: bool = False) -> dict | None:
     """Run analyse_and_log for one pair; return result or None on exception."""
     try:
-        return service.analyse_and_log(pair, log=lambda m: _log_line(logf, m))
+        return service.analyse_and_log(pair, log=lambda m: _log_line(logf, m), force_deep=force_deep)
     except Exception as exc:
         _log_line(logf, f"FAILED {pair}: {exc}")
         traceback.print_exc(file=logf)
