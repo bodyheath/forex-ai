@@ -137,6 +137,16 @@ def _send_telegram_summary(
         f"<i>Scanned {universe_size} total pairs · Deep analysed {len(deep_results)} pairs</i>"
     )
 
+    # Build sizing lookup keyed by pair (populated from risk_data if available).
+    _sizes = {}
+    _exposure = {}
+    _risk_state = {}
+    if risk_data:
+        for s in (risk_data.get("sized_trades") or []):
+            _sizes[s["pair"]] = s
+        _exposure   = risk_data.get("exposure", {})
+        _risk_state = risk_data.get("risk_state", {})
+
     # ── Section 1: TRADE ALERTS ──────────────────────────────────────────────
     lines.append("")
     lines.append("━━━━━━━━━━━━━━━━━━━━━")
@@ -147,26 +157,50 @@ def _send_telegram_summary(
             pair      = r["pair"]
             direction = (p.get("direction") or "?").upper()
             conf      = p.get("confidence") or "?"
-            entry     = _fmt_price(p.get("entry"))
-            stop      = _fmt_price(p.get("stop_loss"))
-            target    = _fmt_price(p.get("target"))
+            entry_raw = p.get("entry")
+            stop_raw  = p.get("stop_loss")
+            tgt_raw   = p.get("target")
             rr_raw    = p.get("reward_risk")
-            rr        = f"{float(rr_raw):.2f}:1" if rr_raw is not None else "—"
             arrow     = "📈" if direction == "BUY" else "📉"
             session   = _session_label(pair)
             bet_raw   = p.get("best_entry_time") or ""
             bet       = bet_raw[:80] if bet_raw else session
 
-            lines += [
+            sz = _sizes.get(pair, {})
+            adj_stop = sz.get("adj_stop") or stop_raw
+            adj_tgt  = sz.get("adj_target") or tgt_raw
+
+            # Re-derive R:R from (possibly ATR-adjusted) levels.
+            try:
+                rr = f"{abs(float(adj_tgt) - float(entry_raw)) / abs(float(entry_raw) - float(adj_stop)):.2f}:1"
+            except (TypeError, ValueError, ZeroDivisionError):
+                rr = f"{float(rr_raw):.2f}:1" if rr_raw is not None else "—"
+
+            trade_lines = [
                 "",
                 f"{arrow} <b>{pair} — {direction}</b>",
                 f"Confidence:  <b>{conf}/10</b>",
-                f"Entry:       <code>{entry}</code>",
-                f"Stop Loss:   <code>{stop}</code>",
-                f"Target:      <code>{target}</code>",
+                f"Entry:       <code>{_fmt_price(entry_raw)}</code>",
+                f"Stop Loss:   <code>{_fmt_price(adj_stop)}</code>",
+                f"Target:      <code>{_fmt_price(adj_tgt)}</code>",
                 f"Reward:Risk  <b>{rr}</b>",
-                f"⏰ <b>{bet}</b>",
             ]
+            if sz.get("atr_note"):
+                trade_lines.append(f"📐 ATR adj:   {sz['atr_note']}")
+            if sz.get("lots"):
+                cur = sz.get("currency", "USD")
+                amt = sz.get("risk_amount", 0)
+                pct = sz.get("risk_pct", 1.0)
+                trade_lines.append(
+                    f"📦 Position: <code>{sz['lots']} lots</code> — "
+                    f"Risk: {amt:,.2f} {cur} ({pct:.2f}%)"
+                )
+            if sz.get("correlated"):
+                trade_lines.append("⚠️ <i>CORRELATED POSITION — size halved to manage total exposure</i>")
+            if _exposure.get("limit_reached"):
+                trade_lines.append("🔴 <i>RISK LIMIT REACHED — open exposure at limit</i>")
+            trade_lines.append(f"⏰ <b>{bet}</b>")
+            lines += trade_lines
     else:
         lines.append("No pairs met the 7+ confidence threshold today.")
 
