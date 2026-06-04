@@ -869,10 +869,6 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Technical pre-fetch failed (analysis will still run): {exc}")
 
-        # All top-15 selected pairs bypass the Haiku stage-1 screener and go
-        # straight to Sonnet deep analysis.  Expansion pairs (rank 16+) still
-        # go through stage-1 first to contain API costs on wide sweeps.
-        force_deep_pairs = set(pairs_today)
         _log_line(logf, f"=== Daily run {date} | universe: {universe_size} pairs ===")
 
         # ── Startup diagnostics — log exactly what config values are in use ──
@@ -886,7 +882,7 @@ def run() -> int:
             f"[DIAG] TWELVE_DATA_KEY="
             f"{'set (len=' + str(len(config.TWELVE_DATA_KEY)) + ')' if config.TWELVE_DATA_KEY else 'not set — will use UNIVERSE fallback'}"
         ))
-        _log_line(logf, f"[DIAG] force_deep_pairs ({len(force_deep_pairs)}): {sorted(force_deep_pairs)}")
+        _log_line(logf, f"[DIAG] pairs_today ({len(pairs_today)}): {pairs_today}")
 
         # 3. Analyse initial batch (top 15).
         filtered_count  = 0
