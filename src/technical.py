@@ -225,16 +225,14 @@ def warm_cache(pairs: list, log=print) -> None:
 
     log(
         f"Technical pre-fetch: {len(needed)} API call(s) needed "
-        f"for {len(pairs)} pair(s) — pacing at 7 calls per 62s ..."
+        f"for {len(pairs)} pair(s) — 10s delay between calls ..."
     )
 
     api_n  = 0
     errors = 0
     for pair, interval, outputsize in needed:
-        # Pause before the 8th, 15th, 22nd … call to stay under 8/min.
-        if api_n > 0 and api_n % 7 == 0:
-            log(f"  Rate-limit pause 62s ({api_n} calls made so far) ...")
-            time.sleep(62)
+        if api_n > 0:
+            time.sleep(10)
         try:
             _td_request(pair, interval, outputsize)
             log(f"  Cached {pair} {interval}")
