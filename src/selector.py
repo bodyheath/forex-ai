@@ -73,7 +73,7 @@ _COUNTRY_CURRENCY = {
     "poland": "PLN", "hungary": "HUF", "czech republic": "CZK",
 }
 
-_PRICE_FETCH_LIMIT = 75
+_PRICE_FETCH_LIMIT = 20
 
 
 def _fetch_universe() -> list:
