@@ -329,9 +329,8 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         cache_key = f"SEL:daily:{pair}"
         is_miss = cache.get(cache_key) is None and bool(config.TWELVE_DATA_KEY)
         if is_miss:
-            if api_calls > 0 and api_calls % 7 == 0:
-                log("  (rate-limit pause 62s ...)")
-                time.sleep(62)
+            if api_calls > 0:
+                time.sleep(10)
             api_calls += 1
 
         snapshot = _fetch_daily_snapshot(pair)
