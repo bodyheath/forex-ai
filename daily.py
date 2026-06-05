@@ -905,7 +905,36 @@ def _send_telegram_summary(
 
 # ── Daily run ──────────────────────────────────────────────────────────────────
 
+_LAST_RUN_FILE = config.REPORTS_DIR.parent / "last_run.txt"
+_COOLDOWN_SECS = 3600  # 60 minutes
+
+
 def run() -> int:
+    # ── Duplicate-run guard ────────────────────────────────────────────────────
+    # Write the current UTC timestamp at the very start and block any second run
+    # that starts within 60 minutes of the previous one.  This hard-stops
+    # duplicates regardless of whether cron-job.org, GitHub Actions cron, or a
+    # manual workflow_dispatch fired twice.
+    _now_utc = datetime.utcnow()
+    try:
+        _LAST_RUN_FILE.parent.mkdir(parents=True, exist_ok=True)
+        if _LAST_RUN_FILE.exists():
+            _last_ts  = datetime.fromisoformat(_LAST_RUN_FILE.read_text().strip())
+            _elapsed  = (_now_utc - _last_ts).total_seconds()
+            if _elapsed < _COOLDOWN_SECS:
+                print(
+                    f"[guard] Duplicate run blocked — last run started "
+                    f"{int(_elapsed / 60)}m {int(_elapsed % 60)}s ago "
+                    f"(cooldown: {_COOLDOWN_SECS // 60}m). "
+                    f"Exiting without sending any Telegram message.",
+                    file=sys.stderr,
+                )
+                return 0
+        _LAST_RUN_FILE.write_text(_now_utc.isoformat())
+    except Exception as _guard_err:
+        print(f"[guard] last_run.txt check failed ({_guard_err}) — proceeding anyway.", file=sys.stderr)
+    # ── /duplicate-run guard ───────────────────────────────────────────────────
+
     missing = config.missing_keys()
     if missing:
         print("ERROR: missing API keys in .env: " + ", ".join(missing), file=sys.stderr)
