@@ -32,7 +32,7 @@ key_looks_valid = key_len >= 20  # real keys are 32-char hex
 
 print(f"  Key present : {'Yes' if key else 'No'}")
 print(f"  Key length  : {key_len} chars")
-print(f"  Looks valid : {'Yes (≥20 chars)' if key_looks_valid else 'No — too short or empty'}")
+print(f"  Looks valid : {'Yes (>=20 chars)' if key_looks_valid else 'No - too short or empty'}")
 
 results["key_present"] = bool(key)
 results["key_valid_shape"] = key_looks_valid
