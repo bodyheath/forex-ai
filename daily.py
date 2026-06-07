@@ -1034,13 +1034,13 @@ def run() -> int:
         deep_results    = []
         analysed_pairs: set = set()
 
-        def _process_batch(pairs):
+        def _process_batch(pairs, force_deep=False):
             nonlocal filtered_count
             for pair in pairs:
                 if pair in analysed_pairs:
                     continue
                 analysed_pairs.add(pair)
-                result = _analyse_pair(pair, logf, force_deep=False)
+                result = _analyse_pair(pair, logf, force_deep=force_deep)
                 if result is None:
                     failed_pairs.append(pair)
                     continue
