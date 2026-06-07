@@ -138,16 +138,28 @@ tier_coeff = float(tier_coeff_match.group(1)) if tier_coeff_match else None
 if thr_val is not None:
     reject_range  = f"scores 1-{thr_val - 1}" if thr_val > 1 else "score 1 only"
     pass_range    = f"scores {thr_val}-5"
-    print(f"  Rejection condition              : screen['score'] < {thr_val}")
-    print(f"  Pairs filtered out               : {reject_range}")
-    print(f"  Pairs that pass to deep analysis : {pass_range}")
-    print(f"  Threshold is <= 3?               : {'YES' if thr_val <= 3 else 'NO'}")
+    print(f"  Rejection condition (pipeline.py)  : screen['score'] < {thr_val}")
+    print(f"  Pairs Haiku filters out            : {reject_range}")
+    print(f"  Pairs Haiku passes through         : {pass_range}")
+    print(f"  Threshold is <= 3?                 : {'YES' if thr_val <= 3 else 'NO'}")
 else:
     print("  ERROR: could not find threshold in pipeline.py")
 
-results["threshold_ok"] = thr_val is not None and thr_val <= 3
+print()
+print(f"  Minimum-liquidity filter (selector): tier < 1.0 present? {'YES' if has_liq_filter else 'NO'}")
+if tier_coeff is not None:
+    print(f"  Tier coefficient in composite      : {tier_coeff} (tiebreaker -- not dominator)")
+    print(f"  Coefficient <= 0.5?                : {'YES' if tier_coeff <= 0.5 else 'NO -- STILL DOMINATING'}")
+else:
+    print("  Tier coefficient in composite      : check selector.py manually")
+
+results["threshold_ok"] = (
+    thr_val is not None and thr_val <= 3
+    and has_liq_filter
+    and (tier_coeff is not None and tier_coeff <= 0.5)
+)
 print(f"\n  {PASS if results['threshold_ok'] else FAIL}  "
-      f"Haiku threshold = {thr_val} -- pairs scoring >= {thr_val} pass to deep analysis")
+      f"Haiku threshold={thr_val}, liquidity filter active, tier is tiebreaker only")
 
 
 # ── STEP 4: EXPANSION CHECK ─────────────────────────────────────────────────
