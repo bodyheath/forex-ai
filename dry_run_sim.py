@@ -38,13 +38,17 @@ section("STEP 1  |  SELECTOR CHECK")
 
 utc_hour = datetime.utcnow().hour
 prescore_list = []
+exotic_filtered = 0
 for pair in _sel.UNIVERSE:
     parts = pair.split("/")
     if len(parts) != 2:
         continue
     base, quote = parts[0].upper(), parts[1].upper()
-    sess = _sel._session_score(base, quote, utc_hour)
     tier = _sel._tier_score(pair, base, quote)
+    if tier < 1.0:               # minimum-liquidity filter
+        exotic_filtered += 1
+        continue
+    sess = _sel._session_score(base, quote, utc_hour)
     pre  = 0.0 * 1.5 + sess * 1.2 + tier * 0.3   # no event data (conserving quota)
     prescore_list.append((pair, pre, tier, sess))
 
@@ -52,13 +56,28 @@ prescore_list.sort(key=lambda x: x[1], reverse=True)
 top15 = prescore_list[:15]
 
 print(f"  Universe pairs available     : {len(_sel.UNIVERSE)}")
+print(f"  Exotic pairs filtered out    : {exotic_filtered} (tier < 1.0)")
+print(f"  Liquid pairs remaining       : {len(prescore_list)}")
 print(f"  Current UTC hour             : {utc_hour:02d}:00")
 print()
-print(f"  Top 15 by pre-score  (tier x2 + session x1.2 -- no event data):")
-print(f"  {'Rank':<5} {'Pair':<12} {'Pre-score':<11} {'Tier':<7} {'Session'}")
-print(f"  {'-'*5} {'-'*12} {'-'*11} {'-'*7} {'-'*7}")
+print(f"  Top 15 by pre-score  (sess x1.2 + liq x0.3 -- no event/price data):")
+print(f"  Note: session alignment now visible in rankings -- EUR/JPY etc. score")
+print(f"  higher when multiple sessions overlap. With real price data, momentum")
+print(f"  (24h move x2.2) will further differentiate pairs dynamically.")
+print()
+print(f"  {'Rank':<5} {'Pair':<12} {'Pre-score':<11} {'Tier':<7} {'Session':<9} Why ranked here")
+print(f"  {'-'*5} {'-'*12} {'-'*11} {'-'*7} {'-'*9} {'-'*30}")
 for i, (pair, pre, tier, sess) in enumerate(top15, 1):
-    print(f"  {i:<5} {pair:<12} {pre:<11.3f} {tier:<7.1f} {sess:.1f}")
+    reason = []
+    if sess >= 3.0:
+        reason.append("dual session overlap")
+    elif sess >= 1.5:
+        reason.append("active session")
+    if tier >= 7.0:
+        reason.append("G7 liquidity")
+    elif tier >= 5.0:
+        reason.append("major cross")
+    print(f"  {i:<5} {pair:<12} {pre:<11.3f} {tier:<7.1f} {sess:<9.1f} {', '.join(reason)}")
 
 selected_count = len(top15)
 print(f"\n  Pairs that would be selected : {selected_count}")
