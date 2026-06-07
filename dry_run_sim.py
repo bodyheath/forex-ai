@@ -123,8 +123,17 @@ section("STEP 3  |  HAIKU THRESHOLD CHECK  (pipeline.py)")
 with open("src/pipeline.py", "r", encoding="utf-8") as f:
     pipeline_src = f.read()
 
+with open("src/selector.py", "r", encoding="utf-8") as f:
+    selector_src = f.read()
+
 thr_match = re.search(r'screen\["score"\]\s*<\s*(\d+)', pipeline_src)
 thr_val   = int(thr_match.group(1)) if thr_match else None
+
+# Check minimum-liquidity filter is in selector
+has_liq_filter = "tier < 1.0" in selector_src
+# Check tier coefficient is <=0.5 (not dominating)
+tier_coeff_match = re.search(r"tier \* ([\d.]+)\s*# .*tiebreaker", selector_src)
+tier_coeff = float(tier_coeff_match.group(1)) if tier_coeff_match else None
 
 if thr_val is not None:
     reject_range  = f"scores 1-{thr_val - 1}" if thr_val > 1 else "score 1 only"
