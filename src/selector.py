@@ -41,12 +41,13 @@ _SESSION_UTC = {
     "ZAR": (6, 15), "TRY": (6, 16),
 }
 
-# Tier scores use a deliberately wide range so the tier weight dominates the
-# composite and guarantees majors always outrank exotics regardless of
-# short-term volatility.  An exotic pair would need ~7 % more daily movement
-# than a major to overcome the gap — essentially impossible in normal markets.
+# Tier scores reflect tradeable liquidity rank (G7 majors highest, exotics 0.1).
+# With a small coefficient (0.3) in the composite, tier is a modest tiebreaker
+# rather than a dominance mechanism.  A cross pair moving 0.5 % more than a flat
+# G7 major will outscore it.  Pairs with tier 0.1 (one exotic currency) are
+# removed before scoring begins by the minimum-liquidity filter.
 _TIER_SCORES = {
-    # G7 majors — always the first picks
+    # G7 majors — highest liquidity, not a guaranteed selection
     "EUR/USD": 8.0, "GBP/USD": 8.0, "USD/JPY": 8.0,
     "AUD/USD": 7.5, "USD/CAD": 7.5, "NZD/USD": 7.0, "USD/CHF": 7.0,
     # Key crosses among the eight core currencies — second tier
