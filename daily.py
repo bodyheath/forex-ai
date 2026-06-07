@@ -1059,13 +1059,14 @@ def run() -> int:
                 _log_line(logf, f"#{result['id']} {result['pair']}: {verdict}")
                 deep_results.append(result)
 
-        # All top-selected pairs bypass Haiku and go straight to Sonnet.
-        force_deep_pairs = set(pairs_today)
+        # Merit-selected pairs go directly to Sonnet — Haiku is bypassed.
+        # The selector already ranked every liquid pair on momentum, events,
+        # session alignment, and liquidity tier; additional Haiku filtering
+        # here would risk discarding the highest-scoring pairs of the day.
         _log_line(
             logf,
-            f"force_deep_pairs ({len(force_deep_pairs)}): "
-            f"{', '.join(sorted(force_deep_pairs))} "
-            f"-- bypassing Haiku, going straight to Sonnet.",
+            f"Merit-selected {len(pairs_today)} pair(s) going directly to Sonnet "
+            f"(Haiku bypassed): {', '.join(pairs_today)}",
         )
         _process_batch(pairs_today, force_deep=True)
 
