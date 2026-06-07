@@ -45,7 +45,7 @@ for pair in _sel.UNIVERSE:
     base, quote = parts[0].upper(), parts[1].upper()
     sess = _sel._session_score(base, quote, utc_hour)
     tier = _sel._tier_score(pair, base, quote)
-    pre  = 0.0 * 1.5 + sess * 1.2 + tier * 2.0   # no event data (conserving quota)
+    pre  = 0.0 * 1.5 + sess * 1.2 + tier * 0.3   # no event data (conserving quota)
     prescore_list.append((pair, pre, tier, sess))
 
 prescore_list.sort(key=lambda x: x[1], reverse=True)
