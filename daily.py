@@ -1059,9 +1059,17 @@ def run() -> int:
                 _log_line(logf, f"#{result['id']} {result['pair']}: {verdict}")
                 deep_results.append(result)
 
-        _process_batch(pairs_today)
+        # All top-selected pairs bypass Haiku and go straight to Sonnet.
+        force_deep_pairs = set(pairs_today)
+        _log_line(
+            logf,
+            f"force_deep_pairs ({len(force_deep_pairs)}): "
+            f"{', '.join(sorted(force_deep_pairs))} "
+            f"-- bypassing Haiku, going straight to Sonnet.",
+        )
+        _process_batch(pairs_today, force_deep=True)
 
-        # 4. Auto-expand: if fewer than 3 meaningful results after the first 10,
+        # 4. Auto-expand: if fewer than 3 meaningful results after the first 15,
         # pull the next 5 from the ranked list and screen them through Haiku too.
         # Cap at 15 deep-analysed pairs total to contain costs.
         meaningful = [r for r in deep_results if _conf(r) >= 5]
