@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
-SEP = "─" * 60
+SEP = "-" * 60
 PASS = "[ PASS ]"
 FAIL = "[ FAIL ]"
 
