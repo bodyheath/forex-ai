@@ -54,8 +54,8 @@ def run(pair: str, log=print, force_deep: bool = False) -> dict:
     screen = analyst.screen(canonical, bundle)
     log(f"  Screen score: {screen['score']}/5 — {screen['reason']}")
 
-    if not force_deep and screen["score"] < 4:
-        log(f"  Filtered out (score {screen['score']} < 4). Skipping deep analysis.")
+    if not force_deep and screen["score"] < 3:
+        log(f"  Filtered out (score {screen['score']} < 3). Skipping deep analysis.")
         return {
             "pair": canonical,
             "bundle": bundle,
