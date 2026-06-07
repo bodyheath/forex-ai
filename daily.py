@@ -1023,10 +1023,11 @@ def run() -> int:
         ))
         _log_line(logf, f"[DIAG] pairs_today ({len(pairs_today)}): {pairs_today}")
 
-        # 3. Analyse initial batch (top 10).
-        # All pairs go through Haiku screening first.  Only those scoring 4+
-        # proceed to Sonnet deep analysis.  This is enforced naturally by
-        # force_deep=False — no bypass of the stage-1 threshold.
+        # 3. Analyse initial batch (top 15 — force_deep=True bypasses Haiku).
+        # The smart selector already scored these on 4 axes (movement, momentum,
+        # events, session, tier); sending them directly to Sonnet prevents Haiku
+        # from discarding pairs the selector ranked highly, which was the root
+        # cause of zero-deep-analysed runs.
         filtered_count  = 0
         stage1_filtered: list = []   # pairs rejected by Haiku screening
         failed_pairs:    list = []   # pairs where _analyse_pair returned None (exception)
