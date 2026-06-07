@@ -357,21 +357,27 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         tier = _tier_score(pair, base, quote)
 
         composite = (
-            change_abs * 2.2
-            + directional * 0.5
-            + ev_boost * 1.6
-            + sess * 0.8
-            + tier * 2.0   # raised from 0.4 — dominates to ensure majors rank above exotics
+            change_abs * 2.2    # 24h price movement — largest merit signal
+            + directional * 0.5  # 5-day directional consistency
+            + ev_boost * 1.6     # upcoming high/medium-impact events (next 48h)
+            + sess * 0.8         # current session alignment
+            + tier * 0.3         # liquidity tier — modest tiebreaker only
         )
         pair_scores[pair] = {
-            "score": round(composite, 3),
+            "score":      round(composite, 3),
             "change_24h": round(change_abs, 4),
-            "momentum": int(directional),
-            "events": round(ev_boost, 2),
-            "session": round(sess, 2),
-            "tier": round(tier, 2),
-            "base": base,
-            "quote": quote,
+            "momentum":   int(directional),
+            "events":     round(ev_boost, 2),
+            "session":    round(sess, 2),
+            "tier":       round(tier, 2),
+            "base":       base,
+            "quote":      quote,
+            # Per-component contributions for transparent logging
+            "c_momentum":  round(change_abs * 2.2, 2),
+            "c_direction": round(directional * 0.5, 2),
+            "c_events":    round(ev_boost * 1.6, 2),
+            "c_session":   round(sess * 0.8, 2),
+            "c_tier":      round(tier * 0.3, 2),
         }
 
     ranked = sorted(pair_scores.items(), key=lambda x: x[1]["score"], reverse=True)
