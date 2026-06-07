@@ -285,14 +285,21 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
                  log=print) -> dict:
     """Score the full Twelve Data forex universe and return the top_n pairs.
 
+    Selection is pure-merit: every pair is scored on momentum (last 24h price
+    movement), directional consistency (5-day), upcoming economic events, session
+    alignment, and a modest liquidity-tier factor.  No pair is guaranteed a spot.
+    Exotic pairs (tier < 1.0) are removed by a minimum-liquidity filter before
+    scoring begins.
+
     Returns a dict:
         selected        -- list of top_n pair strings for deep analysis
-        ranked          -- list of (pair, score_meta) tuples covering all pairs
-                           that received a price-data fetch, sorted best-first
+        ranked          -- list of (pair, score_meta) tuples, sorted best-first,
+                           each including per-component score contributions
         universe_size   -- total pairs in the Twelve Data universe
-        prescreened     -- number of pairs that received a price-data fetch
+        prescreened     -- number of pairs that passed the liquidity filter
+                           and received a price-data fetch
 
-    Rate-limit pacing: pauses 62s after every 7 uncached Twelve Data calls.
+    Rate-limit pacing: pauses 10s between uncached Twelve Data calls.
     Falls back to config.WATCHLIST when no price data is available.
     """
     all_pairs = _fetch_universe()
