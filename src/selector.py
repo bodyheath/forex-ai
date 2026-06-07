@@ -382,15 +382,21 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
 
     ranked = sorted(pair_scores.items(), key=lambda x: x[1]["score"], reverse=True)
 
-    log(f"  Top {min(top_n, len(ranked))} selected (score = movement + momentum + events + session + tier):")
-    for pair, meta in ranked[:top_n]:
-        event_flag = f"  ** {meta['events']:.1f} evt" if meta["events"] > 0 else ""
-        sess_flag = f"  sess={meta['session']:.1f}" if meta["session"] > 0 else ""
+    log(
+        f"  Top {min(top_n, len(ranked))} by pure merit  "
+        f"(columns: total | mov x2.2 | dir x0.5 | evt x1.6 | sess x0.8 | liq x0.3):"
+    )
+    for rank, (pair, meta) in enumerate(ranked[:top_n], 1):
         log(
-            f"    {pair:10s}  score={meta['score']:5.2f}"
-            f"  24h={meta['change_24h']:.3f}%"
-            f"  mom={meta['momentum']}/5"
-            f"{event_flag}{sess_flag}"
+            f"    #{rank:02d}  {pair:10s}  total={meta['score']:6.2f}"
+            f"  |  mov={meta['c_momentum']:5.2f}"
+            f"  dir={meta['c_direction']:4.2f}"
+            f"  evt={meta['c_events']:4.2f}"
+            f"  sess={meta['c_session']:4.2f}"
+            f"  liq={meta['c_tier']:4.2f}"
+            f"  (24h={meta['change_24h']:+.3f}%"
+            f"  {meta['momentum']}/5d"
+            f"  {meta['events']:.1f}evt)"
         )
 
     selected = [pair for pair, _ in ranked[:top_n]]
