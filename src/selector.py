@@ -137,11 +137,10 @@ def _session_score(base: str, quote: str, utc_hour: int) -> float:
 def _tier_score(pair: str, base: str, quote: str) -> float:
     """Return liquidity-tier score for this pair.
 
-    Scores span 0.1–8.0 so that the weighted tier term dominates the composite
-    and majors always rank above exotics.  Pairs involving any non-core
-    currency (CZK, DKK, HUF, PLN, SEK, NOK, HKD, SGD, etc.) receive 0.1,
-    meaning they require ~7 % more daily movement than a major to compete —
-    a threshold almost never reached in normal market conditions.
+    Scores span 0.1–8.0.  Used with coefficient 0.3 so tier acts as a modest
+    tiebreaker rather than a dominator.  Pairs scoring 0.1 (at least one exotic
+    or illiquid currency — CZK, DKK, HUF, PLN, SEK, NOK, HKD, SGD, etc.) are
+    excluded before scoring by the minimum-liquidity filter.
     """
     if pair in _TIER_SCORES:
         return _TIER_SCORES[pair]
