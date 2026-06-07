@@ -1073,9 +1073,9 @@ def run() -> int:
         # pull the next 5 from the ranked list and screen them through Haiku too.
         # Cap at 15 deep-analysed pairs total to contain costs.
         meaningful = [r for r in deep_results if _conf(r) >= 5]
-        next_idx   = 10
+        next_idx   = len(pairs_today)  # start expansion beyond the initial selection
 
-        while len(meaningful) < 3 and len(deep_results) < 15 and next_idx < len(ranked_all):
+        while len(meaningful) < 3 and len(deep_results) < 25 and next_idx < len(ranked_all):
             extra_pairs = [p for p, _ in ranked_all[next_idx:next_idx + 5]]
             next_idx   += 5
             _log_line(
