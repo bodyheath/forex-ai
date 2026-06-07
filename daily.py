@@ -984,7 +984,7 @@ def run() -> int:
         universe_size = len(selector.UNIVERSE)
         ranked_all    = []
         try:
-            selection     = selector.select_pairs(top_n=10, log=lambda m: _log_line(logf, m))
+            selection     = selector.select_pairs(top_n=15, log=lambda m: _log_line(logf, m))
             pairs_today   = selection["selected"]
             ranked_all    = selection["ranked"]
             universe_size = selection["universe_size"]
