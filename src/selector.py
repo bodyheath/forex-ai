@@ -319,15 +319,20 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         if len(parts) != 2:
             continue
         base, quote = parts[0].upper(), parts[1].upper()
+        tier = _tier_score(pair, base, quote)
+        if tier < 1.0:
+            continue  # minimum-liquidity filter: skip exotic/illiquid pairs
         ev = _event_boost(base, quote, events)
         sess = _session_score(base, quote, utc_hour)
-        tier = _tier_score(pair, base, quote)
-        pre = ev * 1.5 + sess * 1.2 + tier * 2.0   # tier weight matches final composite
+        pre = ev * 1.5 + sess * 1.2 + tier * 0.3
         prescore_list.append((pair, base, quote, pre))
 
     prescore_list.sort(key=lambda x: x[3], reverse=True)
     candidates = prescore_list[:price_fetch_limit]
-    log(f"  Pre-screened top {len(candidates)} pairs by session+events+tier for price fetch")
+    log(
+        f"  Pre-screened top {len(candidates)} liquid pairs "
+        f"(of {len(prescore_list)} passing liquidity filter) for price fetch"
+    )
 
     api_calls = 0
     pair_scores = {}
