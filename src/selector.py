@@ -655,7 +655,7 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         sess      = _session_score(base, quote, utc_hour)
         rate_diff = abs(rates.get(base, 0.0) - rates.get(quote, 0.0))
         rate_bonus = min(rate_diff / 5.0, 1.0) * 2.0   # 0-2 pts
-        pre = ev * 1.5 + sess * 1.2 + tier * 0.3 + rate_bonus
+        pre = ev * 1.5 + sess * 1.2 + tier * 0.3 + rate_bonus  # tier * 0.3 = tiebreaker
         prescore_list.append((pair, base, quote, pre))
 
     prescore_list.sort(key=lambda x: x[3], reverse=True)
