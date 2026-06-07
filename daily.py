@@ -1086,6 +1086,29 @@ def run() -> int:
             _process_batch(extra_pairs)
             meaningful = [r for r in deep_results if _conf(r) >= 5]
 
+        # Minimum guarantee: if deep_results is still 0 after all screening and
+        # expansion, force the top 5 pre-scored pairs directly to Sonnet deep
+        # analysis. This is an absolute floor that can never be breached.
+        if len(deep_results) == 0:
+            _log_line(
+                logf,
+                "WARNING: deep_results=0 after all screening and expansion. "
+                "Activating minimum guarantee -- forcing top 5 pre-scored pairs "
+                "directly to Sonnet deep analysis.",
+            )
+            fallback_pairs = (
+                [p for p, _ in ranked_all[:5]]
+                if ranked_all
+                else list(config.WATCHLIST[:5])
+            )
+            _log_line(logf, f"  Minimum guarantee pairs: {fallback_pairs}")
+            _process_batch(fallback_pairs, force_deep=True)
+            _log_line(
+                logf,
+                f"Minimum guarantee applied: {len(deep_results)} pair(s) now "
+                f"in deep analysis pool.",
+            )
+
         passed = len(deep_results)
         _log_line(
             logf,
