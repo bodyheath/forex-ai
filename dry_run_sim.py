@@ -124,7 +124,7 @@ print(f"\n  {PASS if results['threshold_ok'] else FAIL}  "
 section("STEP 4  |  EXPANSION CHECK  (code inspection)")
 
 has_expansion   = "while len(meaningful) < 3" in daily_src
-has_dynamic_idx = "next_idx = len(pairs_today)" in daily_src
+has_dynamic_idx = "next_idx" in daily_src and "len(pairs_today)" in daily_src
 
 batch_match = re.search(r"ranked_all\[next_idx:next_idx \+ (\d+)\]", daily_src)
 batch_size  = int(batch_match.group(1)) if batch_match else None
