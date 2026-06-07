@@ -75,25 +75,27 @@ section("STEP 2  |  FORCE DEEP CHECK  (code inspection)")
 with open("daily.py", "r", encoding="utf-8") as f:
     daily_src = f.read()
 
-has_fd_param  = "def _process_batch(pairs, force_deep=False):" in daily_src
-has_fd_call   = "_process_batch(pairs_today, force_deep=True)" in daily_src
-has_fd_log    = "force_deep_pairs" in daily_src
+has_fd_param   = "def _process_batch(pairs, force_deep=False):" in daily_src
+has_fd_call    = "_process_batch(pairs_today, force_deep=True)" in daily_src
+has_merit_log  = "Merit-selected" in daily_src
+no_hardcoded   = "force_deep_pairs" not in daily_src
 
-top_n_match   = re.search(r"select_pairs\(top_n=(\d+)", daily_src)
-top_n_val     = int(top_n_match.group(1)) if top_n_match else 0
+top_n_match    = re.search(r"select_pairs\(top_n=(\d+)", daily_src)
+top_n_val      = int(top_n_match.group(1)) if top_n_match else 0
 
 print(f"  _process_batch has force_deep param  : {'YES' if has_fd_param else 'NO'}")
 print(f"  Initial batch called force_deep=True : {'YES' if has_fd_call else 'NO'}")
-print(f"  force_deep_pairs logged at runtime   : {'YES' if has_fd_log else 'NO'}")
+print(f"  Merit-selected log (not hardcoded)   : {'YES' if has_merit_log else 'NO'}")
+print(f"  No hardcoded force_deep_pairs list   : {'YES' if no_hardcoded else 'NO'}")
 print(f"  select_pairs top_n                   : {top_n_val}")
 print(f"  top_n >= 15?                         : {'YES' if top_n_val >= 15 else 'NO'}")
 print()
-print(f"  Effect: all {top_n_val} top-selected pairs skip Haiku entirely and go")
-print(f"  straight to Sonnet -- Haiku score cannot block them.")
+print(f"  Effect: all {top_n_val} pairs selected by pure merit score skip Haiku")
+print(f"  entirely and go straight to Sonnet -- no pair is hardcoded in.")
 
-results["force_deep_ok"] = has_fd_param and has_fd_call and top_n_val >= 15
+results["force_deep_ok"] = has_fd_param and has_fd_call and has_merit_log and no_hardcoded and top_n_val >= 15
 print(f"\n  {PASS if results['force_deep_ok'] else FAIL}  "
-      f"Top {top_n_val} pairs bypass Haiku and go straight to Sonnet deep analysis")
+      f"Top {top_n_val} merit-selected pairs bypass Haiku -- no hardcoded list")
 
 
 # ── STEP 3: HAIKU THRESHOLD CHECK ───────────────────────────────────────────
