@@ -956,7 +956,6 @@ def _send_telegram_summary(
 
     # ── CREDIT BALANCE (1 line) ─────────────────────────────────────────────────
     try:
-        from src import billing as _bill, analyst as _anl
         primary_bal = credit_data.get("primary_balance")
         backup_bal  = credit_data.get("backup_balance")
         total_bal   = (primary_bal or 0.0) + (backup_bal or 0.0 if config.ANTHROPIC_API_KEY_2 else 0.0)
