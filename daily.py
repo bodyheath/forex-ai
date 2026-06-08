@@ -1008,6 +1008,26 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Technical pre-fetch failed (analysis will still run): {exc}")
 
+        # Diagnostic: log actual indicator values for key pairs so we can verify
+        # that RSI/MACD are being calculated correctly and producing real numbers.
+        _log_line(logf, "[DIAG] Technical indicator snapshot (from cache, no API calls):")
+        for _diag_pair in ["EUR/USD", "USD/JPY", "AUD/CAD"]:
+            try:
+                from src import technical as _tech
+                _ind = _tech.read_cached_indicators(_diag_pair)
+                if _ind:
+                    _ts = _ind.get("tech_signal", {})
+                    _log_line(logf, (
+                        f"  {_diag_pair}: RSI={_ind['rsi14']}  "
+                        f"MACD_hist={_ind['macd_hist']} ({_ind['macd_direction']})  "
+                        f"BB={_ind['bb_state'][:20]}  "
+                        f"→ tech_signal={_ts.get('direction','?')} {_ts.get('score','?')}/10"
+                    ))
+                else:
+                    _log_line(logf, f"  {_diag_pair}: not in cache (pair not selected today)")
+            except Exception as _diag_exc:
+                _log_line(logf, f"  {_diag_pair}: diagnostic failed — {_diag_exc}")
+
         _log_line(logf, f"=== Daily run {date} | universe: {universe_size} pairs ===")
 
         # ── Startup diagnostics — log exactly what config values are in use ──
