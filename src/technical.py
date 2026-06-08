@@ -43,6 +43,9 @@ def _td_request(symbol: str, interval: str, outputsize: int) -> dict:
     if cached is not None:
         return cached
 
+    global _td_calls_this_run
+    _td_calls_this_run += 1
+
     resp = requests.get(
         _TD_URL,
         params={
