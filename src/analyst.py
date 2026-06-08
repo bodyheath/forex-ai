@@ -169,12 +169,14 @@ def _slim_for_screen(bundle: dict) -> tuple:
             "trend":          daily.get("trend"),
             "rsi14":          daily.get("rsi14"),
             "macd":           daily.get("macd"),
+            "macd_hist":      daily.get("macd_hist"),
             "bollinger":      daily.get("bollinger"),
             "sma50":          daily.get("sma50"),
             "sma200":         daily.get("sma200"),
             "atr14":          daily.get("atr14"),
             "recent_high_20": daily.get("recent_high_20"),
             "recent_low_20":  daily.get("recent_low_20"),
+            "tech_signal":    daily.get("tech_signal"),
         }
     else:
         slim_tech = {"status": tech.get("status", "UNAVAILABLE")}
