@@ -296,3 +296,50 @@ def warm_cache(pairs: list, log=print) -> None:
 
     status = "complete" if errors == 0 else f"complete with {errors} error(s)"
     log(f"Technical pre-fetch {status}: {api_n} API call(s) made.")
+
+
+def read_cached_indicators(pair: str) -> dict | None:
+    """Read daily indicator values from cache without making any API calls.
+
+    Returns a dict with rsi14, macd_hist, tech_signal etc. or None if the
+    daily candle data for this pair is not currently in the 24-hour cache.
+    Used for diagnostic logging in the daily runner.
+    """
+    key = f"TD:{pair}:1day:400"
+    cached = cache.get(key, ttl_hours=_CACHE_TTL)
+    if cached is None:
+        return None
+    try:
+        df = _frame_from_td(cached)
+        if len(df) < 30:
+            return None
+        close = df["close"]
+        rsi   = _rsi(close)
+        _, _, hist = _macd(close)
+        sma50  = close.rolling(50).mean().iloc[-1]
+        sma200 = close.rolling(200).mean().iloc[-1] if len(close) >= 200 else float("nan")
+        sma20  = close.rolling(20).mean()
+        std20  = close.rolling(20).std()
+        last   = close.iloc[-1]
+        bb_upper = (sma20 + 2 * std20).iloc[-1]
+        bb_lower = (sma20 - 2 * std20).iloc[-1]
+        if last >= bb_upper:
+            bb_state = "at/above upper band (stretched, mean-reversion risk down)"
+        elif last <= bb_lower:
+            bb_state = "at/below lower band (stretched, mean-reversion risk up)"
+        else:
+            bb_state = "inside bands"
+        rsi14_val    = round(rsi.iloc[-1], 2)
+        macd_hist_val = round(hist.iloc[-1], 6)
+        trend_str    = _trend(close, sma50, sma200)
+        return {
+            "pair":       pair,
+            "rsi14":      rsi14_val,
+            "macd_hist":  macd_hist_val,
+            "macd_direction": "bullish" if macd_hist_val > 0 else "bearish",
+            "trend":      trend_str,
+            "bb_state":   bb_state,
+            "tech_signal": _tech_signal(rsi14_val, macd_hist_val, bb_state, trend_str),
+        }
+    except Exception:
+        return None
