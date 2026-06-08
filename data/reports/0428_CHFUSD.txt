@@ -1,0 +1,25 @@
+PAIR: CHF/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+ENTRY: 1.25433
+TARGET: 1.24700
+STOP_LOSS: 1.26000
+REWARD_RISK_RATIO: 1.3:1
+BEST_ENTRY_TIME: London/New York overlap — 21:00–01:00 NZST (UTC+12)
+NEWS_WARNING: SNB rate decision pending (CHF policy rate at -0.04% falling trend — any hawkish surprise triggers sharp CHF strength); US jobs/economic data flow in next 48h; Wall Street tech sector volatility elevated (VIX 21.51 rising)
+TRADE_THIS: NO
+
+**REASONING SUMMARY:**
+- **Technical conflict:** Daily RSI at 33.2 approaches oversold (BUY signal), MACD bearish on daily but bullish on 4H — mixed, not cleanly aligned for SELL. 4H shows death-cross downtrend structure which supports SELL, but oversold RSI on both timeframes suppresses conviction. Technical score penalized for conflict: 5/10.
+- **Fundamental:** Strongly favours SELL — CHF rate at -0.04% vs USD at 3.62%, a -3.66% carry differential heavily penalises CHF longs. Rate trend (CHF falling, USD flat) amplifies this. Score: 7/10.
+- **Sentiment:** Low-quality signal. CHF headlines dominated by NRB exchange rate notices and SNB data tools — no directional tone. USD headlines mixed (tech plunge, Trump policy noise). Neutral to slightly USD-negative given Wall Street weakness. Score: 4/10.
+- **Positioning:** CHF net SHORT at 47th percentile — mid-range, no crowding signal, no contrarian edge. USD COT UNAVAILABLE (counts as 0, lowers confidence per rules). Score: 4/10.
+- **Macro:** VIX rising (21.51, risk-off) would normally support CHF as safe haven — this **conflicts** with the SELL thesis. Falling WTI and falling 10Y yields are USD-negative at the margin. Yield curve positive (0.42) — not recessionary. Score: 5/10.
+- **Source count:** Only Fundamental clearly
+KEY_THESIS: CHF/USD presents a short bias opportunity as the 4-hour downtrend (price < SMA50 < SMA200 death-cross) aligns with negative carry (-3.66% annual) favoring USD longs, while rising VIX and falling Treasury yields support safe-haven CHF weakness despite mixed daily signals.
+RISK_FACTORS: (1) Break above the daily recent high of 1.28217 would invalidate the downtrend structure and signal potential reversal to long positions; (2) An SNB rate hike or shift to hawkish policy guidance (currently at -0.04% with falling trend) would reverse the carry disadvantage and trigger CHF strength.

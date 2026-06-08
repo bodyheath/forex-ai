@@ -1,0 +1,28 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+ENTRY: 0.79729
+TARGET: 0.79161
+STOP_LOSS: 0.79872
+REWARD_RISK_RATIO: 1.98:1
+BEST_ENTRY_TIME: London open, 20:00–22:00 NZST (UTC+12)
+NEWS_WARNING: SNB rate decision potentially imminent given falling CHF rate trend and Swiss inflation data; monitor for any Fed speakers or US macro releases within 48h; VIX rising trend warrants caution on risk-sensitive positions
+TRADE_THIS: NO
+
+**Reasoning summary:**
+Confidence is capped at 5/10 — below the mandatory threshold of 7/10 — for the following reasons:
+
+1. **Technical conflict**: Daily RSI at 66.9 leans SELL, but the 4H uptrend structure (price > SMA50 > SMA200, golden cross) directly contradicts a short entry. Mixed signals across timeframes reduce reliability.
+2. **Fundamental headwind**: The +3.66% carry differential strongly favours long USD/CHF. Selling into positive carry without overwhelming confluence is a known underperforming pattern (Seed Memory #3).
+3. **Positioning unavailable**: USD COT data is UNAVAILABLE, scored as 0 — this meaningfully lowers confidence per the rules.
+4. **Macro mixed**: VIX at 21.51 and rising introduces risk-off pressure that *could* support CHF (safe-haven), but falling oil and a flat DXY do not provide a clean directional signal.
+5. **Sentiment weak**: CHF headlines are largely noise (NRB exchange rates, SNB MCP tools); USD headlines show tech sector stress but no decisive USD-bearish narrative.
+
+Fewer than 4 sources cleanly agree on SELL direction. Do not trade.
+KEY_THESIS: The 4-hour uptrend structure (price > SMA50 > SMA200) with positive carry (+3.66%) supports USD strength, but daily timeframe shows mixed signals with overbought RSI (66.9) and bearish MACD divergence, suggesting a near-term pullback before continuation higher.
+RISK_FACTORS: A break below the 4-hour SMA50 at 0.7910 would invalidate the uptrend structure and signal shift to downside; alternatively, if VIX continues rising above 22-23 levels amid tech sector weakness, risk-off sentiment could overcome carry advantage and force USD/CHF lower toward daily support at 0.7930.

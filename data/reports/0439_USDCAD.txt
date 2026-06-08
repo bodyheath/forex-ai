@@ -1,0 +1,24 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 4/10
+ENTRY: 1.39488
+TARGET: 1.38200
+STOP_LOSS: 1.39750
+REWARD_RISK_RATIO: 4.9:1
+BEST_ENTRY_TIME: London open overlap, 21:00–23:00 NZST (UTC+12)
+NEWS_WARNING: Bank of Canada rate decision or commentary possible within 48h; Canada jobs data already released (88k beat) — watch for any Fed speaker events or US CPI follow-through that could re-energise USD bulls
+TRADE_THIS: NO
+
+**Reasoning summary:**
+- **Technical (7/10):** Daily RSI at 76.7 is firmly overbought (base score 8–9 SELL), MACD histogram marginally positive (+0.001) so no adjustment, Bollinger inside bands (no stretch bonus), D1 trend mixed and 4H in uptrend — these conflict, capping score. Net: 7.
+- **Fundamental (4/10):** USD rate advantage (+1.35% carry, Fed at 3.62% vs BoC 2.27%) structurally favours long USD/CAD. BoC rate trend is falling, but Canada's blowout jobs print (88k) is actively reducing BoC cut expectations. This is a significant fundamental conflict against the SELL direction — confidence penalty applied per seed pattern #3.
+- **Sentiment (4/10):** USD headlines are broadly negative (tech rout, Wall Street losing streak, geopolitical noise). CAD headlines are surprisingly bullish (strong jobs, BoC stability report). Net sentiment marginally favours CAD strength (SELL USD/CAD), but signal is weak and mixed.
+- **Positioning (3/10):** USD COT is UNAVAILABLE (scores 0 per rules). CAD net SHORT at 33rd percentile — mid-range, no contrarian signal, neutral-to-slightly bearish CAD. Together this provides minimal SELL support.
+- **Macro (4/10):** VIX rising (21.51, risk-off) is modestly USD-positive (SELL pressure on CAD-correlated risk plays). WTI falling (95.96, falling trend) is CAD-negative (oil-linked
+KEY_THESIS: USD/CAD shows overbought daily conditions (RSI 76.7) with a strong sell signal (score 8) despite a bullish 4-hour uptrend, suggesting a pullback is likely as the daily trend remains mixed and momentum is diverging; the +1.35% carry advantage and higher Fed rate (3.62% vs 2.27%) support USD strength on dips, but recent Canadian job data (88k jobs, 6.6% unemployment) reduces BoC rate-cut expectations, providing a counter-narrative.
+RISK_FACTORS: 1) A break above the daily recent high of 1.39608 with 4-hour RSI sustaining above 65 would invalidate the overbought sell setup and signal continuation of the uptrend. 2) Unexpectedly dovish Federal Reserve commentary or a sharp drop below 1.
