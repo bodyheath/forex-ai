@@ -1032,6 +1032,16 @@ def _send_telegram_summary(
         f"<i>⏰ Next scan tomorrow {_fmt_date_short_nz(tomorrow_ak)} at 6am Auckland time</i>",
     ])
 
+    # Item 17: strip any line containing "unavailable", "n/a", or "check console"
+    def _is_ok_line(ln: str) -> bool:
+        ll = ln.lower().strip()
+        if not ll:
+            return True  # keep empty separator lines
+        bad = ("unavailable", " n/a", ": n/a", "=n/a", "check console")
+        return not any(b in ll for b in bad)
+
+    all_sections = [[ln for ln in sec if _is_ok_line(ln)] for sec in all_sections]
+
     _send_in_parts(all_sections)
 
 
