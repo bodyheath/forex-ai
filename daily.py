@@ -1008,10 +1008,10 @@ def _send_telegram_summary(
     if run_duration_min > 20:
         health_issues.append(f"Run took {run_duration_min:.0f} minutes — longer than normal")
 
-    # Account balance at default
-    default_bal = config.ACCOUNT_BALANCE in (10000.0, 100000.0)
-    if default_bal:
-        health_issues.append(f"Account balance not configured — set ACCOUNT_BALANCE in GitHub secrets")
+    # Account balance at default (env var not set)
+    import os as _os
+    if not _os.getenv("ACCOUNT_BALANCE"):
+        health_issues.append("Account balance not configured — set ACCOUNT_BALANCE in GitHub secrets")
 
     # Estimated cost (always shown)
     est_usd = run_stats.get("estimated_usd", 0.0)
