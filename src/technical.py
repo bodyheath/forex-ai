@@ -200,13 +200,17 @@ def _summarise(df: pd.DataFrame, label: str) -> dict:
     else:
         bb_state = "inside bands"
 
+    rsi14_val  = round(rsi.iloc[-1], 1)
+    macd_hist_val = round(hist.iloc[-1], 6)
+    trend_str  = _trend(close, sma50, sma200)
+
     return {
         "timeframe": label,
         "last_close": round(last, 5),
-        "trend": _trend(close, sma50, sma200),
-        "rsi14": round(rsi.iloc[-1], 1),
+        "trend": trend_str,
+        "rsi14": rsi14_val,
         "macd": macd_state,
-        "macd_hist": round(hist.iloc[-1], 6),
+        "macd_hist": macd_hist_val,
         "bollinger": bb_state,
         "sma20": round(sma20.iloc[-1], 5),
         "sma50": round(sma50, 5),
@@ -215,6 +219,7 @@ def _summarise(df: pd.DataFrame, label: str) -> dict:
         "recent_high_20": round(df["high"].tail(20).max(), 5),
         "recent_low_20": round(df["low"].tail(20).min(), 5),
         "pivots_from_last_candle": _pivots(df.iloc[-2]),
+        "tech_signal": _tech_signal(rsi14_val, macd_hist_val, bb_state, trend_str),
     }
 
 
