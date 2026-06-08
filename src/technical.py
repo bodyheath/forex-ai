@@ -21,10 +21,19 @@ from src import cache
 _TD_URL = "https://api.twelvedata.com/time_series"
 _TIMEOUT = 30
 
-# Candle data is fetched once per daily run and reused for 24 hours.
-# This keeps all 30 API calls (15 pairs × 2 timeframes) within the free-tier
-# daily budget and avoids re-hitting the 8-calls/min rate limit during analysis.
 _CACHE_TTL = 24.0  # hours
+
+# Per-run Twelve Data API call counter (cache misses only — live API calls).
+_td_calls_this_run: int = 0
+
+
+def reset_call_count() -> None:
+    global _td_calls_this_run
+    _td_calls_this_run = 0
+
+
+def get_call_count() -> int:
+    return _td_calls_this_run
 
 
 def _td_request(symbol: str, interval: str, outputsize: int) -> dict:
