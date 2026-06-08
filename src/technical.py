@@ -117,6 +117,54 @@ def _pivots(prev: pd.Series) -> dict:
     }
 
 
+def _tech_signal(rsi14: float, macd_hist: float, bb_state: str, trend: str) -> dict:
+    """Compute a Python-anchored technical signal score (1–10) and direction.
+
+    RSI extremes are the primary driver — this mirrors the selector's factor-2
+    logic so the score Claude sees is pre-calibrated to the same thresholds.
+    MACD, Bollinger, and trend add/subtract 1 point each.
+    """
+    if rsi14 < 30:
+        direction, base = "BUY", 8
+    elif rsi14 < 35:
+        direction, base = "BUY", 6
+    elif rsi14 > 70:
+        direction, base = "SELL", 8
+    elif rsi14 > 65:
+        direction, base = "SELL", 6
+    elif rsi14 > 60:
+        direction, base = "SELL", 4
+    elif rsi14 < 40:
+        direction, base = "BUY", 4
+    else:
+        direction, base = "NEUTRAL", 2
+
+    score = base
+    # MACD confirmation
+    if direction == "BUY" and macd_hist > 0:
+        score += 1
+    elif direction == "SELL" and macd_hist < 0:
+        score += 1
+    # Bollinger confirmation
+    if direction == "BUY" and "lower band" in bb_state:
+        score += 1
+    elif direction == "SELL" and "upper band" in bb_state:
+        score += 1
+    # Trend alignment bonus
+    trend_l = trend.lower()
+    if direction == "BUY" and "uptrend" in trend_l:
+        score += 1
+    elif direction == "SELL" and "downtrend" in trend_l:
+        score += 1
+    # Trend contradiction penalty
+    if direction == "BUY" and "downtrend" in trend_l and "golden" not in trend_l:
+        score -= 1
+    elif direction == "SELL" and "uptrend" in trend_l and "death" not in trend_l:
+        score -= 1
+
+    return {"direction": direction, "score": max(1, min(10, score))}
+
+
 def _trend(close: pd.Series, sma50: float, sma200: float) -> str:
     last = close.iloc[-1]
     if np.isnan(sma200):
