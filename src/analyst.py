@@ -1,22 +1,19 @@
 """The Claude analysis layer.
 
-Loads the analyst system prompt, assembles the gathered evidence + system memory
-into a user message, and calls Claude. The system prompt is sent as a cached block
-(prompt caching) so repeated runs in a session are cheaper and faster.
-
-Cost design:
-  Stage 1 — Haiku screens on slim technical + fundamental only (~250 input tokens).
-  Stage 2 — Sonnet receives a slim bundle (~1,400 input tokens) for pairs scoring 4+.
-  Both stages use prompt caching on the system content.
+Stage 1  — Haiku screens on slim technical + fundamental only (~250 input tokens).
+Stage 1b — Haiku generates KEY_THESIS and RISK_FACTORS (~200 tokens) for pairs
+           that pass screening, saving ~120 Sonnet output tokens per pair.
+Stage 2  — Sonnet receives the slim bundle + pre-generated thesis (~800 input tokens)
+           and outputs scores, entry/exit levels, and confidence only.
+Both stages use prompt caching on the system content.
 
 Fallback key:
-  If the primary ANTHROPIC_API_KEY fails with an authentication or credit error,
-  _call_api() automatically switches to ANTHROPIC_API_KEY_2 for all remaining calls
-  in the run.  key_status() returns a human-readable label for the Telegram message
-  so you can see which account is being billed.
+  If the primary ANTHROPIC_API_KEY fails, _call_api() switches to KEY_2 for all
+  remaining calls in the run.  key_status() returns a label for the Telegram message.
 """
 
 import json
+import time
 
 from anthropic import Anthropic
 
@@ -24,22 +21,37 @@ import config
 from src import memory
 
 # ── API key fallback state ─────────────────────────────────────────────────────
-# Module-level flag: once the primary key fails, every subsequent call this run
-# uses the fallback key.  reset_key_state() is called at the start of each run.
+_using_fallback: bool    = False
+_fallback_triggered: bool = False
 
-_using_fallback: bool = False      # True once primary key has failed
-_fallback_triggered: bool = False  # True if we ever switched (for status reporting)
+# ── Run-level cost tracker ─────────────────────────────────────────────────────
+_cost: dict = {
+    "haiku_input":  0,
+    "haiku_output": 0,
+    "sonnet_input": 0,
+    "sonnet_output": 0,
+    "cache_hits":   0,   # pairs skipped because price didn't move
+}
+
+# ── Skip-unchanged cache ───────────────────────────────────────────────────────
+# Stores the last analysis price and report per pair so we can skip re-analysis
+# when price moved < 15 pips since the last run (within 6 hours).
+_SKIP_TTL_HOURS = 6.0
+_SKIP_PIPS      = 15
+_analysis_cache: dict = {}  # pair → {ts, price, report, thesis, risk}
 
 
 def reset_key_state() -> None:
-    """Reset fallback state at the start of each daily run."""
+    """Reset fallback and cost state at the start of each daily run."""
     global _using_fallback, _fallback_triggered
-    _using_fallback      = False
-    _fallback_triggered  = False
+    _using_fallback     = False
+    _fallback_triggered = False
+    for k in _cost:
+        _cost[k] = 0
+    _analysis_cache.clear()
 
 
 def key_status() -> str:
-    """Return a Telegram-ready label showing which API key(s) were used."""
     if not config.ANTHROPIC_API_KEY_2:
         return "🔑 API: primary key (no fallback configured)"
     if _fallback_triggered:
@@ -47,8 +59,21 @@ def key_status() -> str:
     return "🔑 API: primary key (KEY_1)"
 
 
+def get_run_stats() -> dict:
+    """Return cost tracker snapshot with estimated USD cost."""
+    # Pricing (USD per 1M tokens) — Haiku 4.5 / Sonnet 4.6
+    H_IN, H_OUT = 0.80, 4.00
+    S_IN, S_OUT = 3.00, 15.00
+    est = (
+        _cost["haiku_input"]  / 1_000_000 * H_IN  +
+        _cost["haiku_output"] / 1_000_000 * H_OUT +
+        _cost["sonnet_input"] / 1_000_000 * S_IN  +
+        _cost["sonnet_output"]/ 1_000_000 * S_OUT
+    )
+    return {**_cost, "estimated_usd": round(est, 4)}
+
+
 def _is_auth_or_credit_error(exc: Exception) -> bool:
-    """Return True for errors that indicate the key is invalid or has no credit."""
     try:
         import anthropic as _anth
         if isinstance(exc, (_anth.AuthenticationError, _anth.PermissionDeniedError)):
@@ -66,26 +91,14 @@ def _is_auth_or_credit_error(exc: Exception) -> bool:
 
 
 def _call_api(fn):
-    """Call fn(client) → result, switching to fallback key on auth/credit error.
-
-    fn receives an Anthropic client and must return the API response.
-    On first auth/credit failure the module switches to ANTHROPIC_API_KEY_2
-    for this and all remaining calls in the run.
-    """
     global _using_fallback, _fallback_triggered
-
-    key = config.ANTHROPIC_API_KEY_2 if _using_fallback else config.ANTHROPIC_API_KEY
+    key    = config.ANTHROPIC_API_KEY_2 if _using_fallback else config.ANTHROPIC_API_KEY
     client = Anthropic(api_key=key)
-
     try:
         return fn(client)
     except Exception as exc:
-        # Only attempt fallback if: not already on fallback, fallback exists, and
-        # the error is the kind that a different key would fix.
         if _using_fallback or not config.ANTHROPIC_API_KEY_2 or not _is_auth_or_credit_error(exc):
             raise
-
-    # Switch permanently to the fallback key for the rest of this run.
     _using_fallback     = True
     _fallback_triggered = True
     client2 = Anthropic(api_key=config.ANTHROPIC_API_KEY_2)
@@ -99,12 +112,7 @@ def _load_system_prompt() -> str:
 
 
 def _slim_bundle(bundle: dict) -> dict:
-    """Return a token-efficient version of the data bundle for the Sonnet prompt.
-
-    Strips metadata fields (FRED series IDs, as_of dates, historical extremes,
-    source strings) that do not improve the analytical output.  Sentiment
-    headlines are capped at 8 and descriptions at 80 characters.
-    """
+    """Token-efficient version of the data bundle for the Sonnet prompt."""
     slim: dict = {"technical": bundle.get("technical", {})}
 
     fund = bundle.get("fundamental", {})
@@ -161,14 +169,13 @@ def _slim_bundle(bundle: dict) -> dict:
 
 
 def _slim_for_screen(bundle: dict) -> tuple:
-    """Return (tech_json, fund_json) stripped to just what Haiku needs for a score."""
+    """Return (tech_json, fund_json) for Haiku screener — minimal tokens."""
     tech  = bundle.get("technical", {})
     daily = tech.get("daily", {})
     if daily:
         slim_tech = {
             "trend":          daily.get("trend"),
             "rsi14":          daily.get("rsi14"),
-            "macd":           daily.get("macd"),
             "macd_hist":      daily.get("macd_hist"),
             "bollinger":      daily.get("bollinger"),
             "sma50":          daily.get("sma50"),
@@ -192,16 +199,13 @@ def _slim_for_screen(bundle: dict) -> tuple:
     return json.dumps(slim_tech, indent=2), json.dumps(slim_fund, indent=2)
 
 
-def _build_user_message(pair: str, bundle: dict) -> str:
+def _build_user_message(pair: str, bundle: dict, thesis: str = "", risk: str = "") -> str:
+    """Compact user message. Injects pre-generated thesis/risk from Haiku."""
     slim = _slim_bundle(bundle)
     parts = [
         memory.render(),
         "",
-        f"Analyse the currency pair: {pair}",
-        "",
-        "Evidence from independent live data sources follows. "
-        "UNAVAILABLE layers do not count as agreeing sources. "
-        "All prices are quote currency per 1 unit of base currency.",
+        f"Pair: {pair}",
         "",
         "=== TECHNICAL ===",
         json.dumps(slim["technical"], indent=2),
@@ -215,16 +219,22 @@ def _build_user_message(pair: str, bundle: dict) -> str:
         "=== POSITIONING (COT) ===",
         json.dumps(slim["positioning"], indent=2),
         "",
-        "=== MACRO CONTEXT ===",
+        "=== MACRO ===",
         json.dumps(slim["macro"], indent=2),
-        "",
-        "Respond with ONLY the OUTPUT FORMAT fields. "
-        "Start with PAIR: and end with TRADE_THIS:. "
-        "No preamble, no commentary. "
-        "Give BEST_ENTRY_TIME as a session name and time range in Auckland time "
-        "(New Zealand — UTC+13 NZDT in summer Sep–Apr, UTC+12 NZST in winter Apr–Sep).",
     ]
-    return "\n".join(parts)
+    if thesis or risk:
+        parts += [
+            "",
+            "=== PRE-GENERATED THESIS (use verbatim in output) ===",
+            f"KEY_THESIS: {thesis}" if thesis else "",
+            f"RISK_FACTORS: {risk}" if risk else "",
+        ]
+    parts += [
+        "",
+        "Output PAIR: through TRADE_THIS: only. No preamble.",
+        "BEST_ENTRY_TIME in Auckland time (NZDT=UTC+13 Sep–Apr, NZST=UTC+12 Apr–Sep).",
+    ]
+    return "\n".join(p for p in parts if p != "")
 
 
 # ── Stage-1 screener (Haiku) ───────────────────────────────────────────────────
@@ -245,15 +255,15 @@ _SCREEN_SYSTEM = (
 
 def screen(pair: str, bundle: dict) -> dict:
     """Stage-1 screener: Haiku scores pair 1–5 on slim tech + fundamental only.
-    Fails open (score=5) on any API or parse error so deep analysis still runs."""
+    Fails open (score=5) on any error so deep analysis still runs."""
     tech_json, fund_json = _slim_for_screen(bundle)
     user_msg = "\n".join([
-        f"Currency pair: {pair}",
+        f"Pair: {pair}",
         "",
-        "=== TECHNICAL (daily indicators) ===",
+        "=== TECHNICAL ===",
         tech_json,
         "",
-        "=== FUNDAMENTAL (rate differential) ===",
+        "=== FUNDAMENTAL ===",
         fund_json,
     ])
 
@@ -267,8 +277,10 @@ def screen(pair: str, bundle: dict) -> dict:
 
     try:
         resp = _call_api(_call)
+        _cost["haiku_input"]  += getattr(resp.usage, "input_tokens",  0)
+        _cost["haiku_output"] += getattr(resp.usage, "output_tokens", 0)
         text = "".join(b.text for b in resp.content if b.type == "text").strip()
-    except Exception:  # noqa: BLE001
+    except Exception:
         return {"score": 5, "reason": "screener unavailable — failing open"}
 
     score, reason = 5, text
@@ -283,25 +295,120 @@ def screen(pair: str, bundle: dict) -> dict:
     return {"score": score, "reason": reason}
 
 
+# ── Stage-1b: Haiku thesis generation ─────────────────────────────────────────
+
+_THESIS_SYSTEM = (
+    "Generate KEY_THESIS and RISK_FACTORS for a forex pair from the data provided.\n"
+    "KEY_THESIS: 1-2 sentences on what the combined data shows as the main edge.\n"
+    "RISK_FACTORS: 2 specific events or price levels that would invalidate a trade.\n"
+    "Respond with exactly:\n"
+    "KEY_THESIS: <text>\n"
+    "RISK_FACTORS: <text>"
+)
+
+
+def _generate_thesis(pair: str, bundle: dict) -> tuple:
+    """Use Haiku to cheaply generate thesis and risk factors."""
+    slim = _slim_bundle(bundle)
+    user_msg = f"Pair: {pair}\n\n{json.dumps(slim, separators=(',', ':'))}"
+
+    def _call(client):
+        return client.messages.create(
+            model=config.HAIKU_MODEL,
+            max_tokens=200,
+            system=_THESIS_SYSTEM,
+            messages=[{"role": "user", "content": user_msg}],
+        )
+
+    try:
+        resp = _call_api(_call)
+        _cost["haiku_input"]  += getattr(resp.usage, "input_tokens",  0)
+        _cost["haiku_output"] += getattr(resp.usage, "output_tokens", 0)
+        text    = "".join(b.text for b in resp.content if b.type == "text").strip()
+        thesis, risk = "", ""
+        for line in text.splitlines():
+            if line.startswith("KEY_THESIS:"):
+                thesis = line.split(":", 1)[1].strip()
+            elif line.startswith("RISK_FACTORS:"):
+                risk = line.split(":", 1)[1].strip()
+        return thesis, risk
+    except Exception:
+        return "", ""
+
+
+# ── Skip-unchanged check ───────────────────────────────────────────────────────
+
+def _pip_value(pair: str) -> float:
+    """Return pip size: 0.01 for JPY pairs, 0.0001 for all others."""
+    return 0.01 if "JPY" in pair.upper() else 0.0001
+
+
+def check_skip(pair: str, bundle: dict) -> tuple:
+    """Return (should_skip, cached_report) if pair hasn't moved ≥15 pips in 6h."""
+    entry = _analysis_cache.get(pair)
+    if not entry:
+        return False, None
+    age_h = (time.time() - entry["ts"]) / 3600.0
+    if age_h > _SKIP_TTL_HOURS:
+        return False, None
+    try:
+        cur_price = float(bundle["technical"]["daily"]["last_close"])
+        pip_move  = abs(cur_price - entry["price"]) / _pip_value(pair)
+        if pip_move < _SKIP_PIPS:
+            _cost["cache_hits"] += 1
+            return True, entry["report"]
+    except (KeyError, TypeError, ValueError):
+        pass
+    return False, None
+
+
+def _store_skip_cache(pair: str, bundle: dict, report: str) -> None:
+    """Cache the analysis result for potential skip on next run."""
+    try:
+        price = float(bundle["technical"]["daily"]["last_close"])
+        _analysis_cache[pair] = {"ts": time.time(), "price": price, "report": report}
+    except (KeyError, TypeError, ValueError):
+        pass
+
+
 # ── Stage-2 deep analysis (Sonnet) ────────────────────────────────────────────
 
 def analyse(pair: str, bundle: dict) -> str:
+    """Full analysis: Haiku generates thesis, Sonnet scores and sizes the trade."""
+    # Step 1: Haiku generates thesis + risk (cheap, saves Sonnet output tokens)
+    thesis, risk = _generate_thesis(pair, bundle)
+
+    # Step 2: Sonnet scores the trade with pre-generated thesis in context
     system_prompt = _load_system_prompt()
-    user_message  = _build_user_message(pair, bundle)
+    user_message  = _build_user_message(pair, bundle, thesis=thesis, risk=risk)
 
     def _call(client):
         return client.messages.create(
             model=config.CLAUDE_MODEL,
-            max_tokens=800,
+            max_tokens=600,
             system=[
                 {
-                    "type": "text",
-                    "text": system_prompt,
+                    "type":          "text",
+                    "text":          system_prompt,
                     "cache_control": {"type": "ephemeral"},
                 }
             ],
             messages=[{"role": "user", "content": user_message}],
         )
 
-    resp = _call_api(_call)
-    return "".join(block.text for block in resp.content if block.type == "text")
+    resp   = _call_api(_call)
+    _cost["sonnet_input"]  += getattr(resp.usage, "input_tokens",  0)
+    _cost["sonnet_output"] += getattr(resp.usage, "output_tokens", 0)
+    report = "".join(block.text for block in resp.content if block.type == "text")
+
+    # Step 3: Inject Haiku-generated thesis/risk into the report if Sonnet omitted them
+    injected = []
+    if thesis and "KEY_THESIS:" not in report:
+        injected.append(f"KEY_THESIS: {thesis}")
+    if risk and "RISK_FACTORS:" not in report:
+        injected.append(f"RISK_FACTORS: {risk}")
+    if injected:
+        report = report.rstrip() + "\n" + "\n".join(injected)
+
+    _store_skip_cache(pair, bundle, report)
+    return report
