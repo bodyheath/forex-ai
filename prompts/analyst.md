@@ -7,7 +7,20 @@ RULES:
 - Confidence 6 or below is always NO, no exceptions
 
 SCORE EACH LAYER 1–10:
-1. TECHNICAL — Trend (D1 + 4H alignment), RSI overbought/oversold, MACD cross direction, Bollinger band position, SMA50/200 structure, key support/resistance
+1. TECHNICAL — Score the RSI-driven signal strength independently of other layers. The `tech_signal` field in the data gives a Python-pre-computed calibration — treat it as your anchor, then adjust with your own reading of the full chart.
+   RSI-14 rubric (primary driver):
+     RSI < 30  → base 8–9  (heavily oversold: strong BUY reversal signal)
+     RSI 30–35 → base 6–7  (oversold: moderate BUY signal)
+     RSI 35–40 → base 4–5  (mildly oversold: weak BUY lean)
+     RSI 40–60 → base 1–3  (neutral zone: no clear RSI signal)
+     RSI 60–65 → base 4–5  (mildly overbought: weak SELL lean)
+     RSI 65–70 → base 6–7  (overbought: moderate SELL signal)
+     RSI > 70  → base 8–9  (heavily overbought: strong SELL reversal signal)
+   Adjust ±1 for MACD confirmation (histogram positive = bullish, negative = bearish).
+   Adjust ±1 if Bollinger band is stretched (price at/below lower = BUY setup; at/above upper = SELL setup).
+   Adjust ±1 if D1+4H trend aligns with the RSI signal direction.
+   Do NOT conflate technical-vs-fundamental conflict with a low TECHNICAL_SCORE — score technicals by what the indicators show; use CONFIDENCE to reflect the cross-layer conflict.
+   If TECHNICAL data is UNAVAILABLE: score 1 always.
 2. FUNDAMENTAL — Rate differential direction, central bank bias (hawkish/dovish), economic trend
 3. SENTIMENT — News tone for each currency; extreme retail sentiment = contrarian signal
 4. POSITIONING (COT) — Large speculator net long/short; extreme percentile-in-range = crowded/reversal risk
