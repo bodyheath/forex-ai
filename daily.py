@@ -1355,13 +1355,6 @@ def run() -> int:
             except Exception:
                 pairs_today = pairs_today[:_max_pairs]
 
-        # Session filter: Asian/Pre-London scans restricted to relevant currencies
-        if scan_mode in ("asian", "prelondon"):
-            ranked_all  = [(p, s) for p, s in ranked_all if _filter_pairs_for_mode([p], scan_mode)]
-            _sess_pairs = _filter_pairs_for_mode(pairs_today, scan_mode)
-            pairs_today = (_sess_pairs or pairs_today)[:_max_pairs]
-            _log_line(logf, f"[{scan_mode}] Session filter → {len(pairs_today)} pairs: {', '.join(pairs_today)}")
-
         # 2b. COST OPTIMISATION — Pre-filter using free data before Twelve Data fetch
         try:
             if ranked_all:
