@@ -15,7 +15,7 @@ import config
 from src import research_tracker
 
 _PRICE_URL   = "https://api.twelvedata.com/price"
-_EXPIRY_DAYS = 14
+_EXPIRY_DAYS = 5
 _FETCH_DELAY = 10  # seconds between calls; free tier = 8 req/min
 
 
