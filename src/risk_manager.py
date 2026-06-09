@@ -260,7 +260,7 @@ def size_trade(pair: str, direction: str, entry: float, stop: float,
     Returns dict with lots, risk_amount, risk_pct, adj_stop, adj_target,
     atr_note, correlated_flag, risk_mode, and limit_flag.
     """
-    balance  = profile.get("estimated_balance", config.ACCOUNT_BALANCE)
+    balance  = config.ACCOUNT_BALANCE   # real account from env/secret, not paper fund
     currency = profile.get("account_currency", "USD")
 
     # ATR-adjust stops first
