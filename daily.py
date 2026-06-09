@@ -1582,6 +1582,7 @@ def run() -> int:
                 run_duration_min=run_duration_min,
                 scan_mode=scan_mode,
                 new_alerts=_new_alerts,
+                research_result=research_result,
             )
 
     return 0
