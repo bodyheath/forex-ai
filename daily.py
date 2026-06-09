@@ -1202,6 +1202,12 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Outcome step failed: {exc}")
 
+        try:
+            from src import research_outcome_checker
+            research_outcome_checker.check_open_research_trades(log=lambda m: _log_line(logf, m))
+        except Exception as exc:
+            _log_line(logf, f"Research outcome check failed: {exc}")
+
         # 1. Learn from prior outcomes
         learning_stats = None
         try:
