@@ -1216,12 +1216,15 @@ def run() -> int:
             _log_line(logf, f"Learning step failed: {exc}")
 
         # 2. Smart pair selection
+        _top_n        = _SCAN_TOP_N.get(scan_mode, 15)
+        _max_pairs    = _SCAN_MAX_PRS.get(scan_mode, 15)
+        _td_cap       = _TD_CACHE_MAX.get(scan_mode, 20)
+        sonnet_thresh = _SONNET_THRESH.get(scan_mode, 6)
+
         universe_size = len(selector.UNIVERSE)
         ranked_all    = []
         pairs_today   = []
         try:
-            # Fetch a larger candidate pool for focused scans so filtering still yields enough
-            _top_n        = 30 if scan_mode in ("asian", "prelondon") else 15
             selection     = selector.select_pairs(top_n=_top_n, log=lambda m: _log_line(logf, m))
             pairs_today   = selection["selected"]
             ranked_all    = selection["ranked"]
@@ -1235,34 +1238,45 @@ def run() -> int:
             _log_line(logf, f"Smart selection failed ({exc}) — falling back to watchlist.")
             pairs_today = list(config.WATCHLIST)
 
-        # For focused intraday scans, restrict to session-relevant pairs
+        # Midday scan: use morning ranked state to pick the 5 pairs closest to triggering
+        if scan_mode == "midday":
+            try:
+                _mranked = json.loads(_MORNING_RANKED_FILE.read_text(encoding="utf-8"))
+                _morning_pairs = [p for p, _ in sorted(_mranked.items(), key=lambda x: -x[1])]
+                if _morning_pairs:
+                    # Keep only pairs that are still in today's universe
+                    pairs_today = [p for p in _morning_pairs if p in {q for q, _ in ranked_all}][:_max_pairs]
+                    if not pairs_today:
+                        pairs_today = _morning_pairs[:_max_pairs]
+                    _log_line(logf, f"[midday] Using morning-ranked top {len(pairs_today)}: {', '.join(pairs_today)}")
+            except Exception:
+                pairs_today = pairs_today[:_max_pairs]
+
+        # Session filter: Asian/Pre-London scans restricted to relevant currencies
         if scan_mode in ("asian", "prelondon"):
-            ranked_all   = [(p, s) for p, s in ranked_all if _filter_pairs_for_mode([p], scan_mode)]
-            _sess_pairs  = _filter_pairs_for_mode(pairs_today, scan_mode)
-            pairs_today  = (_sess_pairs or pairs_today)[:10]
+            ranked_all  = [(p, s) for p, s in ranked_all if _filter_pairs_for_mode([p], scan_mode)]
+            _sess_pairs = _filter_pairs_for_mode(pairs_today, scan_mode)
+            pairs_today = (_sess_pairs or pairs_today)[:_max_pairs]
             _log_line(logf, f"[{scan_mode}] Session filter → {len(pairs_today)} pairs: {', '.join(pairs_today)}")
 
         # 2b. COST OPTIMISATION — Pre-filter using free data before Twelve Data fetch
-        # Take top candidates from ranked_all and score on FRED+COT to determine which
-        # 20 pairs are worth fetching price candles for.
         try:
             if ranked_all:
                 pre_filtered = _pre_filter_pairs(
-                    ranked_all, top_n=20, log=lambda m: _log_line(logf, m)
+                    ranked_all, top_n=_td_cap, log=lambda m: _log_line(logf, m)
                 )
-                # Ensure pairs_today (selector's top picks) are always in the pool
                 for p in pairs_today:
                     if p not in pre_filtered:
                         pre_filtered.insert(0, p)
-                pre_filtered = pre_filtered[:20]
+                pre_filtered = pre_filtered[:_td_cap]
             else:
                 pre_filtered = pairs_today
-            _log_line(logf, f"Pre-filtered pool: {len(pre_filtered)} pairs for Twelve Data fetch")
+            _log_line(logf, f"Pre-filtered pool: {len(pre_filtered)} pairs for Twelve Data (cap={_td_cap})")
         except Exception as exc:
             _log_line(logf, f"Pre-filter failed ({exc}) — using selector output.")
             pre_filtered = pairs_today
 
-        # 3. COST OPTIMISATION — Batch pre-fetch shared data (FRED, COT, macro) once
+        # 3. Batch pre-fetch shared data (FRED, COT, macro) once — all cached 12h
         _shared_fund: dict = {}
         _shared_macro      = None
         try:
@@ -1272,7 +1286,7 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Shared data pre-fetch failed ({exc}) — each pair will fetch independently.")
 
-        # 4. Pre-fetch Twelve Data candles for pre-filtered pairs only (max 20)
+        # 4. Pre-fetch Twelve Data candles — capped to _td_cap pairs
         try:
             from src import technical as _tech
             _tech.warm_cache(pre_filtered, log=lambda m: _log_line(logf, m))
