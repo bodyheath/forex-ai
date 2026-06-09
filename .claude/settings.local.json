@@ -21,7 +21,12 @@
       "Bash(python -c \"import ast; ast.parse\\(open\\('daily.py', encoding='utf-8'\\).read\\(\\)\\); print\\('daily.py OK'\\)\")",
       "Bash(python -c \"import ast; ast.parse\\(open\\('config.py', encoding='utf-8'\\).read\\(\\)\\); print\\('config.py OK'\\)\")",
       "Bash(gh workflow *)",
-      "PowerShell(gh workflow *)"
+      "PowerShell(gh workflow *)",
+      "Bash(python -m py_compile daily.py)",
+      "Bash(python -m py_compile src/analyst.py)",
+      "Bash(python -m py_compile src/pipeline.py)",
+      "Bash(python -m py_compile src/service.py)",
+      "Bash(python -m py_compile src/technical.py)"
     ]
   },
   "hooks": {
