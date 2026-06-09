@@ -1603,6 +1603,7 @@ def run() -> int:
                 scan_mode=scan_mode,
                 new_alerts=_new_alerts,
                 research_result=research_result,
+                threshold_revert_msg=threshold_revert_msg,
             )
 
     return 0
