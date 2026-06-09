@@ -145,7 +145,8 @@ def _fmt_pips_between(pair: str, price_a, price_b) -> str:
 
 
 def _analyse_pair(pair: str, logf, force_deep: bool = False,
-                  shared_fundamental=None, shared_macro=None) -> dict | None:
+                  shared_fundamental=None, shared_macro=None,
+                  sonnet_threshold: int = 6) -> dict | None:
     try:
         return service.analyse_and_log(
             pair,
@@ -153,6 +154,7 @@ def _analyse_pair(pair: str, logf, force_deep: bool = False,
             force_deep=force_deep,
             shared_fundamental=shared_fundamental,
             shared_macro=shared_macro,
+            sonnet_threshold=sonnet_threshold,
         )
     except Exception as exc:
         _log_line(logf, f"FAILED {pair}: {exc}")
