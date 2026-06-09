@@ -684,6 +684,7 @@ def _send_telegram_summary(
     scan_mode: str = "full",
     new_alerts: set = None,
     research_result: dict = None,
+    threshold_revert_msg: str = None,
 ) -> None:
     """Build and send the reformatted daily Telegram notification."""
     closed_today    = closed_today    or []
