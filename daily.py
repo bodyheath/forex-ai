@@ -1212,17 +1212,19 @@ def _save_alerts(alerts: set) -> None:
 def _next_scan_footer(scan_mode: str, now_ak: datetime) -> str:
     """Return a localised 'next scan' line for the Telegram footer."""
     nxt = now_ak + timedelta(days=1)
-    while nxt.weekday() >= 5:          # skip Saturday (5) and Sunday (6)
+    while nxt.weekday() >= 5:
         nxt += timedelta(days=1)
     nxt_short  = _fmt_date_short_nz(nxt)
     is_weekday = now_ak.weekday() < 5
 
     if scan_mode == "full" and is_weekday:
-        return "⏰ Next scan today at 9am Auckland time (Asian session)"
+        return "⏰ Next scan today at 9am Auckland time"
     if scan_mode == "asian" and is_weekday:
-        return "⏰ Next scan today at 1pm Auckland time (midday)"
+        return "⏰ Next scan today at 1pm Auckland time"
     if scan_mode == "midday" and is_weekday:
-        return "⏰ Next scan today at 3pm Auckland time (pre-London open)"
+        return "⏰ Next scan today at 3pm Auckland time"
+    if scan_mode == "prelondon":
+        return "⏰ Next scan tomorrow 6am Auckland — have a good evening."
     return f"⏰ Next full scan {nxt_short} at 6am Auckland time"
 
 
