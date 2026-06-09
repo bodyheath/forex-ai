@@ -224,7 +224,7 @@ def analyse_haiku_full(pair: str, bundle: dict) -> dict:
         return client.messages.create(
             model=config.HAIKU_MODEL,
             max_tokens=250,
-            system=_HAIKU_FULL_SYSTEM,
+            system=_haiku_system_prompt(),
             messages=[{"role": "user", "content": user_msg}],
         )
 
