@@ -815,7 +815,7 @@ def _send_telegram_summary(
 
             block = [
                 "",
-                f"{action_icon} <b>ACTION: {direction} {pair} NOW</b>",
+                f"{action_icon} <b>{_pfx}ACTION: {direction} {pair} NOW</b>",
                 "━━━━━━━━━━━━━━━━━━━━━",
                 f"💰 Entry: {_fmt_price(entry_raw)}",
                 f"🛑 Stop Loss: {_fmt_price(adj_stop)}  ({pip_risk} risk)",
