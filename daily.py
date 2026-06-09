@@ -1034,6 +1034,40 @@ def _send_telegram_summary(
     health_sec.append(f"- {cost_line}")
     all_sections.append(health_sec)
 
+    # ── RESEARCH THRESHOLD ANALYSIS (only after 30 days of data) ──────────────
+    if research_result:
+        br   = research_result.get("band_results", {})
+        rec  = research_result.get("recommendation", "")
+        rsn  = research_result.get("reasoning", "")
+        days = research_result.get("days_of_data", 0)
+
+        rec_icon = {"LOWER_TO_6": "✅", "KEEP_AT_7": "❌", "MARGINAL_EDGE": "⚠️"}.get(rec, "🔬")
+        rec_label = {
+            "LOWER_TO_6":        "Consider lowering threshold to 6",
+            "KEEP_AT_7":         "Keep threshold at 7",
+            "MARGINAL_EDGE":     "Marginal edge — collect more data",
+            "INSUFFICIENT_DATA": "Insufficient data",
+        }.get(rec, rec)
+
+        def _fmt_band(stats):
+            if not stats:
+                return "no data"
+            wr  = f"{stats['win_rate']*100:.0f}%"
+            exp = f"{stats['expectancy']:+.2f}R" if stats.get("expectancy") is not None else "—R"
+            return f"{stats['n']} trades · {wr} win · {exp}"
+
+        r_sec = [
+            "", "━━━━━━━━━━━━━━━━━━━━━",
+            f"🔬 <b>RESEARCH MODE — {days}-day threshold study</b>",
+            f"Conf 5: {_fmt_band(br.get('5'))}",
+            f"Conf 6: {_fmt_band(br.get('6'))}",
+            f"Conf 7: {_fmt_band(br.get('7'))}",
+            f"Conf 8-10: {_fmt_band(br.get('8-10'))}",
+            f"{rec_icon} <b>{rec_label}</b>",
+            f"<i>{rsn}</i>",
+        ]
+        all_sections.append(r_sec)
+
     # ── FOOTER ─────────────────────────────────────────────────────────────────
     all_sections.append([
         "",
