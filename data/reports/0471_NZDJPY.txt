@@ -1,0 +1,13 @@
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 3/10
+TECHNICAL_SCORE: 1/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 2/10
+MACRO_SCORE: 4/10
+KEY_THESIS: JPY strength from rising rates and risk-off sentiment conflicts with NZD weakness, but lack of technical confirmation and unavailable D1 data severely limits trade conviction.
+RISK_FACTORS: D1 data unavailable blocks MTF confirmation (MTF rule violated); NZD positioning data missing creates blind spot on flow dynamics.
+TRADE_THIS: NO
+
+**Rationale:** Technical score forced to 1 (D1 unavailable = UNAVAILABLE scoring rule). MTF confidence cannot reach 4/5 timeframes without D1 validation—automatic TRADE_THIS rejection per MTF rule. Fundamental divergence (+1.83% gap) with falling NZD rates vs rising JPY rates supports SELL directionally, but confidence ceiling capped
