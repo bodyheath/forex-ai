@@ -187,6 +187,15 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
             mac_parts.append(f"{label}={float(v):.1f}")
     lines.append(f"MACRO {' '.join(mac_parts) or 'UNAVAILABLE'}")
 
+    mtf_data = bundle.get("mtf", {})
+    mtf_bd   = mtf_data.get("breakdown", "")
+    if mtf_bd and mtf_bd != "UNAVAILABLE":
+        lines.append(
+            f"MTF {mtf_bd} "
+            f"conf={mtf_data.get('agreeing_count', 0)}/5 "
+            f"wt={int(mtf_data.get('weighted_score', 0) * 100)}%"
+        )
+
     return "\n".join(lines)
 
 
