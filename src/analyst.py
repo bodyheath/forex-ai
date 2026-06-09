@@ -287,7 +287,17 @@ def _store_skip_cache(pair: str, bundle: dict, report: str) -> None:
 # ── Stage 2: Sonnet confirmation (high-confidence pairs only) ──────────────────
 
 def _load_system_prompt() -> str:
-    return config.PROMPT_FILE.read_text(encoding="utf-8")
+    from src import threshold_manager
+    cfg  = threshold_manager.load()
+    thr  = int(cfg.get("confidence_threshold", 6))
+    rr   = cfg.get("min_rr", 1.3)
+    text = config.PROMPT_FILE.read_text(encoding="utf-8")
+    return (
+        text
+        .replace("{confidence_threshold}", str(thr))
+        .replace("{min_rr}", str(rr))
+        .replace("{below_threshold}", str(thr - 1))
+    )
 
 
 def _build_sonnet_message(pair: str, bundle: dict, haiku_report: str) -> str:
