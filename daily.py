@@ -1500,6 +1500,8 @@ def run() -> int:
     except Exception as _guard_err:
         print(f"[guard] last_run.txt check failed ({_guard_err}) — proceeding.", file=sys.stderr)
 
+    _telegram_test()
+
     missing = config.missing_keys()
     if missing:
         print("ERROR: missing API keys in .env: " + ", ".join(missing), file=sys.stderr)
