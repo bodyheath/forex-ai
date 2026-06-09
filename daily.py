@@ -1159,6 +1159,9 @@ def run() -> int:
         print("ERROR: missing API keys in .env: " + ", ".join(missing), file=sys.stderr)
         return 2
 
+    scan_mode = _get_scan_mode()
+    print(f"[scan] mode={scan_mode} ({_SCAN_MODES[scan_mode][0]})", file=sys.stderr)
+
     now_ak   = _auckland_now()
     date     = now_ak.strftime("%Y-%m-%d")
     log_path = config.REPORTS_DIR / f"daily_{date}.log"
