@@ -1334,10 +1334,10 @@ def _get_scan_mode() -> str:
     hour = _auckland_now().hour
     if 8 <= hour <= 10:
         return "asian"
-    if 12 <= hour <= 14:
-        return "midday"
     if 14 <= hour <= 16:
         return "prelondon"
+    if 17 <= hour <= 19:
+        return "midday"
     return "full"
 
 
