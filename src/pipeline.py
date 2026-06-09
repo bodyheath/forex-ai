@@ -1,12 +1,12 @@
 """Orchestrates the full analysis for one pair: gather every data layer, then
-hand the bundle to Claude."""
+run Haiku full analysis, and escalate to Sonnet only if Haiku confidence reaches
+the session-specific threshold."""
 
 import config
 from src import analyst, fundamental, macro, positioning, sentiment, technical
 
 
 def parse_pair(pair: str):
-    """Normalise 'eur/usd', 'EURUSD', 'eur-usd' -> ('EUR', 'USD')."""
     cleaned = pair.upper().replace("/", "").replace("-", "").replace(" ", "")
     if len(cleaned) != 6:
         raise ValueError(f"Could not parse currency pair from '{pair}'. Use e.g. EUR/USD.")
@@ -15,8 +15,6 @@ def parse_pair(pair: str):
 
 def gather(base: str, quote: str, log=print,
            _shared_fundamental=None, _shared_macro=None) -> dict:
-    """Collect all data layers. Accepts pre-fetched fundamental and macro to
-    avoid duplicate FRED calls when multiple pairs share currencies."""
     log(f"  - technical (Twelve Data) ...")
     tech = technical.analyse(base, quote)
 
@@ -39,16 +37,23 @@ def gather(base: str, quote: str, log=print,
     pos = positioning.analyse(base, quote)
 
     return {
-        "technical":    tech,
-        "fundamental":  fund,
-        "sentiment":    sent,
-        "positioning":  pos,
-        "macro":        mac,
+        "technical":   tech,
+        "fundamental": fund,
+        "sentiment":   sent,
+        "positioning": pos,
+        "macro":       mac,
     }
 
 
 def run(pair: str, log=print, force_deep: bool = False,
-        shared_fundamental=None, shared_macro=None) -> dict:
+        shared_fundamental=None, shared_macro=None,
+        sonnet_threshold: int = 6) -> dict:
+    """Analyse one pair.
+
+    sonnet_threshold controls when Haiku result is escalated to Sonnet:
+      6 = 6am full scan (more Sonnet calls, highest quality).
+      7 = intraday scans (Haiku-only for most pairs, Sonnet only for near-certain trades).
+    """
     base, quote = parse_pair(pair)
     canonical   = f"{base}/{quote}"
     log(f"Gathering live data for {canonical}:")
@@ -60,48 +65,62 @@ def run(pair: str, log=print, force_deep: bool = False,
     log(f"Data sources available: {available['count']}/5 "
         f"({', '.join(available['ok']) or 'none'})")
 
-    # Skip-unchanged check: if price moved < 15 pips since last analysis, reuse
+    # Skip-unchanged check (10-pip threshold) — skips even Haiku on flat pairs
     if not force_deep:
         should_skip, cached_report = analyst.check_skip(canonical, bundle)
         if should_skip:
-            log(f"  SKIP: {canonical} unchanged (<15 pips) — reusing cached analysis.")
-            screen = {"score": 5, "reason": "cached — price unchanged"}
+            log(f"  SKIP: {canonical} unchanged (<{analyst._SKIP_PIPS} pips) — reusing cached result.")
             return {
-                "pair":         canonical,
-                "bundle":       bundle,
-                "availability": available,
-                "report":       cached_report,
-                "screened_out": False,
-                "screen":       screen,
+                "pair":              canonical,
+                "bundle":            bundle,
+                "availability":      available,
+                "report":            cached_report,
+                "screened_out":      False,
+                "screen":            {"score": 5, "reason": "cached — price unchanged"},
                 "skipped_unchanged": True,
             }
 
-    # Stage 1: fast Haiku screener — only tech + fundamental, score 1-5.
-    log("Stage 1: screening with Haiku ...")
-    screen = analyst.screen(canonical, bundle)
-    log(f"  Screen score: {screen['score']}/5 — {screen['reason']}")
+    # Stage 1: Haiku full analysis (every pair in scope)
+    log("Haiku: full analysis ...")
+    haiku = analyst.analyse_haiku_full(canonical, bundle)
+    log(f"  Haiku: conf={haiku['confidence']}/10 {haiku['direction']} — {haiku['reason']}")
 
-    if not force_deep and screen["score"] < 3:
-        log(f"  Filtered out (score {screen['score']} < 3). Skipping deep analysis.")
+    # Very low confidence → screened out (kept out of Watch List too)
+    if haiku["confidence"] < 3:
+        log(f"  Filtered (Haiku conf {haiku['confidence']} < 3).")
         return {
             "pair":         canonical,
             "bundle":       bundle,
             "availability": available,
-            "report":       None,
+            "report":       haiku["report"],
             "screened_out": True,
-            "screen":       screen,
+            "screen":       {"score": 1, "reason": haiku["reason"] or "Very low confluence"},
         }
 
-    # Stage 2: full 5-source deep analysis with Sonnet.
-    log(f"Stage 2: deep analysis with {config.CLAUDE_MODEL} ...")
-    report = analyst.analyse(canonical, bundle)
+    # Below Sonnet threshold → use Haiku result directly (Watch List / Approaching)
+    if haiku["confidence"] < sonnet_threshold:
+        log(f"  Haiku-only (conf {haiku['confidence']} < threshold {sonnet_threshold}).")
+        return {
+            "pair":         canonical,
+            "bundle":       bundle,
+            "availability": available,
+            "report":       haiku["report"],
+            "screened_out": False,
+            "screen":       {"score": min(5, haiku["confidence"] // 2 + 1),
+                             "reason": f"Haiku {haiku['confidence']}/10"},
+        }
+
+    # Stage 2: Sonnet confirmation for high-confidence pairs
+    log(f"Sonnet: confirming (Haiku conf={haiku['confidence']}/10, threshold={sonnet_threshold}) ...")
+    report = analyst.analyse(canonical, bundle, haiku_report=haiku["report"])
     return {
         "pair":         canonical,
         "bundle":       bundle,
         "availability": available,
         "report":       report,
         "screened_out": False,
-        "screen":       screen,
+        "screen":       {"score": min(5, haiku["confidence"] // 2 + 1),
+                         "reason": f"Sonnet confirmed (Haiku {haiku['confidence']}/10)"},
     }
 
 
