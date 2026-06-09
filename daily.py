@@ -1308,10 +1308,10 @@ _MORNING_RANKED_FILE = config.DATA_DIR / "morning_ranked.json"
 
 # (label, session-currency filter set — empty = no filter)
 _SCAN_MODES: dict = {
-    "asian":     ("9am Check",        set()),
-    "midday":    ("1pm Midday Check", set()),
-    "prelondon": ("3pm Check",        set()),
-    "full":      ("6am Full Scan",    set()),
+    "asian":     ("9am Check",     set()),
+    "midday":    ("5pm Check",     set()),
+    "prelondon": ("3pm Check",     set()),
+    "full":      ("6am Full Scan", set()),
 }
 
 # Pair counts per scan mode (top_n for selector, max pairs after session filter)
