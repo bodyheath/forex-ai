@@ -39,6 +39,7 @@ def gather(base: str, quote: str, log=print,
 
     return {
         "technical":   tech,
+        "mtf":         mtf_result,
         "fundamental": fund,
         "sentiment":   sent,
         "positioning": pos,
