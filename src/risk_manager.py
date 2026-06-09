@@ -41,6 +41,12 @@ MODE_RISK = {
 CONF_MULT = {7: 0.75, 8: 1.00, 9: 1.25, 10: 1.50}
 MAX_RISK_PCT = 1.50
 
+# ── FOREX AI FUND ─────────────────────────────────────────────────────────────
+# The paper trading fund always starts at exactly $10,000 regardless of the
+# real account size (ACCOUNT_BALANCE).  Position sizing for real recommendations
+# uses config.ACCOUNT_BALANCE (the GitHub secret), never this value.
+FUND_START = 10_000.0
+
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
