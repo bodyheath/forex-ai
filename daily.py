@@ -719,6 +719,7 @@ def _send_telegram_summary(
     all_sections: list[list[str]] = []
 
     # ── HEADER ─────────────────────────────────────────────────────────────────
+    _scan_label = _SCAN_MODES.get(scan_mode, ("Daily Analysis", set()))[0]
     n_deep = len(deep_results)
     if yes_trades:
         setup_line = f"<b>🟢 {len(yes_trades)} setup{'s' if len(yes_trades) > 1 else ''} found</b>"
@@ -726,7 +727,7 @@ def _send_telegram_summary(
         setup_line = "No setups today"
 
     all_sections.append([
-        f"<b>🤖 Forex AI — {_fmt_date_nz(now_ak)}</b>",
+        f"<b>🤖 Forex AI — {_scan_label} — {_fmt_date_nz(now_ak)}</b>",
         f"Universe: {universe_size} · Deep analysed: <b>{n_deep}</b> · {setup_line}",
     ])
 
