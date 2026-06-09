@@ -113,16 +113,34 @@ def _log_line(handle, msg: str) -> None:
     handle.flush()
 
 
+def _telegram_test() -> None:
+    """Call getMe to verify the bot token is valid; log the result."""
+    if not config.TELEGRAM_TOKEN:
+        print("[TELEGRAM] Bot token INVALID — check TELEGRAM_TOKEN secret")
+        return
+    url = f"https://api.telegram.org/bot{config.TELEGRAM_TOKEN}/getMe"
+    try:
+        resp = urllib.request.urlopen(url, timeout=10)
+        data = json.loads(resp.read().decode())
+        if data.get("ok"):
+            bot_name = data["result"].get("username", "Unknown")
+            print(f"[TELEGRAM] Bot token valid — bot name: {bot_name}")
+        else:
+            print("[TELEGRAM] Bot token INVALID — check TELEGRAM_TOKEN secret")
+    except Exception as exc:
+        print(f"[TELEGRAM] Bot token INVALID — check TELEGRAM_TOKEN secret ({exc})")
+
+
 def _telegram(message: str) -> None:
     if not config.TELEGRAM_TOKEN or not config.TELEGRAM_CHAT_ID:
         return
-    recipients = [config.TELEGRAM_CHAT_ID]
+    _named_recipients = [("Heath", config.TELEGRAM_CHAT_ID)]
     if config.TELEGRAM_CHAT_ID_2:
-        recipients.append(config.TELEGRAM_CHAT_ID_2)
+        _named_recipients.append(("George", config.TELEGRAM_CHAT_ID_2))
     if config.TELEGRAM_CHAT_ID_3:
-        recipients.append(config.TELEGRAM_CHAT_ID_3)
+        _named_recipients.append(("Max", config.TELEGRAM_CHAT_ID_3))
     url = f"https://api.telegram.org/bot{config.TELEGRAM_TOKEN}/sendMessage"
-    for chat_id in recipients:
+    for name, chat_id in _named_recipients:
         try:
             data = urllib.parse.urlencode({
                 "chat_id":    chat_id,
@@ -130,8 +148,9 @@ def _telegram(message: str) -> None:
                 "parse_mode": "HTML",
             }).encode()
             urllib.request.urlopen(urllib.request.Request(url, data=data), timeout=10)
-        except Exception:
-            pass
+            print(f"[TELEGRAM] SUCCESS — message sent to {name} (chat_id: {chat_id})")
+        except Exception as exc:
+            print(f"[TELEGRAM] FAILED — {name}: {exc}")
 
 
 def _fmt_price(v) -> str:
