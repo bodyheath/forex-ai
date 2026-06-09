@@ -292,9 +292,11 @@ def warm_cache(pairs: list, log=print) -> None:
     # Determine which (pair, interval) combinations need a live fetch.
     needed = []
     for pair in pairs:
-        for interval, outputsize in (("1day", 400), ("4h", 500)):
+        for interval, outputsize in (
+            ("1month", 60), ("1week", 200), ("1day", 400), ("4h", 500), ("1h", 300)
+        ):
             key = f"TD:{pair}:{interval}:{outputsize}"
-            if cache.get(key, ttl_hours=_CACHE_TTL) is None:
+            if cache.get(key, ttl_hours=_INTERVAL_TTL.get(interval, _CACHE_TTL)) is None:
                 needed.append((pair, interval, outputsize))
 
     if not needed:
