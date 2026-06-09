@@ -1050,6 +1050,83 @@ def _send_telegram_summary(
 _LAST_RUN_FILE = config.REPORTS_DIR.parent / "last_run.txt"
 _COOLDOWN_SECS = 3600  # 60 minutes
 
+_ALERTS_FILE = config.DATA_DIR / "last_alerts.json"
+
+# (label, session-currency filter set — empty = no filter)
+_SCAN_MODES: dict = {
+    "asian":     ("9am Asian Session",  {"AUD", "NZD", "JPY"}),
+    "midday":    ("1pm Midday Scan",    set()),
+    "prelondon": ("3pm Pre-London",     {"EUR", "GBP", "CHF"}),
+    "full":      ("Daily Analysis",     set()),
+}
+
+
+def _get_scan_mode() -> str:
+    """Return scan mode from SCAN_MODE env var or current Auckland hour."""
+    import os as _os_
+    mode = _os_.getenv("SCAN_MODE", "").lower().strip()
+    if mode in _SCAN_MODES:
+        return mode
+    hour = _auckland_now().hour
+    if 8 <= hour <= 10:
+        return "asian"
+    if 12 <= hour <= 14:
+        return "midday"
+    if 14 <= hour <= 16:
+        return "prelondon"
+    return "full"
+
+
+def _filter_pairs_for_mode(pairs: list, mode: str) -> list:
+    """Return only the pairs relevant to the given scan mode."""
+    ccys = _SCAN_MODES.get(mode, ("", set()))[1]
+    if not ccys:
+        return pairs
+    return [p for p in pairs if any(c in p.upper() for c in ccys)]
+
+
+def _alert_fingerprints(results: list) -> set:
+    """Build a set of 'PAIR:DIRECTION' strings for all YES trade alerts."""
+    return {
+        f"{r['pair']}:{(r['parsed'].get('direction') or '').upper()}"
+        for r in results
+        if r["parsed"].get("trade_this") == "YES"
+    }
+
+
+def _load_last_alerts() -> set:
+    try:
+        data = json.loads(_ALERTS_FILE.read_text(encoding="utf-8"))
+        return set(data.get("alerts", []))
+    except Exception:
+        return set()
+
+
+def _save_alerts(alerts: set) -> None:
+    try:
+        _ALERTS_FILE.write_text(
+            json.dumps({"alerts": sorted(alerts)}), encoding="utf-8"
+        )
+    except Exception:
+        pass
+
+
+def _next_scan_footer(scan_mode: str, now_ak: datetime) -> str:
+    """Return a localised 'next scan' line for the Telegram footer."""
+    nxt = now_ak + timedelta(days=1)
+    while nxt.weekday() >= 5:          # skip Saturday (5) and Sunday (6)
+        nxt += timedelta(days=1)
+    nxt_short  = _fmt_date_short_nz(nxt)
+    is_weekday = now_ak.weekday() < 5
+
+    if scan_mode == "full" and is_weekday:
+        return "⏰ Next scan today at 9am Auckland time (Asian session)"
+    if scan_mode == "asian" and is_weekday:
+        return "⏰ Next scan today at 1pm Auckland time (midday)"
+    if scan_mode == "midday" and is_weekday:
+        return "⏰ Next scan today at 3pm Auckland time (pre-London open)"
+    return f"⏰ Next full scan {nxt_short} at 6am Auckland time"
+
 
 def run() -> int:
     _run_start = time.time()
