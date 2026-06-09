@@ -21,7 +21,17 @@ from src import cache
 _TD_URL = "https://api.twelvedata.com/time_series"
 _TIMEOUT = 30
 
-_CACHE_TTL = 24.0  # hours
+_CACHE_TTL = 24.0  # default hours (also used for daily candles)
+
+# Per-interval cache TTL.  Shorter-lived timeframes expire faster so intraday
+# scans always see fresh 1H / 4H data without hammering the API.
+_INTERVAL_TTL: dict = {
+    "1month": 48.0,
+    "1week":  24.0,
+    "1day":   24.0,
+    "4h":      6.0,
+    "1h":      2.0,
+}
 
 # Per-run Twelve Data API call counter (cache misses only — live API calls).
 _td_calls_this_run: int = 0
