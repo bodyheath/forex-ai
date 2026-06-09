@@ -114,7 +114,13 @@ def _defaults() -> dict:
 
 
 def load_profile() -> dict:
-    """Load risk_profile.json; sync account balance from env on significant change."""
+    """Load risk_profile.json.
+
+    account_balance  — always set from env (real trading account, GitHub secret).
+    estimated_balance — FOREX AI FUND, starts at FUND_START ($10,000), drifts with P&L.
+    These two are intentionally separate: position sizing uses config.ACCOUNT_BALANCE
+    directly; the fund tracks paper performance independently.
+    """
     if not config.RISK_PROFILE_FILE.exists():
         d = _defaults()
         save_profile(d)
@@ -124,17 +130,13 @@ def load_profile() -> dict:
     except (json.JSONDecodeError, OSError):
         return _defaults()
 
-    # If env ACCOUNT_BALANCE was manually updated (>5 % delta), trust env.
-    env_bal  = config.ACCOUNT_BALANCE
-    est_bal  = data.get("estimated_balance", env_bal)
-    if est_bal > 0 and abs(env_bal - est_bal) / est_bal > 0.05:
-        data["account_balance"]   = env_bal
-        data["estimated_balance"] = env_bal
-        data["peak_balance"]      = max(data.get("peak_balance", 0), env_bal)
+    # Real account balance always comes from env — never drifts with paper P&L.
+    data["account_balance"] = config.ACCOUNT_BALANCE
 
+    # Paper fund — default to FUND_START only when the key is completely absent.
     data.setdefault("account_currency",  config.ACCOUNT_CURRENCY)
-    data.setdefault("estimated_balance", data.get("account_balance", config.ACCOUNT_BALANCE))
-    data.setdefault("peak_balance",      data.get("estimated_balance"))
+    data.setdefault("estimated_balance", FUND_START)
+    data.setdefault("peak_balance",      data.get("estimated_balance", FUND_START))
     data.setdefault("weekly_snapshots",  [])
     return data
 
