@@ -10,6 +10,7 @@ def analyse_and_log(
     force_deep: bool = False,
     shared_fundamental=None,
     shared_macro=None,
+    sonnet_threshold: int = 6,
 ) -> dict:
     result = pipeline.run(
         pair,
@@ -17,6 +18,7 @@ def analyse_and_log(
         force_deep=force_deep,
         shared_fundamental=shared_fundamental,
         shared_macro=shared_macro,
+        sonnet_threshold=sonnet_threshold,
     )
     if result.get("screened_out"):
         screen = result.get("screen", {})
