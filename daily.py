@@ -841,6 +841,12 @@ def _send_telegram_summary(
             block.append("- If price gaps past entry on open — skip this trade entirely")
             block.append("━━━━━━━━━━━━━━━━━━━━━")
             block.append(f"📈 Confidence: {conf}/10  {_conf_bar(conf)}")
+            _mtf = r.get("bundle", {}).get("mtf", {})
+            if _mtf and _mtf.get("agreeing_count", 0) > 0:
+                block.append(
+                    f"🕐 Timeframes: {_mtf['agreeing_count']}/5 agree  "
+                    f"<code>{_mtf.get('breakdown', '')}</code>"
+                )
             block.append("🔍 <b>Why all data agrees:</b>")
             for why_line in _why_agrees_lines(r, ctx):
                 block.append(why_line)
