@@ -2,8 +2,8 @@ name: Intraday Forex Scans
 
 # Three focused scans per weekday (Auckland time, NZST = UTC+12):
 #   9am  NZ → 21:00 UTC previous day  (Asian session: AUD/NZD/JPY focus)
-#   1pm  NZ → 01:00 UTC same day      (Midday: all pairs)
 #   3pm  NZ → 03:00 UTC same day      (Pre-London: EUR/GBP/CHF focus)
+#   5pm  NZ → 05:00 UTC same day      (Evening check: all pairs)
 #
 # Note: during NZDT (Oct–Mar, UTC+13) each trigger fires 1 hour early in NZ time.
 # The script's _get_scan_mode() reads the actual Auckland clock so it always
@@ -13,10 +13,10 @@ on:
   schedule:
     # 9am Auckland (Mon–Fri NZST): Sun–Thu 21:00 UTC
     - cron: '0 21 * * 0-4'
-    # 1pm Auckland (Mon–Fri NZST): Mon–Fri 01:00 UTC
-    - cron: '0 1 * * 1-5'
     # 3pm Auckland (Mon–Fri NZST): Mon–Fri 03:00 UTC
     - cron: '0 3 * * 1-5'
+    # 5pm Auckland (Mon–Fri NZST): Mon–Fri 05:00 UTC
+    - cron: '0 5 * * 1-5'
   workflow_dispatch:
     inputs:
       scan_mode:
