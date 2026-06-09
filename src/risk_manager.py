@@ -423,7 +423,10 @@ def fmt_currency(amount: float, currency: str) -> str:
 def risk_dashboard_lines(profile: dict, risk_state: dict,
                          exposure: dict) -> list:
     """Return Telegram-formatted lines for the Risk Dashboard section."""
-    bal    = profile.get("estimated_balance", config.ACCOUNT_BALANCE)
+    fund   = profile.get("estimated_balance", FUND_START)
+    fund_pk = profile.get("peak_balance", fund)
+    fund_ret = (fund - FUND_START) / FUND_START * 100
+    real   = config.ACCOUNT_BALANCE
     cur    = profile.get("account_currency", "USD")
     mode   = risk_state["risk_mode"]
     wr     = risk_state.get("overall_win_rate")
@@ -432,7 +435,6 @@ def risk_dashboard_lines(profile: dict, risk_state: dict,
     cl     = risk_state.get("consecutive_losses", 0)
     cw     = risk_state.get("consecutive_wins", 0)
     dd     = risk_state.get("drawdown_pct", 0.0)
-    peak   = risk_state.get("peak_balance", bal)
     b_pct  = MODE_RISK.get(mode, 1.0)
     tot    = exposure.get("total_pct", 0.0)
     lim    = exposure.get("limit_pct", MAX_DAILY_RISK)
@@ -446,7 +448,9 @@ def risk_dashboard_lines(profile: dict, risk_state: dict,
 
     lines = [
         "📊 <b>RISK DASHBOARD</b>",
-        f"Account: <b>{fmt_currency(bal, cur)}</b> | Win rate: {wr_txt} ({dec} decisive trades)",
+        f"📈 FOREX AI FUND: <b>{fmt_currency(fund, cur)}</b> ({fund_ret:+.1f}%) | Peak: {fmt_currency(fund_pk, cur)}",
+        f"💼 Real Account: <b>{fmt_currency(real, cur)}</b>",
+        f"Win rate: {wr_txt} ({dec} decisive trades)",
         f"Risk/trade: <b>{b_pct:.2f}%</b> ({mode.replace('_',' ')}) | Open exposure: {tot:.1f}% / {lim:.0f}%",
         streak_txt,
     ]
