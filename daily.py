@@ -1309,7 +1309,7 @@ def run() -> int:
             except Exception:
                 pass
 
-        _log_line(logf, f"=== Daily run {date} | universe: {universe_size} pairs ===")
+        _log_line(logf, f"=== {scan_mode.upper()} run {date} | universe: {universe_size} pairs | Sonnet threshold: {sonnet_thresh}/10 ===")
         _log_line(logf, f"[DIAG] CLAUDE_MODEL={repr(config.CLAUDE_MODEL)}")
         _log_line(logf, f"[DIAG] HAIKU_MODEL={repr(config.HAIKU_MODEL)}")
         _log_line(logf, f"[DIAG] pairs_today ({len(pairs_today)}): {pairs_today}")
@@ -1333,6 +1333,7 @@ def run() -> int:
                     force_deep=force_deep,
                     shared_fundamental=_shared_fund.get(pair),
                     shared_macro=_shared_macro,
+                    sonnet_threshold=sonnet_thresh,
                 )
                 if result is None:
                     failed_pairs.append(pair)
@@ -1353,8 +1354,8 @@ def run() -> int:
                 _log_line(logf, f"#{result['id']} {result['pair']}: {skipped}{verdict}")
                 deep_results.append(result)
 
-        # Merit-selected pairs go directly to Sonnet (Haiku bypassed for initial 15)
-        _log_line(logf, f"Sending {len(pairs_today)} merit-selected pairs to Sonnet: {', '.join(pairs_today)}")
+        # Haiku analyses all pairs; Sonnet only called for conf >= sonnet_thresh
+        _log_line(logf, f"Analysing {len(pairs_today)} pairs (Haiku all, Sonnet if conf>={sonnet_thresh}): {', '.join(pairs_today)}")
         _process_batch(pairs_today, force_deep=True)
 
         # Auto-expand if fewer than 3 meaningful results
