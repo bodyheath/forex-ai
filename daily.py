@@ -1034,7 +1034,7 @@ def _send_telegram_summary(
     # ── FOOTER ─────────────────────────────────────────────────────────────────
     all_sections.append([
         "",
-        f"<i>⏰ Next scan tomorrow {_fmt_date_short_nz(tomorrow_ak)} at 6am Auckland time</i>",
+        f"<i>{_next_scan_footer(scan_mode, now_ak)}</i>",
     ])
 
     # Item 17: strip any line containing "unavailable", "n/a", or "check console"
