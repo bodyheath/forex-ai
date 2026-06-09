@@ -1256,6 +1256,14 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Learning step failed: {exc}")
 
+        # Threshold auto-adjust: revert conf 6→7 / R:R 1.3→1.5 if win rate < 45% after 50 trades
+        threshold_revert_msg = None
+        try:
+            from src import threshold_manager as _thresh_check
+            threshold_revert_msg = _thresh_check.check_and_adjust(log=lambda m: _log_line(logf, m))
+        except Exception as exc:
+            _log_line(logf, f"Threshold check failed: {exc}")
+
         # 2. Smart pair selection
         from src import threshold_manager as _thresh_mgr
         _trade_conf   = _thresh_mgr.get_confidence_threshold()
