@@ -1654,7 +1654,7 @@ def run() -> int:
             f"meaningful(conf>=5)={len(meaningful)} · failed={len(failed_pairs)}",
         )
 
-        # Save morning-ranked state so 1pm midday scan can pick the closest-to-trigger pairs
+        # Save morning-ranked state so intraday scans can pick the closest-to-trigger pairs
         if scan_mode == "full":
             try:
                 morning_confs = {
