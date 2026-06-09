@@ -3,7 +3,7 @@ run Haiku full analysis, and escalate to Sonnet only if Haiku confidence reaches
 the session-specific threshold."""
 
 import config
-from src import analyst, fundamental, macro, positioning, sentiment, technical
+from src import analyst, fundamental, macro, mtf, positioning, sentiment, technical
 
 
 def parse_pair(pair: str):
