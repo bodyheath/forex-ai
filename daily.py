@@ -1612,11 +1612,8 @@ def run() -> int:
         _current_alerts = _alert_fingerprints(deep_results)
         _new_alerts     = _current_alerts - _last_alerts
         _save_alerts(_current_alerts)
-        _should_notify  = (scan_mode == "full") or bool(_new_alerts)
-        if not _should_notify:
-            _log_line(logf, f"[{scan_mode}] No new trade alerts since last scan — Telegram skipped.")
-        else:
-            _log_line(logf, f"[{scan_mode}] New alerts: {_new_alerts or '(full-scan, always sends)'}")
+        _should_notify = True
+        _log_line(logf, f"[{scan_mode}] Sending Telegram. New alerts: {sorted(_new_alerts) if _new_alerts else 'none'}")
 
         # 10. Send Telegram summary
         if _should_notify:
