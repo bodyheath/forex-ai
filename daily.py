@@ -1433,23 +1433,37 @@ def run() -> int:
             f"duration={run_duration_min:.1f}m"
         ))
 
+        # Alert deduplication: intraday scans only notify when new trade alerts appear
+        _last_alerts    = _load_last_alerts()
+        _current_alerts = _alert_fingerprints(deep_results)
+        _new_alerts     = _current_alerts - _last_alerts
+        _save_alerts(_current_alerts)
+        _should_notify  = (scan_mode == "full") or bool(_new_alerts)
+        if not _should_notify:
+            _log_line(logf, f"[{scan_mode}] No new trade alerts since last scan — Telegram skipped.")
+        else:
+            _log_line(logf, f"[{scan_mode}] New alerts: {_new_alerts or '(full-scan, always sends)'}")
+
         # 10. Send Telegram summary
-        _send_telegram_summary(
-            date=date,
-            universe_size=universe_size,
-            total_scanned=len(analysed_pairs),
-            deep_results=deep_results,
-            closed_today=closed_today,
-            new_patterns=new_patterns,
-            stats=learning_stats,
-            risk_data=risk_data,
-            stage1_filtered=stage1_filtered,
-            failed_pairs=failed_pairs,
-            credit_data=credit_data,
-            run_stats=run_stats,
-            td_calls=td_calls,
-            run_duration_min=run_duration_min,
-        )
+        if _should_notify:
+            _send_telegram_summary(
+                date=date,
+                universe_size=universe_size,
+                total_scanned=len(analysed_pairs),
+                deep_results=deep_results,
+                closed_today=closed_today,
+                new_patterns=new_patterns,
+                stats=learning_stats,
+                risk_data=risk_data,
+                stage1_filtered=stage1_filtered,
+                failed_pairs=failed_pairs,
+                credit_data=credit_data,
+                run_stats=run_stats,
+                td_calls=td_calls,
+                run_duration_min=run_duration_min,
+                scan_mode=scan_mode,
+                new_alerts=_new_alerts,
+            )
 
     return 0
 
