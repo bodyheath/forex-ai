@@ -41,6 +41,13 @@ def analyse_and_log(
         return result
 
     parsed = recparse.parse(result["report"])
+
+    # Hard MTF gate: TRADE_THIS YES requires >=4/5 timeframes agreeing.
+    # If MTF data is unavailable (qualifies defaults to True) we don't block.
+    _mtf = result.get("bundle", {}).get("mtf", {})
+    if parsed.get("trade_this") == "YES" and _mtf and not _mtf.get("qualifies", True):
+        parsed["trade_this"] = "NO"
+
     rec_id = tracker.log_recommendation(
         result["pair"], parsed, result["availability"]["count"], result["report"]
     )
