@@ -192,17 +192,23 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
 
 # ── Stage 1: Haiku full analysis ───────────────────────────────────────────────
 
-_HAIKU_FULL_SYSTEM = (
-    "Forex analyst. Score all 5 data layers 1-10 and output confidence.\n"
-    "TRADE_THIS: YES only if confidence>=7, R:R>=1.5, >=4 layers agree. UNAVAILABLE=score 1.\n"
-    "TECHNICAL: RSI<30=8-9BUY 30-35=6-7BUY 35-40=4-5BUY 40-60=1-3NEUTRAL "
-    "60-65=4-5SELL 65-70=6-7SELL >70=8-9SELL +/-1 MACD +/-1 Bollinger +/-1 D1+4H aligned.\n"
-    "Output PAIR: through TRADE_THIS: only. No preamble.\n"
-    "PAIR: [p]\nDIRECTION: [BUY|SELL]\nCONFIDENCE: [n/10]\n"
-    "TECHNICAL_SCORE: [n/10]\nFUNDAMENTAL_SCORE: [n/10]\nSENTIMENT_SCORE: [n/10]\n"
-    "POSITIONING_SCORE: [n/10]\nMACRO_SCORE: [n/10]\n"
-    "KEY_THESIS: [1 sentence]\nRISK_FACTORS: [2 risks]\nTRADE_THIS: [YES|NO]"
-)
+def _haiku_system_prompt() -> str:
+    """Build the Haiku system prompt using the active threshold config."""
+    from src import threshold_manager
+    cfg = threshold_manager.load()
+    thr = int(cfg.get("confidence_threshold", 6))
+    rr  = cfg.get("min_rr", 1.3)
+    return (
+        "Forex analyst. Score all 5 data layers 1-10 and output confidence.\n"
+        f"TRADE_THIS: YES only if confidence>={thr}, R:R>={rr}, >=4 layers agree. UNAVAILABLE=score 1.\n"
+        "TECHNICAL: RSI<30=8-9BUY 30-35=6-7BUY 35-40=4-5BUY 40-60=1-3NEUTRAL "
+        "60-65=4-5SELL 65-70=6-7SELL >70=8-9SELL +/-1 MACD +/-1 Bollinger +/-1 D1+4H aligned.\n"
+        "Output PAIR: through TRADE_THIS: only. No preamble.\n"
+        "PAIR: [p]\nDIRECTION: [BUY|SELL]\nCONFIDENCE: [n/10]\n"
+        "TECHNICAL_SCORE: [n/10]\nFUNDAMENTAL_SCORE: [n/10]\nSENTIMENT_SCORE: [n/10]\n"
+        "POSITIONING_SCORE: [n/10]\nMACRO_SCORE: [n/10]\n"
+        "KEY_THESIS: [1 sentence]\nRISK_FACTORS: [2 risks]\nTRADE_THIS: [YES|NO]"
+    )
 
 
 def analyse_haiku_full(pair: str, bundle: dict) -> dict:
