@@ -1057,7 +1057,8 @@ def _send_telegram_summary(
 _LAST_RUN_FILE = config.REPORTS_DIR.parent / "last_run.txt"
 _COOLDOWN_SECS = 3600  # 60 minutes
 
-_ALERTS_FILE = config.DATA_DIR / "last_alerts.json"
+_ALERTS_FILE         = config.DATA_DIR / "last_alerts.json"
+_MORNING_RANKED_FILE = config.DATA_DIR / "morning_ranked.json"
 
 # (label, session-currency filter set — empty = no filter)
 _SCAN_MODES: dict = {
@@ -1066,6 +1067,16 @@ _SCAN_MODES: dict = {
     "prelondon": ("3pm Pre-London",     {"EUR", "GBP", "CHF"}),
     "full":      ("Daily Analysis",     set()),
 }
+
+# Pair counts per scan mode (top_n for selector, max pairs after session filter)
+_SCAN_TOP_N   = {"full": 15, "asian": 25, "midday": 15, "prelondon": 25}
+_SCAN_MAX_PRS = {"full": 15, "asian":  7, "midday":  5, "prelondon":  7}
+
+# Sonnet escalation threshold: 6 for 6am (higher quality), 7 for intraday (cheaper)
+_SONNET_THRESH = {"full": 6, "asian": 7, "midday": 7, "prelondon": 7}
+
+# Max pre-filtered pairs to warm Twelve Data cache for
+_TD_CACHE_MAX = {"full": 20, "asian": 10, "midday": 10, "prelondon": 10}
 
 
 def _get_scan_mode() -> str:
