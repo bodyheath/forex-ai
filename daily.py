@@ -1388,6 +1388,20 @@ def run() -> int:
             f"meaningful(conf>=5)={len(meaningful)} · failed={len(failed_pairs)}",
         )
 
+        # Save morning-ranked state so 1pm midday scan can pick the closest-to-trigger pairs
+        if scan_mode in ("full", "asian"):
+            try:
+                morning_confs = {
+                    r["pair"]: (_conf(r) or 0)
+                    for r in deep_results
+                }
+                _MORNING_RANKED_FILE.write_text(
+                    json.dumps(morning_confs), encoding="utf-8"
+                )
+                _log_line(logf, f"Morning ranked state saved ({len(morning_confs)} pairs).")
+            except Exception as _mr_exc:
+                _log_line(logf, f"Morning ranked save failed: {_mr_exc}")
+
         # 6. Rebuild dashboard
         try:
             path = dashboard.generate()
