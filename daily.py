@@ -96,6 +96,8 @@ def _telegram(message: str) -> None:
     recipients = [config.TELEGRAM_CHAT_ID]
     if config.TELEGRAM_CHAT_ID_2:
         recipients.append(config.TELEGRAM_CHAT_ID_2)
+    if config.TELEGRAM_CHAT_ID_3:
+        recipients.append(config.TELEGRAM_CHAT_ID_3)
     url = f"https://api.telegram.org/bot{config.TELEGRAM_TOKEN}/sendMessage"
     for chat_id in recipients:
         try:
