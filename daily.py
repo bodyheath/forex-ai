@@ -899,6 +899,12 @@ def _send_telegram_summary(
             watch_sec.append(f"")
             watch_sec.append(f"{arrow} <b>{rr['pair']}</b> {dirn}  {conf}/10 {_conf_bar(conf)}")
             watch_sec.append(f"<code>{_score_breakdown_line(pp)}</code>")
+            _mtf_wl = rr.get("bundle", {}).get("mtf", {})
+            if _mtf_wl and _mtf_wl.get("agreeing_count", 0) > 0:
+                watch_sec.append(
+                    f"MTF: {_mtf_wl['agreeing_count']}/5  "
+                    f"<code>{_mtf_wl.get('breakdown', '')}</code>"
+                )
             watch_sec.append(f"Needs: {ntc}")
     else:
         watch_sec.append("No pairs in the 5–6 confidence range today.")
