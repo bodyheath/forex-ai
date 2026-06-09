@@ -51,6 +51,7 @@ MY_EMAIL = os.getenv("MY_EMAIL", "")
 TELEGRAM_TOKEN   = os.getenv("TELEGRAM_TOKEN", "")
 TELEGRAM_CHAT_ID  = os.getenv("TELEGRAM_CHAT_ID", "")
 TELEGRAM_CHAT_ID_2 = os.getenv("TELEGRAM_CHAT_ID_2", "")
+TELEGRAM_CHAT_ID_3 = os.getenv("TELEGRAM_CHAT_ID_3", "")
 
 ACCOUNT_BALANCE  = float(os.getenv("ACCOUNT_BALANCE") or "10000")
 ACCOUNT_CURRENCY = os.getenv("ACCOUNT_CURRENCY") or "USD"
