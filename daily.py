@@ -1509,6 +1509,14 @@ def run() -> int:
             f"duration={run_duration_min:.1f}m"
         ))
 
+        # Research threshold analysis (only meaningful after 30 days of paper trades)
+        research_result = None
+        try:
+            from src import research_analyst as _ra
+            research_result = _ra.analyse(log=lambda m: _log_line(logf, m))
+        except Exception as exc:
+            _log_line(logf, f"Research analysis failed: {exc}")
+
         # Alert deduplication: intraday scans only notify when new trade alerts appear
         _last_alerts    = _load_last_alerts()
         _current_alerts = _alert_fingerprints(deep_results)
