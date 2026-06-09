@@ -98,12 +98,11 @@ def _currency_exposure(pair: str, direction: str) -> dict:
 # ── Profile load / save ───────────────────────────────────────────────────────
 
 def _defaults() -> dict:
-    bal = config.ACCOUNT_BALANCE
     return {
-        "account_balance":    bal,
+        "account_balance":    config.ACCOUNT_BALANCE,  # real trading account (from env/secret)
         "account_currency":   config.ACCOUNT_CURRENCY,
-        "estimated_balance":  bal,
-        "peak_balance":       bal,
+        "estimated_balance":  FUND_START,   # FOREX AI FUND — always starts at $10,000
+        "peak_balance":       FUND_START,
         "risk_mode":          "normal",
         "consecutive_losses": 0,
         "consecutive_wins":   0,
