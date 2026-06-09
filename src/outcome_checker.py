@@ -1,7 +1,7 @@
 """Automatic daily outcome detection for open trade recommendations.
 
 Fetches the live price for every OPEN trade from Twelve Data, then closes any
-trade that has hit its target (WIN), stop loss (LOSS), or been open for 14+
+trade that has hit its target (WIN), stop loss (LOSS), or been open for 5+
 days (EXPIRED).  Returns the list of closed trade row dicts so the caller can
 immediately run win/loss analysis on them.
 """
