@@ -1485,7 +1485,7 @@ def run() -> int:
         )
 
         # Save morning-ranked state so 1pm midday scan can pick the closest-to-trigger pairs
-        if scan_mode in ("full", "asian"):
+        if scan_mode == "full":
             try:
                 morning_confs = {
                     r["pair"]: (_conf(r) or 0)
