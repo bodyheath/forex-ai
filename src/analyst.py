@@ -209,7 +209,8 @@ def _haiku_system_prompt() -> str:
     rr  = cfg.get("min_rr", 1.3)
     return (
         "Forex analyst. Score all 5 data layers 1-10 and output confidence.\n"
-        f"TRADE_THIS: YES only if confidence>={thr}, R:R>={rr}, >=4 layers agree. UNAVAILABLE=score 1.\n"
+        f"TRADE_THIS: YES only if confidence>={thr}, R:R>={rr}, MTF conf>=4/5, >=4 fundamental layers agree. UNAVAILABLE=score 1.\n"
+        "MTF rule: check MTF line in data — if conf<4/5 timeframes agree, TRADE_THIS NO regardless.\n"
         "TECHNICAL: RSI<30=8-9BUY 30-35=6-7BUY 35-40=4-5BUY 40-60=1-3NEUTRAL "
         "60-65=4-5SELL 65-70=6-7SELL >70=8-9SELL +/-1 MACD +/-1 Bollinger +/-1 D1+4H aligned.\n"
         "Output PAIR: through TRADE_THIS: only. No preamble.\n"
