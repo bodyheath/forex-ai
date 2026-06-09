@@ -1408,6 +1408,34 @@ def run() -> int:
             except Exception as _mr_exc:
                 _log_line(logf, f"Morning ranked save failed: {_mr_exc}")
 
+        # Research trading mode: paper-trade every pair with conf >= 5 (0.01 lots)
+        try:
+            from src import research_tracker as _rt
+            _rt_today = {
+                (r["pair"], (r.get("direction") or "").upper())
+                for r in _rt.load()
+                if r.get("date") == date
+            }
+            _rt_logged = 0
+            for _r in deep_results:
+                _rconf = _conf(_r)
+                if _rconf >= 5:
+                    _rp  = _r["parsed"]
+                    _rdir = (_rp.get("direction") or "").upper()
+                    if (_r["pair"], _rdir) not in _rt_today:
+                        _rsrc = (
+                            "sonnet"
+                            if all(_rp.get(k) for k in ("entry", "stop_loss", "target"))
+                            else "haiku"
+                        )
+                        _rt.log_research_trade(_r["pair"], _rp, _rsrc, scan_mode)
+                        _rt_today.add((_r["pair"], _rdir))
+                        _rt_logged += 1
+            if _rt_logged:
+                _log_line(logf, f"Research mode: logged {_rt_logged} paper trade(s) (conf>=5).")
+        except Exception as exc:
+            _log_line(logf, f"Research trade logging failed: {exc}")
+
         # 6. Rebuild dashboard
         try:
             path = dashboard.generate()
