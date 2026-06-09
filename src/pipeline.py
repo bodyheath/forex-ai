@@ -17,6 +17,7 @@ def gather(base: str, quote: str, log=print,
            _shared_fundamental=None, _shared_macro=None) -> dict:
     log(f"  - technical (Twelve Data) ...")
     tech = technical.analyse(base, quote)
+    mtf_result = mtf.analyse(tech)
 
     if _shared_fundamental is not None:
         fund = _shared_fundamental
