@@ -1,15 +1,16 @@
-"""The Claude analysis layer.
+"""The Claude analysis layer — cost-optimised two-stage flow.
 
-Stage 1  — Haiku screens on slim technical + fundamental only (~250 input tokens).
-Stage 1b — Haiku generates KEY_THESIS and RISK_FACTORS (~200 tokens) for pairs
-           that pass screening, saving ~120 Sonnet output tokens per pair.
-Stage 2  — Sonnet receives the slim bundle + pre-generated thesis (~800 input tokens)
-           and outputs scores, entry/exit levels, and confidence only.
-Both stages use prompt caching on the system content.
+Stage 1  — Haiku full analysis for ALL pairs in scope (~200 input tokens each).
+           Outputs confidence 1-10, direction, all 5 layer scores, key thesis.
+Stage 2  — Sonnet confirmation ONLY for pairs where Haiku confidence >= threshold
+           (6 for the 6am full scan, 7 for intraday scans). Typically 0-3 pairs.
+           Uses ultra-compressed input (<500 tokens) and 400 max_tokens output.
 
-Fallback key:
-  If the primary ANTHROPIC_API_KEY fails, _call_api() switches to KEY_2 for all
-  remaining calls in the run.  key_status() returns a label for the Telegram message.
+Skip-unchanged: pairs that moved <10 pips since last scan are skipped entirely,
+further reducing API calls on repeated intraday runs.
+
+Fallback key: if primary ANTHROPIC_API_KEY fails, all remaining calls switch to
+ANTHROPIC_API_KEY_2 for the rest of the run.
 """
 
 import json
@@ -21,7 +22,7 @@ import config
 from src import memory
 
 # ── API key fallback state ─────────────────────────────────────────────────────
-_using_fallback: bool    = False
+_using_fallback: bool     = False
 _fallback_triggered: bool = False
 
 # ── Run-level cost tracker ─────────────────────────────────────────────────────
@@ -30,19 +31,16 @@ _cost: dict = {
     "haiku_output": 0,
     "sonnet_input": 0,
     "sonnet_output": 0,
-    "cache_hits":   0,   # pairs skipped because price didn't move
+    "cache_hits":   0,
 }
 
 # ── Skip-unchanged cache ───────────────────────────────────────────────────────
-# Stores the last analysis price and report per pair so we can skip re-analysis
-# when price moved < 15 pips since the last run (within 6 hours).
 _SKIP_TTL_HOURS = 6.0
-_SKIP_PIPS      = 15
-_analysis_cache: dict = {}  # pair → {ts, price, report, thesis, risk}
+_SKIP_PIPS      = 10        # tightened from 15 — skips Haiku entirely if price flat
+_analysis_cache: dict = {}  # pair -> {ts, price, report}
 
 
 def reset_key_state() -> None:
-    """Reset fallback and cost state at the start of each daily run."""
     global _using_fallback, _fallback_triggered
     _using_fallback     = False
     _fallback_triggered = False
@@ -60,8 +58,6 @@ def key_status() -> str:
 
 
 def get_run_stats() -> dict:
-    """Return cost tracker snapshot with estimated USD cost."""
-    # Pricing (USD per 1M tokens) — Haiku 4.5 / Sonnet 4.6
     H_IN, H_OUT = 0.80, 4.00
     S_IN, S_OUT = 3.00, 15.00
     est = (
@@ -105,256 +101,168 @@ def _call_api(fn):
     return fn(client2)
 
 
-# ── Bundle trimming helpers ────────────────────────────────────────────────────
+# ── Ultra-compact data builder (~150 tokens) ───────────────────────────────────
 
-def _load_system_prompt() -> str:
-    return config.PROMPT_FILE.read_text(encoding="utf-8")
+def _compress_bundle(pair: str, bundle: dict) -> str:
+    """Build a flat, ~150-token data string used for both Haiku and Sonnet prompts."""
+    lines = [f"Pair:{pair}"]
 
+    tech  = bundle.get("technical", {})
+    daily = tech.get("daily", {})
 
-def _slim_bundle(bundle: dict) -> dict:
-    """Token-efficient version of the data bundle for the Sonnet prompt."""
-    slim: dict = {"technical": bundle.get("technical", {})}
+    def _f(v, d=4):
+        try:
+            return f"{float(v):.{d}f}"
+        except (TypeError, ValueError):
+            return "?"
+
+    if isinstance(daily, dict) and daily:
+        lines.append(
+            f"D1 price={_f(daily.get('last_close'))} "
+            f"RSI={daily.get('rsi14','?')} "
+            f"MACDh={_f(daily.get('macd_hist'))} "
+            f"SMA50={_f(daily.get('sma50'))} "
+            f"SMA200={_f(daily.get('sma200'))} "
+            f"trend={daily.get('trend','?')} "
+            f"ATR={_f(daily.get('atr14'))}"
+        )
+        h4 = tech.get("h4") or tech.get("4h") or {}
+        if isinstance(h4, dict) and h4.get("rsi14"):
+            lines.append(
+                f"4H RSI={h4.get('rsi14')} "
+                f"MACDh={_f(h4.get('macd_hist'))} "
+                f"trend={h4.get('trend','?')}"
+            )
+    else:
+        lines.append("D1:UNAVAILABLE")
 
     fund = bundle.get("fundamental", {})
-    slim_fund: dict = {}
-    for k, v in fund.items():
-        if k not in ("base", "quote"):
-            slim_fund[k] = v
+    diff = fund.get("rate_differential_pct")
+    if diff is not None:
+        b = fund.get("base") or {}
+        q = fund.get("quote") or {}
+        lines.append(
+            f"FUND diff={diff:+.2f}% "
+            f"{b.get('currency','?')}_rate={b.get('rate_trend','?')} "
+            f"{q.get('currency','?')}_rate={q.get('rate_trend','?')}"
+        )
+    else:
+        lines.append("FUND:UNAVAILABLE")
+
+    pos = bundle.get("positioning", {})
+    pos_parts = []
     for side in ("base", "quote"):
-        r = fund.get(side, {})
-        slim_fund[side] = {k: v for k, v in r.items() if k not in ("fred_series", "as_of")}
-    slim["fundamental"] = slim_fund
+        p = pos.get(side, {})
+        if p.get("status") == "ok":
+            flag = (p.get("extreme_flag") or "")[:20]
+            pos_parts.append(
+                f"{p.get('currency','?')}={p.get('direction','?')}@{p.get('percentile_in_range','?')}pct"
+                + (f" {flag}" if flag else "")
+            )
+        else:
+            pos_parts.append(f"{side[0].upper()}:N/A")
+    lines.append(f"POS {' '.join(pos_parts)}")
 
     sent = bundle.get("sentiment", {})
-    slim_sent: dict = {}
+    sent_parts = []
     for side in ("base", "quote"):
         s = sent.get(side, {})
         if s.get("status") == "ok":
-            slim_sent[side] = {
-                "currency":      s.get("currency"),
-                "status":        "ok",
-                "article_count": s.get("article_count"),
-                "headlines": [
-                    {
-                        "title":     h.get("title"),
-                        "published": (h.get("published") or "")[:10],
-                        "desc":      (h.get("desc") or "")[:80],
-                    }
-                    for h in (s.get("headlines") or [])[:8]
-                ],
-            }
+            sent_parts.append(f"{s.get('currency','?')}={s.get('article_count',0)}art")
         else:
-            slim_sent[side] = {k: s[k] for k in ("currency", "status", "error") if k in s}
-    slim["sentiment"] = slim_sent
+            sent_parts.append(f"{side[0].upper()}:N/A")
+    lines.append(f"SENT {' '.join(sent_parts)}")
 
-    pos = bundle.get("positioning", {})
-    slim_pos: dict = {}
-    _POS_KEEP = ("currency", "status", "report_date", "direction",
-                 "net_speculator_position", "percentile_in_range", "extreme_flag")
-    for side in ("base", "quote"):
-        p = pos.get(side, {})
-        slim_pos[side] = {k: p[k] for k in _POS_KEEP if k in p}
-    slim["positioning"] = slim_pos
+    mac     = bundle.get("macro", {})
+    signals = mac.get("signals") or {}
+    mac_parts = []
+    for label, key in (
+        ("VIX",   "VIX (volatility index)"),
+        ("oil",   "WTI crude oil ($/bbl)"),
+        ("curve", "US 2s10s curve (10Y-2Y, %)"),
+    ):
+        d = signals.get(key, {})
+        v = d.get("value") if isinstance(d, dict) else None
+        if v is not None:
+            mac_parts.append(f"{label}={float(v):.1f}")
+    lines.append(f"MACRO {' '.join(mac_parts) or 'UNAVAILABLE'}")
 
-    macro = bundle.get("macro", {})
-    slim_signals: dict = {}
-    for label, data in (macro.get("signals") or {}).items():
-        if isinstance(data, dict):
-            slim_signals[label] = {k: v for k, v in data.items() if k != "as_of"}
-        else:
-            slim_signals[label] = data
-    slim["macro"] = {"status": macro.get("status"), "signals": slim_signals}
-
-    return slim
+    return "\n".join(lines)
 
 
-def _slim_for_screen(bundle: dict) -> tuple:
-    """Return (tech_json, fund_json) for Haiku screener — minimal tokens."""
-    tech  = bundle.get("technical", {})
-    daily = tech.get("daily", {})
-    if daily:
-        slim_tech = {
-            "trend":          daily.get("trend"),
-            "rsi14":          daily.get("rsi14"),
-            "macd_hist":      daily.get("macd_hist"),
-            "bollinger":      daily.get("bollinger"),
-            "sma50":          daily.get("sma50"),
-            "sma200":         daily.get("sma200"),
-            "atr14":          daily.get("atr14"),
-            "recent_high_20": daily.get("recent_high_20"),
-            "recent_low_20":  daily.get("recent_low_20"),
-            "tech_signal":    daily.get("tech_signal"),
-        }
-    else:
-        slim_tech = {"status": tech.get("status", "UNAVAILABLE")}
+# ── Stage 1: Haiku full analysis ───────────────────────────────────────────────
 
-    fund = bundle.get("fundamental", {})
-    slim_fund = {
-        "rate_differential_pct": fund.get("rate_differential_pct"),
-        "carry_note":            fund.get("carry_note"),
-        "base_rate_trend":       (fund.get("base") or {}).get("rate_trend"),
-        "quote_rate_trend":      (fund.get("quote") or {}).get("rate_trend"),
-    }
-
-    return json.dumps(slim_tech, indent=2), json.dumps(slim_fund, indent=2)
-
-
-def _build_user_message(pair: str, bundle: dict, thesis: str = "", risk: str = "") -> str:
-    """Compact user message. Injects pre-generated thesis/risk from Haiku."""
-    slim = _slim_bundle(bundle)
-    parts = [
-        memory.render(),
-        "",
-        f"Pair: {pair}",
-        "",
-        "=== TECHNICAL ===",
-        json.dumps(slim["technical"], indent=2),
-        "",
-        "=== FUNDAMENTAL ===",
-        json.dumps(slim["fundamental"], indent=2),
-        "",
-        "=== SENTIMENT ===",
-        json.dumps(slim["sentiment"], indent=2),
-        "",
-        "=== POSITIONING (COT) ===",
-        json.dumps(slim["positioning"], indent=2),
-        "",
-        "=== MACRO ===",
-        json.dumps(slim["macro"], indent=2),
-    ]
-    if thesis or risk:
-        parts += [
-            "",
-            "=== PRE-GENERATED THESIS (use verbatim in output) ===",
-            f"KEY_THESIS: {thesis}" if thesis else "",
-            f"RISK_FACTORS: {risk}" if risk else "",
-        ]
-    parts += [
-        "",
-        "Output PAIR: through TRADE_THIS: only. No preamble.",
-        "BEST_ENTRY_TIME in Auckland time (NZDT=UTC+13 Sep–Apr, NZST=UTC+12 Apr–Sep).",
-    ]
-    return "\n".join(p for p in parts if p != "")
-
-
-# ── Stage-1 screener (Haiku) ───────────────────────────────────────────────────
-
-_SCREEN_SYSTEM = (
-    "You are a fast forex pre-screener. "
-    "Score 1–5 based only on the technical indicators and rate differential provided:\n"
-    "1 = no signal / flat / choppy\n"
-    "2 = weak or contradictory signals\n"
-    "3 = mixed / borderline\n"
-    "4 = clear directional bias — worth deep analysis\n"
-    "5 = strong confluence — high priority\n\n"
-    "Respond with EXACTLY two lines:\n"
-    "SCORE: <integer 1-5>\n"
-    "REASON: <one sentence>"
+_HAIKU_FULL_SYSTEM = (
+    "Forex analyst. Score all 5 data layers 1-10 and output confidence.\n"
+    "TRADE_THIS: YES only if confidence>=7, R:R>=1.5, >=4 layers agree. UNAVAILABLE=score 1.\n"
+    "TECHNICAL: RSI<30=8-9BUY 30-35=6-7BUY 35-40=4-5BUY 40-60=1-3NEUTRAL "
+    "60-65=4-5SELL 65-70=6-7SELL >70=8-9SELL +/-1 MACD +/-1 Bollinger +/-1 D1+4H aligned.\n"
+    "Output PAIR: through TRADE_THIS: only. No preamble.\n"
+    "PAIR: [p]\nDIRECTION: [BUY|SELL]\nCONFIDENCE: [n/10]\n"
+    "TECHNICAL_SCORE: [n/10]\nFUNDAMENTAL_SCORE: [n/10]\nSENTIMENT_SCORE: [n/10]\n"
+    "POSITIONING_SCORE: [n/10]\nMACRO_SCORE: [n/10]\n"
+    "KEY_THESIS: [1 sentence]\nRISK_FACTORS: [2 risks]\nTRADE_THIS: [YES|NO]"
 )
 
 
-def screen(pair: str, bundle: dict) -> dict:
-    """Stage-1 screener: Haiku scores pair 1–5 on slim tech + fundamental only.
-    Fails open (score=5) on any error so deep analysis still runs."""
-    tech_json, fund_json = _slim_for_screen(bundle)
-    user_msg = "\n".join([
-        f"Pair: {pair}",
-        "",
-        "=== TECHNICAL ===",
-        tech_json,
-        "",
-        "=== FUNDAMENTAL ===",
-        fund_json,
-    ])
+def analyse_haiku_full(pair: str, bundle: dict) -> dict:
+    """Haiku full analysis for all pairs.
+
+    Returns dict with keys: confidence (int 1-10), direction (str), report (str), reason (str).
+    The report is compatible with recparse.parse() — contains all score fields the
+    Watch List and dashboard need. No entry/stop/target (Sonnet provides those for conf>=threshold).
+    """
+    user_msg = _compress_bundle(pair, bundle)
 
     def _call(client):
         return client.messages.create(
             model=config.HAIKU_MODEL,
-            max_tokens=80,
-            system=_SCREEN_SYSTEM,
+            max_tokens=250,
+            system=_HAIKU_FULL_SYSTEM,
             messages=[{"role": "user", "content": user_msg}],
         )
 
     try:
-        resp = _call_api(_call)
+        resp   = _call_api(_call)
         _cost["haiku_input"]  += getattr(resp.usage, "input_tokens",  0)
         _cost["haiku_output"] += getattr(resp.usage, "output_tokens", 0)
-        text = "".join(b.text for b in resp.content if b.type == "text").strip()
-    except Exception:
-        return {"score": 5, "reason": "screener unavailable — failing open"}
+        report = "".join(b.text for b in resp.content if b.type == "text").strip()
+    except Exception as exc:
+        return {"confidence": 1, "direction": "NONE", "report": "", "reason": str(exc)}
 
-    score, reason = 5, text
-    for line in text.splitlines():
-        if line.startswith("SCORE:"):
+    confidence, direction, reason = 1, "NONE", ""
+    for line in report.splitlines():
+        line = line.strip()
+        if line.startswith("CONFIDENCE:"):
             try:
-                score = max(1, min(5, int(line.split(":", 1)[1].strip())))
-            except ValueError:
+                confidence = max(1, min(10, int(line.split(":", 1)[1].strip().split("/")[0])))
+            except (ValueError, IndexError):
                 pass
-        elif line.startswith("REASON:"):
-            reason = line.split(":", 1)[1].strip()
-    return {"score": score, "reason": reason}
+        elif line.startswith("DIRECTION:"):
+            direction = line.split(":", 1)[1].strip()
+        elif line.startswith("KEY_THESIS:"):
+            reason = line.split(":", 1)[1].strip()[:80]
 
-
-# ── Stage-1b: Haiku thesis generation ─────────────────────────────────────────
-
-_THESIS_SYSTEM = (
-    "Generate KEY_THESIS and RISK_FACTORS for a forex pair from the data provided.\n"
-    "KEY_THESIS: 1-2 sentences on what the combined data shows as the main edge.\n"
-    "RISK_FACTORS: 2 specific events or price levels that would invalidate a trade.\n"
-    "Respond with exactly:\n"
-    "KEY_THESIS: <text>\n"
-    "RISK_FACTORS: <text>"
-)
-
-
-def _generate_thesis(pair: str, bundle: dict) -> tuple:
-    """Use Haiku to cheaply generate thesis and risk factors."""
-    slim = _slim_bundle(bundle)
-    user_msg = f"Pair: {pair}\n\n{json.dumps(slim, separators=(',', ':'))}"
-
-    def _call(client):
-        return client.messages.create(
-            model=config.HAIKU_MODEL,
-            max_tokens=200,
-            system=_THESIS_SYSTEM,
-            messages=[{"role": "user", "content": user_msg}],
-        )
-
-    try:
-        resp = _call_api(_call)
-        _cost["haiku_input"]  += getattr(resp.usage, "input_tokens",  0)
-        _cost["haiku_output"] += getattr(resp.usage, "output_tokens", 0)
-        text    = "".join(b.text for b in resp.content if b.type == "text").strip()
-        thesis, risk = "", ""
-        for line in text.splitlines():
-            if line.startswith("KEY_THESIS:"):
-                thesis = line.split(":", 1)[1].strip()
-            elif line.startswith("RISK_FACTORS:"):
-                risk = line.split(":", 1)[1].strip()
-        return thesis, risk
-    except Exception:
-        return "", ""
+    _store_skip_cache(pair, bundle, report)
+    return {"confidence": confidence, "direction": direction, "report": report, "reason": reason}
 
 
 # ── Skip-unchanged check ───────────────────────────────────────────────────────
 
 def _pip_value(pair: str) -> float:
-    """Return pip size: 0.01 for JPY pairs, 0.0001 for all others."""
     return 0.01 if "JPY" in pair.upper() else 0.0001
 
 
 def check_skip(pair: str, bundle: dict) -> tuple:
-    """Return (should_skip, cached_report) if pair hasn't moved ≥15 pips in 6h."""
+    """Return (should_skip, cached_report) if pair hasn't moved >=10 pips in 6h."""
     entry = _analysis_cache.get(pair)
     if not entry:
         return False, None
-    age_h = (time.time() - entry["ts"]) / 3600.0
-    if age_h > _SKIP_TTL_HOURS:
+    if (time.time() - entry["ts"]) / 3600.0 > _SKIP_TTL_HOURS:
         return False, None
     try:
         cur_price = float(bundle["technical"]["daily"]["last_close"])
-        pip_move  = abs(cur_price - entry["price"]) / _pip_value(pair)
-        if pip_move < _SKIP_PIPS:
+        if abs(cur_price - entry["price"]) / _pip_value(pair) < _SKIP_PIPS:
             _cost["cache_hits"] += 1
             return True, entry["report"]
     except (KeyError, TypeError, ValueError):
@@ -363,7 +271,6 @@ def check_skip(pair: str, bundle: dict) -> tuple:
 
 
 def _store_skip_cache(pair: str, bundle: dict, report: str) -> None:
-    """Cache the analysis result for potential skip on next run."""
     try:
         price = float(bundle["technical"]["daily"]["last_close"])
         _analysis_cache[pair] = {"ts": time.time(), "price": price, "report": report}
@@ -371,28 +278,49 @@ def _store_skip_cache(pair: str, bundle: dict, report: str) -> None:
         pass
 
 
-# ── Stage-2 deep analysis (Sonnet) ────────────────────────────────────────────
+# ── Stage 2: Sonnet confirmation (high-confidence pairs only) ──────────────────
 
-def analyse(pair: str, bundle: dict) -> str:
-    """Full analysis: Haiku generates thesis, Sonnet scores and sizes the trade."""
-    # Step 1: Haiku generates thesis + risk (cheap, saves Sonnet output tokens)
-    thesis, risk = _generate_thesis(pair, bundle)
+def _load_system_prompt() -> str:
+    return config.PROMPT_FILE.read_text(encoding="utf-8")
 
-    # Step 2: Sonnet scores the trade with pre-generated thesis in context
+
+def _build_sonnet_message(pair: str, bundle: dict, haiku_report: str) -> str:
+    """Compact Sonnet user message: compressed data + Haiku preliminary (~300-400 tokens)."""
+    parts = []
+
+    mem = memory.render()
+    if mem and len(mem) < 500:
+        parts.append(mem)
+        parts.append("")
+
+    parts.append(_compress_bundle(pair, bundle))
+
+    if haiku_report:
+        parts.append("\n--- Haiku preliminary ---")
+        parts.append(haiku_report.strip())
+
+    parts.append(
+        "\nOutput PAIR: through TRADE_THIS: only. "
+        "Include ENTRY TARGET STOP_LOSS REWARD_RISK_RATIO BEST_ENTRY_TIME(Auckland time) NEWS_WARNING."
+    )
+    return "\n".join(parts)
+
+
+def analyse(pair: str, bundle: dict, haiku_report: str = "") -> str:
+    """Sonnet confirmation for high-confidence pairs.
+
+    Input: ~400-600 tokens (compressed data + Haiku report).
+    Output: max 400 tokens (full structured format with entry/stop/target).
+    Only called for pairs where Haiku confidence >= sonnet_threshold (6 for full scan, 7 for intraday).
+    """
     system_prompt = _load_system_prompt()
-    user_message  = _build_user_message(pair, bundle, thesis=thesis, risk=risk)
+    user_message  = _build_sonnet_message(pair, bundle, haiku_report)
 
     def _call(client):
         return client.messages.create(
             model=config.CLAUDE_MODEL,
-            max_tokens=600,
-            system=[
-                {
-                    "type":          "text",
-                    "text":          system_prompt,
-                    "cache_control": {"type": "ephemeral"},
-                }
-            ],
+            max_tokens=400,
+            system=[{"type": "text", "text": system_prompt, "cache_control": {"type": "ephemeral"}}],
             messages=[{"role": "user", "content": user_message}],
         )
 
@@ -401,14 +329,14 @@ def analyse(pair: str, bundle: dict) -> str:
     _cost["sonnet_output"] += getattr(resp.usage, "output_tokens", 0)
     report = "".join(block.text for block in resp.content if block.type == "text")
 
-    # Step 3: Inject Haiku-generated thesis/risk into the report if Sonnet omitted them
-    injected = []
-    if thesis and "KEY_THESIS:" not in report:
-        injected.append(f"KEY_THESIS: {thesis}")
-    if risk and "RISK_FACTORS:" not in report:
-        injected.append(f"RISK_FACTORS: {risk}")
-    if injected:
-        report = report.rstrip() + "\n" + "\n".join(injected)
+    # Inject Haiku thesis/risk if Sonnet omitted them (saves output tokens)
+    if haiku_report:
+        for field in ("KEY_THESIS", "RISK_FACTORS"):
+            if field + ":" not in report:
+                for line in haiku_report.splitlines():
+                    if line.strip().startswith(field + ":"):
+                        report = report.rstrip() + "\n" + line.strip()
+                        break
 
     _store_skip_cache(pair, bundle, report)
     return report
