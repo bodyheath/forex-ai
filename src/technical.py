@@ -49,7 +49,7 @@ def get_call_count() -> int:
 def _td_request(symbol: str, interval: str, outputsize: int) -> dict:
     """Call Twelve Data time_series with caching and error/rate-limit detection."""
     key = f"TD:{symbol}:{interval}:{outputsize}"
-    cached = cache.get(key, ttl_hours=_CACHE_TTL)
+    cached = cache.get(key, ttl_hours=_INTERVAL_TTL.get(interval, _CACHE_TTL))
     if cached is not None:
         return cached
 
