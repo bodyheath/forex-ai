@@ -679,6 +679,8 @@ def _send_telegram_summary(
     run_stats: dict = None,
     td_calls: int = 0,
     run_duration_min: float = 0.0,
+    scan_mode: str = "full",
+    new_alerts: set = None,
 ) -> None:
     """Build and send the reformatted daily Telegram notification."""
     closed_today    = closed_today    or []
