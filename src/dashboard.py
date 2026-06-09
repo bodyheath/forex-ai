@@ -450,13 +450,16 @@ def _risk_section() -> str:
     bar_cls = "danger" if bar_pct >= 100 else "warn" if bar_pct >= 60 else ""
 
     sym = {"USD":"$","EUR":"€","GBP":"£"}.get(cur, f"{cur} ")
+    real_bal = config.ACCOUNT_BALANCE
+    fund_ret = (bal - _rm.FUND_START) / _rm.FUND_START * 100
     cards = [
-        ("Account balance", f'{sym}{bal:,.2f}'),
-        ("Peak balance",    f'{sym}{peak:,.2f}'),
-        ("Risk per trade",  f'{mode_risk:.2f}%'),
+        ("FOREX AI FUND",  f'{sym}{bal:,.2f} ({fund_ret:+.1f}%)'),
+        ("Real Account",   f'{sym}{real_bal:,.2f}'),
+        ("Peak balance",   f'{sym}{peak:,.2f}'),
+        ("Risk per trade", f'{mode_risk:.2f}%'),
         ("Last-5 win rate", wr_txt),
-        ("Open exposure",   f'{tot:.1f}% / {_rm.MAX_DAILY_RISK:.0f}%'),
-        ("Drawdown",        f'{dd:.1f}%'),
+        ("Open exposure",  f'{tot:.1f}% / {_rm.MAX_DAILY_RISK:.0f}%'),
+        ("Drawdown",       f'{dd:.1f}%'),
     ]
     cards_html = "".join(
         f'<div class="risk-card"><div class="k">{html.escape(k)}</div>'
