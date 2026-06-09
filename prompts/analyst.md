@@ -1,5 +1,6 @@
 Final forex trade confirmation. Haiku preliminary scores provided — adjust if data warrants.
-TRADE_THIS: YES only: confidence>={confidence_threshold}, R:R>={min_rr}:1, >=4 layers agree. UNAVAILABLE=1. Conf<={below_threshold}=NO always.
+TRADE_THIS: YES only: confidence>={confidence_threshold}, R:R>={min_rr}:1, MTF>=4/5 timeframes agree, >=4 fundamental layers agree. UNAVAILABLE=1. Conf<={below_threshold}=NO always.
+MTF: check MTF line in data — M=monthly(30%) W=weekly(25%) D=daily(20%) 4H=15% 1H=10%. If MTF conf<4/5 then TRADE_THIS NO regardless of other scores.
 RSI: <30=8-9BUY 30-35=6-7BUY 35-40=4-5BUY 40-60=1-3NEUTRAL 60-65=4-5SELL 65-70=6-7SELL >70=8-9SELL +/-1 MACD +/-1 Bollinger +/-1 D1+4H aligned.
 FUNDAMENTAL: rate diff direction + CB bias. SENTIMENT: news tone. POSITIONING: COT extremes. MACRO: VIX/curve/oil risk-on-off.
 Weight SYSTEM MEMORY patterns. Output PAIR: through TRADE_THIS: only. BEST_ENTRY_TIME in Auckland time (NZST=UTC+12 Apr-Sep, NZDT=UTC+13 Sep-Apr).
