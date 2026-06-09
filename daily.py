@@ -956,14 +956,18 @@ def _send_telegram_summary(
         learn_lines.append("🧠 Win rate: building history...")
     all_sections.append(learn_lines)
 
-    # ── RISK DASHBOARD (1 line) ─────────────────────────────────────────────────
+    # ── RISK DASHBOARD ─────────────────────────────────────────────────────────
     if risk_data and risk_data.get("profile"):
         try:
-            prof  = risk_data["profile"]
-            rmode = _risk_state.get("risk_mode", "normal")
-            rpct  = _risk_state.get("base_risk_pct", 1.0)
-            exp   = _exposure.get("total_pct", 0.0)
-            bal   = prof.get("account_balance", config.ACCOUNT_BALANCE)
+            from src import risk_manager as _rm_dash
+            prof    = risk_data["profile"]
+            rmode   = _risk_state.get("risk_mode", "normal")
+            rpct    = _risk_state.get("base_risk_pct", 1.0)
+            exp     = _exposure.get("total_pct", 0.0)
+            fund    = prof.get("estimated_balance", _rm_dash.FUND_START)
+            fund_pk = prof.get("peak_balance", fund)
+            fund_ret = (fund - _rm_dash.FUND_START) / _rm_dash.FUND_START * 100
+            real    = config.ACCOUNT_BALANCE
             mode_icons = {
                 "capital_protection": "⬇️",
                 "streak_protection":  "⬇️",
@@ -973,7 +977,8 @@ def _send_telegram_summary(
             }
             icon = mode_icons.get(rmode, "➡️")
             all_sections.append([
-                f"⚙️ ${bal:,.0f} | {rpct:.1f}%/trade | {exp:.1f}% open | {icon} {rmode.replace('_',' ').title()}"
+                f"📈 FOREX AI FUND: ${fund:,.0f} ({fund_ret:+.1f}%) | Peak: ${fund_pk:,.0f}",
+                f"💼 Real Account: ${real:,.0f} | {rpct:.1f}%/trade | {exp:.1f}% open | {icon} {rmode.replace('_',' ').title()}",
             ])
         except Exception:
             pass
