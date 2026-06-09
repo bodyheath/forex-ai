@@ -800,6 +800,8 @@ def _send_telegram_summary(
             pip_target = _fmt_pips_between(pair, entry_raw, adj_tgt)
 
             action_icon = "🟢" if direction == "BUY" else "🔴"
+            _fp  = f"{pair}:{direction}"
+            _pfx = "🆕 NEW: " if (new_alerts and _fp in new_alerts) else ""
 
             # Entry window
             bet = (p.get("best_entry_time") or "").strip()
