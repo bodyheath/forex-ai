@@ -1164,206 +1164,121 @@ def _send_telegram_summary(
         ])
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # 9AM CHECK — top opportunities right now, compact
+    # INTRADAY SCANS (9AM / 3PM / 5PM) — unified expanded format
     # ═══════════════════════════════════════════════════════════════════════════
-    elif scan_mode == "asian":
-        all_sections.append([
-            f"<b>🤖 Forex AI — {_badge} — {today_short}</b>",
-        ])
+    elif scan_mode in ("asian", "midday", "prelondon"):
+        all_sections.append([f"<b>🤖 Forex AI — {_badge} — {today_short}</b>"])
 
-        # Detect meaningful changes vs 6am morning scan
-        _conf_changed = [
+        # ── Market context (one-line brief) ───────────────────────────────────
+        vix_str   = f"VIX {ctx['vix']:.1f}" if ctx["vix"] else ""
+        env_str   = ctx["risk_env"]
+        sc        = ctx.get("strongest_ccy")
+        wc        = ctx.get("weakest_ccy")
+        ctx_parts = [f"🌍 {env_str}"]
+        if vix_str:
+            ctx_parts.append(f"({vix_str})")
+        if sc and wc:
+            ctx_parts.append(f"| 💪 {sc}  📉 {wc}")
+        all_sections.append(["", "━━━━━━━━━━━━━━━━━━━━━", " ".join(ctx_parts)])
+
+        # ── YES trade alerts (full entry instructions) ────────────────────────
+        for r in yes_trades:
+            all_sections.append(_trade_block(r))
+
+        # ── Pairs newly reaching 6+ since 6am ────────────────────────────────
+        _yes_pairs   = {r["pair"] for r in yes_trades}
+        _newly_6plus = [
             r for r in deep_results
-            if _morning_conf
-            and abs(_conf(r) - _morning_conf.get(r["pair"], _conf(r))) >= 1
+            if r["pair"] not in _yes_pairs
+            and _conf(r) >= 6
+            and _morning_conf.get(r["pair"], 10) < 6
         ]
-        _has_changes = bool(yes_trades) or bool(_conf_changed)
-
-        if not _has_changes:
-            all_sections.append(["9am check — no new setups since morning scan"])
-        else:
-            # YES trade alerts (full entry instructions)
-            for r in yes_trades:
-                all_sections.append(_trade_block(r))
-
-            # Confidence-changed pairs not already shown as YES
-            _yes_pairs = {r["pair"] for r in yes_trades}
-            _changed_wl = [
-                r for r in _conf_changed
-                if r["pair"] not in _yes_pairs
-            ][:2]
-            if _changed_wl:
-                chg_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "📊 <b>CONFIDENCE CHANGES SINCE 6AM</b>"]
-                for r in _changed_wl:
-                    pp    = r["parsed"]
-                    curr  = _conf(r)
-                    prev  = _morning_conf.get(r["pair"], curr)
-                    delta = curr - prev
-                    dirn  = (pp.get("direction") or "").upper()
-                    sign  = f"+{delta}" if delta > 0 else str(delta)
-                    arrow = "📈" if dirn == "BUY" else "📉"
-                    chg_sec.append(
-                        f"{arrow} <b>{r['pair']}</b> {dirn} — {curr}/10 ({sign} since 6am)"
-                    )
-                    chg_sec.append(f"  {_best_session_for_pair(r['pair'])}")
-                all_sections.append(chg_sec)
-
-    # ═══════════════════════════════════════════════════════════════════════════
-    # 1PM MIDDAY CHECK — what changed since 6am
-    # ═══════════════════════════════════════════════════════════════════════════
-    elif scan_mode == "midday":
-        all_sections.append([
-            f"<b>🤖 Forex AI — {_badge} — {today_short}</b>",
-        ])
-
-        # Detect pairs with meaningful confidence change vs 6am
-        _changed: list = []
-        for r in deep_results:
-            curr = _conf(r)
-            prev = _morning_conf.get(r["pair"])
-            if prev is not None:
-                delta = curr - prev
-                if abs(delta) >= 1:
-                    _changed.append((r, delta))
-            elif curr >= 5:
-                _changed.append((r, curr))  # new high-conf pair not in morning
-        _changed.sort(key=lambda x: abs(x[1]), reverse=True)
-
-        _new_yes = [
-            r for r in yes_trades
-            if f"{r['pair']}:{(r['parsed'].get('direction') or '').upper()}"
-            in (new_alerts or set())
-        ]
-
-        if not _changed and not _new_yes:
-            all_sections.append(["Midday check — no changes since morning scan"])
-        else:
-            n_ch = len(_changed)
-            mid_sec = [
-                "",
-                f"<b>MIDDAY UPDATE — {n_ch} pair{'s' if n_ch != 1 else ''} changed since 6am</b>",
-                "━━━━━━━━━━━━━━━━━━━━━",
-            ]
-            for r, delta in _changed[:5]:
-                pp   = r["parsed"]
-                dirn = (pp.get("direction") or "").upper()
-                curr = _conf(r)
-                sign = f"+{delta}" if delta > 0 else str(delta)
+        if _newly_6plus:
+            ns = ["", "━━━━━━━━━━━━━━━━━━━━━", "⬆️ <b>NEWLY REACHED 6+ SINCE 6AM</b>"]
+            for r in _newly_6plus[:5]:
+                pp    = r["parsed"]
+                curr  = _conf(r)
+                prev  = _morning_conf.get(r["pair"], 0)
+                dirn  = (pp.get("direction") or "").upper()
                 arrow = "📈" if dirn == "BUY" else "📉"
-                flag  = " 🟢 TRADE ALERT" if r["parsed"].get("trade_this") == "YES" else ""
-                mid_sec.append(
-                    f"{arrow} <b>{r['pair']}</b> {dirn} — {curr}/10 ({sign} since 6am){flag}"
+                sign  = f"+{curr - prev}"
+                ns.append(
+                    f"{arrow} <b>{r['pair']}</b> {dirn} — "
+                    f"<b>{curr}/10</b> ({sign} since 6am)  {_conf_bar(curr)}"
                 )
-                ntc = _what_needs_to_change(pp)
-                if ntc and r["parsed"].get("trade_this") != "YES":
-                    mid_sec.append(f"   Still needs: {ntc}")
-            all_sections.append(mid_sec)
+                ns.append(f"  Watch: {_best_session_for_pair(r['pair'])}")
+            all_sections.append(ns)
+        elif not yes_trades:
+            _any_change = any(
+                _morning_conf and abs(_conf(r) - _morning_conf.get(r["pair"], _conf(r))) >= 1
+                for r in deep_results
+            )
+            if not _any_change:
+                all_sections.append(["", "No new signals since morning scan."])
 
-            # Full entry instructions for any brand-new YES alerts
-            for r in _new_yes[:2]:
-                all_sections.append(_trade_block(r))
+        # ── Open trades current status ────────────────────────────────────────
+        try:
+            from src import tracker as _trk
+            _open_trades = [row for row in _trk.load() if row.get("status") == "OPEN"]
+            if _open_trades:
+                _cur_px: dict = {}
+                for _r in deep_results:
+                    try:
+                        _tech_d = _r["bundle"]["technical"]["daily"]
+                        _price  = float(
+                            _tech_d.get("close") or _tech_d.get("last_close") or 0
+                        )
+                        if _price > 0:
+                            _cur_px[_r["pair"]] = _price
+                    except (KeyError, TypeError, ValueError):
+                        pass
+                ot_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "📊 <b>OPEN TRADES</b>"]
+                for _row in _open_trades:
+                    _pair  = _row.get("pair", "")
+                    _dirn  = (_row.get("direction") or "").upper()
+                    _icon  = "🟢" if _dirn == "BUY" else "🔴"
+                    _tid   = _row.get("id", "?")
+                    try:
+                        _entry = float(_row.get("entry") or 0)
+                        _cur   = _cur_px.get(_pair, 0)
+                        if _entry > 0 and _cur > 0:
+                            _raw = (_cur - _entry) if _dirn == "BUY" else (_entry - _cur)
+                            _pips = _raw / _pip_size(_pair)
+                            if _pips > 5:
+                                _st = f"✅ in profit (+{_pips:.0f} pips)"
+                            elif _pips < -5:
+                                _st = f"❌ in loss ({_pips:.0f} pips)"
+                            else:
+                                _st = "➖ near breakeven"
+                            ot_sec.append(f"{_icon} #{_tid} {_pair} {_dirn} — {_st}")
+                        else:
+                            ot_sec.append(
+                                f"{_icon} #{_tid} {_pair} {_dirn} — price not in today's scan"
+                            )
+                    except (TypeError, ValueError):
+                        ot_sec.append(f"{_icon} #{_tid} {_pair} {_dirn}")
+                all_sections.append(ot_sec)
+        except Exception:
+            pass
 
-    # ═══════════════════════════════════════════════════════════════════════════
-    # 3PM CHECK — best pre-London/NY opportunities, all pairs, session notes
-    # ═══════════════════════════════════════════════════════════════════════════
-    elif scan_mode == "prelondon":
-        all_sections.append([
-            f"<b>🤖 Forex AI — {_badge} — {today_short}</b>",
-        ])
-
-        if yes_trades:
-            for r in yes_trades:
-                p         = r["parsed"]
-                pair      = r["pair"]
-                direction = (p.get("direction") or "?").upper()
-                conf      = p.get("confidence") or "?"
-                entry_raw = p.get("entry")
-                stop_raw  = p.get("stop_loss")
-                tgt_raw   = p.get("target")
-                sz        = _sizes.get(pair, {})
-                adj_stop  = sz.get("adj_stop") or stop_raw
-                adj_tgt   = sz.get("adj_target") or tgt_raw
-
-                rr_num = None
-                try:
-                    rr_num = abs(float(adj_tgt) - float(entry_raw)) / abs(
-                        float(entry_raw) - float(adj_stop)
-                    )
-                    rr_str = f"{rr_num:.2f}:1"
-                except (TypeError, ValueError, ZeroDivisionError):
-                    rr_str = "—"
-
-                risk_amt = float(sz.get("risk_amount") or 0)
-                profit_amt = None
-                try:
-                    profit_amt = round(risk_amt * rr_num) if rr_num else None
-                except (TypeError, ValueError):
-                    pass
-
-                pip_risk   = _fmt_pips_between(pair, entry_raw, adj_stop)
-                pip_target = _fmt_pips_between(pair, entry_raw, adj_tgt)
-                action_icon = "🟢" if direction == "BUY" else "🔴"
-                best_sess  = _best_session_for_pair(pair)
-
-                bet = (p.get("best_entry_time") or "").strip()
-                bet_clean = bet.replace("NZT", "Auckland time").replace("nzt", "Auckland time")
-                _, enter_window, end_time = _parse_entry_window(
-                    bet_clean or _session_label(pair)
+        # ── Top 3 watch pairs with T/F/S/P/M scores ──────────────────────────
+        _watch_top3 = sorted(
+            [r for r in deep_results if r["pair"] not in _yes_pairs and _conf(r) >= 3],
+            key=_conf, reverse=True,
+        )[:3]
+        if _watch_top3:
+            wl_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "👀 <b>WATCH LIST</b>"]
+            for rr in _watch_top3:
+                pp    = rr["parsed"]
+                conf  = pp.get("confidence") or "?"
+                dirn  = (pp.get("direction") or "—").upper()
+                arrow = "📈" if dirn == "BUY" else "📉"
+                wl_sec.append(
+                    f"{arrow} <b>{rr['pair']}</b> {dirn}  {conf}/10 {_conf_bar(conf)}"
                 )
-
-                opp_block = [
-                    "",
-                    f"{action_icon} <b>OPPORTUNITY — {direction} {pair}</b>",
-                    "━━━━━━━━━━━━━━━━━━━━━",
-                    f"💰 Entry: {_fmt_price(entry_raw)}  "
-                    f"🛑 Stop: {_fmt_price(adj_stop)}  "
-                    f"🎯 Target: {_fmt_price(adj_tgt)}",
-                ]
-                if profit_amt and risk_amt:
-                    opp_block.append(
-                        f"📊 Risk ${risk_amt:,.0f} → Make ${profit_amt:,.0f}  ({rr_str} reward)"
-                    )
-                if sz.get("lots"):
-                    opp_block.append(f"📏 {sz['lots']} lots")
-                opp_block.append(f"📈 Confidence: {conf}/10  {_conf_bar(conf)}")
-                opp_block.append(f"⏰ Best entry time: {best_sess}")
-                opp_block.append(f"- Enter between: {enter_window} Auckland time")
-                opp_block.append(f"- Do NOT enter after: {end_time} Auckland time")
-                _mtf = r.get("bundle", {}).get("mtf", {})
-                if _mtf and _mtf.get("agreeing_count", 0) > 0:
-                    opp_block.append(
-                        f"🕐 {_mtf['agreeing_count']}/5 timeframes  "
-                        f"<code>{_mtf.get('breakdown', '')}</code>"
-                    )
-                kt = (p.get("key_thesis") or "").strip()
-                if kt:
-                    opp_block.append(f"<i>{kt[:100]}</i>")
-                all_sections.append([ln for ln in opp_block if ln])
-
-        elif not watch_list:
-            all_sections.append([
-                "No setups at 3pm — conditions not favourable. Next scan 6am tomorrow."
-            ])
-
-        # WATCH LIST with session info
-        if watch_list:
-            wl3_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "👀 <b>WATCH LIST</b>"]
-            for rr in watch_list:
-                wl3_sec.extend(_watch_entry(rr))
-            all_sections.append(wl3_sec)
-
-        # APPROACHING SIGNALS with session line
-        if upcoming:
-            up3_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "📡 <b>APPROACHING SIGNAL</b>"]
-            for rr in upcoming:
-                pp   = rr["parsed"]
-                conf = pp.get("confidence") or "?"
-                dirn = (pp.get("direction") or "—").upper()
-                up3_sec.append(
-                    f"{rr['pair']} {conf}/10 — "
-                    f"watch {_best_session_for_pair(rr['pair'])} for potential setup"
-                )
-            all_sections.append(up3_sec)
+                wl_sec.append(f"<code>{_score_breakdown_line(pp)}</code>")
+                wl_sec.append(f"👀 {_best_session_for_pair(rr['pair'])}")
+            all_sections.append(wl_sec)
 
     # ── FOOTER (all modes) ─────────────────────────────────────────────────────
     all_sections.append([
