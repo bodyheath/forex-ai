@@ -1257,10 +1257,19 @@ def run() -> int:
             _log_line(logf, f"Learning step failed: {exc}")
 
         # 2. Smart pair selection
+        from src import threshold_manager as _thresh_mgr
+        _trade_conf   = _thresh_mgr.get_confidence_threshold()
         _top_n        = _SCAN_TOP_N.get(scan_mode, 15)
         _max_pairs    = _SCAN_MAX_PRS.get(scan_mode, 15)
         _td_cap       = _TD_CACHE_MAX.get(scan_mode, 20)
-        sonnet_thresh = _SONNET_THRESH.get(scan_mode, 6)
+        # Sonnet threshold equals trade threshold so every potential TRADE_THIS YES
+        # pair gets entry/stop/target — essential when threshold is 6 (data collection).
+        sonnet_thresh = _trade_conf
+        _coll_note = (
+            " [DATA COLLECTION MODE — threshold lowered from 7/1.5 for trade accumulation]"
+            if _thresh_mgr.is_data_collection_mode() else ""
+        )
+        _log_line(logf, f"Active thresholds: conf>={_trade_conf}, R:R>={_thresh_mgr.get_min_rr()}{_coll_note}")
 
         universe_size = len(selector.UNIVERSE)
         ranked_all    = []
