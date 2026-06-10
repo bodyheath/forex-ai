@@ -1868,7 +1868,7 @@ def _send_telegram_summary(
     # ═══════════════════════════════════════════════════════════════════════════
     # INTRADAY SCANS (9AM / 3PM / 5PM) — unified expanded format
     # ═══════════════════════════════════════════════════════════════════════════
-    elif scan_mode in ("asian", "midday", "prelondon"):
+    elif scan_mode in ("morning", "london", "prelondon"):
         all_sections.append([f"<b>🤖 Forex AI — {_badge} — {today_short}</b>"])
 
         # OPEN TRADES — always at the top so it's the first thing seen
