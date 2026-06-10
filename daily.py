@@ -1107,7 +1107,19 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
 
                     bar_filled = int(pct_tgt / 100 * 20)
                     prog_bar   = "█" * bar_filled + "░" * (20 - bar_filled)
-                    sec.append(f"Progress: {pct_tgt:.0f}% {prog_bar}")
+                    if pct_tgt >= 90:
+                        _pctx = "almost at target"
+                    elif pct_tgt >= 75:
+                        _pctx = "excellent progress, lock in gains"
+                    elif pct_tgt >= 50:
+                        _pctx = "good momentum, consider partial profit"
+                    elif pct_tgt >= 20:
+                        _pctx = "building toward target"
+                    elif pct_tgt >= 5:
+                        _pctx = "price barely moving, watch for momentum" if abs(pips) < 5 else "early progress, stay patient"
+                    else:
+                        _pctx = "just opened, give it time" if days_open == 0 else "price barely moving, watch for momentum"
+                    sec.append(f"Progress: {pct_tgt:.0f}% to target {prog_bar} — {_pctx}")
 
                     # Dynamic status — most urgent condition takes priority
                     if 0 < pips_to_target <= 20:
