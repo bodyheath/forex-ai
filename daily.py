@@ -252,13 +252,24 @@ def _telegram_test() -> None:
 
 def _telegram(message: str) -> None:
     if not config.TELEGRAM_TOKEN or not config.TELEGRAM_CHAT_ID:
+        print("[TELEGRAM] SKIP — TELEGRAM_TOKEN or TELEGRAM_CHAT_ID not set", file=sys.stderr)
         return
+    # Preserve intentional <b>, </b>, <i>, </i> tags while escaping all other
+    # < > & characters that come from AI-generated text (e.g. "< 1.08 support").
+    # Telegram HTML mode rejects any unescaped special chars and returns 400 silently.
+    _TAG = _re_tg.compile(r'(</?[bi]>)')
+    _parts = _TAG.split(message)
+    message = "".join(
+        p if i % 2 == 1 else _html_mod.escape(p, quote=False)
+        for i, p in enumerate(_parts)
+    )
     _named_recipients = [("Heath", config.TELEGRAM_CHAT_ID)]
     if config.TELEGRAM_CHAT_ID_2:
         _named_recipients.append(("George", config.TELEGRAM_CHAT_ID_2))
     if config.TELEGRAM_CHAT_ID_3:
         _named_recipients.append(("Max", config.TELEGRAM_CHAT_ID_3))
     url = f"https://api.telegram.org/bot{config.TELEGRAM_TOKEN}/sendMessage"
+    _preview = message[:120].replace("\n", " ")
     for name, chat_id in _named_recipients:
         try:
             data = urllib.parse.urlencode({
@@ -266,10 +277,13 @@ def _telegram(message: str) -> None:
                 "text":       message,
                 "parse_mode": "HTML",
             }).encode()
-            urllib.request.urlopen(urllib.request.Request(url, data=data), timeout=10)
-            print(f"[TELEGRAM] SUCCESS — message sent to {name} (chat_id: {chat_id})")
+            urllib.request.urlopen(urllib.request.Request(url, data=data), timeout=15)
+            print(f"[TELEGRAM] SUCCESS — sent to {name} ({len(message)} chars)")
+        except urllib.error.HTTPError as exc:
+            body = exc.read().decode("utf-8", errors="replace")[:300]
+            print(f"[TELEGRAM] FAILED — {name}: HTTP {exc.code} {exc.reason} | {body} | preview: {_preview}", file=sys.stderr)
         except Exception as exc:
-            print(f"[TELEGRAM] FAILED — {name}: {exc}")
+            print(f"[TELEGRAM] FAILED — {name}: {exc} | preview: {_preview}", file=sys.stderr)
 
 
 def _fmt_price(v) -> str:
