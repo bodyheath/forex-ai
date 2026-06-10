@@ -1559,9 +1559,19 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Technical pre-fetch failed (analysis will still run): {exc}")
 
-        # Diagnostic: log indicator snapshot
-        _log_line(logf, "[DIAG] Technical indicator snapshot (cache, no API calls):")
-        for _diag_pair in ["EUR/USD", "USD/JPY", "AUD/CAD"]:
+        # Diagnostic: log indicator snapshot — all AUD crosses + one per currency group
+        _log_line(logf, "[DIAG] Technical indicator snapshot (from cache):")
+        _DIAG_PAIRS = [
+            # AUD crosses — full set for debugging AUD-specific issues
+            "AUD/CHF", "AUD/JPY", "AUD/USD", "AUD/NZD", "AUD/CAD",
+            "EUR/AUD", "GBP/AUD",
+            # One representative per other currency group
+            "EUR/USD", "EUR/GBP", "EUR/JPY", "EUR/CHF",
+            "GBP/USD", "GBP/JPY",
+            "USD/JPY", "USD/CHF", "USD/CAD",
+            "NZD/USD", "NZD/JPY",
+        ]
+        for _diag_pair in _DIAG_PAIRS:
             try:
                 from src import technical as _tech
                 _ind = _tech.read_cached_indicators(_diag_pair)
@@ -1569,11 +1579,15 @@ def run() -> int:
                     _ts = _ind.get("tech_signal", {})
                     _log_line(logf, (
                         f"  {_diag_pair}: RSI={_ind['rsi14']}  "
-                        f"MACD_hist={_ind['macd_hist']}  "
-                        f"→ signal={_ts.get('direction','?')} {_ts.get('score','?')}/10"
+                        f"MACDh={_ind['macd_hist']}  "
+                        f"SMA50={_ind.get('sma50','?')}  "
+                        f"BB={(_ind.get('bb_state') or 'inside bands').split('(')[0].strip()[:25]}  "
+                        f"→ T_sig={_ts.get('direction','?')} {_ts.get('score','?')}/10"
                     ))
-            except Exception:
-                pass
+                else:
+                    _log_line(logf, f"  {_diag_pair}: NOT IN CACHE (candles not fetched this run)")
+            except Exception as _de:
+                _log_line(logf, f"  {_diag_pair}: DIAG ERROR — {_de}")
 
         _log_line(logf, f"=== {scan_mode.upper()} run {date} | universe: {universe_size} pairs | Sonnet threshold: {sonnet_thresh}/10 ===")
         _log_line(logf, f"[DIAG] CLAUDE_MODEL={repr(config.CLAUDE_MODEL)}")
