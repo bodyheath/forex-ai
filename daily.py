@@ -1242,6 +1242,28 @@ def _send_telegram_summary(
             "━━━━━━━━━━━━━━━━━━━━━",
             f"📈 Confidence: {conf}/10  {_conf_bar(conf)}",
         ]
+        # RSI divergence (Python-computed — reliable, not dependent on Claude)
+        _daily_tech = r.get("bundle", {}).get("technical", {}).get("daily", {})
+        _div        = _daily_tech.get("divergence", {}) if isinstance(_daily_tech, dict) else {}
+        _div_bul    = _div.get("bullish")
+        _div_ber    = _div.get("bearish")
+        _div_confirms = (direction == "BUY" and _div_bul) or (direction == "SELL" and _div_ber)
+        _div_conflicts = (direction == "BUY" and _div_ber) or (direction == "SELL" and _div_bul)
+        if _div_confirms:
+            _d = _div_bul if direction == "BUY" else _div_ber
+            block.append(
+                f"⚡ <b>RSI Divergence: {'Bullish' if direction == 'BUY' else 'Bearish'} CONFIRMED</b>"
+                f" — price {_d['price_diff_pips']:.0f}p {'lower low' if direction == 'BUY' else 'higher high'}"
+                f", RSI {_d['rsi_diff']:.0f}pt {'higher low' if direction == 'BUY' else 'lower high'}"
+                f" ({_d['strength'].upper()}) +1 confidence"
+            )
+        elif _div_conflicts:
+            _dc = _div_ber if direction == "BUY" else _div_bul
+            block.append(
+                f"⚠️ RSI Divergence CONFLICT: "
+                f"{'bearish' if direction == 'BUY' else 'bullish'} divergence detected"
+                f" ({_dc['price_diff_pips']:.0f}p / {_dc['rsi_diff']:.0f}pt RSI) — see risk factors"
+            )
         _mtf = r.get("bundle", {}).get("mtf", {})
         if _mtf and _mtf.get("agreeing_count", 0) > 0:
             block.append(
