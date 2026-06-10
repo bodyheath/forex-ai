@@ -708,6 +708,133 @@ def _pre_fetch_shared_data(pairs: list, log=print) -> tuple:
     return fund_store, macro_result
 
 
+# ── Open trade live-price helpers ─────────────────────────────────────────────
+
+def _fetch_live_price(pair: str, px_cache: dict) -> tuple:
+    """Return (price | None, stale: bool) for an open trade pair.
+
+    Checks px_cache (scan data already in memory) first, then the 24-hour
+    Twelve Data disk cache (from the 6am warm-cache run), then makes a
+    fresh API call as a last resort.  Never falls through to the old
+    'price not in today's scan' message.
+    """
+    if pair in px_cache:
+        return px_cache[pair], False
+    # Check every possible outputsize that might be cached from today's run
+    try:
+        from src import cache as _tc, technical as _tt
+        for _sz in (400, 200, 100, 2):
+            _cdata = _tc.get(f"TD:{pair}:1day:{_sz}", ttl_hours=24.0)
+            if _cdata:
+                _df = _tt._frame_from_td(_cdata)
+                if len(_df) > 0:
+                    p = float(_df["close"].iloc[-1])
+                    if p > 0:
+                        px_cache[pair] = p
+                        return p, False
+    except Exception:
+        pass
+    # Live API call as last resort (uses TD cache internally if available)
+    if not config.TWELVE_DATA_KEY:
+        return None, True
+    try:
+        from src import technical as _tt_live
+        _data = _tt_live._td_request(pair, "1day", 2)
+        _df   = _tt_live._frame_from_td(_data)
+        if len(_df) > 0:
+            p = float(_df["close"].iloc[-1])
+            if p > 0:
+                px_cache[pair] = p
+                return p, False
+    except Exception:
+        pass
+    return None, True
+
+
+def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> list:
+    """Build the OPEN TRADES section lines for any Telegram scan message.
+
+    For every OPEN trade: fetches current price (live or cached), computes
+    unrealised P&L in pips, shows % progress toward target/stop, and flags
+    when price is within 20% of target or stop.  Always appended regardless
+    of whether the pair appeared in today's scan.
+    """
+    if not open_trades:
+        return []
+    sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "📊 <b>OPEN TRADES</b>"]
+    for row in open_trades:
+        pair = row.get("pair", "?")
+        dirn = (row.get("direction") or "").upper()
+        tid  = row.get("id", "?")
+        icon = "🟢" if dirn == "BUY" else "🔴"
+
+        sec.append("")
+        sec.append(f"{icon} <b>OPEN TRADE #{tid} — {pair} {dirn}</b>")
+
+        cur, stale = _fetch_live_price(pair, px_cache)
+
+        try:
+            entry  = float(row.get("entry")     or 0) or None
+            stop   = float(row.get("stop_loss") or 0) or None
+            target = float(row.get("target")    or 0) or None
+        except (TypeError, ValueError):
+            entry, stop, target = None, None, None
+
+        # Age / expiry (5-day default)
+        days_open_str = "?"
+        expires_str   = "?"
+        try:
+            opened_dt = datetime.strptime(row.get("timestamp", "")[:10], "%Y-%m-%d")
+            days_open = (now_ak.replace(tzinfo=None) - opened_dt).days
+            days_open_str = f"{days_open} day{'s' if days_open != 1 else ''}"
+            remaining     = max(0, 5 - days_open)
+            expires_str   = f"{remaining} day{'s' if remaining != 1 else ''}"
+        except Exception:
+            pass
+
+        if entry and cur:
+            pip_sz  = _pip_size(pair)
+            raw     = (cur - entry) if dirn == "BUY" else (entry - cur)
+            pips    = raw / pip_sz
+            pnl_str = (f"+{pips:.0f} pips" if pips >= 0 else f"{pips:.0f} pips")
+            arrow   = "📈" if pips > 2 else ("📉" if pips < -2 else "➖")
+            stale_note = " ⚠️ last known price" if stale else ""
+            sec.append(f"Entry: {_fmt_price(entry)} | Current: {_fmt_price(cur)}{stale_note}")
+            sec.append(f"Unrealised P&L: {arrow} {pnl_str}")
+
+            # Progress toward target and stop
+            if target and stop:
+                try:
+                    if dirn == "BUY" and target > entry > stop:
+                        trade_range = target - entry
+                        risk_range  = entry  - stop
+                        pct_tgt = min(100.0, max(0.0, (cur - entry)  / trade_range * 100))
+                        pct_stp = min(100.0, max(0.0, (entry - cur)  / risk_range  * 100))
+                    elif dirn == "SELL" and stop > entry > target:
+                        trade_range = entry  - target
+                        risk_range  = stop   - entry
+                        pct_tgt = min(100.0, max(0.0, (entry - cur)  / trade_range * 100))
+                        pct_stp = min(100.0, max(0.0, (cur   - entry) / risk_range * 100))
+                    else:
+                        pct_tgt = pct_stp = 0.0
+                    stop_badge = "✅" if pips > 0 else ("⚠️" if pct_stp > 50 else "🟡")
+                    sec.append(f"Progress: {pct_tgt:.0f}% to target | Stop {stop_badge}")
+                    if pct_tgt >= 80:
+                        sec.append("🎯 Approaching target — consider taking partial profit")
+                    elif pct_stp >= 80:
+                        sec.append("⚠️ Stop approaching — monitor closely")
+                except Exception:
+                    pass
+        elif entry:
+            sec.append(f"Entry: {_fmt_price(entry)} | Current: ⚠️ price unavailable")
+        else:
+            sec.append("Trade details unavailable")
+
+        sec.append(f"Opened: {days_open_str} ago | Expires in: {expires_str}")
+
+    return sec
+
+
 # ── Main summary builder ───────────────────────────────────────────────────────
 
 def _send_telegram_summary(
