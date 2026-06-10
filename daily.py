@@ -1981,10 +1981,10 @@ _MORNING_RANKED_FILE = config.DATA_DIR / "morning_ranked.json"
 
 # (label, session-currency filter set — empty = no filter)
 _SCAN_MODES: dict = {
-    "asian":     ("9am Check",     set()),
-    "midday":    ("5pm Check",     set()),
-    "prelondon": ("3pm Check",     set()),
-    "full":      ("6am Full Scan", set()),
+    "morning":   ("9am Morning Check",    set()),
+    "london":    ("5pm London Check",     set()),
+    "prelondon": ("3pm Pre-London Check", set()),
+    "full":      ("6am Full Scan",        set()),
 }
 
 # All 4 scans select from the full universe by 8-factor merit score — no mode filtering
