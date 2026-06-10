@@ -1693,6 +1693,9 @@ def _send_telegram_summary(
     elif scan_mode in ("asian", "midday", "prelondon"):
         all_sections.append([f"<b>🤖 Forex AI — {_badge} — {today_short}</b>"])
 
+        # OPEN TRADES — always at the top so it's the first thing seen
+        all_sections.append(_build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak))
+
         # ── Market context (one-line brief) ───────────────────────────────────
         vix_str   = f"VIX {ctx['vix']:.1f}" if ctx["vix"] else ""
         env_str   = ctx["risk_env"]
