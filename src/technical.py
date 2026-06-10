@@ -599,8 +599,11 @@ def _summarise(df: pd.DataFrame, label: str) -> dict:
     trend_str     = _trend(close, sma50, sma200)
     sma20_val     = float(sma20.iloc[-1])
     pivots        = _pivots(df.iloc[-2])
+    fib           = _fibonacci(df, float(last))
+    fib_vals      = list(fib["levels"].values()) if fib.get("status") == "ok" else []
     patterns      = _detect_candle_patterns(
-        df, float(bb_lower), float(bb_upper), float(sma50), pivots
+        df, float(bb_lower), float(bb_upper), float(sma50), pivots,
+        extra_levels=fib_vals,
     )
 
     return {
@@ -618,6 +621,7 @@ def _summarise(df: pd.DataFrame, label: str) -> dict:
         "recent_high_20": round(df["high"].tail(20).max(), 5),
         "recent_low_20": round(df["low"].tail(20).min(), 5),
         "pivots_from_last_candle": pivots,
+        "fibonacci": fib,
         "patterns": patterns,
         "tech_signal": _tech_signal(
             rsi14_val, macd_hist_val, bb_state, trend_str,
