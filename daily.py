@@ -2438,6 +2438,7 @@ def run() -> int:
                 new_alerts=_new_alerts,
                 research_result=research_result,
                 threshold_revert_msg=threshold_revert_msg,
+                cost_lines=_cost_lines,
             )
 
     return 0
