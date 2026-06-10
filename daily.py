@@ -105,6 +105,46 @@ def _best_session_for_pair(pair: str) -> str:
     return f"{s[0]} {s[1]} Auckland"
 
 
+def _session_time_label(pair: str, now_ak: datetime) -> str:
+    """Return best session label with today/tonight/tomorrow morning based on current Auckland time.
+
+    Uses specific currency logic: cross-JPY pairs go to London open, USD/JPY to NY open,
+    pure JPY to Tokyo, EUR/GBP/CHF to London, USD/CAD to New York, AUD/NZD to Sydney/Tokyo.
+    'Today' = session starts within 8 hours; 'tonight' = 8–20 hours away; else 'tomorrow morning'.
+    """
+    cleaned = pair.upper().replace("/", "").replace("-", "")
+    base  = cleaned[:3]
+    quote = cleaned[3:6] if len(cleaned) >= 6 else ""
+    ccys  = {base, quote}
+
+    if "JPY" in ccys and ccys & {"EUR", "GBP", "CHF"}:
+        sess_name, window, start_h = "London open sweet spot", "5pm–7pm", 17
+    elif "JPY" in ccys and ccys & {"USD", "CAD"}:
+        sess_name, window, start_h = "New York open", "10pm–12am", 22
+    elif "JPY" in ccys:
+        sess_name, window, start_h = "Tokyo session peak", "9am–12pm", 9
+    elif ccys & {"EUR", "GBP", "CHF"}:
+        sess_name, window, start_h = "London session peak", "5pm–8pm", 17
+    elif ccys & {"USD", "CAD"}:
+        sess_name, window, start_h = "New York session peak", "10pm–1am", 22
+    elif ccys & {"AUD", "NZD"}:
+        sess_name, window, start_h = "Sydney/Tokyo peak", "7am–11am", 7
+    else:
+        sess_name, window, start_h = "London open", "5pm–7pm", 17
+
+    hours_away = (start_h - now_ak.hour) % 24
+    if hours_away == 0:
+        time_ref = "now"
+    elif hours_away <= 8:
+        time_ref = "today"
+    elif hours_away <= 20:
+        time_ref = "tonight"
+    else:
+        time_ref = "tomorrow morning"
+
+    return f"{sess_name} {window} Auckland {time_ref}"
+
+
 def _log_line(handle, msg: str) -> None:
     stamp = datetime.now().strftime("%H:%M:%S")
     line  = f"[{stamp}] {msg}"
