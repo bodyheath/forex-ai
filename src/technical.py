@@ -449,6 +449,10 @@ def _tech_signal(rsi14: float, macd_hist: float, bb_state: str, trend: str,
         elif direction == "SELL" and "uptrend" in trend_l and "death" not in trend_l:
             score -= 1
 
+    # Pattern bonus from candlestick/price-action patterns
+    if patterns:
+        score += _pattern_bonus(patterns, direction)
+
     # Floor at 3 — T:1 must only appear for genuinely missing data
     return {"direction": direction, "score": max(3, min(10, score))}
 
