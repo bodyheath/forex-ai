@@ -1,0 +1,13 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 3/10
+TECHNICAL_SCORE: 1/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 2/10
+MACRO_SCORE: 4/10
+KEY_THESIS: JPY strength from rising rates conflicts with USD+2.89% differential; D1 unavailability blocks core confirmation needed for trade entry.
+RISK_FACTORS: D1 data missing blocks MTF alignment check (hard rule violation); flat USD rates may reverse if data updates show tightening bias.
+TRADE_THIS: NO
+
+*Rationale: Technical layer fails (D1 unavailable = cannot verify 4H/D1 alignment; score 1). MTF rule triggers automatic TRADE_THIS=NO. Confidence caps at 3 due to missing critical D1 confirmation despite some fundamental support (JPY rate rise +5, USD flat prevents rate advantage). Positioning near-neutral offers no directional edge. UNAVAILABLE D1 = non
