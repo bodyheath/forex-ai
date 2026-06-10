@@ -2114,7 +2114,11 @@ def run() -> int:
         return 2
 
     scan_mode = _get_scan_mode()
-    print(f"[scan] mode={scan_mode} ({_SCAN_MODES[scan_mode][0]})", file=sys.stderr)
+    print(
+        f"[scan] mode={scan_mode} ({_SCAN_MODES[scan_mode][0]}) "
+        f"— detected from Auckland hour={_startup_ak.hour}",
+        file=sys.stderr,
+    )
 
     now_ak   = _auckland_now()
     date     = now_ak.strftime("%Y-%m-%d")
