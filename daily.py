@@ -1799,6 +1799,12 @@ def _send_telegram_summary(
             health_sec.append(threshold_revert_msg)
         for issue in health_issues:
             health_sec.append(f"- {issue}")
+        # ML model status line
+        try:
+            from src import ml_predictor as _mlp_hs
+            health_sec.append(_mlp_hs.get_model_status_line())
+        except Exception:
+            pass
         all_sections.append(health_sec)
 
         # RESEARCH THRESHOLD ANALYSIS
