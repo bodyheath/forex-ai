@@ -1750,11 +1750,6 @@ def _send_telegram_summary(
             if not _any_change:
                 all_sections.append(["", "No new signals since morning scan."])
 
-        # ── Open trades current status ────────────────────────────────────────
-        _ot_intra = _build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak)
-        if _ot_intra:
-            all_sections.append(_ot_intra)
-
         # ── Watch list (5–6) and approaching signals (3–4) with levels + session ─
         _all_candidates = sorted(
             [r for r in deep_results if r["pair"] not in _yes_pairs and _conf(r) >= 3],
