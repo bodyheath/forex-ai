@@ -1074,10 +1074,12 @@ def _send_telegram_summary(
 
         # SYSTEM HEALTH
         health_issues: list = []
-        weak_tech = [r for r in deep_results if r["parsed"].get("technical_score") in (None, 1)]
+        weak_tech = [r for r in deep_results if r["parsed"].get("technical_score") in (None, 1, 2)]
         if weak_tech and len(weak_tech) >= max(1, len(deep_results) // 2):
+            _wt_pairs = ", ".join(r["pair"] for r in weak_tech[:5])
             health_issues.append(
-                "Technical data weak — T:1 or T:N/A across most pairs, may need investigation"
+                f"Technical scores suppressed — T:1/2/N/A on {len(weak_tech)} pairs "
+                f"({_wt_pairs}) — check DIAG lines in Actions log"
             )
         if td_calls > 600:
             health_issues.append(
