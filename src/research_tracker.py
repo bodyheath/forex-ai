@@ -72,8 +72,9 @@ def _to_float(val):
 def log_research_trade(pair: str, parsed: dict, source: str, scan_mode: str) -> int:
     """Append one research trade; return its assigned id.
 
-    source: 'haiku' when confidence < sonnet_threshold (no price levels available),
-            'sonnet' when Sonnet confirmed the setup (entry/stop/target present).
+    source: 'sonnet'     — Sonnet-confirmed, entry/stop/target from Claude.
+            'indicative' — Haiku-scored with ATR-derived levels; status = OPEN.
+            'haiku'      — Legacy haiku-only with no levels; status = NO_PRICE_LEVELS.
     """
     rows  = load()
     rec_id = _next_id(rows)
