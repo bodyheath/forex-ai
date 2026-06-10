@@ -1206,6 +1206,30 @@ def _send_telegram_summary(
             block.append(f"📊 Risk ${risk_amt:,.0f} {cur}  ({pct:.2f}% account)")
         if sz.get("lots"):
             block.append(f"📏 Position Size: {sz['lots']} lots")
+
+        # ── Fibonacci levels ──────────────────────────────────────────────────
+        _fib = (r.get("bundle", {}).get("technical", {})
+                 .get("daily", {}).get("fibonacci", {}))
+        if isinstance(_fib, dict) and _fib.get("status") == "ok":
+            _fib_above = _fib.get("nearest_above", [])
+            _fib_below = _fib.get("nearest_below", [])
+            _fib_near  = _fib.get("near_levels", [])
+            _rng_p     = _fib.get("range_pips", "?")
+            block.append("━━━━━━━━━━━━━━━━━━━━━")
+            block.append(f"📐 <b>Fibonacci Levels</b>  (swing range: {_rng_p}p)")
+            if _fib_above:
+                block.append("  🔴 Resistance: " + " | ".join(
+                    f"{lb} {_fmt_price(px)}" for lb, px in _fib_above))
+            if _fib_below:
+                block.append("  🟢 Support: " + " | ".join(
+                    f"{lb} {_fmt_price(px)}" for lb, px in _fib_below))
+            if _fib_near:
+                _fn = _fib_near[0]
+                block.append(
+                    f"  ⭐ Price {_fn['distance_pips']:.0f}p from {_fn['label']}"
+                    f" {_fn['type']} — triple confluence zone"
+                )
+
         block += [
             "━━━━━━━━━━━━━━━━━━━━━",
             f"⏰ <b>EXACT ENTRY INSTRUCTIONS:</b>",
