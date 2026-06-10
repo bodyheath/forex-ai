@@ -1474,6 +1474,9 @@ def _send_telegram_summary(
             _mtf_txt_tb = _mtf_plain_english(_mtf)
             if _mtf_txt_tb:
                 block.append(f"🕐 {_mtf_txt_tb}")
+        _rib_line = _ribbon_display(r.get("bundle", {}))
+        if _rib_line:
+            block.append(_rib_line)
         block.append("🔍 <b>Why all data agrees:</b>")
         for why_line in _why_agrees_lines(r, ctx):
             block.append(why_line)
