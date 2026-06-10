@@ -118,19 +118,19 @@ def _session_time_label(pair: str, now_ak: datetime) -> str:
     ccys  = {base, quote}
 
     if "JPY" in ccys and ccys & {"EUR", "GBP", "CHF"}:
-        sess_name, window, start_h = "London open sweet spot", "5pm–7pm", 17
+        sess_name, window, start_h = "London open sweet spot", "7pm–9pm", 19
     elif "JPY" in ccys and ccys & {"USD", "CAD"}:
-        sess_name, window, start_h = "New York open", "10pm–12am", 22
+        sess_name, window, start_h = "New York open", "1am–3am", 1
     elif "JPY" in ccys:
-        sess_name, window, start_h = "Tokyo session peak", "9am–12pm", 9
+        sess_name, window, start_h = "Tokyo session peak", "12pm–3pm", 12
     elif ccys & {"EUR", "GBP", "CHF"}:
-        sess_name, window, start_h = "London session peak", "5pm–8pm", 17
+        sess_name, window, start_h = "London session peak", "7pm–10pm", 19
     elif ccys & {"USD", "CAD"}:
-        sess_name, window, start_h = "New York session peak", "10pm–1am", 22
+        sess_name, window, start_h = "New York session peak", "1am–4am", 1
     elif ccys & {"AUD", "NZD"}:
-        sess_name, window, start_h = "Sydney/Tokyo peak", "7am–11am", 7
+        sess_name, window, start_h = "Sydney/Tokyo peak", "9am–1pm", 9
     else:
-        sess_name, window, start_h = "London open", "5pm–7pm", 17
+        sess_name, window, start_h = "London open", "7pm–9pm", 19
 
     hours_away = (start_h - now_ak.hour) % 24
     if hours_away == 0:
