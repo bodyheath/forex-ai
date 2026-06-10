@@ -2103,6 +2103,18 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Learning step failed: {exc}")
 
+        # Retrain ML win-probability model if > 7 days old (weekly cadence)
+        try:
+            from src import ml_predictor as _mlp
+            _ml_meta = _mlp.retrain_if_stale(quiet=True)
+            if _ml_meta:
+                _log_line(logf, f"ML model retrained: {_ml_meta.get('n_trades',0)} trades, "
+                                 f"ROC-AUC {_ml_meta.get('roc_auc',0):.3f}")
+            else:
+                _log_line(logf, f"ML model: {_mlp.get_model_status_line()}")
+        except Exception as _ml_exc:
+            _log_line(logf, f"ML model step: {_ml_exc}")
+
         # Threshold auto-adjust: revert conf 6→7 / R:R 1.3→1.5 if win rate < 45% after 50 trades
         threshold_revert_msg = None
         try:
