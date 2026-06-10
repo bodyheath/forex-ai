@@ -748,6 +748,52 @@ def _pre_fetch_shared_data(pairs: list, log=print) -> tuple:
     return fund_store, macro_result
 
 
+# ── Indicative level calculator ───────────────────────────────────────────────
+
+def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict) -> tuple:
+    """Return (entry, stop, target) as floats for indicative display.
+
+    Uses Claude's parsed values when present (watch list / approaching pairs
+    always have Claude-computed levels).  Falls back to current price ± ATR
+    proxy if any value is missing.  Returns (None, None, None) if price
+    is completely unavailable.
+    """
+    try:
+        entry  = float(parsed.get("entry")     or 0) or None
+        stop   = float(parsed.get("stop_loss") or 0) or None
+        target = float(parsed.get("target")    or 0) or None
+    except (TypeError, ValueError):
+        entry, stop, target = None, None, None
+
+    if entry and stop and target:
+        return entry, stop, target
+
+    # Current price from bundle
+    cur = None
+    try:
+        daily = bundle.get("technical", {}).get("daily", {})
+        if isinstance(daily, dict):
+            cur = float(daily.get("last_close") or daily.get("close") or 0) or None
+    except (TypeError, ValueError):
+        pass
+
+    if cur is None:
+        return entry, stop, target
+
+    is_jpy = "JPY" in pair.upper()
+    atr_est = 0.50 if is_jpy else (0.0080 if any(c in pair.upper() for c in ("EUR", "GBP")) else 0.0050)
+    dirn = (parsed.get("direction") or "").upper()
+    if dirn == "BUY":
+        entry  = entry  or cur
+        stop   = stop   or round(entry - atr_est * 1.5, 3 if is_jpy else 5)
+        target = target or round(entry + atr_est * 2.0, 3 if is_jpy else 5)
+    elif dirn == "SELL":
+        entry  = entry  or cur
+        stop   = stop   or round(entry + atr_est * 1.5, 3 if is_jpy else 5)
+        target = target or round(entry - atr_est * 2.0, 3 if is_jpy else 5)
+    return entry, stop, target
+
+
 # ── Open trade live-price helpers ─────────────────────────────────────────────
 
 def _fetch_live_price(pair: str, px_cache: dict) -> tuple:
