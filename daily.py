@@ -1385,11 +1385,12 @@ def _send_telegram_summary(
                 profit_pips= abs(float(ind_t) - float(ind_e)) / _pip_size(rr["pair"])
                 risk_usd   = max(1, round(risk_pips))
                 profit_usd = max(1, round(profit_pips))
+                lines.append("🟡 <b>READY TO TRADE IF CONFIRMED:</b>")
                 lines.append(
-                    f"If triggers: Entry ~{ind_e:.{dec}f} | "
+                    f"Entry ~{ind_e:.{dec}f} | "
                     f"Stop ~{ind_s:.{dec}f} | Target ~{ind_t:.{dec}f}"
                 )
-                lines.append(f"Risk to make: ${risk_usd} to make ${profit_usd} ({rr_ratio:.1f}:1)")
+                lines.append(f"Risk ${risk_usd} → Make ${profit_usd} ({rr_ratio:.1f}:1)")
             except (TypeError, ValueError, ZeroDivisionError):
                 pass
         # Entry preparation instructions
