@@ -127,6 +127,98 @@ def _atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
     return tr.ewm(alpha=1 / period, adjust=False).mean()
 
 
+def _stochastic(df: pd.DataFrame, k_period: int = 14, d_period: int = 3) -> "tuple":
+    """Fast Stochastic Oscillator: %K and %D (signal line = SMA of %K)."""
+    low_min  = df["low"].rolling(k_period).min()
+    high_max = df["high"].rolling(k_period).max()
+    k = 100 * (df["close"] - low_min) / (high_max - low_min).replace(0, np.nan)
+    d = k.rolling(d_period).mean()
+    return k, d
+
+
+def _cci(df: pd.DataFrame, period: int = 20) -> pd.Series:
+    """Commodity Channel Index.  Mean-deviation form, constant 0.015."""
+    tp      = (df["high"] + df["low"] + df["close"]) / 3
+    tp_sma  = tp.rolling(period).mean()
+    mean_dev = tp.rolling(period).apply(
+        lambda x: np.mean(np.abs(x - x.mean())), raw=True
+    )
+    return (tp - tp_sma) / (0.015 * mean_dev.replace(0, np.nan))
+
+
+def _oscillator_confluence(
+    rsi14: float, stoch_k: float, stoch_d: float, cci20: float
+) -> dict:
+    """Check RSI, Stochastic, and CCI simultaneously for directional agreement.
+
+    Thresholds:
+      RSI:        < 35 = BUY-oversold   > 65 = SELL-overbought
+      Stochastic: %K < 20 = BUY         %K > 80 = SELL  (%D must be same side)
+      CCI:        < -100 = BUY          > +100 = SELL
+
+    Returns:
+      direction   — "BUY" | "SELL" | "NONE"
+      score       — 0-3  (oscillators confirming)
+      triple      — True when all three agree
+      conf_label  — human-readable e.g. "BUY(3/3)" or "NONE"
+      rsi_signal  — "BUY" | "SELL" | "NEUTRAL"
+      stoch_signal
+      cci_signal
+      stoch_k, stoch_d, cci  — raw values
+    """
+    def _safe(v: float) -> float:
+        return v if (v == v) else float("nan")   # NaN check
+
+    rsi14   = _safe(rsi14)
+    stoch_k = _safe(stoch_k)
+    stoch_d = _safe(stoch_d)
+    cci20   = _safe(cci20)
+
+    def _classify(sig, buy_thresh, sell_thresh):
+        if sig != sig:          # NaN → neutral
+            return "NEUTRAL"
+        return "BUY" if sig < buy_thresh else ("SELL" if sig > sell_thresh else "NEUTRAL")
+
+    rsi_sig   = _classify(rsi14,   35,  65)
+    # Stochastic: require both %K and %D on the same side for a cleaner signal
+    stoch_sig = "NEUTRAL"
+    if stoch_k == stoch_k and stoch_d == stoch_d:
+        if stoch_k < 20 and stoch_d < 25:
+            stoch_sig = "BUY"
+        elif stoch_k > 80 and stoch_d > 75:
+            stoch_sig = "SELL"
+    cci_sig   = _classify(cci20, -100, 100)
+
+    signals = [rsi_sig, stoch_sig, cci_sig]
+    buy_n   = signals.count("BUY")
+    sell_n  = signals.count("SELL")
+
+    if buy_n >= 2 and sell_n == 0:
+        direction = "BUY"
+        score     = buy_n
+    elif sell_n >= 2 and buy_n == 0:
+        direction = "SELL"
+        score     = sell_n
+    else:
+        direction = "NONE"
+        score     = 0
+
+    conf_label = f"{direction}({score}/3)" if direction != "NONE" else "NONE"
+
+    return {
+        "direction":    direction,
+        "score":        score,
+        "triple":       score == 3,
+        "conf_label":   conf_label,
+        "rsi_signal":   rsi_sig,
+        "stoch_signal": stoch_sig,
+        "cci_signal":   cci_sig,
+        "stoch_k":      round(stoch_k, 1) if stoch_k == stoch_k else None,
+        "stoch_d":      round(stoch_d, 1) if stoch_d == stoch_d else None,
+        "cci":          round(cci20,   1) if cci20   == cci20   else None,
+    }
+
+
 def _pivots(prev: pd.Series) -> dict:
     """Classic floor-trader pivots from the last completed candle."""
     p = (prev["high"] + prev["low"] + prev["close"]) / 3
