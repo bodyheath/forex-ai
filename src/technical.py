@@ -146,6 +146,80 @@ def _cci(df: pd.DataFrame, period: int = 20) -> pd.Series:
     return (tp - tp_sma) / (0.015 * mean_dev.replace(0, np.nan))
 
 
+_EMA_RIBBON_PERIODS = [8, 13, 21, 34, 55, 89]
+
+
+def _ema_ribbon(close: pd.Series) -> dict:
+    """Calculate EMA ribbon status using periods [8, 13, 21, 34, 55, 89].
+
+    Status:
+      ALIGNED_BULL — EMA8 > EMA13 > EMA21 > EMA34 > EMA55 > EMA89 (strong uptrend)
+      ALIGNED_BEAR — EMA8 < EMA13 < EMA21 < EMA34 < EMA55 < EMA89 (strong downtrend)
+      CONVERGING   — fully stacked but spread narrowing (trend weakening)
+      LEANING_BULL / LEANING_BEAR — 4 of 5 pairs aligned
+      NEUTRAL      — mixed / no clear stack
+
+    fanning=True when fully aligned and spread is widening (trend accelerating).
+    A fully aligned ribbon in the trade direction grants +2 to tech score.
+    """
+    periods = _EMA_RIBBON_PERIODS
+    if len(close) < periods[-1] + 5:
+        return {"status": "UNAVAILABLE", "direction": "NEUTRAL", "fanning": False}
+
+    ema_series = {p: close.ewm(span=p, adjust=False).mean() for p in periods}
+    cur        = {p: float(ema_series[p].iloc[-1]) for p in periods}
+
+    n_pairs    = len(periods) - 1   # 5 consecutive pairs
+    pairs_bull = sum(1 for i in range(n_pairs) if cur[periods[i]] > cur[periods[i + 1]])
+    pairs_bear = sum(1 for i in range(n_pairs) if cur[periods[i]] < cur[periods[i + 1]])
+
+    fully_bull = pairs_bull == n_pairs
+    fully_bear = pairs_bear == n_pairs
+
+    # Fanning vs converging: compare EMA8–EMA89 spread now vs 5 bars ago
+    fanning    = False
+    converging = False
+    if fully_bull or fully_bear:
+        try:
+            spread_now  = abs(cur[8] - cur[89])
+            prev        = {p: float(ema_series[p].iloc[-6]) for p in periods}
+            spread_prev = abs(prev[8] - prev[89])
+            if spread_now > spread_prev * 1.01:
+                fanning    = True
+            elif spread_now < spread_prev * 0.99:
+                converging = True
+        except (IndexError, KeyError, ValueError):
+            pass
+
+    if fully_bull and not converging:
+        status, direction = "ALIGNED_BULL", "BUY"
+    elif fully_bear and not converging:
+        status, direction = "ALIGNED_BEAR", "SELL"
+    elif (fully_bull or fully_bear) and converging:
+        status    = "CONVERGING"
+        direction = "BUY" if fully_bull else "SELL"
+    elif pairs_bull >= 4:
+        status, direction = "LEANING_BULL", "BUY"
+    elif pairs_bear >= 4:
+        status, direction = "LEANING_BEAR", "SELL"
+    else:
+        status, direction = "NEUTRAL", "NEUTRAL"
+
+    return {
+        "status":        status,
+        "direction":     direction,
+        "fanning":       fanning,
+        "converging":    converging,
+        "aligned_count": max(pairs_bull, pairs_bear),
+        "ema8":  round(cur[8],  5),
+        "ema13": round(cur[13], 5),
+        "ema21": round(cur[21], 5),
+        "ema34": round(cur[34], 5),
+        "ema55": round(cur[55], 5),
+        "ema89": round(cur[89], 5),
+    }
+
+
 def _oscillator_confluence(
     rsi14: float, stoch_k: float, stoch_d: float, cci20: float
 ) -> dict:
