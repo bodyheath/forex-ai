@@ -1,0 +1,345 @@
+"""ML win-probability predictor for forex trade setups.
+
+Trains a calibrated classification model on historical closed trade outcomes:
+  - data/research_trades.csv  (paper trades, 0.01 lots, conf >= 5)
+  - data/trades.csv           (live trade recommendations)
+
+Rich features come from data/trade_features.csv (bundle snapshot at entry).
+For older rows without a feature snapshot, layer scores from the trade CSV are
+used as a reduced feature set.
+
+Model:
+  - n < 50:  LogisticRegression(C=0.5)        — works well on small data
+  - n >= 50: GradientBoostingClassifier        — captures non-linear interactions
+  Probabilities calibrated with CalibratedClassifierCV for reliable estimates.
+
+Minimum 10 closed trades required before the model activates.
+Model persisted to data/ml_model.pkl; metadata in data/ml_model_meta.json.
+
+Usage:
+  from src import ml_predictor
+  line = ml_predictor.get_win_prob(pair, parsed, bundle)
+  # returns "73% (12 trades)" or "Model learning: 3/10 closed trades" or None
+"""
+import csv
+import json
+import math
+import pickle
+from datetime import datetime, timedelta
+from typing import Optional
+
+import config
+from src.feature_extractor import FEATURE_COLS, extract
+
+MODEL_FILE = config.DATA_DIR / "ml_model.pkl"
+META_FILE  = config.DATA_DIR / "ml_model_meta.json"
+FEAT_CSV   = config.DATA_DIR / "trade_features.csv"
+MIN_TRADES = 10
+
+
+# ── Persistence helpers ────────────────────────────────────────────────────────
+
+def _load_meta() -> dict:
+    try:
+        return json.loads(META_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _save_meta(meta: dict) -> None:
+    META_FILE.write_text(json.dumps(meta, indent=2), encoding="utf-8")
+
+
+def _safe_float(v, default: float = 0.0) -> float:
+    try:
+        f = float(v) if v not in ("", None) else default
+        return default if (f != f) else f
+    except (TypeError, ValueError):
+        return default
+
+
+# ── Training data loader ───────────────────────────────────────────────────────
+
+def _load_training_data():
+    """Merge closed trade outcomes with features.
+
+    Returns (X_array, y_array, n) or (None, None, n) if < MIN_TRADES available.
+    X columns follow FEATURE_COLS order exactly.
+    y: 1=WIN, 0=LOSS/EXPIRED/BREAKEVEN
+    """
+    try:
+        import numpy as np
+    except ImportError:
+        return None, None, 0
+
+    # Load rich feature store indexed by (source_table, trade_id)
+    feat_map: dict = {}
+    if FEAT_CSV.exists():
+        with FEAT_CSV.open("r", encoding="utf-8", newline="") as fh:
+            for r in csv.DictReader(fh):
+                key = (r.get("source_table", ""), r.get("trade_id", ""))
+                feat_map[key] = r
+
+    rows_X, rows_y = [], []
+
+    def _add(trade_id, source_table: str, trade_row: dict, outcome: str):
+        if outcome == "WIN":
+            y = 1
+        elif outcome in ("LOSS", "EXPIRED", "BREAKEVEN"):
+            y = 0
+        else:
+            return   # OPEN / NO_TRADE / NO_PRICE_LEVELS / SKIPPED
+
+        feat_row = feat_map.get((source_table, str(trade_id)))
+        if feat_row:
+            try:
+                vec = [_safe_float(feat_row.get(c, 0.0)) for c in FEATURE_COLS]
+            except Exception:
+                return
+        else:
+            # Fallback: build reduced feature vector from scores in trade row
+            try:
+                ts  = trade_row.get("timestamp") or trade_row.get("date") or ""
+                mo  = int(ts.split("-")[1]) if len(ts.split("-")) >= 2 else 6
+                ms  = math.sin(2 * math.pi * mo / 12)
+                mc  = math.cos(2 * math.pi * mo / 12)
+                dirn = (trade_row.get("direction") or "BUY").upper()
+                vec = [
+                    _safe_float(trade_row.get("confidence"),                      5.0),
+                    _safe_float(trade_row.get("technical") or
+                                trade_row.get("tech_score"),                      5.0),
+                    _safe_float(trade_row.get("fundamental") or
+                                trade_row.get("fund_score"),                      5.0),
+                    _safe_float(trade_row.get("sentiment") or
+                                trade_row.get("sent_score"),                      5.0),
+                    _safe_float(trade_row.get("positioning") or
+                                trade_row.get("pos_score"),                       5.0),
+                    _safe_float(trade_row.get("macro") or
+                                trade_row.get("macro_score"),                     5.0),
+                    50.0,                           # rsi14        — neutral default
+                    0.0,                            # macd_signal  — neutral
+                    0.0,                            # atr_pct      — neutral
+                    _safe_float(trade_row.get("reward_risk"), 1.5),
+                    1.0 if dirn == "BUY" else 0.0,
+                    0.0,                            # mtf_count    — unknown
+                    0.0,                            # ribbon_aligned — unknown
+                    ms,                             # month_sin
+                    mc,                             # month_cos
+                ]
+            except Exception:
+                return
+
+        rows_X.append(vec)
+        rows_y.append(y)
+
+    # Research paper trades
+    research_csv = config.DATA_DIR / "research_trades.csv"
+    if research_csv.exists():
+        with research_csv.open("r", encoding="utf-8", newline="") as fh:
+            for r in csv.DictReader(fh):
+                _add(r.get("id"), "research", r, r.get("status", ""))
+
+    # Main live trades
+    if config.TRADES_CSV.exists():
+        with config.TRADES_CSV.open("r", encoding="utf-8", newline="") as fh:
+            for r in csv.DictReader(fh):
+                _add(r.get("id"), "main", r, r.get("status", ""))
+
+    n = len(rows_X)
+    if n < MIN_TRADES:
+        return None, None, n
+
+    return np.array(rows_X, dtype=float), np.array(rows_y, dtype=int), n
+
+
+# ── Training ───────────────────────────────────────────────────────────────────
+
+def train(quiet: bool = False) -> dict:
+    """Train or retrain the model on all available closed trade data.
+
+    Returns a metadata dict — keys: trained_at, model_ready, n_trades, win_rate,
+    roc_auc, model_type, importances, error (if any).
+    """
+    try:
+        from sklearn.calibration import CalibratedClassifierCV
+        from sklearn.ensemble import GradientBoostingClassifier
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import cross_val_score
+        from sklearn.preprocessing import StandardScaler
+        import numpy as np
+    except ImportError:
+        meta = {"error": "scikit-learn not installed — add scikit-learn to requirements.txt",
+                "model_ready": False}
+        _save_meta(meta)
+        return meta
+
+    X, y, n = _load_training_data()
+
+    if X is None:
+        meta = _load_meta()
+        meta.update({
+            "n_trades":    n,
+            "model_ready": False,
+            "checked_at":  datetime.now().isoformat(),
+        })
+        _save_meta(meta)
+        if not quiet:
+            print(f"[ml_predictor] Waiting: {n}/{MIN_TRADES} closed trades so far")
+        return {"error": f"need {MIN_TRADES} closed trades (have {n})", "n_trades": n,
+                "model_ready": False}
+
+    scaler = StandardScaler()
+    X_s    = scaler.fit_transform(X)
+
+    cv_k = min(5, max(2, n // 4))
+
+    if n >= 50:
+        base   = GradientBoostingClassifier(
+            n_estimators=200, max_depth=3, learning_rate=0.05,
+            min_samples_leaf=3, subsample=0.8, random_state=42,
+        )
+        method = "isotonic"
+        mtype  = "GradientBoosting"
+    else:
+        base   = LogisticRegression(C=0.5, max_iter=1000, random_state=42)
+        method = "sigmoid"
+        mtype  = "LogisticRegression"
+
+    model = CalibratedClassifierCV(base, cv=cv_k, method=method)
+    model.fit(X_s, y)
+
+    # ROC-AUC cross-validation
+    try:
+        cv_s    = cross_val_score(model, X_s, y, cv=cv_k, scoring="roc_auc")
+        roc_auc = round(float(np.mean(cv_s)), 3)
+        roc_std = round(float(np.std(cv_s)),  3)
+    except Exception:
+        roc_auc = roc_std = 0.0
+
+    win_rate = round(float(y.mean()), 3)
+
+    # Feature importances
+    importances: dict = {}
+    try:
+        cal_clf = model.calibrated_classifiers_[0]
+        est     = cal_clf.estimator if hasattr(cal_clf, "estimator") else cal_clf
+        if hasattr(est, "coef_"):
+            for col, imp in zip(FEATURE_COLS, est.coef_[0]):
+                importances[col] = round(abs(float(imp)), 4)
+        elif hasattr(est, "feature_importances_"):
+            for col, imp in zip(FEATURE_COLS, est.feature_importances_):
+                importances[col] = round(float(imp), 4)
+    except Exception:
+        pass
+
+    # Persist
+    MODEL_FILE.write_bytes(pickle.dumps({
+        "scaler":       scaler,
+        "model":        model,
+        "feature_cols": FEATURE_COLS,
+    }))
+
+    meta = {
+        "trained_at":   datetime.now().isoformat(),
+        "model_ready":  True,
+        "n_trades":     int(n),
+        "win_rate":     win_rate,
+        "roc_auc":      roc_auc,
+        "roc_auc_std":  roc_std,
+        "model_type":   mtype,
+        "feature_cols": FEATURE_COLS,
+        "importances":  importances,
+    }
+    _save_meta(meta)
+
+    if not quiet:
+        print(
+            f"[ml_predictor] {mtype} trained on {n} trades — "
+            f"ROC-AUC {roc_auc:.3f}±{roc_std:.3f}  win rate {win_rate:.1%}"
+        )
+    return meta
+
+
+# ── Inference ──────────────────────────────────────────────────────────────────
+
+def predict(features: dict) -> Optional[float]:
+    """Return win probability (0–1) or None if model unavailable/broken."""
+    if not MODEL_FILE.exists():
+        return None
+    try:
+        import numpy as np
+        payload = pickle.loads(MODEL_FILE.read_bytes())
+        scaler  = payload["scaler"]
+        model   = payload["model"]
+        cols    = payload.get("feature_cols", FEATURE_COLS)
+        row     = np.array([[float(features.get(c) or 0.0) for c in cols]])
+        row_s   = scaler.transform(row)
+        proba   = model.predict_proba(row_s)
+        classes = list(model.classes_)
+        win_idx = classes.index(1) if 1 in classes else 1
+        return float(proba[0][win_idx])
+    except Exception:
+        return None
+
+
+def retrain_if_stale(force: bool = False, quiet: bool = True) -> Optional[dict]:
+    """Retrain if model is missing or was last trained > 7 days ago.
+
+    Returns training metadata dict on retrain, None if still fresh.
+    """
+    meta = _load_meta()
+    if not force:
+        trained_at = meta.get("trained_at")
+        if trained_at:
+            try:
+                if datetime.now() - datetime.fromisoformat(trained_at) < timedelta(days=7):
+                    return None
+            except ValueError:
+                pass
+    return train(quiet=quiet)
+
+
+# ── Public helpers for Telegram display ───────────────────────────────────────
+
+def get_win_prob(pair: str, parsed: dict, bundle: dict) -> Optional[str]:
+    """Return formatted win-probability string for Telegram, or None.
+
+    When model is active:   "73% (12 trades)"
+    When model is learning: "Model learning: 4/10 closed trades"
+    On any error:           None
+    """
+    try:
+        meta = _load_meta()
+        if not meta.get("model_ready"):
+            n      = meta.get("n_trades", 0)
+            needed = max(0, MIN_TRADES - n)
+            if needed > 0:
+                return f"Model learning: {n}/{MIN_TRADES} closed trades"
+            return None
+        feats = extract(pair, parsed, bundle)
+        p     = predict(feats)
+        if p is None:
+            return None
+        n = meta.get("n_trades", "?")
+        return f"{round(p * 100):.0f}% ({n} trades)"
+    except Exception:
+        return None
+
+
+def get_model_status_line() -> str:
+    """One-line summary of model status for scan messages / system health."""
+    try:
+        meta = _load_meta()
+        if not meta.get("model_ready"):
+            n      = meta.get("n_trades", 0)
+            needed = max(0, MIN_TRADES - n)
+            return (f"🤖 ML model: learning — {n}/{MIN_TRADES} closed trades"
+                    f" (need {needed} more outcomes)")
+        trained = (meta.get("trained_at") or "")[:10]
+        roc     = meta.get("roc_auc", 0.0)
+        n       = meta.get("n_trades", "?")
+        mtype   = meta.get("model_type", "")[:2].upper()  # LR or GB
+        return (f"🤖 ML model active — {n} trades | ROC-AUC {roc:.2f} | "
+                f"{mtype} | last trained {trained}")
+    except Exception:
+        return "🤖 ML model: unavailable"
