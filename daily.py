@@ -1428,17 +1428,24 @@ def _send_telegram_summary(
         dirn  = (pp.get("direction") or "—").upper()
         arrow = "📈" if dirn == "BUY" else "📉"
         ntc   = _what_needs_to_change(pp)
+        # Compute entry quality badge first so it appears in header
+        _ew_we    = _entry_window_for_pair(rr["pair"])
+        _eq_we_e, _eq_we_l = _entry_quality(rr["pair"], now_ak)
+        _tref_we  = _time_ref_for_entry(_ew_we[0], _ew_we[1], now_ak)
+        _start_we = _fmt_time_exact(_ew_we[0], _ew_we[1])
         lines = [
             "",
-            f"{arrow} <b>{rr['pair']}</b> {dirn}  {conf}/10 {_conf_bar(conf)}",
-            f"<code>{_score_breakdown_line(pp)}</code>",
+            f"{arrow} <b>{rr['pair']}</b> {dirn}  {conf}/10 {_conf_bar(conf)}  {_eq_we_e} {_eq_we_l}",
+            f"{_score_breakdown_line(pp)}",
         ]
+        _wl_hint = _weakest_layer_hint(pp)
+        if _wl_hint:
+            lines.append(f"↑ {_wl_hint}")
         _mtf_wl = rr.get("bundle", {}).get("mtf", {})
         if _mtf_wl and _mtf_wl.get("agreeing_count", 0) > 0:
-            lines.append(
-                f"MTF: {_mtf_wl['agreeing_count']}/5  "
-                f"<code>{_mtf_wl.get('breakdown', '')}</code>"
-            )
+            _mtf_txt = _mtf_plain_english(_mtf_wl)
+            if _mtf_txt:
+                lines.append(_mtf_txt)
         # Indicative entry/stop/target — always shown so investor knows the trade shape
         ind_e, ind_s, ind_t = _calc_indicative_levels(rr["pair"], pp, rr.get("bundle", {}))
         if ind_e and ind_s and ind_t:
@@ -1458,15 +1465,10 @@ def _send_telegram_summary(
                 lines.append(f"Risk ${risk_usd} → Make ${profit_usd} ({rr_ratio:.1f}:1)")
             except (TypeError, ValueError, ZeroDivisionError):
                 pass
-        # Entry preparation instructions
-        _ew_we = _entry_window_for_pair(rr["pair"])
-        _eq_we_e, _eq_we_l = _entry_quality(rr["pair"], now_ak)
-        _tref_we = _time_ref_for_entry(_ew_we[0], _ew_we[1], now_ak)
-        _start_we = _fmt_time_exact(_ew_we[0], _ew_we[1])
         lines += [
             f"{_eq_we_e} <b>BE READY TO ENTER:</b> {_ew_we[6]} {_start_we} Auckland {_tref_we}",
-            f"If confidence reaches 7+ before {_start_we} — enter immediately at market",
-            f"If confidence reaches 7+ during {_ew_we[6]} — enter within 30 minutes",
+            f"If confidence reaches 7+ before {_start_we} — enter immediately at market price",
+            f"If confidence reaches 7+ during {_ew_we[6]} — enter within 30 minutes of the open",
             f"If confidence has not reached 7+ by {_ew_we[5]} {_tref_we} — skip this pair today",
             f"Needs: {ntc}",
         ]
