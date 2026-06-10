@@ -450,6 +450,67 @@ def _fibonacci(df: pd.DataFrame, current_price: float) -> dict:
     }
 
 
+def _detect_divergence(df: pd.DataFrame, rsi: pd.Series) -> dict:
+    """Detect classic RSI divergence on the most recent 60 bars.
+
+    Bullish: price making lower lows while RSI makes higher lows → BUY signal.
+    Bearish: price making higher highs while RSI makes lower highs → SELL signal.
+
+    Requirements: ≥5 bars between swing points, ≥5 pip price move, ≥2 RSI points.
+    Returns {"bullish": dict|None, "bearish": dict|None}.
+    """
+    n = min(60, len(df))
+    tail     = df.iloc[-n:]
+    rsi_tail = rsi.iloc[-n:]
+
+    if n < 20:
+        return {"bullish": None, "bearish": None}
+
+    hi_arr  = tail["high"].values
+    lo_arr  = tail["low"].values
+    rsi_arr = rsi_tail.values
+    pip     = _pip_size(float(tail["close"].iloc[-1]))
+    dec     = 5 if pip < 0.001 else 3
+
+    peaks   = _local_peaks(hi_arr, n=3)
+    troughs = _local_troughs(lo_arr, n=3)
+    result  = {"bullish": None, "bearish": None}
+
+    # ── Bearish: price higher high + RSI lower high ───────────────────────────
+    if len(peaks) >= 2:
+        (i1, ph1), (i2, ph2) = peaks[-2], peaks[-1]
+        if i2 - i1 >= 5 and i1 < len(rsi_arr) and i2 < len(rsi_arr):
+            rh1, rh2 = float(rsi_arr[i1]), float(rsi_arr[i2])
+            pdiff    = (ph2 - ph1) / pip   # positive = higher high
+            rdiff    = rh1 - rh2           # positive = RSI lower high
+            if ph2 > ph1 and rh2 < rh1 and pdiff >= 5 and rdiff >= 2:
+                strength = "strong" if pdiff >= 15 and rdiff >= 5 else "moderate"
+                result["bearish"] = {
+                    "type": "bearish", "strength": strength,
+                    "price_diff_pips": round(pdiff, 1), "rsi_diff": round(rdiff, 1),
+                    "price_h1": round(ph1, dec), "price_h2": round(ph2, dec),
+                    "rsi_h1": round(rh1, 1),     "rsi_h2": round(rh2, 1),
+                }
+
+    # ── Bullish: price lower low + RSI higher low ─────────────────────────────
+    if len(troughs) >= 2:
+        (i1, pl1), (i2, pl2) = troughs[-2], troughs[-1]
+        if i2 - i1 >= 5 and i1 < len(rsi_arr) and i2 < len(rsi_arr):
+            rl1, rl2 = float(rsi_arr[i1]), float(rsi_arr[i2])
+            pdiff    = (pl1 - pl2) / pip   # positive = lower low
+            rdiff    = rl2 - rl1           # positive = RSI higher low
+            if pl2 < pl1 and rl2 > rl1 and pdiff >= 5 and rdiff >= 2:
+                strength = "strong" if pdiff >= 15 and rdiff >= 5 else "moderate"
+                result["bullish"] = {
+                    "type": "bullish", "strength": strength,
+                    "price_diff_pips": round(pdiff, 1), "rsi_diff": round(rdiff, 1),
+                    "price_l1": round(pl1, dec), "price_l2": round(pl2, dec),
+                    "rsi_l1": round(rl1, 1),     "rsi_l2": round(rl2, 1),
+                }
+
+    return result
+
+
 def _pattern_bonus(patterns: list, ts_direction: str) -> int:
     """Score bonus from confirming candlestick patterns (capped at +3).
 
