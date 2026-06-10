@@ -1948,9 +1948,10 @@ def _send_telegram_summary(
                 ap_sec.extend(_approaching_entry(rr))
             all_sections.append(ap_sec)
 
-    # COST SECTION — shown in all 4 scan modes just before footer
-    if cost_lines:
-        all_sections.append(["", "━━━━━━━━━━━━━━━━━━━━━"] + cost_lines)
+        if cost_lines:
+            all_sections.append(
+                ["", "━━━━━━━━━━━━━━━━━━━━━", "⚠️ <b>SYSTEM HEALTH</b>"] + cost_lines
+            )
 
     # ── FOOTER (all modes) ─────────────────────────────────────────────────────
     all_sections.append([
