@@ -145,6 +145,83 @@ def _session_time_label(pair: str, now_ak: datetime) -> str:
     return f"{sess_name} {window} Auckland {time_ref}"
 
 
+def _fmt_time_exact(h: int, m: int = 0) -> str:
+    """Format 24-hour time as '5:00pm', '10:30pm'."""
+    ampm = "am" if h < 12 else "pm"
+    h12  = h % 12 or 12
+    return f"{h12}:{m:02d}{ampm}"
+
+
+def _entry_window_for_pair(pair: str) -> tuple:
+    """Return (start_h, start_m, end_h, end_m, window_str, cutoff_str, sess_name).
+
+    Precise 90-minute high-liquidity windows for each currency group.
+    Cutoff is the absolute no-entry deadline.
+    """
+    cleaned = pair.upper().replace("/", "").replace("-", "")
+    base  = cleaned[:3]
+    quote = cleaned[3:6] if len(cleaned) >= 6 else ""
+    ccys  = {base, quote}
+
+    if ccys == {"USD", "JPY"}:
+        return (22, 0, 23, 0, "10:00pm–11:00pm", "11:30pm", "New York open")
+    if "JPY" in ccys and ccys & {"EUR", "GBP", "CHF"}:
+        return (17, 0, 18, 0, "5:00pm–6:00pm", "7:00pm", "London open")
+    if "JPY" in ccys:
+        return (9, 0, 10, 30, "9:00am–10:30am", "12:00pm", "Tokyo open")
+    if ccys & {"EUR", "GBP", "CHF"}:
+        return (17, 0, 18, 30, "5:00pm–6:30pm", "9:00pm", "London open")
+    if ccys & {"USD", "CAD"}:
+        return (22, 0, 23, 30, "10:00pm–11:30pm", "1:00am", "New York open")
+    if ccys & {"AUD", "NZD"}:
+        return (7, 0, 8, 30, "7:00am–8:30am", "11:00am", "Sydney open")
+    return (17, 0, 18, 30, "5:00pm–6:30pm", "9:00pm", "London open")
+
+
+def _entry_quality(pair: str, now_ak: datetime) -> tuple:
+    """Return (emoji, label) based on how close we are to the optimal entry window now.
+
+    🟢 ENTER NOW   — currently inside optimal window
+    🟡 ENTER SOON  — window opens in < 2 hours
+    🟠 WAIT        — window opens in 2-6 hours
+    🔴 WAIT UNTIL TOMORROW — more than 6 hours away
+    """
+    start_h, start_m, end_h, end_m, _, _, sess_name = _entry_window_for_pair(pair)
+    cur_mins   = now_ak.hour * 60 + now_ak.minute
+    win_s_mins = start_h * 60 + start_m
+    win_e_mins = end_h   * 60 + end_m
+
+    if win_s_mins <= win_e_mins:
+        in_window = win_s_mins <= cur_mins <= win_e_mins
+    else:
+        in_window = cur_mins >= win_s_mins or cur_mins <= win_e_mins
+
+    if in_window:
+        return "🟢", "ENTER NOW — currently in optimal session window"
+
+    mins_away = (win_s_mins - cur_mins) % (24 * 60)
+    if mins_away < 120:
+        return "🟡", f"ENTER SOON — {sess_name} opens in {mins_away} min"
+    if mins_away <= 360:
+        hrs = mins_away // 60
+        rem = mins_away % 60
+        t   = f"{hrs}h {rem}m" if rem else f"{hrs}h"
+        return "🟠", f"WAIT — {sess_name} opens in {t}"
+    return "🔴", "WAIT UNTIL TOMORROW — optimal window more than 6 hours away"
+
+
+def _time_ref_for_entry(start_h: int, start_m: int, now_ak: datetime) -> str:
+    """Return 'TODAY', 'tonight', or 'tomorrow' for a session start time."""
+    cur_mins  = now_ak.hour * 60 + now_ak.minute
+    win_mins  = start_h * 60 + start_m
+    hours_away = ((win_mins - cur_mins) % (24 * 60)) / 60
+    if hours_away <= 8:
+        return "TODAY"
+    if hours_away <= 20:
+        return "tonight"
+    return "tomorrow"
+
+
 def _log_line(handle, msg: str) -> None:
     stamp = datetime.now().strftime("%H:%M:%S")
     line  = f"[{stamp}] {msg}"
