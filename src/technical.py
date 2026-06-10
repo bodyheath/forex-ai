@@ -234,7 +234,7 @@ def _trend(close: pd.Series, sma50: float, sma200: float) -> str:
 
 def _summarise(df: pd.DataFrame, label: str) -> dict:
     if len(df) < 30:
-        return {"timeframe": label, "status": "insufficient data"}
+        return {"timeframe": label, "status": "insufficient data", "candle_count": len(df)}
     close = df["close"]
     sma20 = close.rolling(20).mean()
     std20 = close.rolling(20).std()
