@@ -156,6 +156,19 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
                 f"trend={h4.get('trend','?')}"
                 + h4_sig_str + h4_pat_str
             )
+        # Fibonacci summary from daily timeframe
+        fib = daily.get("fibonacci", {})
+        if isinstance(fib, dict) and fib.get("status") == "ok":
+            near      = fib.get("near_levels", [])
+            near_str  = ""
+            if near:
+                n        = near[0]
+                near_str = f" near={n['label']}@{n['price']}({n['distance_pips']:.0f}p,{n['type'][:3]})"
+            lines.append(
+                f"FIB SH={fib['swing_high']} SL={fib['swing_low']} "
+                f"range={fib['range_pips']}p"
+                + near_str
+            )
     else:
         lines.append("D1:UNAVAILABLE")
 
