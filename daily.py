@@ -2390,6 +2390,17 @@ def run() -> int:
             f"duration={run_duration_min:.1f}m"
         ))
 
+        # Record scan cost and prepare formatted lines for Telegram
+        _cost_lines = []
+        try:
+            from src import cost_tracker as _ct
+            _cost_lines = _ct.record_and_get_lines(
+                run_stats.get("estimated_usd", 0.0),
+                _auckland_now(),
+            )
+        except Exception as _ct_exc:
+            _log_line(logf, f"Cost tracking failed: {_ct_exc}")
+
         # Research threshold analysis (only meaningful after 30 days of paper trades)
         research_result = None
         try:
