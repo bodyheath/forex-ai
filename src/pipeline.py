@@ -17,6 +17,20 @@ def gather(base: str, quote: str, log=print,
            _shared_fundamental=None, _shared_macro=None) -> dict:
     log(f"  - technical (Twelve Data) ...")
     tech = technical.analyse(base, quote)
+    # Prominent diagnostic for technical failures so they're visible in GitHub Actions logs
+    if tech.get("status") == "UNAVAILABLE":
+        log(f"  ⚠️ TECHNICAL UNAVAILABLE for {base}/{quote}: {tech.get('error','')[:120]}")
+    else:
+        daily_tf = tech.get("daily", {})
+        if isinstance(daily_tf, dict) and daily_tf.get("status") == "insufficient data":
+            cnt = daily_tf.get("candle_count", "?")
+            log(f"  ⚠️ TECHNICAL DAILY: only {cnt} candles for {base}/{quote} "
+                f"(need 30) — indicators unavailable")
+        elif isinstance(daily_tf, dict) and daily_tf.get("rsi14") is not None:
+            ts = daily_tf.get("tech_signal", {})
+            log(f"  ✓ TECHNICAL: RSI={daily_tf['rsi14']}  "
+                f"MACDh={daily_tf.get('macd_hist','?')}  "
+                f"T_sig={ts.get('direction','?')}_{ts.get('score','?')}/10")
     mtf_result = mtf.analyse(tech)
 
     if _shared_fundamental is not None:
