@@ -117,6 +117,14 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
             return "?"
 
     if isinstance(daily, dict) and daily:
+        # Include Python-computed tech signal as an anchor so Claude never drifts below it
+        ts       = daily.get("tech_signal") or {}
+        sig_part = (f" T_sig={ts['direction']}_{ts['score']}"
+                    if ts and ts.get("direction") and ts.get("score") else "")
+        # Include Bollinger state so Claude can apply the +1 BB confirmation bonus
+        bb_raw   = daily.get("bollinger", "") or ""
+        bb_short = bb_raw.split("(")[0].strip()
+        bb_part  = (f" BB={bb_short}" if bb_short and bb_short != "inside bands" else "")
         lines.append(
             f"D1 price={_f(daily.get('last_close'))} "
             f"RSI={daily.get('rsi14','?')} "
@@ -125,13 +133,17 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
             f"SMA200={_f(daily.get('sma200'))} "
             f"trend={daily.get('trend','?')} "
             f"ATR={_f(daily.get('atr14'))}"
+            + sig_part + bb_part
         )
         h4 = tech.get("h4") or tech.get("4h") or {}
         if isinstance(h4, dict) and h4.get("rsi14"):
+            h4_ts      = h4.get("tech_signal") or {}
+            h4_sig_str = f" T={h4_ts['score']}" if h4_ts and h4_ts.get("score") else ""
             lines.append(
                 f"4H RSI={h4.get('rsi14')} "
                 f"MACDh={_f(h4.get('macd_hist'))} "
                 f"trend={h4.get('trend','?')}"
+                + h4_sig_str
             )
     else:
         lines.append("D1:UNAVAILABLE")
