@@ -900,6 +900,26 @@ def _send_telegram_summary(
     except Exception:
         pass
 
+    # Open trades and shared price cache — used in all scan modes
+    _ot_open_trades: list = []
+    try:
+        from src import tracker as _trk_ot
+        _ot_open_trades = [r for r in _trk_ot.load() if r.get("status") == "OPEN"]
+    except Exception:
+        pass
+
+    # Pre-populate price cache from today's scan results (zero extra API calls)
+    _ot_px_cache: dict = {}
+    for _r in deep_results:
+        try:
+            _td = _r["bundle"]["technical"]["daily"]
+            if isinstance(_td, dict):
+                _p = float(_td.get("last_close") or _td.get("close") or 0)
+                if _p > 0:
+                    _ot_px_cache[_r["pair"]] = _p
+        except (KeyError, TypeError, ValueError):
+            pass
+
     # ── Badges ────────────────────────────────────────────────────────────────
     _badge_map = {
         "full":      "🌅 6AM FULL SCAN",
