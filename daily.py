@@ -1419,6 +1419,14 @@ def _send_telegram_summary(
             "━━━━━━━━━━━━━━━━━━━━━",
             f"📈 Confidence: {conf}/10  {_conf_bar(conf)}",
         ]
+        # ML win-probability
+        try:
+            from src import ml_predictor as _mlp_tb
+            _wp_tb = _mlp_tb.get_win_prob(pair, pp, r.get("bundle", {}))
+            if _wp_tb:
+                block.append(f"🤖 <b>Predicted win probability: {_wp_tb}</b>")
+        except Exception:
+            pass
         # RSI divergence (Python-computed — reliable, not dependent on Claude)
         _daily_tech = r.get("bundle", {}).get("technical", {}).get("daily", {})
         _div        = _daily_tech.get("divergence", {}) if isinstance(_daily_tech, dict) else {}
