@@ -2354,7 +2354,14 @@ def run() -> int:
                                 _rp["stop_loss"] = _rp.get("stop_loss") or _ind_s
                                 _rp["target"]    = _rp.get("target")    or _ind_t
                                 _rsrc = "indicative"
-                        _rt.log_research_trade(_r["pair"], _rp, _rsrc, scan_mode)
+                        _rt_id = _rt.log_research_trade(_r["pair"], _rp, _rsrc, scan_mode)
+                        # Capture ML feature snapshot keyed to this research trade
+                        try:
+                            from src import feature_extractor as _fe, feature_store as _fs
+                            _feat = _fe.extract(_r["pair"], _r["parsed"], _r.get("bundle", {}))
+                            _fs.save("research", _rt_id, _feat)
+                        except Exception:
+                            pass
                         _rt_today.add((_r["pair"], _rdir))
                         _rt_logged += 1
             if _rt_logged:
