@@ -1843,8 +1843,8 @@ def _send_telegram_summary(
             "",
             "━━━━━━━━━━━━━━━━━━━━━",
             "🕐 <b>TODAY'S SESSIONS (Auckland time)</b>",
-            "Tokyo: 9am–6pm | London: 5pm–2am | New York: 10pm–7am",
-            "Best overlap: 10pm–2am Auckland (London/NY peak volume)",
+            "Sydney: 9am–6pm | Tokyo: 12pm–9pm | London: 7pm–4am | New York: 1am–10am",
+            "Best overlap: 1am–4am Auckland (London/NY peak volume)",
         ])
 
     # ═══════════════════════════════════════════════════════════════════════════
