@@ -1264,6 +1264,34 @@ def _send_telegram_summary(
                 f"{'bearish' if direction == 'BUY' else 'bullish'} divergence detected"
                 f" ({_dc['price_diff_pips']:.0f}p / {_dc['rsi_diff']:.0f}pt RSI) — see risk factors"
             )
+        # Oscillator confluence (RSI + Stochastic + CCI)
+        _osc        = _daily_tech.get("oscillator_confluence", {}) if isinstance(_daily_tech, dict) else {}
+        _osc_dir    = _osc.get("direction", "NONE")
+        _osc_score  = _osc.get("score", 0)
+        _osc_triple = _osc.get("triple", False)
+        if _osc_dir == direction and _osc_score >= 2:
+            _osc_state = "OVERSOLD" if direction == "BUY" else "OVERBOUGHT"
+            _osc_boost = "+2 confidence" if _osc_triple else "+1 confidence"
+            _osc_label = "TRIPLE" if _osc_triple else f"PARTIAL ({_osc_score}/3)"
+            _osc_sigs  = " | ".join(filter(None, [
+                f"RSI {_osc.get('stoch_k','?'):.0f}" if isinstance(_osc.get('stoch_k'), float) else None,
+                f"Stoch %K {_osc.get('stoch_k','?')}" if _osc.get('stoch_k') is not None else None,
+                f"CCI {_osc.get('cci','?')}" if _osc.get('cci') is not None else None,
+            ]))
+            _rsi_v  = _daily_tech.get("rsi14", "?")
+            _stk_v  = _osc.get("stoch_k", "?")
+            _cci_v  = _osc.get("cci", "?")
+            block.append(
+                f"📊 <b>Oscillator Confluence: {_osc_label} {_osc_state}</b> ({_osc_boost})"
+            )
+            block.append(
+                f"   RSI {_rsi_v} | Stoch %K {_stk_v} | CCI {_cci_v}"
+            )
+        elif _osc_dir not in ("NONE", direction) and _osc_score >= 2:
+            block.append(
+                f"⚠️ Oscillator conflict: {_osc_dir.lower()} signals"
+                f" (Stoch %K {_osc.get('stoch_k','?')} | CCI {_osc.get('cci','?')}) — see risk factors"
+            )
         _mtf = r.get("bundle", {}).get("mtf", {})
         if _mtf and _mtf.get("agreeing_count", 0) > 0:
             block.append(
