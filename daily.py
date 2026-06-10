@@ -405,6 +405,71 @@ def _score_breakdown_line(parsed: dict) -> str:
     )
 
 
+def _mtf_plain_english(mtf_data: dict) -> str:
+    """Convert MTF data to a plain English summary for phone-readable display."""
+    if not isinstance(mtf_data, dict):
+        return ""
+    direction = mtf_data.get("direction", "NEUTRAL")
+    count     = mtf_data.get("agreeing_count", 0)
+    breakdown = mtf_data.get("breakdown", "")
+    if not breakdown or breakdown == "UNAVAILABLE" or direction == "NEUTRAL" or count == 0:
+        return ""
+
+    _TF_NAMES = {"M": "monthly", "W": "weekly", "D": "daily", "4H": "4H", "1H": "1H"}
+
+    def _natural(items):
+        if not items:
+            return ""
+        if len(items) == 1:
+            return items[0]
+        return ", ".join(items[:-1]) + f" and {items[-1]}"
+
+    agreeing    = []
+    disagreeing = []
+    for part in breakdown.split():
+        if ":" in part:
+            tf, sig = part.split(":", 1)
+            name = _TF_NAMES.get(tf, tf)
+            if sig == direction:
+                agreeing.append(name)
+            elif sig not in ("NEUTRAL", ""):
+                disagreeing.append(name)
+
+    agree_dir    = "bullish" if direction == "BUY" else "bearish"
+    disagree_dir = "bearish" if direction == "BUY" else "bullish"
+    agree_str    = _natural(agreeing) if agreeing else "—"
+
+    if disagreeing:
+        return (
+            f"Timeframes: {count} of 5 agree {direction} — "
+            f"{agree_str} {agree_dir}, {_natural(disagreeing)} {disagree_dir}"
+        )
+    return f"Timeframes: {count} of 5 agree {direction} — {agree_str} all {agree_dir}"
+
+
+def _weakest_layer_hint(parsed: dict) -> str:
+    """Return one line identifying the weakest analysis layer and what would fix it."""
+    _HINTS = {
+        "Technical":   "needs stronger RSI, MACD or trend alignment",
+        "Fundamental": "needs clearer rate differential or central bank divergence",
+        "Sentiment":   "needs positive news tone shift for this currency",
+        "Positioning": "needs more extreme COT positioning data",
+        "Macro":       "needs risk-on environment or positive economic data",
+    }
+    score_keys = [
+        ("Technical",   "technical_score"),
+        ("Fundamental", "fundamental_score"),
+        ("Sentiment",   "sentiment_score"),
+        ("Positioning", "positioning_score"),
+        ("Macro",       "macro_score"),
+    ]
+    valid = [(name, parsed.get(key)) for name, key in score_keys if parsed.get(key) is not None]
+    if not valid:
+        return ""
+    name, score = min(valid, key=lambda x: x[1])
+    return f"Weakest: {name} {score}/10 — {_HINTS[name]}"
+
+
 def _what_needs_to_change(parsed: dict) -> str:
     scores = {
         "Technical":   parsed.get("technical_score"),
