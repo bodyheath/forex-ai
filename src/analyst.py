@@ -185,6 +185,20 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
                 f"({div_ber['price_diff_pips']:.0f}p/{div_ber['rsi_diff']:.0f}pt)"
             )
         lines.append(f"DIV={','.join(div_parts) or 'none'}")
+        # Oscillator confluence (RSI + Stochastic + CCI)
+        osc = daily.get("oscillator_confluence", {})
+        if isinstance(osc, dict) and osc.get("direction") != "NONE" and osc.get("score", 0) >= 2:
+            lines.append(
+                f"OSC stoch_k={osc.get('stoch_k','?')} cci={osc.get('cci','?')}"
+                f" conf={osc.get('conf_label','?')}"
+            )
+        else:
+            stk = daily.get("stochastic_k")
+            cci_v = daily.get("cci")
+            if stk is not None or cci_v is not None:
+                lines.append(
+                    f"OSC stoch_k={stk or '?'} cci={cci_v or '?'} conf=NONE"
+                )
     else:
         lines.append("D1:UNAVAILABLE")
 
