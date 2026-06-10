@@ -1526,24 +1526,25 @@ def _send_telegram_summary(
         if _ot_intra:
             all_sections.append(_ot_intra)
 
-        # ── Top 3 watch pairs with T/F/S/P/M scores ──────────────────────────
-        _watch_top3 = sorted(
+        # ── Watch list (5–6) and approaching signals (3–4) with levels + session ─
+        _all_candidates = sorted(
             [r for r in deep_results if r["pair"] not in _yes_pairs and _conf(r) >= 3],
             key=_conf, reverse=True,
-        )[:3]
-        if _watch_top3:
+        )
+        _watch_items      = [r for r in _all_candidates if _conf(r) >= 5][:3]
+        _approaching_items= [r for r in _all_candidates if _conf(r) <= 4][:2]
+
+        if _watch_items:
             wl_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "👀 <b>WATCH LIST</b>"]
-            for rr in _watch_top3:
-                pp    = rr["parsed"]
-                conf  = pp.get("confidence") or "?"
-                dirn  = (pp.get("direction") or "—").upper()
-                arrow = "📈" if dirn == "BUY" else "📉"
-                wl_sec.append(
-                    f"{arrow} <b>{rr['pair']}</b> {dirn}  {conf}/10 {_conf_bar(conf)}"
-                )
-                wl_sec.append(f"<code>{_score_breakdown_line(pp)}</code>")
-                wl_sec.append(f"👀 {_best_session_for_pair(rr['pair'])}")
+            for rr in _watch_items:
+                wl_sec.extend(_watch_entry(rr))
             all_sections.append(wl_sec)
+
+        if _approaching_items:
+            ap_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "📡 <b>APPROACHING SIGNAL</b>"]
+            for rr in _approaching_items:
+                ap_sec.extend(_approaching_entry(rr))
+            all_sections.append(ap_sec)
 
     # ── FOOTER (all modes) ─────────────────────────────────────────────────────
     all_sections.append([
