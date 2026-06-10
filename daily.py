@@ -1179,14 +1179,18 @@ def _send_telegram_summary(
         _fp  = f"{pair}:{direction}"
         _pfx = "🆕 NEW: " if (new_alerts and _fp in new_alerts) else ""
 
-        bet = (p.get("best_entry_time") or "").strip()
-        bet_clean = bet.replace("NZT", "Auckland time").replace("nzt", "Auckland time")
-        sess_name, enter_window, end_time = _parse_entry_window(
-            bet_clean or _session_label(pair)
-        )
-
         rf  = (p.get("risk_factors") or "").strip()
         rf_parts = [x.strip() for x in rf.replace(";", "\n").split("\n") if x.strip()][:2]
+
+        # Precise entry window from currency group
+        _ew_tb  = _entry_window_for_pair(pair)
+        _ew_sh, _ew_sm = _ew_tb[0], _ew_tb[1]
+        _ew_win = _ew_tb[4]   # "5:00pm–6:30pm"
+        _ew_cut = _ew_tb[5]   # "9:00pm"
+        _ew_ses = _ew_tb[6]   # "London open"
+        _eq_em, _eq_lb = _entry_quality(pair, now_ak)
+        _tref_tb = _time_ref_for_entry(_ew_sh, _ew_sm, now_ak)
+        _ideal_verb = "pull back to" if direction == "BUY" else "push up to"
 
         block = [
             "",
@@ -1204,12 +1208,12 @@ def _send_telegram_summary(
             block.append(f"📏 Position Size: {sz['lots']} lots")
         block += [
             "━━━━━━━━━━━━━━━━━━━━━",
-            "⏰ <b>EXACT ENTRY INSTRUCTIONS:</b>",
-            f"- Best session: {sess_name} — highest {pair} volume",
-            f"- Enter between: {enter_window} Auckland time TODAY",
-            f"- Do NOT enter after: {end_time} Auckland time",
-            "- Do NOT enter if price moves more than 30 pips from entry before your session",
-            f"- Wait for price to reach {_fmt_price(entry_raw)} — do not chase if already moved",
+            f"⏰ <b>EXACT ENTRY INSTRUCTIONS:</b>",
+            f"{_eq_em} {_eq_lb}",
+            f"⏰ ENTER TRADE: Between {_ew_win} Auckland {_tref_tb}",
+            f"⛔ DO NOT ENTER after {_ew_cut} Auckland",
+            f"⚡ IDEAL ENTRY: Wait for price to {_ideal_verb} {_fmt_price(entry_raw)} then enter",
+            f"- Do NOT enter if price moves more than 30 pips from entry before {_ew_ses}",
             "- If price gaps past entry on open — skip this trade entirely",
             "━━━━━━━━━━━━━━━━━━━━━",
             f"📈 Confidence: {conf}/10  {_conf_bar(conf)}",
