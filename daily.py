@@ -2099,6 +2099,14 @@ def run() -> int:
     date     = now_ak.strftime("%Y-%m-%d")
     log_path = config.REPORTS_DIR / f"daily_{date}.log"
 
+    # Startup ping for 6am scan so we know Telegram delivery is working before analysis begins
+    if scan_mode == "full":
+        _time_str = now_ak.strftime("%I:%M%p").lstrip("0").lower()
+        _telegram(
+            f"⏱️ <b>6am full scan starting</b> — {_time_str} Auckland\n"
+            f"Analysing up to 15 pairs. Summary to follow in ~20 min."
+        )
+
     # Reset per-run state
     try:
         from src import analyst as _anl, technical as _tech
