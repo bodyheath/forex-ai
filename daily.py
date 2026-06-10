@@ -79,7 +79,7 @@ def _session_label(pair: str) -> str:
         if ccy in (base, quote):
             name, window = _SESSION_AUCKLAND[ccy]
             return f"{name} session {window} Auckland time"
-    return "London session 5pm – 9pm Auckland time"
+    return "London session 7pm – 11pm Auckland time"
 
 
 def _best_session_for_pair(pair: str) -> str:
