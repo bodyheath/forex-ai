@@ -1522,6 +1522,9 @@ def _send_telegram_summary(
             _mtf_txt = _mtf_plain_english(_mtf_wl)
             if _mtf_txt:
                 lines.append(_mtf_txt)
+        _rib_wl = _ribbon_display(rr.get("bundle", {}))
+        if _rib_wl:
+            lines.append(_rib_wl)
         # Indicative entry/stop/target — always shown so investor knows the trade shape
         ind_e, ind_s, ind_t = _calc_indicative_levels(rr["pair"], pp, rr.get("bundle", {}))
         if ind_e and ind_s and ind_t:
