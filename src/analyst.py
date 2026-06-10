@@ -279,10 +279,16 @@ def _haiku_system_prompt() -> str:
         "Price within 10p of a Fib level = stronger confluence → raise CONFIDENCE by 1 if it confirms direction. "
         "Fib level + RSI + pattern = triple-confirmed entry. "
         "nearest_above = resistance targets, nearest_below = support/bounce zones.\n"
+        "DIV: DIV= line shows Python-detected RSI divergence. "
+        "If DIV confirms your direction (bullish DIV + BUY, or bearish DIV + SELL): "
+        "output DIVERGENCE: CONFIRMED and raise CONFIDENCE by 1 (max 10). "
+        "If DIV conflicts (bullish DIV + SELL, or bearish DIV + BUY): output DIVERGENCE: CONFLICT — consider reducing CONFIDENCE. "
+        "If DIV=none: output DIVERGENCE: NONE.\n"
         "Output PAIR: through TRADE_THIS: only. No preamble.\n"
         "PAIR: [p]\nDIRECTION: [BUY|SELL]\nCONFIDENCE: [n/10]\n"
         "TECHNICAL_SCORE: [n/10]\nFUNDAMENTAL_SCORE: [n/10]\nSENTIMENT_SCORE: [n/10]\n"
         "POSITIONING_SCORE: [n/10]\nMACRO_SCORE: [n/10]\n"
+        "DIVERGENCE: [CONFIRMED|NONE|CONFLICT]\n"
         "KEY_THESIS: [1 sentence]\nRISK_FACTORS: [2 risks]\nTRADE_THIS: [YES|NO]"
     )
 
