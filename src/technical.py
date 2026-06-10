@@ -847,6 +847,7 @@ def _summarise(df: pd.DataFrame, label: str) -> dict:
         extra_levels=fib_vals,
     )
     divergence    = _detect_divergence(df, rsi)
+    ribbon        = _ema_ribbon(close)
 
     return {
         "timeframe": label,
@@ -870,9 +871,11 @@ def _summarise(df: pd.DataFrame, label: str) -> dict:
         "fibonacci": fib,
         "patterns": patterns,
         "divergence": divergence,
+        "ribbon": ribbon,
         "tech_signal": _tech_signal(
             rsi14_val, macd_hist_val, bb_state, trend_str,
             float(last), sma20_val, float(sma50), patterns=patterns,
+            ribbon=ribbon,
         ),
     }
 
