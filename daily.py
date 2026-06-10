@@ -225,7 +225,7 @@ def _time_ref_for_entry(start_h: int, start_m: int, now_ak: datetime) -> str:
 
 
 def _log_line(handle, msg: str) -> None:
-    stamp = datetime.now().strftime("%H:%M:%S")
+    stamp = _auckland_now().strftime("%H:%M:%S")
     line  = f"[{stamp}] {msg}"
     print(line)
     handle.write(line + "\n")
