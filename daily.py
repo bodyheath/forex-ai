@@ -1421,6 +1421,7 @@ def _send_telegram_summary(
             is_jpy = "JPY" in rr["pair"].upper()
             dec = 3 if is_jpy else 5
             try:
+                lines.append("🟠 <b>POTENTIAL SETUP IF CONDITIONS IMPROVE:</b>")
                 lines.append(
                     f"Indicative entry ~{ind_e:.{dec}f} | "
                     f"Stop ~{ind_s:.{dec}f} | Target ~{ind_t:.{dec}f}"
