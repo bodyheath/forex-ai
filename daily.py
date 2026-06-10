@@ -1280,12 +1280,22 @@ def _send_telegram_summary(
                 lines.append(f"Risk to make: ${risk_usd} to make ${profit_usd} ({rr_ratio:.1f}:1)")
             except (TypeError, ValueError, ZeroDivisionError):
                 pass
-        lines.append(f"👀 Best time to watch: {_session_time_label(rr['pair'], now_ak)}")
-        lines.append(f"Needs: {ntc}")
+        # Entry preparation instructions
+        _ew_we = _entry_window_for_pair(rr["pair"])
+        _eq_we_e, _eq_we_l = _entry_quality(rr["pair"], now_ak)
+        _tref_we = _time_ref_for_entry(_ew_we[0], _ew_we[1], now_ak)
+        _start_we = _fmt_time_exact(_ew_we[0], _ew_we[1])
+        lines += [
+            f"{_eq_we_e} <b>BE READY TO ENTER:</b> {_ew_we[6]} {_start_we} Auckland {_tref_we}",
+            f"If confidence reaches 7+ before {_start_we} — enter immediately at market",
+            f"If confidence reaches 7+ during {_ew_we[6]} — enter within 30 minutes",
+            f"If confidence has not reached 7+ by {_ew_we[5]} {_tref_we} — skip this pair today",
+            f"Needs: {ntc}",
+        ]
         return lines
 
     def _approaching_entry(rr: dict) -> list:
-        """Build approaching signal entry (conf 3–4) with indicative levels and session time."""
+        """Build approaching signal entry (conf 3–4) with indicative levels and entry alert time."""
         pp   = rr["parsed"]
         conf = pp.get("confidence") or "?"
         dirn = (pp.get("direction") or "—").upper()
@@ -1304,7 +1314,14 @@ def _send_telegram_summary(
                 )
             except (TypeError, ValueError):
                 pass
-        lines.append(f"👀 Monitor: {_session_time_label(rr['pair'], now_ak)}")
+        _ew_ae = _entry_window_for_pair(rr["pair"])
+        _eq_ae_e, _ = _entry_quality(rr["pair"], now_ak)
+        _tref_ae = _time_ref_for_entry(_ew_ae[0], _ew_ae[1], now_ak)
+        _start_ae = _fmt_time_exact(_ew_ae[0], _ew_ae[1])
+        lines += [
+            f"{_eq_ae_e} <b>SET ALERT FOR:</b> {_start_ae} Auckland {_tref_ae} — check if this pair improved",
+            "If confidence reaches 6+ at any scan today — add to watch list",
+        ]
         return lines
 
     # ═══════════════════════════════════════════════════════════════════════════
