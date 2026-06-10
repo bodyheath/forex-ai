@@ -702,7 +702,8 @@ def _pattern_bonus(patterns: list, ts_direction: str) -> int:
 
 def _tech_signal(rsi14: float, macd_hist: float, bb_state: str, trend: str,
                  close: float = 0.0, sma20: float = 0.0, sma50: float = 0.0,
-                 patterns: "list | None" = None) -> dict:
+                 patterns: "list | None" = None,
+                 ribbon: "dict | None" = None) -> dict:
     """Compute a Python-anchored technical signal score (1–10) and direction.
 
     RSI tiers set direction and base score.  MACD, Bollinger, SMA20/50 alignment,
