@@ -2529,27 +2529,35 @@ def run() -> int:
 
         # 10. Send Telegram summary
         if _should_notify:
-            _send_telegram_summary(
-                date=date,
-                universe_size=universe_size,
-                total_scanned=len(analysed_pairs),
-                deep_results=deep_results,
-                closed_today=closed_today,
-                new_patterns=new_patterns,
-                stats=learning_stats,
-                risk_data=risk_data,
-                stage1_filtered=stage1_filtered,
-                failed_pairs=failed_pairs,
-                credit_data=credit_data,
-                run_stats=run_stats,
-                td_calls=td_calls,
-                run_duration_min=run_duration_min,
-                scan_mode=scan_mode,
-                new_alerts=_new_alerts,
-                research_result=research_result,
-                threshold_revert_msg=threshold_revert_msg,
-                cost_lines=_cost_lines,
-            )
+            try:
+                _send_telegram_summary(
+                    date=date,
+                    universe_size=universe_size,
+                    total_scanned=len(analysed_pairs),
+                    deep_results=deep_results,
+                    closed_today=closed_today,
+                    new_patterns=new_patterns,
+                    stats=learning_stats,
+                    risk_data=risk_data,
+                    stage1_filtered=stage1_filtered,
+                    failed_pairs=failed_pairs,
+                    credit_data=credit_data,
+                    run_stats=run_stats,
+                    td_calls=td_calls,
+                    run_duration_min=run_duration_min,
+                    scan_mode=scan_mode,
+                    new_alerts=_new_alerts,
+                    research_result=research_result,
+                    threshold_revert_msg=threshold_revert_msg,
+                    cost_lines=_cost_lines,
+                )
+            except Exception as _tg_exc:
+                print(f"[telegram] _send_telegram_summary CRASHED: {_tg_exc}", file=sys.stderr)
+                traceback.print_exc(file=sys.stderr)
+                _telegram(
+                    f"⚠️ <b>{scan_mode.upper()} scan complete but summary build failed</b>\n"
+                    f"{type(_tg_exc).__name__}: {str(_tg_exc)[:200]}"
+                )
 
     return 0
 
