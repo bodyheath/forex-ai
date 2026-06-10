@@ -753,8 +753,11 @@ def read_cached_indicators(pair: str) -> dict | None:
         trend_str     = _trend(close, sma50, sma200)
         sma20_val     = float(sma20.iloc[-1])
         pivots        = _pivots(df.iloc[-2])
+        fib           = _fibonacci(df, float(last))
+        fib_vals      = list(fib["levels"].values()) if fib.get("status") == "ok" else []
         patterns      = _detect_candle_patterns(
-            df, float(bb_lower), float(bb_upper), float(sma50), pivots
+            df, float(bb_lower), float(bb_upper), float(sma50), pivots,
+            extra_levels=fib_vals,
         )
         return {
             "pair":       pair,
@@ -765,6 +768,7 @@ def read_cached_indicators(pair: str) -> dict | None:
             "bb_state":   bb_state,
             "sma20":      round(sma20_val, 5),
             "sma50":      round(float(sma50), 5),
+            "fibonacci":  fib,
             "patterns":   patterns,
             "tech_signal": _tech_signal(
                 rsi14_val, macd_hist_val, bb_state, trend_str,
