@@ -1155,7 +1155,7 @@ def _send_telegram_summary(
         return [ln for ln in block if ln]
 
     def _watch_entry(rr: dict) -> list:
-        """Build watch list entry lines including session recommendation."""
+        """Build watch list entry (conf 5–6) with indicative levels and session time."""
         pp    = rr["parsed"]
         conf  = pp.get("confidence") or "?"
         dirn  = (pp.get("direction") or "—").upper()
@@ -1172,8 +1172,49 @@ def _send_telegram_summary(
                 f"MTF: {_mtf_wl['agreeing_count']}/5  "
                 f"<code>{_mtf_wl.get('breakdown', '')}</code>"
             )
+        # Indicative entry/stop/target — always shown so investor knows the trade shape
+        ind_e, ind_s, ind_t = _calc_indicative_levels(rr["pair"], pp, rr.get("bundle", {}))
+        if ind_e and ind_s and ind_t:
+            is_jpy = "JPY" in rr["pair"].upper()
+            dec = 3 if is_jpy else 5
+            try:
+                rr_ratio   = abs(float(ind_t) - float(ind_e)) / abs(float(ind_e) - float(ind_s))
+                risk_pips  = abs(float(ind_e) - float(ind_s)) / _pip_size(rr["pair"])
+                profit_pips= abs(float(ind_t) - float(ind_e)) / _pip_size(rr["pair"])
+                risk_usd   = max(1, round(risk_pips))
+                profit_usd = max(1, round(profit_pips))
+                lines.append(
+                    f"If triggers: Entry ~{ind_e:.{dec}f} | "
+                    f"Stop ~{ind_s:.{dec}f} | Target ~{ind_t:.{dec}f}"
+                )
+                lines.append(f"Risk to make: ${risk_usd} to make ${profit_usd} ({rr_ratio:.1f}:1)")
+            except (TypeError, ValueError, ZeroDivisionError):
+                pass
+        lines.append(f"👀 Best time to watch: {_session_time_label(rr['pair'], now_ak)}")
         lines.append(f"Needs: {ntc}")
-        lines.append(f"👀 Watch during: {_best_session_for_pair(rr['pair'])}")
+        return lines
+
+    def _approaching_entry(rr: dict) -> list:
+        """Build approaching signal entry (conf 3–4) with indicative levels and session time."""
+        pp   = rr["parsed"]
+        conf = pp.get("confidence") or "?"
+        dirn = (pp.get("direction") or "—").upper()
+        lines = [
+            "",
+            f"<b>{rr['pair']}</b> {conf}/10 {dirn} — if conditions improve:",
+        ]
+        ind_e, ind_s, ind_t = _calc_indicative_levels(rr["pair"], pp, rr.get("bundle", {}))
+        if ind_e and ind_s and ind_t:
+            is_jpy = "JPY" in rr["pair"].upper()
+            dec = 3 if is_jpy else 5
+            try:
+                lines.append(
+                    f"Indicative entry ~{ind_e:.{dec}f} | "
+                    f"Stop ~{ind_s:.{dec}f} | Target ~{ind_t:.{dec}f}"
+                )
+            except (TypeError, ValueError):
+                pass
+        lines.append(f"👀 Monitor: {_session_time_label(rr['pair'], now_ak)}")
         return lines
 
     # ═══════════════════════════════════════════════════════════════════════════
