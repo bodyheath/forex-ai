@@ -917,6 +917,12 @@ def read_cached_indicators(pair: str) -> dict | None:
         macd_hist_val = round(hist.iloc[-1], 6)
         trend_str     = _trend(close, sma50, sma200)
         sma20_val     = float(sma20.iloc[-1])
+        stk, std_s    = _stochastic(df)
+        cci_s         = _cci(df)
+        stoch_k_val   = float(stk.iloc[-1])
+        stoch_d_val   = float(std_s.iloc[-1])
+        cci_val       = float(cci_s.iloc[-1])
+        osc_conf      = _oscillator_confluence(rsi14_val, stoch_k_val, stoch_d_val, cci_val)
         pivots        = _pivots(df.iloc[-2])
         fib           = _fibonacci(df, float(last))
         fib_vals      = list(fib["levels"].values()) if fib.get("status") == "ok" else []
@@ -934,6 +940,10 @@ def read_cached_indicators(pair: str) -> dict | None:
             "bb_state":   bb_state,
             "sma20":      round(sma20_val, 5),
             "sma50":      round(float(sma50), 5),
+            "stochastic_k": round(stoch_k_val, 1) if stoch_k_val == stoch_k_val else None,
+            "stochastic_d": round(stoch_d_val, 1) if stoch_d_val == stoch_d_val else None,
+            "cci":          round(cci_val, 1) if cci_val == cci_val else None,
+            "oscillator_confluence": osc_conf,
             "fibonacci":  fib,
             "patterns":   patterns,
             "divergence": divergence,
