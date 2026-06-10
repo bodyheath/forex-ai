@@ -2265,6 +2265,13 @@ def run() -> int:
                 verdict = f"{pp['trade_this']} | conf {pp['confidence']} | {pp['direction']}"
                 _log_line(logf, f"#{result['id']} {result['pair']}: {skipped}{verdict}")
                 deep_results.append(result)
+                # Capture ML feature snapshot for future win-probability training
+                try:
+                    from src import feature_extractor as _fe, feature_store as _fs
+                    _feat = _fe.extract(result["pair"], pp, result.get("bundle", {}))
+                    _fs.save("main", result["id"], _feat)
+                except Exception:
+                    pass
 
         # Haiku analyses all pairs; Sonnet only called for conf >= sonnet_thresh
         _log_line(logf, f"Analysing {len(pairs_today)} pairs (Haiku all, Sonnet if conf>={sonnet_thresh}): {', '.join(pairs_today)}")
