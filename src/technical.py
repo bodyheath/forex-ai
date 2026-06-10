@@ -357,7 +357,11 @@ def warm_cache(pairs: list, log=print) -> None:
             _td_request(pair, interval, outputsize)
             log(f"  Cached {pair} {interval}")
         except Exception as exc:  # noqa: BLE001
-            log(f"  Failed  {pair} {interval}: {exc}")
+            err_str = str(exc)
+            log(f"  Failed  {pair} {interval}: {err_str[:120]}")
+            if any(kw in err_str.lower() for kw in
+                   ("not found", "invalid symbol", "no data", "no candles")):
+                log(f"  ↳ Symbol format? Tried '{pair}' — verify on twelvedata.com/symbols")
             errors += 1
         api_n += 1
 
