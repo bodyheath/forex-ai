@@ -1740,19 +1740,11 @@ def _send_telegram_summary(
             health_issues.append(
                 "Account balance not configured — set ACCOUNT_BALANCE in GitHub secrets"
             )
-        est_usd   = run_stats.get("estimated_usd", 0.0)
-        cache_h   = run_stats.get("cache_hits", 0)
-        cost_line = f"Todays run cost approximately ${est_usd:.2f} USD"
-        if cache_h:
-            cost_line += (
-                f" ({cache_h} pair{'s' if cache_h > 1 else ''} skipped — price unchanged)"
-            )
         health_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "⚠️ <b>SYSTEM HEALTH</b>"]
         if threshold_revert_msg:
             health_sec.append(threshold_revert_msg)
         for issue in health_issues:
             health_sec.append(f"- {issue}")
-        health_sec.append(f"- {cost_line}")
         all_sections.append(health_sec)
 
         # RESEARCH THRESHOLD ANALYSIS
