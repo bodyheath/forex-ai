@@ -1119,6 +1119,11 @@ def _send_telegram_summary(
                 no_sec.append("No qualifying setups — staying in cash is a valid position.")
             all_sections.append(no_sec)
 
+        # OPEN TRADES — always shown, fetches live price for any pair not in scan
+        _ot_full = _build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak)
+        if _ot_full:
+            all_sections.append(_ot_full)
+
         # WATCH LIST with session info
         watch_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "👀 <b>WATCH LIST</b>"]
         if watch_list:
