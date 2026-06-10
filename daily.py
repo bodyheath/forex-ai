@@ -470,6 +470,38 @@ def _weakest_layer_hint(parsed: dict) -> str:
     return f"Weakest: {name} {score}/10 — {_HINTS[name]}"
 
 
+def _ribbon_display(bundle: dict) -> str:
+    """Return a one-line MA ribbon status string for Telegram display, or empty string."""
+    rib = (bundle or {}).get("technical", {})
+    if isinstance(rib, dict):
+        rib = rib.get("daily", {})
+    if not isinstance(rib, dict):
+        return ""
+    ribbon = rib.get("ribbon", {})
+    if not isinstance(ribbon, dict):
+        return ""
+    status = ribbon.get("status", "")
+    if not status or status in ("UNAVAILABLE", "NEUTRAL", ""):
+        return ""
+    _LABELS = {
+        "ALIGNED_BULL":  "Aligned bull",
+        "ALIGNED_BEAR":  "Aligned bear",
+        "CONVERGING":    "Converging",
+        "LEANING_BULL":  "Leaning bull",
+        "LEANING_BEAR":  "Leaning bear",
+    }
+    label = _LABELS.get(status, status.replace("_", " ").title())
+    detail = ""
+    if ribbon.get("fanning"):
+        detail = " — fanning out (trend accelerating)"
+    elif ribbon.get("converging"):
+        detail = " — spread tightening (trend weakening)"
+    elif status == "CONVERGING":
+        detail = " — potential trend change"
+    cnt = ribbon.get("aligned_count", 0)
+    return f"📊 MA Ribbon: {label} ({cnt}/5 aligned){detail}"
+
+
 def _what_needs_to_change(parsed: dict) -> str:
     scores = {
         "Technical":   parsed.get("technical_score"),
