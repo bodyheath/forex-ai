@@ -1203,6 +1203,7 @@ def _send_telegram_summary(
     new_alerts: set = None,
     research_result: dict = None,
     threshold_revert_msg: str = None,
+    cost_lines: list = None,
 ) -> None:
     """Build and send Telegram notifications with format tailored to each scan mode."""
     closed_today    = closed_today    or []
@@ -1211,6 +1212,7 @@ def _send_telegram_summary(
     failed_pairs    = failed_pairs    or []
     run_stats       = run_stats       or {}
     credit_data     = credit_data     or {}
+    cost_lines      = cost_lines      or []
 
     yes_trades  = [r for r in deep_results if r["parsed"].get("trade_this") == "YES"]
     watch_list  = sorted(
