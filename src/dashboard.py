@@ -35,7 +35,7 @@ def _session_time(pair: str) -> tuple:
     for ccy in _SESSION_PRIORITY:
         if ccy in (base, quote):
             return _SESSION_NZT[ccy]
-    return "London", "5pm – 9pm NZT"
+    return "London", "7pm – 11pm NZT"
 
 
 _CSS = """
