@@ -1292,19 +1292,11 @@ def _send_telegram_summary(
             watch_sec.append("No pairs in the 5–6 confidence range today.")
         all_sections.append(watch_sec)
 
-        # APPROACHING SIGNALS with session line
+        # APPROACHING SIGNALS with indicative levels and session time
         if upcoming:
             up_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "📡 <b>APPROACHING SIGNAL</b>"]
             for rr in upcoming:
-                pp   = rr["parsed"]
-                conf = pp.get("confidence") or "?"
-                dirn = (pp.get("direction") or "—").upper()
-                kt   = (pp.get("key_thesis") or "").strip()
-                kt50 = (kt[:80] + "…") if len(kt) > 80 else kt
-                ntc  = _what_needs_to_change(pp)
-                up_sec.append(f"<b>{rr['pair']}</b> — {conf}/10 {dirn}: {kt50}")
-                up_sec.append(f"  Trigger: {ntc}")
-                up_sec.append(f"  {_best_session_for_pair(rr['pair'])}")
+                up_sec.extend(_approaching_entry(rr))
             all_sections.append(up_sec)
 
         # LEARNING UPDATE
