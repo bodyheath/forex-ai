@@ -2108,13 +2108,26 @@ def run() -> int:
     date     = now_ak.strftime("%Y-%m-%d")
     log_path = config.REPORTS_DIR / f"daily_{date}.log"
 
-    # Startup ping for 6am scan so we know Telegram delivery is working before analysis begins
+    # Startup ping — only for the 6am full scan so Telegram delivery is confirmed before analysis.
+    # Guard: if scan_mode resolved to 'full' but the clock is clearly outside the morning window
+    # (e.g. 11pm), something triggered this run at the wrong time — skip the ping and warn instead.
+    _FULL_SCAN_EXPECTED_HOURS = (5, 8)  # 5am–8am Auckland
     if scan_mode == "full":
-        _time_str = now_ak.strftime("%I:%M%p").lstrip("0").lower()
-        _telegram(
-            f"⏱️ <b>6am full scan starting</b> — {_time_str} Auckland\n"
-            f"Analysing up to 15 pairs. Summary to follow in ~20 min."
-        )
+        _exp_lo, _exp_hi = _FULL_SCAN_EXPECTED_HOURS
+        if _exp_lo <= now_ak.hour <= _exp_hi:
+            _time_str = now_ak.strftime("%I:%M%p").lstrip("0").lower()
+            _telegram(
+                f"⏱️ <b>6am full scan starting</b> — {_time_str} Auckland\n"
+                f"Analysing up to 15 pairs. Summary to follow in ~20 min."
+            )
+        else:
+            print(
+                f"[startup-ping] WARNING — scan_mode='full' but Auckland hour={now_ak.hour} "
+                f"is outside expected window {_exp_lo}h–{_exp_hi}h. "
+                f"Skipping startup ping to avoid a confusing '6am full scan' message at {now_ak.hour}h. "
+                f"Check cron-job.org trigger time and SCAN_MODE env var.",
+                file=sys.stderr,
+            )
 
     # Reset per-run state
     try:
