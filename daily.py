@@ -2190,26 +2190,12 @@ def run() -> int:
             universe_size = selection["universe_size"]
             _log_line(
                 logf,
-                f"Selected {len(pairs_today)} pairs from universe of {universe_size}: "
-                f"{', '.join(pairs_today)}",
+                f"Scanning full universe of {universe_size} pairs — selecting top pairs by merit score. "
+                f"Top {len(pairs_today)}: {', '.join(pairs_today)}",
             )
         except Exception as exc:
             _log_line(logf, f"Smart selection failed ({exc}) — falling back to watchlist.")
             pairs_today = list(config.WATCHLIST)
-
-        # Midday scan: use morning ranked state to pick the 5 pairs closest to triggering
-        if scan_mode == "midday":
-            try:
-                _mranked = json.loads(_MORNING_RANKED_FILE.read_text(encoding="utf-8"))
-                _morning_pairs = [p for p, _ in sorted(_mranked.items(), key=lambda x: -x[1])]
-                if _morning_pairs:
-                    # Keep only pairs that are still in today's universe
-                    pairs_today = [p for p in _morning_pairs if p in {q for q, _ in ranked_all}][:_max_pairs]
-                    if not pairs_today:
-                        pairs_today = _morning_pairs[:_max_pairs]
-                    _log_line(logf, f"[midday] Using morning-ranked top {len(pairs_today)}: {', '.join(pairs_today)}")
-            except Exception:
-                pairs_today = pairs_today[:_max_pairs]
 
         # 2b. COST OPTIMISATION — Pre-filter using free data before Twelve Data fetch
         try:
