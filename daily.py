@@ -1618,7 +1618,14 @@ def _send_telegram_summary(
                     f"{arrow} <b>{r['pair']}</b> {dirn} — "
                     f"<b>{curr}/10</b> ({sign} since 6am)  {_conf_bar(curr)}"
                 )
-                ns.append(f"  Watch: {_best_session_for_pair(r['pair'])}")
+                _ew_ns = _entry_window_for_pair(r["pair"])
+                _eq_ns_e, _eq_ns_l = _entry_quality(r["pair"], now_ak)
+                _tref_ns = _time_ref_for_entry(_ew_ns[0], _ew_ns[1], now_ak)
+                _start_ns = _fmt_time_exact(_ew_ns[0], _ew_ns[1])
+                ns.append(
+                    f"  {_eq_ns_e} <b>BE READY TO ENTER:</b> "
+                    f"{_ew_ns[6]} {_start_ns} Auckland {_tref_ns}"
+                )
             all_sections.append(ns)
         elif not yes_trades:
             _any_change = any(
