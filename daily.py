@@ -1371,49 +1371,9 @@ def _send_telegram_summary(
                 all_sections.append(["", "No new signals since morning scan."])
 
         # ── Open trades current status ────────────────────────────────────────
-        try:
-            from src import tracker as _trk
-            _open_trades = [row for row in _trk.load() if row.get("status") == "OPEN"]
-            if _open_trades:
-                _cur_px: dict = {}
-                for _r in deep_results:
-                    try:
-                        _tech_d = _r["bundle"]["technical"]["daily"]
-                        _price  = float(
-                            _tech_d.get("close") or _tech_d.get("last_close") or 0
-                        )
-                        if _price > 0:
-                            _cur_px[_r["pair"]] = _price
-                    except (KeyError, TypeError, ValueError):
-                        pass
-                ot_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "📊 <b>OPEN TRADES</b>"]
-                for _row in _open_trades:
-                    _pair  = _row.get("pair", "")
-                    _dirn  = (_row.get("direction") or "").upper()
-                    _icon  = "🟢" if _dirn == "BUY" else "🔴"
-                    _tid   = _row.get("id", "?")
-                    try:
-                        _entry = float(_row.get("entry") or 0)
-                        _cur   = _cur_px.get(_pair, 0)
-                        if _entry > 0 and _cur > 0:
-                            _raw = (_cur - _entry) if _dirn == "BUY" else (_entry - _cur)
-                            _pips = _raw / _pip_size(_pair)
-                            if _pips > 5:
-                                _st = f"✅ in profit (+{_pips:.0f} pips)"
-                            elif _pips < -5:
-                                _st = f"❌ in loss ({_pips:.0f} pips)"
-                            else:
-                                _st = "➖ near breakeven"
-                            ot_sec.append(f"{_icon} #{_tid} {_pair} {_dirn} — {_st}")
-                        else:
-                            ot_sec.append(
-                                f"{_icon} #{_tid} {_pair} {_dirn} — price not in today's scan"
-                            )
-                    except (TypeError, ValueError):
-                        ot_sec.append(f"{_icon} #{_tid} {_pair} {_dirn}")
-                all_sections.append(ot_sec)
-        except Exception:
-            pass
+        _ot_intra = _build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak)
+        if _ot_intra:
+            all_sections.append(_ot_intra)
 
         # ── Top 3 watch pairs with T/F/S/P/M scores ──────────────────────────
         _watch_top3 = sorted(
