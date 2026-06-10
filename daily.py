@@ -164,18 +164,18 @@ def _entry_window_for_pair(pair: str) -> tuple:
     ccys  = {base, quote}
 
     if ccys == {"USD", "JPY"}:
-        return (22, 0, 23, 0, "10:00pm–11:00pm", "11:30pm", "New York open")
+        return (1, 0, 2, 0, "1:00am–2:00am", "2:30am", "New York open")
     if "JPY" in ccys and ccys & {"EUR", "GBP", "CHF"}:
-        return (17, 0, 18, 0, "5:00pm–6:00pm", "7:00pm", "London open")
+        return (19, 0, 20, 0, "7:00pm–8:00pm", "9:00pm", "London open")
     if "JPY" in ccys:
-        return (9, 0, 10, 30, "9:00am–10:30am", "12:00pm", "Tokyo open")
+        return (12, 0, 13, 30, "12:00pm–1:30pm", "3:00pm", "Tokyo open")
     if ccys & {"EUR", "GBP", "CHF"}:
-        return (17, 0, 18, 30, "5:00pm–6:30pm", "9:00pm", "London open")
+        return (19, 0, 20, 30, "7:00pm–8:30pm", "11:00pm", "London open")
     if ccys & {"USD", "CAD"}:
-        return (22, 0, 23, 30, "10:00pm–11:30pm", "1:00am", "New York open")
+        return (1, 0, 2, 30, "1:00am–2:30am", "3:00am", "New York open")
     if ccys & {"AUD", "NZD"}:
-        return (7, 0, 8, 30, "7:00am–8:30am", "11:00am", "Sydney open")
-    return (17, 0, 18, 30, "5:00pm–6:30pm", "9:00pm", "London open")
+        return (9, 0, 10, 30, "9:00am–10:30am", "12:00pm", "Sydney open")
+    return (19, 0, 20, 30, "7:00pm–8:30pm", "11:00pm", "London open")
 
 
 def _entry_quality(pair: str, now_ak: datetime) -> tuple:
