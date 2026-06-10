@@ -208,12 +208,16 @@ def _detect_candle_patterns(
     bb_hi: float,
     sma50: float,
     pivots: dict,
+    extra_levels: "list | None" = None,
 ) -> list:
     """Detect high-probability candlestick / price-action patterns on recent bars.
 
     Returns a list of pattern dicts:
       {"name": str, "direction": "bullish"|"bearish"|"neutral",
        "at_key_level": bool, "strength": "high"|"moderate"}
+
+    extra_levels: additional key price levels (e.g. Fibonacci) to include in
+    the at-key-level check so patterns coinciding with Fib levels are flagged.
 
     Patterns are intentionally conservative — false positives dilute the signal.
     """
@@ -224,6 +228,8 @@ def _detect_candle_patterns(
     hi20   = float(tail["high"].max())
     lo20   = float(tail["low"].min())
     p_vals = list(pivots.values()) if isinstance(pivots, dict) else []
+    if extra_levels:
+        p_vals = p_vals + [float(v) for v in extra_levels if v is not None]
 
     last  = tail.iloc[-1]
     prev  = tail.iloc[-2]
