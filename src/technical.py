@@ -822,6 +822,7 @@ def read_cached_indicators(pair: str) -> dict | None:
             df, float(bb_lower), float(bb_upper), float(sma50), pivots,
             extra_levels=fib_vals,
         )
+        divergence    = _detect_divergence(df, rsi)
         return {
             "pair":       pair,
             "rsi14":      rsi14_val,
@@ -833,6 +834,7 @@ def read_cached_indicators(pair: str) -> dict | None:
             "sma50":      round(float(sma50), 5),
             "fibonacci":  fib,
             "patterns":   patterns,
+            "divergence": divergence,
             "tech_signal": _tech_signal(
                 rsi14_val, macd_hist_val, bb_state, trend_str,
                 float(last), sma20_val, float(sma50), patterns=patterns,
