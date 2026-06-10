@@ -32,14 +32,14 @@ import config
 from src import dashboard, learning, selector, service
 
 _SESSION_AUCKLAND = {
-    "EUR": ("London",        "5pm–2am"),
-    "GBP": ("London",        "5pm–2am"),
-    "CHF": ("London",        "5pm–2am"),
-    "JPY": ("Tokyo",         "9am–6pm"),
-    "USD": ("New York",      "10pm–7am"),
-    "CAD": ("New York",      "10pm–7am"),
-    "AUD": ("Sydney/Tokyo",  "7am–6pm"),
-    "NZD": ("Sydney/Tokyo",  "7am–6pm"),
+    "EUR": ("London",        "7pm–4am"),
+    "GBP": ("London",        "7pm–4am"),
+    "CHF": ("London",        "7pm–4am"),
+    "JPY": ("Tokyo",         "12pm–9pm"),
+    "USD": ("New York",      "1am–10am"),
+    "CAD": ("New York",      "1am–10am"),
+    "AUD": ("Sydney/Tokyo",  "9am–9pm"),
+    "NZD": ("Sydney/Tokyo",  "9am–9pm"),
 }
 _SESSION_PRIORITY = ["EUR", "GBP", "CHF", "AUD", "NZD", "JPY", "USD", "CAD"]
 
