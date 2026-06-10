@@ -298,11 +298,17 @@ def _haiku_system_prompt() -> str:
         "output DIVERGENCE: CONFIRMED and raise CONFIDENCE by 1 (max 10). "
         "If DIV conflicts (bullish DIV + SELL, or bearish DIV + BUY): output DIVERGENCE: CONFLICT — consider reducing CONFIDENCE. "
         "If DIV=none: output DIVERGENCE: NONE.\n"
+        "OSC: OSC= line shows oscillator confluence (RSI+Stochastic+CCI agreement). "
+        "conf=BUY(3/3) or SELL(3/3) = TRIPLE confluence — raise CONFIDENCE by 2, output OSCILLATOR_CONFLUENCE: TRIPLE_BUY or TRIPLE_SELL. "
+        "conf=BUY(2/3) or SELL(2/3) = PARTIAL — raise CONFIDENCE by 1, output OSCILLATOR_CONFLUENCE: PARTIAL_BUY or PARTIAL_SELL. "
+        "conf=NONE = OSCILLATOR_CONFLUENCE: NONE. "
+        "Triple confluence that confirms direction = highest-reliability reversal signal possible.\n"
         "Output PAIR: through TRADE_THIS: only. No preamble.\n"
         "PAIR: [p]\nDIRECTION: [BUY|SELL]\nCONFIDENCE: [n/10]\n"
         "TECHNICAL_SCORE: [n/10]\nFUNDAMENTAL_SCORE: [n/10]\nSENTIMENT_SCORE: [n/10]\n"
         "POSITIONING_SCORE: [n/10]\nMACRO_SCORE: [n/10]\n"
         "DIVERGENCE: [CONFIRMED|NONE|CONFLICT]\n"
+        "OSCILLATOR_CONFLUENCE: [TRIPLE_BUY|TRIPLE_SELL|PARTIAL_BUY|PARTIAL_SELL|NONE]\n"
         "KEY_THESIS: [1 sentence]\nRISK_FACTORS: [2 risks]\nTRADE_THIS: [YES|NO]"
     )
 
