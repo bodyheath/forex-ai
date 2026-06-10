@@ -15,14 +15,14 @@ from src import tracker
 # Priority order: if a pair contains multiple currencies, the first match wins.
 # ---------------------------------------------------------------------------
 _SESSION_NZT = {
-    "EUR": ("London",   "5pm – 9pm NZT"),
-    "GBP": ("London",   "5pm – 9pm NZT"),
-    "CHF": ("London",   "5pm – 9pm NZT"),
-    "JPY": ("Tokyo",    "9am – 2pm NZT"),
-    "USD": ("New York", "10pm – 2am NZT"),
-    "CAD": ("New York", "10pm – 2am NZT"),
-    "AUD": ("Sydney",   "7am – 12pm NZT"),
-    "NZD": ("Sydney",   "7am – 12pm NZT"),
+    "EUR": ("London",   "7pm – 11pm NZT"),
+    "GBP": ("London",   "7pm – 11pm NZT"),
+    "CHF": ("London",   "7pm – 11pm NZT"),
+    "JPY": ("Tokyo",    "12pm – 5pm NZT"),
+    "USD": ("New York", "1am – 5am NZT"),
+    "CAD": ("New York", "1am – 5am NZT"),
+    "AUD": ("Sydney",   "9am – 2pm NZT"),
+    "NZD": ("Sydney",   "9am – 2pm NZT"),
 }
 _SESSION_PRIORITY = ["EUR", "GBP", "CHF", "AUD", "NZD", "JPY", "USD", "CAD"]
 
