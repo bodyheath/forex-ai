@@ -1984,15 +1984,12 @@ _SCAN_MODES: dict = {
     "full":      ("6am Full Scan", set()),
 }
 
-# Pair counts per scan mode (top_n for selector, max pairs after session filter)
-_SCAN_TOP_N   = {"full": 15, "asian": 25, "midday": 15, "prelondon": 25}
-_SCAN_MAX_PRS = {"full": 15, "asian":  7, "midday":  5, "prelondon":  7}
+# All 4 scans select from the full universe by 8-factor merit score — no mode filtering
+_SCAN_TOP_N   = 15   # pairs selected and analysed from the full universe
+_TD_CACHE_MAX = 20   # pairs to pre-warm in Twelve Data cache
 
 # Sonnet escalation threshold: 6 for 6am (higher quality), 7 for intraday (cheaper)
 _SONNET_THRESH = {"full": 6, "asian": 7, "midday": 7, "prelondon": 7}
-
-# Max pre-filtered pairs to warm Twelve Data cache for
-_TD_CACHE_MAX = {"full": 20, "asian": 10, "midday": 10, "prelondon": 10}
 
 
 def _get_scan_mode() -> str:
