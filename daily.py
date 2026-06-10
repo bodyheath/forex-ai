@@ -2076,8 +2076,20 @@ def _next_scan_footer(scan_mode: str, now_ak: datetime) -> str:
 def run() -> int:
     _run_start = time.time()
 
+    # ── Startup timezone diagnostics ──────────────────────────────────────────
+    _now_utc    = datetime.utcnow()
+    _startup_ak = _auckland_now()
+    print(
+        f"[startup] UTC time:      {_now_utc.strftime('%Y-%m-%d %H:%M:%S')} UTC",
+        file=sys.stderr,
+    )
+    print(
+        f"[startup] Auckland time: {_startup_ak.strftime('%Y-%m-%d %H:%M:%S')} NZT "
+        f"(hour={_startup_ak.hour})",
+        file=sys.stderr,
+    )
+
     # ── Duplicate-run guard ────────────────────────────────────────────────────
-    _now_utc = datetime.utcnow()
     try:
         _LAST_RUN_FILE.parent.mkdir(parents=True, exist_ok=True)
         if _LAST_RUN_FILE.exists():
