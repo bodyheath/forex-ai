@@ -783,6 +783,13 @@ def _tech_signal(rsi14: float, macd_hist: float, bb_state: str, trend: str,
     if patterns:
         score += _pattern_bonus(patterns, direction)
 
+    # MA ribbon bonus: fully aligned in trade direction = +2
+    if ribbon and direction != "NEUTRAL":
+        r_status = ribbon.get("status", "")
+        if (direction == "BUY"  and r_status == "ALIGNED_BULL") or \
+           (direction == "SELL" and r_status == "ALIGNED_BEAR"):
+            score += 2
+
     # Floor at 3 — T:1 must only appear for genuinely missing data
     return {"direction": direction, "score": max(3, min(10, score))}
 
