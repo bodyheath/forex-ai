@@ -90,17 +90,17 @@ def _best_session_for_pair(pair: str) -> str:
     b = _SESSION_AUCKLAND.get(base)
     q = _SESSION_AUCKLAND.get(quote)
     if not b and not q:
-        return "London open 5pm–7pm Auckland"
+        return "London open 7pm–9pm Auckland"
     if b and q and b[0] == q[0]:
         return f"{b[0]} {b[1]} Auckland"
     if b and q:
         sess_set = {b[0], q[0]}
         if {"Tokyo", "London"} <= sess_set or {"Sydney/Tokyo", "London"} <= sess_set:
-            return "London open 5pm–7pm Auckland"
+            return "London open 7pm–9pm Auckland"
         if {"London", "New York"} <= sess_set:
-            return "London/NY overlap 10pm–2am Auckland"
+            return "London/NY overlap 1am–4am Auckland"
         if {"Tokyo", "New York"} <= sess_set or {"Sydney/Tokyo", "New York"} <= sess_set:
-            return "Sydney/Tokyo 7am–6pm Auckland"
+            return "Sydney/Tokyo 9am–9pm Auckland"
     s = b or q
     return f"{s[0]} {s[1]} Auckland"
 
