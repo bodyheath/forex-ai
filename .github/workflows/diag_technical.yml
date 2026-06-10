@@ -1,0 +1,50 @@
+name: Technical Scoring Diagnostic
+
+# Run manually via GitHub Actions → "Run workflow" button to verify
+# the T:1 fix before any scheduled scan.
+
+on:
+  workflow_dispatch:
+    inputs:
+      cached_only:
+        description: 'Use cached data only (no live API calls)'
+        required: false
+        default: 'false'
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run technical scoring diagnostic
+        env:
+          TWELVE_DATA_KEY: ${{ secrets.TWELVE_DATA_KEY }}
+          NEWS_API_KEY:    ${{ secrets.NEWS_API_KEY }}
+          FRED_API_KEY:    ${{ secrets.FRED_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ "${{ github.event.inputs.cached_only }}" = "true" ]; then
+            python diag_technical.py --cached
+          else
+            python diag_technical.py
+          fi
+
+      - name: Upload diagnostic log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diag-technical-${{ github.run_id }}
+          path: data/reports/
+          if-no-files-found: ignore
