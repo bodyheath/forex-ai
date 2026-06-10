@@ -2,9 +2,14 @@
 
 Tracks at 0.01 lots for reference only (not real money). Outcome checking runs
 automatically like real trades: WIN when target hit, LOSS when stop hit, EXPIRED
-after 14 days.  Pairs analysed by Haiku only (no entry/stop/target) are stored
-as NO_PRICE_LEVELS and excluded from statistical outcome analysis — they can only
-be used for qualitative counts, not win-rate or R calculations.
+after 14 days.
+
+Source values:
+  'sonnet'     — Sonnet-confirmed setup; entry/stop/target from Claude's analysis.
+  'indicative' — Haiku-scored pair (conf 5-6) with ATR-derived price levels
+                 computed by _calc_indicative_levels. Fully trackable for outcomes.
+  'haiku'      — Legacy: Haiku-only with no price levels at all (NO_PRICE_LEVELS).
+                 No longer written by current code but may exist in historical data.
 
 Used by research_analyst.py for the 30-day threshold study: were conf-6 pairs
 profitable enough to warrant lowering the live-trade threshold from 7 to 6?
