@@ -2290,7 +2290,7 @@ def run() -> int:
             for _r in deep_results:
                 _rconf = _conf(_r)
                 if _rconf >= 5:
-                    _rp  = _r["parsed"]
+                    _rp   = _r["parsed"]
                     _rdir = (_rp.get("direction") or "").upper()
                     if (_r["pair"], _rdir) not in _rt_today:
                         _rsrc = (
@@ -2298,6 +2298,19 @@ def run() -> int:
                             if all(_rp.get(k) for k in ("entry", "stop_loss", "target"))
                             else "haiku"
                         )
+                        # Haiku-only results have no price levels — compute indicative
+                        # entry/stop/target from the technical bundle so every conf-5+
+                        # research trade can be properly tracked for outcome analysis.
+                        if _rsrc == "haiku":
+                            _ind_e, _ind_s, _ind_t = _calc_indicative_levels(
+                                _r["pair"], _rp, _r.get("bundle", {})
+                            )
+                            if _ind_e and _ind_s and _ind_t:
+                                _rp = dict(_rp)          # shallow copy — don't mutate original
+                                _rp["entry"]     = _rp.get("entry")     or _ind_e
+                                _rp["stop_loss"] = _rp.get("stop_loss") or _ind_s
+                                _rp["target"]    = _rp.get("target")    or _ind_t
+                                _rsrc = "indicative"
                         _rt.log_research_trade(_r["pair"], _rp, _rsrc, scan_mode)
                         _rt_today.add((_r["pair"], _rdir))
                         _rt_logged += 1
