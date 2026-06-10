@@ -1522,6 +1522,14 @@ def _send_telegram_summary(
             f"{arrow} <b>{rr['pair']}</b> {dirn}  {conf}/10 {_conf_bar(conf)}  {_eq_we_e} {_eq_we_l}",
             f"{_score_breakdown_line(pp)}",
         ]
+        # ML win-probability (only show when model is trained and ready)
+        try:
+            from src import ml_predictor as _mlp_we
+            _wp_we = _mlp_we.get_win_prob(rr["pair"], pp, rr.get("bundle", {}))
+            if _wp_we and "learning" not in _wp_we:
+                lines.append(f"🤖 Predicted win probability: {_wp_we}")
+        except Exception:
+            pass
         _wl_hint = _weakest_layer_hint(pp)
         if _wl_hint:
             lines.append(f"↑ {_wl_hint}")
