@@ -264,17 +264,19 @@ def main() -> int:
         except Exception as exc:
             print(f"\nSelector unavailable ({exc}) — using fixed list")
 
-    # Rate-limit aware fetching: 10 s between API calls
-    print(f"\nAnalysing {len(pairs_to_test)} pairs ...")
-    results  = []
-    api_call = 0
-    for pair in pairs_to_test[:15]:
-        if not use_cached and config.TWELVE_DATA_KEY and api_call > 0:
-            time.sleep(10)
+    # Rate-limit aware fetching: 12 s between pairs.
+    # Each pair triggers up to 5 Twelve Data calls (monthly/weekly/daily/4h/1h).
+    # 12 s gap keeps the burst well under the 8-calls/min free-tier ceiling.
+    pairs_to_run = pairs_to_test[:15]
+    print(f"\nAnalysing {len(pairs_to_run)} pairs "
+          f"(12 s gap between each — ~{len(pairs_to_run) * 12 // 60} min total) ...")
+    results = []
+    for idx, pair in enumerate(pairs_to_run):
+        if idx > 0 and not use_cached and config.TWELVE_DATA_KEY:
+            print(f"  [{idx}/{len(pairs_to_run)}] waiting 12 s ...", flush=True)
+            time.sleep(12)
         r = _analyse_pair(pair)
         results.append(r)
-        if r.get("status") == "ok":
-            api_call += 1
 
     # ── Step 3: Print table ────────────────────────────────────────────────────
     issues = _print_table(results)
