@@ -2002,12 +2002,21 @@ def _get_scan_mode() -> str:
     if mode in _SCAN_MODES:
         return mode
     hour = _auckland_now().hour
+    if 5 <= hour <= 7:      # 5am–7am → 6am full scan window
+        return "full"
     if 8 <= hour <= 10:
         return "asian"
     if 14 <= hour <= 16:
         return "prelondon"
     if 17 <= hour <= 19:
         return "midday"
+    # Off-hours fallback — log a warning so it is visible in GitHub Actions logs
+    print(
+        f"[scan] WARNING — Auckland hour={hour} is outside all defined scan windows "
+        f"(5-7=full, 8-10=asian, 14-16=prelondon, 17-19=midday) and SCAN_MODE env var is unset. "
+        f"Defaulting to 'full'. Check cron-job.org schedule and workflow trigger times.",
+        file=sys.stderr,
+    )
     return "full"
 
 

@@ -26,7 +26,8 @@
       "Bash(python -m py_compile src/analyst.py)",
       "Bash(python -m py_compile src/pipeline.py)",
       "Bash(python -m py_compile src/service.py)",
-      "Bash(python -m py_compile src/technical.py)"
+      "Bash(python -m py_compile src/technical.py)",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('daily.py', encoding='utf-8'\\).read\\(\\)\\); print\\('Syntax OK'\\)\")"
     ]
   },
   "hooks": {
