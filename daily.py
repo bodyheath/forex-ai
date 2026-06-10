@@ -840,10 +840,10 @@ def _fetch_live_price(pair: str, px_cache: dict) -> tuple:
 def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> list:
     """Build the OPEN TRADES section lines for any Telegram scan message.
 
-    For every OPEN trade: fetches current price (live or cached), computes
-    unrealised P&L in pips, shows % progress toward target/stop, and flags
-    when price is within 20% of target or stop.  Always appended regardless
-    of whether the pair appeared in today's scan.
+    For every OPEN trade: shows entry, current price, stop loss, take profit,
+    unrealised P&L in pips + dollar estimate, progress bar toward target, best
+    monitoring session (today/tonight), and age/expiry.  Always appended
+    regardless of whether the pair appeared in today's scan.
     """
     if not open_trades:
         return []
@@ -879,40 +879,72 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
             pass
 
         if entry and cur:
-            pip_sz  = _pip_size(pair)
-            raw     = (cur - entry) if dirn == "BUY" else (entry - cur)
-            pips    = raw / pip_sz
-            pnl_str = (f"+{pips:.0f} pips" if pips >= 0 else f"{pips:.0f} pips")
-            arrow   = "📈" if pips > 2 else ("📉" if pips < -2 else "➖")
             stale_note = " ⚠️ last known price" if stale else ""
             sec.append(f"Entry: {_fmt_price(entry)} | Current: {_fmt_price(cur)}{stale_note}")
+
+            # Always show stop and target
+            if stop and target:
+                sec.append(f"🛑 Stop Loss: {_fmt_price(stop)} | 🎯 Take Profit: {_fmt_price(target)}")
+            elif stop:
+                sec.append(f"🛑 Stop Loss: {_fmt_price(stop)}")
+            elif target:
+                sec.append(f"🎯 Take Profit: {_fmt_price(target)}")
+
+            pip_sz   = _pip_size(pair)
+            raw      = (cur - entry) if dirn == "BUY" else (entry - cur)
+            pips     = raw / pip_sz
+            dollar   = abs(pips) * 1.0   # $1/pip estimate at 0.1 lots
+            pnl_sign = "+" if pips >= 0 else ""
+            pnl_str  = f"{pnl_sign}{pips:.0f} pips (+${dollar:.0f})" if pips >= 0 else f"{pips:.0f} pips (-${dollar:.0f})"
+            arrow    = "📈" if pips > 2 else ("📉" if pips < -2 else "➖")
             sec.append(f"Unrealised P&L: {arrow} {pnl_str}")
 
-            # Progress toward target and stop
+            # Progress bar (20 chars) and stop status
             if target and stop:
                 try:
-                    if dirn == "BUY" and target > entry > stop:
+                    if dirn == "BUY" and target > entry and entry > stop:
                         trade_range = target - entry
                         risk_range  = entry  - stop
                         pct_tgt = min(100.0, max(0.0, (cur - entry)  / trade_range * 100))
                         pct_stp = min(100.0, max(0.0, (entry - cur)  / risk_range  * 100))
-                    elif dirn == "SELL" and stop > entry > target:
+                    elif dirn == "SELL" and stop > entry and entry > target:
                         trade_range = entry  - target
                         risk_range  = stop   - entry
                         pct_tgt = min(100.0, max(0.0, (entry - cur)  / trade_range * 100))
                         pct_stp = min(100.0, max(0.0, (cur   - entry) / risk_range * 100))
                     else:
                         pct_tgt = pct_stp = 0.0
-                    stop_badge = "✅" if pips > 0 else ("⚠️" if pct_stp > 50 else "🟡")
-                    sec.append(f"Progress: {pct_tgt:.0f}% to target | Stop {stop_badge}")
+                    bar_filled = int(pct_tgt / 100 * 20)
+                    prog_bar   = "█" * bar_filled + "░" * (20 - bar_filled)
+                    sec.append(f"Progress: {pct_tgt:.0f}% to target {prog_bar}")
+
+                    # Best monitoring time
+                    sec.append(f"⏰ Best monitoring time: {_session_time_label(pair, now_ak)}")
+
                     if pct_tgt >= 80:
-                        sec.append("🎯 Approaching target — consider taking partial profit")
+                        # Suggest partial profit at 75% of distance
+                        try:
+                            if dirn == "BUY":
+                                partial_px = entry + (target - entry) * 0.75
+                            else:
+                                partial_px = entry - (entry - target) * 0.75
+                            sec.append(
+                                f"🎯 Approaching target — consider partial profit if price reaches "
+                                f"{_fmt_price(partial_px)}"
+                            )
+                        except Exception:
+                            sec.append("🎯 Approaching target — consider taking partial profit")
                     elif pct_stp >= 80:
                         sec.append("⚠️ Stop approaching — monitor closely")
                 except Exception:
-                    pass
+                    sec.append(f"⏰ Best monitoring time: {_session_time_label(pair, now_ak)}")
+            else:
+                sec.append(f"⏰ Best monitoring time: {_session_time_label(pair, now_ak)}")
         elif entry:
+            if stop and target:
+                sec.append(f"🛑 Stop Loss: {_fmt_price(stop)} | 🎯 Take Profit: {_fmt_price(target)}")
             sec.append(f"Entry: {_fmt_price(entry)} | Current: ⚠️ price unavailable")
+            sec.append(f"⏰ Best monitoring time: {_session_time_label(pair, now_ak)}")
         else:
             sec.append("Trade details unavailable")
 
