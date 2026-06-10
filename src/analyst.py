@@ -262,6 +262,16 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
             f"wt={int(mtf_data.get('weighted_score', 0) * 100)}%"
         )
 
+    # MA ribbon (EMA 8/13/21/34/55/89) — only include if daily data available
+    rib = daily.get("ribbon", {}) if isinstance(daily, dict) else {}
+    if isinstance(rib, dict) and rib.get("status") not in ("UNAVAILABLE", None, ""):
+        r_status = rib.get("status", "NEUTRAL")
+        r_fan    = (" fan" if rib.get("fanning")
+                    else (" conv" if rib.get("converging") else ""))
+        lines.append(
+            f"RIB={r_status}{r_fan} aligned={rib.get('aligned_count', 0)}/5"
+        )
+
     return "\n".join(lines)
 
 
