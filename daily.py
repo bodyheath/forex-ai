@@ -988,9 +988,37 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
     one dynamic status message from 8 possible states, and next key check time.
     """
     sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "📊 <b>OPEN TRADES</b>"]
+
+    # Portfolio summary — quick pre-pass to compute aggregate P&L
+    _port_dollar = 0.0
+    _port_counted = 0
+    for _pr in open_trades:
+        try:
+            _pc, _ = _fetch_live_price(_pr.get("pair", "?"), px_cache)
+            _pe    = float(_pr.get("entry") or 0) or None
+            _pd    = (_pr.get("direction") or "").upper()
+            if _pc and _pe:
+                _pz  = _pip_size(_pr.get("pair", "?"))
+                _prw = (_pc - _pe) if _pd == "BUY" else (_pe - _pc)
+                _port_dollar += (_prw / _pz) * 1.0
+                _port_counted += 1
+        except Exception:
+            pass
+
     if not open_trades:
         sec.append("No open trades currently.")
         return sec
+
+    # Portfolio summary line
+    _n = len(open_trades)
+    _tw = "trade" if _n == 1 else "trades"
+    if _port_counted > 0:
+        if _port_dollar >= 0:
+            sec.append(f"<b>{_n} open {_tw} — up ${_port_dollar:.0f} overall</b>")
+        else:
+            sec.append(f"<b>{_n} open {_tw} — down ${abs(_port_dollar):.0f} overall</b>")
+    else:
+        sec.append(f"<b>{_n} open {_tw}</b>")
 
     for row in open_trades:
         pair = row.get("pair", "?")
