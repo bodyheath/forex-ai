@@ -1397,10 +1397,9 @@ def _send_telegram_summary(
             )
         _mtf = r.get("bundle", {}).get("mtf", {})
         if _mtf and _mtf.get("agreeing_count", 0) > 0:
-            block.append(
-                f"🕐 Timeframes: {_mtf['agreeing_count']}/5 agree  "
-                f"<code>{_mtf.get('breakdown', '')}</code>"
-            )
+            _mtf_txt_tb = _mtf_plain_english(_mtf)
+            if _mtf_txt_tb:
+                block.append(f"🕐 {_mtf_txt_tb}")
         block.append("🔍 <b>Why all data agrees:</b>")
         for why_line in _why_agrees_lines(r, ctx):
             block.append(why_line)
