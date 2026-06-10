@@ -955,6 +955,15 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
         except Exception:
             pass
 
+        # Compute check-time label once per trade
+        _ew_t  = _entry_window_for_pair(pair)
+        _eq_e, _eq_l = _entry_quality(pair, now_ak)
+        _tref_t = _time_ref_for_entry(_ew_t[0], _ew_t[1], now_ak)
+        _check_line = (
+            f"{_eq_e} <b>CHECK TRADE AT:</b> {_ew_t[6]} "
+            f"{_fmt_time_exact(_ew_t[0], _ew_t[1])} Auckland {_tref_t}"
+        )
+
         if entry and cur:
             stale_note = " ⚠️ last known price" if stale else ""
             sec.append(f"Entry: {_fmt_price(entry)} | Current: {_fmt_price(cur)}{stale_note}")
@@ -994,17 +1003,17 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
                     bar_filled = int(pct_tgt / 100 * 20)
                     prog_bar   = "█" * bar_filled + "░" * (20 - bar_filled)
                     sec.append(f"Progress: {pct_tgt:.0f}% to target {prog_bar}")
-
-                    # Best monitoring time
-                    sec.append(f"⏰ Best monitoring time: {_session_time_label(pair, now_ak)}")
-
+                    sec.append(_check_line)
+                    sec.append(
+                        "Look for: price approaching target or stop, "
+                        "consider partial profit if 75% to target"
+                    )
                     if pct_tgt >= 80:
-                        # Suggest partial profit at 75% of distance
                         try:
-                            if dirn == "BUY":
-                                partial_px = entry + (target - entry) * 0.75
-                            else:
-                                partial_px = entry - (entry - target) * 0.75
+                            partial_px = (
+                                entry + (target - entry) * 0.75 if dirn == "BUY"
+                                else entry - (entry - target) * 0.75
+                            )
                             sec.append(
                                 f"🎯 Approaching target — consider partial profit if price reaches "
                                 f"{_fmt_price(partial_px)}"
@@ -1012,16 +1021,16 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
                         except Exception:
                             sec.append("🎯 Approaching target — consider taking partial profit")
                     elif pct_stp >= 80:
-                        sec.append("⚠️ Stop approaching — monitor closely")
+                        sec.append("⚠️ Stop approaching — review your stop placement")
                 except Exception:
-                    sec.append(f"⏰ Best monitoring time: {_session_time_label(pair, now_ak)}")
+                    sec.append(_check_line)
             else:
-                sec.append(f"⏰ Best monitoring time: {_session_time_label(pair, now_ak)}")
+                sec.append(_check_line)
         elif entry:
             if stop and target:
                 sec.append(f"🛑 Stop Loss: {_fmt_price(stop)} | 🎯 Take Profit: {_fmt_price(target)}")
             sec.append(f"Entry: {_fmt_price(entry)} | Current: ⚠️ price unavailable")
-            sec.append(f"⏰ Best monitoring time: {_session_time_label(pair, now_ak)}")
+            sec.append(_check_line)
         else:
             sec.append("Trade details unavailable")
 
