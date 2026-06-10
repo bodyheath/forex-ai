@@ -1821,6 +1821,8 @@ def _send_telegram_summary(
             health_sec.append(_mlp_hs.get_model_status_line())
         except Exception:
             pass
+        if cost_lines:
+            health_sec.extend(cost_lines)
         all_sections.append(health_sec)
 
         # RESEARCH THRESHOLD ANALYSIS
