@@ -139,52 +139,85 @@ def _pivots(prev: pd.Series) -> dict:
     }
 
 
-def _tech_signal(rsi14: float, macd_hist: float, bb_state: str, trend: str) -> dict:
+def _tech_signal(rsi14: float, macd_hist: float, bb_state: str, trend: str,
+                 close: float = 0.0, sma20: float = 0.0, sma50: float = 0.0) -> dict:
     """Compute a Python-anchored technical signal score (1–10) and direction.
 
-    RSI extremes are the primary driver — this mirrors the selector's factor-2
-    logic so the score Claude sees is pre-calibrated to the same thresholds.
-    MACD, Bollinger, and trend add/subtract 1 point each.
+    RSI tiers set direction and base score.  MACD, Bollinger, SMA20/50 alignment,
+    and trend each add or subtract 1 point.
+
+    Floor rule: score can never be below 3 when real data is present.
+    T:1 is reserved exclusively for missing / UNAVAILABLE data.
+
+    RSI tiers (matches Haiku prompt exactly):
+      <  30  → BUY  base 9    (deeply oversold)
+      30–35  → BUY  base 7
+      35–45  → BUY  base 5
+      45–55  → NEUTRAL base 3
+      55–65  → SELL base 4
+      65–70  → SELL base 7
+      >  70  → SELL base 9    (deeply overbought)
     """
     if rsi14 < 30:
-        direction, base = "BUY", 8
+        direction, base = "BUY", 9
     elif rsi14 < 35:
-        direction, base = "BUY", 6
+        direction, base = "BUY", 7
+    elif rsi14 < 45:
+        direction, base = "BUY", 5
     elif rsi14 > 70:
-        direction, base = "SELL", 8
+        direction, base = "SELL", 9
     elif rsi14 > 65:
-        direction, base = "SELL", 6
-    elif rsi14 > 60:
+        direction, base = "SELL", 7
+    elif rsi14 > 55:
         direction, base = "SELL", 4
-    elif rsi14 < 40:
-        direction, base = "BUY", 4
-    else:
-        direction, base = "NEUTRAL", 2
+    else:  # 45–55
+        direction, base = "NEUTRAL", 3
 
     score = base
-    # MACD confirmation
-    if direction == "BUY" and macd_hist > 0:
-        score += 1
-    elif direction == "SELL" and macd_hist < 0:
-        score += 1
-    # Bollinger confirmation
-    if direction == "BUY" and "lower band" in bb_state:
-        score += 1
-    elif direction == "SELL" and "upper band" in bb_state:
-        score += 1
-    # Trend alignment bonus
-    trend_l = trend.lower()
-    if direction == "BUY" and "uptrend" in trend_l:
-        score += 1
-    elif direction == "SELL" and "downtrend" in trend_l:
-        score += 1
-    # Trend contradiction penalty
-    if direction == "BUY" and "downtrend" in trend_l and "golden" not in trend_l:
-        score -= 1
-    elif direction == "SELL" and "uptrend" in trend_l and "death" not in trend_l:
-        score -= 1
 
-    return {"direction": direction, "score": max(1, min(10, score))}
+    if direction == "NEUTRAL":
+        # Bollinger extreme lifts neutral to 4 — price at a band is a tension point
+        if "upper band" in bb_state or "lower band" in bb_state:
+            score += 1
+    else:
+        # MACD confirmation (+1)
+        if direction == "BUY" and macd_hist > 0:
+            score += 1
+        elif direction == "SELL" and macd_hist < 0:
+            score += 1
+
+        # Bollinger confirmation (+1)
+        if direction == "BUY" and "lower band" in bb_state:
+            score += 1
+        elif direction == "SELL" and "upper band" in bb_state:
+            score += 1
+
+        # SMA20/SMA50 alignment (+1 confirming / -1 contradicting)
+        if close > 0 and sma20 > 0 and sma50 > 0 and sma20 == sma20 and sma50 == sma50:
+            if direction == "BUY":
+                if close > sma20 and close > sma50:
+                    score += 1
+                elif close < sma20 and close < sma50:
+                    score -= 1
+            else:  # SELL
+                if close < sma20 and close < sma50:
+                    score += 1
+                elif close > sma20 and close > sma50:
+                    score -= 1
+
+        # Trend alignment (+1) and contradiction (-1)
+        trend_l = trend.lower()
+        if direction == "BUY" and "uptrend" in trend_l:
+            score += 1
+        elif direction == "SELL" and "downtrend" in trend_l:
+            score += 1
+        if direction == "BUY" and "downtrend" in trend_l and "golden" not in trend_l:
+            score -= 1
+        elif direction == "SELL" and "uptrend" in trend_l and "death" not in trend_l:
+            score -= 1
+
+    # Floor at 3 — T:1 must only appear for genuinely missing data
+    return {"direction": direction, "score": max(3, min(10, score))}
 
 
 def _trend(close: pd.Series, sma50: float, sma200: float) -> str:
