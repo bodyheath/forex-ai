@@ -396,9 +396,10 @@ def read_cached_indicators(pair: str) -> dict | None:
             bb_state = "at/below lower band (stretched, mean-reversion risk up)"
         else:
             bb_state = "inside bands"
-        rsi14_val    = round(rsi.iloc[-1], 2)
+        rsi14_val     = round(rsi.iloc[-1], 2)
         macd_hist_val = round(hist.iloc[-1], 6)
-        trend_str    = _trend(close, sma50, sma200)
+        trend_str     = _trend(close, sma50, sma200)
+        sma20_val     = float(sma20.iloc[-1])
         return {
             "pair":       pair,
             "rsi14":      rsi14_val,
@@ -406,7 +407,12 @@ def read_cached_indicators(pair: str) -> dict | None:
             "macd_direction": "bullish" if macd_hist_val > 0 else "bearish",
             "trend":      trend_str,
             "bb_state":   bb_state,
-            "tech_signal": _tech_signal(rsi14_val, macd_hist_val, bb_state, trend_str),
+            "sma20":      round(sma20_val, 5),
+            "sma50":      round(float(sma50), 5),
+            "tech_signal": _tech_signal(
+                rsi14_val, macd_hist_val, bb_state, trend_str,
+                float(last), sma20_val, float(sma50),
+            ),
         }
     except Exception:
         return None
