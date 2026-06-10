@@ -666,6 +666,7 @@ def _summarise(df: pd.DataFrame, label: str) -> dict:
         df, float(bb_lower), float(bb_upper), float(sma50), pivots,
         extra_levels=fib_vals,
     )
+    divergence    = _detect_divergence(df, rsi)
 
     return {
         "timeframe": label,
@@ -684,6 +685,7 @@ def _summarise(df: pd.DataFrame, label: str) -> dict:
         "pivots_from_last_candle": pivots,
         "fibonacci": fib,
         "patterns": patterns,
+        "divergence": divergence,
         "tech_signal": _tech_signal(
             rsi14_val, macd_hist_val, bb_state, trend_str,
             float(last), sma20_val, float(sma50), patterns=patterns,
