@@ -1557,7 +1557,7 @@ def _send_telegram_summary(
         ll = ln.lower().strip()
         if not ll:
             return True
-        bad = ("unavailable", " n/a", ": n/a", "=n/a", "check console")
+        bad = (" n/a", ": n/a", "=n/a", "check console")
         return not any(b in ll for b in bad)
 
     all_sections = [[ln for ln in sec if _is_ok_line(ln)] for sec in all_sections]
