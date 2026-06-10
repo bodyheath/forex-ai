@@ -1447,6 +1447,9 @@ def _send_telegram_summary(
             f"Universe: {universe_size} · Deep analysed: <b>{n_deep}</b> · {setup_line}",
         ])
 
+        # OPEN TRADES — always at the top so it's the first thing seen
+        all_sections.append(_build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak))
+
         # MARKET CONTEXT
         ctx_lines = ["", "━━━━━━━━━━━━━━━━━━━━━", "🌍 <b>MARKET CONTEXT</b>"]
         vix_str = f"VIX {ctx['vix']:.1f}" if ctx["vix"] else ""
