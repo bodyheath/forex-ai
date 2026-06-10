@@ -15,7 +15,9 @@ Sequence:
 """
 
 import sys
+import html as _html_mod
 import json
+import re as _re_tg
 import time
 import traceback
 import urllib.parse
