@@ -139,8 +139,241 @@ def _pivots(prev: pd.Series) -> dict:
     }
 
 
+# ── Candlestick / price-action pattern detection ───────────────────────────────
+
+def _pin_bar(c: pd.Series) -> "str | None":
+    """Bullish pin (hammer-type) or bearish pin (shooting-star-type), else None.
+
+    Strict: body ≤ 30% of range, dominant wick ≥ 60%, opposing wick ≤ 15%.
+    """
+    o, h, l, cl = float(c["open"]), float(c["high"]), float(c["low"]), float(c["close"])
+    total = h - l
+    if total < 1e-8:
+        return None
+    body    = abs(cl - o)
+    lo_wick = min(o, cl) - l
+    hi_wick = h - max(o, cl)
+    if body / total > 0.30:
+        return None
+    if lo_wick / total >= 0.60 and hi_wick / total <= 0.15:
+        return "bullish"
+    if hi_wick / total >= 0.60 and lo_wick / total <= 0.15:
+        return "bearish"
+    return None
+
+
+def _at_key_level(c: pd.Series, bb_lo: float, bb_hi: float, sma50: float,
+                  pivot_vals: list, hi20: float, lo20: float) -> bool:
+    """True if the candle's extreme (low or high) touched a key price level."""
+    lo  = float(c["low"])
+    hi  = float(c["high"])
+    mid = float(c["close"])
+    tol = mid * 0.006  # 0.6% tolerance
+
+    for level in pivot_vals:
+        if abs(lo - level) <= tol or abs(hi - level) <= tol or abs(mid - level) <= tol:
+            return True
+    if abs(lo - bb_lo) <= tol * 1.5 or abs(hi - bb_hi) <= tol * 1.5:
+        return True
+    if abs(lo - sma50) <= tol * 2 or abs(hi - sma50) <= tol * 2 or abs(mid - sma50) <= tol * 2:
+        return True
+    if abs(lo - lo20) <= tol * 2 or abs(hi - hi20) <= tol * 2:
+        return True
+    return False
+
+
+def _local_peaks(arr: np.ndarray, n: int = 3) -> list:
+    """Local maxima with at least n bars on each side."""
+    result = []
+    for i in range(n, len(arr) - n):
+        if all(arr[i] > arr[i - j] for j in range(1, n + 1)) and \
+           all(arr[i] > arr[i + j] for j in range(1, n + 1)):
+            result.append((i, float(arr[i])))
+    return result
+
+
+def _local_troughs(arr: np.ndarray, n: int = 3) -> list:
+    """Local minima with at least n bars on each side."""
+    result = []
+    for i in range(n, len(arr) - n):
+        if all(arr[i] < arr[i - j] for j in range(1, n + 1)) and \
+           all(arr[i] < arr[i + j] for j in range(1, n + 1)):
+            result.append((i, float(arr[i])))
+    return result
+
+
+def _detect_candle_patterns(
+    df: pd.DataFrame,
+    bb_lo: float,
+    bb_hi: float,
+    sma50: float,
+    pivots: dict,
+) -> list:
+    """Detect high-probability candlestick / price-action patterns on recent bars.
+
+    Returns a list of pattern dicts:
+      {"name": str, "direction": "bullish"|"bearish"|"neutral",
+       "at_key_level": bool, "strength": "high"|"moderate"}
+
+    Patterns are intentionally conservative — false positives dilute the signal.
+    """
+    if len(df) < 10:
+        return []
+
+    tail   = df.tail(30).copy()
+    hi20   = float(tail["high"].max())
+    lo20   = float(tail["low"].min())
+    p_vals = list(pivots.values()) if isinstance(pivots, dict) else []
+
+    last  = tail.iloc[-1]
+    prev  = tail.iloc[-2]
+    prev2 = tail.iloc[-3] if len(tail) >= 3 else None
+
+    found: list = []
+
+    # 1. Pin bars (last two closed candles)
+    for candle in (last, prev):
+        pin = _pin_bar(candle)
+        if pin is None:
+            continue
+        at_key = _at_key_level(candle, bb_lo, bb_hi, sma50, p_vals, hi20, lo20)
+        name   = "pin bar at key level" if at_key else "pin bar"
+        found.append({
+            "name": name, "direction": pin,
+            "at_key_level": at_key, "strength": "high" if at_key else "moderate",
+        })
+
+    # 2. Engulfing candles (most recent candle vs previous)
+    c_o, c_c = float(last["open"]),  float(last["close"])
+    p_o, p_c = float(prev["open"]),  float(prev["close"])
+    c_body   = abs(c_c - c_o)
+    p_body   = abs(p_c - p_o)
+    if c_body >= p_body * 0.8 and p_body > 0:
+        if c_c > c_o and p_c < p_o and c_c >= p_o and c_o <= p_c:
+            found.append({"name": "bullish engulfing", "direction": "bullish",
+                          "at_key_level": False, "strength": "high"})
+        elif c_c < c_o and p_c > p_o and c_c <= p_o and c_o >= p_c:
+            found.append({"name": "bearish engulfing", "direction": "bearish",
+                          "at_key_level": False, "strength": "high"})
+
+    # 3. Inside bar (consolidation — neutral, but signals breakout potential)
+    if float(last["high"]) < float(prev["high"]) and float(last["low"]) > float(prev["low"]):
+        found.append({"name": "inside bar", "direction": "neutral",
+                      "at_key_level": False, "strength": "moderate"})
+
+    # 4. Hammer / Shooting Star (classic 2:1 wick-to-body ratio)
+    already_pin = any(p["name"].startswith("pin bar") for p in found)
+    if not already_pin:
+        for candle in (last, prev):
+            o, h, l, cl = (float(candle[x]) for x in ("open", "high", "low", "close"))
+            total = h - l
+            if total < 1e-8:
+                continue
+            body = abs(cl - o)
+            lo_w = min(o, cl) - l
+            hi_w = h - max(o, cl)
+            if body > 0:
+                at_key = _at_key_level(candle, bb_lo, bb_hi, sma50, p_vals, hi20, lo20)
+                if lo_w >= 2.0 * body and hi_w <= 0.3 * body:
+                    found.append({"name": "hammer", "direction": "bullish",
+                                  "at_key_level": at_key,
+                                  "strength": "high" if at_key else "moderate"})
+                    break
+                if hi_w >= 2.0 * body and lo_w <= 0.3 * body:
+                    found.append({"name": "shooting star", "direction": "bearish",
+                                  "at_key_level": at_key,
+                                  "strength": "high" if at_key else "moderate"})
+                    break
+
+    # 5. Morning / Evening Star (3-candle reversal)
+    if prev2 is not None:
+        c1_o, c1_c = float(prev2["open"]), float(prev2["close"])
+        c2_o, c2_c = float(prev["open"]),  float(prev["close"])
+        c3_o, c3_c = float(last["open"]),  float(last["close"])
+        body1 = abs(c1_c - c1_o)
+        body2 = abs(c2_c - c2_o)
+        body3 = abs(c3_c - c3_o)
+        mid1  = (c1_o + c1_c) / 2
+        if body1 > 0 and body2 <= body1 * 0.4 and body3 >= body1 * 0.5:
+            if c1_c < c1_o and c3_c > c3_o and c3_c > mid1:
+                found.append({"name": "morning star", "direction": "bullish",
+                              "at_key_level": False, "strength": "high"})
+            elif c1_c > c1_o and c3_c < c3_o and c3_c < mid1:
+                found.append({"name": "evening star", "direction": "bearish",
+                              "at_key_level": False, "strength": "high"})
+
+    # 6. Double Top / Bottom (structural pattern on last 30 bars)
+    if len(tail) >= 20:
+        hi_arr  = tail["high"].values
+        lo_arr  = tail["low"].values
+        cur_px  = float(last["close"])
+        peaks   = _local_peaks(hi_arr)
+        troughs = _local_troughs(lo_arr)
+
+        if len(peaks) >= 2:
+            p1, p2  = peaks[-2][1], peaks[-1][1]
+            avg_top = (p1 + p2) / 2
+            if avg_top > 0 and abs(p1 - p2) / avg_top <= 0.003 and cur_px < avg_top * 0.997:
+                found.append({"name": "double top", "direction": "bearish",
+                              "at_key_level": True, "strength": "high"})
+
+        if len(troughs) >= 2:
+            t1, t2  = troughs[-2][1], troughs[-1][1]
+            avg_bot = (t1 + t2) / 2
+            if avg_bot > 0 and abs(t1 - t2) / avg_bot <= 0.003 and cur_px > avg_bot * 1.003:
+                found.append({"name": "double bottom", "direction": "bullish",
+                              "at_key_level": True, "strength": "high"})
+
+    # 7. Head and Shoulders / Inverse H&S (structural reversal)
+    if len(tail) >= 15:
+        hi_arr      = tail["high"].values
+        lo_arr      = tail["low"].values
+        hs_peaks    = _local_peaks(hi_arr, n=2)
+        ihs_troughs = _local_troughs(lo_arr, n=2)
+
+        if len(hs_peaks) >= 3:
+            ls, hd, rs = hs_peaks[-3], hs_peaks[-2], hs_peaks[-1]
+            if (hd[1] > ls[1] and hd[1] > rs[1] and
+                    hd[1] > 0 and abs(ls[1] - rs[1]) / hd[1] <= 0.03):
+                found.append({"name": "head and shoulders", "direction": "bearish",
+                              "at_key_level": True, "strength": "high"})
+
+        if len(ihs_troughs) >= 3:
+            ls, hd, rs = ihs_troughs[-3], ihs_troughs[-2], ihs_troughs[-1]
+            if (hd[1] < ls[1] and hd[1] < rs[1] and
+                    abs(ls[1]) > 0 and abs(ls[1] - rs[1]) / abs(ls[1]) <= 0.03):
+                found.append({"name": "inverse head and shoulders", "direction": "bullish",
+                              "at_key_level": True, "strength": "high"})
+
+    return found
+
+
+def _pattern_bonus(patterns: list, ts_direction: str) -> int:
+    """Score bonus from confirming candlestick patterns (capped at +3).
+
+    Direction map: bullish → BUY, bearish → SELL.
+    Pin bar at key level or structural pattern (double top/H&S): +2.
+    Other high-strength confirming pattern: +1.
+    Neutral patterns (inside bar) contribute 0.
+    """
+    bonus = 0
+    for p in patterns:
+        p_dir = p.get("direction", "neutral")
+        if p_dir == "neutral":
+            continue
+        p_ts = "BUY" if p_dir == "bullish" else "SELL"
+        if p_ts != ts_direction:
+            continue
+        if p.get("at_key_level") and p.get("strength") == "high":
+            bonus += 2
+        elif p.get("strength") == "high":
+            bonus += 1
+    return min(3, bonus)
+
+
 def _tech_signal(rsi14: float, macd_hist: float, bb_state: str, trend: str,
-                 close: float = 0.0, sma20: float = 0.0, sma50: float = 0.0) -> dict:
+                 close: float = 0.0, sma20: float = 0.0, sma50: float = 0.0,
+                 patterns: "list | None" = None) -> dict:
     """Compute a Python-anchored technical signal score (1–10) and direction.
 
     RSI tiers set direction and base score.  MACD, Bollinger, SMA20/50 alignment,
