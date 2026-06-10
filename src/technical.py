@@ -348,6 +348,102 @@ def _detect_candle_patterns(
     return found
 
 
+# ── Fibonacci retracement / extension ─────────────────────────────────────────
+
+_FIB_LEVELS = [
+    (-0.618, "-61.8%"),
+    (-0.272, "-27.2%"),
+    ( 0.000,   "0.0%"),
+    ( 0.236,  "23.6%"),
+    ( 0.382,  "38.2%"),
+    ( 0.500,  "50.0%"),
+    ( 0.618,  "61.8%"),
+    ( 0.786,  "78.6%"),
+    ( 1.000, "100.0%"),
+    ( 1.272, "127.2%"),
+    ( 1.618, "161.8%"),
+]
+
+
+def _pip_size(price: float) -> float:
+    """Return pip size: 0.01 for JPY-style pairs (price ≥ 10), 0.0001 for others."""
+    return 0.01 if price >= 10.0 else 0.0001
+
+
+def _fibonacci(df: pd.DataFrame, current_price: float) -> dict:
+    """Identify the swing high/low from ~3 months of daily data and compute
+    Fibonacci retracement (23.6%–78.6%) and extension (127.2%, 161.8%) levels.
+
+    Returns:
+      status        — "ok" | "insufficient" | "range too small"
+      swing_high    — highest local peak in window
+      swing_low     — lowest local trough in window
+      range_pips    — swing range in pips
+      levels        — {label: price} for all 11 levels
+      near_levels   — levels within 10 pips of current_price, sorted by distance
+      nearest_above — up to 3 nearest levels above current price [(label, price), ...]
+      nearest_below — up to 3 nearest levels below current price
+    """
+    tail = df.tail(65)
+    if len(tail) < 20:
+        return {"status": "insufficient"}
+
+    hi_arr = tail["high"].values
+    lo_arr = tail["low"].values
+    pip    = _pip_size(current_price)
+
+    # Use n=5 for significant peaks/troughs — filters out minor noise
+    peaks   = _local_peaks(hi_arr, n=5)
+    troughs = _local_troughs(lo_arr, n=5)
+
+    sh_v = max(peaks, key=lambda x: x[1])[1] if peaks else float(np.max(hi_arr))
+    sl_v = min(troughs, key=lambda x: x[1])[1] if troughs else float(np.min(lo_arr))
+
+    rng = sh_v - sl_v
+    if rng < pip * 20:
+        return {"status": "range too small", "range_pips": round(rng / pip)}
+
+    range_pips = round(rng / pip)
+    dec = 5 if pip < 0.001 else 3
+
+    # All levels: level = swing_low + range × ratio
+    levels: dict = {}
+    for ratio, label in _FIB_LEVELS:
+        levels[label] = round(sl_v + rng * ratio, dec)
+
+    # Flag any level within 10 pips of current price
+    near_levels = []
+    for label, price in levels.items():
+        dist_pips = abs(current_price - price) / pip
+        if dist_pips <= 10:
+            ltype = "support" if price < current_price else ("resistance" if price > current_price else "at")
+            near_levels.append({
+                "label": label, "price": price,
+                "distance_pips": round(dist_pips, 1), "type": ltype,
+            })
+    near_levels.sort(key=lambda x: x["distance_pips"])
+
+    nearest_above = sorted(
+        [(lb, px) for lb, px in levels.items() if px > current_price],
+        key=lambda x: x[1],
+    )[:3]
+    nearest_below = sorted(
+        [(lb, px) for lb, px in levels.items() if px < current_price],
+        key=lambda x: x[1], reverse=True,
+    )[:3]
+
+    return {
+        "status":        "ok",
+        "swing_high":    round(sh_v, dec),
+        "swing_low":     round(sl_v, dec),
+        "range_pips":    range_pips,
+        "levels":        levels,
+        "near_levels":   near_levels,
+        "nearest_above": nearest_above,
+        "nearest_below": nearest_below,
+    }
+
+
 def _pattern_bonus(patterns: list, ts_direction: str) -> int:
     """Score bonus from confirming candlestick patterns (capped at +3).
 
