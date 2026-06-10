@@ -169,6 +169,22 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
                 f"range={fib['range_pips']}p"
                 + near_str
             )
+        # RSI divergence from daily timeframe
+        div      = daily.get("divergence", {})
+        div_bul  = div.get("bullish")
+        div_ber  = div.get("bearish")
+        div_parts: list = []
+        if div_bul:
+            div_parts.append(
+                f"bullish:{div_bul['strength']}"
+                f"({div_bul['price_diff_pips']:.0f}p/{div_bul['rsi_diff']:.0f}pt)"
+            )
+        if div_ber:
+            div_parts.append(
+                f"bearish:{div_ber['strength']}"
+                f"({div_ber['price_diff_pips']:.0f}p/{div_ber['rsi_diff']:.0f}pt)"
+            )
+        lines.append(f"DIV={','.join(div_parts) or 'none'}")
     else:
         lines.append("D1:UNAVAILABLE")
 
