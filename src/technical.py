@@ -496,6 +496,10 @@ def _summarise(df: pd.DataFrame, label: str) -> dict:
     macd_hist_val = round(hist.iloc[-1], 6)
     trend_str     = _trend(close, sma50, sma200)
     sma20_val     = float(sma20.iloc[-1])
+    pivots        = _pivots(df.iloc[-2])
+    patterns      = _detect_candle_patterns(
+        df, float(bb_lower), float(bb_upper), float(sma50), pivots
+    )
 
     return {
         "timeframe": label,
@@ -511,10 +515,11 @@ def _summarise(df: pd.DataFrame, label: str) -> dict:
         "atr14": round(atr.iloc[-1], 5),
         "recent_high_20": round(df["high"].tail(20).max(), 5),
         "recent_low_20": round(df["low"].tail(20).min(), 5),
-        "pivots_from_last_candle": _pivots(df.iloc[-2]),
+        "pivots_from_last_candle": pivots,
+        "patterns": patterns,
         "tech_signal": _tech_signal(
             rsi14_val, macd_hist_val, bb_state, trend_str,
-            float(last), sma20_val, float(sma50),
+            float(last), sma20_val, float(sma50), patterns=patterns,
         ),
     }
 
