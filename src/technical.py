@@ -734,8 +734,10 @@ def _summarise(df: pd.DataFrame, label: str) -> dict:
     sma200 = close.rolling(200).mean().iloc[-1] if len(close) >= 200 else float("nan")
     rsi = _rsi(close)
     macd, signal, hist = _macd(close)
-    atr = _atr(df)
-    last = close.iloc[-1]
+    atr  = _atr(df)
+    stk, std = _stochastic(df)
+    cci_s    = _cci(df)
+    last     = close.iloc[-1]
 
     macd_state = "bullish (MACD > signal)" if macd.iloc[-1] > signal.iloc[-1] else "bearish (MACD < signal)"
     bb_upper = (sma20 + 2 * std20).iloc[-1]
@@ -751,6 +753,10 @@ def _summarise(df: pd.DataFrame, label: str) -> dict:
     macd_hist_val = round(hist.iloc[-1], 6)
     trend_str     = _trend(close, sma50, sma200)
     sma20_val     = float(sma20.iloc[-1])
+    stoch_k_val   = float(stk.iloc[-1])
+    stoch_d_val   = float(std.iloc[-1])
+    cci_val       = float(cci_s.iloc[-1])
+    osc_conf      = _oscillator_confluence(rsi14_val, stoch_k_val, stoch_d_val, cci_val)
     pivots        = _pivots(df.iloc[-2])
     fib           = _fibonacci(df, float(last))
     fib_vals      = list(fib["levels"].values()) if fib.get("status") == "ok" else []
@@ -772,6 +778,10 @@ def _summarise(df: pd.DataFrame, label: str) -> dict:
         "sma50": round(sma50, 5),
         "sma200": (round(sma200, 5) if not np.isnan(sma200) else "n/a"),
         "atr14": round(atr.iloc[-1], 5),
+        "stochastic_k": round(stoch_k_val, 1) if stoch_k_val == stoch_k_val else None,
+        "stochastic_d": round(stoch_d_val, 1) if stoch_d_val == stoch_d_val else None,
+        "cci": round(cci_val, 1) if cci_val == cci_val else None,
+        "oscillator_confluence": osc_conf,
         "recent_high_20": round(df["high"].tail(20).max(), 5),
         "recent_low_20": round(df["low"].tail(20).min(), 5),
         "pivots_from_last_candle": pivots,
