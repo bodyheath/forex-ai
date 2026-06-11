@@ -212,6 +212,31 @@ def _entry_quality(pair: str, now_ak: datetime) -> tuple:
     return "🔴", "WAIT UNTIL TOMORROW — optimal window more than 6 hours away"
 
 
+def _session_status_for_pair(pair: str, now_ak: datetime) -> tuple:
+    """Return (is_active, close_str) for the pair's primary trading session.
+
+    is_active: True if the session is currently open in Auckland time.
+    close_str: Human-readable close time, e.g. '4am', '9pm'.
+    """
+    _, _, _, _, _, _, sess_name = _entry_window_for_pair(pair)
+    hour = now_ak.hour
+    _SESS_WINDOWS = {
+        "London open":   (19, 4,  "4am",  True),
+        "Tokyo open":    (12, 21, "9pm",  False),
+        "New York open": (1,  10, "10am", False),
+        "Sydney open":   (9,  22, "10pm", False),
+    }
+    window = _SESS_WINDOWS.get(sess_name)
+    if not window:
+        return False, ""
+    open_h, close_h, close_label, wraps = window
+    if wraps:
+        is_active = hour >= open_h or hour < close_h
+    else:
+        is_active = open_h <= hour < close_h
+    return is_active, close_label
+
+
 def _time_ref_for_entry(start_h: int, start_m: int, now_ak: datetime) -> str:
     """Return 'TODAY', 'tonight', or 'tomorrow' for a session start time."""
     cur_mins  = now_ak.hour * 60 + now_ak.minute
