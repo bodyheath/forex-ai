@@ -1816,13 +1816,22 @@ def _send_telegram_summary(
                 lines.append(f"Risk ${risk_usd} → Make ${profit_usd} ({rr_ratio:.1f}:1)")
             except (TypeError, ValueError, ZeroDivisionError):
                 pass
-        lines += [
-            f"{_eq_we_e} <b>BE READY TO ENTER:</b> {_ew_we[6]} {_start_we} Auckland {_tref_we}",
-            f"If confidence reaches 7+ before {_start_we} — enter immediately at market price",
-            f"If confidence reaches 7+ during {_ew_we[6]} — enter within 30 minutes of the open",
-            f"If confidence has not reached 7+ by {_ew_we[5]} {_tref_we} — skip this pair today",
-            f"Needs: {ntc}",
-        ]
+        _sess_we_active, _sess_we_close = _session_status_for_pair(rr["pair"], now_ak)
+        if _sess_we_active:
+            lines += [
+                f"{_eq_we_e} <b>{_ew_we[6]} currently active — closes {_sess_we_close} Auckland</b>",
+                f"If confidence reaches 7+ now — enter immediately at market price",
+                f"If confidence has not reached 7+ by {_ew_we[5]} — skip this pair today",
+                f"Needs: {ntc}",
+            ]
+        else:
+            lines += [
+                f"{_eq_we_e} <b>BE READY TO ENTER:</b> {_ew_we[6]} {_start_we} Auckland {_tref_we}",
+                f"If confidence reaches 7+ before {_start_we} — enter immediately at market price",
+                f"If confidence reaches 7+ during {_ew_we[6]} — enter within 30 minutes of the open",
+                f"If confidence has not reached 7+ by {_ew_we[5]} {_tref_we} — skip this pair today",
+                f"Needs: {ntc}",
+            ]
         return lines
 
     def _approaching_entry(rr: dict) -> list:
