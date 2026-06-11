@@ -1713,6 +1713,17 @@ def _send_telegram_summary(
         _rib_line = _ribbon_display(r.get("bundle", {}))
         if _rib_line:
             block.append(_rib_line)
+            _rib_status = (r.get("bundle", {}).get("technical", {}).get("daily", {}) or {}).get("ribbon", {}).get("status", "")
+            _rib_bull = _rib_status in ("ALIGNED_BULL", "LEANING_BULL")
+            _rib_bear = _rib_status in ("ALIGNED_BEAR", "LEANING_BEAR")
+            if (_rib_bull and direction == "SELL") or (_rib_bear and direction == "BUY"):
+                block.append("⚠️ <b>MA Ribbon conflict — ribbon aligned against trade direction, higher risk</b>")
+                try:
+                    _conf_adj = int(conf) - 1
+                    if _rib_status in ("ALIGNED_BULL", "ALIGNED_BEAR"):
+                        block.append(f"Adjusted confidence: {_conf_adj}/10 (−1 for strong ribbon conflict)")
+                except (TypeError, ValueError):
+                    pass
         block.append("🔍 <b>Why all data agrees:</b>")
         for why_line in _why_agrees_lines(r, ctx):
             block.append(why_line)
