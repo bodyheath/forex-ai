@@ -1312,11 +1312,17 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
         # Next key monitoring time
         _ew_t  = _entry_window_for_pair(pair)
         _eq_e, _ = _entry_quality(pair, now_ak)
-        _tref_t = _time_ref_for_entry(_ew_t[0], _ew_t[1], now_ak)
-        _check_line = (
-            f"⏰ <b>Next key time:</b> {_ew_t[6]} "
-            f"{_fmt_time_exact(_ew_t[0], _ew_t[1])} Auckland {_tref_t}"
-        )
+        _sess_active, _sess_close = _session_status_for_pair(pair, now_ak)
+        if _sess_active:
+            _check_line = (
+                f"⏰ <b>{_ew_t[6]} currently active — closes {_sess_close} Auckland</b>"
+            )
+        else:
+            _tref_t = _time_ref_for_entry(_ew_t[0], _ew_t[1], now_ak)
+            _check_line = (
+                f"⏰ <b>Next key time:</b> {_ew_t[6]} "
+                f"{_fmt_time_exact(_ew_t[0], _ew_t[1])} Auckland {_tref_t}"
+            )
 
         if entry and cur:
             stale_note = " ⚠️ last known price" if stale else ""
