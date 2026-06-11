@@ -1148,7 +1148,8 @@ def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict) -> tuple:
     if cur is None:
         return entry, stop, target
 
-    is_jpy = "JPY" in pair.upper()
+    quote_ccy = pair.split("/")[-1].upper() if "/" in pair else pair[-3:].upper()
+    is_jpy = quote_ccy == "JPY"
     atr_est = 0.50 if is_jpy else (0.0080 if any(c in pair.upper() for c in ("EUR", "GBP")) else 0.0050)
     dirn = (parsed.get("direction") or "").upper()
     if dirn == "BUY":
@@ -1159,6 +1160,12 @@ def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict) -> tuple:
         entry  = entry  or cur
         stop   = stop   or round(entry + atr_est * 1.5, 3 if is_jpy else 5)
         target = target or round(entry - atr_est * 2.0, 3 if is_jpy else 5)
+    # Reject impossible levels (negative price, zero, or move > 50% of entry)
+    if entry and stop is not None and target is not None:
+        if stop <= 0 or target <= 0:
+            return None, None, None
+        if entry > 0 and (abs(entry - stop) > entry * 0.5 or abs(entry - target) > entry * 0.5):
+            return None, None, None
     return entry, stop, target
 
 
