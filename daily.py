@@ -660,6 +660,184 @@ def _weekly_performance_section(date: str) -> list:
     return lines
 
 
+def _build_research_section(research_result=None) -> list:
+    """Build the RESEARCH TRADES Telegram section from data/research_trades.csv.
+
+    Three display modes:
+      • 30-day analysis complete → recommendation line
+      • Closed trades exist      → full stats breakdown
+      • No closed trades yet     → collecting-data summary
+    Returns an empty list when no research trades exist at all.
+    """
+    try:
+        from src import research_tracker as _rtrk
+        rows = _rtrk.load()
+    except Exception:
+        return []
+    if not rows:
+        return []
+
+    def _f(v):
+        try:
+            return float(v)
+        except (TypeError, ValueError):
+            return None
+
+    open_rows = [r for r in rows if r.get("status") in ("OPEN", "NO_PRICE_LEVELS")]
+    closed    = [r for r in rows if r.get("status") in ("WIN", "LOSS", "BREAKEVEN", "EXPIRED")]
+    wins      = [r for r in closed if r.get("status") == "WIN"]
+    losses    = [r for r in closed if r.get("status") == "LOSS"]
+
+    # Days elapsed from oldest trade date
+    days_elapsed = 0
+    try:
+        dates = [r.get("date", "") for r in rows if r.get("date")]
+        if dates:
+            days_elapsed = (_auckland_now().replace(tzinfo=None) -
+                            datetime.strptime(min(dates), "%Y-%m-%d")).days
+    except Exception:
+        pass
+    days_remaining = max(0, 30 - days_elapsed)
+
+    sec = ["", "━━━━━━━━━━━━━━━━━━━━━"]
+
+    # ── Mode 1: 30-day analysis has fired ─────────────────────────────────────
+    if research_result and research_result.get("recommendation") not in (None, "INSUFFICIENT_DATA"):
+        rec = research_result.get("recommendation", "")
+        c6  = (research_result.get("band_results") or {}).get("6") or {}
+        wr6 = f"{c6.get('win_rate', 0) * 100:.0f}%" if c6 else "?"
+        sec.append("🔬 <b>RESEARCH TRADES — ANALYSIS COMPLETE</b>")
+        if rec == "LOWER_TO_6":
+            sec.append(
+                f"Recommendation: LOWER_TO_6 — conf 6 setups profitable at {wr6} win rate"
+            )
+        elif rec == "KEEP_AT_7":
+            sec.append(
+                f"Recommendation: KEEP_AT_7 — conf 6 setups only {wr6} win rate, insufficient edge"
+            )
+        else:
+            sec.append(f"Recommendation: {rec}")
+            rsn = research_result.get("reasoning", "")
+            if rsn:
+                sec.append(f"<i>{rsn}</i>")
+        return sec
+
+    n_open   = len(open_rows)
+    n_closed = len(closed)
+    n_total  = len(rows)
+    sec.append("🔬 <b>RESEARCH TRADES</b>")
+
+    # ── Mode 2: No closed trades yet ──────────────────────────────────────────
+    if not closed:
+        sec.append(
+            f"<b>{n_open}</b> open trades tracking | <b>0</b> closed trades"
+        )
+        if days_remaining > 0:
+            sec.append(f"Collecting data — first analysis in {days_remaining} days")
+        else:
+            sec.append("Collecting data — analysis pending (need 10+ closed trades)")
+        pair_freq: dict = {}
+        for r in rows:
+            p = r.get("pair", "")
+            if p:
+                pair_freq[p] = pair_freq.get(p, 0) + 1
+        top = sorted(pair_freq, key=lambda x: pair_freq[x], reverse=True)[:4]
+        if top:
+            sec.append(f"Most active pairs: {', '.join(top)}")
+        return sec
+
+    # ── Mode 3: Full breakdown ─────────────────────────────────────────────────
+    n_wins   = len(wins)
+    n_losses = len(losses)
+    decisive = n_wins + n_losses
+    wr_pct   = int(n_wins / decisive * 100) if decisive else 0
+
+    sec.append(
+        f"Open: <b>{n_open}</b> trades | Closed: <b>{n_closed}</b> trades | Total: <b>{n_total}</b>"
+    )
+    sec.append("")
+    sec.append(
+        f"Win rate: <b>{wr_pct}%</b> ({n_wins}W / {n_losses}L) — {decisive} closed trades"
+    )
+
+    win_pips  = [_f(r.get("pips")) for r in wins   if _f(r.get("pips")) is not None]
+    loss_pips = [_f(r.get("pips")) for r in losses if _f(r.get("pips")) is not None]
+    if win_pips and loss_pips:
+        sec.append(
+            f"Avg win: <b>+{sum(win_pips)/len(win_pips):.0f} pips</b> | "
+            f"Avg loss: <b>{sum(loss_pips)/len(loss_pips):.0f} pips</b>"
+        )
+    elif win_pips:
+        sec.append(f"Avg win: <b>+{sum(win_pips)/len(win_pips):.0f} pips</b>")
+    elif loss_pips:
+        sec.append(f"Avg loss: <b>{sum(loss_pips)/len(loss_pips):.0f} pips</b>")
+
+    all_with_pips = [(r, _f(r.get("pips"))) for r in closed if _f(r.get("pips")) is not None]
+    if all_with_pips:
+        best  = max(all_with_pips, key=lambda x: x[1])
+        worst = min(all_with_pips, key=lambda x: x[1])
+        sec.append(
+            f"Best trade: {best[0].get('pair')} {best[0].get('direction')} {best[1]:+.0f} pips"
+        )
+        if worst[0] is not best[0]:
+            sec.append(
+                f"Worst trade: {worst[0].get('pair')} {worst[0].get('direction')} {worst[1]:+.0f} pips"
+            )
+
+    if win_pips and loss_pips:
+        total_loss = sum(abs(p) for p in loss_pips if p < 0)
+        if total_loss > 0:
+            sec.append(f"Profit factor: <b>{sum(win_pips) / total_loss:.2f}</b>")
+
+    # Confidence breakdown (bands 5, 6, 7)
+    sec.append("")
+    sec.append("📊 <b>Confidence breakdown:</b>")
+    for cv in (5, 6, 7):
+        band = [r for r in closed if str(r.get("confidence", "")).strip() == str(cv)]
+        bw   = sum(1 for r in band if r.get("status") == "WIN")
+        bl   = sum(1 for r in band if r.get("status") == "LOSS")
+        bd   = bw + bl
+        if bd:
+            sec.append(f"{cv}/10 setups: {bw}W {bl}L — {int(bw/bd*100)}% win rate")
+        elif band:
+            sec.append(f"{cv}/10 setups: {len(band)} trades — no decisive outcomes yet")
+        else:
+            sec.append(f"{cv}/10 setups: 0W 0L — no data yet")
+
+    # Most promising pairs by win rate (min 1 closed trade)
+    pair_stats: dict = {}
+    for r in closed:
+        p  = r.get("pair", "?")
+        ps = pair_stats.setdefault(p, {"wins": 0, "total": 0})
+        ps["total"] += 1
+        if r.get("status") == "WIN":
+            ps["wins"] += 1
+    sorted_pairs = sorted(
+        pair_stats.items(),
+        key=lambda x: (x[1]["wins"] / max(x[1]["total"], 1), x[1]["total"]),
+        reverse=True,
+    )
+    sec.append("")
+    sec.append("🔬 <b>Most promising pairs so far:</b>")
+    for pair, ps in sorted_pairs[:4]:
+        pwr = int(ps["wins"] / ps["total"] * 100) if ps["total"] else 0
+        sec.append(f"{pair} — {ps['wins']} wins from {ps['total']} trades ({pwr}%)")
+
+    # Days until / since threshold analysis
+    sec.append("")
+    if days_remaining > 0:
+        sec.append(
+            f"⏳ <b>Days until threshold analysis: {days_remaining} days remaining</b>"
+        )
+        sec.append(
+            "(System will recommend whether to lower threshold to 6 after 30 days of data)"
+        )
+    else:
+        sec.append("⏳ <b>Threshold analysis: 30+ days of data — awaiting 10+ closed trades</b>")
+
+    return sec
+
+
 def _send_in_parts(sections: list) -> None:
     MAX = 4000
     current: list[str] = []
