@@ -1809,16 +1809,16 @@ def _send_telegram_summary(
                     _fib_d = (rr.get("bundle") or {}).get("technical", {}).get("daily", {})
                     if isinstance(_fib_d, dict):
                         _fib = _fib_d.get("fibonacci", {})
-                        if isinstance(_fib, dict):
+                        if isinstance(_fib, dict) and _fib.get("status") == "ok":
                             _fib_key = "nearest_above" if dirn == "BUY" else "nearest_below"
-                            _fib_lvl = _fib.get(_fib_key)
-                            if _fib_lvl is not None:
-                                _fib_px = float(_fib_lvl.get("price") if isinstance(_fib_lvl, dict) else _fib_lvl)
+                            _fib_levels = _fib.get(_fib_key, [])
+                            if _fib_levels:
+                                _fib_px = float(_fib_levels[0][1])  # (label, price) tuple
                                 _fib_rr = abs(_fib_px - float(ind_e)) / abs(float(ind_e) - float(ind_s))
                                 if _fib_rr >= 1.3 and _fib_rr > rr_ratio:
                                     ind_t = _fib_px
                                     rr_ratio = _fib_rr
-                except (TypeError, ValueError, ZeroDivisionError):
+                except (TypeError, ValueError, ZeroDivisionError, IndexError):
                     pass
                 # Floor at 1.3:1
                 rr_ratio = max(rr_ratio, 1.3)
