@@ -1900,6 +1900,11 @@ def _send_telegram_summary(
             learn_lines.append("🧠 Win rate: building history...")
         all_sections.append(learn_lines)
 
+        # RESEARCH TRADES
+        _rt_sec = _build_research_section(research_result=research_result)
+        if _rt_sec:
+            all_sections.append(_rt_sec)
+
         # RISK DASHBOARD
         if risk_data and risk_data.get("profile"):
             try:
