@@ -2131,6 +2131,11 @@ def _send_telegram_summary(
                 ap_sec.extend(_approaching_entry(rr))
             all_sections.append(ap_sec)
 
+        # RESEARCH TRADES
+        _rt_sec_id = _build_research_section(research_result=research_result)
+        if _rt_sec_id:
+            all_sections.append(_rt_sec_id)
+
         if cost_lines:
             all_sections.append(
                 ["", "━━━━━━━━━━━━━━━━━━━━━", "⚠️ <b>SYSTEM HEALTH</b>"] + cost_lines
