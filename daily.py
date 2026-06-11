@@ -1803,7 +1803,25 @@ def _send_telegram_summary(
             is_jpy = "JPY" in rr["pair"].upper()
             dec = 3 if is_jpy else 5
             try:
-                rr_ratio   = abs(float(ind_t) - float(ind_e)) / abs(float(ind_e) - float(ind_s))
+                rr_ratio = abs(float(ind_t) - float(ind_e)) / abs(float(ind_e) - float(ind_s))
+                # Override with nearest Fibonacci level if it gives a better natural R:R
+                try:
+                    _fib_d = (rr.get("bundle") or {}).get("technical", {}).get("daily", {})
+                    if isinstance(_fib_d, dict):
+                        _fib = _fib_d.get("fibonacci", {})
+                        if isinstance(_fib, dict):
+                            _fib_key = "nearest_above" if dirn == "BUY" else "nearest_below"
+                            _fib_lvl = _fib.get(_fib_key)
+                            if _fib_lvl is not None:
+                                _fib_px = float(_fib_lvl.get("price") if isinstance(_fib_lvl, dict) else _fib_lvl)
+                                _fib_rr = abs(_fib_px - float(ind_e)) / abs(float(ind_e) - float(ind_s))
+                                if _fib_rr >= 1.3 and _fib_rr > rr_ratio:
+                                    ind_t = _fib_px
+                                    rr_ratio = _fib_rr
+                except (TypeError, ValueError, ZeroDivisionError):
+                    pass
+                # Floor at 1.3:1
+                rr_ratio = max(rr_ratio, 1.3)
                 risk_pips  = abs(float(ind_e) - float(ind_s)) / _pip_size(rr["pair"])
                 profit_pips= abs(float(ind_t) - float(ind_e)) / _pip_size(rr["pair"])
                 risk_usd   = max(1, round(risk_pips))
