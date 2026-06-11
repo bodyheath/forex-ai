@@ -1409,11 +1409,13 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
                             sec.append(f"Consider partial profit at {_fmt_price(halfway_px)} (50% level)")
                         except Exception:
                             sec.append("📈 Good progress — price moving toward target")
-                    elif abs(pips) <= 10:
+                    elif pips > 5:
+                        sec.append("📈 Slight gain — price moving in the right direction")
+                    elif abs(pips) <= 5:
                         sec.append("⚠️ <b>Trade at breakeven — monitor closely</b>")
                         sec.append("Price needs to move away from entry")
                     else:
-                        sec.append(f"📉 Currently underwater — {abs(pips_to_stop):.0f} pips from stop loss")
+                        sec.append(f"🔶 Slightly underwater — {abs(pips):.0f} pips from entry, stop is {abs(pips_to_stop):.0f} pips away — still safe")
                         sec.append("Stay disciplined — let the analysis play out")
 
                     # Additional age warning when trade has been open too long
