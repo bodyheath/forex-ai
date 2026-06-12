@@ -1603,23 +1603,43 @@ def _send_telegram_summary(
         c2 = p2.upper().replace("/", "").replace("-", "")
         return len(c1) == 6 and len(c2) == 6 and c1 == c2[3:] + c2[:3]
 
-    yes_trades  = [r for r in deep_results if r["parsed"].get("trade_this") == "YES"]
+    # Pairs the analyst said YES but whose effective confidence (after MA ribbon
+    # penalty) falls below the live-trade threshold are demoted to watch list.
+    try:
+        from src import threshold_manager as _tm_eff
+        _trade_conf_thr = _tm_eff.get_confidence_threshold()
+    except Exception:
+        _trade_conf_thr = 7
+
+    _demoted_pairs = {
+        r["pair"] for r in deep_results
+        if r["parsed"].get("trade_this") == "YES"
+        and _eff_conf(r) < _trade_conf_thr
+    }
+
+    yes_trades  = [
+        r for r in deep_results
+        if r["parsed"].get("trade_this") == "YES"
+        and r["pair"] not in _demoted_pairs
+    ]
     watch_list  = sorted(
         [r for r in deep_results
-         if r["parsed"].get("trade_this") != "YES" and 5 <= _conf(r) <= 6],
-        key=_conf, reverse=True,
+         if (r["parsed"].get("trade_this") != "YES" or r["pair"] in _demoted_pairs)
+         and 5 <= _eff_conf(r) <= 6],
+        key=_eff_conf, reverse=True,
     )[:3]
     near_misses = sorted(
-        [r for r in deep_results if r["parsed"].get("trade_this") != "YES"],
-        key=_conf, reverse=True,
+        [r for r in deep_results
+         if r["parsed"].get("trade_this") != "YES" or r["pair"] in _demoted_pairs],
+        key=_eff_conf, reverse=True,
     )
     upcoming = sorted(
         [r for r in near_misses
-         if 3 <= _conf(r) <= 4
+         if 3 <= _eff_conf(r) <= 4
          and r["pair"].upper() not in _open_pair_set
          and not any(_is_inverse(r["pair"], op) for op in _open_pair_set)
         ],
-        key=_conf, reverse=True,
+        key=_eff_conf, reverse=True,
     )[:3]
 
     _sizes, _exposure, _risk_state = {}, {}, {}
