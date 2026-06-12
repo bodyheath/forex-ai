@@ -1954,13 +1954,7 @@ def _send_telegram_summary(
             _rib_wl_bull = _rib_wl_status in ("ALIGNED_BULL", "LEANING_BULL")
             _rib_wl_bear = _rib_wl_status in ("ALIGNED_BEAR", "LEANING_BEAR")
             if (_rib_wl_bull and dirn == "SELL") or (_rib_wl_bear and dirn == "BUY"):
-                lines.append("⚠️ <b>MA Ribbon conflict — ribbon aligned against trade direction, higher risk</b>")
-                try:
-                    _conf_wl_adj = int(conf) - 1
-                    if _rib_wl_status in ("ALIGNED_BULL", "ALIGNED_BEAR"):
-                        lines.append(f"Adjusted confidence: {_conf_wl_adj}/10 (−1 for strong ribbon conflict)")
-                except (TypeError, ValueError):
-                    pass
+                lines.append("⚠️ <b>MA Ribbon conflict — confidence penalised −1, higher risk</b>")
         # Indicative entry/stop/target — always shown so investor knows the trade shape
         ind_e, ind_s, ind_t = _calc_indicative_levels(rr["pair"], pp, rr.get("bundle", {}))
         if ind_e and ind_s and ind_t:
