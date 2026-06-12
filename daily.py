@@ -1932,7 +1932,7 @@ def _send_telegram_summary(
             lines.append(f"↑ {_wl_hint}")
         _mtf_wl = rr.get("bundle", {}).get("mtf", {})
         if _mtf_wl and _mtf_wl.get("agreeing_count", 0) > 0:
-            _mtf_txt = _mtf_plain_english(_mtf_wl)
+            _mtf_txt = _mtf_plain_english(_mtf_wl, trade_direction=dirn)
             if _mtf_txt:
                 lines.append(_mtf_txt)
         _rib_wl = _ribbon_display(rr.get("bundle", {}))
