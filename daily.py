@@ -1495,6 +1495,33 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
         elif entry:
             if stop and target:
                 sec.append(f"🛑 Stop: {_fmt_price(stop)} | 🎯 Target: {_fmt_price(target)}")
+            elif stop:
+                sec.append(f"🛑 Stop: {_fmt_price(stop)}")
+            if stop and _rm_profile and _rm_state:
+                try:
+                    from src import risk_manager as _rm_inv
+                    _sz = _rm_inv.size_trade(
+                        pair=pair, direction=dirn, entry=entry, stop=stop,
+                        target=target or entry,
+                        confidence=int(float(row.get("confidence") or 8)),
+                        profile=_rm_profile, risk_state=_rm_state,
+                    )
+                    _lots    = _sz["lots"]
+                    _risk_a  = _sz["risk_amount"]
+                    _risk_p  = _sz["risk_pct"]
+                    _cl      = pair.upper().replace("/", "")
+                    _base_c  = _cl[:3]
+                    if _base_c == "USD":
+                        _mkt_exp = _lots * 100_000
+                    else:
+                        _mkt_exp = _lots * 100_000 * entry
+                    sec.append(
+                        f"💵 Invested: {_lots:.2f} lots — "
+                        f"${_mkt_exp:,.0f} market exposure — "
+                        f"${_risk_a:.0f} at risk ({_risk_p:.1f}% of account)"
+                    )
+                except Exception:
+                    pass
             sec.append(f"Entry: {_fmt_price(entry)} | Current: ⚠️ price unavailable")
             sec.append(_check_line)
         else:
