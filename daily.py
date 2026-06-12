@@ -580,6 +580,25 @@ def _rejection_reason(result: dict) -> str:
     parsed    = result["parsed"]
     conf      = parsed.get("confidence")
     direction = (parsed.get("direction") or "?").upper()
+
+    # Priority 1: MTF gate — most common reason a high-confidence pair is blocked
+    mtf = result.get("bundle", {}).get("mtf", {})
+    if mtf and not mtf.get("qualifies", True):
+        cnt = mtf.get("agreeing_count", 0)
+        bkd = mtf.get("breakdown", "")
+        bkd_str = f" [{bkd}]" if bkd and bkd != "UNAVAILABLE" else ""
+        return f"Conf {conf}/10 {direction} — MTF: only {cnt}/5 timeframes align (needs 4){bkd_str}"
+
+    # Priority 2: R:R below minimum threshold
+    try:
+        from src import threshold_manager as _tm_rr
+        rr_min = _tm_rr.get_min_rr()
+        rr_actual = float(parsed.get("reward_risk") or 0)
+        if rr_actual > 0 and rr_actual < rr_min:
+            return f"Conf {conf}/10 {direction} — R:R {rr_actual:.2f}:1 below {rr_min:.1f}:1 minimum"
+    except Exception:
+        pass
+
     scores = {
         "Technical":   parsed.get("technical_score"),
         "Fundamental": parsed.get("fundamental_score"),
@@ -602,7 +621,7 @@ def _rejection_reason(result: dict) -> str:
     if missing:
         parts.append(f"{' + '.join(missing[:2])} data missing")
     if not parts:
-        parts.append("overall confluence just below trade threshold")
+        parts.append("all layers strong — analyst judged setup not clean enough to trade")
 
     return f"Conf {conf}/10 {direction} — {', '.join(parts)}"
 
