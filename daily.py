@@ -470,14 +470,23 @@ def _score_breakdown_line(parsed: dict) -> str:
     )
 
 
-def _mtf_plain_english(mtf_data: dict) -> str:
-    """Convert MTF data to a plain English summary for phone-readable display."""
+def _mtf_plain_english(mtf_data: dict, trade_direction: str = None) -> str:
+    """Convert MTF data to a plain English summary for phone-readable display.
+
+    Always describes agreement with `trade_direction` (the pair's recommended
+    direction).  If trade_direction disagrees with MTF's dominant direction the
+    agreeing/disagreeing counts are recomputed from the breakdown so the
+    summary never says "2 of 5 agree SELL" for a BUY recommendation.
+    """
     if not isinstance(mtf_data, dict):
         return ""
-    direction = mtf_data.get("direction", "NEUTRAL")
-    count     = mtf_data.get("agreeing_count", 0)
     breakdown = mtf_data.get("breakdown", "")
-    if not breakdown or breakdown == "UNAVAILABLE" or direction == "NEUTRAL" or count == 0:
+    if not breakdown or breakdown == "UNAVAILABLE":
+        return ""
+
+    # Use the trade's direction; fall back to MTF dominant only if none given
+    direction = (trade_direction or mtf_data.get("direction") or "NEUTRAL").upper()
+    if direction == "NEUTRAL":
         return ""
 
     _TF_NAMES = {"M": "monthly", "W": "weekly", "D": "daily", "4H": "4H", "1H": "1H"}
@@ -499,6 +508,10 @@ def _mtf_plain_english(mtf_data: dict) -> str:
                 agreeing.append(name)
             elif sig not in ("NEUTRAL", ""):
                 disagreeing.append(name)
+
+    count = len(agreeing)
+    if count == 0:
+        return ""  # no timeframes agree with the trade direction — suppress
 
     agree_dir    = "bullish" if direction == "BUY" else "bearish"
     disagree_dir = "bearish" if direction == "BUY" else "bullish"
