@@ -1917,7 +1917,7 @@ def _send_telegram_summary(
     def _watch_entry(rr: dict) -> list:
         """Build watch list entry (conf 5–6) with indicative levels and session time."""
         pp    = rr["parsed"]
-        conf  = pp.get("confidence") or "?"
+        conf  = _eff_conf(rr)   # ribbon-adjusted confidence — consistent with threshold checks
         dirn  = (pp.get("direction") or "—").upper()
         arrow = "📈" if dirn == "BUY" else "📉"
         ntc   = _what_needs_to_change(pp)
