@@ -1927,7 +1927,8 @@ def _send_telegram_summary(
         for r in deep_results:
             nw = (r["parsed"].get("news_warning") or "").strip()
             if nw and len(nw) > 5 and "none" not in nw.lower() and "n/a" not in nw.lower():
-                nw_list.append(f"{r['pair']}: {nw[:60]}")
+                _nw_trunc = nw if len(nw) <= 60 else nw[:60].rsplit(" ", 1)[0].rstrip(",;") + "…"
+                nw_list.append(f"{r['pair']}: {_nw_trunc}")
         if nw_list:
             ctx_lines.append(f"⚡ {nw_list[0]}")
         all_sections.append(ctx_lines)
