@@ -1865,7 +1865,7 @@ def _send_telegram_summary(
             )
         _mtf = r.get("bundle", {}).get("mtf", {})
         if _mtf and _mtf.get("agreeing_count", 0) > 0:
-            _mtf_txt_tb = _mtf_plain_english(_mtf)
+            _mtf_txt_tb = _mtf_plain_english(_mtf, trade_direction=direction)
             if _mtf_txt_tb:
                 block.append(f"🕐 {_mtf_txt_tb}")
         _rib_line = _ribbon_display(r.get("bundle", {}))
