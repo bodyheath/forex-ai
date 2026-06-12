@@ -325,6 +325,30 @@ def _conf(result: dict) -> int:
         return 0
 
 
+def _eff_conf(result: dict) -> int:
+    """Confidence after MA ribbon penalty: −1 when a STRONG ribbon is fully aligned
+    against the trade direction (ALIGNED_BULL vs SELL or ALIGNED_BEAR vs BUY).
+    LEANING ribbon statuses do not incur a penalty — only ALIGNED ones do.
+    """
+    raw = _conf(result)
+    if raw == 0:
+        return 0
+    try:
+        direction = (result.get("parsed", {}).get("direction") or "").upper()
+        rib_status = (
+            result.get("bundle", {})
+            .get("technical", {})
+            .get("daily", {}) or {}
+        ).get("ribbon", {}).get("status", "")
+        if rib_status == "ALIGNED_BULL" and direction == "SELL":
+            return max(0, raw - 1)
+        if rib_status == "ALIGNED_BEAR" and direction == "BUY":
+            return max(0, raw - 1)
+    except Exception:
+        pass
+    return raw
+
+
 def _conf_bar(conf) -> str:
     """Generate visual confidence bar: 7 → ███████░░░"""
     try:
