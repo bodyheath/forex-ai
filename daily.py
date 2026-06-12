@@ -2363,13 +2363,13 @@ def _send_telegram_summary(
 
         # ── Watch list (5–6) and approaching signals (3–4) with levels + session ─
         _all_candidates = sorted(
-            [r for r in deep_results if r["pair"] not in _yes_pairs and _conf(r) >= 3],
-            key=_conf, reverse=True,
+            [r for r in deep_results if r["pair"] not in _yes_pairs and _eff_conf(r) >= 3],
+            key=_eff_conf, reverse=True,
         )
-        _watch_items       = [r for r in _all_candidates if _conf(r) >= 5][:3]
+        _watch_items       = [r for r in _all_candidates if _eff_conf(r) >= 5][:3]
         _approaching_items = [
             r for r in _all_candidates
-            if _conf(r) <= 4
+            if _eff_conf(r) <= 4
             and r["pair"].upper() not in _open_pair_set
             and not any(_is_inverse(r["pair"], op) for op in _open_pair_set)
         ][:2]
