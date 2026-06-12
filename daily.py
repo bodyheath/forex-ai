@@ -2026,17 +2026,19 @@ def _send_telegram_summary(
             f"<b>{rr['pair']}</b> {conf}/10 {dirn} — if conditions improve:",
         ]
         ind_e, ind_s, ind_t = _calc_indicative_levels(rr["pair"], pp, rr.get("bundle", {}))
+        is_jpy = "JPY" in rr["pair"].upper()
+        dec = 3 if is_jpy else 5
+        lines.append("🟠 <b>POTENTIAL SETUP IF CONDITIONS IMPROVE:</b>")
         if ind_e and ind_s and ind_t:
-            is_jpy = "JPY" in rr["pair"].upper()
-            dec = 3 if is_jpy else 5
             try:
-                lines.append("🟠 <b>POTENTIAL SETUP IF CONDITIONS IMPROVE:</b>")
                 lines.append(
                     f"Entry ~{ind_e:.{dec}f} | "
                     f"Stop ~{ind_s:.{dec}f} | Target ~{ind_t:.{dec}f}"
                 )
             except (TypeError, ValueError):
-                pass
+                lines.append("Price levels: insufficient data for this pair")
+        else:
+            lines.append("Price levels: insufficient data for this pair")
         _ew_ae = _entry_window_for_pair(rr["pair"])
         _eq_ae_e, _ = _entry_quality(rr["pair"], now_ak)
         _tref_ae = _time_ref_for_entry(_ew_ae[0], _ew_ae[1], now_ak)
