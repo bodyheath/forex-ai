@@ -1231,7 +1231,16 @@ def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict) -> tuple:
 
     quote_ccy = pair.split("/")[-1].upper() if "/" in pair else pair[-3:].upper()
     is_jpy = quote_ccy == "JPY"
-    atr_est = 0.50 if is_jpy else (0.0080 if any(c in pair.upper() for c in ("EUR", "GBP")) else 0.0050)
+    if is_jpy:
+        atr_est = 0.50
+    elif cur is not None and cur < 0.10:
+        # Inverse/tiny-price pairs (e.g. JPY/USD ≈ 0.006, JPY/GBP ≈ 0.005)
+        # Standard absolute ATR is absurdly large; use 0.8 % of price instead.
+        atr_est = cur * 0.008
+    elif any(c in pair.upper() for c in ("EUR", "GBP")):
+        atr_est = 0.0080
+    else:
+        atr_est = 0.0050
     dirn = (parsed.get("direction") or "").upper()
     if dirn == "BUY":
         entry  = entry  or cur
