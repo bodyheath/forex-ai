@@ -2013,7 +2013,7 @@ def _send_telegram_summary(
     def _approaching_entry(rr: dict) -> list:
         """Build approaching signal entry (conf 3–4) with indicative levels and entry alert time."""
         pp   = rr["parsed"]
-        conf = pp.get("confidence") or "?"
+        conf = _eff_conf(rr)   # ribbon-adjusted confidence
         dirn = (pp.get("direction") or "—").upper()
         lines = [
             "",
