@@ -1553,11 +1553,13 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
                         confidence=int(float(row.get("confidence") or 8)),
                         profile=_rm_profile, risk_state=_rm_state,
                     )
-                    _lots    = _sz["lots"]
-                    _risk_a  = _sz["risk_amount"]
-                    _risk_p  = _sz["risk_pct"]
-                    _cl      = pair.upper().replace("/", "")
-                    _base_c  = _cl[:3]
+                    # Scale to paper fund ($10k) rather than real account
+                    _paper_scale = _rm_inv.FUND_START / max(config.ACCOUNT_BALANCE, 1)
+                    _lots   = max(round(_sz["lots"] * _paper_scale, 2), 0.01)
+                    _risk_a = round(_sz["risk_amount"] * _paper_scale, 2)
+                    _risk_p = _sz["risk_pct"]
+                    _cl     = pair.upper().replace("/", "")
+                    _base_c = _cl[:3]
                     if _base_c == "USD":
                         _mkt_exp = _lots * 100_000
                     else:
