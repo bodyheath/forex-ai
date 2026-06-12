@@ -1480,6 +1480,21 @@ def _send_telegram_summary(
     credit_data     = credit_data     or {}
     cost_lines      = cost_lines      or []
 
+    # Load open trades first — needed to filter already-open pairs from signals
+    _ot_open_trades: list = []
+    try:
+        from src import tracker as _trk_ot
+        _ot_open_trades = [r for r in _trk_ot.load() if r.get("status") == "OPEN"]
+    except Exception:
+        pass
+    _open_pair_set = {r.get("pair", "").upper() for r in _ot_open_trades}
+
+    def _is_inverse(p1: str, p2: str) -> bool:
+        """True if p1 and p2 represent the same instrument quoted the other way (e.g. USD/CAD vs CAD/USD)."""
+        c1 = p1.upper().replace("/", "").replace("-", "")
+        c2 = p2.upper().replace("/", "").replace("-", "")
+        return len(c1) == 6 and len(c2) == 6 and c1 == c2[3:] + c2[:3]
+
     yes_trades  = [r for r in deep_results if r["parsed"].get("trade_this") == "YES"]
     watch_list  = sorted(
         [r for r in deep_results
@@ -1491,7 +1506,11 @@ def _send_telegram_summary(
         key=_conf, reverse=True,
     )
     upcoming = sorted(
-        [r for r in near_misses if 3 <= _conf(r) <= 4],
+        [r for r in near_misses
+         if 3 <= _conf(r) <= 4
+         and r["pair"].upper() not in _open_pair_set
+         and not any(_is_inverse(r["pair"], op) for op in _open_pair_set)
+        ],
         key=_conf, reverse=True,
     )[:3]
 
@@ -1512,14 +1531,6 @@ def _send_telegram_summary(
     _morning_conf: dict = {}
     try:
         _morning_conf = json.loads(_MORNING_RANKED_FILE.read_text(encoding="utf-8"))
-    except Exception:
-        pass
-
-    # Open trades and shared price cache — used in all scan modes
-    _ot_open_trades: list = []
-    try:
-        from src import tracker as _trk_ot
-        _ot_open_trades = [r for r in _trk_ot.load() if r.get("status") == "OPEN"]
     except Exception:
         pass
 
