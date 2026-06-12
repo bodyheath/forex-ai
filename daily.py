@@ -1364,6 +1364,34 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
             elif target:
                 sec.append(f"🎯 Target: {_fmt_price(target)}")
 
+            # Investment details — position size, market exposure, risk amount
+            if stop and _rm_profile and _rm_state:
+                try:
+                    from src import risk_manager as _rm_inv
+                    _sz = _rm_inv.size_trade(
+                        pair=pair, direction=dirn, entry=entry, stop=stop,
+                        target=target or entry,
+                        confidence=int(float(row.get("confidence") or 8)),
+                        profile=_rm_profile, risk_state=_rm_state,
+                    )
+                    _lots    = _sz["lots"]
+                    _risk_a  = _sz["risk_amount"]
+                    _risk_p  = _sz["risk_pct"]
+                    _cl      = pair.upper().replace("/", "")
+                    _base_c  = _cl[:3]
+                    _quote_c = _cl[3:6] if len(_cl) >= 6 else ""
+                    if _base_c == "USD":
+                        _mkt_exp = _lots * 100_000
+                    else:
+                        _mkt_exp = _lots * 100_000 * entry
+                    sec.append(
+                        f"💵 Invested: {_lots:.2f} lots — "
+                        f"${_mkt_exp:,.0f} market exposure — "
+                        f"${_risk_a:.0f} at risk ({_risk_p:.1f}% of account)"
+                    )
+                except Exception:
+                    pass
+
             pip_sz = _pip_size(pair)
             raw    = (cur - entry) if dirn == "BUY" else (entry - cur)
             pips   = raw / pip_sz
