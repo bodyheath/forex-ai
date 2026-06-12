@@ -135,8 +135,16 @@ def check_open_research_trades(log=print) -> list:
     wins    = sum(1 for r in closed if r.get("status") == "WIN")
     losses  = sum(1 for r in closed if r.get("status") == "LOSS")
     expired = sum(1 for r in closed if r.get("status") == "EXPIRED")
+    still_open = len(open_trades) - len(closed)
     if closed:
-        log(f"Research outcome check complete: {wins} WIN, {losses} LOSS, {expired} EXPIRED.")
+        log(
+            f"Research outcome check complete: closed {len(closed)} trade(s) this run — "
+            f"{wins} WIN · {losses} LOSS · {expired} EXPIRED · "
+            f"{still_open} still open."
+        )
     else:
-        log("Research outcome check: no research trades hit target/stop today.")
+        log(
+            f"Research outcome check: no trades hit target/stop/expiry — "
+            f"{len(open_trades)} still open."
+        )
     return closed
