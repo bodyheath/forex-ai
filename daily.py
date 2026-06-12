@@ -2217,8 +2217,13 @@ def _send_telegram_summary(
             [r for r in deep_results if r["pair"] not in _yes_pairs and _conf(r) >= 3],
             key=_conf, reverse=True,
         )
-        _watch_items      = [r for r in _all_candidates if _conf(r) >= 5][:3]
-        _approaching_items= [r for r in _all_candidates if _conf(r) <= 4][:2]
+        _watch_items       = [r for r in _all_candidates if _conf(r) >= 5][:3]
+        _approaching_items = [
+            r for r in _all_candidates
+            if _conf(r) <= 4
+            and r["pair"].upper() not in _open_pair_set
+            and not any(_is_inverse(r["pair"], op) for op in _open_pair_set)
+        ][:2]
 
         if _watch_items:
             wl_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "👀 <b>WATCH LIST</b>"]
