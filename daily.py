@@ -1266,6 +1266,16 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
     """
     sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "📊 <b>OPEN TRADES</b>"]
 
+    # Load risk profile once for investment detail calculations
+    _rm_profile: dict = {}
+    _rm_state: dict = {}
+    try:
+        from src import risk_manager as _rm_inv
+        _rm_profile = _rm_inv.load_profile()
+        _rm_state   = _rm_inv.compute_risk_state(_rm_profile)
+    except Exception:
+        pass
+
     # Portfolio summary — quick pre-pass to compute aggregate P&L
     _port_dollar = 0.0
     _port_counted = 0
