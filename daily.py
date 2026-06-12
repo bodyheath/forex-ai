@@ -2307,14 +2307,14 @@ def _send_telegram_summary(
         _newly_6plus = [
             r for r in deep_results
             if r["pair"] not in _yes_pairs
-            and _conf(r) >= 6
+            and _eff_conf(r) >= 6
             and _morning_conf.get(r["pair"], 10) < 6
         ]
         if _newly_6plus:
             ns = ["", "━━━━━━━━━━━━━━━━━━━━━", "⬆️ <b>NEWLY REACHED 6+ SINCE 6AM</b>"]
             for r in _newly_6plus[:5]:
                 pp    = r["parsed"]
-                curr  = _conf(r)
+                curr  = _eff_conf(r)           # show ribbon-adjusted confidence
                 prev  = _morning_conf.get(r["pair"], 0)
                 dirn  = (pp.get("direction") or "").upper()
                 arrow = "📈" if dirn == "BUY" else "📉"
