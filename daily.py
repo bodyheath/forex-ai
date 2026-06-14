@@ -454,6 +454,27 @@ def _derive_market_context(deep_results: list, risk_data: dict) -> dict:
         ctx["strongest_ccy"] = max(ccy_score, key=lambda c: ccy_score[c])
         ctx["weakest_ccy"]   = min(ccy_score, key=lambda c: ccy_score[c])
 
+    # Monthly structural bias — informational background context
+    monthly_counts: dict = {"BUY": 0, "SELL": 0}
+    for r in deep_results:
+        mtf = r.get("bundle", {}).get("mtf", {})
+        if isinstance(mtf, dict):
+            bd = mtf.get("breakdown", "")
+            for part in bd.split():
+                if ":" in part:
+                    tf, sig = part.split(":", 1)
+                    if tf == "M" and sig in ("BUY", "SELL"):
+                        monthly_counts[sig] += 1
+    total_m = monthly_counts["BUY"] + monthly_counts["SELL"]
+    if total_m > 0:
+        buy_m, sell_m = monthly_counts["BUY"], monthly_counts["SELL"]
+        if sell_m > buy_m:
+            ctx["monthly_bias"] = f"SELL ({sell_m}/{total_m} pairs bearish)"
+        elif buy_m > sell_m:
+            ctx["monthly_bias"] = f"BUY ({buy_m}/{total_m} pairs bullish)"
+        else:
+            ctx["monthly_bias"] = f"MIXED ({buy_m} bullish / {sell_m} bearish)"
+
     return ctx
 
 
