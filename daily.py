@@ -471,12 +471,11 @@ def _score_breakdown_line(parsed: dict) -> str:
 
 
 def _mtf_plain_english(mtf_data: dict, trade_direction: str = None) -> str:
-    """Convert MTF data to a plain English summary for phone-readable display.
+    """Convert MTF data to a 3-TF swing-trading display for phone-readable output.
 
-    Always describes agreement with `trade_direction` (the pair's recommended
-    direction).  If trade_direction disagrees with MTF's dominant direction the
-    agreeing/disagreeing counts are recomputed from the breakdown so the
-    summary never says "2 of 5 agree SELL" for a BUY recommendation.
+    Format: "Timeframes: Weekly SELL Daily SELL 4H SELL — all 3 aligned strongest signal"
+    Or:     "Timeframes: Weekly SELL Daily SELL 4H BUY — 2 of 3 agree SELL valid setup"
+    Monthly is excluded from the display (shown separately in market context).
     """
     if not isinstance(mtf_data, dict):
         return ""
@@ -484,45 +483,42 @@ def _mtf_plain_english(mtf_data: dict, trade_direction: str = None) -> str:
     if not breakdown or breakdown == "UNAVAILABLE":
         return ""
 
-    # Use the trade's direction; fall back to MTF dominant only if none given
     direction = (trade_direction or mtf_data.get("direction") or "NEUTRAL").upper()
     if direction == "NEUTRAL":
         return ""
 
-    _TF_NAMES = {"M": "monthly", "W": "weekly", "D": "daily", "4H": "4H", "1H": "1H"}
+    # Only display the 3 core swing-trading timeframes (skip monthly M)
+    _TF_DISPLAY = {"W": "Weekly", "D": "Daily", "4H": "4H"}
 
-    def _natural(items):
-        if not items:
-            return ""
-        if len(items) == 1:
-            return items[0]
-        return ", ".join(items[:-1]) + f" and {items[-1]}"
-
-    agreeing    = []
-    disagreeing = []
+    tf_signals: dict = {}
     for part in breakdown.split():
         if ":" in part:
             tf, sig = part.split(":", 1)
-            name = _TF_NAMES.get(tf, tf)
+            if tf in _TF_DISPLAY:
+                tf_signals[tf] = sig
+
+    if not tf_signals:
+        return ""
+
+    parts   = []
+    agreeing = 0
+    for tf in ("W", "D", "4H"):
+        if tf in tf_signals:
+            sig = tf_signals[tf]
+            parts.append(f"{_TF_DISPLAY[tf]} {sig}")
             if sig == direction:
-                agreeing.append(name)
-            elif sig not in ("NEUTRAL", ""):
-                disagreeing.append(name)
+                agreeing += 1
 
-    count = len(agreeing)
-    if count == 0:
-        return ""  # no timeframes agree with the trade direction — suppress
+    tf_str = " ".join(parts)
+    total  = len(parts)
 
-    agree_dir    = "bullish" if direction == "BUY" else "bearish"
-    disagree_dir = "bearish" if direction == "BUY" else "bullish"
-    agree_str    = _natural(agreeing) if agreeing else "—"
-
-    if disagreeing:
-        return (
-            f"Timeframes: {count} of 5 agree {direction} — "
-            f"{agree_str} {agree_dir}, {_natural(disagreeing)} {disagree_dir}"
-        )
-    return f"Timeframes: {count} of 5 agree {direction} — {agree_str} all {agree_dir}"
+    if agreeing == total == 3:
+        return f"Timeframes: {tf_str} — all 3 aligned strongest signal"
+    if agreeing >= 2:
+        return f"Timeframes: {tf_str} — {agreeing} of {total} agree {direction} valid setup"
+    if agreeing == 1:
+        return f"Timeframes: {tf_str} — only 1 of {total} align {direction}"
+    return f"Timeframes: {tf_str}"
 
 
 def _weakest_layer_hint(parsed: dict) -> str:
