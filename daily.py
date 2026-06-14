@@ -620,7 +620,7 @@ def _rejection_reason(result: dict) -> str:
         cnt = mtf.get("agreeing_count", 0)
         bkd = mtf.get("breakdown", "")
         bkd_str = f" [{bkd}]" if bkd and bkd != "UNAVAILABLE" else ""
-        return f"Conf {conf}/10 {direction} — MTF: only {cnt}/5 timeframes align (needs 4){bkd_str}"
+        return f"Conf {conf}/10 {direction} — MTF: weekly+daily must both agree (got {cnt}/3 core TFs){bkd_str}"
 
     # Priority 2: R:R below minimum threshold
     try:
