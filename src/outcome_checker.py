@@ -64,12 +64,13 @@ def _fetch_live_price(pair: str) -> float | None:
 
 
 def _determine_outcome(direction: str, price: float,
-                       entry, stop, target, opened_at: str) -> str | None:
+                       entry, stop, target, opened_at: str,
+                       expiry_days: int = None) -> str | None:
     """Return 'WIN', 'LOSS', 'EXPIRED', or None (trade still open)."""
-    # 14-day expiry takes priority — regardless of price level.
+    expiry = expiry_days if expiry_days is not None else _EXPIRY_DAYS
     try:
         opened = datetime.strptime(opened_at[:19], "%Y-%m-%d %H:%M:%S")
-        if (datetime.now() - opened).days >= _EXPIRY_DAYS:
+        if (datetime.now() - opened).days >= expiry:
             return "EXPIRED"
     except (ValueError, TypeError):
         pass
