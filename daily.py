@@ -1216,14 +1216,35 @@ def _pre_fetch_shared_data(pairs: list, log=print) -> tuple:
 
 # ── Indicative level calculator ───────────────────────────────────────────────
 
-def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict) -> tuple:
-    """Return (entry, stop, target) as floats for indicative display.
+def _compute_expiry_days_from_rr(rr: float) -> int:
+    """Calibrate trade expiry from R:R ratio.
 
-    Uses Claude's parsed values when present (watch list / approaching pairs
-    always have Claude-computed levels).  Falls back to current price ± ATR
-    proxy if any value is missing.  Returns (None, None, None) if price
-    is completely unavailable.
+    Stop ≈ 1x ATR ≈ average daily range (ADR), so R:R ≈ target_pips / adr_pips.
+    Formula: max(4, round(rr * 1.5) + 1)
+    Examples: R:R 2.3 → 4 days; R:R 3.1 → 6 days.
     """
+    try:
+        return max(4, round(float(rr) * 1.5) + 1)
+    except (TypeError, ValueError):
+        return 5
+
+
+def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict) -> tuple:
+    """Return (entry, stop, target, meta) for indicative display.
+
+    Stop = 1.0x ATR(14), rounded to nearest 5 pips.
+    Target = nearest Fibonacci level in [1.5x, 2.5x] ATR range, else 2.0x ATR.
+    meta dict: {atr, stop_atr_mult, target_atr_mult, expiry_days, quality_flag}
+
+    Uses Claude's parsed entry/stop/target when present.  When stop or target
+    are missing, computes them from ATR.  Returns (None, None, None, {}) if
+    price is completely unavailable.
+    """
+    _empty_meta: dict = {
+        "atr": None, "stop_atr_mult": None, "target_atr_mult": None,
+        "expiry_days": 5, "quality_flag": "",
+    }
+
     try:
         entry  = float(parsed.get("entry")     or 0) or None
         stop   = float(parsed.get("stop_loss") or 0) or None
@@ -1231,49 +1252,124 @@ def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict) -> tuple:
     except (TypeError, ValueError):
         entry, stop, target = None, None, None
 
-    if entry and stop and target:
-        return entry, stop, target
-
-    # Current price from bundle
-    cur = None
+    # Pull actual ATR14 and current price from bundle
+    atr_actual = None
+    cur        = None
     try:
-        daily = bundle.get("technical", {}).get("daily", {})
-        if isinstance(daily, dict):
-            cur = float(daily.get("last_close") or daily.get("close") or 0) or None
+        _daily = bundle.get("technical", {}).get("daily", {})
+        if isinstance(_daily, dict):
+            atr_actual = float(_daily.get("atr14") or 0) or None
+            cur        = float(_daily.get("last_close") or _daily.get("close") or 0) or None
     except (TypeError, ValueError):
         pass
 
-    if cur is None:
-        return entry, stop, target
+    # If all 3 Claude values present, compute meta only
+    if entry and stop and target:
+        meta = dict(_empty_meta)
+        if atr_actual and atr_actual > 0:
+            try:
+                sd = abs(entry - stop)
+                td = abs(entry - target)
+                meta["atr"]             = atr_actual
+                meta["stop_atr_mult"]   = round(sd / atr_actual, 1)
+                meta["target_atr_mult"] = round(td / atr_actual, 1)
+                rr = td / sd if sd > 0 else 0
+                meta["expiry_days"]  = _compute_expiry_days_from_rr(rr)
+                meta["quality_flag"] = "LOW QUALITY SETUP" if rr < 1.5 else ""
+            except (TypeError, ValueError, ZeroDivisionError):
+                pass
+        else:
+            try:
+                sd = abs(entry - stop)
+                td = abs(entry - target)
+                rr = td / sd if sd > 0 else 0
+                meta["expiry_days"]  = _compute_expiry_days_from_rr(rr)
+                meta["quality_flag"] = "LOW QUALITY SETUP" if rr < 1.5 else ""
+            except (TypeError, ValueError, ZeroDivisionError):
+                pass
+        return entry, stop, target, meta
 
+    if cur is None:
+        return entry, stop, target, _empty_meta
+
+    # --- ATR-based fallback ---
     quote_ccy = pair.split("/")[-1].upper() if "/" in pair else pair[-3:].upper()
-    is_jpy = quote_ccy == "JPY"
-    if is_jpy:
-        atr_est = 0.50
-    elif cur is not None and cur < 0.10:
-        # Inverse/tiny-price pairs (e.g. JPY/USD ≈ 0.006, JPY/GBP ≈ 0.005)
-        # Standard absolute ATR is absurdly large; use 0.8 % of price instead.
-        atr_est = cur * 0.008
+    is_jpy    = quote_ccy == "JPY"
+    pip_size  = 0.01 if is_jpy else 0.0001
+    dec       = 3 if is_jpy else 5
+
+    # Use actual ATR14 if available, else estimate from pair characteristics
+    if atr_actual and atr_actual > 0:
+        atr = atr_actual
+    elif is_jpy:
+        atr = 0.50
+    elif cur < 0.10:
+        atr = cur * 0.008
     elif any(c in pair.upper() for c in ("EUR", "GBP")):
-        atr_est = 0.0080
+        atr = 0.0080
     else:
-        atr_est = 0.0050
+        atr = 0.0050
+
     dirn = (parsed.get("direction") or "").upper()
-    if dirn == "BUY":
-        entry  = entry  or cur
-        stop   = stop   or round(entry - atr_est * 1.5, 3 if is_jpy else 5)
-        target = target or round(entry + atr_est * 2.0, 3 if is_jpy else 5)
-    elif dirn == "SELL":
-        entry  = entry  or cur
-        stop   = stop   or round(entry + atr_est * 1.5, 3 if is_jpy else 5)
-        target = target or round(entry - atr_est * 2.0, 3 if is_jpy else 5)
-    # Reject impossible levels (negative price, zero, or move > 50% of entry)
+    if dirn not in ("BUY", "SELL"):
+        return entry, stop, target, _empty_meta
+
+    entry = entry or cur
+
+    # Stop: 1.0x ATR rounded to nearest 5 pips
+    if not stop:
+        atr_pips   = atr / pip_size
+        stop_pips  = round(atr_pips / 5) * 5   # nearest 5 pips
+        stop_dist  = stop_pips * pip_size
+        stop = round(entry - stop_dist if dirn == "BUY" else entry + stop_dist, dec)
+
+    # Target: nearest Fibonacci level in [1.5x, 2.5x] ATR range, else 2.0x ATR
+    if not target:
+        min_dist = 1.5 * atr
+        max_dist = 2.5 * atr
+        fib_target = None
+        try:
+            _fib_d = bundle.get("technical", {}).get("daily", {})
+            if isinstance(_fib_d, dict):
+                _fib = _fib_d.get("fibonacci", {})
+                if isinstance(_fib, dict) and _fib.get("status") == "ok":
+                    _fib_key    = "nearest_above" if dirn == "BUY" else "nearest_below"
+                    _fib_levels = _fib.get(_fib_key, [])
+                    for _lbl, _px in _fib_levels:
+                        _px = float(_px)
+                        dist = _px - entry if dirn == "BUY" else entry - _px
+                        if min_dist <= dist <= max_dist:
+                            fib_target = _px
+                            break
+        except (TypeError, ValueError, IndexError):
+            pass
+        if fib_target is not None:
+            target = round(fib_target, dec)
+        else:
+            target = round(entry + atr * 2.0 if dirn == "BUY" else entry - atr * 2.0, dec)
+
+    # Reject impossible levels
     if entry and stop is not None and target is not None:
         if stop <= 0 or target <= 0:
-            return None, None, None
+            return None, None, None, _empty_meta
         if entry > 0 and (abs(entry - stop) > entry * 0.5 or abs(entry - target) > entry * 0.5):
-            return None, None, None
-    return entry, stop, target
+            return None, None, None, _empty_meta
+
+    # Compute meta
+    meta = dict(_empty_meta)
+    try:
+        sd = abs(entry - stop)
+        td = abs(entry - target)
+        rr = td / sd if sd > 0 else 0
+        meta["atr"]             = atr
+        meta["stop_atr_mult"]   = round(sd / atr, 1) if atr > 0 else None
+        meta["target_atr_mult"] = round(td / atr, 1) if atr > 0 else None
+        meta["expiry_days"]     = _compute_expiry_days_from_rr(rr)
+        meta["quality_flag"]    = "LOW QUALITY SETUP" if rr < 1.5 else ""
+    except (TypeError, ValueError, ZeroDivisionError):
+        pass
+
+    return entry, stop, target, meta
 
 
 # ── Open trade live-price helpers ─────────────────────────────────────────────
