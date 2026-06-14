@@ -135,6 +135,7 @@ def check_open_trades(log=print) -> list:
                 direction, price,
                 row.get("entry"), row.get("stop_loss"), row.get("target"),
                 row.get("timestamp", ""),
+                expiry_days=_compute_expiry_days(row),
             )
             if outcome is None:
                 continue  # still open
