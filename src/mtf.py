@@ -110,6 +110,7 @@ def analyse(tech_bundle: dict) -> dict:
     )
     if signals["monthly"] == dominant and dominant != "NEUTRAL":
         weighted_score += _MONTHLY_BONUS
+    weighted_score = min(1.0, weighted_score)
 
     breakdown = " ".join(
         f"{_ABBREV[tf]}:{sig}" for tf, sig in signals.items()
