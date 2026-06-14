@@ -909,10 +909,9 @@ def analyse(base: str, quote: str) -> dict:
 def warm_cache(pairs: list, log=print) -> None:
     """Pre-fetch and cache candle data for all pairs before analysis begins.
 
-    Fetches daily (400 candles) and 4h (500 candles) data for every pair,
-    pacing at 7 API calls per 62 seconds to stay within the Twelve Data
-    free-tier rate limit (8 calls/min).  Pairs whose data is already fresh
-    in the 24-hour cache are skipped — no wasted calls.
+    Fetches monthly/weekly/daily/4H data for every pair, pacing at 7 API
+    calls per 62 seconds to stay within the Twelve Data free-tier rate limit
+    (8 calls/min).  Pairs whose data is already fresh in the cache are skipped.
 
     After this returns, every subsequent call to analyse() is a pure cache
     hit: no live API calls and no rate-limit risk during analysis.
@@ -925,7 +924,7 @@ def warm_cache(pairs: list, log=print) -> None:
     needed = []
     for pair in pairs:
         for interval, outputsize in (
-            ("1month", 60), ("1week", 200), ("1day", 400), ("4h", 500), ("1h", 300)
+            ("1month", 60), ("1week", 200), ("1day", 400), ("4h", 500)
         ):
             key = f"TD:{pair}:{interval}:{outputsize}"
             if cache.get(key, ttl_hours=_INTERVAL_TTL.get(interval, _CACHE_TTL)) is None:
