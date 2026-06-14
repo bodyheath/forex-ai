@@ -1972,7 +1972,7 @@ def _send_telegram_summary(
             f"- Do NOT enter if price moves more than 30 pips from entry before {_ew_ses}",
             "- If price gaps past entry on open — skip this trade entirely",
             "━━━━━━━━━━━━━━━━━━━━━",
-            f"📈 Confidence: {conf}/10  {_conf_bar(conf)}",
+            f"📈 Confidence: {_conf_display}/10  {_conf_bar(_conf_display)}",
         ]
         # ML win-probability
         try:
