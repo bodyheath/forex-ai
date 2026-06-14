@@ -14,9 +14,9 @@ import requests
 import config
 from src import tracker
 
-_PRICE_URL  = "https://api.twelvedata.com/price"
-_EXPIRY_DAYS = 5
-_FETCH_DELAY = 10  # seconds between price calls; free tier = 8 req/min
+_PRICE_URL   = "https://api.twelvedata.com/price"
+_EXPIRY_DAYS = 5    # fallback; actual expiry is computed from R:R
+_FETCH_DELAY = 10   # seconds between price calls; free tier = 8 req/min
 
 
 def _to_float(val):
@@ -24,6 +24,26 @@ def _to_float(val):
         return float(val)
     except (TypeError, ValueError):
         return None
+
+
+def _compute_expiry_days(row: dict) -> int:
+    """Dynamic expiry from R:R: max(4, round(rr * 1.5) + 1).
+
+    Stop ≈ 1x ATR ≈ ADR, so rr ≈ target_pips / adr_pips.
+    Falls back to _EXPIRY_DAYS if levels are missing.
+    """
+    try:
+        entry  = float(row.get("entry")     or 0)
+        stop   = float(row.get("stop_loss") or 0)
+        target = float(row.get("target")    or 0)
+        sd = abs(entry - stop)
+        td = abs(entry - target)
+        if sd <= 0:
+            return _EXPIRY_DAYS
+        rr = td / sd
+        return max(4, round(rr * 1.5) + 1)
+    except (TypeError, ValueError, ZeroDivisionError):
+        return _EXPIRY_DAYS
 
 
 def _fetch_live_price(pair: str) -> float | None:
