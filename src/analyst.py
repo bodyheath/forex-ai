@@ -258,7 +258,7 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
     if mtf_bd and mtf_bd != "UNAVAILABLE":
         lines.append(
             f"MTF {mtf_bd} "
-            f"conf={mtf_data.get('agreeing_count', 0)}/5 "
+            f"conf={mtf_data.get('agreeing_count', 0)}/3 "
             f"wt={int(mtf_data.get('weighted_score', 0) * 100)}%"
         )
 
