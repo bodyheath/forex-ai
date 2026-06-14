@@ -1483,16 +1483,25 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
         except (TypeError, ValueError):
             entry, stop, target = None, None, None
 
-        # Age / expiry (5-day default)
+        # Age / expiry — calibrated from R:R (stop ≈ 1x ATR ≈ ADR)
         days_open     = 0
         days_open_str = "?"
         expires_str   = "?"
         remaining     = 5
         try:
+            _ot_entry  = float(row.get("entry")     or 0) or None
+            _ot_stop   = float(row.get("stop_loss") or 0) or None
+            _ot_target = float(row.get("target")    or 0) or None
+            _ot_expiry = 5
+            if _ot_entry and _ot_stop and _ot_target:
+                _sd = abs(_ot_entry - _ot_stop)
+                _td = abs(_ot_entry - _ot_target)
+                _rr = _td / _sd if _sd > 0 else 0
+                _ot_expiry = _compute_expiry_days_from_rr(_rr)
             opened_dt = datetime.strptime(row.get("timestamp", "")[:10], "%Y-%m-%d")
             days_open = (now_ak.replace(tzinfo=None) - opened_dt).days
             days_open_str = f"{days_open} day{'s' if days_open != 1 else ''}"
-            remaining     = max(0, 5 - days_open)
+            remaining     = max(0, _ot_expiry - days_open)
             expires_str   = f"{remaining} day{'s' if remaining != 1 else ''}"
         except Exception:
             pass
