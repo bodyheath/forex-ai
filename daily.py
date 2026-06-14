@@ -2097,6 +2097,8 @@ def _send_telegram_summary(
                 nw_list.append(f"{r['pair']}: {_nw_trunc}")
         if nw_list:
             ctx_lines.append(f"⚡ {nw_list[0]}")
+        if ctx.get("monthly_bias"):
+            ctx_lines.append(f"📅 Monthly structural bias: <b>{ctx['monthly_bias']}</b> — background context only")
         all_sections.append(ctx_lines)
 
         # TRADE ALERTS
