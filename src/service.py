@@ -42,7 +42,7 @@ def analyse_and_log(
 
     parsed = recparse.parse(result["report"])
 
-    # Hard MTF gate: TRADE_THIS YES requires >=4/5 timeframes agreeing.
+    # Hard MTF gate: TRADE_THIS YES requires weekly+daily both agreeing on direction.
     # If MTF data is unavailable (qualifies defaults to True) we don't block.
     _mtf = result.get("bundle", {}).get("mtf", {})
     if parsed.get("trade_this") == "YES" and _mtf and not _mtf.get("qualifies", True):
