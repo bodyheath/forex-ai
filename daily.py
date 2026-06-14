@@ -1889,6 +1889,37 @@ def _send_telegram_summary(
         _tref_tb = _time_ref_for_entry(_ew_sh, _ew_sm, now_ak)
         _ideal_verb = "pull back to" if direction == "BUY" else "push up to"
 
+        # ATR display for trade block
+        _tb_daily = r.get("bundle", {}).get("technical", {}).get("daily", {})
+        _tb_atr14 = float(_tb_daily.get("atr14") or 0) if isinstance(_tb_daily, dict) else 0
+        _tb_pip   = _pip_size(pair)
+        _tb_atr_line = None
+        if _tb_atr14 > 0:
+            try:
+                _stop_d   = abs(float(entry_raw) - float(adj_stop))
+                _tgt_d    = abs(float(adj_tgt)   - float(entry_raw))
+                _stop_m   = _stop_d / _tb_atr14
+                _tgt_m    = _tgt_d  / _tb_atr14
+                _atr_pips = round(_tb_atr14  / _tb_pip)
+                _stop_p   = round(_stop_d    / _tb_pip)
+                _tgt_p    = round(_tgt_d     / _tb_pip)
+                _tb_atr_line = (
+                    f"📏 Stop {_stop_m:.1f}x ATR ({_stop_p}p) · "
+                    f"Target {_tgt_m:.1f}x ATR ({_tgt_p}p) · "
+                    f"ATR={_atr_pips}p"
+                )
+            except (TypeError, ValueError, ZeroDivisionError):
+                pass
+
+        # R:R < 1.5 → LOW QUALITY flag; reduce displayed confidence by 1
+        _low_quality = rr_num is not None and rr_num < 1.5
+        _conf_display = conf
+        if _low_quality:
+            try:
+                _conf_display = str(max(1, int(conf) - 1))
+            except (TypeError, ValueError):
+                pass
+
         block = [
             "",
             f"{action_icon} <b>{_pfx}ACTION: {direction} {pair} NOW</b>",
@@ -1897,6 +1928,10 @@ def _send_telegram_summary(
             f"🛑 Stop Loss: {_fmt_price(adj_stop)}  ({pip_risk} risk)",
             f"🎯 Take Profit: {_fmt_price(adj_tgt)}  ({pip_target} target)",
         ]
+        if _tb_atr_line:
+            block.append(_tb_atr_line)
+        if _low_quality:
+            block.append(f"⚠️ <b>LOW QUALITY SETUP — R:R {rr_str} below 1.5:1 minimum (confidence −1)</b>")
         if profit_amt and risk_amt:
             block.append(f"📊 Risk ${risk_amt:,.0f} → Make ${profit_amt:,.0f}  ({rr_str} reward)")
         elif risk_amt:
