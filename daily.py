@@ -597,6 +597,200 @@ def _ribbon_display(bundle: dict) -> str:
     return f"📊 MA Ribbon: {label} ({cnt}/5 aligned){detail}"
 
 
+_GRADE_LABELS: dict = {
+    "A": "TAKE IMMEDIATELY",
+    "B": "TAKE IF NO A AVAILABLE",
+    "C": "WATCH ONLY",
+    "D": "AVOID",
+    "F": "NEVER TRADE",
+}
+_GRADE_ICONS: dict = {"A": "🏆", "B": "✅", "C": "👀", "D": "⚠️", "F": "❌"}
+
+
+def _trade_quality_grade(r: dict) -> dict:
+    """Compute A–F trade quality grade.
+
+    A — conf≥8, R:R>2.5, all 3 TFs, ATR-calibrated, Fib near, no news, ribbon aligned, divergence
+    B — conf≥7, R:R≥2.0, weekly+daily agree, no severe negatives
+    C — conf≥6, R:R≥1.5, no blocking conditions
+    D — ribbon against direction, R:R<1.5, or TF conflict + low conf
+    F — ribbon strongly against, weekly/daily direct conflict, or R:R<1.3
+    """
+    p         = r.get("parsed", {})
+    bundle    = r.get("bundle", {})
+    direction = (p.get("direction") or "").upper()
+
+    try:
+        conf_raw = int(p.get("confidence") or 0)
+    except (TypeError, ValueError):
+        conf_raw = 0
+
+    # R:R from parsed price levels (use Claude's field as fallback)
+    rr = 0.0
+    try:
+        e = float(p.get("entry")     or 0)
+        s = float(p.get("stop_loss") or 0)
+        t = float(p.get("target")    or 0)
+        if e and s and t and abs(e - s) > 0:
+            rr = abs(t - e) / abs(e - s)
+    except (TypeError, ValueError, ZeroDivisionError):
+        pass
+    if not rr:
+        try:
+            rr = float(p.get("reward_risk") or 0)
+        except (TypeError, ValueError):
+            rr = 0.0
+
+    # MTF signals
+    mtf    = bundle.get("mtf", {})
+    sigs   = mtf.get("signals", {})
+    w_sig  = sigs.get("weekly",  "NEUTRAL")
+    d_sig  = sigs.get("daily",   "NEUTRAL")
+    h4_sig = sigs.get("h4",      "NEUTRAL")
+    w_ok   = w_sig  == direction
+    d_ok   = d_sig  == direction
+    h4_ok  = h4_sig == direction
+    w_d_agree    = w_ok and d_ok
+    all3_agree   = w_ok and d_ok and h4_ok
+    w_d_conflict = (w_sig  in ("BUY", "SELL") and d_sig in ("BUY", "SELL")
+                    and w_sig != d_sig)
+
+    # Ribbon
+    _dt  = (bundle.get("technical", {}).get("daily") or {}) if bundle else {}
+    _rib = (_dt.get("ribbon") or {}) if isinstance(_dt, dict) else {}
+    rib_st = str(_rib.get("status") or "") if isinstance(_rib, dict) else ""
+
+    rib_aligned = (
+        (direction == "BUY"  and rib_st in ("ALIGNED_BULL", "LEANING_BULL")) or
+        (direction == "SELL" and rib_st in ("ALIGNED_BEAR", "LEANING_BEAR"))
+    )
+    rib_strongly_against = (
+        (direction == "BUY"  and rib_st == "ALIGNED_BEAR") or
+        (direction == "SELL" and rib_st == "ALIGNED_BULL")
+    )
+    rib_against = (
+        (direction == "BUY"  and rib_st in ("ALIGNED_BEAR", "LEANING_BEAR")) or
+        (direction == "SELL" and rib_st in ("ALIGNED_BULL", "LEANING_BULL"))
+    )
+
+    # Effective confidence (ribbon ALIGNED penalty already in _eff_conf; replicate here)
+    conf = conf_raw - (1 if rib_strongly_against else 0)
+    conf = max(1, conf)
+
+    # Divergence
+    _div = _dt.get("divergence", {}) if isinstance(_dt, dict) else {}
+    div_confirmed = (
+        (direction == "BUY"  and bool(_div.get("bullish"))) or
+        (direction == "SELL" and bool(_div.get("bearish")))
+    )
+
+    # Fibonacci near level
+    _fib    = _dt.get("fibonacci", {}) if isinstance(_dt, dict) else {}
+    fib_near = (isinstance(_fib, dict) and _fib.get("status") == "ok"
+                and bool(_fib.get("near_levels")))
+
+    # ATR calibration (stop ≈ 0.7–1.5× ATR, target ≈ 1.5–3.0× ATR)
+    atr14   = float(_dt.get("atr14") or 0) if isinstance(_dt, dict) else 0
+    atr_cal = False
+    if atr14 > 0:
+        try:
+            e2 = float(p.get("entry")     or 0)
+            s2 = float(p.get("stop_loss") or 0)
+            t2 = float(p.get("target")    or 0)
+            sd = abs(e2 - s2)
+            td = abs(t2 - e2)
+            if sd > 0 and td > 0:
+                atr_cal = (0.7 <= sd / atr14 <= 1.5) and (1.5 <= td / atr14 <= 3.0)
+        except (TypeError, ValueError, ZeroDivisionError):
+            pass
+
+    # News warning (no major events)
+    news_raw = (p.get("news_warning") or "").lower().strip()
+    no_news  = (not news_raw or
+                any(kw in news_raw for kw in ("none", "n/a", "no major", "no significant")))
+
+    # ── Grade F — never trade ─────────────────────────────────────────────
+    if rib_strongly_against or w_d_conflict or rr < 1.3:
+        grade = "F"
+    # ── Grade D — avoid ──────────────────────────────────────────────────
+    elif rib_against or rr < 1.5 or (not w_d_agree and conf <= 6):
+        grade = "D"
+    # ── Grade A — take immediately ────────────────────────────────────────
+    elif (conf >= 8 and rr > 2.5 and all3_agree and
+          atr_cal and fib_near and no_news and rib_aligned and div_confirmed):
+        grade = "A"
+    # ── Grade B — take if no A ────────────────────────────────────────────
+    elif conf >= 7 and rr >= 2.0 and w_d_agree:
+        grade = "B"
+    # ── Grade C — watch only ──────────────────────────────────────────────
+    elif conf >= 6 and rr >= 1.5:
+        grade = "C"
+    # ── Default D ─────────────────────────────────────────────────────────
+    else:
+        grade = "D"
+
+    return {
+        "grade":        grade,
+        "label":        _GRADE_LABELS[grade],
+        "icon":         _GRADE_ICONS[grade],
+        "conf":         conf,
+        "rr":           round(rr, 2),
+        "all3_agree":   all3_agree,
+        "w_d_agree":    w_d_agree,
+        "w_d_conflict": w_d_conflict,
+        "atr_cal":      atr_cal,
+        "fib_near":     fib_near,
+        "no_news":      no_news,
+        "rib_aligned":  rib_aligned,
+        "rib_against":  rib_against,
+        "div_confirmed": div_confirmed,
+    }
+
+
+def _grade_display_line(qg: dict) -> str:
+    """One-line grade badge: icon, grade, label, key factor dots."""
+    grade = qg["grade"]
+    rr    = qg["rr"]
+    conf  = qg["conf"]
+
+    badges = [f"Conf {conf}", f"R:R {rr:.1f}"]
+
+    if grade in ("A", "B"):
+        if qg.get("all3_agree"):
+            badges.append("✓ All 3 TFs")
+        elif qg.get("w_d_agree"):
+            badges.append("✓ W+D agree")
+        else:
+            badges.append("✗ TF conflict")
+        if qg.get("rib_aligned"):
+            badges.append("✓ Ribbon")
+        elif qg.get("rib_against"):
+            badges.append("✗ Ribbon")
+        if grade == "A":
+            if qg.get("div_confirmed"):
+                badges.append("✓ Divergence")
+            if qg.get("fib_near"):
+                badges.append("✓ Fib")
+            if not qg.get("no_news"):
+                badges.append("⚠️ News risk")
+            if qg.get("atr_cal"):
+                badges.append("✓ ATR-calibrated")
+    elif grade == "C":
+        if qg.get("w_d_agree"):
+            badges.append("W+D agree")
+        else:
+            badges.append("mixed TFs")
+    elif grade in ("D", "F"):
+        if qg.get("w_d_conflict"):
+            badges.append("W/D conflict")
+        if qg.get("rib_against"):
+            badges.append("ribbon against")
+        if rr < 1.5:
+            badges.append("low R:R")
+
+    return f"{qg['icon']} <b>Grade {grade} — {qg['label']}</b>  {' · '.join(badges)}"
+
+
 def _what_needs_to_change(parsed: dict) -> str:
     scores = {
         "Technical":   parsed.get("technical_score"),
