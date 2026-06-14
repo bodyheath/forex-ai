@@ -2989,7 +2989,7 @@ def run() -> int:
                         # entry/stop/target from the technical bundle so every conf-5+
                         # research trade can be properly tracked for outcome analysis.
                         if _rsrc == "haiku":
-                            _ind_e, _ind_s, _ind_t = _calc_indicative_levels(
+                            _ind_e, _ind_s, _ind_t, _ind_meta_r = _calc_indicative_levels(
                                 _r["pair"], _rp, _r.get("bundle", {})
                             )
                             if _ind_e and _ind_s and _ind_t:
