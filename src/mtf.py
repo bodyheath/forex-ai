@@ -1,28 +1,30 @@
 """Multi-timeframe confluence analysis.
 
-Derives a directional signal (BUY / SELL / NEUTRAL) from each of five
-timeframes already present in the technical bundle and computes a weighted
-confluence score.  No extra API calls — all inputs come from the data
-fetched by technical.analyse().
+Derives a directional signal (BUY / SELL / NEUTRAL) from three core
+timeframes and one contextual timeframe already present in the technical
+bundle.  Optimised for 3-7 day swing trading.
 
-Timeframe weights:
-  Monthly  30%  — structural trend bias
-  Weekly   25%  — intermediate trend
-  Daily    20%  — current setup
-  4-Hour   15%  — entry alignment
-  1-Hour   10%  — timing confirmation
+Core timeframe weights:
+  Weekly   40%  — trend direction
+  Daily    40%  — setup timeframe
+  4-Hour   20%  — entry timing
 
-TRADE_THIS YES requires >=4/5 timeframes to agree on direction.
-This rule is enforced here (qualifies flag) AND as a hard gate in service.py.
+Monthly is informational only (+5% bonus when aligned, never blocks a
+good weekly/daily/4H setup).  1-Hour has been removed as noise for
+3-7 day swing trades.
+
+TRADE_THIS YES requires weekly AND daily to agree on direction.
+4-Hour is optional bonus.  This rule is enforced here (qualifies flag)
+AND as a hard gate in service.py.
 """
 
-_TF_WEIGHTS: dict = {
-    "monthly": 0.30,
-    "weekly":  0.25,
-    "daily":   0.20,
-    "h4":      0.15,
-    "h1":      0.10,
+_CORE_TF_WEIGHTS: dict = {
+    "weekly":  0.40,
+    "daily":   0.40,
+    "h4":      0.20,
 }
+
+_MONTHLY_BONUS = 0.05  # informational bonus when monthly aligns with dominant
 
 # Maps our canonical TF names to the keys used in the technical bundle dict
 _TF_DATA_KEYS: dict = {
@@ -30,7 +32,6 @@ _TF_DATA_KEYS: dict = {
     "weekly":  "weekly",
     "daily":   "daily",
     "h4":      "4h",
-    "h1":      "1h",
 }
 
 _ABBREV: dict = {
@@ -38,10 +39,9 @@ _ABBREV: dict = {
     "weekly":  "W",
     "daily":   "D",
     "h4":      "4H",
-    "h1":      "1H",
 }
 
-_MIN_AGREEING = 4   # minimum timeframes that must agree for TRADE_THIS YES
+_MIN_AGREEING = 2   # weekly + daily must both agree (4H is optional bonus)
 _MIN_SCORE    = 4   # tech_signal score threshold below which we treat as NEUTRAL
 
 
@@ -65,12 +65,12 @@ def analyse(tech_bundle: dict) -> dict:
     """Compute multi-timeframe confluence from a technical data bundle.
 
     Returns a dict with keys:
-      signals        — {tf_name: BUY/SELL/NEUTRAL}
+      signals        — {tf_name: BUY/SELL/NEUTRAL} for all 4 TFs
       direction      — dominant direction (BUY / SELL / NEUTRAL)
-      agreeing_count — number of timeframes matching dominant direction
-      weighted_score — 0.0–1.0 sum of weights for agreeing timeframes
-      breakdown      — compact string: "M:BUY W:BUY D:BUY 4H:BUY 1H:SELL"
-      qualifies      — True if agreeing_count >= 4 (hard TRADE_THIS gate)
+      agreeing_count — core TFs (W/D/4H) matching dominant direction (0-3)
+      weighted_score — 0.0–1.0 sum of core TF weights + monthly bonus
+      breakdown      — compact string: "M:BUY W:BUY D:BUY 4H:BUY"
+      qualifies      — True if weekly AND daily both agree (mandatory gate)
     """
     if not isinstance(tech_bundle, dict) or tech_bundle.get("status") == "UNAVAILABLE":
         return {
@@ -87,8 +87,10 @@ def analyse(tech_bundle: dict) -> dict:
         for tf, data_key in _TF_DATA_KEYS.items()
     }
 
-    buy_count  = sum(1 for s in signals.values() if s == "BUY")
-    sell_count = sum(1 for s in signals.values() if s == "SELL")
+    # Direction vote uses core TFs only (weekly, daily, h4)
+    core_signals = {tf: signals[tf] for tf in _CORE_TF_WEIGHTS}
+    buy_count  = sum(1 for s in core_signals.values() if s == "BUY")
+    sell_count = sum(1 for s in core_signals.values() if s == "SELL")
 
     if buy_count == 0 and sell_count == 0:
         dominant       = "NEUTRAL"
@@ -100,14 +102,24 @@ def analyse(tech_bundle: dict) -> dict:
         dominant       = "SELL"
         agreeing_count = sell_count
 
+    # Core weighted score + monthly bonus
     weighted_score = sum(
-        _TF_WEIGHTS[tf]
-        for tf, sig in signals.items()
+        _CORE_TF_WEIGHTS[tf]
+        for tf, sig in core_signals.items()
         if sig == dominant
     )
+    if signals["monthly"] == dominant and dominant != "NEUTRAL":
+        weighted_score += _MONTHLY_BONUS
 
     breakdown = " ".join(
         f"{_ABBREV[tf]}:{sig}" for tf, sig in signals.items()
+    )
+
+    # Weekly AND daily must both agree — 4H is optional bonus
+    qualifies = (
+        dominant != "NEUTRAL"
+        and signals["weekly"] == dominant
+        and signals["daily"] == dominant
     )
 
     return {
@@ -116,5 +128,5 @@ def analyse(tech_bundle: dict) -> dict:
         "agreeing_count": agreeing_count,
         "weighted_score": round(weighted_score, 2),
         "breakdown":      breakdown,
-        "qualifies":      agreeing_count >= _MIN_AGREEING,
+        "qualifies":      qualifies,
     }
