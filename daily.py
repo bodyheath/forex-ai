@@ -2378,9 +2378,11 @@ def _send_telegram_summary(
         pp   = rr["parsed"]
         conf = _eff_conf(rr)   # ribbon-adjusted confidence
         dirn = (pp.get("direction") or "—").upper()
+        _qg_ap = _quality_grades.get(rr["pair"], _trade_quality_grade(rr))
         lines = [
             "",
             f"<b>{rr['pair']}</b> {conf}/10 {dirn} — if conditions improve:",
+            _grade_display_line(_qg_ap),
         ]
         ind_e, ind_s, ind_t, ind_meta = _calc_indicative_levels(rr["pair"], pp, rr.get("bundle", {}))
         is_jpy = "JPY" in rr["pair"].upper()
