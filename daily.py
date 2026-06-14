@@ -2291,9 +2291,11 @@ def _send_telegram_summary(
         _eq_we_e, _eq_we_l = _entry_quality(rr["pair"], now_ak)
         _tref_we  = _time_ref_for_entry(_ew_we[0], _ew_we[1], now_ak)
         _start_we = _fmt_time_exact(_ew_we[0], _ew_we[1])
+        _qg_we = _quality_grades.get(rr["pair"], _trade_quality_grade(rr))
         lines = [
             "",
             f"{arrow} <b>{rr['pair']}</b> {dirn}  {conf}/10 {_conf_bar(conf)}  {_eq_we_e} {_eq_we_l}",
+            _grade_display_line(_qg_we),
             f"{_score_breakdown_line(pp)}",
         ]
         # ML win-probability (only show when model is trained and ready)
