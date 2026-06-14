@@ -2571,6 +2571,7 @@ def _send_telegram_summary(
         all_sections.append(_build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak))
 
         # MARKET CONTEXT
+        _patience = _compute_patience_score(ctx)
         ctx_lines = ["", "━━━━━━━━━━━━━━━━━━━━━", "🌍 <b>MARKET CONTEXT</b>"]
         vix_str = f"VIX {ctx['vix']:.1f}" if ctx["vix"] else ""
         env_str = ctx["risk_env"]
@@ -2597,6 +2598,9 @@ def _send_telegram_summary(
             ctx_lines.append(f"⚡ {nw_list[0]}")
         if ctx.get("monthly_bias"):
             ctx_lines.append(f"📅 Monthly structural bias: <b>{ctx['monthly_bias']}</b> — background context only")
+        _ps = _patience["score"]
+        _pd = _patience["description"]
+        ctx_lines.append(f"📊 <b>Today's trading conditions: {_ps}/10</b> — {_pd}")
         all_sections.append(ctx_lines)
 
         # TRADE ALERTS
