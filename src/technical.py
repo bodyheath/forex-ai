@@ -894,7 +894,6 @@ def analyse(base: str, quote: str) -> dict:
         weekly  = _frame_from_td(_td_request(symbol, "1week",  200))
         daily   = _frame_from_td(_td_request(symbol, "1day",   400))
         four_h  = _frame_from_td(_td_request(symbol, "4h",     500))
-        one_h   = _frame_from_td(_td_request(symbol, "1h",     300))
         return {
             "status":  "ok",
             "source":  "Twelve Data",
@@ -902,7 +901,6 @@ def analyse(base: str, quote: str) -> dict:
             "weekly":  _summarise(weekly,  "Weekly"),
             "daily":   _summarise(daily,   "Daily"),
             "4h":      _summarise(four_h,  "4-Hour"),
-            "1h":      _summarise(one_h,   "1-Hour"),
         }
     except Exception as exc:  # noqa: BLE001 - degrade gracefully
         return {"status": "UNAVAILABLE", "error": str(exc)}
