@@ -475,6 +475,26 @@ def _derive_market_context(deep_results: list, risk_data: dict) -> dict:
         else:
             ctx["monthly_bias"] = f"MIXED ({buy_m} bullish / {sell_m} bearish)"
 
+    # MTF averages across all deep-analysed pairs
+    mtf_scores, mtf_qualifies = [], []
+    for r in deep_results:
+        mtf = r.get("bundle", {}).get("mtf", {})
+        if isinstance(mtf, dict) and mtf.get("breakdown", "UNAVAILABLE") != "UNAVAILABLE":
+            ws = mtf.get("weighted_score")
+            if ws is not None:
+                mtf_scores.append(float(ws))
+            mtf_qualifies.append(bool(mtf.get("qualifies", False)))
+    ctx["avg_mtf_score"]   = (sum(mtf_scores) / len(mtf_scores)) if mtf_scores else None
+    ctx["qualify_pct"]     = (sum(mtf_qualifies) / len(mtf_qualifies)) if mtf_qualifies else None
+
+    # High-impact event count for the week (cached 6h in selector)
+    try:
+        hi_count, hi_notable = selector.count_weekly_high_impact_events()
+    except Exception:
+        hi_count, hi_notable = 0, []
+    ctx["high_impact_count"]   = hi_count
+    ctx["high_impact_notable"] = hi_notable
+
     return ctx
 
 
