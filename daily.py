@@ -2125,9 +2125,12 @@ def _send_telegram_summary(
             except (TypeError, ValueError):
                 pass
 
+        _qg_tb = _quality_grades.get(pair, _trade_quality_grade(r))
         block = [
             "",
             f"{action_icon} <b>{_pfx}ACTION: {direction} {pair} NOW</b>",
+            "━━━━━━━━━━━━━━━━━━━━━",
+            _grade_display_line(_qg_tb),
             "━━━━━━━━━━━━━━━━━━━━━",
             f"💰 Entry: {_fmt_price(entry_raw)}",
             f"🛑 Stop Loss: {_fmt_price(adj_stop)}  ({pip_risk} risk)",
