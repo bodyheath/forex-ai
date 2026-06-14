@@ -63,10 +63,12 @@ def _fetch_live_price(pair: str):
 
 
 def _determine_outcome(direction: str, price: float,
-                       entry, stop, target, opened_at: str):
+                       entry, stop, target, opened_at: str,
+                       expiry_days: int = None):
+    expiry = expiry_days if expiry_days is not None else _EXPIRY_DAYS
     try:
         opened = datetime.strptime(opened_at[:10], "%Y-%m-%d")
-        if (datetime.now() - opened).days >= _EXPIRY_DAYS:
+        if (datetime.now() - opened).days >= expiry:
             return "EXPIRED"
     except (ValueError, TypeError):
         pass
