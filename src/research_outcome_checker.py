@@ -142,6 +142,7 @@ def check_open_research_trades(log=print) -> list:
                 direction, price,
                 row.get("entry"), row.get("stop_loss"), row.get("target"),
                 row.get("date", ""),
+                expiry_days=_compute_expiry_days(row),
             )
             if outcome is None:
                 continue
