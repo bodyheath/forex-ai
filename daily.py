@@ -2128,7 +2128,7 @@ def _send_telegram_summary(
             "",
             f"<b>{rr['pair']}</b> {conf}/10 {dirn} — if conditions improve:",
         ]
-        ind_e, ind_s, ind_t = _calc_indicative_levels(rr["pair"], pp, rr.get("bundle", {}))
+        ind_e, ind_s, ind_t, ind_meta = _calc_indicative_levels(rr["pair"], pp, rr.get("bundle", {}))
         is_jpy = "JPY" in rr["pair"].upper()
         dec = 3 if is_jpy else 5
         lines.append("🟠 <b>POTENTIAL SETUP IF CONDITIONS IMPROVE:</b>")
@@ -2138,6 +2138,15 @@ def _send_telegram_summary(
                     f"Entry ~{ind_e:.{dec}f} | "
                     f"Stop ~{ind_s:.{dec}f} | Target ~{ind_t:.{dec}f}"
                 )
+                _sm_ap = ind_meta.get("stop_atr_mult")
+                _tm_ap = ind_meta.get("target_atr_mult")
+                _atr_ap = ind_meta.get("atr")
+                if _sm_ap is not None and _tm_ap is not None and _atr_ap:
+                    _pip_ap = _pip_size(rr["pair"])
+                    lines.append(
+                        f"📏 Stop {_sm_ap}x ATR · Target {_tm_ap}x ATR · "
+                        f"ATR={round(_atr_ap / _pip_ap)}p"
+                    )
             except (TypeError, ValueError):
                 lines.append("Price levels: insufficient data for this pair")
         else:
