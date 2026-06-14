@@ -498,6 +498,127 @@ def _derive_market_context(deep_results: list, risk_data: dict) -> dict:
     return ctx
 
 
+def _compute_patience_score(ctx: dict) -> dict:
+    """Rate today's trading conditions 1-10 from four factors.
+
+    VIX (0-3): calm market scores high, fear index > 25 scores 0.
+    News (0-3): more high-impact events this week = lower score.
+    MTF agreement (0-2): high avg weighted_score = cleaner trends.
+    Trend clarity (0-2): % of pairs that pass weekly+daily gate.
+
+    Returns dict with 'score' (int 1-10), 'description' (str), and
+    individual component scores for debugging.
+    """
+    # VIX component (0-3)
+    vix = ctx.get("vix")
+    if vix is None:
+        vix_pts = 1.5
+    elif vix <= 13:
+        vix_pts = 3.0
+    elif vix <= 17:
+        vix_pts = 2.5
+    elif vix <= 20:
+        vix_pts = 2.0
+    elif vix <= 25:
+        vix_pts = 1.0
+    else:
+        vix_pts = 0.0
+
+    # News component (0-3)
+    hi = ctx.get("high_impact_count", 0) or 0
+    if hi == 0:
+        news_pts = 3.0
+    elif hi == 1:
+        news_pts = 2.0
+    elif hi <= 3:
+        news_pts = 1.0
+    else:
+        news_pts = 0.0
+
+    # MTF average weighted score (0-2)
+    avg_mtf = ctx.get("avg_mtf_score")
+    if avg_mtf is None:
+        mtf_pts = 1.0
+    elif avg_mtf >= 0.70:
+        mtf_pts = 2.0
+    elif avg_mtf >= 0.45:
+        mtf_pts = 1.0
+    else:
+        mtf_pts = 0.0
+
+    # Trend clarity: % of pairs with qualifying weekly+daily alignment (0-2)
+    qpct = ctx.get("qualify_pct")
+    if qpct is None:
+        trend_pts = 1.0
+    elif qpct >= 0.50:
+        trend_pts = 2.0
+    elif qpct >= 0.25:
+        trend_pts = 1.0
+    else:
+        trend_pts = 0.0
+
+    raw = vix_pts + news_pts + mtf_pts + trend_pts  # 0–10
+    score = max(1, min(10, round(raw)))
+
+    # Build description from the weakest factors
+    parts = []
+    notable = ctx.get("high_impact_notable") or []
+
+    if avg_mtf is not None and avg_mtf < 0.45:
+        parts.append("choppy market")
+    elif avg_mtf is not None and avg_mtf < 0.70:
+        parts.append("moderate trend clarity")
+    else:
+        parts.append("strong trend clarity")
+
+    if vix is not None and vix > 25:
+        parts.append("VIX elevated")
+    elif vix is not None and vix > 20:
+        parts.append("VIX above average")
+
+    if hi > 0:
+        if notable:
+            ev_label = notable[0]
+            # shorten well-known events
+            for kw, short in [("Non-Farm", "NFP"), ("Nonfarm", "NFP"),
+                               ("Federal Reserve", "Fed rate decision"),
+                               ("FOMC", "FOMC"), ("Consumer Price", "CPI")]:
+                if kw.lower() in ev_label.lower():
+                    ev_label = short
+                    break
+            parts.append(f"{ev_label} this week")
+        else:
+            parts.append(f"{hi} high-impact event{'s' if hi != 1 else ''} this week")
+
+    if qpct is not None and qpct < 0.25:
+        parts.append("few pairs with clear directional bias")
+
+    desc_body = ", ".join(parts)
+
+    if score >= 8:
+        suffix = "ideal conditions for A/B setups"
+    elif score >= 6:
+        suffix = "consider waiting for cleaner setups"
+    elif score >= 4:
+        suffix = "be selective — only A-grade setups"
+    elif score >= 2:
+        suffix = "strong recommendation to reduce size"
+    else:
+        suffix = "strong recommendation to stay in cash today"
+
+    description = f"{desc_body} — {suffix}" if desc_body else suffix
+
+    return {
+        "score":     score,
+        "raw":       round(raw, 1),
+        "vix_pts":   vix_pts,
+        "news_pts":  news_pts,
+        "mtf_pts":   mtf_pts,
+        "trend_pts": trend_pts,
+        "description": description,
+    }
+
+
 def _score_breakdown_line(parsed: dict) -> str:
     def _s(key):
         v = parsed.get(key)
