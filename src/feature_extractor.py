@@ -21,7 +21,7 @@ FEATURE_COLS = [
     "atr_pct",         # ATR as percentage of price (normalised volatility)
     "reward_risk",     # R:R ratio from analysis
     "direction_buy",   # 1=BUY  0=SELL
-    "mtf_count",       # agreeing MTF timeframes 0-5
+    "mtf_count",       # agreeing core MTF timeframes 0-3 (weekly/daily/4H)
     "ribbon_aligned",  # 1=MA ribbon fully aligned with trade direction
     "month_sin",       # sin(2π·month/12) — seasonal cycle encoding
     "month_cos",       # cos(2π·month/12)
