@@ -2069,40 +2069,36 @@ def _send_telegram_summary(
             if (_rib_wl_bull and dirn == "SELL") or (_rib_wl_bear and dirn == "BUY"):
                 lines.append("⚠️ <b>MA Ribbon conflict — confidence penalised −1, higher risk</b>")
         # Indicative entry/stop/target — always shown so investor knows the trade shape
-        ind_e, ind_s, ind_t = _calc_indicative_levels(rr["pair"], pp, rr.get("bundle", {}))
+        ind_e, ind_s, ind_t, ind_meta = _calc_indicative_levels(rr["pair"], pp, rr.get("bundle", {}))
         if ind_e and ind_s and ind_t:
             is_jpy = "JPY" in rr["pair"].upper()
             dec = 3 if is_jpy else 5
             try:
-                rr_ratio = abs(float(ind_t) - float(ind_e)) / abs(float(ind_e) - float(ind_s))
-                # Override with nearest Fibonacci level if it gives a better natural R:R
-                try:
-                    _fib_d = (rr.get("bundle") or {}).get("technical", {}).get("daily", {})
-                    if isinstance(_fib_d, dict):
-                        _fib = _fib_d.get("fibonacci", {})
-                        if isinstance(_fib, dict) and _fib.get("status") == "ok":
-                            _fib_key = "nearest_above" if dirn == "BUY" else "nearest_below"
-                            _fib_levels = _fib.get(_fib_key, [])
-                            if _fib_levels:
-                                _fib_px = float(_fib_levels[0][1])  # (label, price) tuple
-                                _fib_rr = abs(_fib_px - float(ind_e)) / abs(float(ind_e) - float(ind_s))
-                                if _fib_rr >= 1.3 and _fib_rr > rr_ratio:
-                                    ind_t = _fib_px
-                                    rr_ratio = _fib_rr
-                except (TypeError, ValueError, ZeroDivisionError, IndexError):
-                    pass
-                # Floor at 1.3:1
-                rr_ratio = max(rr_ratio, 1.3)
+                rr_ratio   = abs(float(ind_t) - float(ind_e)) / abs(float(ind_e) - float(ind_s))
+                rr_ratio   = max(rr_ratio, 1.3)
                 risk_pips  = abs(float(ind_e) - float(ind_s)) / _pip_size(rr["pair"])
                 profit_pips= abs(float(ind_t) - float(ind_e)) / _pip_size(rr["pair"])
                 risk_usd   = max(1, round(risk_pips))
                 profit_usd = max(1, round(profit_pips))
                 lines.append("🟡 <b>READY TO TRADE IF CONFIRMED:</b>")
+                if ind_meta.get("quality_flag"):
+                    lines.append(f"⚠️ <b>{ind_meta['quality_flag']}</b> — R:R {rr_ratio:.1f}:1 below 1.5 minimum")
                 lines.append(
                     f"Entry ~{ind_e:.{dec}f} | "
                     f"Stop ~{ind_s:.{dec}f} | Target ~{ind_t:.{dec}f}"
                 )
                 lines.append(f"Risk ${risk_usd} → Make ${profit_usd} ({rr_ratio:.1f}:1)")
+                # ATR multiples display
+                _sm = ind_meta.get("stop_atr_mult")
+                _tm = ind_meta.get("target_atr_mult")
+                _atr_val = ind_meta.get("atr")
+                if _sm is not None and _tm is not None and _atr_val:
+                    _atr_pip = round(_atr_val / _pip_size(rr["pair"]))
+                    lines.append(
+                        f"📏 Stop {_sm}x ATR ({round(risk_pips):.0f}p) · "
+                        f"Target {_tm}x ATR ({round(profit_pips):.0f}p) · "
+                        f"ATR={_atr_pip}p"
+                    )
             except (TypeError, ValueError, ZeroDivisionError):
                 pass
         _sess_we_active, _sess_we_close = _session_status_for_pair(rr["pair"], now_ak)
