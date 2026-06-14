@@ -225,14 +225,14 @@ def adjust_stop_for_atr(pair: str, direction: str,
         return {"stop": stop, "target": target, "note": ""}
 
     orig_rr   = abs(target - entry) / orig_dist
-    min_dist  = 1.2 * atr_daily   # tighter than this → widen (noise stop)
+    min_dist  = 1.0 * atr_daily   # tighter than this → widen to 1x ATR
     max_dist  = 2.5 * atr_daily   # wider than this   → tighten (over-exposed)
     dec       = _decimals(pair)
     note      = ""
 
     if orig_dist < min_dist:
         new_dist = min_dist
-        note     = f"widened vs ATR {atr_daily:.{dec}f}"
+        note     = f"widened to 1.0x ATR {atr_daily:.{dec}f}"
     elif orig_dist > max_dist:
         new_dist = max_dist
         note     = f"tightened vs ATR {atr_daily:.{dec}f}"
