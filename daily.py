@@ -1958,20 +1958,31 @@ def _send_telegram_summary(
         and _eff_conf(r) < _trade_conf_thr
     }
 
-    yes_trades  = [
+    # Grade all results — used by display helpers and filtering below
+    _quality_grades: dict = {r["pair"]: _trade_quality_grade(r) for r in deep_results}
+
+    # Candidate YES trades (passes MTF gate + effective confidence threshold)
+    _yes_raw = [
         r for r in deep_results
         if r["parsed"].get("trade_this") == "YES"
         and r["pair"] not in _demoted_pairs
     ]
-    watch_list  = sorted(
+    # Only A and B get full trade alerts; C → watch list; D/F → near misses
+    yes_trades    = [r for r in _yes_raw if _quality_grades.get(r["pair"], {}).get("grade") in ("A", "B")]
+    _c_grade_yes  = [r for r in _yes_raw if _quality_grades.get(r["pair"], {}).get("grade") == "C"]
+    _df_grade_yes = [r for r in _yes_raw if _quality_grades.get(r["pair"], {}).get("grade") in ("D", "F")]
+
+    watch_list = sorted(
         [r for r in deep_results
          if (r["parsed"].get("trade_this") != "YES" or r["pair"] in _demoted_pairs)
-         and 5 <= _eff_conf(r) <= 6],
+         and 5 <= _eff_conf(r) <= 6
+        ] + _c_grade_yes,
         key=_eff_conf, reverse=True,
-    )[:3]
+    )[:4]   # allow one extra slot for demoted C-grade alerts
     near_misses = sorted(
         [r for r in deep_results
-         if r["parsed"].get("trade_this") != "YES" or r["pair"] in _demoted_pairs],
+         if r["parsed"].get("trade_this") != "YES" or r["pair"] in _demoted_pairs
+        ] + _df_grade_yes,
         key=_eff_conf, reverse=True,
     )
     upcoming = sorted(
