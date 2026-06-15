@@ -220,9 +220,12 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
     for side in ("base", "quote"):
         p = pos.get(side, {})
         if p.get("status") == "ok":
-            flag = (p.get("extreme_flag") or "")[:20]
+            flag     = (p.get("extreme_flag") or "")[:20]
+            momentum = p.get("cot_momentum", "")
+            mom_str  = f" MOM={momentum}" if momentum else ""
             pos_parts.append(
                 f"{p.get('currency','?')}={p.get('direction','?')}@{p.get('percentile_in_range','?')}pct"
+                + mom_str
                 + (f" {flag}" if flag else "")
             )
         else:
