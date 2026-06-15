@@ -26,7 +26,7 @@ RESEARCH_LOTS = 0.01
 FIELDS = [
     "id", "date", "pair", "direction", "confidence",
     "entry", "stop_loss", "target", "lots",
-    "status", "close_price", "pips", "r_multiple", "closed_at",
+    "status", "close_price", "pips", "net_pips", "r_multiple", "closed_at",
     "source", "scan_mode",
 ]
 
