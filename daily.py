@@ -2689,6 +2689,8 @@ def _send_telegram_summary(
                 "🔄 <b>COT REVERSAL WARNING — institutional positioning just flipped against "
                 "this trade direction — confidence penalised −1</b>"
             )
+        # Fundamental alignment
+        block += _fundamental_lines(r, compact=False)
         block.append("🔍 <b>Why all data agrees:</b>")
         for why_line in _why_agrees_lines(r, ctx):
             block.append(why_line)
