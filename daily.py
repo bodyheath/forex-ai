@@ -3144,12 +3144,33 @@ def run() -> int:
 
     with log_path.open("a", encoding="utf-8") as logf:
 
+        # 0a. Pre-fetch prices for all open trades before outcome checking.
+        #     Uses /time_series?interval=1day&outputsize=2 — more reliable on
+        #     the free tier than /price.  The resulting cache is passed to both
+        #     outcome checkers so they skip per-trade API calls entirely, which
+        #     means ALL open research trades can be priced regardless of whether
+        #     they appeared in today's pair selection.
+        _open_trade_prices: dict = {}
+        try:
+            from src import price_fetcher as _pf
+            _open_trade_prices = _pf.fetch_prices_for_open_trades(
+                log=lambda m: _log_line(logf, m)
+            )
+        except Exception as _pf_exc:
+            _log_line(
+                logf,
+                f"Price pre-fetch failed ({_pf_exc}) — outcome checkers will use direct API.",
+            )
+
         # 0. Automatic outcome detection
         closed_today = []
         new_patterns = []
         try:
             from src import outcome_checker, outcome_analyst
-            closed_today = outcome_checker.check_open_trades(log=lambda m: _log_line(logf, m))
+            closed_today = outcome_checker.check_open_trades(
+                log=lambda m: _log_line(logf, m),
+                price_cache=_open_trade_prices,
+            )
             if closed_today:
                 new_patterns = outcome_analyst.run_outcome_analysis(
                     closed_today, log=lambda m: _log_line(logf, m)
@@ -3159,7 +3180,10 @@ def run() -> int:
 
         try:
             from src import research_outcome_checker
-            research_outcome_checker.check_open_research_trades(log=lambda m: _log_line(logf, m))
+            research_outcome_checker.check_open_research_trades(
+                log=lambda m: _log_line(logf, m),
+                price_cache=_open_trade_prices,
+            )
         except Exception as exc:
             _log_line(logf, f"Research outcome check failed: {exc}")
 
