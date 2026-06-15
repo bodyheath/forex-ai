@@ -2606,6 +2606,12 @@ def _send_telegram_summary(
             _rib_wl_bear = _rib_wl_status in ("ALIGNED_BEAR", "LEANING_BEAR")
             if (_rib_wl_bull and dirn == "SELL") or (_rib_wl_bear and dirn == "BUY"):
                 lines.append("⚠️ <b>MA Ribbon conflict — confidence penalised −1, higher risk</b>")
+        # COT reversal warning
+        if _cot_reversal_penalty(rr) < 0:
+            lines.append(
+                "🔄 <b>COT REVERSAL WARNING — institutional positioning just flipped — "
+                "confidence penalised −1</b>"
+            )
         # D/F grade: monitoring only — suppress all entry instructions
         if _qg_we["grade"] in ("D", "F"):
             if _qg_we["grade"] == "F":
