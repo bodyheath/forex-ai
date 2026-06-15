@@ -2760,6 +2760,8 @@ def _send_telegram_summary(
                 "🔄 <b>COT REVERSAL WARNING — institutional positioning just flipped — "
                 "confidence penalised −1</b>"
             )
+        # Fundamental alignment (compact)
+        lines += _fundamental_lines(rr, compact=True)
         # D/F grade: monitoring only — suppress all entry instructions
         if _qg_we["grade"] in ("D", "F"):
             if _qg_we["grade"] == "F":
