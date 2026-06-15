@@ -15,13 +15,20 @@ which 15 pairs go to deep analysis:
 Each factor is scored 0 to its maximum; together they sum to 100.
 No pair is guaranteed a spot — the 15 highest scorers win each day.
 
+Eligible universe (expanded from G8 to G10 + SGD/HKD):
+  G8  majors : EUR GBP USD JPY CHF AUD NZD CAD
+  G10 add    : NOK SEK
+  Liquid Asia: SGD HKD
+  Blacklisted: TRY ZAR MXN BRL IDR INR RUB THB PHP CZK HUF PLN RON
+               (known illiquid / spread-too-wide currencies)
+
 Flow:
   a) Fetch complete pair universe from Twelve Data /forex_pairs (cached 12h).
   b) Fetch economic calendar (cached).
   c) Fetch policy rates for all core currencies from FRED (cached 24h).
   d) Load per-pair win rates from trades.csv.
   e) Pre-score ALL liquid pairs on events + session + rate divergence + tier.
-  f) Fetch 20-candle OHLCV snapshots for the top PRICE_FETCH_LIMIT pre-scored pairs.
+  f) Fetch OHLCV snapshots for the top PRICE_FETCH_LIMIT pre-scored pairs.
   g) Compute full 8-factor score; log the breakdown; return top 15.
 """
 
