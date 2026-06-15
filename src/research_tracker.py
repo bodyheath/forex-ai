@@ -99,6 +99,7 @@ def log_research_trade(pair: str, parsed: dict, source: str, scan_mode: str) -> 
         "status":      status,
         "close_price": "",
         "pips":        "",
+        "net_pips":    "",
         "r_multiple":  "",
         "closed_at":   "",
         "source":      source,
