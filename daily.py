@@ -2630,6 +2630,23 @@ def _send_telegram_summary(
                         f"📏 Stop {_sm_ap}x ATR · Target {_tm_ap}x ATR · "
                         f"ATR={round(_atr_ap / _pip_ap)}p"
                     )
+                # Net R:R viability
+                try:
+                    from src import trade_costs as _tc_ap
+                    _viab_ap = _tc_ap.check_viability(rr["pair"], dirn, ind_e, ind_s, ind_t)
+                    if not _viab_ap["viable"]:
+                        lines.append(
+                            f"🚫 NOT VIABLE AFTER COSTS — net R:R {_viab_ap['net_rr']:.1f}:1 "
+                            f"(gross {_viab_ap['gross_rr']:.1f}:1 minus "
+                            f"{_viab_ap['total_cost_pips']:.1f}p costs)"
+                        )
+                    elif _viab_ap.get("net_rr", 0) > 0:
+                        lines.append(
+                            f"Net R:R {_viab_ap['net_rr']:.1f}:1 after "
+                            f"{_viab_ap['total_cost_pips']:.1f}p costs"
+                        )
+                except Exception:
+                    pass
             except (TypeError, ValueError):
                 lines.append("Price levels: insufficient data for this pair")
         else:
