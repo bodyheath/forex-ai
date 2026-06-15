@@ -2547,6 +2547,22 @@ def _send_telegram_summary(
                     f"Stop ~{ind_s:.{dec}f} | Target ~{ind_t:.{dec}f}"
                 )
                 lines.append(f"Risk ${risk_usd} → Make ${profit_usd} ({rr_ratio:.1f}:1)")
+                # Net R:R after costs
+                try:
+                    from src import trade_costs as _tc_we
+                    _viab_we = _tc_we.check_viability(rr["pair"], dirn, ind_e, ind_s, ind_t)
+                    if not _viab_we["viable"]:
+                        lines.append(
+                            f"🚫 <b>NOT VIABLE AFTER COSTS — net R:R {_viab_we['net_rr']:.1f}:1</b> "
+                            f"(gross {rr_ratio:.1f}:1 minus {_viab_we['total_cost_pips']:.1f}p costs)"
+                        )
+                    elif _viab_we.get("net_rr", 0) > 0:
+                        lines.append(
+                            f"✅ Net R:R {_viab_we['net_rr']:.1f}:1 after "
+                            f"{_viab_we['total_cost_pips']:.1f}p costs"
+                        )
+                except Exception:
+                    pass
                 # ATR multiples display
                 _sm = ind_meta.get("stop_atr_mult")
                 _tm = ind_meta.get("target_atr_mult")
