@@ -2472,6 +2472,13 @@ def _send_telegram_summary(
             _rib_wl_bear = _rib_wl_status in ("ALIGNED_BEAR", "LEANING_BEAR")
             if (_rib_wl_bull and dirn == "SELL") or (_rib_wl_bear and dirn == "BUY"):
                 lines.append("⚠️ <b>MA Ribbon conflict — confidence penalised −1, higher risk</b>")
+        # D/F grade: monitoring only — suppress all entry instructions
+        if _qg_we["grade"] in ("D", "F"):
+            if _qg_we["grade"] == "F":
+                lines.append("❌ Grade F — conditions not suitable for trading — monitoring only")
+            else:
+                lines.append("⚠️ Grade D — avoid — conditions not suitable for entry")
+            return lines
         # Indicative entry/stop/target — always shown so investor knows the trade shape
         ind_e, ind_s, ind_t, ind_meta = _calc_indicative_levels(rr["pair"], pp, rr.get("bundle", {}))
         if ind_e and ind_s and ind_t:
