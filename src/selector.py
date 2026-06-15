@@ -43,11 +43,19 @@ from src import cache
 
 # Fallback universe when Twelve Data /forex_pairs is unavailable.
 UNIVERSE = [
+    # G8 majors
     "EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "USD/CAD", "AUD/USD", "NZD/USD",
+    # G8 crosses
     "EUR/JPY", "GBP/JPY", "AUD/JPY", "CAD/JPY", "CHF/JPY",
     "EUR/GBP", "EUR/AUD", "EUR/CAD", "EUR/CHF",
     "GBP/AUD", "GBP/CAD", "GBP/CHF",
     "AUD/CAD", "AUD/NZD",
+    # G10 Scandinavian (NOK, SEK)
+    "EUR/NOK", "USD/NOK", "GBP/NOK",
+    "EUR/SEK", "USD/SEK", "GBP/SEK",
+    # Liquid Asian (SGD, HKD)
+    "USD/SGD", "EUR/SGD", "GBP/SGD", "SGD/JPY",
+    "USD/HKD", "EUR/HKD",
 ]
 
 _SESSION_UTC = {
