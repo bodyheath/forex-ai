@@ -839,7 +839,28 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         f"Fetching OHLCV for top {len(candidates)} by pre-score."
     )
 
+    # ── Pre-score breakdown diagnostic ───────────────────────────────────────
+    # Shows what's driving the pre-selection ranking BEFORE OHLCV data is used.
+    # Rate column shows the raw rate differential; this is what F3 will score on.
+    log(
+        f"\n  Pre-score breakdown — top {len(candidates)} candidates:\n"
+        f"  {'Pair':<10} {'Events':>7} {'Session':>8} {'RateDiff%':>10} "
+        f"{'Tier':>5}  {'Pre':>6}"
+    )
+    for pair, base, quote, pre in candidates:
+        _ev_d    = _event_boost(base, quote, events)
+        _sess_d  = _session_score(base, quote, utc_hour)
+        _rdiff_d = abs(rates.get(base, 0.0) - rates.get(quote, 0.0))
+        _tier_d  = _tier_score(pair, base, quote)
+        log(
+            f"  {pair:<10} {_ev_d:>7.2f} {_sess_d:>8.2f} "
+            f"{_rdiff_d:>9.2f}% {_tier_d:>5.1f}  {pre:>6.2f}"
+        )
+    log("")
+
     api_calls  = 0
+    snap_ok:   list = []
+    snap_fail: list = []
     pair_scores: dict = {}
 
     for pair, base, quote, _pre in candidates:
@@ -851,6 +872,10 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
             api_calls += 1
 
         snapshot = _fetch_ohlcv_snapshot(pair)
+        if snapshot:
+            snap_ok.append(pair)
+        else:
+            snap_fail.append(pair)
         score, breakdown = _compute_rich_score(
             pair, base, quote, snapshot, rates, events, utc_hour, perf_map
         )
