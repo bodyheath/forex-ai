@@ -1421,22 +1421,34 @@ def _why_agrees_lines(r: dict, ctx: dict) -> list:
     except (KeyError, TypeError, ValueError):
         pass
 
-    # COT positioning
+    # COT positioning + momentum
     try:
         pos_bundle = r["bundle"]["positioning"]
         for side in ("base", "quote"):
             pp = pos_bundle.get(side, {})
             if pp.get("status") == "ok":
-                pct  = pp.get("percentile_in_range")
-                pdir = pp.get("direction", "")
-                flag = (pp.get("extreme_flag") or "")[:70]
+                pct      = pp.get("percentile_in_range")
+                pdir     = pp.get("direction", "")
+                flag     = (pp.get("extreme_flag") or "")[:55]
+                momentum = pp.get("cot_momentum", "")
                 if pct is not None:
-                    lines.append(f"- Positioning: {pp['currency']} {pdir} at {pct:.0f}th pct — {flag}")
+                    _mom_icons = {
+                        "BUILDING":  "📈",
+                        "UNWINDING": "📉",
+                        "REVERSING": "🔄",
+                        "STABLE":    "➡️",
+                    }
+                    _mom_icon = _mom_icons.get(momentum, "")
+                    _mom_str  = f" · {_mom_icon} COT {momentum}" if momentum else ""
+                    lines.append(
+                        f"- COT: {pp['currency']} {pdir} at {pct:.0f}th pct"
+                        f"{_mom_str} — {flag}"
+                    )
                     break
     except (KeyError, TypeError, ValueError):
         ps = p.get("positioning_score")
         if ps:
-            lines.append(f"- Positioning: score {ps}/10")
+            lines.append(f"- COT: positioning score {ps}/10")
 
     # Sentiment — draw from key_thesis if available
     kt = (p.get("key_thesis") or "").lower()
