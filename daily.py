@@ -1651,6 +1651,18 @@ def _pre_filter_pairs(ranked_all: list, top_n: int = 20, log=print) -> list:
             elif mom == "REVERSING":
                 score -= 0.5   # institutional flip is a warning, deprioritise
 
+        # Fundamental divergence: pairs where one ccy is fundamentally bullish and
+        # the other bearish have a clearer directional trade — score them higher
+        try:
+            from src import fundamentals as _fund_pf
+            _cb_b  = _fund_pf.currency_cb_score(base)
+            _cb_q  = _fund_pf.currency_cb_score(quote)
+            _ec_b  = _fund_pf.currency_econ_score(base)
+            _ec_q  = _fund_pf.currency_econ_score(quote)
+            score += abs((_cb_b + _ec_b) - (_cb_q + _ec_q)) * 0.5  # max 2.0
+        except Exception:
+            pass
+
         scored.append((pair, score))
 
     # Stable-sort: primary key = free-data score, secondary = original selector rank
