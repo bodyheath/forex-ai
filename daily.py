@@ -1342,13 +1342,13 @@ def _build_research_section(research_result=None) -> list:
         else:
             sec.append(f"{cv}/10 setups: 0W 0L — no data yet")
 
-    # Most promising pairs by win rate (min 1 closed trade)
+    # Most promising pairs by win rate (PARTIAL_WIN counted as directional success)
     pair_stats: dict = {}
     for r in closed:
         p  = r.get("pair", "?")
         ps = pair_stats.setdefault(p, {"wins": 0, "total": 0})
         ps["total"] += 1
-        if r.get("status") == "WIN":
+        if r.get("status") in ("WIN", "PARTIAL_WIN"):
             ps["wins"] += 1
     sorted_pairs = sorted(
         pair_stats.items(),
