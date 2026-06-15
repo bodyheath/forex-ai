@@ -788,13 +788,18 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
     rates    = _fetch_all_rates()
     perf_map = _load_pair_performance()
 
+    # Count how many currencies came from FRED vs fallback (FRED_API_KEY present
+    # but FRED returned fewer currencies than _FALLBACK_RATES).
+    fred_live = {c for c in rates if c in config.CURRENCIES and config.FRED_API_KEY}
+    fallback_used = set(rates) - fred_live
     if rates:
         log(
-            f"  Policy rates: "
+            f"  Policy rates ({len(rates)} currencies — "
+            f"{len(fred_live)} from FRED, {len(fallback_used)} from fallback): "
             + ", ".join(f"{c}={v:.2f}%" for c, v in sorted(rates.items()))
         )
     else:
-        log("  Policy rates: FRED unavailable — fundamental divergence set to neutral")
+        log("  Policy rates: unavailable — fundamental divergence set to neutral")
 
     if perf_map:
         log(f"  Trade history: {len(perf_map)} pair(s) with >= 3 decisive trades")
