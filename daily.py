@@ -781,6 +781,15 @@ def _trade_quality_grade(r: dict) -> dict:
             rr = float(p.get("reward_risk") or 0)
         except (TypeError, ValueError):
             rr = 0.0
+    if not rr:
+        try:
+            _fb_e, _fb_s, _fb_t, _ = _calc_indicative_levels(
+                r["pair"], p, r.get("bundle", {})
+            )
+            if _fb_e and _fb_s and _fb_t and abs(_fb_e - _fb_s) > 0:
+                rr = abs(_fb_t - _fb_e) / abs(_fb_e - _fb_s)
+        except Exception:
+            pass
 
     # MTF signals
     mtf    = bundle.get("mtf", {})
