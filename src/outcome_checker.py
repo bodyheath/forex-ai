@@ -95,8 +95,13 @@ def _determine_outcome(direction: str, price: float,
     return None
 
 
-def check_open_trades(log=print) -> list:
+def check_open_trades(log=print, price_cache: dict | None = None) -> list:
     """Check all OPEN trades; close any that hit target/stop/expiry.
+
+    ``price_cache`` is an optional {pair: float} dict pre-fetched by
+    price_fetcher.fetch_prices_for_open_trades().  When a pair's price is
+    present in the cache the direct API call and rate-limit sleep are both
+    skipped.  Falls back to the live /price endpoint for cache misses.
 
     Returns a list of updated trade row dicts for each trade that was closed
     this run.  Fully fault-tolerant: errors on individual trades are swallowed
@@ -116,17 +121,23 @@ def check_open_trades(log=print) -> list:
 
     log(f"Outcome check: monitoring {len(open_trades)} open trade(s).")
     closed = []
+    _last_api_t = 0.0  # timestamp of the last direct API call (for rate limiting)
 
-    for i, row in enumerate(open_trades):
-        if i > 0:
-            time.sleep(_FETCH_DELAY)
-
+    for row in open_trades:
         rec_id    = int(row.get("id", 0))
         pair      = row.get("pair", "")
         direction = (row.get("direction") or "").upper()
 
         try:
-            price = _fetch_live_price(pair)
+            if price_cache and pair in price_cache:
+                price = price_cache[pair]
+            else:
+                # Rate-limit guard: ensure ≥ _FETCH_DELAY between live API calls
+                _elapsed = time.time() - _last_api_t
+                if _last_api_t > 0 and _elapsed < _FETCH_DELAY:
+                    time.sleep(_FETCH_DELAY - _elapsed)
+                price = _fetch_live_price(pair)
+                _last_api_t = time.time()
             if price is None:
                 log(f"  #{rec_id} {pair}: price unavailable, skipping.")
                 continue
