@@ -2361,6 +2361,91 @@ def _send_telegram_summary(
 
     # ── Nested helpers ────────────────────────────────────────────────────────
 
+    def _fundamental_lines(result: dict, compact: bool = False) -> list:
+        """Return Telegram lines for fundamental alignment.  Computes and caches alignment."""
+        fa = result.get("_fundamental_alignment")
+        if fa is None:
+            _fa_p = result.get("pair", "")
+            _fa_d = (result.get("parsed", {}).get("direction") or "").upper()
+            if _fa_p and "/" in _fa_p and _fa_d:
+                try:
+                    from src import fundamentals as _fund_fl
+                    _fb, _fq = _fa_p.split("/")
+                    fa = _fund_fl.get_fundamental_alignment(_fb, _fq, _fa_d)
+                    result["_fundamental_alignment"] = fa
+                except Exception:
+                    fa = {}
+            else:
+                fa = {}
+        if not fa:
+            return []
+
+        alignment   = fa.get("alignment", "MIXED")
+        conf_adj    = fa.get("conf_adj", 0)
+        aligned     = fa.get("aligned", 0)
+        opposed     = fa.get("opposed", 0)
+        cb_s        = fa.get("cb_score", 0)
+        carry_s     = fa.get("carry_score", 0)
+        econ_s      = fa.get("econ_score", 0)
+
+        def _tk(s):
+            return "✅" if s > 0 else ("❌" if s < 0 else "➖")
+
+        if alignment == "TAILWIND":
+            hdr = f"🌊 <b>FUNDAMENTAL TAILWIND</b> — {aligned}/3 factors aligned (conf +1)"
+        elif alignment == "HEADWIND":
+            hdr = f"⛔ <b>FIGHTING THE FUNDAMENTALS</b> — {opposed}/3 factors opposed (conf −1)"
+        else:
+            hdr = f"📊 <b>Mixed fundamentals</b> — {aligned}/3 aligned"
+
+        if compact:
+            tick_str = f"CB {_tk(cb_s)} · Carry {_tk(carry_s)} · Econ {_tk(econ_s)}"
+            cb_b = fa.get("cb_base",  "neutral")
+            cb_q = fa.get("cb_quote", "neutral")
+            pair = result.get("pair", "?")
+            base_c = pair.split("/")[0] if "/" in pair else "?"
+            quot_c = pair.split("/")[1] if "/" in pair else "?"
+            adj_str = f" · conf {'−1' if conf_adj < 0 else ('+1' if conf_adj > 0 else '±0')}"
+            return [
+                f"{hdr}",
+                f"   {tick_str} · {base_c} {cb_b} CB · {quot_c} {cb_q} CB{adj_str}",
+            ]
+
+        # Full detail for trade blocks
+        pair = result.get("pair", "?")
+        dirn = (result.get("parsed", {}).get("direction") or "?").upper()
+        base_c = pair.split("/")[0] if "/" in pair else "?"
+        quot_c = pair.split("/")[1] if "/" in pair else "?"
+
+        cb_base_b  = fa.get("cb_base",  "neutral")
+        cb_quot_b  = fa.get("cb_quote", "neutral")
+        cb_note_b  = fa.get("cb_note_base",  "")
+        cb_note_q  = fa.get("cb_note_quote", "")
+        carry_diff = fa.get("carry_diff", 0)
+        econ_base  = fa.get("econ_base",  "neutral")
+        econ_quote = fa.get("econ_quote", "neutral")
+
+        carry_sign  = "+" if carry_diff >= 0 else ""
+        carry_dirn  = "positive" if carry_diff > 0 else ("negative" if carry_diff < 0 else "neutral")
+        carry_trade = f"BUY {base_c}" if dirn == "BUY" else f"SELL {base_c}"
+
+        lines = [hdr]
+        cb_line = f"   {_tk(cb_s)} CB: {base_c} {cb_base_b}"
+        if cb_note_b:
+            cb_line += f" ({cb_note_b})"
+        cb_line += f" · {quot_c} {cb_quot_b}"
+        if cb_note_q:
+            cb_line += f" ({cb_note_q})"
+        lines.append(cb_line)
+        lines.append(
+            f"   {_tk(carry_s)} Carry: {carry_sign}{carry_diff:.1f}% diff → "
+            f"{carry_dirn} carry for {carry_trade}"
+        )
+        lines.append(
+            f"   {_tk(econ_s)} Econ: {base_c} data {econ_base} · {quot_c} data {econ_quote}"
+        )
+        return lines
+
     def _trade_block(r: dict) -> list:
         """Build the full trade alert block for one YES result."""
         p         = r["parsed"]
