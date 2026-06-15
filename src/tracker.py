@@ -147,10 +147,28 @@ def update_outcome(rec_id: int, status: str, exit_price=None, notes: str = "") -
         raise ValueError(f"no recommendation with id {rec_id}")
 
     r_mult, pips = _compute_result(target, status, exit_price)
+
+    net_pips = pips
+    if pips not in ("", None):
+        try:
+            from src import trade_costs as _tc
+            opened = datetime.strptime(target.get("timestamp", "")[:19], "%Y-%m-%d %H:%M:%S")
+            days_held = max(0.0, (datetime.now() - opened).total_seconds() / 86400)
+            net_pips = _tc.net_pips_for_closed_trade(
+                target.get("pair", ""),
+                target.get("direction", ""),
+                _to_float(target.get("entry")) or 1.0,
+                float(pips),
+                days_held,
+            )
+        except Exception:
+            pass
+
     target["status"] = status
     target["exit_price"] = exit_price if exit_price is not None else ""
     target["r_multiple"] = r_mult
     target["pips"] = pips
+    target["net_pips"] = net_pips
     target["closed_at"] = _now()
     if notes:
         target["notes"] = notes
