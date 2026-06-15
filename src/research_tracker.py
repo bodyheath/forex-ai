@@ -30,7 +30,7 @@ FIELDS = [
     "source", "scan_mode",
 ]
 
-OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED"}
+OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN"}
 
 
 def _now() -> str:
