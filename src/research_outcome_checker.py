@@ -93,8 +93,15 @@ def _determine_outcome(direction: str, price: float,
     return None
 
 
-def check_open_research_trades(log=print) -> list:
+def check_open_research_trades(log=print, price_cache: dict | None = None) -> list:
     """Check all OPEN research trades; close any that hit target/stop/expiry.
+
+    ``price_cache`` is an optional {pair: float} dict pre-fetched by
+    price_fetcher.fetch_prices_for_open_trades().  When a pair's price is
+    present in the cache the direct API call and rate-limit sleep are both
+    skipped, allowing ALL open research trades to be checked regardless of
+    whether they appeared in today's scan.  Falls back to the live /price
+    endpoint for any cache misses.
 
     Returns list of closed trade row dicts.  Fully fault-tolerant.
     """
@@ -121,19 +128,30 @@ def check_open_research_trades(log=print) -> list:
         log("Research outcome check: no open research trades to monitor.")
         return []
 
-    log(f"Research outcome check: monitoring {len(open_trades)} open research trade(s).")
+    n_cached  = sum(1 for r in open_trades if price_cache and r.get("pair") in price_cache)
+    n_api     = len(open_trades) - n_cached
+    log(
+        f"Research outcome check: monitoring {len(open_trades)} open research trade(s) — "
+        f"{n_cached} from price cache · {n_api} via direct API."
+    )
     closed = []
+    _last_api_t = 0.0  # timestamp of the last direct API call (for rate limiting)
 
-    for i, row in enumerate(open_trades):
-        if i > 0:
-            time.sleep(_FETCH_DELAY)
-
+    for row in open_trades:
         rec_id    = int(row.get("id", 0))
         pair      = row.get("pair", "")
         direction = (row.get("direction") or "").upper()
 
         try:
-            price = _fetch_live_price(pair)
+            if price_cache and pair in price_cache:
+                price = price_cache[pair]
+            else:
+                # Rate-limit guard: ensure ≥ _FETCH_DELAY between live API calls
+                _elapsed = time.time() - _last_api_t
+                if _last_api_t > 0 and _elapsed < _FETCH_DELAY:
+                    time.sleep(_FETCH_DELAY - _elapsed)
+                price = _fetch_live_price(pair)
+                _last_api_t = time.time()
             if price is None:
                 log(f"  Research #{rec_id} {pair}: price unavailable, skipping.")
                 continue
