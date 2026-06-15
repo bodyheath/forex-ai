@@ -66,6 +66,53 @@ def _days_old(date_str: str):
         return None
 
 
+def _cot_momentum(nets: list, range_span: float) -> dict:
+    """Compute 3-week institutional positioning momentum.
+
+    Compares the latest net speculator position (nets[0]) to 3 weeks ago
+    (nets[3]).  Uses 5 % of the 52-week range span as the STABLE threshold —
+    smaller moves are noise; larger moves show real conviction change.
+
+    Returns
+    -------
+    momentum         BUILDING | STABLE | UNWINDING | REVERSING
+    delta            change in net contracts (latest − 3_weeks_ago)
+    delta_pct_range  abs(delta) as % of 52-week range span
+    net_3w_ago       net position 3 weeks ago (for REVERSING context)
+    """
+    if len(nets) < 4 or range_span < 1_000:
+        return {
+            "momentum": "STABLE",
+            "delta": 0,
+            "delta_pct_range": 0.0,
+            "net_3w_ago": int(nets[0]) if nets else 0,
+        }
+
+    current       = nets[0]
+    three_w_ago   = nets[3]
+    delta         = current - three_w_ago
+    delta_pct     = abs(delta) / range_span * 100.0
+
+    current_long  = current > 0
+    prev_long     = three_w_ago > 0
+
+    if current_long != prev_long and three_w_ago != 0 and current != 0:
+        momentum = "REVERSING"
+    elif delta_pct < 5.0:
+        momentum = "STABLE"
+    elif (current > 0 and delta > 0) or (current < 0 and delta < 0):
+        momentum = "BUILDING"
+    else:
+        momentum = "UNWINDING"
+
+    return {
+        "momentum":        momentum,
+        "delta":           int(delta),
+        "delta_pct_range": round(delta_pct, 1),
+        "net_3w_ago":      int(three_w_ago),
+    }
+
+
 def _for_currency(ccy: str) -> dict:
     meta = config.CURRENCIES.get(ccy, {})
     market = meta.get("cot_market")
@@ -104,6 +151,8 @@ def _for_currency(ccy: str) -> dict:
     else:
         extreme = "net positioning mid-range (not extreme)"
 
+    momentum_data = _cot_momentum(nets, hi - lo)
+
     return {
         "currency": ccy,
         "status": "ok",
@@ -116,6 +165,11 @@ def _for_currency(ccy: str) -> dict:
         "one_year_low": int(lo),
         "percentile_in_range": round(pct_of_range, 0),
         "extreme_flag": extreme,
+        # ── momentum fields ──────────────────────────────────────────────────
+        "cot_momentum":        momentum_data["momentum"],
+        "momentum_delta":      momentum_data["delta"],
+        "momentum_delta_pct":  momentum_data["delta_pct_range"],
+        "net_3w_ago":          momentum_data["net_3w_ago"],
     }
 
 
