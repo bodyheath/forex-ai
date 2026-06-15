@@ -118,7 +118,7 @@ def _compute_result(row: dict, status: str, close_price) -> tuple:
 
     if status == "BREAKEVEN":
         return 0.0, 0.0
-    if status == "EXPIRED" and _to_float(close_price) is None:
+    if status in ("EXPIRED", "PARTIAL_WIN") and _to_float(close_price) is None:
         return "", ""
 
     close_price = _to_float(close_price)
