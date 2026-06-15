@@ -157,7 +157,13 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
         log("Research outcome check: TWELVE_DATA_KEY not set — skipping.")
         return []
 
-    rows        = research_tracker.load()
+    rows = research_tracker.load()
+
+    # ── Retroactively reclassify EXPIRED → PARTIAL_WIN ───────────────────────
+    reclassified = _reclassify_expired(rows, log)
+    if reclassified:
+        rows = research_tracker.load()  # reload after mutations
+
     open_trades = [r for r in rows if r.get("status") == "OPEN"]
     no_levels   = [r for r in rows if r.get("status") == "NO_PRICE_LEVELS"]
     closed_hist = [r for r in rows if r.get("status") in research_tracker.OUTCOME_STATUSES]
@@ -166,10 +172,12 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
     wins_hist    = sum(1 for r in closed_hist if r.get("status") == "WIN")
     losses_hist  = sum(1 for r in closed_hist if r.get("status") == "LOSS")
     expired_hist = sum(1 for r in closed_hist if r.get("status") == "EXPIRED")
+    partial_hist = sum(1 for r in closed_hist if r.get("status") == "PARTIAL_WIN")
     log(
         f"Research outcome audit: {len(rows)} total trades — "
         f"{len(open_trades)} OPEN · {len(no_levels)} NO_PRICE_LEVELS · "
-        f"{wins_hist} WIN · {losses_hist} LOSS · {expired_hist} EXPIRED"
+        f"{wins_hist} WIN · {losses_hist} LOSS · {expired_hist} EXPIRED · "
+        f"{partial_hist} PARTIAL_WIN"
     )
 
     if not open_trades:
