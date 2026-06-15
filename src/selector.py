@@ -790,9 +790,10 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
     prescore_list.sort(key=lambda x: x[3], reverse=True)
     candidates = prescore_list[:price_fetch_limit]
     log(
-        f"  Liquidity filter: {exotic_count} exotic pair(s) removed, "
-        f"{len(prescore_list)} liquid pair(s) eligible. "
-        f"Fetching OHLCV for top {len(candidates)}."
+        f"  Universe expanded — {len(prescore_list)} liquid pair(s) eligible "
+        f"({exotic_count} illiquid/unknown removed). "
+        f"Scanning full eligible universe for best opportunities. "
+        f"Fetching OHLCV for top {len(candidates)} by pre-score."
     )
 
     api_calls  = 0
