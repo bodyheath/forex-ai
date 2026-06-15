@@ -141,6 +141,32 @@ CURRENCIES = {
         "cot_market": "NEW ZEALAND DOLLAR - CHICAGO MERCANTILE EXCHANGE",
         "news_terms": '"Reserve Bank of New Zealand" OR RBNZ OR "New Zealand dollar"',
     },
+    # G10 Scandinavian additions — FRED 3-month interbank series
+    "NOK": {
+        "rate_fred": "IR3TIB01NOM156N",  # 3-month interbank, Norway
+        "cb": "Norges Bank",
+        "cot_market": "",  # no CME futures — use fallback rate if FRED stale
+        "news_terms": '"Norges Bank" OR "Norwegian krone" OR NOK',
+    },
+    "SEK": {
+        "rate_fred": "IR3TIB01SEM156N",  # 3-month interbank, Sweden
+        "cb": "Riksbank",
+        "cot_market": "",
+        "news_terms": '"Riksbank" OR "Swedish krona" OR SEK',
+    },
+    # Liquid Asian additions — no FRED series; selector uses _FALLBACK_RATES
+    "SGD": {
+        "rate_fred": "",  # MAS uses exchange-rate policy, no single policy rate
+        "cb": "Monetary Authority of Singapore",
+        "cot_market": "",
+        "news_terms": '"Monetary Authority of Singapore" OR MAS OR "Singapore dollar"',
+    },
+    "HKD": {
+        "rate_fred": "",  # pegged to USD; HKMA base rate mirrors Fed
+        "cb": "HKMA",
+        "cot_market": "",
+        "news_terms": '"HKMA" OR "Hong Kong dollar" OR HKD',
+    },
 }
 
 # FRED series for macro / risk-context signals.
