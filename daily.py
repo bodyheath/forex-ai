@@ -1294,16 +1294,49 @@ def _build_research_section(research_result=None) -> list:
         if total_loss > 0:
             sec.append(f"Profit factor: <b>{sum(win_pips) / total_loss:.2f}</b>")
 
+    # Expiry analysis breakdown
+    n_expiry_total = len(expired_rows) + len(partial_wins)
+    if n_expiry_total > 0:
+        sec.append("")
+        sec.append("⏰ <b>Expiry analysis:</b>")
+        partial_ep = [_f(r.get("pips")) for r in partial_wins if _f(r.get("pips")) is not None]
+        exp_pos    = [_f(r.get("pips")) for r in expired_rows if (_f(r.get("pips")) or 0) > 0]
+        exp_neg    = [_f(r.get("pips")) for r in expired_rows if (_f(r.get("pips")) or 0) < 0]
+        exp_neu    = [r for r in expired_rows if _f(r.get("pips")) is None or _f(r.get("pips")) == 0]
+        if partial_wins:
+            avg_p = sum(partial_ep) / len(partial_ep) if partial_ep else 0
+            sec.append(
+                f"✅ {len(partial_wins)} PARTIAL WIN (>50% to target, avg +{avg_p:.0f}p) · "
+                f"{len(expired_rows)} expired"
+            )
+        else:
+            sec.append(f"{n_expiry_total} expired — expiry window extended to 7-10 days")
+        detail = []
+        if exp_pos:
+            avg_pos = sum(exp_pos) / len(exp_pos)
+            detail.append(f"{len(exp_pos)} profitable (avg +{avg_pos:.0f}p)")
+        if exp_neg:
+            avg_neg = sum(exp_neg) / len(exp_neg)
+            detail.append(f"{len(exp_neg)} against direction (avg {avg_neg:.0f}p)")
+        if exp_neu:
+            detail.append(f"{len(exp_neu)} neutral")
+        if detail and expired_rows:
+            sec.append(f"   Expired: {' · '.join(detail)}")
+
     # Confidence breakdown (bands 5, 6, 7)
     sec.append("")
     sec.append("📊 <b>Confidence breakdown:</b>")
     for cv in (5, 6, 7):
         band = [r for r in closed if str(r.get("confidence", "")).strip() == str(cv)]
         bw   = sum(1 for r in band if r.get("status") == "WIN")
+        bpw  = sum(1 for r in band if r.get("status") == "PARTIAL_WIN")
         bl   = sum(1 for r in band if r.get("status") == "LOSS")
         bd   = bw + bl
+        pw_str = f" · {bpw} partial" if bpw else ""
         if bd:
-            sec.append(f"{cv}/10 setups: {bw}W {bl}L — {int(bw/bd*100)}% win rate")
+            sec.append(f"{cv}/10 setups: {bw}W {bl}L{pw_str} — {int(bw/bd*100)}% win rate")
+        elif bpw:
+            sec.append(f"{cv}/10 setups: {bpw} partial wins — no full wins/losses yet")
         elif band:
             sec.append(f"{cv}/10 setups: {len(band)} trades — no decisive outcomes yet")
         else:
