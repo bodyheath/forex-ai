@@ -1186,10 +1186,12 @@ def _build_research_section(research_result=None) -> list:
         except (TypeError, ValueError):
             return None
 
-    open_rows = [r for r in rows if r.get("status") in ("OPEN", "NO_PRICE_LEVELS")]
-    closed    = [r for r in rows if r.get("status") in ("WIN", "LOSS", "BREAKEVEN", "EXPIRED")]
-    wins      = [r for r in closed if r.get("status") == "WIN"]
-    losses    = [r for r in closed if r.get("status") == "LOSS"]
+    open_rows    = [r for r in rows if r.get("status") in ("OPEN", "NO_PRICE_LEVELS")]
+    closed       = [r for r in rows if r.get("status") in ("WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN")]
+    wins         = [r for r in closed if r.get("status") == "WIN"]
+    losses       = [r for r in closed if r.get("status") == "LOSS"]
+    partial_wins = [r for r in closed if r.get("status") == "PARTIAL_WIN"]
+    expired_rows = [r for r in closed if r.get("status") == "EXPIRED"]
 
     # Days elapsed from oldest trade date
     days_elapsed = 0
