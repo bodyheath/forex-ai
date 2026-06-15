@@ -3060,18 +3060,21 @@ def _next_scan_footer(scan_mode: str, now_ak: datetime) -> str:
 
 
 def run() -> int:
+    # ── Auckland startup log — very first line, before all guards and checks ──
+    _startup_ak = _auckland_now()
+    print(
+        f"[startup] Auckland: {_startup_ak.strftime('%A')} "
+        f"{_startup_ak.day} {_startup_ak.strftime('%B %Y')} "
+        f"{_startup_ak.strftime('%H:%M')} NZT "
+        f"(weekday={_startup_ak.weekday()}, hour={_startup_ak.hour})",
+        file=sys.stderr, flush=True,
+    )
     _run_start = time.time()
 
     # ── Startup timezone diagnostics ──────────────────────────────────────────
-    _now_utc    = datetime.utcnow()
-    _startup_ak = _auckland_now()
+    _now_utc = datetime.utcnow()
     print(
         f"[startup] UTC time:      {_now_utc.strftime('%Y-%m-%d %H:%M:%S')} UTC",
-        file=sys.stderr,
-    )
-    print(
-        f"[startup] Auckland time: {_startup_ak.strftime('%Y-%m-%d %H:%M:%S')} NZT "
-        f"(hour={_startup_ak.hour})",
         file=sys.stderr,
     )
 
