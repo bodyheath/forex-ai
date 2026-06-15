@@ -1541,11 +1541,16 @@ def _pre_filter_pairs(ranked_all: list, top_n: int = 20, log=print) -> list:
         if b_r is not None and q_r is not None:
             score += min(5.0, abs(b_r - q_r) / 0.5)
 
-        # COT extreme: distance from 50th percentile = reversal opportunity
+        # COT positioning: distance from 50th percentile + momentum bonus
         for ccy in (base, quote):
             pct = _cot_cache.get(ccy)
             if pct is not None:
-                score += abs(pct - 50.0) / 25.0  # max 2 pts per currency
+                score += abs(pct - 50.0) / 25.0   # max 2 pts per currency
+            mom = _cot_mom_cache.get(ccy, "")
+            if mom == "BUILDING":
+                score += 0.5   # institutions adding conviction — higher opportunity
+            elif mom == "REVERSING":
+                score -= 0.5   # institutional flip is a warning, deprioritise
 
         scored.append((pair, score))
 
