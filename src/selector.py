@@ -112,6 +112,27 @@ _ILLIQUID_CURRENCIES = {
     "PHP", "CZK", "HUF", "PLN", "RON",
 }
 
+# Approximate current central-bank policy rates (% p.a.).
+# Used as the primary rate source when FRED is unreachable AND as a guaranteed
+# floor so that F3 (fundamental divergence) always produces differentiated
+# values — even if FRED is down for a whole day.
+# Update these whenever a major central bank moves rates.
+# Last updated: 2026-06-15 (USD 5.33, JPY 0.50 after Mar-2024 hike, etc.)
+_FALLBACK_RATES: dict = {
+    "USD": 5.33,   # Federal Reserve — effective fed funds
+    "EUR": 3.65,   # ECB deposit facility (cut Jun 2025)
+    "GBP": 4.50,   # Bank of England (cut to 4.50 Feb 2025)
+    "JPY": 0.50,   # Bank of Japan (hiked Mar 2024, Jul 2024)
+    "AUD": 4.10,   # RBA cash rate (cut Feb 2025)
+    "NZD": 3.75,   # RBNZ OCR
+    "CAD": 3.00,   # Bank of Canada
+    "CHF": 0.25,   # Swiss National Bank
+    "NOK": 4.50,   # Norges Bank
+    "SEK": 2.50,   # Riksbank (cut Feb 2025)
+    "SGD": 3.60,   # MAS 3-month SIBOR proxy
+    "HKD": 5.33,   # HKMA base rate (pegged, mirrors Fed)
+}
+
 _IMPACT = {"high": 2.0, "medium": 0.7}
 
 _COUNTRY_CURRENCY = {
