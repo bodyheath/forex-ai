@@ -1905,20 +1905,48 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
                 except Exception:
                     pass
 
-            pip_sz = _pip_size(pair)
-            raw    = (cur - entry) if dirn == "BUY" else (entry - cur)
-            pips   = raw / pip_sz
-            dollar = abs(pips) * 1.0   # $1/pip estimate at 0.1 lots
+            pip_sz    = _pip_size(pair)
+            raw       = (cur - entry) if dirn == "BUY" else (entry - cur)
+            pips      = raw / pip_sz
+            net_pips  = pips
+            _cost_str = ""
+            try:
+                from src import trade_costs as _tc_ot
+                _ot_costs = _tc_ot.compute_costs(pair, dirn, entry, float(days_open))
+                _tot_cost = _ot_costs["total_cost_pips"]
+                net_pips  = pips - _tot_cost
+                _sp  = _ot_costs["spread"]
+                _sl  = _ot_costs["entry_slip"]
+                _cm  = _ot_costs["commission"]
+                _sw  = _ot_costs["swap_total"]
+                _parts = [
+                    f"{_sp:.1f}p spread",
+                    f"{_sl:.1f}p slip×2",
+                    f"{_cm:.2f}p comm",
+                ]
+                if abs(_sw) >= 0.05:
+                    _parts.append(f"{_sw:+.1f}p swap")
+                _cost_str = f"💸 Costs: {' · '.join(_parts)} = {_tot_cost:.1f}p total"
+            except Exception:
+                pass
             if pips > 2:
-                arrow    = "📈"
-                pnl_str  = f"+{pips:.0f} pips (+${dollar:.0f}) — moving in your favour"
+                arrow   = "📈"
+                pnl_str = (
+                    f"+{pips:.0f} pips gross | {net_pips:+.0f} pips net "
+                    f"(+${abs(net_pips):.0f}) — moving in your favour"
+                )
             elif pips < -2:
-                arrow    = "📉"
-                pnl_str  = f"{pips:.0f} pips (-${dollar:.0f}) — moving against you"
+                arrow   = "📉"
+                pnl_str = (
+                    f"{pips:.0f} pips gross | {net_pips:.0f} pips net "
+                    f"(-${abs(net_pips):.0f}) — moving against you"
+                )
             else:
-                arrow    = "➖"
-                pnl_str  = f"{pips:+.0f} pips — at breakeven"
+                arrow   = "➖"
+                pnl_str = f"{pips:+.0f} pips gross — at breakeven"
             sec.append(f"{arrow} {pnl_str}")
+            if _cost_str:
+                sec.append(_cost_str)
 
             if target and stop:
                 try:
