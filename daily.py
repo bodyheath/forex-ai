@@ -325,14 +325,63 @@ def _conf(result: dict) -> int:
         return 0
 
 
+def _cot_reversal_penalty(result: dict) -> int:
+    """Return -1 if a REVERSING COT signal aligns with the OLD positioning that
+    now contradicts the trade direction, else 0.
+
+    Rule: penalise when institutions recently FLIPPED and you are trading with
+    the crowd that is now exiting.
+      BUY  + base  COT REVERSING from net LONG  → institutions abandoned their long
+      BUY  + quote COT REVERSING from net SHORT → institutions abandoned their short
+      SELL + base  COT REVERSING from net SHORT → institutions abandoned their short
+      SELL + quote COT REVERSING from net LONG  → institutions abandoned their long
+    """
+    try:
+        direction = (result.get("parsed", {}).get("direction") or "").upper()
+        if direction not in ("BUY", "SELL"):
+            return 0
+        pos = result.get("bundle", {}).get("positioning", {})
+        pair = result.get("pair", "")
+        clean = pair.upper().replace("/", "")
+        base_ccy  = clean[:3] if len(clean) >= 6 else ""
+        quote_ccy = clean[3:6] if len(clean) >= 6 else ""
+
+        for side, ccy in (("base", base_ccy), ("quote", quote_ccy)):
+            pp = pos.get(side, {})
+            if pp.get("status") != "ok":
+                continue
+            if pp.get("cot_momentum") != "REVERSING":
+                continue
+            old_net   = pp.get("net_3w_ago", 0)
+            old_long  = old_net > 0
+            old_short = old_net < 0
+            # BUY: you want base up — penalty if base was long (flipped to short)
+            #      or quote was short (flipped to long, making quote stronger)
+            if direction == "BUY":
+                if side == "base"  and old_long:  return -1
+                if side == "quote" and old_short: return -1
+            # SELL: you want base down — penalty if base was short (flipped to long)
+            #       or quote was long (flipped to short, weakening quote you need weak)
+            else:
+                if side == "base"  and old_short: return -1
+                if side == "quote" and old_long:  return -1
+    except Exception:
+        pass
+    return 0
+
+
 def _eff_conf(result: dict) -> int:
-    """Confidence after MA ribbon penalty: −1 when a STRONG ribbon is fully aligned
-    against the trade direction (ALIGNED_BULL vs SELL or ALIGNED_BEAR vs BUY).
-    LEANING ribbon statuses do not incur a penalty — only ALIGNED ones do.
+    """Confidence after MA ribbon and COT momentum penalties.
+
+    Ribbon:       −1 when ALIGNED ribbon is fully against trade direction.
+    COT reversal: −1 when institutions just flipped away from the direction
+                  you are trading with.
+    Both penalties can stack (max −2).
     """
     raw = _conf(result)
     if raw == 0:
         return 0
+    adj = 0
     try:
         direction = (result.get("parsed", {}).get("direction") or "").upper()
         rib_status = (
@@ -341,12 +390,13 @@ def _eff_conf(result: dict) -> int:
             .get("daily", {}) or {}
         ).get("ribbon", {}).get("status", "")
         if rib_status == "ALIGNED_BULL" and direction == "SELL":
-            return max(0, raw - 1)
+            adj -= 1
         if rib_status == "ALIGNED_BEAR" and direction == "BUY":
-            return max(0, raw - 1)
+            adj -= 1
     except Exception:
         pass
-    return raw
+    adj += _cot_reversal_penalty(result)
+    return max(1, raw + adj)
 
 
 def _conf_bar(conf) -> str:
