@@ -396,6 +396,20 @@ def _eff_conf(result: dict) -> int:
     except Exception:
         pass
     adj += _cot_reversal_penalty(result)
+    # Fundamental alignment adjustment
+    _fa = result.get("_fundamental_alignment")
+    if _fa is None:
+        _fa_pair = result.get("pair", "")
+        _fa_dirn = (result.get("parsed", {}).get("direction") or "").upper()
+        if _fa_pair and "/" in _fa_pair and _fa_dirn:
+            try:
+                from src import fundamentals as _fund
+                _fa_base, _fa_quot = _fa_pair.split("/")
+                _fa = _fund.get_fundamental_alignment(_fa_base, _fa_quot, _fa_dirn)
+                result["_fundamental_alignment"] = _fa
+            except Exception:
+                _fa = {}
+    adj += (_fa or {}).get("conf_adj", 0)
     return max(1, raw + adj)
 
 
