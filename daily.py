@@ -1075,30 +1075,41 @@ def _weekly_performance_section(date: str) -> list:
     lines = ["", "━━━━━━━━━━━━━━━━━━━━━", "📅 <b>WEEKLY PERFORMANCE SUMMARY</b>"]
     if not recent:
         lines.append("No closed trades in the past 7 days.")
-        return lines
+    else:
+        wins  = [r for r in recent if r.get("status") == "WIN"]
+        total = len(recent)
+        wr    = len(wins) / total * 100 if total else 0
 
-    wins  = [r for r in recent if r.get("status") == "WIN"]
-    total = len(recent)
-    wr    = len(wins) / total * 100 if total else 0
+        def _r(row):
+            try:
+                return float(row.get("r_multiple") or 0)
+            except (TypeError, ValueError):
+                return 0.0
 
-    def _r(row):
-        try:
-            return float(row.get("r_multiple") or 0)
-        except (TypeError, ValueError):
-            return 0.0
+        total_r = sum(_r(r) for r in recent)
+        best    = max(recent, key=_r) if recent else None
+        worst   = min(recent, key=_r) if recent else None
 
-    total_r = sum(_r(r) for r in recent)
-    best    = max(recent, key=_r) if recent else None
-    worst   = min(recent, key=_r) if recent else None
+        lines.append(
+            f"7-day: <b>{len(wins)}W / {len(recent)-len(wins)}L</b>  "
+            f"Win rate: <b>{wr:.0f}%</b>  Net: <b>{total_r:+.2f}R</b>"
+        )
+        if best:
+            lines.append(f"🏆 Best: #{best.get('id')} {best.get('pair')} — {_r(best):+.2f}R")
+        if worst and worst is not best:
+            lines.append(f"💔 Worst: #{worst.get('id')} {worst.get('pair')} — {_r(worst):+.2f}R")
 
-    lines.append(
-        f"7-day: <b>{len(wins)}W / {len(recent)-len(wins)}L</b>  "
-        f"Win rate: <b>{wr:.0f}%</b>  Net: <b>{total_r:+.2f}R</b>"
-    )
-    if best:
-        lines.append(f"🏆 Best: #{best.get('id')} {best.get('pair')} — {_r(best):+.2f}R")
-    if worst and worst is not best:
-        lines.append(f"💔 Worst: #{worst.get('id')} {worst.get('pair')} — {_r(worst):+.2f}R")
+    # ── Risk of Ruin + Kelly Criterion ─────────────────────────────────────────
+    try:
+        from src import risk_manager as _rm_ror
+        from src import risk_of_ruin as _ror
+        _ror_profile    = _rm_ror.load_profile()
+        _ror_state      = _rm_ror.compute_risk_state(_ror_profile)
+        _current_risk_f = _rm_ror.MODE_RISK[_ror_state["risk_mode"]] / 100.0
+        lines += _ror.build_ror_section(_current_risk_f)
+    except Exception as _ror_exc:
+        lines.append(f"⚠️ Risk analysis unavailable ({_ror_exc})")
+
     return lines
 
 
