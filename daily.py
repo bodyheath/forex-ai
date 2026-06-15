@@ -3297,8 +3297,8 @@ _SCAN_MODES: dict = {
 }
 
 # All 4 scans select from the full universe by 8-factor merit score — no mode filtering
-_SCAN_TOP_N   = 15   # pairs selected and analysed from the full universe
-_TD_CACHE_MAX = 20   # pairs to pre-warm in Twelve Data cache
+_SCAN_TOP_N   = 20   # pairs selected and analysed from the full universe
+_TD_CACHE_MAX = 35   # pairs to pre-warm in Twelve Data cache (research sweep uses the extras)
 
 # Sonnet escalation threshold: 6 for 6am (higher quality), 7 for intraday (cheaper)
 _SONNET_THRESH = {"full": 6, "morning": 7, "london": 7, "prelondon": 7}
