@@ -461,14 +461,21 @@ def _tier_score(pair: str, base: str, quote: str) -> float:
     """Return liquidity-tier score (0.1–8.0).
 
     Used with coefficient 0.3 in the pre-score so tier acts as a modest
-    tiebreaker.  Pairs scoring 0.1 (an exotic/illiquid currency) are excluded
-    by the minimum-liquidity filter before any scoring runs.
+    tiebreaker.  Pairs scoring 0.1 are excluded before any scoring runs.
+
+    Rules applied in order:
+      1. Pre-set tier entry → use it (all entries ≥ 2.0, always pass).
+      2. Either currency in _ILLIQUID_CURRENCIES → 0.1 (filtered out).
+      3. Both currencies in _LIQUID_CURRENCIES (G10 + SGD/HKD) → 1.5 (tradeable).
+      4. Otherwise → 0.1 (unknown / outside eligible universe).
     """
     if pair in _TIER_SCORES:
         return _TIER_SCORES[pair]
-    if base in _CORE_CURRENCIES and quote in _CORE_CURRENCIES:
-        return 1.5   # both G8 but not a predefined cross — still tradeable
-    return 0.1       # at least one exotic currency
+    if base in _ILLIQUID_CURRENCIES or quote in _ILLIQUID_CURRENCIES:
+        return 0.1
+    if base in _LIQUID_CURRENCIES and quote in _LIQUID_CURRENCIES:
+        return 1.5   # valid cross not yet in the tier table
+    return 0.1       # outside eligible universe
 
 
 def _event_boost(base: str, quote: str, events: list) -> float:
