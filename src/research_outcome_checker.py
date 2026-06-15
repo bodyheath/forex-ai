@@ -20,9 +20,10 @@ _FETCH_DELAY = 10   # seconds between calls; free tier = 8 req/min
 
 
 def _compute_expiry_days(row: dict) -> int:
-    """Dynamic expiry from R:R: max(4, round(rr * 1.5) + 1).
+    """Dynamic expiry from R:R: max(7, round(rr * 2)).
 
     Stop ≈ 1x ATR ≈ ADR, so rr ≈ target_pips / adr_pips.
+    For a 2:1 R:R this gives 7 days; for 3:1 gives 7; for 4:1 gives 8.
     Falls back to _EXPIRY_DAYS if levels are missing.
     """
     try:
@@ -34,9 +35,54 @@ def _compute_expiry_days(row: dict) -> int:
         if sd <= 0:
             return _EXPIRY_DAYS
         rr = td / sd
-        return max(4, round(rr * 1.5) + 1)
+        return max(7, round(rr * 2))
     except (TypeError, ValueError, ZeroDivisionError):
         return _EXPIRY_DAYS
+
+
+def _is_partial_win(direction: str, price: float, entry, stop, target) -> bool:
+    """Return True if price is >=50% of the way to target AND gross pips positive.
+
+    Used to reclassify EXPIRED trades that were moving well but ran out of time.
+    """
+    e = _to_float(entry)
+    t = _to_float(target)
+    if None in (e, t, price) or direction not in ("BUY", "SELL"):
+        return False
+    reward = abs(t - e)
+    if reward <= 0:
+        return False
+    if direction == "BUY":
+        gross_pips = price - e
+        pct_to_target = (price - e) / reward
+    else:
+        gross_pips = e - price
+        pct_to_target = (e - price) / reward
+    return gross_pips > 0 and pct_to_target >= 0.5
+
+
+def _reclassify_expired(rows: list, log) -> int:
+    """Promote EXPIRED rows to PARTIAL_WIN if they meet the criteria.
+
+    Runs once per daily check against all historical EXPIRED trades so that
+    the new classification is retroactively applied.  Returns number reclassified.
+    """
+    count = 0
+    for row in rows:
+        if row.get("status") != "EXPIRED":
+            continue
+        cp = _to_float(row.get("close_price"))
+        if cp is None:
+            continue
+        direction = (row.get("direction") or "").upper()
+        if _is_partial_win(direction, cp, row.get("entry"), row.get("stop_loss"), row.get("target")):
+            try:
+                research_tracker.update_outcome(int(row.get("id", 0)), "PARTIAL_WIN", close_price=cp)
+                log(f"  Reclassified #{row.get('id')} {row.get('pair')} EXPIRED → PARTIAL_WIN")
+                count += 1
+            except Exception as exc:
+                log(f"  Reclassify error #{row.get('id')}: {exc}")
+    return count
 
 
 def _to_float(val):
