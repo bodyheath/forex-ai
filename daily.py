@@ -2325,6 +2325,26 @@ def _send_telegram_summary(
         if sz.get("lots"):
             block.append(f"📏 Position Size: {sz['lots']} lots")
 
+        # ── Cost viability ────────────────────────────────────────────────────
+        try:
+            from src import trade_costs as _tc_tb
+            _viab_tb = _tc_tb.check_viability(pair, direction, entry_raw, adj_stop, adj_tgt)
+            if not _viab_tb["viable"]:
+                block.append(
+                    f"🚫 <b>NOT VIABLE AFTER COSTS — net R:R {_viab_tb['net_rr']:.1f}:1</b> "
+                    f"(gross {_viab_tb['gross_rr']:.1f}:1 minus "
+                    f"{_viab_tb['total_cost_pips']:.1f}p costs)"
+                )
+            else:
+                block.append(
+                    f"✅ Net R:R {_viab_tb['net_rr']:.1f}:1 after "
+                    f"{_viab_tb['total_cost_pips']:.1f}p costs "
+                    f"(gross {_viab_tb['gross_rr']:.1f}:1 · "
+                    f"{_viab_tb['gross_pips']:.0f}p target)"
+                )
+        except Exception:
+            pass
+
         # ── Fibonacci levels ──────────────────────────────────────────────────
         _fib = (r.get("bundle", {}).get("technical", {})
                  .get("daily", {}).get("fibonacci", {}))
