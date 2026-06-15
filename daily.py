@@ -3738,7 +3738,9 @@ def run() -> int:
             except Exception as _mr_exc:
                 _log_line(logf, f"Morning ranked save failed: {_mr_exc}")
 
-        # Research trading mode: paper-trade every pair with conf >= 5 (0.01 lots)
+        # Research trading mode: paper-trade conf>=4 pairs (0.01 lots)
+        # conf-4 "borderline" setups are tracked separately — they build ML training
+        # data and reveal where the real profitable threshold actually sits.
         try:
             from src import research_tracker as _rt
             _rt_today = {
@@ -3747,42 +3749,92 @@ def run() -> int:
                 if r.get("date") == date
             }
             _rt_logged = 0
+
+            def _log_one_research(r_result, src_override=None, mode_override=None):
+                """Log one analysis result as a research trade. Returns True if logged."""
+                nonlocal _rt_logged
+                _rconf = _conf(r_result)
+                if _rconf < 4:
+                    return False
+                _rp   = r_result["parsed"]
+                _rdir = (_rp.get("direction") or "").upper()
+                if (r_result["pair"], _rdir) in _rt_today:
+                    return False
+                _rsrc = src_override or (
+                    "sonnet"
+                    if all(_rp.get(k) for k in ("entry", "stop_loss", "target"))
+                    else "haiku"
+                )
+                if _rsrc in ("haiku", "haiku_sweep"):
+                    _ind_e, _ind_s, _ind_t, _ = _calc_indicative_levels(
+                        r_result["pair"], _rp, r_result.get("bundle", {})
+                    )
+                    if _ind_e and _ind_s and _ind_t:
+                        _rp = dict(_rp)
+                        _rp["entry"]     = _rp.get("entry")     or _ind_e
+                        _rp["stop_loss"] = _rp.get("stop_loss") or _ind_s
+                        _rp["target"]    = _rp.get("target")    or _ind_t
+                        _rsrc = ("indicative" if _rconf >= 5 else "indicative_borderline") \
+                                if _rsrc == "haiku" else "haiku_sweep"
+                    elif _rconf < 5:
+                        _rsrc = "haiku_borderline" if _rsrc == "haiku" else "haiku_sweep_borderline"
+                _smode = mode_override or scan_mode
+                _rt_id = _rt.log_research_trade(r_result["pair"], _rp, _rsrc, _smode)
+                try:
+                    from src import feature_extractor as _fe, feature_store as _fs
+                    _feat = _fe.extract(r_result["pair"], r_result["parsed"], r_result.get("bundle", {}))
+                    _fs.save("research", _rt_id, _feat)
+                except Exception:
+                    pass
+                _rt_today.add((r_result["pair"], _rdir))
+                _rt_logged += 1
+                return True
+
+            # Pass 1: deep analysis results (conf>=4, includes borderline conf-4)
             for _r in deep_results:
-                _rconf = _conf(_r)
-                if _rconf >= 5:
-                    _rp   = _r["parsed"]
-                    _rdir = (_rp.get("direction") or "").upper()
-                    if (_r["pair"], _rdir) not in _rt_today:
-                        _rsrc = (
-                            "sonnet"
-                            if all(_rp.get(k) for k in ("entry", "stop_loss", "target"))
-                            else "haiku"
-                        )
-                        # Haiku-only results have no price levels — compute indicative
-                        # entry/stop/target from the technical bundle so every conf-5+
-                        # research trade can be properly tracked for outcome analysis.
-                        if _rsrc == "haiku":
-                            _ind_e, _ind_s, _ind_t, _ind_meta_r = _calc_indicative_levels(
-                                _r["pair"], _rp, _r.get("bundle", {})
-                            )
-                            if _ind_e and _ind_s and _ind_t:
-                                _rp = dict(_rp)          # shallow copy — don't mutate original
-                                _rp["entry"]     = _rp.get("entry")     or _ind_e
-                                _rp["stop_loss"] = _rp.get("stop_loss") or _ind_s
-                                _rp["target"]    = _rp.get("target")    or _ind_t
-                                _rsrc = "indicative"
-                        _rt_id = _rt.log_research_trade(_r["pair"], _rp, _rsrc, scan_mode)
-                        # Capture ML feature snapshot keyed to this research trade
-                        try:
-                            from src import feature_extractor as _fe, feature_store as _fs
-                            _feat = _fe.extract(_r["pair"], _r["parsed"], _r.get("bundle", {}))
-                            _fs.save("research", _rt_id, _feat)
-                        except Exception:
-                            pass
-                        _rt_today.add((_r["pair"], _rdir))
-                        _rt_logged += 1
+                _log_one_research(_r)
             if _rt_logged:
-                _log_line(logf, f"Research mode: logged {_rt_logged} paper trade(s) (conf>=5).")
+                _log_line(logf, f"Research mode: {_rt_logged} trade(s) from deep analysis (conf>=4).")
+
+            # Pass 2: research sweep — Haiku-only on all pre-filtered pairs not yet analysed.
+            # Uses Twelve Data data already cached by warm_cache (no extra API calls).
+            # _TD_CACHE_MAX controls how many pairs are pre-warmed; increase it for wider coverage.
+            _already_in_deep = {r["pair"] for r in deep_results}
+            _sweep_candidates = [p for p in pre_filtered if p not in _already_in_deep]
+            if _sweep_candidates:
+                _log_line(logf,
+                    f"Research sweep: Haiku-only scan of {len(_sweep_candidates)} additional "
+                    f"pre-warmed pairs (sonnet_threshold=99)...")
+                _sweep_new = 0
+                for _sp in _sweep_candidates:
+                    try:
+                        _sr = _analyse_pair(
+                            _sp, logf,
+                            force_deep=False,
+                            shared_fundamental=_shared_fund.get(_sp),
+                            shared_macro=_shared_macro,
+                            sonnet_threshold=99,
+                        )
+                        if _sr and not _sr.get("screened_out") and _conf(_sr) >= 4:
+                            if _log_one_research(_sr, src_override="haiku_sweep",
+                                                 mode_override=f"{scan_mode}_sweep"):
+                                _sweep_new += 1
+                    except Exception:
+                        pass
+                if _sweep_new:
+                    _log_line(logf, f"Research sweep: {_sweep_new} additional trade(s) logged.")
+
+            # Running total — visible in every GitHub Actions run
+            try:
+                _rt_all  = _rt.load()
+                _rt_open = sum(1 for r in _rt_all if r.get("status") == "OPEN")
+                _log_line(logf,
+                    f"Research trades: {_rt_logged} new this scan "
+                    f"(total: {len(_rt_all)} | open: {_rt_open})")
+            except Exception:
+                if _rt_logged:
+                    _log_line(logf, f"Research trades opened this scan: {_rt_logged}")
+
         except Exception as exc:
             _log_line(logf, f"Research trade logging failed: {exc}")
 
