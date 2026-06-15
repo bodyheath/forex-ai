@@ -906,6 +906,39 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
 
     ranked = sorted(pair_scores.items(), key=lambda x: x[1]["score"], reverse=True)
 
+    # ── OHLCV fetch summary ───────────────────────────────────────────────────
+    log(
+        f"  OHLCV snapshots: {len(snap_ok)}/{len(candidates)} successful"
+        + (
+            f" — {len(snap_fail)} failed (neutral scores assigned): "
+            f"{', '.join(snap_fail)}"
+            if snap_fail else ""
+        )
+    )
+    if snap_fail:
+        log(
+            "  ⚠ Failed snapshots use neutral factor defaults: "
+            "F1=5.0 F2=7.0 F4=5.0 F5=5.0 — these pairs may score identically."
+        )
+
+    # ── Differentiation health check ─────────────────────────────────────────
+    if len(ranked) >= 5:
+        _top15_scores = [meta["score"] for _, meta in ranked[:min(15, len(ranked))]]
+        _spread = max(_top15_scores) - min(_top15_scores)
+        _clust  = sum(1 for s in _top15_scores if abs(s - _top15_scores[0]) <= 3.0)
+        if _spread < 10.0:
+            log(
+                f"  ⚠ SCORE CLUSTERING: top-{len(_top15_scores)} spread is only "
+                f"{_spread:.1f} pts (max={max(_top15_scores):.1f} "
+                f"min={min(_top15_scores):.1f}). Likely cause: OHLCV or FRED "
+                "data unavailable — factors defaulting to neutral values."
+            )
+        elif _clust >= 8:
+            log(
+                f"  ⚠ Score clustering: {_clust} pairs within 3 pts of top score "
+                f"({_top15_scores[0]:.1f}) — check that OHLCV and rates are fresh."
+            )
+
     # ── Detailed breakdown log ────────────────────────────────────────────────
     hdr = (
         f"  {'Rk':<3} {'Pair':<10} {'Total':>6}  "
