@@ -330,46 +330,63 @@ def count_weekly_high_impact_events() -> tuple:
 
 
 def _fetch_all_rates() -> dict:
-    """Fetch current central-bank policy rates for all core currencies from FRED.
+    """Fetch central-bank policy rates for all liquid currencies.
 
-    Cached 24h.  Returns {currency: rate_pct}, e.g. {"USD": 5.33, "JPY": 0.1}.
-    Missing currencies are simply absent; callers treat absence as neutral.
+    Strategy (in order):
+      1. 24h cache — avoid hammering FRED on every run.
+      2. FRED live fetch — real current rates for currencies in config.CURRENCIES.
+      3. _FALLBACK_RATES — fills any gap left by FRED (missing currency, stale
+         series, timeout, missing FRED_API_KEY).  This guarantees F3 always
+         produces differentiated values for G10+SGD/HKD pairs even when FRED
+         is completely unavailable.
+
+    The result is ALWAYS cached (even if entirely from fallbacks), so a FRED
+    outage doesn't cause repeated failed requests on the same day.
+
+    Returns {currency: rate_pct}, e.g. {"USD": 5.33, "JPY": 0.50, "NOK": 4.50}.
     """
     cache_key = "SEL:policy_rates"
     cached = cache.get(cache_key, ttl_hours=24.0)
     if cached is not None:
         return cached
 
-    if not config.FRED_API_KEY:
-        return {}
-
     rates: dict = {}
-    for ccy, ccy_data in config.CURRENCIES.items():
-        series_id = ccy_data.get("rate_fred")
-        if not series_id:
-            continue
-        try:
-            r = requests.get(
-                "https://api.stlouisfed.org/fred/series/observations",
-                params={
-                    "series_id":  series_id,
-                    "api_key":    config.FRED_API_KEY,
-                    "file_type":  "json",
-                    "limit":      5,
-                    "sort_order": "desc",
-                },
-                timeout=10,
-            )
-            for ob in r.json().get("observations", []):
-                val_str = ob.get("value", ".")
-                if val_str not in (".", "", "nd"):
-                    rates[ccy] = float(val_str)
-                    break
-        except Exception:
-            pass
 
-    if rates:
-        cache.set(cache_key, rates)
+    if config.FRED_API_KEY:
+        for ccy, ccy_data in config.CURRENCIES.items():
+            series_id = ccy_data.get("rate_fred")
+            if not series_id:
+                continue
+            try:
+                r = requests.get(
+                    "https://api.stlouisfed.org/fred/series/observations",
+                    params={
+                        "series_id":  series_id,
+                        "api_key":    config.FRED_API_KEY,
+                        "file_type":  "json",
+                        "limit":      5,
+                        "sort_order": "desc",
+                    },
+                    timeout=10,
+                )
+                for ob in r.json().get("observations", []):
+                    val_str = ob.get("value", ".")
+                    if val_str not in (".", "", "nd"):
+                        rates[ccy] = float(val_str)
+                        break
+            except Exception:
+                pass
+
+    # Fill any gaps (FRED unavailable, currency not in config.CURRENCIES, etc.)
+    # with _FALLBACK_RATES so F3 always differentiates between pairs.
+    fred_count = len(rates)
+    for ccy, fallback in _FALLBACK_RATES.items():
+        if ccy not in rates:
+            rates[ccy] = fallback
+
+    # Always cache — prevents FRED hammering when it's down.
+    cache.set(cache_key, rates)
+
     return rates
 
 
