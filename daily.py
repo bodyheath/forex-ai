@@ -1518,11 +1518,13 @@ def _pre_filter_pairs(ranked_all: list, top_n: int = 20, log=print) -> list:
 
     # Pre-fetch COT positioning (populate disk cache)
     from src import positioning as _pos
-    _cot_cache: dict = {}
+    _cot_cache: dict = {}          # ccy -> percentile_in_range
+    _cot_mom_cache: dict = {}      # ccy -> cot_momentum string
     for ccy in unique_ccys:
         cot_data = _pos._for_currency(ccy)
         if cot_data.get("status") == "ok":
-            _cot_cache[ccy] = cot_data.get("percentile_in_range", 50.0)
+            _cot_cache[ccy]     = cot_data.get("percentile_in_range", 50.0)
+            _cot_mom_cache[ccy] = cot_data.get("cot_momentum", "STABLE")
 
     # Score each pair
     scored: list = []
