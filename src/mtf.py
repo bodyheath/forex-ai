@@ -102,6 +102,13 @@ def analyse(tech_bundle: dict) -> dict:
         dominant       = "SELL"
         agreeing_count = sell_count
 
+    # Weekly and daily both NEUTRAL → no directional bias regardless of 4H direction.
+    # A single 4H signal cannot establish a swing-trade recommendation without
+    # weekly AND daily timeframe support.
+    if signals["weekly"] == "NEUTRAL" and signals["daily"] == "NEUTRAL":
+        dominant       = "NEUTRAL"
+        agreeing_count = 0
+
     # Core weighted score + monthly bonus
     weighted_score = sum(
         _CORE_TF_WEIGHTS[tf]
