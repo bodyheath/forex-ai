@@ -126,7 +126,7 @@ _COUNTRY_CURRENCY = {
     "poland": "PLN", "hungary": "HUF", "czech republic": "CZK",
 }
 
-_PRICE_FETCH_LIMIT = 20
+_PRICE_FETCH_LIMIT = 30
 
 
 # ── Universe, calendar, rates, performance ───────────────────────────────────
