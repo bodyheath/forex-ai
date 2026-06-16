@@ -4332,10 +4332,10 @@ _MORNING_RANKED_FILE = config.DATA_DIR / "morning_ranked.json"
 
 # (label, session-currency filter set — empty = no filter)
 _SCAN_MODES: dict = {
-    "morning":   ("9am Morning Check",    set()),
-    "london":    ("5pm London Check",     set()),
-    "prelondon": ("3pm Pre-London Check", set()),
-    "full":      ("6am Full Scan",        set()),
+    "morning":   ("9am Morning Check",      set()),
+    "prelondon": ("5pm Pre-London Check",   set()),
+    "preny":     ("11pm Pre-New York Check", set()),
+    "full":      ("6am Full Scan",          set()),
 }
 
 # All 4 scans select from the full universe by 8-factor merit score — no mode filtering
@@ -4343,7 +4343,7 @@ _SCAN_TOP_N   = 20   # pairs selected and analysed from the full universe
 _TD_CACHE_MAX = 35   # pairs to pre-warm in Twelve Data cache (research sweep uses the extras)
 
 # Sonnet escalation threshold: 6 for 6am (higher quality), 7 for intraday (cheaper)
-_SONNET_THRESH = {"full": 6, "morning": 7, "london": 7, "prelondon": 7}
+_SONNET_THRESH = {"full": 6, "morning": 7, "prelondon": 7, "preny": 7}
 
 
 def _get_scan_mode() -> str:
