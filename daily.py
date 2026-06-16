@@ -4390,7 +4390,14 @@ def run() -> int:
         _should_notify = True
         _log_line(logf, f"[{scan_mode}] Sending Telegram. New alerts: {sorted(_new_alerts) if _new_alerts else 'none'}")
 
-        # 10. Send Telegram summary
+        # 10. Send drawdown tier transition alert (separate message, sent before main summary)
+        if _dd_tier_alert_lines:
+            try:
+                _telegram("\n".join(_dd_tier_alert_lines))
+            except Exception as _dda_exc:
+                _log_line(logf, f"Drawdown tier alert send failed: {_dda_exc}")
+
+        # 11. Send Telegram summary
         if _should_notify:
             try:
                 _send_telegram_summary(
