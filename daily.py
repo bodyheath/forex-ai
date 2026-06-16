@@ -3619,8 +3619,7 @@ def _send_telegram_summary(
                     f"Drawdown: {_dd_id:.1f}% | {_icon_id} {_dd_mode_id.replace('_',' ').title()} | {_rpct_id:.2f}% risk/trade",
                 ]
                 # Show any open trades inline
-                _open_id = [r for r in _all_ft_id if r.get("status") == "OPEN"]
-                for _ot_id in _open_id:
+                for _ot_id in _opn_ft_id:
                     _pp_id = (_ot_id.get("pips") or "")
                     _pp_str = f" ({float(_pp_id):+.1f}p)" if _pp_id else ""
                     _fund_id_sec.append(
