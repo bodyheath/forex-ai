@@ -2053,6 +2053,62 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
         "SGD": "Singapore Dollar","NOK": "Norwegian Krone","SEK": "Swedish Krona",
     }
 
+    # Compact mode: one-line summary per trade for intraday messages
+    if compact:
+        for row in open_trades:
+            _cp_row, _ = _fetch_live_price(row.get("pair", "?"), px_cache)
+            _ce_row    = float(row.get("entry") or 0) or None
+            _cs_row    = float(row.get("stop_loss") or 0) or None
+            _ct_row    = float(row.get("target") or 0) or None
+            _cd_row    = (row.get("direction") or "").upper()
+            _cid_row   = row.get("id", "?")
+            _cpair     = row.get("pair", "?")
+            _buy_row   = _cd_row == "BUY"
+            # Progress %
+            _pct_row   = 0.0
+            _gross_row = None
+            try:
+                if _cp_row and _ce_row and _cs_row and _ct_row:
+                    _pr_pip = _pip_size(_cpair)
+                    _pips_row = ((_cp_row - _ce_row) if _buy_row else (_ce_row - _cp_row)) / _pr_pip
+                    if _buy_row and _ct_row > _ce_row:
+                        _pct_row = min(100.0, max(0.0, (_cp_row - _ce_row) / (_ct_row - _ce_row) * 100))
+                    elif not _buy_row and _ct_row < _ce_row:
+                        _pct_row = min(100.0, max(0.0, (_ce_row - _cp_row) / (_ce_row - _ct_row) * 100))
+                    # Dollar P&L approx (pip value * pips)
+                    _stop_pips_row = abs(_ce_row - _cs_row) / _pr_pip
+                    # simple approx: assume $1/pip for mini lot
+                    _gross_row = _pips_row * 1.0
+            except Exception:
+                pass
+            _bar_row   = int(_pct_row / 100 * 20)
+            _prog_row  = "█" * _bar_row + "░" * (20 - _bar_row)
+            _pnl_icon  = "✅" if (_gross_row is not None and _gross_row > 0) else "📉"
+            _pnl_str   = f"+${_gross_row:.0f}" if (_gross_row is not None and _gross_row > 0) else (f"-${abs(_gross_row):.0f}" if _gross_row is not None else "—")
+            sec.append("")
+            sec.append(
+                f"TRADE #{_cid_row} — {_cpair} {'Buying' if _buy_row else 'Selling'} · "
+                f"{_pnl_str} {_pnl_icon} · {_pct_row:.0f}% to target {_prog_row}"
+            )
+            # Expiry warning
+            try:
+                _ot_exp = 5
+                if _ce_row and _cs_row and _ct_row:
+                    _sd_c = abs(_ce_row - _cs_row)
+                    _td_c = abs(_ct_row - _ce_row)
+                    _ot_exp = _compute_expiry_days_from_rr(_td_c / _sd_c if _sd_c > 0 else 0)
+                _odt_c = datetime.strptime((row.get("timestamp") or "")[:10], "%Y-%m-%d")
+                _days_c = (now_ak.replace(tzinfo=None) - _odt_c).days
+                _rem_c = max(0, _ot_exp - _days_c)
+                if _rem_c <= 2:
+                    sec.append(f"⚠️ Expires in {_rem_c} day{'s' if _rem_c != 1 else ''}")
+            except Exception:
+                pass
+            # 50% milestone reminder
+            if _pct_row >= 50:
+                sec.append(f"⚠️ Halfway — move stop loss to entry price to guarantee no loss")
+        return sec
+
     for row in open_trades:
         pair = row.get("pair", "?")
         dirn = (row.get("direction") or "").upper()
