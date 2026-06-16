@@ -51,6 +51,12 @@ def gather(base: str, quote: str, log=print,
     log(f"  - positioning (CFTC COT) ...")
     pos = positioning.analyse(base, quote)
 
+    log(f"  - smart money divergence ...")
+    smd = smart_money.analyse(
+        sent.get("base", {}), sent.get("quote", {}),
+        pos.get("base",  {}), pos.get("quote",  {}),
+    )
+
     return {
         "technical":   tech,
         "mtf":         mtf_result,
@@ -58,6 +64,7 @@ def gather(base: str, quote: str, log=print,
         "sentiment":   sent,
         "positioning": pos,
         "macro":       mac,
+        "smart_money": smd,
     }
 
 
