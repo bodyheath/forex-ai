@@ -2011,9 +2011,12 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
 
     if not open_trades:
         _fund_bal = _rm_profile.get("estimated_balance", 0) if _rm_profile else 0
-        sec.append("No trades currently open — the system is waiting for the right opportunity.")
-        if _fund_bal > 0:
-            sec.append(f"Your fund balance: <b>${_fund_bal:,.0f}</b> — fully available for the next trade.")
+        if compact:
+            sec.append("No trades open · Fund: $" + (f"{_fund_bal:,.0f}" if _fund_bal else "—") + " fully available")
+        else:
+            sec.append("No trades currently open — the system is waiting for the right opportunity.")
+            if _fund_bal > 0:
+                sec.append(f"Your fund balance: <b>${_fund_bal:,.0f}</b> — fully available for the next trade.")
         return sec
 
     # Portfolio summary — quick pre-pass to compute aggregate P&L
