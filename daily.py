@@ -3776,9 +3776,9 @@ def _send_telegram_summary(
             for r in yes_trades:
                 all_sections.append(_trade_block(r))
 
-        # WHY NO SETUPS
+        # WHY NO MORE SETUPS
         if not yes_trades:
-            no_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "💤 <b>WHY NO SETUPS TODAY</b>"]
+            no_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "💤 <b>WHY NO MORE SETUPS TODAY</b>"]
             if _dd_mode == "halt":
                 no_sec += [
                     "🚨 <b>HALT MODE ACTIVE</b> — all new trades suspended.",
