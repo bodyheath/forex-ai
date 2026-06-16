@@ -4656,6 +4656,7 @@ _SCAN_MODES: dict = {
     "prelondon": ("5pm Pre-London Check",   set()),
     "preny":     ("11pm Pre-New York Check", set()),
     "full":      ("6am Full Scan",          set()),
+    "gap":       ("Sunday Gap Scan",        set()),
 }
 
 # All 4 scans select from the full universe by 8-factor merit score — no mode filtering
