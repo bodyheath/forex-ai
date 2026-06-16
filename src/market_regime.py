@@ -132,6 +132,7 @@ def _classify(vix, vix_trend, yield_curve, gold_5d_pct):
     sigs     = []
 
     # VIX level — the primary signal
+    # 16-20 is the neutral band: historically normal, no directional signal alone.
     if vix is not None:
         if vix < 13:
             risk_on += 3
@@ -140,12 +141,11 @@ def _classify(vix, vix_trend, yield_curve, gold_5d_pct):
             risk_on += 2
             sigs.append(f"VIX {vix:.1f} (low — risk appetite)")
         elif vix < 20:
-            risk_on += 1
-            sigs.append(f"VIX {vix:.1f} (below average)")
+            pass   # neutral band: no signal either way
         elif vix < 25:
             risk_off += 1
             sigs.append(f"VIX {vix:.1f} (elevated)")
-        elif vix < 30:
+        elif vix < 28:
             risk_off += 2
             sigs.append(f"VIX {vix:.1f} (high — caution)")
         else:
