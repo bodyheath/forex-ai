@@ -754,6 +754,16 @@ def _compute_rich_score(
         f8 = 0.0    # consistent loser — small penalty
     bd["8_system_performance"] = round(f8, 2)
 
+    # ── 9. Regime Alignment (max 8) ──────────────────────────────────────────
+    f9 = 0.0
+    if regime:
+        try:
+            from src import market_regime as _mr_sel
+            f9 = _mr_sel.regime_currency_bonus(regime, base, quote)
+        except Exception:
+            pass
+    bd["9_regime_alignment"] = round(f9, 2)
+
     total = sum(bd.values())
     return round(total, 2), bd
 
