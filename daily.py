@@ -4517,31 +4517,33 @@ def _send_telegram_summary(
         if scan_mode == "prelondon":
             _kt_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "⏰ <b>TONIGHT'S KEY TIMES</b>"]
             _kt_sec.append("7:00pm Auckland — London market opens — EUR GBP CHF pairs become most active")
-            # Add tonight's news events
+            # Add any scheduled news events for tonight
+            _kt_events_listed = False
             try:
                 from src import economic_calendar as _ec_kt
-                _kt_events = _ec_kt.events_tonight()
-                if _kt_events:
-                    for _kte in _kt_events[:3]:
-                        _kt_sec.append(_kte)
-                else:
-                    _kt_sec.append("No major economic events tonight — clean London session ahead")
+                _kt_cal = _ec_kt.build_calendar_section()
+                if _kt_cal and len(_kt_cal) > 2:
+                    _kt_sec.append("Check calendar section above for tonight's news events")
+                    _kt_events_listed = True
             except Exception:
+                pass
+            if not _kt_events_listed:
                 _kt_sec.append("No major economic events tonight — clean London session ahead")
             all_sections.append(_kt_sec)
         elif scan_mode == "preny":
             _kt_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "⏰ <b>OVERNIGHT KEY TIMES</b>"]
             _kt_sec.append("1:00am Auckland — New York market opens — USD and CAD pairs become most active")
             _kt_sec.append("1:00am–4:00am Auckland — London and New York both open simultaneously — highest volume window of the entire week — best time for EUR USD GBP pairs")
+            _kt_events2_listed = False
             try:
                 from src import economic_calendar as _ec_kt2
-                _kt_events2 = _ec_kt2.events_tonight()
-                if _kt_events2:
-                    for _kte2 in _kt_events2[:3]:
-                        _kt_sec.append(_kte2)
-                else:
-                    _kt_sec.append("No major economic events overnight — clean New York session ahead")
+                _kt_cal2 = _ec_kt2.build_calendar_section()
+                if _kt_cal2 and len(_kt_cal2) > 2:
+                    _kt_sec.append("Check calendar section above for overnight news events")
+                    _kt_events2_listed = True
             except Exception:
+                pass
+            if not _kt_events2_listed:
                 _kt_sec.append("No major economic events overnight — clean New York session ahead")
             all_sections.append(_kt_sec)
 
