@@ -2432,6 +2432,17 @@ def _send_telegram_summary(
     n_deep      = len(deep_results)
     all_sections: list[list[str]] = []
 
+    # Pre-compute drawdown banner (non-empty when in a protection tier)
+    _dd_banner = ""
+    try:
+        if risk_data:
+            from src import risk_manager as _rm_banner
+            _dd_banner = _rm_banner.drawdown_header_line(
+                _risk_state, risk_data.get("profile", {})
+            )
+    except Exception:
+        pass
+
     # Load 6am morning confidence scores for change detection in intraday scans
     _morning_conf: dict = {}
     try:
