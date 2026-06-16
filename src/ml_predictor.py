@@ -97,35 +97,49 @@ def _load_training_data():
             except Exception:
                 return
         else:
-            # Fallback: build reduced feature vector from scores in trade row
+            # Fallback: build feature vector from scores in trade row.
+            # New extended features (beyond original 15) default to neutral/0.
             try:
-                ts  = trade_row.get("timestamp") or trade_row.get("date") or ""
-                mo  = int(ts.split("-")[1]) if len(ts.split("-")) >= 2 else 6
-                ms  = math.sin(2 * math.pi * mo / 12)
-                mc  = math.cos(2 * math.pi * mo / 12)
+                ts   = trade_row.get("timestamp") or trade_row.get("date") or ""
+                mo   = int(ts.split("-")[1]) if len(ts.split("-")) >= 2 else 6
+                ms   = math.sin(2 * math.pi * mo / 12)
+                mc   = math.cos(2 * math.pi * mo / 12)
                 dirn = (trade_row.get("direction") or "BUY").upper()
-                vec = [
-                    _safe_float(trade_row.get("confidence"),                      5.0),
-                    _safe_float(trade_row.get("technical") or
-                                trade_row.get("tech_score"),                      5.0),
-                    _safe_float(trade_row.get("fundamental") or
-                                trade_row.get("fund_score"),                      5.0),
-                    _safe_float(trade_row.get("sentiment") or
-                                trade_row.get("sent_score"),                      5.0),
-                    _safe_float(trade_row.get("positioning") or
-                                trade_row.get("pos_score"),                       5.0),
-                    _safe_float(trade_row.get("macro") or
-                                trade_row.get("macro_score"),                     5.0),
-                    50.0,                           # rsi14        — neutral default
-                    0.0,                            # macd_signal  — neutral
-                    0.0,                            # atr_pct      — neutral
-                    _safe_float(trade_row.get("reward_risk"), 1.5),
-                    1.0 if dirn == "BUY" else 0.0,
-                    0.0,                            # mtf_count    — unknown
-                    0.0,                            # ribbon_aligned — unknown
-                    ms,                             # month_sin
-                    mc,                             # month_cos
-                ]
+                rr   = _safe_float(trade_row.get("reward_risk"), 1.5)
+                conf = _safe_float(trade_row.get("confidence"), 5.0)
+                # Build a dict matching FEATURE_COLS with best-effort values
+                base = {
+                    "confidence":    conf,
+                    "tech_score":    _safe_float(trade_row.get("technical") or
+                                                 trade_row.get("tech_score"), 5.0),
+                    "fund_score":    _safe_float(trade_row.get("fundamental") or
+                                                 trade_row.get("fund_score"),  5.0),
+                    "sent_score":    _safe_float(trade_row.get("sentiment") or
+                                                 trade_row.get("sent_score"),  5.0),
+                    "pos_score":     _safe_float(trade_row.get("positioning") or
+                                                 trade_row.get("pos_score"),   5.0),
+                    "macro_score":   _safe_float(trade_row.get("macro") or
+                                                 trade_row.get("macro_score"), 5.0),
+                    "rsi14":         50.0,
+                    "macd_signal":   0.0,
+                    "atr_pct":       0.0,
+                    "reward_risk":   rr,
+                    "direction_buy": 1.0 if dirn == "BUY" else 0.0,
+                    "mtf_count":     _safe_float(trade_row.get("mtf_count"), 0.0),
+                    "ribbon_aligned":0.0,
+                    "month_sin":     ms,
+                    "month_cos":     mc,
+                    # extended — best-effort from new research_trades columns
+                    "grade_num":     _safe_float({"A":5,"B":4,"C":3,"D":2,"F":1}.get(
+                                         (trade_row.get("grade") or "").upper(), 0), 0.0),
+                    "rr_over_2":     1.0 if rr > 2.0 else 0.0,
+                    "high_conf":     1.0 if conf >= 8.0 else 0.0,
+                    "fund_aligned_count": _safe_float(trade_row.get("fund_aligned_count"), 0.0),
+                    "corr_agreement_count": _safe_float(trade_row.get("corr_agreement_count"), 0.0),
+                    "day_of_week":   _safe_float(trade_row.get("day_of_week"), 0.0),
+                    "hour_auckland": _safe_float(trade_row.get("hour_auckland"), 0.0),
+                }
+                vec = [base.get(c, 0.0) for c in FEATURE_COLS]
             except Exception:
                 return
 
