@@ -2343,7 +2343,17 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
             sec.append("Trade details unavailable")
 
         if days_open > 0:
-            sec.append(f"Opened: {days_open_str} ago | Expires in: {expires_str}")
+            if remaining <= 2:
+                try:
+                    _exp_date = (now_ak + timedelta(days=remaining)).strftime("%-d %B")
+                except ValueError:
+                    _exp_date = (now_ak + timedelta(days=remaining)).strftime("%d %B").lstrip("0")
+                sec.append(
+                    f"⚠️ This trade expires in {remaining} day{'s' if remaining != 1 else ''} — "
+                    f"if target not reached by {_exp_date} it closes automatically at current price"
+                )
+            else:
+                sec.append(f"Opened: {days_open_str} ago | Expires in: {expires_str}")
 
     return sec
 
