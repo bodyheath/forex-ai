@@ -4038,12 +4038,12 @@ def run() -> int:
 
                 # Auckland time context
                 try:
-                    _ Auckland_now_rt = _auckland_now()
-                    _dow_rt  = _ Auckland_now_rt.isoweekday()   # 1=Mon … 5=Fri
-                    _hour_rt = _ Auckland_now_rt.hour
+                    _aknow_rt = _auckland_now()
+                    _dow_rt   = _aknow_rt.isoweekday()   # 1=Mon … 5=Fri
+                    _hour_rt  = _aknow_rt.hour
                 except Exception:
-                    _dow_rt  = datetime.now().isoweekday()
-                    _hour_rt = datetime.now().hour
+                    _dow_rt   = datetime.now().isoweekday()
+                    _hour_rt  = datetime.now().hour
 
                 _extra_rt = {
                     # Score breakdown
