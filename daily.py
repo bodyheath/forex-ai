@@ -201,15 +201,19 @@ def _entry_quality(pair: str, now_ak: datetime) -> tuple:
     if in_window:
         return "🟢", "ENTER NOW — currently in optimal session window"
 
-    mins_away = (win_s_mins - cur_mins) % (24 * 60)
+    mins_away  = (win_s_mins - cur_mins) % (24 * 60)
+    hours_away = mins_away / 60
     if mins_away < 120:
         return "🟡", f"ENTER SOON — {sess_name} opens in {mins_away} min"
-    if mins_away <= 360:
-        hrs = mins_away // 60
-        rem = mins_away % 60
-        t   = f"{hrs}h {rem}m" if rem else f"{hrs}h"
-        return "🟠", f"WAIT — {sess_name} opens in {t}"
-    return "🔴", "WAIT UNTIL TOMORROW — optimal window more than 6 hours away"
+    hrs = mins_away // 60
+    rem = mins_away % 60
+    t   = f"{hrs}h {rem}m" if rem else f"{hrs}h"
+    # Use same 8h / 20h thresholds as _time_ref_for_entry so badge always matches text
+    if hours_away <= 8:
+        return "🟠", f"WAIT — {sess_name} opens in {t} (today)"
+    if hours_away <= 20:
+        return "🟠", f"WAIT — {sess_name} opens in {t} (tonight)"
+    return "🔴", "WAIT UNTIL TOMORROW — optimal window more than 20 hours away"
 
 
 def _session_status_for_pair(pair: str, now_ak: datetime) -> tuple:
