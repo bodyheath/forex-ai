@@ -36,6 +36,11 @@ META_FILE  = config.DATA_DIR / "ml_model_meta.json"
 FEAT_CSV   = config.DATA_DIR / "trade_features.csv"
 MIN_TRADES = 10
 
+# Anti-curve-fitting safeguard: each learned decision boundary must be supported
+# by at least this many examples in the training set.  Prevents the model from
+# building rules around one-off historical coincidences.
+MIN_PATTERN_SAMPLES = 15
+
 
 # ── Persistence helpers ────────────────────────────────────────────────────────
 
