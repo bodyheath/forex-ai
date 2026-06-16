@@ -3570,14 +3570,18 @@ def _send_telegram_summary(
                 from src import risk_manager as _rm_id
                 from src import tracker as _trk_id
                 _prof_id = risk_data["profile"]
-                _rmode_id = _risk_state.get("risk_mode", "normal")
-                _rpct_id  = _rm_id.MODE_RISK.get(_rmode_id, 1.0)
+                _rmode_id    = _risk_state.get("risk_mode", "normal")
+                _dd_mode_id  = _risk_state.get("drawdown_mode", "normal")
+                _rpct_id     = _rm_id.DD_RISK_PCT.get(_dd_mode_id,
+                               _rm_id.MODE_RISK.get(_rmode_id, 1.0))
                 _fund_id  = _prof_id.get("estimated_balance", _rm_id.FUND_START)
                 _pk_id    = _prof_id.get("peak_balance", _fund_id)
                 _ret_id   = (_fund_id - _rm_id.FUND_START) / _rm_id.FUND_START * 100
                 _dd_id    = max(0.0, (_pk_id - _fund_id) / _pk_id * 100) if _pk_id > 0 else 0.0
-                _icon_id  = {"capital_protection":"⬇️","streak_protection":"⬇️",
-                             "reduced":"➡️","normal":"➡️","enhanced":"⬆️"}.get(_rmode_id,"➡️")
+                _icon_id  = {"halt":"🚨","preservation":"🔴","defensive":"🟠","caution":"⚠️",
+                             "capital_protection":"⬇️","streak_protection":"⬇️",
+                             "reduced":"➡️","normal":"🟢","enhanced":"⬆️"}.get(
+                             _dd_mode_id if _dd_mode_id != "normal" else _rmode_id, "🟢")
                 _all_ft_id = _trk_id.load()
                 _cls_ft_id = [r for r in _all_ft_id if r.get("status") in ("WIN","LOSS","BREAKEVEN","EXPIRED")]
                 _w_ft_id   = [r for r in _cls_ft_id if r.get("status") == "WIN"]
