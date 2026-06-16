@@ -275,6 +275,13 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
             f"RIB={r_status}{r_fan} aligned={rib.get('aligned_count', 0)}/5"
         )
 
+    # Smart Money Divergence (Layer 10)
+    smd_data = bundle.get("smart_money", {})
+    if isinstance(smd_data, dict) and smd_data.get("status") not in ("insufficient_data", None):
+        smd_s   = smd_data.get("smd_score", 0)
+        smd_sig = smd_data.get("signal", "NEUTRAL")
+        lines.append(f"SMD={smd_s:+d} [{smd_sig}]")
+
     return "\n".join(lines)
 
 
