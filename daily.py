@@ -2877,24 +2877,59 @@ def _send_telegram_summary(
                 "🔄 <b>COT REVERSAL WARNING — institutional positioning just flipped against "
                 "this trade direction — confidence penalised −1</b>"
             )
-        # Smart Money Divergence (Layer 10)
-        _smd_tb    = _smd_score(r)
-        _smd_data  = r.get("bundle", {}).get("smart_money", {})
+        # Smart Money Divergence (Layer 10) — plain English
+        _smd_tb   = _smd_score(r)
+        _smd_data = r.get("bundle", {}).get("smart_money", {})
         if isinstance(_smd_data, dict) and _smd_data.get("status") not in ("insufficient_data", None):
-            _smd_sig  = _smd_data.get("signal", "NEUTRAL")
-            _smd_icon = "🐋" if abs(_smd_tb) >= 8 else ("📊" if abs(_smd_tb) >= 5 else "💡")
-            _smd_boost_str = " — <b>+1 confidence boost</b>" if (
-                (_smd_tb >= 8 and direction == "BUY") or (_smd_tb <= -8 and direction == "SELL")
-            ) else ""
-            _smd_warn_str = " — ⚠️ smart money contradicts this trade" if (
-                (_smd_tb >= 8 and direction == "SELL") or (_smd_tb <= -8 and direction == "BUY")
-            ) else ""
-            block.append(
-                f"{_smd_icon} <b>Smart Money Divergence: {_smd_tb:+d}/10 [{_smd_sig}]</b>"
-                f"{_smd_boost_str}{_smd_warn_str}"
+            _smd_bi  = float(_smd_data.get("base_inst",   0) or 0)
+            _smd_qi  = float(_smd_data.get("quote_inst",  0) or 0)
+            _smd_br  = float(_smd_data.get("base_retail", 0) or 0)
+            _smd_qr  = float(_smd_data.get("quote_retail",0) or 0)
+            _smd_base_ccy  = pair.split("/")[0] if "/" in pair else "BASE"
+            _smd_quote_ccy = pair.split("/")[1] if "/" in pair else "QUOTE"
+
+            def _smd_action(score):
+                if score > 0.3:  return "buying"
+                if score < -0.3: return "selling"
+                return "neutral on"
+
+            def _smd_retail_stance(score):
+                if score > 0.3:  return "very bullish"
+                if score > 0.1:  return "mildly bullish"
+                if score < -0.3: return "very bearish"
+                if score < -0.1: return "mildly bearish"
+                return "neutral"
+
+            # Describe the most prominent institutional signal
+            if abs(_smd_bi) >= abs(_smd_qi):
+                _smd_desc_ccy  = _smd_base_ccy
+                _smd_desc_act  = _smd_action(_smd_bi)
+                _smd_desc_ret  = _smd_retail_stance(_smd_br)
+            else:
+                _smd_desc_ccy  = _smd_quote_ccy
+                _smd_desc_act  = _smd_action(_smd_qi)
+                _smd_desc_ret  = _smd_retail_stance(_smd_qr)
+
+            _smd_conflicts = (
+                (_smd_tb >= 5 and direction == "SELL") or (_smd_tb <= -5 and direction == "BUY")
             )
-            for _smd_note in (_smd_data.get("divergence_notes") or [])[:2]:
-                block.append(f"   {_smd_note}")
+            _smd_supports  = (
+                (_smd_tb >= 5 and direction == "BUY")  or (_smd_tb <= -5 and direction == "SELL")
+            )
+            _smd_icon = "🐋" if abs(_smd_tb) >= 8 else ("📊" if abs(_smd_tb) >= 5 else "💡")
+
+            block.append(
+                f"{_smd_icon} <b>Smart Money Signal:</b> Big investors are {_smd_desc_act} "
+                f"{_smd_desc_ccy} while regular traders are {_smd_desc_ret}"
+            )
+            if _smd_conflicts:
+                block.append(f"This conflicts with our {direction} signal — treat with extra caution")
+                block.append("When big money and our signal disagree the risk is higher")
+            elif _smd_supports and abs(_smd_tb) >= 8:
+                block.append(f"This strongly supports our {direction} signal — institutional confirmation")
+                block.append("When big money and our signal agree the probability of success is higher")
+            elif _smd_supports and abs(_smd_tb) >= 5:
+                block.append(f"Mild institutional support for our {direction} signal")
         # Fundamental alignment
         block += _fundamental_lines(r, compact=False)
         block.append("🔍 <b>Why all data agrees:</b>")
