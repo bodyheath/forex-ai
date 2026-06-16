@@ -4491,6 +4491,8 @@ def _send_telegram_summary(
                 _rr_sess_active, _rr_sess_close = _session_status_for_pair(_rr_pair, now_ak)
                 if _rr_sess_active:
                     wl_sec.append(f"⏰ {_rr_ew[6]} currently active — closes {_rr_sess_close} Auckland")
+                elif _rr_tref not in ("TODAY",):
+                    wl_sec.append(f"⏰ Entry window passed for today — next opportunity: {_rr_ew[6]} {_rr_start} Auckland tomorrow")
                 else:
                     wl_sec.append(f"⏰ Best entry window: {_rr_ew[6]} {_rr_start} Auckland {_rr_tref}")
             all_sections.append(wl_sec)
