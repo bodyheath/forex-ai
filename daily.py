@@ -4297,9 +4297,9 @@ def _send_telegram_summary(
                 "New York market opens in 2 hours at 1am Auckland",
                 "London/New York overlap 1am–4am Auckland — highest volume of the entire week",
             ]
-        if _dd_banner:
-            _hdr_id += ["", _dd_banner]
         all_sections.append(_hdr_id)
+        if _dd_banner:
+            all_sections.append(["", "━━━━━━━━━━━━━━━━━━━━━", _dd_banner])
 
         # OPEN TRADES — compact format for intraday (always first)
         _ot_compact = _build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak, compact=True)
