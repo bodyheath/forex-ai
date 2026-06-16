@@ -4513,10 +4513,45 @@ def _send_telegram_summary(
             except Exception:
                 pass
 
+        # TONIGHT'S KEY TIMES (5pm and 11pm scans)
+        if scan_mode == "prelondon":
+            _kt_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "⏰ <b>TONIGHT'S KEY TIMES</b>"]
+            _kt_sec.append("7:00pm Auckland — London market opens — EUR GBP CHF pairs become most active")
+            # Add tonight's news events
+            try:
+                from src import economic_calendar as _ec_kt
+                _kt_events = _ec_kt.events_tonight()
+                if _kt_events:
+                    for _kte in _kt_events[:3]:
+                        _kt_sec.append(_kte)
+                else:
+                    _kt_sec.append("No major economic events tonight — clean London session ahead")
+            except Exception:
+                _kt_sec.append("No major economic events tonight — clean London session ahead")
+            all_sections.append(_kt_sec)
+        elif scan_mode == "preny":
+            _kt_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "⏰ <b>OVERNIGHT KEY TIMES</b>"]
+            _kt_sec.append("1:00am Auckland — New York market opens — USD and CAD pairs become most active")
+            _kt_sec.append("1:00am–4:00am Auckland — London and New York both open simultaneously — highest volume window of the entire week — best time for EUR USD GBP pairs")
+            try:
+                from src import economic_calendar as _ec_kt2
+                _kt_events2 = _ec_kt2.events_tonight()
+                if _kt_events2:
+                    for _kte2 in _kt_events2[:3]:
+                        _kt_sec.append(_kte2)
+                else:
+                    _kt_sec.append("No major economic events overnight — clean New York session ahead")
+            except Exception:
+                _kt_sec.append("No major economic events overnight — clean New York session ahead")
+            all_sections.append(_kt_sec)
+
+        # SYSTEM HEALTH — always show on all intraday scans
+        _intraday_health = ["", "━━━━━━━━━━━━━━━━━━━━━", "⚠️ <b>SYSTEM HEALTH</b>"]
         if cost_lines:
-            all_sections.append(
-                ["", "━━━━━━━━━━━━━━━━━━━━━", "⚠️ <b>SYSTEM HEALTH</b>"] + cost_lines
-            )
+            _intraday_health.extend(cost_lines)
+        else:
+            _intraday_health.append("Cost tracking unavailable")
+        all_sections.append(_intraday_health)
 
     # ── FOOTER (all modes) ─────────────────────────────────────────────────────
     all_sections.append([
