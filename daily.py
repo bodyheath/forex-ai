@@ -709,16 +709,18 @@ def _compute_patience_score(ctx: dict) -> dict:
     }
 
 
-def _score_breakdown_line(parsed: dict) -> str:
+def _score_breakdown_line(parsed: dict, smd: int = 0) -> str:
     def _s(key):
         v = parsed.get(key)
         return str(v) if v is not None else "—"
+    smd_str = f"  SMD:{smd:+d}" if smd != 0 else "  SMD:0"
     return (
         f"T:{_s('technical_score')}  "
         f"F:{_s('fundamental_score')}  "
         f"S:{_s('sentiment_score')}  "
         f"P:{_s('positioning_score')}  "
         f"M:{_s('macro_score')}"
+        f"{smd_str}"
     )
 
 
