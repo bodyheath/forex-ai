@@ -3605,8 +3605,9 @@ def _send_telegram_summary(
                              "capital_protection":"⬇️","streak_protection":"⬇️",
                              "reduced":"➡️","normal":"🟢","enhanced":"⬆️"}.get(
                              _dd_mode_id if _dd_mode_id != "normal" else _rmode_id, "🟢")
-                _all_ft_id = _trk_id.load()
+                _all_ft_id = [r for r in _trk_id.load() if r.get("trade_this") == "YES"]
                 _cls_ft_id = [r for r in _all_ft_id if r.get("status") in ("WIN","LOSS","BREAKEVEN","EXPIRED")]
+                _opn_ft_id = [r for r in _all_ft_id if r.get("status") == "OPEN"]
                 _w_ft_id   = [r for r in _cls_ft_id if r.get("status") == "WIN"]
                 _l_ft_id   = [r for r in _cls_ft_id if r.get("status") == "LOSS"]
                 _dec_id    = _w_ft_id + _l_ft_id
@@ -3614,7 +3615,7 @@ def _send_telegram_summary(
                 _fund_id_sec = [
                     "", "━━━━━━━━━━━━━━━━━━━━━",
                     f"📈 <b>FOREX AI FUND: ${_fund_id:,.0f} ({_ret_id:+.1f}%) | Peak: ${_pk_id:,.0f}</b>",
-                    f"Trades: {len(_all_ft_id)} total · {len(_cls_ft_id)} closed · win rate {_wr_id}",
+                    f"Fund trades: {len(_all_ft_id)} taken · {len(_cls_ft_id)} closed · {len(_opn_ft_id)} open · win rate {_wr_id}",
                     f"Drawdown: {_dd_id:.1f}% | {_icon_id} {_dd_mode_id.replace('_',' ').title()} | {_rpct_id:.2f}% risk/trade",
                 ]
                 # Show any open trades inline
