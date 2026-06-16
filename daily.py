@@ -3952,7 +3952,7 @@ def _send_telegram_summary(
             for rr in watch_list:
                 watch_sec.extend(_watch_entry(rr))
         else:
-            watch_sec.append("No pairs in the 5–6 confidence range today.")
+            watch_sec.append("Nothing on watch list today — the system is waiting for cleaner setups")
         all_sections.append(watch_sec)
 
         # APPROACHING SIGNALS with indicative levels and session time
