@@ -3137,7 +3137,14 @@ def _send_telegram_summary(
         elif risk_amt:
             block.append(f"📊 Risk ${risk_amt:,.0f} {cur}  ({pct:.2f}% account)")
         if sz.get("lots"):
-            block.append(f"📏 Position Size: {sz['lots']} lots")
+            _lots_display = sz["lots"]
+            try:
+                from src import market_regime as _mr_sz
+                if _mr_sz.detect().get("regime") == "ranging_high_vol":
+                    _lots_display = max(0.01, round(_lots_display * 0.5, 2))
+            except Exception:
+                pass
+            block.append(f"📏 Position Size: {_lots_display} lots")
 
         # ── Cost viability ────────────────────────────────────────────────────
         try:
