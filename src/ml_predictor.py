@@ -296,6 +296,27 @@ def train(quiet: bool = False) -> dict:
         _save_meta(meta)
         return meta
 
+    # Require a minimum of decisive outcomes (WIN + LOSS only) before training.
+    # EXPIRED / BREAKEVEN are excluded because they don't cleanly represent edge direction.
+    _d_wins, _d_losses = _count_decisive_trades()
+    _d_total = _d_wins + _d_losses
+    if _d_total < MIN_TRADES:
+        msg = (
+            f"ML retraining skipped — only {_d_total} decisive trades available "
+            f"({_d_wins} wins, {_d_losses} losses) — need {MIN_TRADES} minimum"
+        )
+        if not quiet:
+            print(f"[ml_predictor] {msg}")
+        meta = _load_meta()
+        meta.update({
+            "n_trades":    _d_total,
+            "model_ready": False,
+            "checked_at":  datetime.now().isoformat(),
+            "skip_reason": msg,
+        })
+        _save_meta(meta)
+        return {"skipped": True, "model_ready": False, "n_trades": _d_total, "message": msg}
+
     X, y, n = _load_training_data()
 
     if X is None:
@@ -314,7 +335,26 @@ def train(quiet: bool = False) -> dict:
     scaler = StandardScaler()
     X_s    = scaler.fit_transform(X)
 
-    cv_k = min(5, max(2, n // 4))
+    # Determine safe CV fold count.  Cap at the smallest class size so stratified
+    # splitting never requests more folds than there are examples of the rarer class.
+    n_wins_tr   = int(y.sum())
+    n_losses_tr = n - n_wins_tr
+    min_class   = min(n_wins_tr, n_losses_tr)
+
+    if min_class < 2:
+        # One class has 0 or 1 examples — stratified CV is impossible.
+        skip_cv   = True
+        cv_k      = None
+        no_cv_msg = (
+            f"ML model trained without cross-validation — need at least 5 decisive "
+            f"outcomes per class for proper validation — currently have "
+            f"{n_wins_tr} wins and {n_losses_tr} losses"
+        )
+    else:
+        skip_cv   = False
+        # Cap folds at min_class to prevent stratification errors (e.g. 3 wins → max 3 folds).
+        cv_k      = min(5, max(2, n // 4), min_class)
+        no_cv_msg = None
 
     if n >= 50:
         # Anti-overfitting params:
@@ -334,16 +374,26 @@ def train(quiet: bool = False) -> dict:
         method = "sigmoid"
         mtype  = "LogisticRegression"
 
-    model = CalibratedClassifierCV(base, cv=cv_k, method=method)
-    model.fit(X_s, y)
+    if skip_cv:
+        # Fit base model first, then wrap with prefit calibration (no CV required).
+        base.fit(X_s, y)
+        model = CalibratedClassifierCV(base, cv="prefit", method="sigmoid")
+        model.fit(X_s, y)
+        if not quiet:
+            print(f"[ml_predictor] {no_cv_msg}")
+    else:
+        model = CalibratedClassifierCV(base, cv=cv_k, method=method)
+        model.fit(X_s, y)
 
-    # ROC-AUC cross-validation (in-sample, k-fold)
-    try:
-        cv_s    = cross_val_score(model, X_s, y, cv=cv_k, scoring="roc_auc")
-        roc_auc = round(float(np.mean(cv_s)), 3)
-        roc_std = round(float(np.std(cv_s)),  3)
-    except Exception:
-        roc_auc = roc_std = 0.0
+    # ROC-AUC cross-validation (in-sample, k-fold) — skipped when min_class < 2
+    roc_auc = roc_std = 0.0
+    if not skip_cv:
+        try:
+            cv_s    = cross_val_score(model, X_s, y, cv=cv_k, scoring="roc_auc")
+            roc_auc = round(float(np.mean(cv_s)), 3)
+            roc_std = round(float(np.std(cv_s)),  3)
+        except Exception:
+            roc_auc = roc_std = 0.0
 
     # Temporal holdout (safeguard 2): train on oldest 67%, test on newest 33%.
     # Checks whether patterns discovered in historical data still hold on recent unseen trades.
