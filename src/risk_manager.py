@@ -558,32 +558,34 @@ def fmt_currency(amount: float, currency: str) -> str:
 
 
 def drawdown_header_line(risk_state: dict, profile: dict) -> str:
-    """Compact single-line drawdown status for the top of every Telegram message.
+    """Drawdown warning banner for the top of every Telegram message.
 
-    Returns empty string when in normal mode with no drawdown.
+    Returns empty string when drawdown is under 3% in normal mode.
+    Template format:
+      ⚠️ RISK MODE ACTIVE: [mode] — account down X% from peak
+      Position sizes automatically reduced to X% per trade — system protecting your capital
     """
     dd_mode = risk_state.get("drawdown_mode", "normal")
     dd_pct  = risk_state.get("drawdown_pct", 0.0) * 100
     r_pct   = DD_RISK_PCT.get(dd_mode, 1.00)
     meta    = _TIER_META.get(dd_mode, _TIER_META["normal"])
-    icon    = meta["icon"]
     label   = meta["label"]
 
     if dd_mode == "halt":
-        return (f"{icon} <b>DRAWDOWN: {dd_pct:.1f}% | {label} MODE — "
-                f"NO NEW TRADES</b>")
-    elif dd_mode == "preservation":
-        return (f"{icon} <b>DRAWDOWN: {dd_pct:.1f}% | {label} MODE — "
-                f"A-grade + all TFs only — {r_pct:.2f}%/trade</b>")
-    elif dd_mode == "defensive":
-        return (f"{icon} <b>DRAWDOWN: {dd_pct:.1f}% | {label} MODE — "
-                f"A-grade only — {r_pct:.2f}%/trade</b>")
-    elif dd_mode == "caution":
-        return (f"{icon} <b>DRAWDOWN: {dd_pct:.1f}% | {label} MODE — "
-                f"A/B-grade only — {r_pct:.2f}%/trade</b>")
-    elif dd_pct >= 1.0:
-        # Normal tier but non-zero drawdown — show it quietly
-        return f"🟢 Drawdown: {dd_pct:.1f}% | Normal mode — {r_pct:.2f}%/trade"
+        return (
+            f"🚨 <b>RISK MODE ACTIVE: {label} — account down {dd_pct:.1f}% from peak</b>\n"
+            f"All new trades suspended — system protecting your capital"
+        )
+    elif dd_mode in ("preservation", "defensive", "caution"):
+        return (
+            f"⚠️ <b>RISK MODE ACTIVE: {label} — account down {dd_pct:.1f}% from peak</b>\n"
+            f"Position sizes automatically reduced to {r_pct:.2f}% per trade — system protecting your capital"
+        )
+    elif dd_pct > 3.0:
+        return (
+            f"⚠️ <b>RISK MODE ACTIVE: Normal — account down {dd_pct:.1f}% from peak</b>\n"
+            f"Position sizes automatically reduced to {r_pct:.2f}% per trade — system protecting your capital"
+        )
     return ""
 
 
