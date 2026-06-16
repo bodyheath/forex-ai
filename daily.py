@@ -1996,7 +1996,7 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
     Each trade shows: entry/current/stop/target, unrealised P&L, progress bar,
     one dynamic status message from 8 possible states, and next key check time.
     """
-    sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "📊 <b>OPEN TRADES</b>"]
+    sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "📊 <b>YOUR OPEN TRADES</b>"]
 
     # Load risk profile once for investment detail calculations
     _rm_profile: dict = {}
@@ -2007,6 +2007,13 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
         _rm_state   = _rm_inv.compute_risk_state(_rm_profile)
     except Exception:
         pass
+
+    if not open_trades:
+        _fund_bal = _rm_profile.get("estimated_balance", 0) if _rm_profile else 0
+        sec.append("No trades currently open — the system is waiting for the right opportunity.")
+        if _fund_bal > 0:
+            sec.append(f"Your fund balance: <b>${_fund_bal:,.0f}</b> — fully available for the next trade.")
+        return sec
 
     # Portfolio summary — quick pre-pass to compute aggregate P&L
     _port_dollar = 0.0
@@ -2023,10 +2030,6 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
                 _port_counted += 1
         except Exception:
             pass
-
-    if not open_trades:
-        sec.append("No open trades currently.")
-        return sec
 
     # Portfolio summary line
     _n = len(open_trades)
