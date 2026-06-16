@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
     inputs:
       scan_mode:
-        description: 'Override scan mode (morning / prelondon / preny / full)'
+        description: 'Override scan mode (morning / prelondon / preny / full / gap)'
         required: false
         default: ''
   schedule:
@@ -23,6 +23,7 @@ on:
     - cron: '0 21 * * 0-4'  # ~9am Auckland Mon-Fri (NZST; Sun-Thu UTC)
     - cron: '0 5 * * 1-5'   # ~5pm Auckland Mon-Fri
     - cron: '0 11 * * 1-5'  # ~11pm Auckland Mon-Fri
+    - cron: '0 17 * * 6'    # ~5am Sunday Auckland (NZST) — Sunday gap scan
 
 concurrency:
   group: intraday-forex
