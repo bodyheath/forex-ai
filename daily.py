@@ -3123,7 +3123,8 @@ def _send_telegram_summary(
             elif _dd_mode in ("preservation", "defensive", "caution"):
                 _tier_req = {"preservation": "A-grade + all 3 TFs aligned",
                              "defensive": "A-grade setups", "caution": "A/B-grade setups"}.get(_dd_mode)
-                no_sec.append(f"{_TIER_META_daily.get(_dd_mode, {}).get('icon', '⚠️')} Drawdown protection active — only {_tier_req} accepted. No qualifying setups found today.")
+                _tier_icon = {"preservation": "🔴", "defensive": "🟠", "caution": "⚠️"}.get(_dd_mode, "⚠️")
+                no_sec.append(f"{_tier_icon} Drawdown protection active — only {_tier_req} accepted. No qualifying setups found today.")
             else:
                 def _s1_sort_key(rr):
                     return float(rr.get("screen", {}).get("score") or 0)
