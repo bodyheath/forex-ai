@@ -3743,6 +3743,18 @@ def _send_telegram_summary(
         _ps = _patience["score"]
         _pd = _patience["description"]
         ctx_lines.append(f"📊 <b>Today's trading conditions: {_ps}/10</b> — {_pd}")
+        # Threshold display — always show so investor knows the current bar to clear
+        try:
+            from src import threshold_manager as _tm_ctx
+            _ctx_thr = _tm_ctx.get_confidence_threshold()
+            if _ctx_thr != 7:
+                _thr_reason = (
+                    f"raised to {_ctx_thr} due to high-volatility market regime"
+                    if _ctx_thr > 7 else f"currently {_ctx_thr}"
+                )
+                ctx_lines.append(f"📊 <b>Today's trade threshold: {_ctx_thr}/10</b> — {_thr_reason}")
+        except Exception:
+            pass
         all_sections.append(ctx_lines)
 
         # ECONOMIC CALENDAR — 7-day high impact event timeline (every 6am scan)
