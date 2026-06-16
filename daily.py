@@ -4353,18 +4353,18 @@ def _get_scan_mode() -> str:
     if mode in _SCAN_MODES:
         return mode
     hour = _auckland_now().hour
-    if hour in (5, 6):    # 5am–7am  → 6am full scan
+    if hour in (5, 6):    # 5am–7am   → 6am full scan
         return "full"
-    if hour in (8, 9):    # 8am–10am → 9am morning check
+    if hour in (8, 9):    # 8am–10am  → 9am morning check
         return "morning"
-    if hour in (14, 15):  # 2pm–4pm  → 3pm pre-London check
+    if hour in (16, 17):  # 4pm–6pm   → 5pm pre-London check
         return "prelondon"
-    if hour in (16, 17):  # 4pm–6pm  → 5pm London open check
-        return "london"
+    if hour in (22, 23):  # 10pm–12am → 11pm pre-New York check
+        return "preny"
     # Off-hours fallback — log a warning so it is visible in GitHub Actions logs
     print(
         f"[scan] WARNING — Auckland hour={hour} is outside all defined scan windows "
-        f"(5-6=full, 8-9=morning, 14-15=prelondon, 16-17=london) and SCAN_MODE env var is unset. "
+        f"(5-6=full, 8-9=morning, 16-17=prelondon, 22-23=preny) and SCAN_MODE env var is unset. "
         f"Defaulting to 'full'. Check GitHub Actions schedule and workflow trigger times.",
         file=sys.stderr,
     )
