@@ -3270,11 +3270,51 @@ def _send_telegram_summary(
                     return float(rr.get("screen", {}).get("score") or 0)
                 combined = list(near_misses) + sorted(stage1_filtered, key=_s1_sort_key, reverse=True)
                 top3     = combined[:3]
+
+                def _plain_rejection(rr) -> str:
+                    """Convert rejection reason to plain English for non-traders."""
+                    conf_v  = _conf(rr)
+                    dirn_v  = (rr.get("parsed", {}).get("direction") or "").upper()
+                    parsed  = rr.get("parsed", {})
+                    if rr.get("screened_out"):
+                        return "Technical indicators not strong enough — the system needs more confirmation before considering this pair"
+                    mtf = rr.get("bundle", {}).get("mtf", {})
+                    if mtf and not mtf.get("qualifies", True):
+                        cnt = mtf.get("agreeing_count", 0)
+                        return (f"Nearly there at {conf_v}/10 confidence but the short-term and long-term charts "
+                                f"need to agree ({cnt}/3 timeframes currently aligned) — waiting for alignment")
+                    try:
+                        from src import threshold_manager as _tm_pe
+                        rr_min = _tm_pe.get_min_rr()
+                        rr_act = float(parsed.get("reward_risk") or 0)
+                        if rr_act > 0 and rr_act < rr_min:
+                            return (f"Good setup but the potential profit does not justify the risk at current levels "
+                                    f"(reward needs to be at least {rr_min:.1f}x the risk)")
+                    except Exception:
+                        pass
+                    scores_pe = {
+                        "technical indicators":  parsed.get("technical_score"),
+                        "fundamental data":      parsed.get("fundamental_score"),
+                        "market sentiment":      parsed.get("sentiment_score"),
+                        "institutional positioning": parsed.get("positioning_score"),
+                    }
+                    below_pe = sorted(
+                        [(k, v) for k, v in scores_pe.items() if v is not None and v < 7],
+                        key=lambda x: x[1],
+                    )
+                    if below_pe:
+                        k_pe, v_pe = below_pe[0]
+                        if v_pe <= 4:
+                            return f"Nearly there at {conf_v}/10 but {k_pe} are weak — need to improve before we enter"
+                        return f"Nearly there at {conf_v}/10 confidence but {k_pe} need to strengthen before we enter"
+                    return f"Reached {conf_v}/10 confidence but the analyst judged the setup is not clean enough to enter right now"
+
                 if top3:
-                    for i, rr in enumerate(top3, 1):
-                        reason = _rejection_reason(rr)
-                        no_sec.append(f"<b>{i}. {rr['pair']}</b>  {_conf(rr)}/10")
-                        no_sec.append(f"   {reason}")
+                    no_sec.append("💤 No trades today — here is why the best candidates did not qualify:")
+                    for rr in top3:
+                        reason_plain = _plain_rejection(rr)
+                        no_sec.append(f"<b>{rr['pair']}:</b> {reason_plain}")
+                    no_sec.append("The system is being selective — waiting for higher quality opportunities")
                 elif failed_pairs:
                     no_sec.append(
                         f"⚠️ All {len(failed_pairs)} pairs failed — "
