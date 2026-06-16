@@ -309,13 +309,20 @@ def train(quiet: bool = False) -> dict:
     model = CalibratedClassifierCV(base, cv=cv_k, method=method)
     model.fit(X_s, y)
 
-    # ROC-AUC cross-validation
+    # ROC-AUC cross-validation (in-sample, k-fold)
     try:
         cv_s    = cross_val_score(model, X_s, y, cv=cv_k, scoring="roc_auc")
         roc_auc = round(float(np.mean(cv_s)), 3)
         roc_std = round(float(np.std(cv_s)),  3)
     except Exception:
         roc_auc = roc_std = 0.0
+
+    # Temporal holdout (safeguard 2): train on oldest 67%, test on newest 33%.
+    # Checks whether patterns discovered in historical data still hold on recent unseen trades.
+    _temporal   = _temporal_cv_scores(X_s, y)
+    _hold_auc   = _temporal.get("holdout_auc")
+    _overfit_g  = round(roc_auc - _hold_auc, 3) if _hold_auc is not None else None
+    _is_healthy = _overfit_g is not None and _overfit_g < 0.10
 
     win_rate = round(float(y.mean()), 3)
 
