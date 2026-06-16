@@ -2725,6 +2725,24 @@ def _send_telegram_summary(
     except Exception:
         pass
 
+    # ── GLOBAL MARKET REGIME — prime cache and apply overrides ───────────────────
+    # Run before _yes_raw assembly so conf_override and size_mult are in effect.
+    try:
+        from src import market_regime as _mr_scan
+        _regime_macro_sigs: dict = {}
+        for _r_regime in deep_results:
+            try:
+                _regime_macro_sigs = _r_regime["bundle"]["macro"]["signals"]
+                if _regime_macro_sigs:
+                    break
+            except (KeyError, TypeError):
+                pass
+        _grd = _mr_scan.detect(_regime_macro_sigs or None)
+        if _grd.get("conf_override"):
+            _trade_conf_thr = max(_trade_conf_thr, _grd["conf_override"])
+    except Exception:
+        pass
+
     # ── SECOND OPINION: devil's advocate for all 7+ raw-confidence pairs ─────────
     # Runs BEFORE _yes_raw assembly so a confidence reduction (7→6) correctly
     # removes the pair from trade alerts.
