@@ -3114,13 +3114,40 @@ def _send_telegram_summary(
 
         _qg_tb = _quality_grades.get(pair, _trade_quality_grade(r))
         _tb_grade = (_qg_tb or {}).get("grade", "B")
-        if _tb_grade in ("A", "B"):
-            _hdr_line = f"{action_icon} <b>{_pfx}ACTION: {direction} {pair} NOW</b>"
+
+        # Plain English description of what the trade is betting on
+        _CCY_FULL_TB = {
+            "USD": "US Dollar", "EUR": "Euro", "GBP": "British Pound",
+            "JPY": "Japanese Yen", "AUD": "Australian Dollar", "NZD": "New Zealand Dollar",
+            "CAD": "Canadian Dollar", "CHF": "Swiss Franc", "HKD": "Hong Kong Dollar",
+            "SGD": "Singapore Dollar", "NOK": "Norwegian Krone", "SEK": "Swedish Krona",
+        }
+        _base_tb = pair.split("/")[0] if "/" in pair else pair[:3]
+        _quot_tb = pair.split("/")[1] if "/" in pair else pair[3:]
+        _base_nm_tb = _CCY_FULL_TB.get(_base_tb, _base_tb)
+        _quot_nm_tb = _CCY_FULL_TB.get(_quot_tb, _quot_tb)
+        if direction == "BUY":
+            _plain_desc_tb = f"Betting the {_base_nm_tb} will strengthen against the {_quot_nm_tb}"
         else:
-            _hdr_line = f"👁 <b>{_pfx}WATCH ONLY: {direction} {pair} — Grade {_tb_grade}</b>"
-        block = [
-            "",
-            _hdr_line,
+            _plain_desc_tb = f"Betting the {_base_nm_tb} will weaken against the {_quot_nm_tb}"
+
+        if _tb_grade == "A":
+            _grade_alert_hdr = "🚨 <b>TRADE ALERT — GRADE A</b>"
+            _action_line = f"{action_icon} <b>{_pfx}{direction} {pair} NOW — Grade A · Confidence {_conf_display}/10</b>"
+        elif _tb_grade == "B":
+            _grade_alert_hdr = "⚡ <b>TRADE ALERT — GRADE B</b>"
+            _action_line = f"🟡 <b>{_pfx}{direction} {pair} — Grade B · Confidence {_conf_display}/10</b>"
+        else:
+            _grade_alert_hdr = None
+            _action_line = f"👁 <b>{_pfx}WATCH ONLY: {direction} {pair} — Grade {_tb_grade}</b>"
+
+        block = [""]
+        if _grade_alert_hdr:
+            block.append(_grade_alert_hdr)
+            block.append("")
+        block += [
+            _action_line,
+            f"({_plain_desc_tb})",
             "━━━━━━━━━━━━━━━━━━━━━",
             _grade_display_line(_qg_tb),
             "━━━━━━━━━━━━━━━━━━━━━",
