@@ -1365,7 +1365,13 @@ def _build_research_section(research_result=None) -> list:
     if win_pips and loss_pips:
         total_loss = sum(abs(p) for p in loss_pips if p < 0)
         if total_loss > 0:
-            sec.append(f"Profit factor: <b>{sum(win_pips) / total_loss:.2f}</b>")
+            _pf = sum(win_pips) / total_loss
+            sec.append(f"Profit factor: <b>{_pf:.2f}</b>")
+            if _pf > 1.0:
+                sec.append(
+                    f"📈 Profit factor {_pf:.2f} — your wins are larger than your losses which is "
+                    f"a good sign even at an early low win rate. This is how professional traders operate."
+                )
 
     # Expiry analysis breakdown
     n_expiry_total = len(expired_rows) + len(partial_wins)
