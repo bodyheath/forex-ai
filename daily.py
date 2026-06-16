@@ -933,9 +933,29 @@ def _trade_quality_grade(r: dict) -> dict:
     no_news  = (not news_raw or
                 any(kw in news_raw for kw in ("none", "n/a", "no major", "no significant")))
 
+    # Issue 3: compute fundamental alignment for grade floor
+    _fa_grade = result.get("_fundamental_alignment")
+    if _fa_grade is None:
+        try:
+            from src import fundamentals as _fund_grade
+            _pair_grade = result.get("pair", "")
+            if _pair_grade and "/" in _pair_grade and direction:
+                _fb_g, _fq_g = _pair_grade.split("/")
+                _fa_grade = _fund_grade.get_fundamental_alignment(_fb_g, _fq_g, direction)
+                result["_fundamental_alignment"] = _fa_grade
+        except Exception:
+            pass
+    _fa_grade = _fa_grade if isinstance(_fa_grade, dict) else {}
+    _fa_aligned_g   = _fa_grade.get("aligned", 0)
+    _fa_alignment_g = _fa_grade.get("alignment", "MIXED")
+    _has_fund_tailwind = (_fa_alignment_g == "TAILWIND" and _fa_aligned_g >= 3)
+
     # ── Grade F — never trade ─────────────────────────────────────────────
     if rib_strongly_against or w_d_conflict or rr < 1.3:
         grade = "F"
+        # Issue 3 floor: 3/3 fundamental tailwind + conf>=6 cannot be Grade F
+        if _has_fund_tailwind and conf >= 6:
+            grade = "C"
     # ── Grade D — avoid ──────────────────────────────────────────────────
     elif rib_against or rr < 1.5 or (not w_d_agree and conf <= 6):
         grade = "D"
