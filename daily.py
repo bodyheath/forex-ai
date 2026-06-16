@@ -4419,6 +4419,35 @@ def _send_telegram_summary(
         if _prev_patience is not None and abs(_cur_patience - _prev_patience) >= 2:
             _changes_lines.append(f"📊 Conditions update: Trading conditions changed to {_cur_patience}/10")
 
+        # Research trades closed since last scan
+        _prev_scan_hours = {"morning": 3, "prelondon": 8, "preny": 6}.get(scan_mode, 8)
+        try:
+            from src import research_tracker as _rtrk_chg
+            _rt_chg_rows = _rtrk_chg.load()
+            _rt_cutoff = (now_ak - timedelta(hours=_prev_scan_hours)).replace(tzinfo=None)
+            for _rt_r in _rt_chg_rows:
+                if _rt_r.get("status") not in ("WIN", "LOSS"):
+                    continue
+                _rt_cat = _rt_r.get("closed_at", "")
+                if not _rt_cat:
+                    continue
+                try:
+                    _rt_ts = datetime.strptime(_rt_cat[:16], "%Y-%m-%dT%H:%M")
+                    if _rt_ts >= _rt_cutoff:
+                        _rt_pips = _rt_r.get("pips", "")
+                        try:
+                            _rt_pips_f = float(_rt_pips)
+                            _rt_pips_str = f"{'+' if _rt_pips_f >= 0 else ''}{_rt_pips_f:.0f}"
+                        except (TypeError, ValueError):
+                            _rt_pips_str = "0"
+                        _changes_lines.append(
+                            f"🔬 Research update: {_rt_r['pair']} closed as {_rt_r['status']} {_rt_pips_str} pips"
+                        )
+                except (ValueError, TypeError):
+                    pass
+        except Exception:
+            pass
+
         chg_sec = ["", "━━━━━━━━━━━━━━━━━━━━━",
                    f"🔄 <b>CHANGES SINCE {_prev_scan_label.upper()} SCAN</b>"]
         if _changes_lines:
