@@ -3198,7 +3198,9 @@ def _send_telegram_summary(
                 from src import tracker as _trk_fund
                 prof     = risk_data["profile"]
                 rmode    = _risk_state.get("risk_mode", "normal")
-                rpct     = _rm_dash.MODE_RISK.get(rmode, 1.0)
+                dd_mode_dash = _risk_state.get("drawdown_mode", "normal")
+                rpct     = _rm_dash.DD_RISK_PCT.get(dd_mode_dash,
+                           _rm_dash.MODE_RISK.get(rmode, 1.0))
                 exp      = _exposure.get("total_pct", 0.0)
                 fund     = prof.get("estimated_balance", _rm_dash.FUND_START)
                 fund_pk  = prof.get("peak_balance", fund)
@@ -3206,13 +3208,17 @@ def _send_telegram_summary(
                 dd_pct   = max(0.0, (fund_pk - fund) / fund_pk * 100) if fund_pk > 0 else 0.0
                 real     = config.ACCOUNT_BALANCE
                 mode_icons = {
+                    "halt":              "🚨",
+                    "preservation":      "🔴",
+                    "defensive":         "🟠",
+                    "caution":           "⚠️",
                     "capital_protection": "⬇️",
                     "streak_protection":  "⬇️",
                     "reduced":            "➡️",
-                    "normal":             "➡️",
+                    "normal":             "🟢",
                     "enhanced":           "⬆️",
                 }
-                icon = mode_icons.get(rmode, "➡️")
+                icon = mode_icons.get(dd_mode_dash if dd_mode_dash != "normal" else rmode, "🟢")
 
                 # Load all main fund trades for stats
                 _all_fund_t = _trk_fund.load()
