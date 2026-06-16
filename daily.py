@@ -1509,7 +1509,18 @@ def _add_90min(time_str: str) -> str:
 def _management_lines(direction: str, entry_v: float, stop_v: float,
                       target_v: float, pair: str) -> list:
     """Compute breakeven / trailing stop management instructions."""
-    dec = 3 if "JPY" in pair.upper() else 5
+    try:
+        _ev = float(entry_v)
+        if _ev < 0.01:
+            dec = 6
+        elif _ev < 0.10:
+            dec = 5
+        elif "JPY" in pair.upper():
+            dec = 3
+        else:
+            dec = 5
+    except (TypeError, ValueError):
+        dec = 3 if "JPY" in pair.upper() else 5
     try:
         if direction == "BUY":
             dist        = target_v - entry_v
