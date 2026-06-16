@@ -4673,7 +4673,11 @@ def _get_scan_mode() -> str:
     mode = _os_.getenv("SCAN_MODE", "").lower().strip()
     if mode in _SCAN_MODES:
         return mode
-    hour = _auckland_now().hour
+    now = _auckland_now()
+    # Sunday morning gap scan (weekday 6 = Sunday, hours 5–8am)
+    if now.weekday() == 6 and now.hour in (5, 6, 7, 8):
+        return "gap"
+    hour = now.hour
     if hour in (5, 6):    # 5am–7am   → 6am full scan
         return "full"
     if hour in (8, 9):    # 8am–10am  → 9am morning check
