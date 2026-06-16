@@ -3592,7 +3592,7 @@ def _send_telegram_summary(
                     "", "━━━━━━━━━━━━━━━━━━━━━",
                     f"📈 <b>FOREX AI FUND: ${_fund_id:,.0f} ({_ret_id:+.1f}%) | Peak: ${_pk_id:,.0f}</b>",
                     f"Trades: {len(_all_ft_id)} total · {len(_cls_ft_id)} closed · win rate {_wr_id}",
-                    f"Drawdown: {_dd_id:.1f}% | {_icon_id} {_rmode_id.replace('_',' ').title()} | {_rpct_id:.1f}% risk/trade",
+                    f"Drawdown: {_dd_id:.1f}% | {_icon_id} {_dd_mode_id.replace('_',' ').title()} | {_rpct_id:.2f}% risk/trade",
                 ]
                 # Show any open trades inline
                 _open_id = [r for r in _all_ft_id if r.get("status") == "OPEN"]
