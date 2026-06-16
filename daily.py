@@ -3284,6 +3284,14 @@ def _send_telegram_summary(
             "━━━━━━━━━━━━━━━━━━━━━",
             f"📈 Confidence: {_conf_display}/10  {_conf_bar(_conf_display)}",
         ]
+        # Second opinion summary line
+        _so_tb = r.get("second_opinion")
+        if _so_tb:
+            if _so_tb.get("has_objections"):
+                _so_nc = _so_tb.get("n_compelling", 0)
+                block.append(f"⚠️ Second opinion flagged {_so_nc} concern(s) — see risk factors below.")
+            else:
+                block.append("🔍 Second opinion: No major red flags found — confidence boosted.")
         # ML win-probability
         try:
             from src import ml_predictor as _mlp_tb
