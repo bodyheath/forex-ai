@@ -3777,9 +3777,9 @@ def _send_telegram_summary(
             f"<b>🤖 FOREX AI — 🌅 {_fmt_date_nz(now_ak)}</b>",
             f"Universe: {universe_size} · Deep analysed: <b>{n_deep}</b> · {setup_line}",
         ]
-        if _dd_banner:
-            _hdr_full += ["", _dd_banner]
         all_sections.append(_hdr_full)
+        if _dd_banner:
+            all_sections.append(["", "━━━━━━━━━━━━━━━━━━━━━", _dd_banner])
 
         # OPEN TRADES — always at the top so it's the first thing seen
         all_sections.append(_build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak))
