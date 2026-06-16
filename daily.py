@@ -4345,8 +4345,60 @@ def _send_telegram_summary(
         if _watch_items:
             wl_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "👀 <b>WATCH LIST</b>"]
             for rr in _watch_items:
-                wl_sec.extend(_watch_entry(rr))
+                _rr_pair = rr["pair"]
+                _rr_conf = _eff_conf(rr)
+                _rr_dirn = (rr["parsed"].get("direction") or "").upper()
+                _rr_arrow = "📈" if _rr_dirn == "BUY" else "📉"
+                _rr_ew = _entry_window_for_pair(_rr_pair)
+                _rr_eq_e, _ = _entry_quality(_rr_pair, now_ak)
+                _rr_tref = _time_ref_for_entry(_rr_ew[0], _rr_ew[1], now_ak)
+                _rr_start = _fmt_time_exact(_rr_ew[0], _rr_ew[1])
+                _rr_qg = _quality_grades.get(_rr_pair, _trade_quality_grade(rr))
+                _rr_grade = (_rr_qg or {}).get("grade", "C")
+                # Session label for London/NY relevance
+                _rr_ses_label = ""
+                if scan_mode == "prelondon" and any(c in _rr_pair.upper() for c in ("EUR", "GBP", "CHF")):
+                    _rr_ses_label = "🌆 London session pair — entry window 7pm–8:30pm Auckland tonight"
+                elif scan_mode == "preny":
+                    if any(c in _rr_pair.upper() for c in ("USD", "CAD")):
+                        _rr_ses_label = "🌃 New York session pair — entry window 1am–2:30am Auckland tonight"
+                    elif any(c in _rr_pair.upper() for c in ("EUR", "GBP")):
+                        _rr_ses_label = "🌃 London/NY overlap pair — peak entry window 1am–4am Auckland tonight"
+                wl_sec.append("")
+                if _rr_ses_label:
+                    wl_sec.append(_rr_ses_label)
+                wl_sec.append(
+                    f"{_rr_arrow} <b>{_rr_pair}</b> · Grade {_rr_grade} · {_rr_conf}/10"
+                )
+                # Indicative levels
+                _rr_ind_e, _rr_ind_s, _rr_ind_t, _ = _calc_indicative_levels(
+                    _rr_pair, rr["parsed"], rr.get("bundle", {})
+                )
+                if _rr_ind_e and _rr_ind_s and _rr_ind_t:
+                    try:
+                        _rr_risk = round(abs(float(_rr_ind_e) - float(_rr_ind_s)) / _pip_size(_rr_pair))
+                        _rr_prof = round(abs(float(_rr_ind_t) - float(_rr_ind_e)) / _pip_size(_rr_pair))
+                        _is_jpy_rr = "JPY" in _rr_pair.upper()
+                        _dec_rr = 3 if _is_jpy_rr else 5
+                        wl_sec.append(
+                            f"Ideal entry: {float(_rr_ind_e):.{_dec_rr}f} · "
+                            f"Stop: {float(_rr_ind_s):.{_dec_rr}f} · "
+                            f"Target: {float(_rr_ind_t):.{_dec_rr}f}"
+                        )
+                        _rr_rr = round(_rr_prof / _rr_risk, 1) if _rr_risk else 0
+                        wl_sec.append(f"Risk ${_rr_risk} → Make ${_rr_prof} ({_rr_rr}:1)")
+                    except (TypeError, ValueError, ZeroDivisionError):
+                        pass
+                # Entry window
+                _rr_sess_active, _rr_sess_close = _session_status_for_pair(_rr_pair, now_ak)
+                if _rr_sess_active:
+                    wl_sec.append(f"⏰ {_rr_ew[6]} currently active — closes {_rr_sess_close} Auckland")
+                else:
+                    wl_sec.append(f"⏰ Best entry window: {_rr_ew[6]} {_rr_start} Auckland {_rr_tref}")
             all_sections.append(wl_sec)
+        else:
+            all_sections.append(["", "━━━━━━━━━━━━━━━━━━━━━", "👀 <b>WATCH LIST</b>",
+                                  "Nothing on watch list — system waiting for cleaner setups"])
 
         if _approaching_items:
             ap_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "📡 <b>APPROACHING SIGNAL</b>"]
