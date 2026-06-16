@@ -370,8 +370,16 @@ def _cot_reversal_penalty(result: dict) -> int:
     return 0
 
 
+def _smd_score(result: dict) -> int:
+    """Extract pre-computed Smart Money Divergence score from the bundle (−10 to +10)."""
+    try:
+        return int(result.get("bundle", {}).get("smart_money", {}).get("smd_score", 0) or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
 def _eff_conf(result: dict) -> int:
-    """Confidence after MA ribbon and COT momentum penalties.
+    """Confidence after MA ribbon, COT momentum, and Smart Money Divergence adjustments.
 
     Ribbon:       −1 when ALIGNED ribbon is fully against trade direction.
     COT reversal: −1 when institutions just flipped away from the direction
