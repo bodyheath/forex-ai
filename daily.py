@@ -2042,13 +2042,28 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
     else:
         sec.append(f"<b>{_n} open {_tw}</b>")
 
+    _CCY_FULL = {
+        "USD": "US Dollar",   "EUR": "Euro",         "GBP": "British Pound",
+        "JPY": "Japanese Yen","AUD": "Australian Dollar","NZD": "New Zealand Dollar",
+        "CAD": "Canadian Dollar","CHF": "Swiss Franc","HKD": "Hong Kong Dollar",
+        "SGD": "Singapore Dollar","NOK": "Norwegian Krone","SEK": "Swedish Krona",
+    }
+
     for row in open_trades:
         pair = row.get("pair", "?")
         dirn = (row.get("direction") or "").upper()
         tid  = row.get("id", "?")
+        _base_c = pair.split("/")[0] if "/" in pair else pair[:3]
+        _quot_c = pair.split("/")[1] if "/" in pair else pair[3:]
+        _base_name = _CCY_FULL.get(_base_c, _base_c)
+        _quot_name = _CCY_FULL.get(_quot_c, _quot_c)
+        if dirn == "BUY":
+            _dirn_plain = f"Buying {pair} (betting the {_base_name} will strengthen against the {_quot_name})"
+        else:
+            _dirn_plain = f"Selling {pair} (betting the {_base_name} will weaken against the {_quot_name})"
 
         sec.append("")
-        sec.append(f"📊 <b>OPEN TRADE #{tid} — {pair} {dirn}</b>")
+        sec.append(f"📊 <b>TRADE #{tid} — {_dirn_plain}</b>")
 
         cur, stale = _fetch_live_price(pair, px_cache)
 
