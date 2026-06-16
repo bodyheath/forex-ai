@@ -2370,6 +2370,10 @@ def _send_telegram_summary(
     # Grade all results — used by display helpers and filtering below
     _quality_grades: dict = {r["pair"]: _trade_quality_grade(r) for r in deep_results}
 
+    # Extract drawdown mode early (before _risk_state is fully initialised below)
+    # so it can be applied in the yes_trades filter immediately.
+    _dd_mode: str = (risk_data or {}).get("risk_state", {}).get("drawdown_mode", "normal")
+
     # Issue 1: overall confidence is the deciding factor, not individual layer scores.
     # Any pair with 7+ effective confidence qualifies for a trade alert regardless of
     # what the analyst's trade_this field says — confidence overrides individual layers.
@@ -2378,16 +2382,17 @@ def _send_telegram_summary(
         if _eff_conf(r) >= _trade_conf_thr
         and r["pair"] not in _demoted_pairs
     ]
-    # A and B always get full trade alerts; Grade C with conf >= threshold also gets a
-    # full alert (confidence overrides the C → watch-list demotion rule).
+    # Drawdown tier + grade filtering: stricter tiers require higher grade / more confirmation.
     yes_trades = [
         r for r in _yes_raw
-        if _quality_grades.get(r["pair"], {}).get("grade") in ("A", "B")
-        or (_quality_grades.get(r["pair"], {}).get("grade") == "C"
-            and _eff_conf(r) >= _trade_conf_thr)
+        if _dd_allows_trade(r, _dd_mode, _quality_grades, _trade_conf_thr)
     ]
-    _c_grade_yes  = [r for r in _yes_raw if _quality_grades.get(r["pair"], {}).get("grade") == "C"
-                     and _eff_conf(r) < _trade_conf_thr]
+    # C-grade demoted to watchlist only in normal mode; restricted tiers skip C entirely
+    _c_grade_yes = (
+        [r for r in _yes_raw if _quality_grades.get(r["pair"], {}).get("grade") == "C"
+         and _eff_conf(r) < _trade_conf_thr]
+        if _dd_mode == "normal" else []
+    )
     _df_grade_yes = [r for r in _yes_raw if _quality_grades.get(r["pair"], {}).get("grade") in ("D", "F")]
 
     _yes_pair_set = {r["pair"] for r in _yes_raw}
