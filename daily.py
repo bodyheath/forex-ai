@@ -2320,6 +2320,265 @@ def _dd_allows_trade(r: dict, dd_mode: str, quality_grades: dict,
 
 # ── Main summary builder ───────────────────────────────────────────────────────
 
+def _build_system_learning_report(date: str) -> list:
+    """Build the SYSTEM LEARNING REPORT — Monday 6am scans only.
+
+    Six sections: win rate trend, ML accuracy trend, MFE trend,
+    best/worst pairs, confidence calibration, and overall verdict.
+    Returns an empty list on any non-Monday day or when data is absent.
+    """
+    try:
+        dt = datetime.strptime(date, "%Y-%m-%d")
+    except ValueError:
+        return []
+    if dt.weekday() != 0:   # 0 = Monday
+        return []
+
+    sec = [
+        "", "━━━━━━━━━━━━━━━━━━━━━",
+        "🎓 <b>SYSTEM LEARNING REPORT</b>",
+        "Is the system genuinely improving over time?",
+    ]
+
+    try:
+        from src import research_tracker as _rtrk_lr
+        rows = _rtrk_lr.load()
+    except Exception:
+        return []
+
+    if not rows:
+        sec.append("No research trades yet — report will appear once data is collected.")
+        return sec
+
+    def _f(v):
+        try:
+            return float(v) if v not in ("", None) else None
+        except (TypeError, ValueError):
+            return None
+
+    decisive = [r for r in rows if r.get("status") in ("WIN", "LOSS")]
+    n_dec    = len(decisive)
+
+    def _trade_sort(r):
+        return (r.get("date", ""), str(r.get("id", "")).zfill(6))
+
+    dec_sorted = sorted(decisive, key=_trade_sort)
+    any_added  = False
+
+    # ── 1. WIN RATE TREND ──────────────────────────────────────────────────────
+    if n_dec >= 20:
+        groups = []
+        for i in range(0, n_dec, 10):
+            grp  = dec_sorted[i:i + 10]
+            wins = sum(1 for r in grp if r.get("status") == "WIN")
+            wr   = round(wins / len(grp) * 100) if grp else 0
+            groups.append((i + 1, i + len(grp), wr))
+
+        trend_str = " · ".join(f"Trades {s}-{e}: {w}%" for s, e, w in groups)
+        improving = len(groups) >= 2 and groups[-1][2] > groups[0][2] + 4
+
+        sec += ["", "<b>1. WIN RATE TREND</b>", trend_str]
+        if improving:
+            sec.append("✅ Win rate improving — system is learning")
+        else:
+            sec.append("⚠️ Win rate not improving — review needed")
+        any_added = True
+
+    # ── 2. ML ACCURACY TREND ──────────────────────────────────────────────────
+    try:
+        from src import ml_predictor as _mlp_lr
+        _ml_meta  = _mlp_lr._load_meta()
+        _acc_hist = _ml_meta.get("accuracy_history", [])
+        if len(_acc_hist) >= 2:
+            _recent   = _acc_hist[-4:]
+            _acc_strs = [
+                f"Week of {e.get('trained_at', '')[:10]}: {e.get('roc_auc', 0) * 100:.0f}%"
+                for e in _recent
+            ]
+            _first_roc = _recent[0].get("roc_auc", 0.0)
+            _last_roc  = _recent[-1].get("roc_auc", 0.0)
+            sec += ["", "<b>2. ML ACCURACY TREND</b>", " · ".join(_acc_strs)]
+            if _last_roc > _first_roc + 0.03:
+                sec.append(
+                    f"✅ ML model getting smarter — accuracy improved from "
+                    f"{_first_roc * 100:.0f}% to {_last_roc * 100:.0f}% this week"
+                )
+            elif _last_roc < _first_roc - 0.05:
+                sec.append(
+                    f"⚠️ ML model may be overfitting — "
+                    f"accuracy dropped from {_first_roc * 100:.0f}% to {_last_roc * 100:.0f}% — more data needed"
+                )
+            else:
+                sec.append(
+                    f"ML model stable — accuracy at {_last_roc * 100:.0f}% "
+                    f"({_ml_meta.get('n_trades', '?')} trades)"
+                )
+            any_added = True
+        elif _ml_meta.get("model_ready"):
+            _roc = _ml_meta.get("roc_auc", 0)
+            _n   = _ml_meta.get("n_trades", 0)
+            sec += [
+                "", "<b>2. ML ACCURACY TREND</b>",
+                f"ML model active — prediction accuracy {_roc * 100:.0f}% on {_n} trades",
+                "Trend will show after 2+ weekly retrains",
+            ]
+            any_added = True
+    except Exception:
+        pass
+
+    # ── 3. MFE TREND ──────────────────────────────────────────────────────────
+    closed_all  = [
+        r for r in rows
+        if r.get("status") in ("WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN")
+    ]
+    mfe_pairs   = [(r, _f(r.get("mfe_pips"))) for r in closed_all
+                   if _f(r.get("mfe_pips")) is not None]
+    mfe_sorted  = sorted(mfe_pairs, key=lambda x: _trade_sort(x[0]))
+
+    if len(mfe_sorted) >= 40:
+        mfe_groups = []
+        for i in range(0, len(mfe_sorted), 20):
+            grp = mfe_sorted[i:i + 20]
+            avg = round(sum(v for _, v in grp) / len(grp)) if grp else 0
+            mfe_groups.append((i + 1, i + len(grp), avg))
+
+        mfe_str = " · ".join(
+            f"Trades {s}-{e}: {avg}p avg MFE" for s, e, avg in mfe_groups
+        )
+        sec += ["", "<b>3. MFE TREND</b>", mfe_str]
+        if len(mfe_groups) >= 2 and mfe_groups[-1][2] > mfe_groups[0][2] + 5:
+            sec.append(
+                f"✅ Entry quality improving — average MFE increased from "
+                f"{mfe_groups[0][2]} pips to {mfe_groups[-1][2]} pips over last 20 trades"
+            )
+        else:
+            sec.append("Entry quality consistent across recent trades")
+        any_added = True
+
+    # ── 4. BEST AND WORST PAIRS ────────────────────────────────────────────────
+    pair_stats: dict = {}
+    for r in decisive:
+        p  = r.get("pair", "?")
+        ps = pair_stats.setdefault(p, {"wins": 0, "total": 0})
+        ps["total"] += 1
+        if r.get("status") == "WIN":
+            ps["wins"] += 1
+
+    qualified = {p: v for p, v in pair_stats.items() if v["total"] >= 3}
+    if qualified:
+        def _pwr(v):
+            return v["wins"] / v["total"] if v["total"] else 0
+
+        by_wr   = sorted(qualified.items(), key=lambda x: (_pwr(x[1]), x[1]["total"]), reverse=True)
+        best3   = by_wr[:3]
+        worst3  = [x for x in by_wr[-3:] if x not in best3]
+
+        sec.append("")
+        sec.append("<b>4. BEST AND WORST PAIRS</b>")
+        if best3:
+            sec.append("✅ Best pairs: " + " · ".join(
+                f"{p} {int(_pwr(v) * 100)}%" for p, v in best3
+            ))
+        if worst3:
+            sec.append("❌ Weakest pairs: " + " · ".join(
+                f"{p} {int(_pwr(v) * 100)}%" for p, v in worst3
+            ))
+        any_added = True
+
+    # ── 5. CONFIDENCE CALIBRATION ──────────────────────────────────────────────
+    conf_stats: dict = {}
+    for r in decisive:
+        try:
+            cv = int(float(r.get("confidence", "") or 0))
+        except (TypeError, ValueError):
+            continue
+        if cv < 5:
+            continue
+        cs = conf_stats.setdefault(cv, {"wins": 0, "total": 0})
+        cs["total"] += 1
+        if r.get("status") == "WIN":
+            cs["wins"] += 1
+
+    conf_q = {k: v for k, v in conf_stats.items() if v["total"] >= 3}
+    _cal_checked = False
+    _is_calibrated = False
+    if len(conf_q) >= 2:
+        def _cwr(v):
+            return v["wins"] / v["total"] if v["total"] else 0
+
+        conf_levels = sorted(conf_q.keys())
+        conf_wrs    = [_cwr(conf_q[c]) for c in conf_levels]
+        # Allow up to 5% tolerance for natural variance
+        _is_calibrated = all(
+            conf_wrs[i] <= conf_wrs[i + 1] + 0.05
+            for i in range(len(conf_wrs) - 1)
+        )
+        _cal_checked = True
+        conf_strs = [f"Conf {c}: {int(_cwr(conf_q[c]) * 100)}%" for c in conf_levels]
+        sec += ["", "<b>5. CONFIDENCE CALIBRATION</b>", " · ".join(conf_strs)]
+        if _is_calibrated:
+            sec.append("✅ Confidence scoring is working")
+        else:
+            sec.append("⚠️ Confidence scoring needs review")
+        any_added = True
+
+    # ── 6. OVERALL LEARNING VERDICT ────────────────────────────────────────────
+    if any_added or n_dec >= 10:
+        parts = []
+        if n_dec < 10:
+            parts.append(
+                f"The system has {n_dec} decisive trade outcome{'s' if n_dec != 1 else ''} so far. "
+                "Too early to draw conclusions — a minimum of 20 decisive trades is needed before "
+                "patterns become meaningful. Keep collecting data."
+            )
+        else:
+            _tot_wins  = sum(1 for r in decisive if r.get("status") == "WIN")
+            _overall_wr = _tot_wins / n_dec * 100 if n_dec else 0
+            parts.append(
+                f"The system has {n_dec} decisive trade outcomes with an overall win rate of "
+                f"{_overall_wr:.0f}%."
+            )
+            if n_dec >= 20:
+                _fw = sum(1 for r in dec_sorted[:10] if r.get("status") == "WIN") / 10 * 100
+                _lw = sum(1 for r in dec_sorted[-10:] if r.get("status") == "WIN") / 10 * 100
+                if _lw > _fw + 4:
+                    parts.append(
+                        f"Win rate improved from {_fw:.0f}% in the first 10 trades to "
+                        f"{_lw:.0f}% in the most recent 10 — the system is learning."
+                    )
+                else:
+                    parts.append(
+                        f"Win rate has been {_fw:.0f}% early vs {_lw:.0f}% recently — "
+                        "no clear improvement trend yet."
+                    )
+            if _cal_checked:
+                if _is_calibrated:
+                    parts.append("Confidence scoring is working as intended.")
+                else:
+                    parts.append(
+                        "Confidence scoring is not yet well calibrated — higher confidence "
+                        "setups are not reliably winning more often."
+                    )
+            if _overall_wr >= 50:
+                parts.append(
+                    "Overall verdict: system is performing above breakeven — continue operating "
+                    "with current settings."
+                )
+            elif n_dec >= 30:
+                parts.append(
+                    "Overall verdict: win rate below 50% over 30+ trades — consider reviewing "
+                    "the entry criteria for the weakest pairs."
+                )
+            else:
+                parts.append(
+                    "Overall verdict: system is still in early learning phase — "
+                    "no strategy changes recommended until at least 30 decisive trades are recorded."
+                )
+        sec += ["", "<b>6. OVERALL LEARNING VERDICT</b>", " ".join(parts)]
+
+    return sec
+
+
 def _send_telegram_summary(
     date: str,
     universe_size: int,
