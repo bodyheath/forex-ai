@@ -2749,6 +2749,16 @@ def _send_telegram_summary(
         except Exception:
             pass
 
+        # ── Plain English outcome summary ─────────────────────────────────────
+        if risk_amt and profit_amt:
+            block += [
+                "",
+                "💡 <b>What this trade means:</b>",
+                f"If price reaches target: <b>+${profit_amt:,.0f} profit</b> on this trade",
+                f"If stop loss is hit: <b>-${risk_amt:,.0f} loss</b> on this trade",
+                f"Net risk to reward: you risk ${risk_amt:,.0f} to potentially make ${profit_amt:,.0f}",
+            ]
+
         # ── Fibonacci levels ──────────────────────────────────────────────────
         _fib = (r.get("bundle", {}).get("technical", {})
                  .get("daily", {}).get("fibonacci", {}))
