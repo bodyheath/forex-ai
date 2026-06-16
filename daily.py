@@ -2392,6 +2392,28 @@ def _send_telegram_summary(
     # so it can be applied in the yes_trades filter immediately.
     _dd_mode: str = (risk_data or {}).get("risk_state", {}).get("drawdown_mode", "normal")
 
+    # Hard block: compute not-viable pairs (net R:R after costs < 1.3:1)
+    _not_viable_pairs: set = set()
+    try:
+        from src import trade_costs as _tc_nv
+        for _r_nv in deep_results:
+            try:
+                _p_nv = _r_nv["parsed"]
+                _dir_nv   = (_p_nv.get("direction") or "").upper()
+                _entry_nv = float(_p_nv.get("entry") or _p_nv.get("entry_price") or 0)
+                _stop_nv  = float(_p_nv.get("stop_loss") or _p_nv.get("stop") or 0)
+                _tgt_nv   = float(_p_nv.get("take_profit") or _p_nv.get("target") or 0)
+                if _entry_nv and _stop_nv and _tgt_nv and _dir_nv:
+                    _viab_nv = _tc_nv.check_viability(
+                        _r_nv["pair"], _dir_nv, _entry_nv, _stop_nv, _tgt_nv
+                    )
+                    if _viab_nv.get("net_rr", 999) < 1.3:
+                        _not_viable_pairs.add(_r_nv["pair"])
+            except Exception:
+                pass
+    except Exception:
+        pass
+
     # Issue 1: overall confidence is the deciding factor, not individual layer scores.
     # Any pair with 7+ effective confidence qualifies for a trade alert regardless of
     # what the analyst's trade_this field says — confidence overrides individual layers.
@@ -2399,6 +2421,7 @@ def _send_telegram_summary(
         r for r in deep_results
         if _eff_conf(r) >= _trade_conf_thr
         and r["pair"] not in _demoted_pairs
+        and r["pair"] not in _not_viable_pairs
     ]
     # Drawdown tier + grade filtering: stricter tiers require higher grade / more confirmation.
     yes_trades = [
