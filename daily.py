@@ -3042,6 +3042,21 @@ def _send_telegram_summary(
             except (TypeError, ValueError):
                 pass
 
+        # Economic calendar: if either currency has a HIGH impact event within
+        # 48 hours, reduce displayed confidence by 1 and store warning lines.
+        _cal_warn_lines = []
+        try:
+            from src import economic_calendar as _ec_tb
+            _cal_ev_48h = _ec_tb.events_for_pair(pair, hours=48)
+            if _cal_ev_48h:
+                try:
+                    _conf_display = str(max(1, int(_conf_display) - 1))
+                except (TypeError, ValueError):
+                    pass
+                _cal_warn_lines = _ec_tb.warning_lines_for_pair(pair, _cal_ev_48h)
+        except Exception:
+            pass
+
         _qg_tb = _quality_grades.get(pair, _trade_quality_grade(r))
         _tb_grade = (_qg_tb or {}).get("grade", "B")
         if _tb_grade in ("A", "B"):
