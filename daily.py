@@ -3086,6 +3086,14 @@ def _send_telegram_summary(
         except Exception:
             pass
 
+        # Second opinion boost: if DA found no compelling objections, show +0.5 on display
+        _so_tb = r.get("second_opinion")
+        if _so_tb and not _so_tb.get("has_objections"):
+            try:
+                _conf_display = f"{float(_conf_display) + 0.5:.1f}"
+            except (TypeError, ValueError):
+                pass
+
         _qg_tb = _quality_grades.get(pair, _trade_quality_grade(r))
         _tb_grade = (_qg_tb or {}).get("grade", "B")
         if _tb_grade in ("A", "B"):
