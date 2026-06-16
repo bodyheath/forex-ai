@@ -4624,6 +4624,75 @@ def _send_telegram_summary(
             _intraday_health.append("Cost tracking unavailable")
         all_sections.append(_intraday_health)
 
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SUNDAY GAP SCAN — brief weekend gap detection message
+    # ═══════════════════════════════════════════════════════════════════════════
+    elif scan_mode == "gap":
+        _gap_hdr = [
+            f"<b>🤖 FOREX AI — 🌏 SUNDAY GAP SCAN — {_fmt_date_nz(now_ak)}</b>",
+            "Checking for significant price gaps since Friday's close",
+        ]
+        all_sections.append(_gap_hdr)
+
+        # Detect gaps: compare current price to Friday's close from daily series
+        _gap_found = []
+        _gap_checked = []
+        _gap_pairs_list = [
+            r["pair"] for r in deep_results[:12]
+            if r.get("pair")
+        ] or ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCAD", "NZDUSD",
+               "USDCHF", "EURJPY", "GBPJPY", "EURGBP"]
+        for _gp in _gap_pairs_list:
+            try:
+                import requests as _rq_gap
+                _gp_resp = _rq_gap.get(
+                    "https://api.twelvedata.com/time_series",
+                    params={
+                        "symbol":     _gp,
+                        "interval":   "1day",
+                        "outputsize": 3,
+                        "format":     "JSON",
+                        "apikey":     config.TWELVE_DATA_KEY,
+                    },
+                    timeout=12,
+                )
+                _gp_data = _gp_resp.json().get("values", [])
+                if len(_gp_data) < 2:
+                    continue
+                _gp_cur   = float(_gp_data[0]["close"])
+                _gp_fri   = float(_gp_data[1]["close"])
+                _gp_pips  = (_gp_cur - _gp_fri) / _pip_size(_gp)
+                _gp_thresh = 10 if "JPY" in _gp.upper() else 20
+                _gap_checked.append(_gp)
+                if abs(_gp_pips) >= _gp_thresh:
+                    _gp_sign = "+" if _gp_pips > 0 else ""
+                    _gp_dir  = "⬆️" if _gp_pips > 0 else "⬇️"
+                    _is_jpy_g = "JPY" in _gp.upper()
+                    _dec_g    = 3 if _is_jpy_g else 5
+                    _gap_found.append(
+                        f"{_gp_dir} <b>{_gp}</b> — Friday: {_gp_fri:.{_dec_g}f} → Now: {_gp_cur:.{_dec_g}f} — Gap: {_gp_sign}{int(round(_gp_pips))} pips"
+                    )
+            except Exception:
+                pass
+
+        if _gap_found:
+            _gap_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "⚡ <b>GAPS DETECTED</b>",
+                        f"Checked {len(_gap_checked)} pairs — {len(_gap_found)} significant gap{'s' if len(_gap_found) != 1 else ''} found:"]
+            _gap_sec.extend(_gap_found)
+            _gap_sec.append("")
+            _gap_sec.append("Consider waiting for gaps to fill before entering new trades — gaps often retrace in the first hours of Sunday trading")
+            all_sections.append(_gap_sec)
+        else:
+            all_sections.append([
+                "", "━━━━━━━━━━━━━━━━━━━━━",
+                "✅ <b>NO SIGNIFICANT GAPS</b>",
+                f"Checked {len(_gap_checked)} pairs — markets opened normally, no significant price gaps from Friday's close",
+                "Normal trading conditions expected — Monday 6am full scan will identify opportunities",
+            ])
+
+        if cost_lines:
+            all_sections.append(["", "━━━━━━━━━━━━━━━━━━━━━", "⚠️ <b>SYSTEM HEALTH</b>"] + cost_lines)
+
     # ── FOOTER (all modes) ─────────────────────────────────────────────────────
     all_sections.append([
         "",
