@@ -497,3 +497,91 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "") -> str:
 
     _store_skip_cache(pair, bundle, report)
     return report
+
+
+def devil_advocate(pair: str, parsed: dict, bundle: dict) -> dict:
+    """Devil's advocate second opinion for 7+ confidence trades.
+
+    Asks Sonnet to find the top 3 reasons the proposed trade could fail right
+    now. Returns dict: has_objections (bool), n_compelling (int),
+    reasons (list[str], max 2 for display), verdict (str).
+    """
+    direction  = (parsed.get("direction") or "?").upper()
+    entry      = parsed.get("entry") or "?"
+    stop       = parsed.get("stop_loss") or "?"
+    target     = parsed.get("target") or "?"
+    thesis     = (parsed.get("key_thesis") or parsed.get("KEY_THESIS") or "").strip() or "not provided"
+    risk_known = (parsed.get("risk_factors") or "").strip() or "none"
+    data_line  = _compress_bundle(pair, bundle)
+
+    system_prompt = (
+        "You are a risk-focused devil's advocate for forex trading. "
+        "Your sole task is to find the strongest reasons a proposed trade could fail right now. "
+        "Be specific and data-driven. Output only the structured format requested — nothing else."
+    )
+    user_message = (
+        f"Proposed trade: {pair} {direction}\n"
+        f"Entry: {entry}  Stop: {stop}  Target: {target}\n"
+        f"Thesis: {thesis}\n"
+        f"Known risks: {risk_known}\n"
+        f"Data: {data_line}\n\n"
+        "List the top 3 reasons this trade could fail RIGHT NOW. "
+        "Rate each COMPELLING (genuine problem) or MINOR (worth noting but not deal-breaking). "
+        "OVERALL_VERDICT must be CONCERNING if 2 or more reasons are COMPELLING, else ACCEPTABLE.\n\n"
+        "OBJECTION_1: [one plain-English sentence]\n"
+        "SEVERITY_1: COMPELLING or MINOR\n"
+        "OBJECTION_2: [one plain-English sentence]\n"
+        "SEVERITY_2: COMPELLING or MINOR\n"
+        "OBJECTION_3: [one plain-English sentence]\n"
+        "SEVERITY_3: COMPELLING or MINOR\n"
+        "OVERALL_VERDICT: CONCERNING or ACCEPTABLE"
+    )
+
+    def _call(client):
+        return client.messages.create(
+            model=config.CLAUDE_MODEL,
+            max_tokens=250,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_message}],
+        )
+
+    resp = _call_api(_call)
+    _cost["sonnet_input"]  += getattr(resp.usage, "input_tokens",  0)
+    _cost["sonnet_output"] += getattr(resp.usage, "output_tokens", 0)
+    text = "".join(block.text for block in resp.content if block.type == "text")
+
+    objections: dict = {}
+    severities: dict = {}
+    verdict = ""
+    for line in text.splitlines():
+        line = line.strip()
+        if line.startswith("OBJECTION_") and ":" in line:
+            try:
+                idx = int(line[10])
+                objections[idx] = line.split(":", 1)[1].strip()
+            except (IndexError, ValueError):
+                pass
+        elif line.startswith("SEVERITY_") and ":" in line:
+            try:
+                idx = int(line[9])
+                severities[idx] = line.split(":", 1)[1].strip().upper()
+            except (IndexError, ValueError):
+                pass
+        elif line.startswith("OVERALL_VERDICT:"):
+            verdict = line.split(":", 1)[1].strip().upper()
+
+    n_compelling   = sum(1 for i in range(1, 4) if severities.get(i) == "COMPELLING")
+    has_objections = verdict == "CONCERNING" or n_compelling >= 2
+
+    compelling = [objections[i] for i in range(1, 4)
+                  if objections.get(i) and severities.get(i) == "COMPELLING"]
+    minor      = [objections[i] for i in range(1, 4)
+                  if objections.get(i) and severities.get(i) != "COMPELLING"]
+    reasons    = (compelling + minor)[:2]
+
+    return {
+        "has_objections": has_objections,
+        "n_compelling":   n_compelling,
+        "reasons":        reasons,
+        "verdict":        verdict or "ACCEPTABLE",
+    }
