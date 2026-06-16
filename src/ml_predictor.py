@@ -253,16 +253,27 @@ def train(quiet: bool = False) -> dict:
         "feature_cols": FEATURE_COLS,
     }))
 
+    # Preserve and append to accuracy history for the learning report
+    _prev_meta   = _load_meta()
+    _acc_history = _prev_meta.get("accuracy_history", [])
+    _acc_history.append({
+        "trained_at": datetime.now().strftime("%Y-%m-%d"),
+        "roc_auc":    roc_auc,
+        "n_trades":   int(n),
+    })
+    _acc_history = _acc_history[-10:]  # keep last 10 retrains
+
     meta = {
-        "trained_at":   datetime.now().isoformat(),
-        "model_ready":  True,
-        "n_trades":     int(n),
-        "win_rate":     win_rate,
-        "roc_auc":      roc_auc,
-        "roc_auc_std":  roc_std,
-        "model_type":   mtype,
-        "feature_cols": FEATURE_COLS,
-        "importances":  importances,
+        "trained_at":       datetime.now().isoformat(),
+        "model_ready":      True,
+        "n_trades":         int(n),
+        "win_rate":         win_rate,
+        "roc_auc":          roc_auc,
+        "roc_auc_std":      roc_std,
+        "model_type":       mtype,
+        "feature_cols":     FEATURE_COLS,
+        "importances":      importances,
+        "accuracy_history": _acc_history,
     }
     _save_meta(meta)
 
