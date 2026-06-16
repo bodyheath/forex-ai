@@ -3122,15 +3122,107 @@ def _send_telegram_summary(
                     f" {_fn['type']} — triple confluence zone"
                 )
 
+        # For 7+ confidence: find the nearest Fibonacci support (BUY) or resistance
+        # (SELL) closest to Claude's entry price and use it as the ideal entry level.
+        _is_high_conf = False
+        try:
+            _is_high_conf = int(conf) >= 7
+        except (TypeError, ValueError):
+            pass
+
+        _fib_entry_price = entry_raw
+        if _is_high_conf and isinstance(_fib, dict) and _fib.get("status") == "ok":
+            _fib_lvls = (
+                _fib.get("nearest_below", []) if direction == "BUY"
+                else _fib.get("nearest_above", [])
+            )
+            if _fib_lvls:
+                try:
+                    _best_fib = min(
+                        _fib_lvls,
+                        key=lambda lp: abs(float(lp[1]) - float(entry_raw)),
+                    )
+                    _fib_entry_price = _best_fib[1]
+                except (TypeError, ValueError, IndexError):
+                    pass
+
+        _cur_price = None
+        try:
+            _cp_raw = (
+                _tb_daily.get("last_close") or _tb_daily.get("close")
+                if isinstance(_tb_daily, dict) else None
+            )
+            if _cp_raw:
+                _cur_price = float(_cp_raw)
+        except (TypeError, ValueError):
+            pass
+
+        block.append("━━━━━━━━━━━━━━━━━━━━━")
+        if _is_high_conf and _fib_entry_price is not None and _cur_price is not None:
+            _move_word   = "drop" if direction == "BUY" else "rise"
+            _participant = "buyers" if direction == "BUY" else "sellers"
+            _reversal    = "upward" if direction == "BUY" else "downward"
+            _pip_to_stop   = _fmt_pips_between(pair, _fib_entry_price, adj_stop)
+            _pip_to_target = _fmt_pips_between(pair, _fib_entry_price, adj_tgt)
+            try:
+                _dist_pips = round(abs(_cur_price - float(_fib_entry_price)) / _tb_pip)
+            except (TypeError, ValueError, ZeroDivisionError):
+                _dist_pips = None
+            try:
+                _past_entry = (
+                    float(_cur_price) <= float(_fib_entry_price) if direction == "BUY"
+                    else float(_cur_price) >= float(_fib_entry_price)
+                )
+            except (TypeError, ValueError):
+                _past_entry = False
+            block += [
+                "⏰ <b>EXACT ENTRY INSTRUCTIONS:</b>",
+                f"{_eq_em} {_eq_lb}",
+                "",
+                "<b>WHEN TO ENTER:</b>",
+            ]
+            if _past_entry:
+                block += [
+                    f"Price is already at or past the ideal entry level of {_fmt_price(_fib_entry_price)}",
+                    f"Current price is {_fmt_price(_cur_price)} — enter immediately if you have not already done so",
+                    f"If price has already moved more than 15 pips past {_fmt_price(_fib_entry_price)} do not enter — you have missed this trade",
+                    "Wait for the next scan instead — chasing price always leads to worse results",
+                ]
+            else:
+                block.append(
+                    f"Watch for price to reach {_fmt_price(_fib_entry_price)} — this is a key price level where {_participant} are likely to step in"
+                )
+                if _dist_pips is not None:
+                    block.append(
+                        f"Current price is {_fmt_price(_cur_price)} — you are waiting for price to "
+                        f"{_move_word} {_dist_pips} pips to the ideal entry level"
+                    )
+                block += [
+                    f"If price reaches {_fmt_price(_fib_entry_price)} enter the trade immediately",
+                    f"If price does not reach {_fmt_price(_fib_entry_price)} by {_ew_cut} Auckland tonight skip this trade and wait for tomorrow",
+                    "",
+                    "<b>HOW TO KNOW IF YOU MISSED THE ENTRY:</b>",
+                    f"If price has already moved more than 15 pips past {_fmt_price(_fib_entry_price)} do not chase it",
+                    "Wait for the next scan instead — chasing price always leads to worse results",
+                ]
+            block += [
+                "",
+                "<b>WHY THIS PRICE LEVEL:</b>",
+                f"The system has identified {_fmt_price(_fib_entry_price)} as the ideal entry because it is a key price zone where the market has previously reversed {_reversal}",
+                "Entering here gives the best possible risk to reward ratio for this trade",
+                f"Your stop loss is {_pip_to_stop} away at {_fmt_price(adj_stop)} and your target is {_pip_to_target} away at {_fmt_price(adj_tgt)}",
+            ]
+        else:
+            block += [
+                f"⏰ <b>EXACT ENTRY INSTRUCTIONS:</b>",
+                f"{_eq_em} {_eq_lb}",
+                f"⏰ ENTER TRADE: Between {_ew_win} Auckland {_tref_tb}",
+                f"⛔ DO NOT ENTER after {_ew_cut} Auckland",
+                f"⚡ IDEAL ENTRY: Wait for price to {_ideal_verb} {_fmt_price(entry_raw)} then enter",
+                f"- Do NOT enter if price moves more than 30 pips from entry before {_ew_ses}",
+                "- If price gaps past entry on open — skip this trade entirely",
+            ]
         block += [
-            "━━━━━━━━━━━━━━━━━━━━━",
-            f"⏰ <b>EXACT ENTRY INSTRUCTIONS:</b>",
-            f"{_eq_em} {_eq_lb}",
-            f"⏰ ENTER TRADE: Between {_ew_win} Auckland {_tref_tb}",
-            f"⛔ DO NOT ENTER after {_ew_cut} Auckland",
-            f"⚡ IDEAL ENTRY: Wait for price to {_ideal_verb} {_fmt_price(entry_raw)} then enter",
-            f"- Do NOT enter if price moves more than 30 pips from entry before {_ew_ses}",
-            "- If price gaps past entry on open — skip this trade entirely",
             "━━━━━━━━━━━━━━━━━━━━━",
             f"📈 Confidence: {_conf_display}/10  {_conf_bar(_conf_display)}",
         ]
