@@ -3074,17 +3074,19 @@ def _send_telegram_summary(
         if _rt_sec:
             all_sections.append(_rt_sec)
 
-        # RISK DASHBOARD
+        # FOREX AI FUND — expanded section with full performance stats
         if risk_data and risk_data.get("profile"):
             try:
                 from src import risk_manager as _rm_dash
+                from src import tracker as _trk_fund
                 prof     = risk_data["profile"]
                 rmode    = _risk_state.get("risk_mode", "normal")
-                rpct     = _risk_state.get("base_risk_pct", 1.0)
+                rpct     = _rm_dash.MODE_RISK.get(rmode, 1.0)
                 exp      = _exposure.get("total_pct", 0.0)
                 fund     = prof.get("estimated_balance", _rm_dash.FUND_START)
                 fund_pk  = prof.get("peak_balance", fund)
                 fund_ret = (fund - _rm_dash.FUND_START) / _rm_dash.FUND_START * 100
+                dd_pct   = max(0.0, (fund_pk - fund) / fund_pk * 100) if fund_pk > 0 else 0.0
                 real     = config.ACCOUNT_BALANCE
                 mode_icons = {
                     "capital_protection": "⬇️",
@@ -3094,11 +3096,137 @@ def _send_telegram_summary(
                     "enhanced":           "⬆️",
                 }
                 icon = mode_icons.get(rmode, "➡️")
-                all_sections.append([
-                    f"📈 FOREX AI FUND: ${fund:,.0f} ({fund_ret:+.1f}%) | Peak: ${fund_pk:,.0f}",
-                    f"💼 Real Account: ${real:,.0f} | {rpct:.1f}%/trade | {exp:.1f}% open | "
-                    f"{icon} {rmode.replace('_',' ').title()}",
-                ])
+
+                # Load all main fund trades for stats
+                _all_fund_t = _trk_fund.load()
+                _open_ft    = [r for r in _all_fund_t if r.get("status") == "OPEN"]
+                _closed_ft  = [r for r in _all_fund_t
+                               if r.get("status") in ("WIN","LOSS","BREAKEVEN","EXPIRED")]
+                _wins_ft    = [r for r in _closed_ft if r.get("status") == "WIN"]
+                _losses_ft  = [r for r in _closed_ft if r.get("status") == "LOSS"]
+                _expired_ft = [r for r in _closed_ft if r.get("status") == "EXPIRED"]
+                _decisive_ft = _wins_ft + _losses_ft
+                _n_total    = len(_all_fund_t)
+                _n_open     = len(_open_ft)
+                _n_closed   = len(_closed_ft)
+                _n_wins     = len(_wins_ft)
+                _n_losses   = len(_losses_ft)
+                _n_expired  = len(_expired_ft)
+                _wr_pct     = _n_wins / len(_decisive_ft) * 100 if _decisive_ft else 0.0
+
+                # Best trade by pips
+                _best_str = "None yet"
+                try:
+                    _wp = [(r, float(r.get("pips") or 0)) for r in _closed_ft if r.get("pips")]
+                    if _wp:
+                        _br, _bp = max(_wp, key=lambda x: x[1])
+                        _rm_v = float(_br.get("r_multiple") or 0)
+                        _usd  = round(rpct / 100 * fund * _rm_v) if _rm_v else round(abs(_bp))
+                        _best_str = (f"{_br.get('pair')} {_br.get('direction')} "
+                                     f"+{_bp:.1f} pips (+${_usd})")
+                except Exception:
+                    pass
+
+                # Avg holding time
+                _hold_str = "—"
+                try:
+                    _days = []
+                    for _tr in _closed_ft:
+                        _ts = (_tr.get("timestamp") or "")[:10]
+                        _ca = (_tr.get("closed_at") or "")[:10]
+                        if _ts and _ca:
+                            _d = (datetime.strptime(_ca, "%Y-%m-%d") -
+                                  datetime.strptime(_ts, "%Y-%m-%d")).days
+                            _days.append(max(0, _d))
+                    if _days:
+                        _avg = sum(_days) / len(_days)
+                        _hold_str = f"{_avg:.0f} day{'s' if _avg != 1 else ''}"
+                except Exception:
+                    pass
+
+                # ML milestone (activates at 10 closed trades)
+                _ml_need = max(0, 10 - _n_closed)
+                _ml_str  = (f"Need {_ml_need} more closed trade{'s' if _ml_need != 1 else ''} "
+                            f"for ML activation") if _ml_need > 0 else "ML model active"
+
+                # Prop firm status
+                _week_n = max(1, (now_ak.timetuple().tm_yday // 7) + 1)
+                if fund_ret >= 5.0:
+                    _prop_str = f"EXCELLENT — {fund_ret:.1f}% return in week {_week_n}"
+                elif fund_ret >= 2.0:
+                    _prop_str = f"STRONG — {fund_ret:.1f}% return in week {_week_n}"
+                elif fund_ret >= 0:
+                    _prop_str = f"On track — {fund_ret:.1f}% return in week {_week_n}"
+                else:
+                    _prop_str = f"Behind — {fund_ret:.1f}% return in week {_week_n}"
+
+                _fund_sec = [
+                    "", "━━━━━━━━━━━━━━━━━━━━━",
+                    f"📈 <b>FOREX AI FUND: ${fund:,.0f} ({fund_ret:+.1f}%) | Peak: ${fund_pk:,.0f}</b>",
+                    "",
+                    "<b>FUND PERFORMANCE:</b>",
+                    f"Total trades taken: {_n_total}",
+                    f"Open trades: {_n_open}",
+                    f"Closed trades: {_n_closed} ({_n_wins} WIN · {_n_losses} LOSS · {_n_expired} EXPIRED)",
+                ]
+                if _decisive_ft:
+                    _early = f" ({len(_decisive_ft)} trade{'s' if len(_decisive_ft)!=1 else ''} — too early to judge)" if len(_decisive_ft) < 10 else ""
+                    _fund_sec.append(f"Win rate: {_wr_pct:.0f}%{_early}")
+                else:
+                    _fund_sec.append("Win rate: — (no decisive outcomes yet)")
+                _fund_sec += [
+                    f"Best trade: {_best_str}",
+                    f"Avg holding time: {_hold_str}",
+                    f"Current drawdown: {dd_pct:.1f}% — {rmode.replace('_',' ').title()} mode — {rpct:.1f}% risk per trade",
+                    "",
+                    f"NEXT MILESTONE: {_ml_str}",
+                    f"PROP FIRM STATUS: {_prop_str}",
+                    f"💼 Real Account: ${real:,.0f} | {exp:.1f}% open | {icon} {rmode.replace('_',' ').title()}",
+                ]
+                all_sections.append(_fund_sec)
+
+                # FUND TRADES — every main fund trade with full detail
+                if _all_fund_t:
+                    _ft_sec = [
+                        "", "━━━━━━━━━━━━━━━━━━━━━",
+                        "💼 <b>FUND TRADES</b>",
+                    ]
+                    _status_icons = {"WIN":"✅","LOSS":"❌","OPEN":"⏳","EXPIRED":"⏰",
+                                     "BREAKEVEN":"➖","NO_TRADE":"•"}
+                    for _ftr in _all_fund_t:
+                        _fs    = _ftr.get("status","?")
+                        _fi    = _status_icons.get(_fs, "•")
+                        _fpair = _ftr.get("pair","?")
+                        _fdir  = (_ftr.get("direction") or "?").upper()
+                        _fid   = _ftr.get("id","?")
+                        _fent  = _ftr.get("entry","?")
+                        _fex   = _ftr.get("exit_price","")
+                        _fpips = _ftr.get("pips","")
+                        _frm   = _ftr.get("r_multiple","")
+                        _fts   = (_ftr.get("timestamp") or "")[:10]
+                        _fca   = (_ftr.get("closed_at") or "")[:10]
+
+                        _ft_sec.append(f"{_fi} <b>#{_fid} {_fpair} {_fdir}</b> — {_fs}")
+                        _price_line = f"   Entry: {_fent}"
+                        if _fex:
+                            _price_line += f" → Exit: {_fex}"
+                        _price_line += f"  ({_fts}"
+                        if _fca and _fca != _fts:
+                            _price_line += f" → {_fca}"
+                        _price_line += ")"
+                        _ft_sec.append(_price_line)
+                        if _fpips:
+                            try:
+                                _pp = float(_fpips)
+                                _pips_line = f"   {_pp:+.1f} pips"
+                                if _frm:
+                                    _rm2 = float(_frm)
+                                    _usd2 = round(rpct / 100 * fund * _rm2)
+                                    _pips_line += f" ({_rm2:+.2f}R · ${_usd2:+})"
+                                _ft_sec.append(_pips_line)
+                            except (TypeError, ValueError):
+                                pass
+                    all_sections.append(_ft_sec)
             except Exception:
                 pass
 
