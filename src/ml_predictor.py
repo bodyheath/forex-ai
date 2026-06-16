@@ -139,6 +139,34 @@ def _temporal_cv_scores(X_s, y) -> dict:
     }
 
 
+# ── Decisive trade counter ─────────────────────────────────────────────────────
+
+def _count_decisive_trades() -> tuple:
+    """Count WIN and LOSS outcomes only (excludes EXPIRED / BREAKEVEN / PARTIAL_WIN).
+
+    Returns (n_wins, n_losses).  Called before training to gate on minimum data.
+    """
+    n_wins = n_losses = 0
+    research_csv = config.DATA_DIR / "research_trades.csv"
+    if research_csv.exists():
+        with research_csv.open("r", encoding="utf-8", newline="") as fh:
+            for r in csv.DictReader(fh):
+                s = r.get("status", "").upper()
+                if s == "WIN":
+                    n_wins += 1
+                elif s == "LOSS":
+                    n_losses += 1
+    if config.TRADES_CSV.exists():
+        with config.TRADES_CSV.open("r", encoding="utf-8", newline="") as fh:
+            for r in csv.DictReader(fh):
+                s = r.get("status", "").upper()
+                if s == "WIN":
+                    n_wins += 1
+                elif s == "LOSS":
+                    n_losses += 1
+    return n_wins, n_losses
+
+
 # ── Training data loader ───────────────────────────────────────────────────────
 
 def _load_training_data():
