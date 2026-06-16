@@ -3114,22 +3114,33 @@ def _send_telegram_summary(
         # WHY NO SETUPS
         if not yes_trades:
             no_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "💤 <b>WHY NO SETUPS TODAY</b>"]
-            def _s1_sort_key(rr):
-                return float(rr.get("screen", {}).get("score") or 0)
-            combined = list(near_misses) + sorted(stage1_filtered, key=_s1_sort_key, reverse=True)
-            top3     = combined[:3]
-            if top3:
-                for i, rr in enumerate(top3, 1):
-                    reason = _rejection_reason(rr)
-                    no_sec.append(f"<b>{i}. {rr['pair']}</b>  {_conf(rr)}/10")
-                    no_sec.append(f"   {reason}")
-            elif failed_pairs:
-                no_sec.append(
-                    f"⚠️ All {len(failed_pairs)} pairs failed — "
-                    "check ANTHROPIC_API_KEY in GitHub secrets"
-                )
+            if _dd_mode == "halt":
+                no_sec += [
+                    "🚨 <b>HALT MODE ACTIVE</b> — all new trades suspended.",
+                    "Account has reached 10%+ drawdown from peak. No new positions.",
+                    "Review open trades and wait for drawdown recovery before resuming.",
+                ]
+            elif _dd_mode in ("preservation", "defensive", "caution"):
+                _tier_req = {"preservation": "A-grade + all 3 TFs aligned",
+                             "defensive": "A-grade setups", "caution": "A/B-grade setups"}.get(_dd_mode)
+                no_sec.append(f"{_TIER_META_daily.get(_dd_mode, {}).get('icon', '⚠️')} Drawdown protection active — only {_tier_req} accepted. No qualifying setups found today.")
             else:
-                no_sec.append("No qualifying setups — staying in cash is a valid position.")
+                def _s1_sort_key(rr):
+                    return float(rr.get("screen", {}).get("score") or 0)
+                combined = list(near_misses) + sorted(stage1_filtered, key=_s1_sort_key, reverse=True)
+                top3     = combined[:3]
+                if top3:
+                    for i, rr in enumerate(top3, 1):
+                        reason = _rejection_reason(rr)
+                        no_sec.append(f"<b>{i}. {rr['pair']}</b>  {_conf(rr)}/10")
+                        no_sec.append(f"   {reason}")
+                elif failed_pairs:
+                    no_sec.append(
+                        f"⚠️ All {len(failed_pairs)} pairs failed — "
+                        "check ANTHROPIC_API_KEY in GitHub secrets"
+                    )
+                else:
+                    no_sec.append("No qualifying setups — staying in cash is a valid position.")
             all_sections.append(no_sec)
 
         # WATCH LIST with session info
