@@ -1809,15 +1809,26 @@ def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict) -> tuple:
 
     # --- ATR-based fallback ---
     quote_ccy = pair.split("/")[-1].upper() if "/" in pair else pair[-3:].upper()
-    is_jpy    = quote_ccy == "JPY"
-    pip_size  = 0.01 if is_jpy else 0.0001
-    dec       = 3 if is_jpy else 5
+    base_ccy  = pair.split("/")[0].upper()  if "/" in pair else pair[:3].upper()
+    is_jpy      = quote_ccy == "JPY"
+    # Issue 2: JPY-as-base pairs (JPY/USD, JPY/EUR etc.) have very small prices (~0.006)
+    is_jpy_base = (base_ccy == "JPY" and not is_jpy)
+
+    if is_jpy:
+        pip_size, dec = 0.01, 3
+    elif is_jpy_base:
+        pip_size, dec = 0.000001, 6   # micro pip for JPY/USD at price ~0.006
+    else:
+        pip_size, dec = 0.0001, 5
 
     # Use actual ATR14 if available, else estimate from pair characteristics
     if atr_actual and atr_actual > 0:
         atr = atr_actual
     elif is_jpy:
         atr = 0.50
+    elif is_jpy_base:
+        # ~0.3% of price is equivalent to a ~50 pip move in USD/JPY
+        atr = (cur * 0.003) if cur else 0.00002
     elif cur < 0.10:
         atr = cur * 0.008
     elif any(c in pair.upper() for c in ("EUR", "GBP")):
@@ -1831,10 +1842,11 @@ def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict) -> tuple:
 
     entry = entry or cur
 
-    # Stop: 1.0x ATR rounded to nearest 5 pips
+    # Stop: 1.0x ATR rounded to nearest 5 pips (minimum 5 pips to avoid zero stop)
     if not stop:
         atr_pips   = atr / pip_size
         stop_pips  = round(atr_pips / 5) * 5   # nearest 5 pips
+        stop_pips  = max(stop_pips, 5)          # never allow zero stop distance
         stop_dist  = stop_pips * pip_size
         stop = round(entry - stop_dist if dirn == "BUY" else entry + stop_dist, dec)
 
