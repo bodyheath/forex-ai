@@ -3835,7 +3835,7 @@ def _send_telegram_summary(
                     return f"Reached {conf_v}/10 confidence but the analyst judged the setup is not clean enough to enter right now"
 
                 if top3:
-                    no_sec.append("💤 No trades today — here is why the best candidates did not qualify:")
+                    no_sec.append(f"The system considered {universe_size} pairs and analysed the top {n_deep} in depth. Here is why the best candidates did not fully qualify:")
                     for rr in top3:
                         reason_plain = _plain_rejection(rr)
                         no_sec.append(f"<b>{rr['pair']}:</b> {reason_plain}")
