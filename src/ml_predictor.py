@@ -289,14 +289,20 @@ def train(quiet: bool = False) -> dict:
     cv_k = min(5, max(2, n // 4))
 
     if n >= 50:
+        # Anti-overfitting params:
+        #   min_samples_leaf=15 — no pattern learned from < 15 examples (safeguard 1)
+        #   n_estimators=100    — fewer trees = simpler model (complexity penalty)
+        #   max_features=0.7    — random feature subsets at each split (complexity penalty)
         base   = GradientBoostingClassifier(
-            n_estimators=200, max_depth=3, learning_rate=0.05,
-            min_samples_leaf=3, subsample=0.8, random_state=42,
+            n_estimators=100, max_depth=3, learning_rate=0.05,
+            min_samples_leaf=MIN_PATTERN_SAMPLES, subsample=0.8,
+            max_features=0.7, random_state=42,
         )
         method = "isotonic"
         mtype  = "GradientBoosting"
     else:
-        base   = LogisticRegression(C=0.5, max_iter=1000, random_state=42)
+        # C=0.1 — strong L2 regularisation suppresses rare single-occurrence patterns
+        base   = LogisticRegression(C=0.1, max_iter=1000, random_state=42)
         method = "sigmoid"
         mtype  = "LogisticRegression"
 
