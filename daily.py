@@ -418,6 +418,14 @@ def _eff_conf(result: dict) -> int:
             except Exception:
                 _fa = {}
     adj += (_fa or {}).get("conf_adj", 0)
+    # Smart Money Divergence boost: strong institutional/retail divergence aligned with trade
+    try:
+        _smd = _smd_score(result)
+        _smd_dir = (result.get("parsed", {}).get("direction") or "").upper()
+        if (_smd >= 8 and _smd_dir == "BUY") or (_smd <= -8 and _smd_dir == "SELL"):
+            adj += 1
+    except Exception:
+        pass
     return max(1, raw + adj)
 
 
