@@ -423,7 +423,17 @@ def _conf_bar(conf) -> str:
 
 
 def _pip_size(pair: str) -> float:
-    return 0.01 if "JPY" in pair.upper() else 0.0001
+    cleaned = pair.upper().replace("/", "").replace("-", "")
+    if len(cleaned) >= 6:
+        base  = cleaned[:3]
+        quote = cleaned[3:6]
+        if quote == "JPY":
+            return 0.01        # JPY is quote currency (USD/JPY, EUR/JPY, etc.)
+        if base == "JPY":
+            return 0.000001    # JPY is base currency (JPY/USD, JPY/EUR) — micro pip
+    elif "JPY" in pair.upper():
+        return 0.01
+    return 0.0001
 
 
 def _fmt_pips_between(pair: str, price_a, price_b) -> str:
