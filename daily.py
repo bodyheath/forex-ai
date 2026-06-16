@@ -1328,6 +1328,11 @@ def _build_research_section(research_result=None) -> list:
     sec.append(
         f"Win rate: <b>{wr_pct}%</b> ({n_wins}W / {n_losses}L) — {decisive} closed trades"
     )
+    if decisive >= 10 and wr_pct < 30:
+        sec.append(
+            f"⚠️ <b>Win rate {wr_pct}% from {decisive} trades — well below target.</b> "
+            f"System is in learning phase — do not adjust strategy until 50+ decisive trades recorded."
+        )
 
     win_pips  = [_f(r.get("pips")) for r in wins   if _f(r.get("pips")) is not None]
     loss_pips = [_f(r.get("pips")) for r in losses if _f(r.get("pips")) is not None]
