@@ -2725,6 +2725,35 @@ def _send_telegram_summary(
     except Exception:
         pass
 
+    # ── SECOND OPINION: devil's advocate for all 7+ raw-confidence pairs ─────────
+    # Runs BEFORE _yes_raw assembly so a confidence reduction (7→6) correctly
+    # removes the pair from trade alerts.
+    for _da_r in deep_results:
+        if _conf(_da_r) >= 7:
+            try:
+                from src import analyst as _da_analyst
+                _da = _da_analyst.devil_advocate(
+                    _da_r["pair"],
+                    _da_r["parsed"],
+                    _da_r.get("bundle", {}),
+                )
+                _da_r["second_opinion"] = _da
+                if _da.get("has_objections"):
+                    try:
+                        _da_r["parsed"]["confidence"] = max(1, int(_da_r["parsed"]["confidence"]) - 1)
+                    except (TypeError, ValueError):
+                        pass
+                    if _da.get("reasons"):
+                        _existing_rf = (_da_r["parsed"].get("risk_factors") or "").strip()
+                        _new_rf = "; ".join(_da["reasons"])
+                        _da_r["parsed"]["risk_factors"] = (
+                            _new_rf + ("; " + _existing_rf if _existing_rf else "")
+                        )
+                else:
+                    _da_r["_da_boost"] = 0.5
+            except Exception:
+                pass
+
     # Issue 1: overall confidence is the deciding factor, not individual layer scores.
     # Any pair with 7+ effective confidence qualifies for a trade alert regardless of
     # what the analyst's trade_this field says — confidence overrides individual layers.
