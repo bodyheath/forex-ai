@@ -870,6 +870,16 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         )
     log("")
 
+    # ── Market regime — fetch once, pass into scoring ─────────────────────────
+    _sel_regime = ""
+    try:
+        from src import market_regime as _mr_sel_pre
+        _sel_regime = _mr_sel_pre.detect().get("regime", "")
+        if _sel_regime:
+            log(f"  Market regime: {_sel_regime} — regime alignment bonus active")
+    except Exception:
+        pass
+
     api_calls  = 0
     snap_ok:   list = []
     snap_fail: list = []
