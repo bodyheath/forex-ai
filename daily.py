@@ -4893,6 +4893,11 @@ def run() -> int:
                 f"Check cron-job.org trigger time and SCAN_MODE env var.",
                 file=sys.stderr,
             )
+    elif scan_mode == "gap":
+        _telegram(
+            "🤖 FOREX AI — Sunday gap scan starting — checking for weekend price gaps — "
+            "brief report in a few minutes"
+        )
 
     # Reset per-run state
     try:
