@@ -3304,7 +3304,7 @@ def _send_telegram_summary(
                     "",
                     f"NEXT MILESTONE: {_ml_str}",
                     f"PROP FIRM STATUS: {_prop_str}",
-                    f"💼 Real Account: ${real:,.0f} | {exp:.1f}% open | {icon} {rmode.replace('_',' ').title()}",
+                    f"💼 Real Account: ${real:,.0f} | {exp:.1f}% open | {icon} {dd_mode_dash.replace('_',' ').title()}",
                 ]
                 all_sections.append(_fund_sec)
 
