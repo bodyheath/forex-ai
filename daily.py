@@ -2817,7 +2817,7 @@ def _send_telegram_summary(
             "",
             f"{arrow} <b>{rr['pair']}</b> {dirn}  {conf}/10 {_conf_bar(conf)}  {_eq_we_e} {_eq_we_l}",
             _grade_display_line(_qg_we),
-            f"{_score_breakdown_line(pp)}",
+            f"{_score_breakdown_line(pp, smd=_smd_score(rr))}",
         ]
         # ML win-probability (only show when model is trained and ready)
         try:
