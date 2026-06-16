@@ -3660,6 +3660,15 @@ def _send_telegram_summary(
         ctx_lines.append(f"📊 <b>Today's trading conditions: {_ps}/10</b> — {_pd}")
         all_sections.append(ctx_lines)
 
+        # ECONOMIC CALENDAR — 7-day high impact event timeline (every 6am scan)
+        try:
+            from src import economic_calendar as _ec_cal
+            _cal_section = _ec_cal.build_calendar_section()
+            if _cal_section:
+                all_sections.append(_cal_section)
+        except Exception:
+            pass
+
         # SYSTEM LEARNING REPORT (Monday 6am only)
         _slr = _build_system_learning_report(date)
         if _slr:
