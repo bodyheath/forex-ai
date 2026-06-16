@@ -1988,9 +1988,10 @@ def _fetch_live_price(pair: str, px_cache: dict) -> tuple:
     return None, True
 
 
-def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> list:
+def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compact: bool = False) -> list:
     """Build the OPEN TRADES section lines for any Telegram scan message.
 
+    compact=True: one-line-per-trade format for intraday scans.
     Always returns a non-empty list (shows 'No open trades' when empty).
     Placed at the top of every message immediately after the scan header.
     Each trade shows: entry/current/stop/target, unrealised P&L, progress bar,
