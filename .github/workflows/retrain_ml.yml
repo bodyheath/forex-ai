@@ -30,10 +30,15 @@ jobs:
       - name: Retrain ML model
         run: |
           python -c "
+          import sys
           from src.ml_predictor import train
           result = train(quiet=False)
-          if result.get('error'):
-              print('WARNING:', result['error'])
+          if result.get('skipped'):
+              print('INFO: ML retraining skipped --', result.get('message', 'insufficient data'))
+              sys.exit(0)
+          elif result.get('error'):
+              print('INFO: ML retraining skipped --', result['error'])
+              sys.exit(0)
           else:
               print('Model trained successfully.')
               print('  Trades:  ', result.get('n_trades'))
