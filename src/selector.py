@@ -889,7 +889,8 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         else:
             snap_fail.append(pair)
         score, breakdown = _compute_rich_score(
-            pair, base, quote, snapshot, rates, events, utc_hour, perf_map
+            pair, base, quote, snapshot, rates, events, utc_hour, perf_map,
+            _sel_regime,
         )
 
         # change_24h / momentum kept for any external code that reads metadata
