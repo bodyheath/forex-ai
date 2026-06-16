@@ -4162,9 +4162,9 @@ def _send_telegram_summary(
         ])
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # INTRADAY SCANS (9AM / 3PM / 5PM) — unified expanded format
+    # INTRADAY SCANS (9AM / 5PM / 11PM) — unified expanded format
     # ═══════════════════════════════════════════════════════════════════════════
-    elif scan_mode in ("morning", "london", "prelondon"):
+    elif scan_mode in ("morning", "prelondon", "preny"):
         _hdr_id = [f"<b>🤖 Forex AI — {_badge} — {today_short}</b>"]
         if _dd_banner:
             _hdr_id += ["", _dd_banner]
@@ -4183,7 +4183,15 @@ def _send_telegram_summary(
             ctx_parts.append(f"({vix_str})")
         if sc and wc:
             ctx_parts.append(f"| 💪 {sc}  📉 {wc}")
-        all_sections.append(["", "━━━━━━━━━━━━━━━━━━━━━", " ".join(ctx_parts)])
+        _ctx_block = ["", "━━━━━━━━━━━━━━━━━━━━━", " ".join(ctx_parts)]
+        if scan_mode == "prelondon":
+            _ctx_block.append("🕐 London market opens in 2 hours at 7pm Auckland")
+        elif scan_mode == "preny":
+            _ctx_block.append(
+                "🕐 New York market opens in 2 hours at 1am Auckland — "
+                "London/New York overlap 1am–4am is the highest volume period of the week"
+            )
+        all_sections.append(_ctx_block)
 
         # ── YES trade alerts (full entry instructions) ────────────────────────
         for r in yes_trades:
