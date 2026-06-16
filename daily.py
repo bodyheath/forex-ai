@@ -4205,13 +4205,52 @@ def _send_telegram_summary(
     # INTRADAY SCANS (9AM / 5PM / 11PM) — unified expanded format
     # ═══════════════════════════════════════════════════════════════════════════
     elif scan_mode in ("morning", "prelondon", "preny"):
-        _hdr_id = [f"<b>🤖 Forex AI — {_badge} — {today_short}</b>"]
+        # Header — include session context line for 5pm and 11pm
+        if scan_mode == "morning":
+            _hdr_id = [f"<b>🤖 FOREX AI — 🌏 9AM MORNING CHECK — {today_short}</b>"]
+        elif scan_mode == "prelondon":
+            _hdr_id = [
+                f"<b>🤖 FOREX AI — 🌆 5PM PRE-LONDON CHECK — {today_short}</b>",
+                "London market opens in 2 hours at 7pm Auckland — best time for EUR GBP CHF pairs",
+            ]
+        else:  # preny
+            _hdr_id = [
+                f"<b>🤖 FOREX AI — 🌃 11PM PRE-NEW YORK CHECK — {today_short}</b>",
+                "New York market opens in 2 hours at 1am Auckland",
+                "London/New York overlap 1am–4am Auckland — highest volume of the entire week",
+            ]
         if _dd_banner:
             _hdr_id += ["", _dd_banner]
         all_sections.append(_hdr_id)
 
-        # OPEN TRADES — always at the top so it's the first thing seen
-        all_sections.append(_build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak))
+        # OPEN TRADES — compact format for intraday (always first)
+        _ot_compact = _build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak, compact=True)
+        all_sections.append(_ot_compact)
+
+        # ── SESSION FOCUS (5pm = London, 11pm = New York) ─────────────────────
+        if scan_mode == "prelondon":
+            _sf_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "🌆 <b>LONDON SESSION FOCUS</b>"]
+            _sf_sec.append("London opens in 2 hours — EUR GBP CHF pairs are most active during this session")
+            _london_pairs = [r for r in (watch_list + upcoming)
+                             if any(c in r["pair"].upper() for c in ("EUR", "GBP", "CHF"))]
+            if _london_pairs:
+                for _lp in _london_pairs[:3]:
+                    _sf_sec.append(f"{_lp['pair']} entry window opens at 7pm Auckland — be ready")
+            else:
+                _sf_sec.append("No EUR or GBP pairs on watch list today — London session may be quiet for us")
+            all_sections.append(_sf_sec)
+        elif scan_mode == "preny":
+            _sf_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "🌃 <b>NEW YORK SESSION FOCUS</b>"]
+            _sf_sec.append("New York opens in 2 hours — USD CAD pairs are most active during this session")
+            _sf_sec.append("London and New York overlap from 1am to 4am Auckland — highest volume period of the entire week — best time for EUR USD GBP pairs")
+            _ny_pairs = [r for r in (watch_list + upcoming)
+                         if any(c in r["pair"].upper() for c in ("USD", "CAD"))]
+            if _ny_pairs:
+                for _np in _ny_pairs[:3]:
+                    _sf_sec.append(f"{_np['pair']} entry window opens at 1am Auckland — be ready when New York opens")
+            else:
+                _sf_sec.append("No USD or CAD pairs on watch list tonight — New York session may be quiet for us")
+            all_sections.append(_sf_sec)
 
         # ── Market context (one-line brief) ───────────────────────────────────
         vix_str   = f"VIX {ctx['vix']:.1f}" if ctx["vix"] else ""
@@ -4224,56 +4263,71 @@ def _send_telegram_summary(
         if sc and wc:
             ctx_parts.append(f"| 💪 {sc}  📉 {wc}")
         _ctx_block = ["", "━━━━━━━━━━━━━━━━━━━━━", " ".join(ctx_parts)]
-        if scan_mode == "prelondon":
-            _ctx_block.append("🕐 London market opens in 2 hours at 7pm Auckland")
-        elif scan_mode == "preny":
-            _ctx_block.append(
-                "🕐 New York market opens in 2 hours at 1am Auckland — "
-                "London/New York overlap 1am–4am is the highest volume period of the week"
-            )
         all_sections.append(_ctx_block)
 
         # ── YES trade alerts (full entry instructions) ────────────────────────
         for r in yes_trades:
             all_sections.append(_trade_block(r))
 
-        # ── Pairs newly reaching 6+ since 6am ────────────────────────────────
-        _yes_pairs   = {r["pair"] for r in yes_trades}
+        # ── CHANGES SINCE LAST SCAN ───────────────────────────────────────────
+        _yes_pairs = {r["pair"] for r in yes_trades}
+        _prev_scan_label = {"morning": "6am", "prelondon": "9am", "preny": "5pm"}.get(scan_mode, "last")
+        _changes_lines = []
+
+        # New alerts (pairs that just reached YES/7+ that weren't before)
+        _newly_yes = [r for r in yes_trades if new_alerts and f"{r['pair']}:{(r['parsed'].get('direction') or '').upper()}" in new_alerts]
+        for _ny_r in _newly_yes[:3]:
+            _ny_d = (_ny_r["parsed"].get("direction") or "").upper()
+            _changes_lines.append(f"🆕 {_ny_r['pair']} {_ny_d} reached {_eff_conf(_ny_r)}/10 confidence — new trade alert — full details below")
+
+        # Pairs that improved to 6+ since last scan
         _newly_6plus = [
             r for r in deep_results
             if r["pair"] not in _yes_pairs
             and _eff_conf(r) >= 6
             and _morning_conf.get(r["pair"], 10) < 6
         ]
-        if _newly_6plus:
-            ns = ["", "━━━━━━━━━━━━━━━━━━━━━", "⬆️ <b>NEWLY REACHED 6+ SINCE 6AM</b>"]
-            for r in _newly_6plus[:5]:
-                pp    = r["parsed"]
-                curr  = _eff_conf(r)           # show ribbon-adjusted confidence
-                prev  = _morning_conf.get(r["pair"], 0)
-                dirn  = (pp.get("direction") or "").upper()
-                arrow = "📈" if dirn == "BUY" else "📉"
-                sign  = f"+{curr - prev}"
-                ns.append(
-                    f"{arrow} <b>{r['pair']}</b> {dirn} — "
-                    f"<b>{curr}/10</b> ({sign} since 6am)  {_conf_bar(curr)}"
-                )
-                _ew_ns = _entry_window_for_pair(r["pair"])
-                _eq_ns_e, _eq_ns_l = _entry_quality(r["pair"], now_ak)
-                _tref_ns = _time_ref_for_entry(_ew_ns[0], _ew_ns[1], now_ak)
-                _start_ns = _fmt_time_exact(_ew_ns[0], _ew_ns[1])
-                ns.append(
-                    f"  {_eq_ns_e} <b>BE READY TO ENTER:</b> "
-                    f"{_ew_ns[6]} {_start_ns} Auckland {_tref_ns}"
-                )
-            all_sections.append(ns)
-        elif not yes_trades:
-            _any_change = any(
-                _morning_conf and abs(_conf(r) - _morning_conf.get(r["pair"], _conf(r))) >= 1
-                for r in deep_results
+        for r in _newly_6plus[:3]:
+            curr = _eff_conf(r)
+            prev = _morning_conf.get(r["pair"], 0)
+            dirn = (r["parsed"].get("direction") or "").upper()
+            arrow = "📈" if dirn == "BUY" else "📉"
+            _changes_lines.append(f"⬆️ {r['pair']} improved from {prev} to {curr}/10 — getting closer to entry")
+            _ew_ns = _entry_window_for_pair(r["pair"])
+            _eq_ns_e, _ = _entry_quality(r["pair"], now_ak)
+            _tref_ns = _time_ref_for_entry(_ew_ns[0], _ew_ns[1], now_ak)
+            _start_ns = _fmt_time_exact(_ew_ns[0], _ew_ns[1])
+            _changes_lines.append(
+                f"  {_eq_ns_e} <b>BE READY TO ENTER:</b> "
+                f"{_ew_ns[6]} {_start_ns} Auckland {_tref_ns}"
             )
-            if not _any_change:
-                all_sections.append(["", "No new signals since morning scan."])
+
+        # Pairs that dropped since last scan
+        _dropped = [
+            r for r in deep_results
+            if r["pair"] not in _yes_pairs
+            and _morning_conf.get(r["pair"]) is not None
+            and _morning_conf[r["pair"]] >= 6
+            and _eff_conf(r) < 6
+        ]
+        for r in _dropped[:2]:
+            curr = _eff_conf(r)
+            prev = _morning_conf[r["pair"]]
+            _changes_lines.append(f"⬇️ {r['pair']} dropped from {prev} to {curr}/10 — removed from watch list")
+
+        # Conditions change
+        _prev_patience = _morning_conf.get("__patience__")
+        _cur_patience  = _compute_patience_score(ctx)["score"]
+        if _prev_patience is not None and abs(_cur_patience - _prev_patience) >= 2:
+            _changes_lines.append(f"📊 Conditions update: Trading conditions changed to {_cur_patience}/10")
+
+        chg_sec = ["", "━━━━━━━━━━━━━━━━━━━━━",
+                   f"🔄 <b>CHANGES SINCE {_prev_scan_label.upper()} SCAN</b>"]
+        if _changes_lines:
+            chg_sec.extend(_changes_lines)
+        else:
+            chg_sec.append(f"No significant changes since {_prev_scan_label} — existing opportunities remain valid")
+        all_sections.append(chg_sec)
 
         # ── Watch list (5–6) and approaching signals (3–4) with levels + session ─
         _all_candidates = sorted(
