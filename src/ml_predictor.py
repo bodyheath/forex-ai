@@ -358,16 +358,24 @@ def train(quiet: bool = False) -> dict:
     _acc_history = _acc_history[-10:]  # keep last 10 retrains
 
     meta = {
-        "trained_at":       datetime.now().isoformat(),
-        "model_ready":      True,
-        "n_trades":         int(n),
-        "win_rate":         win_rate,
-        "roc_auc":          roc_auc,
-        "roc_auc_std":      roc_std,
-        "model_type":       mtype,
-        "feature_cols":     FEATURE_COLS,
-        "importances":      importances,
-        "accuracy_history": _acc_history,
+        "trained_at":            datetime.now().isoformat(),
+        "model_ready":           True,
+        "n_trades":              int(n),
+        "win_rate":              win_rate,
+        "roc_auc":               roc_auc,
+        "roc_auc_std":           roc_std,
+        "model_type":            mtype,
+        "feature_cols":          FEATURE_COLS,
+        "importances":           importances,
+        # Anti-curve-fitting safeguards
+        "min_samples_enforced":  MIN_PATTERN_SAMPLES,
+        "complexity_penalty":    True,
+        "temporal_holdout_auc":  _hold_auc,
+        "overfit_gap":           _overfit_g,
+        "is_healthy":            _is_healthy,
+        "period_win_rates":      _temporal.get("period_win_rates"),
+        "period_stable":         _temporal.get("period_stable"),
+        "accuracy_history":      _acc_history,
     }
     _save_meta(meta)
 
