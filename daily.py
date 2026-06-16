@@ -2849,6 +2849,21 @@ def _send_telegram_summary(
                 "🔄 <b>COT REVERSAL WARNING — institutional positioning just flipped — "
                 "confidence penalised −1</b>"
             )
+        # Smart Money Divergence (compact)
+        _smd_we   = _smd_score(rr)
+        _smd_d_we = rr.get("bundle", {}).get("smart_money", {})
+        if isinstance(_smd_d_we, dict) and _smd_d_we.get("status") not in ("insufficient_data", None):
+            _smd_sig_we = _smd_d_we.get("signal", "NEUTRAL")
+            _smd_icon_we = "🐋" if abs(_smd_we) >= 8 else "📊"
+            _smd_boost_we = " +1 conf" if (
+                (_smd_we >= 8 and dirn == "BUY") or (_smd_we <= -8 and dirn == "SELL")
+            ) else ""
+            _smd_warn_we = " ⚠️ contradicts trade" if (
+                (_smd_we >= 8 and dirn == "SELL") or (_smd_we <= -8 and dirn == "BUY")
+            ) else ""
+            lines.append(
+                f"{_smd_icon_we} SMD: {_smd_we:+d}/10 [{_smd_sig_we}]{_smd_boost_we}{_smd_warn_we}"
+            )
         # Fundamental alignment (compact)
         lines += _fundamental_lines(rr, compact=True)
         # D/F grade: monitoring only — suppress all entry instructions
