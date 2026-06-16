@@ -2665,9 +2665,14 @@ def _send_telegram_summary(
                 pass
 
         _qg_tb = _quality_grades.get(pair, _trade_quality_grade(r))
+        _tb_grade = (_qg_tb or {}).get("grade", "B")
+        if _tb_grade in ("A", "B"):
+            _hdr_line = f"{action_icon} <b>{_pfx}ACTION: {direction} {pair} NOW</b>"
+        else:
+            _hdr_line = f"👁 <b>{_pfx}WATCH ONLY: {direction} {pair} — Grade {_tb_grade}</b>"
         block = [
             "",
-            f"{action_icon} <b>{_pfx}ACTION: {direction} {pair} NOW</b>",
+            _hdr_line,
             "━━━━━━━━━━━━━━━━━━━━━",
             _grade_display_line(_qg_tb),
             "━━━━━━━━━━━━━━━━━━━━━",
