@@ -3300,7 +3300,7 @@ def _send_telegram_summary(
                 _fund_sec += [
                     f"Best trade: {_best_str}",
                     f"Avg holding time: {_hold_str}",
-                    f"Current drawdown: {dd_pct:.1f}% — {rmode.replace('_',' ').title()} mode — {rpct:.1f}% risk per trade",
+                    f"Current drawdown: {dd_pct:.1f}% — {icon} {dd_mode_dash.replace('_',' ').title()} mode — {rpct:.2f}% risk per trade",
                     "",
                     f"NEXT MILESTONE: {_ml_str}",
                     f"PROP FIRM STATUS: {_prop_str}",
