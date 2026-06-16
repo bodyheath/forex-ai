@@ -3438,6 +3438,44 @@ def _send_telegram_summary(
         if _rt_sec_id:
             all_sections.append(_rt_sec_id)
 
+        # FOREX AI FUND — compact version for intraday scans
+        if risk_data and risk_data.get("profile"):
+            try:
+                from src import risk_manager as _rm_id
+                from src import tracker as _trk_id
+                _prof_id = risk_data["profile"]
+                _rmode_id = _risk_state.get("risk_mode", "normal")
+                _rpct_id  = _rm_id.MODE_RISK.get(_rmode_id, 1.0)
+                _fund_id  = _prof_id.get("estimated_balance", _rm_id.FUND_START)
+                _pk_id    = _prof_id.get("peak_balance", _fund_id)
+                _ret_id   = (_fund_id - _rm_id.FUND_START) / _rm_id.FUND_START * 100
+                _dd_id    = max(0.0, (_pk_id - _fund_id) / _pk_id * 100) if _pk_id > 0 else 0.0
+                _icon_id  = {"capital_protection":"⬇️","streak_protection":"⬇️",
+                             "reduced":"➡️","normal":"➡️","enhanced":"⬆️"}.get(_rmode_id,"➡️")
+                _all_ft_id = _trk_id.load()
+                _cls_ft_id = [r for r in _all_ft_id if r.get("status") in ("WIN","LOSS","BREAKEVEN","EXPIRED")]
+                _w_ft_id   = [r for r in _cls_ft_id if r.get("status") == "WIN"]
+                _l_ft_id   = [r for r in _cls_ft_id if r.get("status") == "LOSS"]
+                _dec_id    = _w_ft_id + _l_ft_id
+                _wr_id     = f"{len(_w_ft_id)/len(_dec_id)*100:.0f}%" if _dec_id else "—"
+                _fund_id_sec = [
+                    "", "━━━━━━━━━━━━━━━━━━━━━",
+                    f"📈 <b>FOREX AI FUND: ${_fund_id:,.0f} ({_ret_id:+.1f}%) | Peak: ${_pk_id:,.0f}</b>",
+                    f"Trades: {len(_all_ft_id)} total · {len(_cls_ft_id)} closed · win rate {_wr_id}",
+                    f"Drawdown: {_dd_id:.1f}% | {_icon_id} {_rmode_id.replace('_',' ').title()} | {_rpct_id:.1f}% risk/trade",
+                ]
+                # Show any open trades inline
+                _open_id = [r for r in _all_ft_id if r.get("status") == "OPEN"]
+                for _ot_id in _open_id:
+                    _pp_id = (_ot_id.get("pips") or "")
+                    _pp_str = f" ({float(_pp_id):+.1f}p)" if _pp_id else ""
+                    _fund_id_sec.append(
+                        f"   ⏳ #{_ot_id.get('id')} {_ot_id.get('pair')} {(_ot_id.get('direction') or '').upper()}{_pp_str}"
+                    )
+                all_sections.append(_fund_id_sec)
+            except Exception:
+                pass
+
         if cost_lines:
             all_sections.append(
                 ["", "━━━━━━━━━━━━━━━━━━━━━", "⚠️ <b>SYSTEM HEALTH</b>"] + cost_lines
