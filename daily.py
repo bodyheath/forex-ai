@@ -2462,6 +2462,11 @@ def _send_telegram_summary(
 
     if yes_trades:
         setup_line = f"<b>🟢 {len(yes_trades)} setup{'s' if len(yes_trades) > 1 else ''} found</b>"
+    elif _dd_mode == "halt":
+        setup_line = "🚨 <b>HALT MODE — no new trades</b>"
+    elif _dd_mode in ("preservation", "defensive", "caution"):
+        _tier_limit = {"preservation": "A + all TFs", "defensive": "A-grade", "caution": "A/B-grade"}.get(_dd_mode, "")
+        setup_line = f"No qualifying setups ({_tier_limit} required)"
     else:
         setup_line = "No setups today"
 
