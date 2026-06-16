@@ -4294,22 +4294,27 @@ def run() -> int:
 
         # 7. Risk management
         risk_data = {}
+        _dd_tier_alert_lines = []
         try:
             from src import risk_manager
-            risk_profile = risk_manager.load_profile()
-            risk_state   = risk_manager.compute_risk_state(risk_profile)
-            exposure     = risk_manager.compute_open_exposure(risk_profile)
+            risk_profile    = risk_manager.load_profile()
+            _old_dd_mode    = risk_profile.get("drawdown_mode", "normal")
+            risk_state      = risk_manager.compute_risk_state(risk_profile)
+            exposure        = risk_manager.compute_open_exposure(risk_profile)
             sized = [
                 risk_manager.size_trade_from_result(r, risk_profile, risk_state)
                 for r in deep_results if r["parsed"].get("trade_this") == "YES"
             ]
             sized = risk_manager.apply_correlation_checks(sized)
             risk_profile.update({
-                "risk_mode":          risk_state["risk_mode"],
-                "consecutive_losses": risk_state["consecutive_losses"],
-                "consecutive_wins":   risk_state["consecutive_wins"],
-                "last_5_win_rate":    risk_state["last_5_win_rate"],
-                "total_open_pct":     exposure["total_pct"],
+                "risk_mode":               risk_state["risk_mode"],
+                "drawdown_mode":           risk_state["drawdown_mode"],
+                "dd_tier_entered_balance": risk_state["dd_tier_entered_balance"],
+                "dd_tier_entered_peak":    risk_state["dd_tier_entered_peak"],
+                "consecutive_losses":      risk_state["consecutive_losses"],
+                "consecutive_wins":        risk_state["consecutive_wins"],
+                "last_5_win_rate":         risk_state["last_5_win_rate"],
+                "total_open_pct":          exposure["total_pct"],
             })
             risk_manager.save_profile(risk_profile)
             risk_data = {
@@ -4318,6 +4323,16 @@ def run() -> int:
                 "exposure":     exposure,
                 "sized_trades": sized,
             }
+            # Build tier transition alert if drawdown mode changed
+            _new_dd_mode = risk_state.get("drawdown_mode", "normal")
+            if risk_state.get("drawdown_mode_changed") and _new_dd_mode != _old_dd_mode:
+                _fund_bal  = risk_profile.get("estimated_balance", risk_manager.FUND_START)
+                _fund_peak = risk_profile.get("peak_balance", _fund_bal)
+                _dd_tier_alert_lines = risk_manager.drawdown_tier_alert_lines(
+                    _old_dd_mode, _new_dd_mode, risk_state, _fund_bal, _fund_peak
+                )
+                _log_line(logf, f"[DRAWDOWN] Tier transition: {_old_dd_mode} → {_new_dd_mode} "
+                          f"(dd={risk_state.get('drawdown_pct',0)*100:.1f}%)")
         except Exception as exc:
             _log_line(logf, f"Risk management step failed: {exc}")
 
