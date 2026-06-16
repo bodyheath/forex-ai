@@ -4075,14 +4075,29 @@ def _send_telegram_summary(
                 else:
                     _prop_str = f"Behind — {fund_ret:.1f}% return in week {_week_n}"
 
+                # ML model plain English status (Rule 27)
+                _ml_status_plain = (
+                    f"learning — need {_ml_need} more decisive trade{'s' if _ml_need != 1 else ''} for activation"
+                    if _ml_need > 0 else "active — correctly predicting from training data"
+                )
+                try:
+                    from src import ml_predictor as _mlp_fd
+                    _ml_line_raw = _mlp_fd.get_model_status_line()
+                    if "accuracy" in _ml_line_raw.lower():
+                        import re as _re_ml
+                        _acc_m = _re_ml.search(r'(\d+)%', _ml_line_raw)
+                        if _acc_m:
+                            _ml_status_plain = f"active — correctly predicting {_acc_m.group(1)}% of trades (based on {_n_closed} closed trades)"
+                except Exception:
+                    pass
+
                 _fund_sec = [
                     "", "━━━━━━━━━━━━━━━━━━━━━",
-                    f"📈 <b>FOREX AI FUND: ${fund:,.0f} ({fund_ret:+.1f}%) | Peak: ${fund_pk:,.0f}</b>",
-                    "",
-                    "<b>FUND PERFORMANCE:</b>",
-                    f"Total trades taken: {_n_total}",
-                    f"Open trades: {_n_open}",
-                    f"Closed trades: {_n_closed} ({_n_wins} WIN · {_n_losses} LOSS · {_n_expired} EXPIRED)",
+                    f"📈 <b>FOREX AI FUND</b>",
+                    f"Balance: <b>${fund:,.0f} ({fund_ret:+.1f}%)</b> · Peak: ${fund_pk:,.0f}",
+                    f"Fund trades: {_n_total} taken · {_n_closed} closed ({_n_wins} WIN · {_n_losses} LOSS) · {_n_open} open",
+                    f"Drawdown: {dd_pct:.1f}% · {icon} {dd_mode_dash.replace('_',' ').title()} · {rpct:.2f}% risk per trade",
+                    f"🤖 ML model: {_ml_status_plain}",
                 ]
                 if _decisive_ft:
                     _early = f" ({len(_decisive_ft)} trade{'s' if len(_decisive_ft)!=1 else ''} — too early to judge)" if len(_decisive_ft) < 10 else ""
@@ -4092,9 +4107,6 @@ def _send_telegram_summary(
                 _fund_sec += [
                     f"Best trade: {_best_str}",
                     f"Avg holding time: {_hold_str}",
-                    f"Current drawdown: {dd_pct:.1f}% — {icon} {dd_mode_dash.replace('_',' ').title()} mode — {rpct:.2f}% risk per trade",
-                    "",
-                    f"NEXT MILESTONE: {_ml_str}",
                     f"PROP FIRM STATUS: {_prop_str}",
                     f"💼 Real Account: ${real:,.0f} | {exp:.1f}% open | {icon} {dd_mode_dash.replace('_',' ').title()}",
                 ]
