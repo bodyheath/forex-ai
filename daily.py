@@ -4230,6 +4230,12 @@ def _send_telegram_summary(
             pass
         if cost_lines:
             health_sec.extend(cost_lines)
+        # Run statistics
+        _rt_open = sum(1 for r in deep_results if r.get("parsed", {}).get("trade_this") != "NO")
+        health_sec.append(
+            f"Run took {run_duration_min:.0f} minutes · {universe_size} pairs scanned · "
+            f"{n_deep} deep analysed · {_rt_open} research trades opened"
+        )
         all_sections.append(health_sec)
 
         # RESEARCH THRESHOLD ANALYSIS
