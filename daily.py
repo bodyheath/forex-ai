@@ -4000,10 +4000,90 @@ def run() -> int:
                     elif _rconf < 5:
                         _rsrc = "haiku_borderline" if _rsrc == "haiku" else "haiku_sweep_borderline"
                 _smode = mode_override or scan_mode
-                _rt_id = _rt.log_research_trade(r_result["pair"], _rp, _rsrc, _smode)
+
+                # ── Collect extended entry-context fields ─────────────────────
+                _bundle_rt = r_result.get("bundle", {})
+                _tech_rt   = (_bundle_rt.get("technical") or {}) if isinstance(_bundle_rt, dict) else {}
+                _daily_rt  = (_tech_rt.get("daily") or {})       if isinstance(_tech_rt, dict) else {}
+                _rib_rt    = (_daily_rt.get("ribbon") or {})      if isinstance(_daily_rt, dict) else {}
+                _mtf_rt    = (_bundle_rt.get("mtf") or {})        if isinstance(_bundle_rt, dict) else {}
+                _fa_rt     = r_result.get("_fundamental_alignment") or {}
+                _fa_rt     = _fa_rt if isinstance(_fa_rt, dict) else {}
+
+                # Grade from quality_grades (computed during scoring)
+                _grade_rt  = _quality_grades.get(r_result["pair"], {}).get("grade", "")
+
+                # Correlation agreement: count other pairs with same base CCY and direction
+                _pair_base_rt = r_result["pair"].split("/")[0].upper() if "/" in r_result["pair"] else ""
+                _corr_count   = sum(
+                    1 for _r2 in deep_results
+                    if _r2.get("pair", "") != r_result["pair"]
+                    and "/" in _r2.get("pair", "")
+                    and _r2["pair"].split("/")[0].upper() == _pair_base_rt
+                    and (_r2.get("parsed", {}).get("direction") or "").upper() == _rdir
+                )
+
+                # Market regime from MTF count + currency risk profile
+                _mtf_cnt_rt = int(_mtf_rt.get("agreeing_count", 0) or 0) \
+                              if isinstance(_mtf_rt, dict) else 0
+                _risk_ccys  = {"AUD", "NZD", "CAD", "EUR", "GBP"}
+                _safe_ccys  = {"JPY", "CHF"}
+                _regime_rt  = "ranging_low_vol"
+                if _mtf_cnt_rt >= 2:
+                    if (_rdir == "BUY" and _pair_base_rt in _risk_ccys) or \
+                       (_rdir == "SELL" and _pair_base_rt in _safe_ccys):
+                        _regime_rt = "trending_risk_on"
+                    else:
+                        _regime_rt = "trending_risk_off"
+
+                # Auckland time context
+                try:
+                    _ Auckland_now_rt = _auckland_now()
+                    _dow_rt  = _ Auckland_now_rt.isoweekday()   # 1=Mon … 5=Fri
+                    _hour_rt = _ Auckland_now_rt.hour
+                except Exception:
+                    _dow_rt  = datetime.now().isoweekday()
+                    _hour_rt = datetime.now().hour
+
+                _extra_rt = {
+                    # Score breakdown
+                    "tech_score":             _rp.get("technical_score", ""),
+                    "fund_score":             _rp.get("fundamental_score", ""),
+                    "sent_score":             _rp.get("sentiment_score", ""),
+                    "pos_score":              _rp.get("positioning_score", ""),
+                    "macro_score":            _rp.get("macro_score", ""),
+                    "mtf_count":              _mtf_cnt_rt,
+                    "cot_momentum":           r_result.get("_cot_signal", ""),
+                    "fundamental_alignment":  _fa_rt.get("alignment", ""),
+                    "fund_aligned_count":     _fa_rt.get("aligned", ""),
+                    "grade":                  _grade_rt,
+                    "ribbon_state":           _rib_rt.get("status", ""),
+                    "divergence_type":        _daily_rt.get("divergence", ""),
+                    # Entry quality from technical bundle
+                    "rsi_at_entry":           _daily_rt.get("rsi14", ""),
+                    "bb_position":            _daily_rt.get("bb_position", ""),
+                    "price_vs_200ma":         _daily_rt.get("price_vs_200ma", ""),
+                    # Market context
+                    "market_regime":          _regime_rt,
+                    "patience_score_at_entry": r_result.get("_patience_score", ""),
+                    "day_of_week":            _dow_rt,
+                    "hour_auckland":          _hour_rt,
+                    "corr_agreement_count":   _corr_count,
+                }
+                # ─────────────────────────────────────────────────────────────
+
+                _rt_id = _rt.log_research_trade(
+                    r_result["pair"], _rp, _rsrc, _smode,
+                    extra_fields=_extra_rt,
+                )
                 try:
                     from src import feature_extractor as _fe, feature_store as _fs
-                    _feat = _fe.extract(r_result["pair"], r_result["parsed"], r_result.get("bundle", {}))
+                    _feat = _fe.extract(
+                        r_result["pair"],
+                        r_result["parsed"],
+                        _bundle_rt,
+                        extra_data=_extra_rt,
+                    )
                     _fs.save("research", _rt_id, _feat)
                 except Exception:
                     pass
