@@ -3726,6 +3726,10 @@ def run() -> int:
                 log=lambda m: _log_line(logf, m),
                 price_cache=_open_trade_prices,
             )
+            research_outcome_checker.check_post_close_trades(
+                log=lambda m: _log_line(logf, m),
+                price_cache=_open_trade_prices,
+            )
         except Exception as exc:
             _log_line(logf, f"Research outcome check failed: {exc}")
 
