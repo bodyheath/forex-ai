@@ -3489,6 +3489,11 @@ def _send_telegram_summary(
         ctx_lines.append(f"📊 <b>Today's trading conditions: {_ps}/10</b> — {_pd}")
         all_sections.append(ctx_lines)
 
+        # SYSTEM LEARNING REPORT (Monday 6am only)
+        _slr = _build_system_learning_report(date)
+        if _slr:
+            all_sections.append(_slr)
+
         # TRADE ALERTS
         if yes_trades:
             for r in yes_trades:
