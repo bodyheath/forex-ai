@@ -3104,6 +3104,12 @@ def _send_telegram_summary(
         except Exception:
             pass
 
+        # ── Calendar news warning ────────────────────────────────────────────────
+        if _cal_warn_lines:
+            block.append("")
+            for _cw in _cal_warn_lines:
+                block.append(_cw)
+
         # ── Plain English outcome summary ─────────────────────────────────────
         if risk_amt and profit_amt:
             block += [
