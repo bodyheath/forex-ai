@@ -4533,10 +4533,9 @@ def run() -> int:
     if scan_mode == "full":
         _exp_lo, _exp_hi = _FULL_SCAN_EXPECTED_HOURS
         if _exp_lo <= now_ak.hour <= _exp_hi:
-            _time_str = now_ak.strftime("%I:%M%p").lstrip("0").lower()
             _telegram(
-                f"⏱️ <b>6am full scan starting</b> — {_time_str} Auckland\n"
-                f"Analysing up to 15 pairs. Summary to follow in ~20 min."
+                "🤖 FOREX AI — 6am scan starting — full market analysis running — "
+                "full report in approximately 20 minutes"
             )
         else:
             print(
