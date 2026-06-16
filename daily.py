@@ -3687,7 +3687,7 @@ def _send_telegram_summary(
     # ═══════════════════════════════════════════════════════════════════════════
     if scan_mode == "full":
         _hdr_full = [
-            f"<b>🤖 Forex AI — {_badge} — {_fmt_date_nz(now_ak)}</b>",
+            f"<b>🤖 FOREX AI — 🌅 {_fmt_date_nz(now_ak)}</b>",
             f"Universe: {universe_size} · Deep analysed: <b>{n_deep}</b> · {setup_line}",
         ]
         if _dd_banner:

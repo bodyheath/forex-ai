@@ -1,0 +1,551 @@
+Update all 4 Telegram message formats to exactly match the templates below. Copy the structure format and language precisely. Do not remove any existing information — reorganise and improve layout only.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+6AM FULL SCAN EXACT TEMPLATE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+HEADER:
+🤖 FOREX AI — 🌅 [WEEKDAY DAY MONTH YEAR]
+━━━━━━━━━━━━━━━━━━━━━
+
+STARTUP PING (sent before scan starts — separate message):
+🤖 FOREX AI — 6am scan starting — full market analysis running — full report in approximately 20 minutes
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 1 — DRAWDOWN BANNER (only if drawdown above 3%):
+⚠️ RISK MODE ACTIVE: [mode name] — account down [X]% from peak
+Position sizes automatically reduced to [X]% per trade — system protecting your capital
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 2 — OPEN TRADES (always first even if empty):
+📊 YOUR OPEN TRADES
+[X] open trades — [up/down] $[total] overall
+
+For each open trade show:
+TRADE #[ID] — [Buying/Selling] [PAIR]
+([plain English description of what the trade is betting on])
+Entered: [price] on [date] · Current: [price]
+Stop loss: [price] — closes automatically if price [rises/falls] here
+Target: [price] — closes automatically for full profit here
+Profit so far: [+/-$X] [✅/📉] · Net after costs: [+/-$X]
+Progress: [X]% to target [progress bar 20 chars using █ and ░]
+What to do: [plain English instruction based on progress]
+[If expires within 2 days]: ⚠️ This trade expires in [X] days — if target not reached by [date] it closes automatically at current price
+[If 50% reached]: Move stop loss up to [entry price] to guarantee no loss on this trade
+[If 75% reached]: Trail stop to [level] to lock in minimum $[X] profit
+
+When no open trades show:
+📊 YOUR OPEN TRADES
+No trades currently open — the system is waiting for the right opportunity
+Your fund balance: $[X] — fully available for the next trade
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 3 — MARKET CONTEXT:
+🌍 MARKET CONTEXT
+📊 Market environment today: [emoji] [regime in plain English]
+💪 Strongest currency today: [currency] — [plain English reason]
+📉 Weakest currency today: [currency] — [plain English reason]
+📊 Today's trading conditions: [X]/10 — [plain English explanation]
+📊 Today's trade threshold: [X]/10 — [plain English reason for current threshold]
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 4 — UPCOMING NEWS (always show even if empty):
+📅 UPCOMING HIGH IMPACT EVENTS — Next 7 Days
+🗓 [Day time Auckland] — [Event name] ([currency]) — [plain English description of what this event is and why it matters]
+🗓 [Day time Auckland] — [Event name] ([currency]) — [plain English description]
+⚠️ [Plain English advice about which pairs to avoid or be cautious with]
+
+If no events this week:
+📅 No major economic events in the next 7 days — clean week for trading
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 5 — MONDAY LEARNING REPORT (Mondays only — skip all other days):
+🧠 WEEKLY LEARNING REPORT
+
+📈 Win rate trend: Trades 1-10: [X]% · Trades 11-20: [X]% · Trades 21-30: [X]% — [✅ Improving or ⚠️ Not improving]
+Only show this once 20 or more decisive trades exist. If not enough trades show: Collecting data — need 20 decisive outcomes to show trend
+
+🤖 ML model health: [plain English — is accuracy improving or declining — show numbers]
+Training accuracy [X]% — accuracy on new trades [X]% — [healthy if gap under 5% / overfitting warning if gap over 20%]
+
+📊 Best performing pairs (3 or more closed trades):
+[pair] [X]% win rate · [pair] [X]% · [pair] [X]%
+
+❌ Weakest pairs (3 or more closed trades):
+[pair] [X]% from [N] trades · [pair] [X]% from [N] trades
+
+📊 Confidence accuracy check:
+Does higher confidence actually produce higher win rates:
+5/10 setups: [X]% win rate · 6/10 setups: [X]% win rate · 7/10 setups: [X]% win rate
+[✅ Confidence scoring is working — higher confidence = higher win rate]
+[⚠️ Confidence scoring needs review — no clear difference between confidence levels yet]
+
+💡 What the AI learned this week: [plain English paragraph — what patterns were discovered]
+
+📊 Overall verdict: [plain English assessment of whether system is genuinely improving]
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 6 — TRADE ALERTS (Grade A first then Grade B — skip section if none):
+Only show this section if at least one Grade A or Grade B trade exists
+
+For Grade A:
+🚨 TRADE ALERT — GRADE A
+
+🟢 BUY [PAIR] NOW — Grade A · Confidence [X]/10
+([plain English description of what this trade is betting on in simple terms])
+
+💰 Entry target: Wait for price to reach [price]
+Current price: [price] — waiting for price to [rise/fall] [X] pips to ideal entry level
+⏰ If price reaches [price] — enter the trade immediately at market price
+⛔ If price does not reach [price] by [cutoff time] Auckland tonight — skip this trade entirely and wait for tomorrow
+
+🛑 Stop loss: [price] — the trade closes automatically if price moves here (losing [X] pips)
+🎯 Target: [price] — the trade closes automatically for full profit here ([X] pips away)
+📏 Stop [X]x ATR ([X]p) · Target [X]x ATR ([X]p) · ATR = [X]p
+✅ Net R:R [X]:1 after spread and costs · Trade expires in [X] days
+
+💡 What this trade means in dollars:
+If price reaches target: +$[X] profit on this trade
+If stop loss is hit: -$[X] loss on this trade
+You are risking $[X] to potentially make $[X]
+
+📊 Why all the data agrees:
+✅ Technical: RSI at [X] — [plain English meaning e.g. oversold means price has fallen too far and a bounce is likely]
+✅ Timeframes: Weekly [direction] · Daily [direction] · 4H [direction] — [agreement in plain English]
+✅ MA Ribbon: [plain English — e.g. All 6 moving averages pointing upward and spreading apart — strong uptrend confirmed]
+[Only include if present and relevant]:
+✅ Divergence: [plain English — e.g. Price made a new low but momentum indicators did not — suggests selling pressure is weakening]
+⚡ Oscillators: [plain English — e.g. 3 separate momentum indicators all showing oversold at the same time — rare and reliable signal]
+📊 Institutional positioning: [plain English COT — e.g. Big institutional investors have been building long positions for 3 weeks — they are buying what retail traders are selling]
+[Only show if SMD score 5 or above]:
+🐋 Smart Money: [plain English — e.g. Big investors are buying AUD while retail traders are selling — institutions are usually right at turning points]
+[If SMD opposes direction]:
+🐋 Smart Money Warning: Big investors are positioned against this trade direction — treat with extra caution
+📊 Economic backdrop:
+   [✅/❌] Central bank: [bank name] — [plain English stance and what it means for this currency]
+   [✅/❌] Interest advantage: [plain English — e.g. Holding AUD/JPY earns approximately $0.87 per day in interest — time is on your side]
+   [✅/❌] Economic data: [plain English — e.g. Australian economic data has beaten expectations 3 times in a row — economy is stronger than markets expected]
+📐 Key price levels: Strong support at [price] (price has bounced here before) · Resistance at [price] (your target sits just below this)
+🔍 Second opinion check: [No major red flags found — confidence boosted to [X].5/10] or [Flagged [N] concern(s) — see risk factors below]
+
+[Only show if news warning applies]:
+⚠️ News Warning — [Event name] [releases/is scheduled] on [day] ([time] Auckland)
+[Plain English: what this event is and why it matters for this specific trade]
+[Plain English advice: e.g. Consider waiting until after this releases before entering or reduce position size if entering before]
+
+[Only show if risk factors exist — skip section entirely if none]:
+⚠️ Risk factors:
+- [Each risk in one plain English sentence]
+
+📋 Trade management — what to do after entering:
+- When price reaches [50% level] — move your stop loss up to [entry price] — this guarantees you cannot lose money on this trade even if it reverses
+- When price reaches [75% level] — move stop to [level] — this locks in a minimum profit of $[X]
+- If price reaches [full target] — the trade closes automatically with full profit — no action needed
+
+For Grade B — identical format but header shows:
+⚡ TRADE ALERT — GRADE B
+🟡 BUY [PAIR] — Grade B · Confidence [X]/10
+([same plain English description)
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 7 — WATCH LIST (Grade C only — skip section if empty):
+👀 WATCH LIST
+
+If watch list is empty show:
+👀 WATCH LIST
+Nothing on watch list today — the system is waiting for cleaner setups
+
+For each Grade C pair:
+[📈/📉] [PAIR] [BUY/SELL] · Grade C · [X]/10 [20 char progress bar]
+([plain English description of what this trade would be betting on])
+👁 Grade C — watch only — do not enter yet — needs one more thing to improve
+Conf [X] · R:R [X]:1 after costs
+Timeframes: [plain English — e.g. Weekly and daily both pointing up — short term 4H still mixed]
+Weakest layer: [layer name] [X]/10 — [plain English explanation of what needs to improve before entering]
+[If SMD score 5 or above and aligned]: 🐋 Smart Money: [plain English support]
+[If SMD opposes direction]: 🐋 Smart Money Warning: Big investors positioned against this direction — higher risk
+
+READY TO ENTER IF CONFIDENCE REACHES 7:
+Ideal entry: [price] · Stop: [price] · Target: [price]
+Risk $[X] → Make $[X] ([X]:1 after costs)
+Stop [X]x ATR · Target [X]x ATR
+⏰ Best entry window: [session name] [time] Auckland [today/tomorrow]
+If confidence reaches 7 before [time] — enter immediately at market price
+If confidence does not reach 7 by [cutoff time] — skip this pair [today/and wait for tomorrow]
+
+[If entry window already passed]:
+⏰ Entry window passed for today — next opportunity: [session] [time] Auckland tomorrow
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 8 — APPROACHING SIGNALS (Grade D — skip section if empty):
+📡 APPROACHING — WORTH WATCHING
+
+For each Grade D pair with price levels:
+[PAIR] · Grade D · [X]/10 [progress bar]
+([plain English one line description])
+Getting closer — not ready yet · R:R [X]:1 if conditions improve
+[If news warning applies]: ⚠️ [Plain English news warning]
+⏰ Check this pair at [session name] [time] Auckland [today/tomorrow]
+
+For each Grade D pair without price levels:
+[PAIR] · Grade D · [X]/10
+Getting closer — monitoring for entry level data
+⏰ Check at [session name] [time] Auckland [today/tomorrow]
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 9 — WHY NO MORE SETUPS (always show on 6am — shows what was considered):
+💤 WHY NO MORE SETUPS TODAY
+The system considered [X] pairs and analysed the top [X] in depth. Here is why the best candidates did not fully qualify:
+
+[Pair name]: [Plain English reason in one clear sentence — e.g. Nearly there at 6/10 confidence but the timeframes are still pointing in different directions]
+[Pair name]: [Plain English reason — e.g. Good technical setup but the potential profit does not justify the risk after costs]
+[Pair name]: [Plain English reason — e.g. Strong fundamentals but a major central bank meeting this week creates too much uncertainty]
+
+The system is being selective — waiting for higher quality opportunities
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 10 — RESEARCH TRADES (6am only):
+🔬 RESEARCH TRADES
+Open: [X] trades · Closed: [X] · Total: [X]
+
+Win rate: [X]% ([X]W / [X]L) from [X] decisive trades · [X] partial wins (moved more than 50% toward target)
+[Only if profit factor above 1.0]: 📈 Profit factor [X] — wins are larger than losses on average — encouraging early sign even at low win rate
+[Only if win rate below 30% from 10 or more decisive trades]: ⚠️ Win rate [X]% from [X] trades — this is early stage data — need 50 or more decisive trades before drawing any conclusions
+
+Best trade: [pair and direction] +[X] pips · Worst trade: [pair and direction] -[X] pips
+
+📊 Results by confidence level:
+5/10 setups: [X]W [X]L · [X]% win rate · [X] trades total
+6/10 setups: [X]W [X]L · [X]% win rate · [X] trades total
+7/10 setups: [X]W [X]L · [X]% win rate or no decisive outcomes yet · [X] trades total
+
+🏆 Most promising pairs (showing pairs with 3 or more closed trades only):
+[Pair]: [X] wins from [X] trades ([X]%) [✅ if above 60%] [❌ if 0%]
+[Pair]: [X] wins from [X] trades ([X]%) [✅/❌]
+[Pair]: [X] wins from [X] trades ([X]%) [✅/❌]
+
+⏳ [X] days until threshold analysis
+The system will automatically recommend whether to keep or adjust the confidence threshold after 30 days of data
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 11 — FUND BALANCE:
+📈 FOREX AI FUND
+Balance: $[X] ([+/-X]%) · Peak: $[X]
+Fund trades: [X] taken · [X] closed ([X] WIN · [X] LOSS) · [X] open
+Drawdown: [X]% · [🟢/⚠️/🟠/🔴/🚨] [mode name] · [X]% risk per trade
+🤖 ML model: [plain English status — e.g. learning — need 7 more decisive trades for activation or active — 67% accuracy on 52 trades]
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 12 — SYSTEM HEALTH:
+⚠️ SYSTEM HEALTH
+💰 This scan cost: $[X] USD (~$[X] NZD)
+📊 Today so far: $[X] USD · [X] scans (~$[X] NZD)
+📅 This month: $[X] USD (~$[X] NZD)
+Run took [X] minutes · [X] pairs scanned · [X] deep analysed · [X] research trades opened
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 13 — SESSIONS AND NEXT SCAN:
+🕐 TODAY'S SESSIONS (Auckland time)
+Sydney: 9am–6pm · Tokyo: 12pm–9pm
+London: 7pm–4am · New York: 1am–10am
+Best window: 1am–4am Auckland (London/New York overlap — highest volume of the week)
+
+⏰ Next scan today at 9am Auckland
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+9AM MORNING CHECK EXACT TEMPLATE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+HEADER:
+🤖 FOREX AI — 🌏 9AM MORNING CHECK — [Day Date Month]
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 1 — DRAWDOWN BANNER (only if drawdown above 3%):
+⚠️ RISK MODE: [mode] — position sizes reduced to [X]% per trade
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 2 — OPEN TRADES (compact):
+📊 YOUR OPEN TRADES
+[X] open trades — [up/down] $[X] overall
+
+TRADE #[ID] — [PAIR] [Buying/Selling] · [+/-$X] [✅/📉] · [X]% to target [20 char progress bar]
+[If expires within 2 days]: ⚠️ Expires in [X] days
+[If 50% reached]: ⚠️ Halfway — move stop loss to entry price to guarantee no loss
+
+When no open trades:
+📊 YOUR OPEN TRADES
+No trades open · Fund: $[X] fully available
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 3 — CHANGES SINCE 6AM:
+🔄 CHANGES SINCE 6AM SCAN
+
+[If new Grade A or B alert]: 🆕 [PAIR] [direction] reached [X]/10 confidence — new trade alert — full details below
+[If pair upgraded on watch list]: ⬆️ [PAIR] improved from [X] to [X]/10 — getting closer to entry
+[If pair downgraded or removed]: ⬇️ [PAIR] dropped from [X] to [X]/10 — removed from watch list
+[If research trade closed]: 🔬 Research update: [PAIR] closed as [WIN/LOSS] [+/-X] pips since last scan
+[If trading conditions changed]: 📊 Conditions update: Trading conditions changed to [X]/10 — [plain English reason]
+[If nothing changed]: No significant changes since 6am — existing opportunities remain valid
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 4 — NEW ALERTS (full detail — only if NEW since 6am scan):
+[Exact same full format as 6am trade alert section]
+[Include note]: 🆕 This alert is new since the 6am scan
+
+[If alert was in previous scan but not yet entered show]:
+⏰ Reminder — [PAIR] [direction] opportunity still open from [previous scan time] scan
+Entry: [price] · Stop: [price] · Target: [price]
+Risk $[X] → Make $[X] · Entry window: [time] to [cutoff time] Auckland
+[Full entry instructions repeated]
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 5 — WATCH LIST (compact):
+👀 WATCH LIST
+
+If empty: Nothing on watch list — system waiting for cleaner setups
+
+For each pair (one compact block per pair):
+[📈/📉] [PAIR] · Grade [B/C] · [X]/10
+[One sentence plain English description]
+Best entry window: [session] [time] Auckland [today/tomorrow]
+Ideal entry: [price] · Stop: [price] · Target: [price] · Risk $[X] → Make $[X]
+[If entry window passed]: ⏰ Window passed today — check tomorrow [session] [time] Auckland
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 6 — FUND AND HEALTH (compact):
+📈 FOREX AI FUND: $[X] ([+/-X]%) · [emoji] [mode] · [X]% drawdown
+
+⚠️ SYSTEM HEALTH
+💰 This scan cost: $[X] USD (~$[X] NZD)
+📊 Today so far: $[X] USD · [X] scans (~$[X] NZD)
+
+⏰ Next scan today at 5pm Auckland — Pre-London check
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5PM PRE-LONDON CHECK EXACT TEMPLATE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+HEADER:
+🤖 FOREX AI — 🌆 5PM PRE-LONDON CHECK — [Day Date Month]
+London market opens in 2 hours at 7pm Auckland — best time for EUR GBP CHF pairs
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 1 — DRAWDOWN BANNER (only if above 3%):
+[Same as 9am]
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 2 — OPEN TRADES (compact):
+[Same compact format as 9am]
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 3 — LONDON SESSION FOCUS:
+🌆 LONDON SESSION FOCUS
+London opens in 2 hours — EUR GBP CHF pairs are most active during this session
+[If watch list has EUR GBP CHF pairs]: [PAIR] entry window opens at 7pm Auckland — be ready
+[If no London relevant pairs]: No EUR or GBP pairs on watch list today — London session may be quiet for us
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 4 — CHANGES SINCE 9AM:
+🔄 CHANGES SINCE 9AM SCAN
+[Same format as 9am changes section — reference 9am not 6am]
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 5 — NEW ALERTS (full detail — only if NEW since 9am scan):
+[Same as 9am new alerts section]
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 6 — WATCH LIST (compact with London relevance noted):
+👀 WATCH LIST
+[If pair suits London session]: 🌆 London session pair — entry window 7pm–8:30pm Auckland tonight
+[Other pairs in compact one line format]
+[If entry window passed for any pair]: ⏰ Window passed today — next opportunity tomorrow
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 7 — TONIGHT'S KEY TIMES:
+⏰ TONIGHT'S KEY TIMES
+7:00pm Auckland — London market opens — EUR GBP CHF pairs become most active
+[Add any scheduled news events tonight in plain English]
+[If no events]: No major economic events tonight — clean London session ahead
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 8 — FUND AND HEALTH (compact):
+📈 FOREX AI FUND: $[X] ([+/-X]%) · [emoji] [mode] · [X]% drawdown
+
+⚠️ SYSTEM HEALTH
+💰 This scan cost: $[X] USD (~$[X] NZD)
+📊 Today so far: $[X] USD · [X] scans (~$[X] NZD)
+
+⏰ Next scan tonight at 11pm Auckland — Pre-New York check
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+11PM PRE-NEW YORK CHECK EXACT TEMPLATE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+HEADER:
+🤖 FOREX AI — 🌃 11PM PRE-NEW YORK CHECK — [Day Date Month]
+New York market opens in 2 hours at 1am Auckland
+London/New York overlap 1am–4am Auckland — highest volume of the entire week
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 1 — DRAWDOWN BANNER (only if above 3%):
+[Same as 9am]
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 2 — OPEN TRADES (compact):
+[Same compact format as 9am and 5pm]
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 3 — NEW YORK SESSION FOCUS:
+🌃 NEW YORK SESSION FOCUS
+New York opens in 2 hours — USD CAD pairs are most active during this session
+London and New York overlap from 1am to 4am Auckland — this is the highest volume period of the entire week — best time to enter EUR USD and GBP pairs
+[If watch list has USD CAD pairs]: [PAIR] entry window opens at 1am Auckland — be ready when New York opens
+[If no NY relevant pairs]: No USD or CAD pairs on watch list tonight — New York session may be quiet for us
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 4 — CHANGES SINCE 5PM:
+🔄 CHANGES SINCE 5PM SCAN
+[Same format as previous changes sections — reference 5pm not 9am]
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 5 — NEW ALERTS (full detail — only if NEW since 5pm scan):
+[Same as 9am and 5pm new alerts section]
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 6 — WATCH LIST (compact with NY relevance noted):
+👀 WATCH LIST
+[If pair suits NY session]: 🌃 New York session pair — entry window 1am–2:30am Auckland tonight
+[If pair suits London/NY overlap]: 🌃 London/NY overlap pair — peak entry window 1am–4am Auckland tonight
+[Other pairs compact one line format]
+[If entry window passed for any pair]: ⏰ Window passed today — next opportunity tomorrow
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 7 — OVERNIGHT KEY TIMES:
+⏰ OVERNIGHT KEY TIMES
+1:00am Auckland — New York market opens — USD and CAD pairs become most active
+1:00am–4:00am Auckland — London and New York both open simultaneously — highest volume window of the entire week — best time for EUR USD GBP pairs
+[Add any scheduled overnight news events in plain English]
+[If no events]: No major economic events overnight — clean New York session ahead
+
+━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 8 — FUND AND HEALTH (compact):
+📈 FOREX AI FUND: $[X] ([+/-X]%) · [emoji] [mode] · [X]% drawdown
+
+⚠️ SYSTEM HEALTH
+💰 This scan cost: $[X] USD (~$[X] NZD)
+📊 Today so far: $[X] USD · [X] scans (~$[X] NZD)
+📅 This month: $[X] USD (~$[X] NZD)
+
+⏰ Next scan tomorrow 6am Auckland — have a good night
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SUNDAY GAP SCAN TEMPLATE (Sunday morning only):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🤖 FOREX AI — 🌅 SUNDAY GAP CHECK — [Date]
+Checking for weekend gaps since Friday close
+━━━━━━━━━━━━━━━━━━━━━
+
+[If significant gaps found]:
+📊 WEEKEND GAPS DETECTED
+[PAIR]: Opened [X] pips [higher/lower] than Friday close — [plain English interpretation — gap in trend direction often continues — gap against trend often fills]
+⏰ Monitor at Tokyo open 12pm Auckland today
+
+[If no significant gaps]:
+📊 No significant weekend gaps detected — markets opened close to Friday closing prices — normal start to the week
+
+⏰ Next scan tomorrow 6am Auckland
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CRITICAL IMPLEMENTATION RULES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. The 6am scan is ALWAYS the full detailed scan — never abbreviated — all 13 sections must appear
+
+2. The 9am, 5pm, and 11pm scans are ALWAYS compact — never repeat full trade details that appeared in the IMMEDIATELY PREVIOUS scan. If a trade alert first fired more than one scan ago and has not yet been entered repeat the key entry details with a note: Reminder — this opportunity is still open from [time] scan
+
+3. Only show FULL trade alert details when a NEW alert fires during an afternoon or evening scan that was NOT in the previous scan — mark it clearly with 🆕 This alert is new since the [time] scan
+
+4. Progress bar is always exactly 20 characters using █ for filled and ░ for empty — 38% = ███████░░░░░░░░░░░░░ — 0% = ░░░░░░░░░░░░░░░░░░░░ — 100% = ████████████████████
+
+5. Always show open trades section FIRST on every scan even if no trades open
+
+6. Always show system health section LAST before next scan time on every scan
+
+7. Never use technical jargon without immediately explaining it in plain English in the same line or immediately after
+
+8. All dollar amounts shown in USD with NZD equivalent in brackets — conversion rate 1 USD = 1.68 NZD — never show only pips to the investor without also showing the dollar equivalent
+
+9. Emojis used consistently throughout: ✅ positive · 📉 negative · ⚠️ warning · 🆕 new · ⬆️ improved · ⬇️ worsened · 🚨 grade A alert · ⚡ grade B alert · 👁 grade C watch · 📡 grade D approaching · ❌ failing or zero win rate · 🏆 best performers
+
+10. Section dividers always use exactly: ━━━━━━━━━━━━━━━━━━━━━
+
+11. Grade A trades show 🚨 TRADE ALERT — GRADE A header with 🟢 BUY or 🔴 SELL
+
+12. Grade B trades show ⚡ TRADE ALERT — GRADE B header with 🟡 BUY or 🟡 SELL
+
+13. Grade C trades go in WATCH LIST section with 👁 Grade C — watch only — do not enter yet
+
+14. Grade D trades go in APPROACHING section with Getting closer — not ready yet
+
+15. Grade F trades never appear anywhere in the message under any circumstances
+
+16. The changes since last scan section on afternoon scans is the primary way to communicate what is new — it replaces the why no setups section on afternoon scans. Why no setups only appears on the 6am scan
+
+17. Research trades section only appears on the 6am scan. On afternoon scans only add a one line research update if any research trade closed as WIN or LOSS since last scan: 🔬 Research update: [PAIR] closed as [WIN/LOSS] [+/-X] pips
+
+18. Monday learning report only appears on Monday 6am scans — completely skip on all other days and all other scans
+
+19. Session focus section appears on 5pm scan (London focus) and 11pm scan (New York focus) immediately after the open trades section
+
+20. If a watch list pair entry window has already passed for today move it automatically and show: ⏰ Entry window passed for today — next opportunity: [session] [time] Auckland tomorrow
+
+21. If the system is in drawdown above 3% show the drawdown banner immediately after the header and before the open trades section on every scan
+
+22. Never show the same full trade alert twice in consecutive scans — always check what was in the previous scan before deciding what to show in full vs compact format
+
+23. The startup ping is a separate Telegram message sent before the 6am scan begins — format: 🤖 FOREX AI — 6am scan starting — full market analysis running — full report in approximately 20 minutes
+
+24. USD to NZD conversion: always use 1 USD = 1.68 NZD for all conversions throughout all messages
+
+25. If approaching signal has no price levels available show: [PAIR] · Grade D · [X]/10 — Getting closer — monitoring for entry level data — check at [session] [time] Auckland [today/tomorrow]
+
+26. Fund balance section always shows wins and losses separately in brackets: [X] closed ([X] WIN · [X] LOSS) — never just a total number
+
+27. ML model status always in plain English — never show raw accuracy numbers without explaining what they mean: 🤖 ML model: learning — need [X] more decisive trades for activation or 🤖 ML model: active — correctly predicting [X]% of trades (based on [X] closed trades)
+
+28. COT institutional positioning shown as plain English in the why everything agrees section — only include if BUILDING or REVERSING — skip if STABLE or unavailable: 📊 Institutional positioning: Big institutional investors have been [building/cutting] their [long/short] positions for [X] weeks — [plain English significance]
+
+Push to GitHub.
