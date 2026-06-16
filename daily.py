@@ -3983,11 +3983,13 @@ def run() -> int:
             # Uses Twelve Data data already cached by warm_cache (no extra API calls).
             # _TD_CACHE_MAX controls how many pairs are pre-warmed; increase it for wider coverage.
             _already_in_deep = {r["pair"] for r in deep_results}
-            _sweep_candidates = [p for p in pre_filtered if p not in _already_in_deep]
+            # Issue 4: limit research sweep — 10 extra pairs for 6am, 5 for afternoon scans
+            _sweep_limit = 10 if scan_mode == "full" else 5
+            _sweep_candidates = [p for p in pre_filtered if p not in _already_in_deep][:_sweep_limit]
             if _sweep_candidates:
                 _log_line(logf,
                     f"Research sweep: Haiku-only scan of {len(_sweep_candidates)} additional "
-                    f"pre-warmed pairs (sonnet_threshold=99)...")
+                    f"pre-warmed pairs (limit={_sweep_limit} for {scan_mode})...")
                 _sweep_new = 0
                 for _sp in _sweep_candidates:
                     try:
