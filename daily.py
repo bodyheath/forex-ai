@@ -3718,6 +3718,21 @@ def _send_telegram_summary(
             ctx_lines.append(f"⚡ {nw_list[0]}")
         if ctx.get("monthly_bias"):
             ctx_lines.append(f"📅 Monthly structural bias: <b>{ctx['monthly_bias']}</b> — background context only")
+        # Market regime — plain-English macro environment summary
+        try:
+            from src import market_regime as _mr_ctx
+            _rd_ctx = _mr_ctx.detect()
+            _regime_line = _mr_ctx.telegram_line(_rd_ctx)
+            if _regime_line:
+                ctx_lines.append(_regime_line)
+                if _rd_ctx.get("conf_override"):
+                    ctx_lines.append(
+                        f"ℹ️ <b>High volatility mode active</b> — "
+                        f"only confidence {_rd_ctx['conf_override']}+ trades taken, "
+                        f"position sizes halved."
+                    )
+        except Exception:
+            pass
         _ps = _patience["score"]
         _pd = _patience["description"]
         ctx_lines.append(f"📊 <b>Today's trading conditions: {_ps}/10</b> — {_pd}")
