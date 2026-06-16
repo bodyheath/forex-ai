@@ -63,6 +63,82 @@ def _safe_float(v, default: float = 0.0) -> float:
         return default
 
 
+# ── Temporal generalisation check ─────────────────────────────────────────────
+
+def _temporal_cv_scores(X_s, y) -> dict:
+    """Walk-forward holdout: train on oldest 67% of trades, score on newest 33%.
+
+    Directly answers: "do patterns learned from old data still predict outcomes
+    on unseen, more-recent trades?"  A large gap between the full-CV ROC-AUC and
+    this holdout score is the primary signal of curve-fitting.
+
+    Also checks per-third win rates so we can tell whether the underlying
+    trade distribution has been stable over the collection window.
+
+    Returns a dict with keys:
+      skipped         — True when there are fewer than 30 trades
+      holdout_auc     — ROC-AUC on the held-out recent 33%
+      period_win_rates — [early_wr, mid_wr, recent_wr] floats
+      period_stable   — True when all three are within 20% of each other
+      period_max_diff — max − min of the three rates
+    """
+    try:
+        import numpy as np
+        from sklearn.calibration import CalibratedClassifierCV
+        from sklearn.ensemble import GradientBoostingClassifier
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import roc_auc_score
+    except ImportError:
+        return {"skipped": True, "reason": "sklearn unavailable"}
+
+    n = len(y)
+    if n < 30:
+        return {"skipped": True, "reason": "need 30+ trades"}
+
+    split  = int(n * 0.67)
+    X_tr   = X_s[:split];  y_tr = y[:split]
+    X_te   = X_s[split:];  y_te = y[split:]
+
+    if len(np.unique(y_tr)) < 2 or len(np.unique(y_te)) < 2:
+        return {"skipped": True, "reason": "single-class split"}
+
+    try:
+        cv_k = min(5, max(2, len(y_tr) // 4))
+        if len(y_tr) >= 50:
+            base   = GradientBoostingClassifier(
+                n_estimators=100, max_depth=3, learning_rate=0.05,
+                min_samples_leaf=MIN_PATTERN_SAMPLES, subsample=0.8,
+                max_features=0.7, random_state=42,
+            )
+            method = "isotonic"
+        else:
+            base   = LogisticRegression(C=0.1, max_iter=1000, random_state=42)
+            method = "sigmoid"
+        m = CalibratedClassifierCV(base, cv=cv_k, method=method)
+        m.fit(X_tr, y_tr)
+        proba   = m.predict_proba(X_te)
+        win_idx = list(m.classes_).index(1) if 1 in list(m.classes_) else 1
+        auc     = round(float(roc_auc_score(y_te, proba[:, win_idx])), 3)
+    except Exception:
+        return {"skipped": True, "reason": "scoring failed"}
+
+    # Per-third win rates — is the data distribution consistent over time?
+    third   = n // 3
+    p_rates = []
+    for i in range(3):
+        seg = y[i * third:(i + 1) * third] if i < 2 else y[2 * third:]
+        p_rates.append(round(float(seg.mean()), 3) if len(seg) > 0 else 0.0)
+    max_diff = round(float(max(p_rates) - min(p_rates)), 3)
+
+    return {
+        "skipped":          False,
+        "holdout_auc":      auc,
+        "period_win_rates": p_rates,
+        "period_stable":    max_diff <= 0.20,
+        "period_max_diff":  max_diff,
+    }
+
+
 # ── Training data loader ───────────────────────────────────────────────────────
 
 def _load_training_data():
