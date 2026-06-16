@@ -1,6 +1,6 @@
-"""Smart daily pair selection — 8-factor merit scoring.
+"""Smart daily pair selection — 9-factor merit scoring.
 
-Scores the complete Twelve Data forex universe on eight axes before deciding
+Scores the complete Twelve Data forex universe on nine axes before deciding
 which 15 pairs go to deep analysis:
 
   1. Momentum Quality     — magnitude, directional consistency, ATR-relative size.
@@ -11,8 +11,9 @@ which 15 pairs go to deep analysis:
   6. Session Timing       — pairs entering their peak session in the next 1-2 hours.
   7. News Catalyst Window — high-impact events 6-24 h away (not too soon, not too far).
   8. System Performance   — historical win rate for this pair in our own trade history.
+  9. Regime Alignment     — pairs involving regime-favoured currencies score higher.
 
-Each factor is scored 0 to its maximum; together they sum to 100.
+Factors 1–8 sum to 100; Factor 9 adds up to 8 bonus points.
 No pair is guaranteed a spot — the 15 highest scorers win each day.
 
 Eligible universe (expanded from G8 to G10 + SGD/HKD):
