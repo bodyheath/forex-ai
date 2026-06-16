@@ -462,11 +462,20 @@ def get_model_status_line() -> str:
             needed = max(0, MIN_TRADES - n)
             return (f"🤖 ML model: learning — {n}/{MIN_TRADES} closed trades"
                     f" (need {needed} more outcomes)")
-        trained = (meta.get("trained_at") or "")[:10]
-        roc     = meta.get("roc_auc", 0.0)
-        n       = meta.get("n_trades", "?")
-        mtype   = meta.get("model_type", "")[:2].upper()  # LR or GB
-        return (f"🤖 ML model active — {n} trades | ROC-AUC {roc:.2f} | "
-                f"{mtype} | last trained {trained}")
+        trained   = (meta.get("trained_at") or "")[:10]
+        roc       = meta.get("roc_auc", 0.0)
+        n         = meta.get("n_trades", "?")
+        mtype     = meta.get("model_type", "")[:2].upper()
+        healthy   = meta.get("is_healthy")
+        hold_auc  = meta.get("temporal_holdout_auc")
+        health_tag = ""
+        if healthy is True:
+            health_tag = " ✅ healthy"
+        elif healthy is False:
+            gap = meta.get("overfit_gap", 0)
+            health_tag = f" ⚠️ overfit gap {gap:.2f}"
+        hold_str = f" | holdout {hold_auc:.2f}" if hold_auc is not None else ""
+        return (f"🤖 ML model active — {n} trades | ROC-AUC {roc:.2f}{hold_str} | "
+                f"{mtype}{health_tag} | last trained {trained}")
     except Exception:
         return "🤖 ML model: unavailable"
