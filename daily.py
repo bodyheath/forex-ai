@@ -2276,6 +2276,36 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
     return sec
 
 
+# ── Drawdown-aware trade filter ───────────────────────────────────────────────
+
+def _dd_allows_trade(r: dict, dd_mode: str, quality_grades: dict,
+                     conf_threshold: int) -> bool:
+    """Return True if the active drawdown protection tier permits this trade.
+
+    Tier rules:
+      halt         — no new trades under any circumstances
+      preservation — A-grade only + all 3 core timeframes aligned
+      defensive    — A-grade only
+      caution      — A or B grade only
+      normal       — A, B, or (C with effective confidence >= threshold)
+    """
+    grade = (quality_grades.get(r["pair"]) or {}).get("grade", "F")
+    if dd_mode == "halt":
+        return False
+    if dd_mode == "preservation":
+        if grade != "A":
+            return False
+        mtf = (r.get("bundle") or {}).get("mtf") or {}
+        return mtf.get("agreeing_count", 0) >= 3
+    if dd_mode == "defensive":
+        return grade == "A"
+    if dd_mode == "caution":
+        return grade in ("A", "B")
+    # normal
+    return (grade in ("A", "B") or
+            (grade == "C" and _eff_conf(r) >= conf_threshold))
+
+
 # ── Main summary builder ───────────────────────────────────────────────────────
 
 def _send_telegram_summary(
