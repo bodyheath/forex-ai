@@ -4325,6 +4325,16 @@ def _send_telegram_summary(
         _ctx_block = ["", "━━━━━━━━━━━━━━━━━━━━━", " ".join(ctx_parts)]
         all_sections.append(_ctx_block)
 
+        # ECONOMIC CALENDAR — include on 5pm and 11pm scans (shows tonight's events)
+        if scan_mode in ("prelondon", "preny"):
+            try:
+                from src import economic_calendar as _ec_id
+                _cal_id = _ec_id.build_calendar_section()
+                if _cal_id:
+                    all_sections.append(_cal_id)
+            except Exception:
+                pass
+
         # ── YES trade alerts (full entry instructions) ────────────────────────
         for r in yes_trades:
             all_sections.append(_trade_block(r))
