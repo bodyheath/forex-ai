@@ -4850,18 +4850,23 @@ def run() -> int:
                     and (_r2.get("parsed", {}).get("direction") or "").upper() == _rdir
                 )
 
-                # Market regime from MTF count + currency risk profile
-                _mtf_cnt_rt = int(_mtf_rt.get("agreeing_count", 0) or 0) \
-                              if isinstance(_mtf_rt, dict) else 0
-                _risk_ccys  = {"AUD", "NZD", "CAD", "EUR", "GBP"}
-                _safe_ccys  = {"JPY", "CHF"}
-                _regime_rt  = "ranging_low_vol"
-                if _mtf_cnt_rt >= 2:
-                    if (_rdir == "BUY" and _pair_base_rt in _risk_ccys) or \
-                       (_rdir == "SELL" and _pair_base_rt in _safe_ccys):
-                        _regime_rt = "trending_risk_on"
-                    else:
-                        _regime_rt = "trending_risk_off"
+                # Market regime — use global macro detector (cached; accurate for ML features)
+                try:
+                    from src import market_regime as _mr_rt
+                    _regime_rt = _mr_rt.detect().get("regime", "ranging_low_vol")
+                except Exception:
+                    # Fallback: MTF-based heuristic
+                    _mtf_cnt_rt = int(_mtf_rt.get("agreeing_count", 0) or 0) \
+                                  if isinstance(_mtf_rt, dict) else 0
+                    _risk_ccys  = {"AUD", "NZD", "CAD", "EUR", "GBP"}
+                    _safe_ccys  = {"JPY", "CHF"}
+                    _regime_rt  = "ranging_low_vol"
+                    if _mtf_cnt_rt >= 2:
+                        if (_rdir == "BUY" and _pair_base_rt in _risk_ccys) or \
+                           (_rdir == "SELL" and _pair_base_rt in _safe_ccys):
+                            _regime_rt = "trending_risk_on"
+                        else:
+                            _regime_rt = "trending_risk_off"
 
                 # Auckland time context
                 try:
