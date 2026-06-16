@@ -2426,6 +2426,64 @@ def _build_system_learning_report(date: str) -> list:
     except Exception:
         pass
 
+    # ── ML HEALTH CHECK ───────────────────────────────────────────────────────
+    # Shows whether the model learned real patterns (generalise to new data) or
+    # just memorised the training set (overfit / curve-fitted).
+    try:
+        from src import ml_predictor as _mlp_hc
+        _hc = _mlp_hc._load_meta()
+        if _hc.get("model_ready") and _hc.get("overfit_gap") is not None:
+            _hc_roc   = _hc.get("roc_auc", 0.0)
+            _hc_hold  = _hc.get("temporal_holdout_auc", 0.0)
+            _hc_gap   = _hc.get("overfit_gap", 0.0)
+            _hc_hlthy = _hc.get("is_healthy", True)
+            _hc_p_wr  = _hc.get("period_win_rates") or []
+            _hc_stbl  = _hc.get("period_stable")
+
+            sec.append("")
+            sec.append("<b>ML HEALTH CHECK</b>")
+            if _hc_hlthy and _hc_gap < 0.05:
+                sec.append(
+                    f"✅ The AI model is healthy — its accuracy on new trades "
+                    f"({_hc_hold * 100:.0f}%) matches its accuracy on training data "
+                    f"({_hc_roc * 100:.0f}%)."
+                )
+            elif _hc_hlthy:
+                sec.append(
+                    f"🟡 The AI model is acceptable — slight gap between training accuracy "
+                    f"({_hc_roc * 100:.0f}%) and new-trade accuracy ({_hc_hold * 100:.0f}%) "
+                    f"— normal for this dataset size."
+                )
+            else:
+                sec.append(
+                    f"⚠️ Warning — the AI model appears to have memorised historical "
+                    f"patterns that are not repeating — training accuracy "
+                    f"{_hc_roc * 100:.0f}% vs new data accuracy {_hc_hold * 100:.0f}% "
+                    f"— gathering more data before trusting predictions."
+                )
+            if len(_hc_p_wr) == 3:
+                _wr_strs = [f"{r * 100:.0f}%" for r in _hc_p_wr]
+                if _hc_stbl:
+                    sec.append(
+                        f"✅ Data distribution stable across 3 time periods "
+                        f"({' / '.join(_wr_strs)} win rates)"
+                    )
+                else:
+                    sec.append(
+                        f"⚠️ Win rate shifted between periods "
+                        f"({' / '.join(_wr_strs)}) — historical patterns may not "
+                        f"reflect current market conditions"
+                    )
+            any_added = True
+        elif _hc.get("model_ready"):
+            sec += [
+                "", "<b>ML HEALTH CHECK</b>",
+                "Health check will appear once 30+ closed trades are recorded.",
+            ]
+            any_added = True
+    except Exception:
+        pass
+
     # ── 3. MFE TREND ──────────────────────────────────────────────────────────
     closed_all  = [
         r for r in rows
