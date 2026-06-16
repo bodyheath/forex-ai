@@ -2584,9 +2584,9 @@ def _send_telegram_summary(
                 f"   {tick_str} · {base_c} {cb_b} CB · {quot_c} {cb_q} CB{adj_str}",
             ]
 
-        # Full detail for trade blocks
-        pair = result.get("pair", "?")
-        dirn = (result.get("parsed", {}).get("direction") or "?").upper()
+        # Full detail for trade blocks — plain English
+        pair   = result.get("pair", "?")
+        dirn   = (result.get("parsed", {}).get("direction") or "?").upper()
         base_c = pair.split("/")[0] if "/" in pair else "?"
         quot_c = pair.split("/")[1] if "/" in pair else "?"
 
@@ -2598,25 +2598,64 @@ def _send_telegram_summary(
         econ_base  = fa.get("econ_base",  "neutral")
         econ_quote = fa.get("econ_quote", "neutral")
 
-        carry_sign  = "+" if carry_diff >= 0 else ""
-        carry_dirn  = "positive" if carry_diff > 0 else ("negative" if carry_diff < 0 else "neutral")
-        carry_trade = f"BUY {base_c}" if dirn == "BUY" else f"SELL {base_c}"
+        _CB_NAMES = {
+            "USD": "US Federal Reserve", "EUR": "European Central Bank",
+            "GBP": "Bank of England",    "JPY": "Bank of Japan",
+            "AUD": "Reserve Bank of Australia", "NZD": "Reserve Bank of New Zealand",
+            "CAD": "Bank of Canada",     "CHF": "Swiss National Bank",
+        }
+        _CCY_NAMES = {
+            "USD": "US Dollar",       "EUR": "Euro",          "GBP": "British Pound",
+            "JPY": "Japanese Yen",    "AUD": "Australian Dollar", "NZD": "New Zealand Dollar",
+            "CAD": "Canadian Dollar", "CHF": "Swiss Franc",   "HKD": "Hong Kong Dollar",
+            "SGD": "Singapore Dollar","NOK": "Norwegian Krone","SEK": "Swedish Krona",
+        }
 
-        lines = [hdr]
-        cb_line = f"   {_tk(cb_s)} CB: {base_c} {cb_base_b}"
-        if cb_note_b:
-            cb_line += f" ({cb_note_b})"
-        cb_line += f" · {quot_c} {cb_quot_b}"
-        if cb_note_q:
-            cb_line += f" ({cb_note_q})"
-        lines.append(cb_line)
-        lines.append(
-            f"   {_tk(carry_s)} Carry: {carry_sign}{carry_diff:.1f}% diff → "
-            f"{carry_dirn} carry for {carry_trade}"
-        )
-        lines.append(
-            f"   {_tk(econ_s)} Econ: {base_c} data {econ_base} · {quot_c} data {econ_quote}"
-        )
+        def _cb_plain(bias, note, ccy):
+            cb_name = _CB_NAMES.get(ccy, f"{ccy} central bank")
+            if bias == "hawkish":
+                act = note if note else "raising interest rates"
+                return f"{cb_name} is {act} — favours {ccy}"
+            if bias == "dovish":
+                act = note if note else "cutting interest rates"
+                return f"{cb_name} is {act} — works against {ccy}"
+            return f"{cb_name} is holding rates steady — neutral for {ccy}"
+
+        def _econ_plain(surprise, ccy):
+            ccy_name = _CCY_NAMES.get(ccy, ccy)
+            if surprise in ("strong", "positive"):
+                return f"{ccy_name} economic data has been stronger than expected recently"
+            if surprise in ("weak", "negative"):
+                return f"{ccy_name} economic data has been weaker than expected recently"
+            return f"{ccy_name} economic data has been mixed recently"
+
+        carry_helps   = (carry_diff > 0 and dirn == "BUY") or (carry_diff < 0 and dirn == "SELL")
+        carry_hurts   = (carry_diff < 0 and dirn == "BUY") or (carry_diff > 0 and dirn == "SELL")
+        trade_ccy     = base_c if dirn == "BUY" else quot_c
+
+        lines = [hdr, "📊 <b>Economic backdrop:</b>"]
+
+        # Central bank
+        _cb_desc = _cb_plain(cb_base_b, cb_note_b, base_c)
+        lines.append(f"   {_tk(cb_s)} <b>Central bank:</b> {_cb_desc}")
+
+        # Carry / interest rate advantage
+        if carry_helps:
+            lines.append(
+                f"   {_tk(carry_s)} <b>Interest rate advantage:</b> You earn interest daily holding {trade_ccy} — adds to this trade"
+            )
+        elif carry_hurts:
+            lines.append(
+                f"   {_tk(carry_s)} <b>Interest rate advantage:</b> Holding {trade_ccy} costs money daily — works against this trade"
+            )
+        else:
+            lines.append(
+                f"   {_tk(carry_s)} <b>Interest rate advantage:</b> Carry is neutral — no daily cost advantage"
+            )
+
+        # Economic data
+        _econ_desc = _econ_plain(econ_base, base_c)
+        lines.append(f"   {_tk(econ_s)} <b>Economic data:</b> {_econ_desc}")
         return lines
 
     def _trade_block(r: dict) -> list:
