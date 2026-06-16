@@ -566,6 +566,187 @@ def _learning_feed_section() -> str:
     )
 
 
+def _research_analytics_section() -> str:
+    """Render research analytics charts: win rates by entry condition and MFE/MAE."""
+    try:
+        import csv as _csv
+        rt_csv = config.DATA_DIR / "research_trades.csv"
+        if not rt_csv.exists():
+            return ""
+        with rt_csv.open("r", encoding="utf-8", newline="") as fh:
+            rt_rows = list(_csv.DictReader(fh))
+    except Exception:
+        return ""
+
+    closed = [r for r in rt_rows if r.get("status") in ("WIN", "LOSS", "PARTIAL_WIN", "EXPIRED")]
+    if len(closed) < 5:
+        return ""
+
+    def _win(r):
+        return r.get("status") in ("WIN", "PARTIAL_WIN")
+
+    def _pct(wins, total):
+        return round(wins / total * 100) if total else 0
+
+    def _wr_table(buckets: dict, label: str) -> str:
+        if not buckets:
+            return ""
+        rows_html = []
+        for k in sorted(buckets):
+            w, t = buckets[k]
+            wr = _pct(w, t)
+            bar = f'<div style="background:{"var(--green)" if wr >= 50 else "var(--red)"};height:8px;border-radius:3px;width:{min(wr,100)}%;margin-top:3px"></div>'
+            rows_html.append(
+                f"<tr><td>{html.escape(str(k))}</td>"
+                f'<td class="num">{t}</td>'
+                f'<td class="num">{w}</td>'
+                f'<td><span style="font-weight:700;color:{"var(--green)" if wr>=50 else "var(--red)"}">{wr}%</span>{bar}</td></tr>'
+            )
+        return (
+            f"<h3 style='font-size:13px;color:var(--mut);margin:16px 0 8px'>{html.escape(label)}</h3>"
+            "<table><tr><th>Bucket</th><th>Trades</th><th>Wins</th><th>Win rate</th></tr>"
+            + "".join(rows_html)
+            + "</table>"
+        )
+
+    # ── Win rate by day of week ───────────────────────────────────────────────
+    _days = {"1":"Mon","2":"Tue","3":"Wed","4":"Thu","5":"Fri"}
+    dow_bkt = {}
+    for r in closed:
+        d = r.get("day_of_week", "")
+        if not d:
+            d = str(datetime.strptime(r.get("date","")[:10], "%Y-%m-%d").isoweekday()) \
+                if r.get("date","")[:10] else ""
+        if d in _days:
+            b = dow_bkt.setdefault(_days[d], [0, 0])
+            b[0] += _win(r)
+            b[1] += 1
+    dow_html = _wr_table({k: (v[0], v[1]) for k, v in dow_bkt.items()}, "Win rate by day of week")
+
+    # ── Win rate by Auckland hour band ────────────────────────────────────────
+    _hour_bands = {
+        "00-06 (overnight)": (0, 5),
+        "06-12 (morning)":   (6, 11),
+        "12-18 (afternoon)": (12, 17),
+        "18-24 (evening)":   (18, 23),
+    }
+    hour_bkt = {}
+    for r in closed:
+        h = r.get("hour_auckland", "")
+        try:
+            hv = int(float(h))
+            for band, (lo, hi) in _hour_bands.items():
+                if lo <= hv <= hi:
+                    b = hour_bkt.setdefault(band, [0, 0])
+                    b[0] += _win(r)
+                    b[1] += 1
+                    break
+        except (TypeError, ValueError):
+            pass
+    hour_html = _wr_table({k: (v[0], v[1]) for k, v in hour_bkt.items()}, "Win rate by Auckland hour")
+
+    # ── Win rate by market regime ─────────────────────────────────────────────
+    regime_bkt = {}
+    for r in closed:
+        reg = r.get("market_regime", "") or "unknown"
+        b = regime_bkt.setdefault(reg, [0, 0])
+        b[0] += _win(r)
+        b[1] += 1
+    regime_html = _wr_table({k: (v[0], v[1]) for k, v in regime_bkt.items()}, "Win rate by market regime")
+
+    # ── Win rate by trade grade ───────────────────────────────────────────────
+    grade_bkt = {}
+    for r in closed:
+        g = r.get("grade", "") or "?"
+        b = grade_bkt.setdefault(g, [0, 0])
+        b[0] += _win(r)
+        b[1] += 1
+    grade_html = _wr_table(
+        {k: (v[0], v[1]) for k, v in sorted(grade_bkt.items())},
+        "Win rate by entry grade (A=best)"
+    )
+
+    # ── Win rate by correlation agreement count ───────────────────────────────
+    corr_bkt = {}
+    for r in closed:
+        c = r.get("corr_agreement_count", "")
+        try:
+            cv = str(int(float(c))) if c != "" else "?"
+        except (TypeError, ValueError):
+            cv = "?"
+        b = corr_bkt.setdefault(f"{cv} correlated pairs agree", [0, 0])
+        b[0] += _win(r)
+        b[1] += 1
+    corr_html = _wr_table({k: (v[0], v[1]) for k, v in sorted(corr_bkt.items())}, "Win rate by correlated-pair agreement")
+
+    # ── MFE vs MAE summary ────────────────────────────────────────────────────
+    mfe_vals = []
+    mae_vals = []
+    for r in closed:
+        try:
+            mfe_vals.append(float(r.get("mfe_pips") or 0))
+            mae_vals.append(float(r.get("mae_pips") or 0))
+        except (TypeError, ValueError):
+            pass
+    mfe_mae_html = ""
+    if mfe_vals:
+        avg_mfe = round(sum(mfe_vals) / len(mfe_vals), 1)
+        avg_mae = round(sum(mae_vals) / len(mae_vals), 1)
+        max_mfe = round(max(mfe_vals), 1)
+        max_mae = round(max(mae_vals), 1)
+        mfe_ratio = round(avg_mfe / avg_mae, 2) if avg_mae > 0 else "∞"
+        mfe_mae_html = (
+            "<h3 style='font-size:13px;color:var(--mut);margin:16px 0 8px'>MFE / MAE excursion profile</h3>"
+            "<table><tr><th>Metric</th><th>Avg (pips)</th><th>Max (pips)</th></tr>"
+            f"<tr><td>Max Favourable Excursion (MFE)</td><td class='num' style='color:var(--green)'>{avg_mfe}</td><td class='num'>{max_mfe}</td></tr>"
+            f"<tr><td>Max Adverse Excursion (MAE)</td><td class='num' style='color:var(--red)'>{avg_mae}</td><td class='num'>{max_mae}</td></tr>"
+            f"<tr><td>MFE:MAE ratio (>1 = favourable)</td><td class='num'>{mfe_ratio}</td><td class='num'>—</td></tr>"
+            "</table>"
+        )
+
+    # ── Exit reason breakdown ─────────────────────────────────────────────────
+    exit_bkt = {}
+    for r in closed:
+        er = r.get("exit_reason", "") or r.get("status", "UNKNOWN")
+        b = exit_bkt.setdefault(er, [0, 0])
+        b[0] += _win(r)
+        b[1] += 1
+    exit_html = _wr_table({k: (v[0], v[1]) for k, v in sorted(exit_bkt.items())}, "Exit reason breakdown")
+
+    # ── Post-close target reached ─────────────────────────────────────────────
+    pc_checked = [r for r in closed if r.get("post_close_checked_at")]
+    pc_reached = sum(1 for r in pc_checked if (r.get("post_close_target_reached") or "").lower() == "true")
+    pc_html = ""
+    if pc_checked:
+        pc_pct = _pct(pc_reached, len(pc_checked))
+        pc_html = (
+            "<h3 style='font-size:13px;color:var(--mut);margin:16px 0 8px'>Post-close: target reached within 5 days after expiry</h3>"
+            "<p style='font-size:13px'>"
+            f"<strong style='color:var(--amber)'>{pc_reached}/{len(pc_checked)}</strong> "
+            f"trades ({pc_pct}%) reached their original target within 5 days of closing. "
+            + ("This suggests targets are well-calibrated." if pc_pct < 40 else
+               f"<strong>This suggests many trades expire too early — consider extending the expiry window.</strong>")
+            + "</p>"
+        )
+
+    return (
+        '<section id="research-analytics">'
+        '<h2>🔬 Research Analytics — ML Pattern Insights</h2>'
+        f'<p style="font-size:12px;color:var(--mut);margin-bottom:16px">'
+        f'Based on {len(closed)} closed research trades. '
+        f'Patterns reveal which entry conditions produce the best outcomes.</p>'
+        + grade_html
+        + corr_html
+        + dow_html
+        + hour_html
+        + regime_html
+        + mfe_mae_html
+        + exit_html
+        + pc_html
+        + '</section>'
+    )
+
+
 def generate() -> str:
     from src import learning
     rows = tracker.load()
@@ -573,11 +754,12 @@ def generate() -> str:
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
 
     today = _most_recent_date(rows)
-    active_html   = _active_setups(rows)
-    watch_html    = _watch_list_section(rows, today)
-    best_html     = _best_opportunity_section(rows, today)
-    risk_html     = _risk_section()
-    learning_html = _learning_feed_section()
+    active_html    = _active_setups(rows)
+    watch_html     = _watch_list_section(rows, today)
+    best_html      = _best_opportunity_section(rows, today)
+    risk_html      = _risk_section()
+    learning_html  = _learning_feed_section()
+    analytics_html = _research_analytics_section()
 
     body = (
         f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
@@ -593,6 +775,7 @@ def generate() -> str:
         f'{risk_html}'
         f'<section><h2>Equity curve</h2>{_equity_curve(rows)}</section>'
         f'<section><h2>Win rate by confidence score</h2>{_by_confidence(rows)}</section>'
+        f'{analytics_html}'
         f'{learning_html}'
         f'<section><h2>All recommendations</h2>{_rows_table(rows)}</section>'
         f'<p class="foot">Columns T/F/S/P/M = technical, fundamental, sentiment, positioning, macro scores.'
