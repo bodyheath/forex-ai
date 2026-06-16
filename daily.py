@@ -3728,7 +3728,9 @@ def run() -> int:
         from src import threshold_manager as _thresh_mgr
         _trade_conf   = _thresh_mgr.get_confidence_threshold()
         _top_n     = _SCAN_TOP_N
-        _td_cap    = _TD_CACHE_MAX
+        # Issue 4: reduce Twelve Data pre-warm cap for afternoon scans to cut cost
+        # 6am: 20 deep + 10 research sweep = 30; afternoon: 20 deep + 5 sweep = 25
+        _td_cap    = 30 if scan_mode == "full" else 25
         # Sonnet threshold equals trade threshold so every potential TRADE_THIS YES
         # pair gets entry/stop/target — essential when threshold is 6 (data collection).
         sonnet_thresh = _trade_conf
