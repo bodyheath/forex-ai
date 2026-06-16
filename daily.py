@@ -2865,8 +2865,8 @@ def _send_telegram_summary(
     _badge_map = {
         "full":      "🌅 6AM FULL SCAN",
         "morning":   "🌏 9AM MORNING CHECK",
-        "prelondon": "🌆 3PM PRE-LONDON CHECK",
-        "london":    "🌃 5PM LONDON OPEN CHECK",
+        "prelondon": "🌆 5PM PRE-LONDON CHECK",
+        "preny":     "🌃 11PM PRE-NEW YORK CHECK",
     }
     _badge = _badge_map.get(scan_mode, "🤖 Forex AI")
 
