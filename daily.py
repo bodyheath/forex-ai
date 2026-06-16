@@ -2112,88 +2112,95 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
                 f"{_fmt_time_exact(_ew_t[0], _ew_t[1])} Auckland {_tref_t}"
             )
 
+        # Compute entry date string
+        _entry_date_str = ""
+        try:
+            _ots = row.get("timestamp", "")[:10]
+            _odt = datetime.strptime(_ots, "%Y-%m-%d")
+            _entry_date_str = f" on {_odt.day} {_odt.strftime('%B')}"
+        except Exception:
+            pass
+
+        if entry:
+            stale_note = " ⚠️ last known price" if (cur and stale) else ""
+            sec.append(f"Entered at: {_fmt_price(entry)}{_entry_date_str}")
+            if cur:
+                sec.append(f"Current price: {_fmt_price(cur)}{stale_note}")
+
+        if stop:
+            _stop_verb = "rises" if dirn == "BUY" else "falls"
+            sec.append(
+                f"Stop loss at: {_fmt_price(stop)} — if price {_stop_verb} here the trade closes automatically with a small loss"
+            )
+        if target:
+            _tgt_verb = "falls" if dirn == "BUY" else "rises"
+            sec.append(
+                f"Target at: {_fmt_price(target)} — if price {_tgt_verb} here the trade closes automatically with a profit"
+            )
+
         if entry and cur:
-            stale_note = " ⚠️ last known price" if stale else ""
-            sec.append(f"Entry: {_fmt_price(entry)} | Current: {_fmt_price(cur)}{stale_note}")
-
-            if stop and target:
-                sec.append(f"🛑 Stop: {_fmt_price(stop)} | 🎯 Target: {_fmt_price(target)}")
-            elif stop:
-                sec.append(f"🛑 Stop: {_fmt_price(stop)}")
-            elif target:
-                sec.append(f"🎯 Target: {_fmt_price(target)}")
-
-            # Investment details — position size, market exposure, risk amount
-            if stop and _rm_profile and _rm_state:
-                try:
-                    from src import risk_manager as _rm_inv
-                    _sz = _rm_inv.size_trade(
-                        pair=pair, direction=dirn, entry=entry, stop=stop,
-                        target=target or entry,
-                        confidence=int(float(row.get("confidence") or 8)),
-                        profile=_rm_profile, risk_state=_rm_state,
-                    )
-                    # Scale to paper fund ($10k) rather than real account
-                    _paper_scale = _rm_inv.FUND_START / max(config.ACCOUNT_BALANCE, 1)
-                    _lots   = max(round(_sz["lots"] * _paper_scale, 2), 0.01)
-                    _risk_a = round(_sz["risk_amount"] * _paper_scale, 2)
-                    _risk_p = _sz["risk_pct"]
-                    _cl     = pair.upper().replace("/", "")
-                    _base_c = _cl[:3]
-                    if _base_c == "USD":
-                        _mkt_exp = _lots * 100_000
-                    else:
-                        _mkt_exp = _lots * 100_000 * entry
-                    sec.append(
-                        f"💵 Invested: {_lots:.2f} lots — "
-                        f"${_mkt_exp:,.0f} market exposure — "
-                        f"${_risk_a:.0f} at risk ({_risk_p:.1f}% of account)"
-                    )
-                except Exception:
-                    pass
-
+            # Compute dollar P&L using risk amount as reference
             pip_sz    = _pip_size(pair)
             raw       = (cur - entry) if dirn == "BUY" else (entry - cur)
             pips      = raw / pip_sz
             net_pips  = pips
-            _cost_str = ""
+
+            # Dollar P&L — use risk_amount if available, else 1:1 pip/dollar approx
+            _risk_a   = 0.0
+            _lots     = 0.0
             try:
-                from src import trade_costs as _tc_ot
-                _ot_costs = _tc_ot.compute_costs(pair, dirn, entry, float(days_open))
-                _tot_cost = _ot_costs["total_cost_pips"]
-                net_pips  = pips - _tot_cost
-                _sp  = _ot_costs["spread"]
-                _sl  = _ot_costs["entry_slip"]
-                _cm  = _ot_costs["commission"]
-                _sw  = _ot_costs["swap_total"]
-                _parts = [
-                    f"{_sp:.1f}p spread",
-                    f"{_sl:.1f}p slip×2",
-                    f"{_cm:.2f}p comm",
-                ]
-                if abs(_sw) >= 0.05:
-                    _parts.append(f"{_sw:+.1f}p swap")
-                _cost_str = f"💸 Costs: {' · '.join(_parts)} = {_tot_cost:.1f}p total"
+                from src import risk_manager as _rm_inv2
+                _sz2 = _rm_inv2.size_trade(
+                    pair=pair, direction=dirn, entry=entry, stop=(stop or entry),
+                    target=(target or entry),
+                    confidence=int(float(row.get("confidence") or 8)),
+                    profile=_rm_profile, risk_state=_rm_state,
+                )
+                _paper_scale2 = _rm_inv2.FUND_START / max(config.ACCOUNT_BALANCE, 1)
+                _lots    = max(round(_sz2["lots"] * _paper_scale2, 2), 0.01)
+                _risk_a  = round(_sz2["risk_amount"] * _paper_scale2, 2)
             except Exception:
                 pass
-            if pips > 2:
-                arrow   = "📈"
-                pnl_str = (
-                    f"+{pips:.0f} pips gross | {net_pips:+.0f} pips net "
-                    f"(+${abs(net_pips):.0f}) — moving in your favour"
-                )
+
+            # Compute pip value per pip (dollar per pip)
+            _pip_val = 0.0
+            if _risk_a > 0 and stop and abs(entry - stop) > 0:
+                _stop_pips = abs(entry - stop) / pip_sz
+                _pip_val   = _risk_a / _stop_pips if _stop_pips > 0 else 0.0
+
+            _gross_dollar = pips * _pip_val if _pip_val > 0 else None
+
+            # Costs
+            _cost_dollar  = 0.0
+            _cost_pips    = 0.0
+            try:
+                from src import trade_costs as _tc_ot
+                _ot_costs  = _tc_ot.compute_costs(pair, dirn, entry, float(days_open))
+                _cost_pips = _ot_costs["total_cost_pips"]
+                net_pips   = pips - _cost_pips
+                _cost_dollar = _cost_pips * _pip_val if _pip_val > 0 else 0.0
+            except Exception:
+                pass
+
+            _net_dollar = _gross_dollar - _cost_dollar if _gross_dollar is not None else None
+
+            sec.append("")
+            if _gross_dollar is not None:
+                if pips > 2:
+                    sec.append(f"Current profit: <b>+${_gross_dollar:.0f}</b> — the trade is moving in the right direction ✅")
+                elif pips < -2:
+                    sec.append(f"Current loss: <b>-${abs(_gross_dollar):.0f}</b> — the trade is moving against you")
+                else:
+                    sec.append("At breakeven — the trade is flat, watching for movement")
+                if _cost_dollar > 0:
+                    sec.append(f"Costs so far: -${_cost_dollar:.0f} spread and swap costs")
+                if _net_dollar is not None and _cost_dollar > 0:
+                    _net_sign = "+" if _net_dollar >= 0 else ""
+                    sec.append(f"Net profit including costs: {_net_sign}${_net_dollar:.0f}")
+            elif pips > 2:
+                sec.append("Moving in the right direction ✅")
             elif pips < -2:
-                arrow   = "📉"
-                pnl_str = (
-                    f"{pips:.0f} pips gross | {net_pips:.0f} pips net "
-                    f"(-${abs(net_pips):.0f}) — moving against you"
-                )
-            else:
-                arrow   = "➖"
-                pnl_str = f"{pips:+.0f} pips gross — at breakeven"
-            sec.append(f"{arrow} {pnl_str}")
-            if _cost_str:
-                sec.append(_cost_str)
+                sec.append("Moving against you — stay disciplined and let your stop do its job")
 
             if target and stop:
                 try:
@@ -2216,65 +2223,48 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak) -> lis
 
                     bar_filled = int(pct_tgt / 100 * 20)
                     prog_bar   = "█" * bar_filled + "░" * (20 - bar_filled)
-                    if pct_tgt >= 90:
-                        _pctx = "almost at target"
-                    elif pct_tgt >= 75:
-                        _pctx = "excellent progress, lock in gains"
-                    elif pct_tgt >= 50:
-                        _pctx = "good momentum, consider partial profit"
-                    elif pct_tgt >= 20:
-                        _pctx = "building toward target"
-                    elif pct_tgt >= 5:
-                        _pctx = "price barely moving, watch for momentum" if abs(pips) < 5 else "early progress, stay patient"
-                    else:
-                        _pctx = "just opened, give it time" if days_open == 0 else "price barely moving, watch for momentum"
-                    sec.append(f"Progress: {pct_tgt:.0f}% to target {prog_bar} — {_pctx}")
+                    sec.append(f"Progress: {pct_tgt:.0f}% of the way to target {prog_bar}")
 
-                    # Dynamic status — most urgent condition takes priority
+                    # "What to do" advice — most urgent condition first
+                    _check_str = _check_line.replace("⏰ <b>", "").replace("</b>", "").replace("⏰ ", "")
                     if 0 < pips_to_target <= 20:
-                        sec.append(f"🚨 <b>TARGET ALMOST HIT — {pips_to_target:.0f} pips remaining</b>")
-                        sec.append("Consider closing entire position now")
+                        sec.append(f"⚠️ <b>What to do: Target almost reached — consider closing your position now to lock in profit</b>")
                     elif 0 < pips_to_stop <= 20:
-                        sec.append(f"🚨 <b>STOP LOSS APPROACHING — {pips_to_stop:.0f} pips remaining</b>")
-                        sec.append("Be prepared — let your stop do its job")
+                        sec.append(f"⚠️ <b>What to do: Stop loss is very close — be prepared. Let your stop do its job automatically</b>")
                     elif pct_tgt >= 75:
                         try:
                             trail_px = (
                                 entry + (target - entry) * 0.75 if dirn == "BUY"
                                 else entry - (entry - target) * 0.75
                             )
-                            sec.append("🎯 <b>75% to target — trail stop to lock in profit</b>")
-                            sec.append(f"Move stop to {_fmt_price(trail_px)} to protect your gains")
+                            sec.append(f"What to do: Move your stop loss to {_fmt_price(trail_px)} to lock in gains — you are 75% of the way there")
                         except Exception:
-                            sec.append("🎯 <b>75% to target — trail stop to lock in profit</b>")
+                            sec.append("What to do: Move your stop to lock in profits — 75% to target")
                     elif pct_tgt >= 50:
-                        sec.append("🎯 <b>50% to target reached — move stop to breakeven now</b>")
-                        sec.append(f"Protect your position: move stop to {_fmt_price(entry)}")
-                    elif pips > 10:
+                        sec.append(f"What to do: Move your stop loss to {_fmt_price(entry)} (your entry price) to protect your profit")
                         try:
                             halfway_px = (
                                 entry + (target - entry) * 0.5 if dirn == "BUY"
                                 else entry - (entry - target) * 0.5
                             )
-                            sec.append("📈 Good progress — price moving toward target")
-                            sec.append(f"Consider partial profit at {_fmt_price(halfway_px)} (50% level)")
+                            sec.append(f"If price hits {_fmt_price(halfway_px)} (halfway to target) — your risk is now zero")
                         except Exception:
-                            sec.append("📈 Good progress — price moving toward target")
-                    elif pips > 5:
-                        sec.append("📈 Slight gain — price moving in the right direction")
-                    elif abs(pips) <= 5:
-                        sec.append("⚠️ <b>Trade at breakeven — monitor closely</b>")
-                        sec.append("Price needs to move away from entry")
+                            pass
+                    elif days_open > 3:
+                        sec.append(f"What to do: Trade has been open for {days_open_str} — if no clear momentum building, consider closing manually")
                     else:
-                        sec.append(f"🔶 Slightly underwater — {abs(pips):.0f} pips from entry, stop is {abs(pips_to_stop):.0f} pips away — still safe")
-                        sec.append("Stay disciplined — let the analysis play out")
-
-                    # Additional age warning when trade has been open too long
-                    if days_open > 3:
-                        sec.append(f"⏳ Trade open {days_open_str} — expires in {expires_str}")
-                        sec.append("If no clear momentum consider closing manually")
-
-                    sec.append(_check_line)
+                        sec.append(f"What to do: Nothing — let the trade run. Check again at {_check_str}")
+                        try:
+                            halfway_px2 = (
+                                entry + (target - entry) * 0.5 if dirn == "BUY"
+                                else entry - (entry - target) * 0.5
+                            )
+                            sec.append(
+                                f"If price hits {_fmt_price(halfway_px2)} (halfway to target) — "
+                                f"move your stop loss up to {_fmt_price(entry)} to protect your profit"
+                            )
+                        except Exception:
+                            pass
                 except Exception:
                     sec.append(_check_line)
             else:
