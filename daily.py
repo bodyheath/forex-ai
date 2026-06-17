@@ -2867,6 +2867,16 @@ def _send_telegram_summary(
         r for r in _yes_raw
         if _dd_allows_trade(r, _dd_mode, _quality_grades, _trade_conf_thr)
     ]
+    # Deduplicate inverse pairs (e.g. USD/CHF SELL + CHF/USD BUY) — keep higher-ranked
+    _yt_seen: set = set()
+    _yt_deduped = []
+    for _r in yes_trades:
+        _p = _r["pair"].upper().replace("/", "")
+        _inv = _p[3:] + _p[:3]
+        if _p not in _yt_seen and _inv not in _yt_seen:
+            _yt_deduped.append(_r)
+            _yt_seen.add(_p)
+    yes_trades = _yt_deduped
     # C-grade demoted to watchlist only in normal mode; restricted tiers skip C entirely
     _c_grade_yes = (
         [r for r in _yes_raw if _quality_grades.get(r["pair"], {}).get("grade") == "C"
