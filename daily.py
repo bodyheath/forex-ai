@@ -690,6 +690,20 @@ def _compute_patience_score(ctx: dict) -> dict:
     if qpct is not None and qpct < 0.25:
         parts.append("few pairs with clear directional bias")
 
+    # Consistency check: if market environment is ranging/low-volatility, cap score
+    # and override MTF description to avoid "strong trend clarity" contradiction
+    _env_lo = (ctx.get("risk_env") or "").lower()
+    if "ranging" in _env_lo or "low volatility" in _env_lo:
+        score = min(score, 5)
+        parts = [
+            "ranging market — limited directional bias"
+            if p in ("strong trend clarity", "moderate trend clarity")
+            else p
+            for p in parts
+        ]
+        if not any("ranging" in p for p in parts):
+            parts.insert(0, "ranging market")
+
     desc_body = ", ".join(parts)
 
     if score >= 8:
