@@ -189,19 +189,50 @@ def fetch_prices_for_open_trades(log=print, scan_mode: str = "full") -> dict:
         return {}
 
     pairs_list = sorted(pairs_needed)
-    log(
-        f"Price pre-fetch: {len(pairs_list)} open trade pair(s) to price — "
-        f"{', '.join(pairs_list)}"
-    )
+
+    # ── Cache lookup for non-full scans ────────────────────────────────────────
+    # On 9am / 5pm / 11pm scans load the cache saved by the 6am run.  Only pairs
+    # absent from the cache (new trades opened since 6am) are fetched live.
+    is_full_scan = (scan_mode == "full")
+    cache_prices: dict = {}
+    pairs_to_fetch = pairs_list
+
+    if not is_full_scan:
+        cached_prices, cache_age = _load_price_cache()
+        if cached_prices and cache_age is not None and cache_age < _PRICE_CACHE_MAX_AGE_HOURS:
+            # Work out which pairs we already have prices for
+            pairs_from_cache = [p for p in pairs_list if p in cached_prices]
+            pairs_to_fetch   = [p for p in pairs_list if p not in cached_prices]
+            cache_prices     = {p: cached_prices[p] for p in pairs_from_cache}
+
+            saved_secs = len(pairs_from_cache) * _FETCH_DELAY
+            saved_mins = saved_secs // 60
+            log(
+                f"Price cache loaded for {len(pairs_from_cache)} trades — "
+                f"{len(pairs_to_fetch)} fetched fresh — saved ~{saved_mins} minutes "
+                f"(cache age {cache_age:.1f}h)"
+            )
+        else:
+            age_str = f"{cache_age:.1f}h old" if cache_age is not None else "missing"
+            log(
+                f"Price pre-fetch: cache {age_str} (max {_PRICE_CACHE_MAX_AGE_HOURS:.0f}h) — "
+                f"fetching all {len(pairs_list)} pairs fresh"
+            )
+
+    if pairs_to_fetch:
+        log(
+            f"Price pre-fetch: {len(pairs_to_fetch)} pair(s) to fetch — "
+            f"{', '.join(pairs_to_fetch)}"
+        )
 
     # ── Fetch prices with rate-limit control ───────────────────────────────────
     state  = _load_state()
     consec = state.get("consecutive_unavailable", {})
-    prices: dict  = {}
+    prices: dict  = dict(cache_prices)   # start with any cached prices
     unavail: list = []
     newly_warned: list = []
 
-    for i, pair in enumerate(pairs_list):
+    for i, pair in enumerate(pairs_to_fetch):
         if i > 0:
             time.sleep(_FETCH_DELAY)
         if i > 0 and i % _BATCH_SIZE == 0:
@@ -222,14 +253,20 @@ def fetch_prices_for_open_trades(log=print, scan_mode: str = "full") -> dict:
     state["consecutive_unavailable"] = consec
     _save_state(state)
 
+    # ── Save price cache on full scan ──────────────────────────────────────────
+    if is_full_scan:
+        _save_price_cache(prices)
+        log(f"Price cache saved: {len(prices)} pairs → data/price_cache.json")
+
     # ── Summary log ───────────────────────────────────────────────────────────
-    n_ok   = len(prices)
-    n_fail = len(unavail)
-    log(
-        f"Price pre-fetch: fetched current prices for {len(pairs_list)} open trade(s) — "
-        f"{n_ok} successful · {n_fail} unavailable"
-        + (f" (unavailable: {', '.join(unavail)})" if unavail else "")
-    )
+    if pairs_to_fetch:
+        n_fetched_ok   = len(prices) - len(cache_prices)
+        n_fetched_fail = len(unavail)
+        log(
+            f"Price pre-fetch: fetched {len(pairs_to_fetch)} pair(s) — "
+            f"{n_fetched_ok} successful · {n_fetched_fail} unavailable"
+            + (f" (unavailable: {', '.join(unavail)})" if unavail else "")
+        )
 
     if newly_warned:
         log(
