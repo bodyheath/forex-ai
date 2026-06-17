@@ -890,6 +890,16 @@ def _trade_quality_grade(r: dict) -> dict:
         except Exception:
             pass
 
+    if not rr:
+        _atr_dbg = float(
+            (r.get("bundle", {}).get("technical", {}).get("daily") or {}).get("atr14") or 0
+        )
+        print(
+            f"[DEBUG R:R=0] {r.get('pair','?')} "
+            f"entry={p.get('entry')} stop={p.get('stop_loss')} target={p.get('target')} "
+            f"rr_field={p.get('reward_risk')} atr14={_atr_dbg:.5f}"
+        )
+
     # MTF signals
     mtf    = bundle.get("mtf", {})
     sigs   = mtf.get("signals", {})
