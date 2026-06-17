@@ -957,25 +957,38 @@ def warm_cache(pairs: list, log=print) -> None:
         f"for {len(pairs)} pair(s) — 10s delay between calls ..."
     )
 
-    api_n  = 0
-    errors = 0
+    _pairs_needing_fetch: set = {p for p, _, _ in needed}
+    _pairs_ok: set = set()
+    api_n     = 0
+    n_success = 0
+    n_failed  = 0
+    errors    = 0
     for pair, interval, outputsize in needed:
         if api_n > 0:
             time.sleep(10)
         try:
             _td_request(pair, interval, outputsize)
             log(f"  Cached {pair} {interval}")
+            n_success += 1
+            _pairs_ok.add(pair)
         except Exception as exc:  # noqa: BLE001
             err_str = str(exc)
             log(f"  Failed  {pair} {interval}: {err_str[:120]}")
             if any(kw in err_str.lower() for kw in
                    ("not found", "invalid symbol", "no data", "no candles")):
                 log(f"  ↳ Symbol format? Tried '{pair}' — verify on twelvedata.com/symbols")
-            errors += 1
+            n_failed += 1
+            errors   += 1
         api_n += 1
 
+    # Neutral fallbacks = pairs that needed a fetch but had zero successful timeframes
+    n_neutral = len(_pairs_needing_fetch - _pairs_ok)
     status = "complete" if errors == 0 else f"complete with {errors} error(s)"
-    log(f"Technical pre-fetch {status}: {api_n} API call(s) made.")
+    log(
+        f"Technical pre-fetch {status}: {api_n} API call(s) made. "
+        f"Candle fetch: {n_success} successful, {n_failed} failed after retry, "
+        f"{n_neutral} neutral fallbacks"
+    )
 
 
 def read_cached_indicators(pair: str) -> dict | None:
