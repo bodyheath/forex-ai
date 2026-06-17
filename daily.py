@@ -4716,6 +4716,11 @@ def _send_telegram_summary(
                 ap_sec.extend(_approaching_entry(rr))
             all_sections.append(ap_sec)
 
+        # RESEARCH TRADES — compact summary for all intraday scans
+        _cpt_rt_sec = _build_compact_research_section()
+        if _cpt_rt_sec:
+            all_sections.append(_cpt_rt_sec)
+
         # FOREX AI FUND — compact version for intraday scans
         if risk_data and risk_data.get("profile"):
             try:
@@ -4744,11 +4749,28 @@ def _send_telegram_summary(
                               if r.get("status") == "LOSS" or
                               (r.get("status") in ("BREAKEVEN","EXPIRED") and float(r.get("pips") or 0) < 0)]
                 _dec_id    = _w_ft_id + _l_ft_id
+                _ml_need_id  = max(0, 10 - len(_cls_ft_id))
+                _ml_stat_id  = (
+                    f"learning — need {_ml_need_id} more decisive trade{'s' if _ml_need_id != 1 else ''} for activation"
+                    if _ml_need_id > 0 else "active — correctly predicting from training data"
+                )
+                try:
+                    from src import ml_predictor as _mlp_id
+                    _ml_raw_id = _mlp_id.get_model_status_line()
+                    if "accuracy" in _ml_raw_id.lower():
+                        import re as _re_id
+                        _acc_id = _re_id.search(r'(\d+)%', _ml_raw_id)
+                        if _acc_id:
+                            _ml_stat_id = f"active — correctly predicting {_acc_id.group(1)}% of trades"
+                except Exception:
+                    pass
                 _fund_id_sec = [
                     "", "━━━━━━━━━━━━━━━━━━━━━",
-                    f"📈 <b>FOREX AI FUND: ${_fund_id:,.0f} ({_ret_id:+.1f}%) | Peak: ${_pk_id:,.0f}</b>",
+                    "📈 <b>FOREX AI FUND</b>",
+                    f"Balance: ${_fund_id:,.0f} ({_ret_id:+.1f}%) · Peak: ${_pk_id:,.0f}",
                     f"Fund trades: {len(_all_ft_id)} taken · {len(_cls_ft_id)} closed ({len(_w_ft_id)} WIN · {len(_l_ft_id)} LOSS) · {len(_opn_ft_id)} open",
-                    f"Drawdown: {_dd_id:.1f}% | {_icon_id} {_dd_mode_id.replace('_',' ').title()} | {_rpct_id:.2f}% risk/trade",
+                    f"Drawdown: {_dd_id:.1f}% · {_icon_id} {_dd_mode_id.replace('_',' ').title()} · {_rpct_id:.2f}% risk per trade",
+                    f"🤖 ML model: {_ml_stat_id}",
                 ]
                 # Show any open trades inline
                 for _ot_id in _opn_ft_id:
