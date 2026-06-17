@@ -4561,6 +4561,8 @@ def _send_telegram_summary(
                 _rr_start = _fmt_time_exact(_rr_ew[0], _rr_ew[1])
                 _rr_qg = _quality_grades.get(_rr_pair, _trade_quality_grade(rr))
                 _rr_grade = (_rr_qg or {}).get("grade", "C")
+                if _rr_grade == "F":
+                    continue
                 # Session label for London/NY relevance
                 _rr_ses_label = ""
                 if scan_mode == "prelondon" and any(c in _rr_pair.upper() for c in ("EUR", "GBP", "CHF")):
