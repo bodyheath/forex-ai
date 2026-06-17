@@ -1221,7 +1221,7 @@ def _weekly_performance_section(date: str) -> list:
 
         lines.append(
             f"7-day: <b>{len(wins)}W / {len(recent)-len(wins)}L</b>  "
-            f"Win rate: <b>{wr:.0f}%</b>  Net: <b>{total_r:+.2f}R</b>"
+            f"<b>{wr:.0f}%</b> wins  Net: <b>{total_r:+.2f}R</b>"
         )
         if best:
             lines.append(f"🏆 Best: #{best.get('id')} {best.get('pair')} — {_r(best):+.2f}R")
