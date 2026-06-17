@@ -4095,8 +4095,19 @@ def _send_telegram_summary(
                 _ml_str  = (f"Need {_ml_need} more closed trade{'s' if _ml_need != 1 else ''} "
                             f"for ML activation") if _ml_need > 0 else "ML model active"
 
-                # Prop firm status
-                _week_n = max(1, (now_ak.timetuple().tm_yday // 7) + 1)
+                # Prop firm status — weeks since first YES trade (not calendar week)
+                _week_n = 1
+                try:
+                    _ts_list = sorted(
+                        r.get("timestamp", "")[:10]
+                        for r in _all_fund_t if r.get("timestamp", "")[:10]
+                    )
+                    if _ts_list:
+                        from datetime import date as _date
+                        _first_dt = datetime.strptime(_ts_list[0], "%Y-%m-%d").date()
+                        _week_n = max(1, ((now_ak.date() - _first_dt).days // 7) + 1)
+                except Exception:
+                    pass
                 if fund_ret >= 5.0:
                     _prop_str = f"EXCELLENT — {fund_ret:.1f}% return in week {_week_n}"
                 elif fund_ret >= 2.0:
