@@ -4139,9 +4139,13 @@ def _send_telegram_summary(
                     if _ts_list:
                         from datetime import date as _date
                         _first_dt = datetime.strptime(_ts_list[0], "%Y-%m-%d").date()
-                        _week_n = max(1, ((now_ak.date() - _first_dt).days // 7) + 1)
-                except Exception:
-                    pass
+                        _days_since = (now_ak.date() - _first_dt).days
+                        _week_n = max(1, (_days_since // 7) + 1)
+                        print(f"[DEBUG WEEK] first_trade={_ts_list[0]} today={now_ak.date()} days={_days_since} week={_week_n}", file=sys.stderr)
+                    else:
+                        print(f"[DEBUG WEEK] _all_fund_t has {len(_all_fund_t)} rows but no timestamps — week defaulting to 1", file=sys.stderr)
+                except Exception as _wk_err:
+                    print(f"[DEBUG WEEK] exception: {_wk_err} — week defaulting to 1", file=sys.stderr)
                 if fund_ret >= 5.0:
                     _prop_str = f"EXCELLENT — {fund_ret:.1f}% return in week {_week_n}"
                 elif fund_ret >= 2.0:
