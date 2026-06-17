@@ -635,7 +635,7 @@ def _compute_patience_score(ctx: dict) -> dict:
     # MTF average weighted score (0-2)
     avg_mtf = ctx.get("avg_mtf_score")
     if avg_mtf is None:
-        mtf_pts = 1.0
+        mtf_pts = 0.0
     elif avg_mtf >= 0.70:
         mtf_pts = 2.0
     elif avg_mtf >= 0.45:
