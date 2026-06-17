@@ -4373,18 +4373,35 @@ def _send_telegram_summary(
                 _sf_sec.append("No USD or CAD pairs on watch list tonight — New York session may be quiet for us")
             all_sections.append(_sf_sec)
 
-        # ── Market context (one-line brief) ───────────────────────────────────
-        vix_str   = f"VIX {ctx['vix']:.1f}" if ctx["vix"] else ""
-        env_str   = ctx["risk_env"]
-        sc        = ctx.get("strongest_ccy")
-        wc        = ctx.get("weakest_ccy")
-        ctx_parts = [f"🌍 {env_str}"]
-        if vix_str:
-            ctx_parts.append(f"({vix_str})")
-        if sc and wc:
-            ctx_parts.append(f"| 💪 {sc}  📉 {wc}")
-        _ctx_block = ["", "━━━━━━━━━━━━━━━━━━━━━", " ".join(ctx_parts)]
-        all_sections.append(_ctx_block)
+        # ── Market context (full plain-English format) ────────────────────────
+        _ctx_id = ["", "━━━━━━━━━━━━━━━━━━━━━", "🌍 <b>MARKET CONTEXT</b>"]
+        _vix_id   = ctx.get("vix")
+        _env_id   = ctx["risk_env"]
+        _vix_str_id = f"VIX {_vix_id:.1f}" if _vix_id else ""
+        _ctx_id.append(
+            f"Environment: <b>{_env_id}</b>"
+            f"{' (' + _vix_str_id + ')' if _vix_str_id else ''}"
+        )
+        _sc_id     = ctx.get("strongest_ccy")
+        _wc_id     = ctx.get("weakest_ccy")
+        _scores_id = ctx.get("ccy_scores", {})
+        if _sc_id:
+            _sc_rsn_id = "carry + risk-on" if "risk-on" in _env_id else "carry + fundamentals"
+            _ctx_id.append(f"💪 Strongest: <b>{_sc_id}</b> — {_sc_rsn_id} (+{_scores_id.get(_sc_id,0):.0f})")
+        if _wc_id:
+            _wc_rsn_id = "low rates + risk-on selling" if "risk-on" in _env_id else "weak fundamentals"
+            _ctx_id.append(f"📉 Weakest: <b>{_wc_id}</b> — {_wc_rsn_id} ({_scores_id.get(_wc_id,0):.0f})")
+        try:
+            from src import market_regime as _mr_id
+            _rd_id = _mr_id.detect()
+            _rl_id = _mr_id.telegram_line(_rd_id)
+            if _rl_id:
+                _ctx_id.append(_rl_id)
+        except Exception:
+            pass
+        _ps_id = _compute_patience_score(ctx)
+        _ctx_id.append(f"📊 <b>Trading conditions: {_ps_id['score']}/10</b> — {_ps_id['description']}")
+        all_sections.append(_ctx_id)
 
         # ECONOMIC CALENDAR — include on 5pm and 11pm scans (shows tonight's events)
         if scan_mode in ("prelondon", "preny"):
