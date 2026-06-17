@@ -2895,6 +2895,17 @@ def _send_telegram_summary(
         ] + _c_grade_yes,
         key=_eff_conf, reverse=True,
     )[:4]   # allow one extra slot for demoted C-grade alerts
+    # Deduplicate inverse pairs from watch list vs yes_trades and within itself
+    _wl_seen: set = {r["pair"].upper().replace("/", "") for r in yes_trades}
+    _wl_deduped = []
+    for _r in watch_list:
+        _p = _r["pair"].upper().replace("/", "")
+        _inv = _p[3:] + _p[:3]
+        if _p not in _wl_seen and _inv not in _wl_seen:
+            _wl_deduped.append(_r)
+            _wl_seen.add(_p)
+    watch_list = _wl_deduped
+
     near_misses = sorted(
         [r for r in deep_results
          if r["pair"] not in _yes_pair_set
