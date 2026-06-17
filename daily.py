@@ -3585,6 +3585,8 @@ def _send_telegram_summary(
 
     def _watch_entry(rr: dict) -> list:
         """Build watch list entry (conf 5–6) with indicative levels and session time."""
+        if (_quality_grades.get(rr["pair"]) or _trade_quality_grade(rr)).get("grade") == "F":
+            return []
         pp    = rr["parsed"]
         conf  = _eff_conf(rr)   # ribbon-adjusted confidence — consistent with threshold checks
         dirn  = (pp.get("direction") or "—").upper()
