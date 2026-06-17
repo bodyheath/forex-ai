@@ -4150,7 +4150,6 @@ def _send_telegram_summary(
                     f"Best trade: {_best_str}",
                     f"Avg holding time: {_hold_str}",
                     f"PROP FIRM STATUS: {_prop_str}",
-                    f"💼 Real Account: ${real:,.0f} | {exp:.1f}% open | {icon} {dd_mode_dash.replace('_',' ').title()}",
                 ]
                 all_sections.append(_fund_sec)
 
