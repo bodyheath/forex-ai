@@ -3607,7 +3607,8 @@ def _send_telegram_summary(
 
     def _watch_entry(rr: dict) -> list:
         """Build watch list entry (conf 5–6) with indicative levels and session time."""
-        if (_quality_grades.get(rr["pair"]) or _trade_quality_grade(rr)).get("grade") == "F":
+        _qg_we = _quality_grades.get(rr["pair"]) or _trade_quality_grade(rr)
+        if not _qg_we or _qg_we.get("grade") == "F":
             return []
         pp    = rr["parsed"]
         conf  = _eff_conf(rr)   # ribbon-adjusted confidence — consistent with threshold checks
@@ -3619,7 +3620,6 @@ def _send_telegram_summary(
         _eq_we_e, _eq_we_l = _entry_quality(rr["pair"], now_ak)
         _tref_we  = _time_ref_for_entry(_ew_we[0], _ew_we[1], now_ak)
         _start_we = _fmt_time_exact(_ew_we[0], _ew_we[1])
-        _qg_we = _quality_grades.get(rr["pair"], _trade_quality_grade(rr))
         lines = [
             "",
             f"{arrow} <b>{rr['pair']}</b> {dirn}  {conf}/10 {_conf_bar(conf)}  {_eq_we_e} {_eq_we_l}",
