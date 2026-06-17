@@ -4786,6 +4786,11 @@ def _send_telegram_summary(
         bad = (" n/a", ": n/a", "=n/a", "check console")
         return not any(b in ll for b in bad)
 
+    for _sc_sec in all_sections:
+        for _sc_ln in _sc_sec:
+            if "Grade F" in str(_sc_ln):
+                print(f"[CRITICAL] Grade F pair found in assembled message: {_sc_ln}", file=sys.stderr)
+
     all_sections = [[ln for ln in sec if _is_ok_line(ln)] for sec in all_sections]
     _send_in_parts(all_sections)
 
