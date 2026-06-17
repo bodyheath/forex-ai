@@ -53,27 +53,42 @@ def _td_request(symbol: str, interval: str, outputsize: int) -> dict:
         return cached
 
     global _td_calls_this_run
-    _td_calls_this_run += 1
 
-    resp = requests.get(
-        _TD_URL,
-        params={
-            "symbol": symbol,
-            "interval": interval,
-            "outputsize": outputsize,
-            "format": "JSON",
-            "apikey": config.TWELVE_DATA_KEY,
-        },
-        timeout=_TIMEOUT,
-    )
-    if resp.status_code == 429:
-        raise RuntimeError("Twelve Data rate limit reached (free tier 8/min, ~800/day). Try again shortly.")
-    resp.raise_for_status()
-    data = resp.json()
+    def _do_fetch() -> dict:
+        global _td_calls_this_run
+        _td_calls_this_run += 1
+        resp = requests.get(
+            _TD_URL,
+            params={
+                "symbol": symbol,
+                "interval": interval,
+                "outputsize": outputsize,
+                "format": "JSON",
+                "apikey": config.TWELVE_DATA_KEY,
+            },
+            timeout=_TIMEOUT,
+        )
+        if resp.status_code == 429:
+            raise RuntimeError("Twelve Data rate limit reached (free tier 8/min, ~800/day). Try again shortly.")
+        resp.raise_for_status()
+        return resp.json()
+
+    data = _do_fetch()
 
     # Twelve Data signals problems with {"status": "error", "code": ..., "message": ...}
     if isinstance(data, dict) and data.get("status") == "error":
         raise RuntimeError(f"Twelve Data error ({data.get('code')}): {data.get('message')}")
+
+    # Empty candles: wait 15s and retry once before failing
+    if isinstance(data, dict) and not data.get("values"):
+        time.sleep(15)
+        data = _do_fetch()
+        if isinstance(data, dict) and data.get("status") == "error":
+            raise RuntimeError(f"Twelve Data error ({data.get('code')}): {data.get('message')}")
+        if isinstance(data, dict) and not data.get("values"):
+            raise RuntimeError(
+                f"Twelve Data returned no candles for {symbol} {interval} after retry"
+            )
 
     cache.set(key, data)
     return data
