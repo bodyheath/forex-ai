@@ -234,6 +234,11 @@ def get_events_7d() -> list:
             "avoid_advice": f"avoid new {currency} trades until after this releases",
         })
 
+    print(
+        f"[ECO-CAL] Filter result: {len(events)} HIGH-impact events kept "
+        f"(skipped: {_skipped_impact} non-high, {_skipped_ccy} unknown currency, "
+        f"{_skipped_dt} bad/past datetime)"
+    )
     events.sort(key=lambda e: e["dt_utc"])
     cache.set(_CACHE_KEY, events)
     return events
