@@ -4938,7 +4938,8 @@ def run() -> int:
         try:
             from src import price_fetcher as _pf
             _open_trade_prices = _pf.fetch_prices_for_open_trades(
-                log=lambda m: _log_line(logf, m)
+                log=lambda m: _log_line(logf, m),
+                scan_mode=scan_mode,
             )
         except Exception as _pf_exc:
             _log_line(
