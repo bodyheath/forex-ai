@@ -142,13 +142,16 @@ def _telegram_warning(pairs: list) -> None:
 
 # ── Public API ─────────────────────────────────────────────────────────────────
 
-def fetch_prices_for_open_trades(log=print) -> dict:
+def fetch_prices_for_open_trades(log=print, scan_mode: str = "full") -> dict:
     """Fetch current daily close prices for every open main + research trade.
 
     Returns a ``{pair: float}`` dict.  Pairs whose price could not be fetched
-    are absent from the dict.  Logs a summary line of the form:
+    are absent from the dict.
 
-        Fetched current prices for 12 open trades — 11 successful · 1 unavailable
+    On the 6am full scan every pair is fetched fresh and results are saved to
+    ``data/price_cache.json``.  On 9am / 5pm / 11pm scans the cache is loaded
+    (if < 8 hours old) and only pairs missing from it are fetched, saving
+    ~10 seconds per cached pair.
 
     The returned dict should be passed to ``outcome_checker.check_open_trades()``
     and ``research_outcome_checker.check_open_research_trades()`` as
