@@ -5069,10 +5069,12 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Shared data pre-fetch failed ({exc}) — each pair will fetch independently.")
 
-        # 4. Pre-fetch Twelve Data candles — capped to _td_cap pairs
+        # 4. Pre-fetch Twelve Data candles — 20 pairs for 6am, 15 for afternoon scans
+        # Reducing from 25×4TF=100 to 15×4TF=60 calls on afternoon scans saves ~6-7 min.
+        _warm_cap = 20 if scan_mode == "full" else 15
         try:
             from src import technical as _tech
-            _tech.warm_cache(pre_filtered, log=lambda m: _log_line(logf, m))
+            _tech.warm_cache(pre_filtered[:_warm_cap], log=lambda m: _log_line(logf, m))
         except Exception as exc:
             _log_line(logf, f"Technical pre-fetch failed (analysis will still run): {exc}")
 
