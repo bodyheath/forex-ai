@@ -4473,7 +4473,9 @@ def _send_telegram_summary(
             [r for r in deep_results if r["pair"] not in _yes_pairs and _eff_conf(r) >= 3],
             key=_eff_conf, reverse=True,
         )
-        _watch_items       = [r for r in _all_candidates if _eff_conf(r) >= 5][:3]
+        _watch_items       = [r for r in _all_candidates
+                              if _eff_conf(r) >= 5
+                              and _quality_grades.get(r["pair"], _trade_quality_grade(r)).get("grade") != "F"][:3]
         _approaching_items = [
             r for r in _all_candidates
             if _eff_conf(r) <= 4
