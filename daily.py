@@ -5546,6 +5546,7 @@ def run() -> int:
                     f"{type(_tg_exc).__name__}: {str(_tg_exc)[:200]}"
                 )
 
+    _timeout_timer.cancel()
     return 0
 
 
