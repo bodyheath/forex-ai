@@ -4546,11 +4546,6 @@ def _send_telegram_summary(
                 ap_sec.extend(_approaching_entry(rr))
             all_sections.append(ap_sec)
 
-        # RESEARCH TRADES
-        _rt_sec_id = _build_research_section(research_result=research_result)
-        if _rt_sec_id:
-            all_sections.append(_rt_sec_id)
-
         # FOREX AI FUND — compact version for intraday scans
         if risk_data and risk_data.get("profile"):
             try:
