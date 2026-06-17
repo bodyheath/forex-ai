@@ -4715,7 +4715,7 @@ def _send_telegram_summary(
 # ── Daily run ──────────────────────────────────────────────────────────────────
 
 _LAST_RUN_FILE = config.REPORTS_DIR.parent / "last_run.txt"
-_COOLDOWN_SECS = 1200  # 20 minutes — blocks accidental double-fires, allows manual re-runs
+_COOLDOWN_SECS = 5400  # 90 minutes — catches cron-job.org retries on long-running scans
 
 _ALERTS_FILE         = config.DATA_DIR / "last_alerts.json"
 _MORNING_RANKED_FILE = config.DATA_DIR / "morning_ranked.json"
