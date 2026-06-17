@@ -704,8 +704,7 @@ def risk_dashboard_lines(profile: dict, risk_state: dict,
     lines = [
         "📊 <b>RISK DASHBOARD</b>",
         f"📈 FOREX AI FUND: <b>{fmt_currency(fund, cur)}</b> ({fund_ret:+.1f}%) | Peak: {fmt_currency(fund_pk, cur)}",
-        f"💼 Real Account: <b>{fmt_currency(real, cur)}</b>",
-        f"Win rate: {wr_txt} ({dec} decisive trades)",
+        f"{wr_txt} wins ({dec} decisive trades)",
         f"Risk/trade: <b>{b_pct:.2f}%</b> ({mode.replace('_', ' ')}) | Open exposure: {tot:.1f}% / {lim:.0f}%",
         streak_txt,
     ]
