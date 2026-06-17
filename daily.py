@@ -3875,8 +3875,14 @@ def _send_telegram_summary(
             _cal_section = _ec_cal.build_calendar_section()
             if _cal_section:
                 all_sections.append(_cal_section)
-        except Exception:
-            pass
+            else:
+                _raw_ev = _ec_cal.get_events_7d()
+                print(
+                    f"[ECO-CAL] build_calendar_section() returned empty — "
+                    f"get_events_7d() returned {len(_raw_ev)} events after HIGH-impact filter"
+                )
+        except Exception as _ec_err:
+            print(f"[ECO-CAL] Exception in economic calendar: {_ec_err}")
 
         # SYSTEM LEARNING REPORT (Monday 6am only)
         _slr = _build_system_learning_report(date)
