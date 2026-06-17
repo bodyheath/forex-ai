@@ -3764,17 +3764,25 @@ def _send_telegram_summary(
         is_jpy = "JPY" in rr["pair"].upper()
         dec = 3 if is_jpy else 5
         if _qg_ap["grade"] == "D":
-            _ntc_ap  = _what_needs_to_change(pp)
-            _bar_n   = max(1, min(conf, 6))
-            _bar     = "█" * _bar_n + "░" * (7 - _bar_n)
-            lines.append(f"Building: {_bar} {conf}/7 — not ready to enter yet")
-            lines.append(f"What needs to change: {_ntc_ap}")
+            _ntc_ap   = _what_needs_to_change(pp)
+            _bar_n    = max(1, min(conf, 6))
+            _bar      = "█" * _bar_n + "░" * (7 - _bar_n)
+            _rr_d_str = ""
             if ind_e and ind_s and ind_t:
                 try:
-                    lines.append(f"Watching: Entry ~{ind_e:.{dec}f} · Stop ~{ind_s:.{dec}f} · Target ~{ind_t:.{dec}f}")
-                except (TypeError, ValueError):
+                    _risk_d = abs(float(ind_e) - float(ind_s))
+                    _prof_d = abs(float(ind_t) - float(ind_e))
+                    if _risk_d:
+                        _rr_d_str = f" · R:R {round(_prof_d / _risk_d, 1)}:1"
+                except (TypeError, ValueError, ZeroDivisionError):
                     pass
-            return lines
+            _ew_d    = _entry_window_for_pair(rr["pair"])
+            _ses_d   = _ew_d[6] if len(_ew_d) > 6 else ""
+            _time_d  = _fmt_time_exact(_ew_d[0], _ew_d[1])
+            return [
+                "",
+                f"<b>{rr['pair']}</b> · Grade D · {conf}/10 {_bar} — ({_ntc_ap}) — Getting closer — not ready yet{_rr_d_str} — ⏰ Check at {_ses_d} {_time_d} Auckland",
+            ]
         lines.append("🟠 <b>POTENTIAL SETUP IF CONDITIONS IMPROVE:</b>")
         if ind_e and ind_s and ind_t:
             try:
