@@ -197,6 +197,7 @@ def get_events_7d() -> list:
         else:
             importance = str(imp_raw).lower().strip()
         if importance != "high":
+            _skipped_impact += 1
             continue
 
         # Currency resolution
@@ -206,14 +207,17 @@ def get_events_7d() -> list:
             else _COUNTRY_CURRENCY.get(cur_raw.lower(), "").upper()
         )
         if not currency or currency not in _VALID_CCYS:
+            _skipped_ccy += 1
             continue
 
         # Datetime parsing (UTC)
         dt_str = str(ev.get("datetime", "") or ev.get("date", ""))
         dt_utc = _parse_dt(dt_str)
         if dt_utc is None:
+            _skipped_dt += 1
             continue
         if dt_utc < now_utc - timedelta(hours=1):
+            _skipped_dt += 1
             continue  # already past
 
         dt_ak      = _to_auckland(dt_utc)
