@@ -3910,7 +3910,7 @@ def _send_telegram_summary(
 
                 def _plain_rejection(rr) -> str:
                     """Convert rejection reason to plain English for non-traders."""
-                    conf_v  = _conf(rr)
+                    conf_v  = _eff_conf(rr)
                     dirn_v  = (rr.get("parsed", {}).get("direction") or "").upper()
                     parsed  = rr.get("parsed", {})
                     if rr.get("screened_out"):
