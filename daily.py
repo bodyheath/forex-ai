@@ -646,7 +646,7 @@ def _compute_patience_score(ctx: dict) -> dict:
     # Trend clarity: % of pairs with qualifying weekly+daily alignment (0-2)
     qpct = ctx.get("qualify_pct")
     if qpct is None:
-        trend_pts = 1.0
+        trend_pts = 0.0
     elif qpct >= 0.50:
         trend_pts = 2.0
     elif qpct >= 0.25:
