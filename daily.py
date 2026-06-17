@@ -4494,9 +4494,19 @@ def _send_telegram_summary(
             [r for r in deep_results if r["pair"] not in _yes_pairs and _eff_conf(r) >= 3],
             key=_eff_conf, reverse=True,
         )
-        _watch_items       = [r for r in _all_candidates
-                              if _eff_conf(r) >= 5
-                              and _quality_grades.get(r["pair"], _trade_quality_grade(r)).get("grade") != "F"][:3]
+        _watch_items_raw    = [r for r in _all_candidates
+                               if _eff_conf(r) >= 5
+                               and _quality_grades.get(r["pair"], _trade_quality_grade(r)).get("grade") != "F"]
+        # Deduplicate inverse pairs vs yes_trades and within watch list
+        _wi_seen: set = {r["pair"].upper().replace("/", "") for r in yes_trades}
+        _watch_items = []
+        for _r in _watch_items_raw:
+            _p = _r["pair"].upper().replace("/", "")
+            _inv = _p[3:] + _p[:3]
+            if _p not in _wi_seen and _inv not in _wi_seen:
+                _watch_items.append(_r)
+                _wi_seen.add(_p)
+        _watch_items = _watch_items[:3]
         _approaching_items = [
             r for r in _all_candidates
             if _eff_conf(r) <= 4
