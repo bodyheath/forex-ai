@@ -3674,11 +3674,10 @@ def _send_telegram_summary(
         # Fundamental alignment (compact)
         lines += _fundamental_lines(rr, compact=True)
         # D/F grade: monitoring only — suppress all entry instructions
-        if _qg_we["grade"] in ("D", "F"):
-            if _qg_we["grade"] == "F":
-                lines.append("❌ Grade F — conditions not suitable for trading — monitoring only")
-            else:
-                lines.append("⚠️ Grade D — avoid — conditions not suitable for entry")
+        if (_qg_we or {}).get("grade") == "F":
+            return []
+        if (_qg_we or {}).get("grade") == "D":
+            lines.append("⚠️ Grade D — worth monitoring — conditions improving but not ready to enter yet")
             return lines
         # Indicative entry/stop/target — always shown so investor knows the trade shape
         ind_e, ind_s, ind_t, ind_meta = _calc_indicative_levels(rr["pair"], pp, rr.get("bundle", {}))
