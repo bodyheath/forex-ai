@@ -4527,7 +4527,7 @@ def _send_telegram_summary(
                             f"Target: {float(_rr_ind_t):.{_dec_rr}f}"
                         )
                         _rr_rr = round(_rr_prof / _rr_risk, 1) if _rr_risk else 0
-                        wl_sec.append(f"Risk ${_rr_risk} → Make ${_rr_prof} ({_rr_rr}:1)")
+                        wl_sec.append(f"R:R {_rr_rr}:1 — Stop {_rr_risk}p · Target {_rr_prof}p")
                     except (TypeError, ValueError, ZeroDivisionError):
                         pass
                 # Entry window
