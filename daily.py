@@ -18,6 +18,7 @@ import sys
 import html as _html_mod
 import json
 import re as _re_tg
+import threading
 import time
 import traceback
 import urllib.parse
