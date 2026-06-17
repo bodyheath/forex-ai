@@ -665,7 +665,7 @@ def _compute_patience_score(ctx: dict) -> dict:
         parts.append("choppy market")
     elif avg_mtf is not None and avg_mtf < 0.70:
         parts.append("moderate trend clarity")
-    else:
+    elif avg_mtf is not None:
         parts.append("strong trend clarity")
 
     if vix is not None and vix > 25:
