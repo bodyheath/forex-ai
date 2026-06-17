@@ -1341,7 +1341,7 @@ def _build_research_section(research_result=None) -> list:
     )
     sec.append("")
     sec.append(
-        f"Win rate: <b>{wr_pct}%</b> ({n_wins}W / {n_losses}L) — {decisive} closed trades"
+        f"<b>{wr_pct}%</b> wins ({n_wins}W / {n_losses}L) — {decisive} closed trades"
     )
     if decisive >= 10 and wr_pct < 30:
         sec.append(
