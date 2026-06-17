@@ -1256,6 +1256,75 @@ def _weekly_performance_section(date: str) -> list:
     return lines
 
 
+def _build_compact_research_section() -> list:
+    """2–4 line research summary for intraday scans (9am / 5pm / 11pm)."""
+    try:
+        from src import research_tracker as _rtrk_cpt
+        _cpt_rows = _rtrk_cpt.load()
+    except Exception:
+        return []
+    if not _cpt_rows:
+        return []
+
+    def _cf(v):
+        try:
+            return float(v)
+        except (TypeError, ValueError):
+            return None
+
+    _cpt_open  = [r for r in _cpt_rows if r.get("status") in ("OPEN", "NO_PRICE_LEVELS")]
+    _cpt_cls   = [r for r in _cpt_rows if r.get("status") in ("WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN")]
+    _cpt_wins  = [r for r in _cpt_cls if r.get("status") == "WIN"]
+    _cpt_loss  = [r for r in _cpt_cls if r.get("status") == "LOSS"]
+    _cpt_pw    = [r for r in _cpt_cls if r.get("status") == "PARTIAL_WIN"]
+    _cpt_dec   = len(_cpt_wins) + len(_cpt_loss)
+    _cpt_wr    = int(len(_cpt_wins) / _cpt_dec * 100) if _cpt_dec else 0
+
+    _l2 = [f"Open: {len(_cpt_open)}", f"Closed: {len(_cpt_cls)}"]
+    if _cpt_dec:
+        _l2.append(f"Win rate: {_cpt_wr}% ({len(_cpt_wins)}W/{len(_cpt_loss)}L)")
+    if _cpt_pw:
+        _l2.append(f"{len(_cpt_pw)} partial wins")
+
+    sec = [
+        "", "━━━━━━━━━━━━━━━━━━━━━",
+        "🔬 <b>RESEARCH TRADES</b>",
+        " · ".join(_l2),
+    ]
+
+    # Best pairs by win rate (≥2 trades for statistical relevance)
+    _cpt_ps: dict = {}
+    for _cr in _cpt_cls:
+        _cp = _cr.get("pair", "?")
+        _cpt_ps.setdefault(_cp, {"wins": 0, "total": 0})
+        _cpt_ps[_cp]["total"] += 1
+        if _cr.get("status") in ("WIN", "PARTIAL_WIN"):
+            _cpt_ps[_cp]["wins"] += 1
+    _cpt_good = [(p, s) for p, s in _cpt_ps.items() if s["total"] >= 2]
+    if _cpt_good:
+        _cpt_sorted = sorted(
+            _cpt_good,
+            key=lambda x: (x[1]["wins"] / x[1]["total"], x[1]["total"]),
+            reverse=True,
+        )[:3]
+        sec.append("Best pairs: " + " · ".join(
+            f"{p} {int(s['wins']/s['total']*100)}%" for p, s in _cpt_sorted
+        ))
+
+    # Profit factor
+    _cpt_wp = [_cf(r.get("pips")) for r in _cpt_wins if _cf(r.get("pips")) is not None]
+    _cpt_lp = [_cf(r.get("pips")) for r in _cpt_loss if _cf(r.get("pips")) is not None]
+    if _cpt_wp and _cpt_lp:
+        _cpt_tl = sum(abs(p) for p in _cpt_lp if p < 0)
+        if _cpt_tl > 0:
+            _cpt_pf = sum(_cpt_wp) / _cpt_tl
+            _cpt_icon = "✅" if _cpt_pf > 1.0 else "⚠️"
+            _cpt_txt  = "wins larger than losses" if _cpt_pf > 1.0 else "losses larger than wins"
+            sec.append(f"Profit factor: {_cpt_pf:.2f} — {_cpt_txt} {_cpt_icon}")
+
+    return sec
+
+
 def _build_research_section(research_result=None) -> list:
     """Build the RESEARCH TRADES Telegram section from data/research_trades.csv.
 
