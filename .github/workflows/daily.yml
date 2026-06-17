@@ -3,6 +3,14 @@ name: Daily Forex Analysis
 on:
   workflow_dispatch: # triggered manually or via cron-job.org API call
 
+# Prevent simultaneous runs of the same workflow (e.g. cron-job.org retry +
+# manual trigger).  cancel-in-progress: false lets any queued run start after
+# the current one finishes — the Python duplicate-run guard then blocks it if
+# it falls within the 90-minute cooldown window.
+concurrency:
+  group: forex-ai-daily
+  cancel-in-progress: false
+
 jobs:
   analyse:
     runs-on: ubuntu-latest
