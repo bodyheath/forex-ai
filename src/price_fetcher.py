@@ -40,6 +40,27 @@ _PRICE_CACHE_MAX_AGE_HOURS = 8.0
 
 # ── Internal helpers ───────────────────────────────────────────────────────────
 
+def _load_price_cache() -> "tuple[dict, float | None]":
+    """Load the research-trade price cache.  Returns (prices_dict, age_hours) or ({}, None)."""
+    try:
+        raw = json.loads(_PRICE_CACHE_FILE.read_text(encoding="utf-8"))
+        ts = float(raw.get("timestamp", 0))
+        age_hours = (time.time() - ts) / 3600.0
+        return raw.get("prices", {}), age_hours
+    except Exception:
+        return {}, None
+
+
+def _save_price_cache(prices: dict) -> None:
+    try:
+        _PRICE_CACHE_FILE.write_text(
+            json.dumps({"timestamp": time.time(), "prices": prices}, indent=2),
+            encoding="utf-8",
+        )
+    except Exception:
+        pass
+
+
 def _fetch_one(pair: str) -> float | None:
     """Fetch latest daily close for *pair*.  Returns float or None."""
     for attempt in range(_MAX_RETRIES):
