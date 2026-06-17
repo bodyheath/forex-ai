@@ -4857,6 +4857,24 @@ def run() -> int:
     except Exception as _guard_err:
         print(f"[guard] last_run.txt check failed ({_guard_err}) — proceeding.", file=sys.stderr)
 
+    # ── 45-minute run-time guard ───────────────────────────────────────────────
+    # cron-job.org treats jobs that run > ~60min as failed and queues a retry.
+    # If the scan is still running at 45 min we send a plain-English Telegram
+    # warning so recipients know a report is coming, preventing a retry-triggered
+    # duplicate scan.
+    _MAX_RUN_SECS = 45 * 60
+    _timeout_fired = [False]
+
+    def _timeout_handler() -> None:
+        _timeout_fired[0] = True
+        _telegram(
+            "⚠️ Scan is taking longer than expected — still running — full report coming shortly"
+        )
+
+    _timeout_timer = threading.Timer(_MAX_RUN_SECS, _timeout_handler)
+    _timeout_timer.daemon = True
+    _timeout_timer.start()
+
     _telegram_test()
 
     missing = config.missing_keys()
