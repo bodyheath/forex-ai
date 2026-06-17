@@ -3727,6 +3727,8 @@ def _send_telegram_summary(
 
     def _approaching_entry(rr: dict) -> list:
         """Build approaching signal entry (conf 3–4) with indicative levels and entry alert time."""
+        if (_quality_grades.get(rr["pair"]) or _trade_quality_grade(rr)).get("grade") == "F":
+            return []
         pp   = rr["parsed"]
         conf = _eff_conf(rr)   # ribbon-adjusted confidence
         dirn = (pp.get("direction") or "—").upper()
