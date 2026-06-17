@@ -3977,32 +3977,6 @@ def _send_telegram_summary(
                 up_sec.extend(_approaching_entry(rr))
             all_sections.append(up_sec)
 
-        # LEARNING UPDATE
-        learn_lines = ["", "━━━━━━━━━━━━━━━━━━━━━"]
-        if stats:
-            wr     = stats.get("win_rate")
-            wr_txt = f"{wr*100:.0f}%" if wr is not None else "—"
-            wins   = stats.get("wins", 0)
-            losses = stats.get("losses", 0)
-            dec    = stats.get("decisive", 0)
-            cl     = _risk_state.get("consecutive_losses", 0)
-            cw     = _risk_state.get("consecutive_wins", 0)
-            if cw >= 2:
-                streak = f"🔥 {cw} consecutive wins"
-            elif cl >= 2:
-                streak = f"⚠️ {cl} consecutive losses"
-            elif cw == 1:
-                streak = "1 win (no streak yet)"
-            elif cl == 1:
-                streak = "1 loss (watching for streak)"
-            else:
-                streak = "No streak active"
-            learn_lines.append(f"🧠 Win rate: <b>{wr_txt}</b>  ({wins}W/{losses}L · {dec} trades)")
-            learn_lines.append(f"🔁 Streak: {streak}")
-        else:
-            learn_lines.append("🧠 Win rate: building history...")
-        all_sections.append(learn_lines)
-
         # RESEARCH TRADES
         _rt_sec = _build_research_section(research_result=research_result)
         if _rt_sec:
