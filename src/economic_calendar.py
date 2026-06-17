@@ -151,6 +151,7 @@ def get_events_7d() -> list:
         return cached
 
     if not config.TWELVE_DATA_KEY:
+        print("[ECO-CAL] TWELVE_DATA_KEY not set — economic calendar unavailable")
         return []
 
     now_utc = datetime.utcnow()
@@ -166,7 +167,8 @@ def get_events_7d() -> list:
             timeout=15,
         )
         data = r.json()
-    except Exception:
+    except Exception as _api_err:
+        print(f"[ECO-CAL] API request failed: {_api_err}")
         cache.set(_CACHE_KEY, [])
         return []
 
@@ -174,10 +176,19 @@ def get_events_7d() -> list:
     if isinstance(raw, dict):
         raw = raw.get("events", [])
     if not isinstance(raw, list):
+        print(f"[ECO-CAL] Unexpected API response structure — top-level keys: {list(data.keys()) if isinstance(data, dict) else type(data).__name__}")
         cache.set(_CACHE_KEY, [])
         return []
 
+    print(f"[ECO-CAL] API returned {len(raw)} raw events before impact/currency filter")
+    if raw:
+        _sample = raw[0]
+        print(f"[ECO-CAL] Sample event keys: {list(_sample.keys()) if isinstance(_sample, dict) else _sample}")
+
     events = []
+    _skipped_impact = 0
+    _skipped_ccy = 0
+    _skipped_dt = 0
     for ev in raw:
         # Impact filter — HIGH only
         imp_raw = ev.get("importance", "")
