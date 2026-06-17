@@ -1,15 +1,8 @@
 name: Intraday Forex Scans
 
-# Primary scheduling: cron-job.org calls the workflow_dispatch API at exact
-# Auckland times, correctly tracking NZST/NZDT DST changes.
-#
-# Backup schedule below fires in UTC — does NOT track DST (off by 1h during
-# NZDT Oct–Apr). Use only as a fallback if cron-job.org is unreachable.
-#
-# Schedule (Auckland / UTC):
-#   9am  Auckland = 21:00 UTC (Sun–Thu = Mon–Fri NZT)
-#   5pm  Auckland = 05:00 UTC (Mon–Fri)
-#   11pm Auckland = 11:00 UTC (Mon–Fri)
+# Scheduling is handled exclusively by cron-job.org via the workflow_dispatch
+# API.  cron-job.org tracks NZST/NZDT DST changes correctly; a built-in
+# GitHub Actions schedule would fire in fixed UTC and create duplicate runs.
 
 on:
   workflow_dispatch:
@@ -18,12 +11,6 @@ on:
         description: 'Override scan mode (morning / prelondon / preny / full / gap)'
         required: false
         default: ''
-  schedule:
-    # Backup cron (UTC — static, does not track DST; cron-job.org is primary)
-    - cron: '0 21 * * 0-4'  # ~9am Auckland Mon-Fri (NZST; Sun-Thu UTC)
-    - cron: '0 5 * * 1-5'   # ~5pm Auckland Mon-Fri
-    - cron: '0 11 * * 1-5'  # ~11pm Auckland Mon-Fri
-    - cron: '0 17 * * 6'    # ~5am Sunday Auckland (NZST) — Sunday gap scan
 
 concurrency:
   group: intraday-forex
