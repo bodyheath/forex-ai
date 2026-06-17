@@ -4980,6 +4980,7 @@ def run() -> int:
                 _guard_state = {}
 
         _last_ts_str = _guard_state.get("timestamp", "")
+        print(f"[guard] File: {_RUN_GUARD_FILE} · exists={_RUN_GUARD_FILE.exists()} · stored_timestamp={_last_ts_str!r} · now_utc={_now_utc.isoformat()}", file=sys.stderr)
         if _last_ts_str:
             _last_ts  = datetime.fromisoformat(_last_ts_str)
             _elapsed  = (_now_utc - _last_ts).total_seconds()
