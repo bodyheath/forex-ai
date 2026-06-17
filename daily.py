@@ -4037,13 +4037,19 @@ def _send_telegram_summary(
                 }
                 icon = mode_icons.get(dd_mode_dash if dd_mode_dash != "normal" else rmode, "🟢")
 
-                # Load all main fund trades for stats
-                _all_fund_t = _trk_fund.load()
+                # Load all main fund trades for stats (YES rows only — not analysis sequence IDs)
+                _all_fund_t = [r for r in _trk_fund.load() if r.get("trade_this") == "YES"]
                 _open_ft    = [r for r in _all_fund_t if r.get("status") == "OPEN"]
                 _closed_ft  = [r for r in _all_fund_t
                                if r.get("status") in ("WIN","LOSS","BREAKEVEN","EXPIRED")]
-                _wins_ft    = [r for r in _closed_ft if r.get("status") == "WIN"]
-                _losses_ft  = [r for r in _closed_ft if r.get("status") == "LOSS"]
+                _wins_ft    = [r for r in _closed_ft
+                               if r.get("status") == "WIN" or
+                               (r.get("status") in ("BREAKEVEN","EXPIRED") and
+                                float(r.get("pips") or 0) > 0)]
+                _losses_ft  = [r for r in _closed_ft
+                               if r.get("status") == "LOSS" or
+                               (r.get("status") in ("BREAKEVEN","EXPIRED") and
+                                float(r.get("pips") or 0) < 0)]
                 _expired_ft = [r for r in _closed_ft if r.get("status") == "EXPIRED"]
                 _decisive_ft = _wins_ft + _losses_ft
                 _n_total    = len(_all_fund_t)
