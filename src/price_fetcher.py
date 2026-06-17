@@ -33,6 +33,10 @@ _BATCH_SIZE  = 8            # extra pause after this many calls in a single run
 _MAX_RETRIES = 2            # total attempts per pair
 _STATE_FILE: Path = config.DATA_DIR / "price_fetch_state.json"
 
+# Research trade price cache — 6am scan saves, afternoon scans load to avoid re-fetching 87 pairs
+_PRICE_CACHE_FILE: Path = config.DATA_DIR / "price_cache.json"
+_PRICE_CACHE_MAX_AGE_HOURS = 8.0
+
 
 # ── Internal helpers ───────────────────────────────────────────────────────────
 
