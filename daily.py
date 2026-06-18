@@ -2101,7 +2101,7 @@ def _fetch_live_price(pair: str, px_cache: dict) -> tuple:
     return None, True
 
 
-def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compact: bool = False) -> list:
+def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compact: bool = False, cur_conf_map: dict = None) -> list:
     """Build the OPEN TRADES section lines for any Telegram scan message.
 
     compact=True: one-line-per-trade format for intraday scans.
