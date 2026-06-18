@@ -291,6 +291,7 @@ def train(quiet: bool = False) -> dict:
         from sklearn.linear_model import LogisticRegression
         from sklearn.model_selection import cross_val_score
         from sklearn.preprocessing import StandardScaler
+        from sklearn.utils.class_weight import compute_sample_weight
         import numpy as np
     except ImportError:
         meta = {"error": "scikit-learn not installed — add scikit-learn to requirements.txt",
