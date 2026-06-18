@@ -1134,6 +1134,16 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         else:
             chg, mom = 0.0, 3
 
+        # ATR and current close — used by dynamic breakout and currency boosters
+        _snap_h = snapshot.get("highs", []) if snapshot else []
+        _snap_l = snapshot.get("lows",  []) if snapshot else []
+        _n_atr  = min(5, len(_snap_h))
+        _atr5   = (
+            sum(_snap_h[i] - _snap_l[i] for i in range(_n_atr)) / _n_atr
+            if _n_atr > 0 else None
+        )
+        _cur_close = snapshot["closes"][0] if snapshot and snapshot.get("closes") else None
+
         pair_scores[pair] = {
             "score":      score,
             "breakdown":  breakdown,
@@ -1144,6 +1154,8 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
             "tier":       round(_tier_score(pair, base, quote), 2),
             "base":       base,
             "quote":      quote,
+            "cur_close":  _cur_close,
+            "atr5":       _atr5,
         }
 
     ranked = sorted(pair_scores.items(), key=lambda x: x[1]["score"], reverse=True)
