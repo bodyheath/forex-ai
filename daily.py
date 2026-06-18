@@ -2196,8 +2196,12 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
                 pass
             _bar_row   = int(_pct_row / 100 * 20)
             _prog_row  = "█" * _bar_row + "░" * (20 - _bar_row)
-            _pnl_icon  = "✅" if (_gross_row is not None and _gross_row > 0) else "📉"
-            _pnl_str   = f"+${_gross_row:.0f}" if (_gross_row is not None and _gross_row > 0) else (f"-${abs(_gross_row):.0f}" if _gross_row is not None else "—")
+            if _gross_row is None:
+                _gross_row = 0.0
+            _pnl_icon  = "✅" if _gross_row > 0 else ("📉" if _gross_row < 0 else "➡️")
+            _pnl_str   = (f"+${_gross_row:.0f}" if _gross_row > 0
+                          else (f"-${abs(_gross_row):.0f}" if _gross_row < 0
+                                else "$0.00"))
             sec.append("")
             sec.append(
                 f"TRADE #{_cid_row} — {_cpair} {'Buying' if _buy_row else 'Selling'} · "
