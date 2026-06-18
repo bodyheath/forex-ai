@@ -395,7 +395,7 @@ def _load_pair_performance() -> dict:
     """Load per-pair win rates from historical trades.csv.
 
     Requires >= 3 decisive (WIN/LOSS) trades per pair before reporting a rate.
-    Returns {pair: win_rate_0_to_1}, e.g. {"EUR/USD": 0.67}.
+    Returns {pair: {"wr": float, "n": int}}, e.g. {"EUR/USD": {"wr": 0.67, "n": 6}}.
     """
     try:
         from src import tracker
@@ -412,7 +412,7 @@ def _load_pair_performance() -> dict:
             if status == "WIN":
                 per_pair[pair]["wins"] += 1
         return {
-            pair: d["wins"] / d["total"]
+            pair: {"wr": d["wins"] / d["total"], "n": d["total"]}
             for pair, d in per_pair.items()
             if d["total"] >= 3
         }
