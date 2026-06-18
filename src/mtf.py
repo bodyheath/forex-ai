@@ -5,7 +5,7 @@ timeframes and one contextual timeframe already present in the technical
 bundle.  Optimised for 3-7 day swing trading.
 
 Core timeframe weights:
-  Weekly   40%  — trend direction
+  Weekly   40%  — trend direction (anchor — must always agree)
   Daily    40%  — setup timeframe
   4-Hour   20%  — entry timing
 
@@ -13,9 +13,17 @@ Monthly is informational only (+5% bonus when aligned, never blocks a
 good weekly/daily/4H setup).  1-Hour has been removed as noise for
 3-7 day swing trades.
 
-TRADE_THIS YES requires weekly AND daily to agree on direction.
-4-Hour is optional bonus.  This rule is enforced here (qualifies flag)
-AND as a hard gate in service.py.
+Graduated MTF gate (qualifies flag + mtf_gate string):
+  strong_all3     W+D+4H all agree       → qualifies, no penalty
+  strong_w_d      W+D agree (4H any)     → qualifies, no penalty
+  strong_w_4h     W+4H agree, D neutral  → qualifies, no penalty
+                  (daily consolidation within weekly trend = classic pullback)
+  weak_weekly_only  W only, D+4H neutral → qualifies, confidence −1
+  weak_mixed        W+some opposition    → qualifies, confidence −1
+  blocked           W opposes D+4H, or D+4H both oppose W → blocked
+  no_signal         W neutral or no dominant direction   → blocked
+
+Confidence penalty (conf_penalty) is applied in service.py.
 """
 
 _CORE_TF_WEIGHTS: dict = {
