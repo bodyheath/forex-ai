@@ -54,13 +54,13 @@ def _td_request(symbol: str, interval: str, outputsize: int) -> dict:
 
     global _td_calls_this_run
 
-    def _do_fetch() -> dict:
+    def _do_fetch(sym: str) -> dict:
         global _td_calls_this_run
         _td_calls_this_run += 1
         resp = requests.get(
             _TD_URL,
             params={
-                "symbol": symbol,
+                "symbol": sym,
                 "interval": interval,
                 "outputsize": outputsize,
                 "format": "JSON",
@@ -73,16 +73,32 @@ def _td_request(symbol: str, interval: str, outputsize: int) -> dict:
         resp.raise_for_status()
         return resp.json()
 
-    data = _do_fetch()
+    # Alternative symbol format: slash ↔ no-slash (e.g. "AUD/JPY" ↔ "AUDJPY").
+    # Twelve Data accepts both; some pairs only resolve under one format.
+    _sym_clean = symbol.replace("/", "")
+    _alt = (
+        _sym_clean if "/" in symbol
+        else f"{symbol[:3]}/{symbol[3:]}" if len(symbol) == 6
+        else None
+    )
+    if _alt == symbol:
+        _alt = None
+
+    data = _do_fetch(symbol)
 
     # Twelve Data signals problems with {"status": "error", "code": ..., "message": ...}
+    # On error: wait 30s and retry with alternative symbol format before failing.
     if isinstance(data, dict) and data.get("status") == "error":
-        raise RuntimeError(f"Twelve Data error ({data.get('code')}): {data.get('message')}")
+        if _alt:
+            time.sleep(30)
+            data = _do_fetch(_alt)
+        if isinstance(data, dict) and data.get("status") == "error":
+            raise RuntimeError(f"Twelve Data error ({data.get('code')}): {data.get('message')}")
 
-    # Empty candles: wait 15s and retry once before failing
+    # Empty candles: wait 30s and retry once before failing
     if isinstance(data, dict) and not data.get("values"):
-        time.sleep(15)
-        data = _do_fetch()
+        time.sleep(30)
+        data = _do_fetch(symbol)
         if isinstance(data, dict) and data.get("status") == "error":
             raise RuntimeError(f"Twelve Data error ({data.get('code')}): {data.get('message')}")
         if isinstance(data, dict) and not data.get("values"):
