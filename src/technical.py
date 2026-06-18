@@ -598,7 +598,7 @@ def _fibonacci(df: pd.DataFrame, current_price: float, pair: str = "") -> dict:
 
     hi_arr = tail["high"].values
     lo_arr = tail["low"].values
-    pip    = _pip_size(current_price)
+    pip    = _pip_size(pair if pair else current_price)
 
     # Use n=5 for significant peaks/troughs — filters out minor noise
     peaks   = _local_peaks(hi_arr, n=5)
