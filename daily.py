@@ -4818,6 +4818,24 @@ def _send_telegram_summary(
 
         # OPEN TRADES — compact format for intraday (always first)
         _ot_conf_map_id = {r["pair"]: _eff_conf(r) for r in deep_results if r.get("pair")}
+        # Confidence crisis: send immediate separate alert before main message
+        for _cca_t in _ot_open_trades:
+            _cca_p  = _cca_t.get("pair", "")
+            _cca_ec = None
+            try:
+                _cca_ec = int(float(_cca_t.get("confidence") or 0)) or None
+            except (TypeError, ValueError):
+                pass
+            _cca_cc = _ot_conf_map_id.get(_cca_p)
+            if _cca_ec and _cca_cc is not None and _cca_cc < 3 and _cca_ec >= 3:
+                try:
+                    _telegram(
+                        f"⚠️ Open trade warning — {_cca_p} confidence has fallen to "
+                        f"{_cca_cc}/10 — the original trade rationale may no longer be valid "
+                        f"— consider whether to exit early to avoid a larger loss"
+                    )
+                except Exception:
+                    pass
         _ot_compact = _build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak, compact=True, cur_conf_map=_ot_conf_map_id)
         all_sections.append(_ot_compact)
 
