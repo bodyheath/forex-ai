@@ -83,6 +83,21 @@ def _next_id(rows: list) -> int:
 
 
 def _pip_size(pair: str) -> float:
+    """Return the pip size for any forex pair based on the QUOTE currency.
+
+    Comprehensive rule covering all 130+ eligible pairs:
+      quote JPY  → 0.01     e.g. USD/JPY, EUR/JPY, AUD/JPY, NOK/JPY, HKD/JPY
+      base  JPY  → 0.000001 e.g. JPY/USD, JPY/AUD  (rare inverted pairs)
+      else  → 0.0001        ALL other pairs including:
+                            standard:  EUR/USD, GBP/USD, USD/CAD, AUD/USD …
+                            HKD quote: USD/HKD (≈7.8), CAD/HKD (≈5.6), AUD/HKD …
+                            SGD quote: USD/SGD (≈1.34), EUR/SGD, AUD/SGD …
+                            NOK quote: USD/NOK (≈9.5), EUR/NOK (≈11), GBP/NOK …
+                            SEK quote: USD/SEK (≈10.5), EUR/SEK (≈12), GBP/SEK …
+                            DKK/MXN/ZAR/TRY quote: all use 0.0001
+    Note: HKD/SGD/NOK/SEK pairs all use 4-decimal quoting (0.0001 per pip)
+    regardless of their price level — only JPY pairs use 2-decimal quoting.
+    """
     cleaned = pair.upper().replace("/", "").replace("-", "")
     if len(cleaned) >= 6:
         base  = cleaned[:3]
