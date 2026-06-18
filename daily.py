@@ -2029,10 +2029,18 @@ def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict,
         stop_dist  = stop_pips * pip_size
         stop = round(entry - stop_dist if dirn == "BUY" else entry + stop_dist, dec)
 
-    # Target: nearest Fibonacci level in [1.5x, 2.5x] ATR range, else 2.0x ATR
+    # Target: nearest Fibonacci level in the calibrated ATR range, else ATR fallback.
+    # research_mode uses 1.0x ATR target (tighter) so trades resolve WIN/LOSS quickly.
+    # Display mode keeps 2.0x ATR for fund-level trade blocks — NEVER changed.
     if not target:
-        min_dist = 1.5 * atr
-        max_dist = 2.5 * atr
+        if research_mode:
+            min_dist     = 0.8 * atr
+            max_dist     = 1.2 * atr
+            fallback_mult = 1.0
+        else:
+            min_dist     = 1.5 * atr
+            max_dist     = 2.5 * atr
+            fallback_mult = 2.0
         fib_target = None
         try:
             _fib_d = bundle.get("technical", {}).get("daily", {})
@@ -2052,7 +2060,10 @@ def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict,
         if fib_target is not None:
             target = round(fib_target, dec)
         else:
-            target = round(entry + atr * 2.0 if dirn == "BUY" else entry - atr * 2.0, dec)
+            target = round(
+                entry + atr * fallback_mult if dirn == "BUY"
+                else entry - atr * fallback_mult, dec
+            )
 
     # Reject impossible levels
     if entry and stop is not None and target is not None:
