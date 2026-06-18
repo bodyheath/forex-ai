@@ -652,7 +652,7 @@ def _fibonacci(df: pd.DataFrame, current_price: float, pair: str = "") -> dict:
     }
 
 
-def _detect_divergence(df: pd.DataFrame, rsi: pd.Series) -> dict:
+def _detect_divergence(df: pd.DataFrame, rsi: pd.Series, pair: str = "") -> dict:
     """Detect classic RSI divergence on the most recent 60 bars.
 
     Bullish: price making lower lows while RSI makes higher lows → BUY signal.
