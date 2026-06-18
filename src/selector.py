@@ -1031,6 +1031,14 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
 
     utc_hour = datetime.utcnow().hour
 
+    # Load previous scan state for dynamic boosters (non-fatal — falls back to {})
+    prev_prices = _load_scan_snapshot()
+    wl_cache    = _load_watchlist_cache_data()
+    if prev_prices:
+        log(f"  Dynamic boosters: price snapshot loaded ({len(prev_prices)} pairs from last scan)")
+    if wl_cache.get("watchlist_pairs"):
+        log(f"  Dynamic boosters: watchlist cache loaded ({len(wl_cache['watchlist_pairs'])} carry-forward pairs)")
+
     # Pre-score ALL liquid pairs (no API calls) to prioritise which 20 get
     # price data fetched.  Includes rate divergence so high-divergence pairs
     # (e.g. USD/JPY when rates differ by 5 %) always earn a fetch slot.
