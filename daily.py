@@ -4106,10 +4106,18 @@ def _send_telegram_summary(
                 _raw_ev = _ec_cal.get_events_7d()
                 print(
                     f"[ECO-CAL] build_calendar_section() returned empty — "
-                    f"get_events_7d() returned {len(_raw_ev)} events after HIGH-impact filter"
+                    f"get_events_7d() returned {len(_raw_ev)} events after HIGH-impact filter",
+                    file=sys.stderr,
                 )
+                all_sections.append([
+                    "", "━━━━━━━━━━━━━━━━━━━━━",
+                    "📅 <b>UPCOMING HIGH IMPACT EVENTS</b>",
+                    "No high-impact events scheduled for the next 7 days — clear sailing ahead",
+                ])
         except Exception as _ec_err:
-            print(f"[ECO-CAL] Exception in economic calendar: {_ec_err}")
+            import traceback as _tb_cal
+            print(f"[ECO-CAL] Exception in economic calendar: {_ec_err}", file=sys.stderr)
+            print(_tb_cal.format_exc(), file=sys.stderr)
 
         # SYSTEM LEARNING REPORT (Monday 6am only)
         _slr = _build_system_learning_report(date)
