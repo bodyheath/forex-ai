@@ -4484,6 +4484,14 @@ def _send_telegram_summary(
         if watch_list:
             for rr in watch_list:
                 watch_sec.extend(_watch_entry(rr))
+                # Missed opportunity: flag pairs with confidence ≥5 but data on fallback
+                try:
+                    from src import data_quality as _dq_wl
+                    _mo_note = _dq_wl.missed_opportunity_note(rr)
+                    if _mo_note:
+                        watch_sec.append(_mo_note)
+                except Exception:
+                    pass
         else:
             watch_sec.append("Nothing on watch list today — the system is waiting for cleaner setups")
         all_sections.append(watch_sec)
