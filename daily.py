@@ -5132,6 +5132,34 @@ def _send_telegram_summary(
             f"Run took {run_duration_min:.0f} minutes · {universe_size} pairs scanned · "
             f"{n_deep} deep analysed · {_rt_open} research trades opened"
         )
+        # Currency coverage summary (6am full scan only)
+        if scan_mode == "full":
+            try:
+                _cov: dict = {}
+                for _r in deep_results:
+                    _pts = _r["pair"].split("/")
+                    if len(_pts) == 2:
+                        for _c in _pts:
+                            _cov[_c] = _cov.get(_c, 0) + 1
+                if _cov:
+                    _cov_parts = [
+                        f"{ccy}({n})"
+                        for ccy, n in sorted(_cov.items(), key=lambda x: (-x[1], x[0]))
+                    ]
+                    _g8 = {"USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "NZD"}
+                    _represented = _g8.intersection(_cov)
+                    if _represented == _g8:
+                        _cov_verdict = "all major currencies represented"
+                    elif len(_represented) >= 6:
+                        _missing = sorted(_g8 - _represented)
+                        _cov_verdict = f"{', '.join(_missing)} not represented"
+                    else:
+                        _cov_verdict = f"{len(_represented)}/8 major currencies represented"
+                    health_sec.append(
+                        f"📊 Pair coverage: {' '.join(_cov_parts)} — {_cov_verdict}"
+                    )
+            except Exception:
+                pass
         all_sections.append(health_sec)
 
         # RESEARCH THRESHOLD ANALYSIS
