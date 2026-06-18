@@ -766,6 +766,24 @@ def _compute_rich_score(
     bd["9_regime_alignment"] = round(f9, 2)
 
     total = sum(bd.values())
+
+    # ── Performance multiplier (pair-specific weighting) ─────────────────────
+    # Pairs with proven edge are boosted; persistent losers are deprioritised.
+    # Applied AFTER all factor scoring so the multiplier is clearly separable.
+    _perf_n  = _perf["n"]  if _perf else 0
+    _perf_wr = _perf["wr"] if _perf else None
+    _mult = 1.0
+    if _perf_wr is not None:
+        if _perf_wr == 0.0 and _perf_n >= 8:
+            _mult = 0.50   # −50%: consistent loser with 8+ trades
+        elif _perf_wr == 0.0 and _perf_n >= 5:
+            _mult = 0.70   # −30%: poor performer with 5+ trades
+        elif _perf_wr >= 0.60 and _perf_n >= 5:
+            _mult = 1.20   # +20%: demonstrated edge with 5+ trades
+    if _mult != 1.0:
+        bd["perf_multiplier"] = round(_mult, 2)
+    total = round(total * _mult, 2)
+
     return round(total, 2), bd
 
 
