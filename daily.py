@@ -3806,6 +3806,7 @@ def _send_telegram_summary(
             pass
 
         _fib_entry_price = entry_raw
+        _fib_entry_label = None
         if _is_high_conf and isinstance(_fib, dict) and _fib.get("status") == "ok":
             _fib_lvls = (
                 _fib.get("nearest_below", []) if direction == "BUY"
@@ -3818,6 +3819,7 @@ def _send_telegram_summary(
                         key=lambda lp: abs(float(lp[1]) - float(entry_raw)),
                     )
                     _fib_entry_price = _best_fib[1]
+                    _fib_entry_label = str(_best_fib[0])
                 except (TypeError, ValueError, IndexError):
                     pass
 
