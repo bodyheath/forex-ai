@@ -338,6 +338,13 @@ def train(quiet: bool = False) -> dict:
     scaler = StandardScaler()
     X_s    = scaler.fit_transform(X)
 
+    # Class imbalance correction: weight minority class up so the model can't
+    # exploit "predict LOSS always" as a cheap strategy.
+    try:
+        _sw = compute_sample_weight("balanced", y)
+    except Exception:
+        _sw = None
+
     # Determine safe CV fold count.  Cap at the smallest class size so stratified
     # splitting never requests more folds than there are examples of the rarer class.
     n_wins_tr   = int(y.sum())
