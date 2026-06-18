@@ -876,13 +876,13 @@ def _summarise(df: pd.DataFrame, label: str, pair: str = "") -> dict:
     cci_val       = float(cci_s.iloc[-1])
     osc_conf      = _oscillator_confluence(rsi14_val, stoch_k_val, stoch_d_val, cci_val)
     pivots        = _pivots(df.iloc[-2])
-    fib           = _fibonacci(df, float(last))
+    fib           = _fibonacci(df, float(last), pair=pair)
     fib_vals      = list(fib["levels"].values()) if fib.get("status") == "ok" else []
     patterns      = _detect_candle_patterns(
         df, float(bb_lower), float(bb_upper), float(sma50), pivots,
         extra_levels=fib_vals,
     )
-    divergence    = _detect_divergence(df, rsi)
+    divergence    = _detect_divergence(df, rsi, pair=pair)
     ribbon        = _ema_ribbon(close)
 
     return {
