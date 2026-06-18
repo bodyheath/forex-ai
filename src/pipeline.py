@@ -70,12 +70,15 @@ def gather(base: str, quote: str, log=print,
 
 def run(pair: str, log=print, force_deep: bool = False,
         shared_fundamental=None, shared_macro=None,
-        sonnet_threshold: int = 6) -> dict:
+        sonnet_threshold: int = 6,
+        pair_threshold_override: "float | None" = None) -> dict:
     """Analyse one pair.
 
     sonnet_threshold controls when Haiku result is escalated to Sonnet:
       6 = 6am full scan (more Sonnet calls, highest quality).
       7 = intraday scans (Haiku-only for most pairs, Sonnet only for near-certain trades).
+    pair_threshold_override: if set, lowers the TRADE_THIS confidence threshold for this
+      specific pair (used for pairs with demonstrated 70%+ win rate).
     """
     base, quote = parse_pair(pair)
     canonical   = f"{base}/{quote}"
