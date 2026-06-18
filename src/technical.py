@@ -842,7 +842,7 @@ def _trend(close: pd.Series, sma50: float, sma200: float) -> str:
     return "mixed / range (price and MAs not aligned)"
 
 
-def _summarise(df: pd.DataFrame, label: str) -> dict:
+def _summarise(df: pd.DataFrame, label: str, pair: str = "") -> dict:
     if len(df) < 30:
         return {"timeframe": label, "status": "insufficient data", "candle_count": len(df)}
     close = df["close"]
