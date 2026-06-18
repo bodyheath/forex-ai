@@ -1570,6 +1570,43 @@ def _build_research_section(research_result=None) -> list:
         pwr = int(ps["wins"] / ps["total"] * 100) if ps["total"] else 0
         sec.append(f"{pair} — {ps['wins']} wins from {ps['total']} trades ({pwr}%)")
 
+    # ── Pair performance weighting display ───────────────────────────────────
+    # Build per-pair stats using decisive trades (WIN + LOSS only, not PARTIAL/EXPIRED)
+    _pw_stats: dict = {}
+    for r in rows:
+        p = r.get("pair", "")
+        s = r.get("status", "")
+        if not p or s not in ("WIN", "LOSS"):
+            continue
+        if p not in _pw_stats:
+            _pw_stats[p] = {"wins": 0, "n": 0}
+        _pw_stats[p]["n"] += 1
+        if s == "WIN":
+            _pw_stats[p]["wins"] += 1
+
+    _strengths = sorted(
+        [(p, d["wins"] / d["n"], d["n"]) for p, d in _pw_stats.items()
+         if d["n"] >= 3 and d["wins"] / d["n"] >= 0.60],
+        key=lambda x: x[1], reverse=True,
+    )
+    _weaknesses = sorted(
+        [(p, d["n"]) for p, d in _pw_stats.items()
+         if d["n"] >= 4 and d["wins"] == 0],
+        key=lambda x: x[1], reverse=True,
+    )
+
+    if _strengths or _weaknesses:
+        sec.append("")
+    if _strengths:
+        _str_parts = " · ".join(f"{p} {wr:.0%}" for p, wr, _ in _strengths[:6])
+        sec.append(f"🏆 System strengths (60%+ win rate with 3+ trades): {_str_parts}")
+    if _weaknesses:
+        _wk_parts = " · ".join(p for p, _ in _weaknesses[:5])
+        sec.append(
+            f"⚠️ System weaknesses (0% win rate with 4+ trades): {_wk_parts}"
+            f" — deprioritised until conditions change"
+        )
+
     # Days until / since threshold analysis
     sec.append("")
     if days_remaining > 0:
