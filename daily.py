@@ -3053,7 +3053,7 @@ def _send_telegram_summary(
         [r for r in deep_results
          if r["pair"] not in _yes_pair_set
          and 5 <= _eff_conf(r) <= 6
-         and _quality_grades.get(r["pair"], _trade_quality_grade(r)).get("grade") != "F"
+         and _quality_grades.get(r["pair"], _trade_quality_grade(r)).get("grade") not in ("D", "F")
         ] + _c_grade_yes,
         key=_eff_conf, reverse=True,
     )[:4]   # allow one extra slot for demoted C-grade alerts
