@@ -3836,59 +3836,122 @@ def _send_telegram_summary(
 
         block.append("━━━━━━━━━━━━━━━━━━━━━")
         if _is_high_conf and _fib_entry_price is not None and _cur_price is not None:
-            _move_word   = "drop" if direction == "BUY" else "rise"
-            _participant = "buyers" if direction == "BUY" else "sellers"
-            _reversal    = "upward" if direction == "BUY" else "downward"
-            _pip_to_stop   = _fmt_pips_between(pair, _fib_entry_price, adj_stop)
-            _pip_to_target = _fmt_pips_between(pair, _fib_entry_price, adj_tgt)
+            _pb_move_word   = "dip"    if direction == "BUY" else "rally"
+            _pb_participant = "buyers" if direction == "BUY" else "sellers"
+            _pb_chase_word  = "higher" if direction == "BUY" else "lower"
+
+            # Pips between current price and pullback entry level
+            _pb_dist_pips = None
             try:
-                _dist_pips = round(abs(_cur_price - float(_fib_entry_price)) / _tb_pip)
+                _pb_dist_pips = round(abs(_cur_price - float(_fib_entry_price)) / _tb_pip)
             except (TypeError, ValueError, ZeroDivisionError):
-                _dist_pips = None
+                pass
+
+            # True when price already ran through the entry without pulling back
+            _pb_past_entry = False
             try:
-                _past_entry = (
+                _pb_past_entry = (
                     float(_cur_price) <= float(_fib_entry_price) if direction == "BUY"
                     else float(_cur_price) >= float(_fib_entry_price)
                 )
             except (TypeError, ValueError):
-                _past_entry = False
-            block += [
-                "⏰ <b>EXACT ENTRY INSTRUCTIONS:</b>",
-                f"{_eq_em} {_eq_lb}",
-                "",
-                "<b>WHEN TO ENTER:</b>",
-            ]
-            if _past_entry:
+                pass
+
+            # R:R entering at current market price
+            _pb_rr_market_str = None
+            try:
+                if direction == "BUY":
+                    _pb_rr_mkt = abs(float(adj_tgt) - _cur_price) / abs(_cur_price - float(adj_stop))
+                else:
+                    _pb_rr_mkt = abs(_cur_price - float(adj_tgt)) / abs(float(adj_stop) - _cur_price)
+                _pb_rr_market_str = f"{_pb_rr_mkt:.1f}:1"
+            except (TypeError, ValueError, ZeroDivisionError):
+                pass
+
+            # R:R entering at the pullback level (only valid if pullback is inside the stop)
+            _pb_rr_pullback_str = None
+            try:
+                _fep = float(_fib_entry_price)
+                _ast = float(adj_stop)
+                _at  = float(adj_tgt)
+                if direction == "BUY" and _fep > _ast:
+                    _pb_rr_pullback_str = f"{abs(_at - _fep) / abs(_fep - _ast):.1f}:1"
+                elif direction == "SELL" and _fep < _ast:
+                    _pb_rr_pullback_str = f"{abs(_fep - _at) / abs(_ast - _fep):.1f}:1"
+            except (TypeError, ValueError, ZeroDivisionError):
+                pass
+
+            # Confluence: is the 20-period swing high/low within 15 pips of the fib level?
+            _pb_why = None
+            try:
+                _pb_swing_key  = "recent_low_20"  if direction == "BUY" else "recent_high_20"
+                _pb_swing_type = "previous swing low" if direction == "BUY" else "previous swing high"
+                _pb_swing_val  = float(_tb_daily.get(_pb_swing_key) or 0)
+                _pb_thresh     = _tb_pip * 15
+                _fep_f = float(_fib_entry_price)
+                if _pb_swing_val > 0 and abs(_pb_swing_val - _fep_f) <= _pb_thresh:
+                    if _fib_entry_label:
+                        _pb_why = (
+                            f"Fibonacci {_fib_entry_label} retracement AND {_pb_swing_type} "
+                            f"both sit at {_fmt_price(_fib_entry_price)} — this is where "
+                            f"{_pb_participant} are likely to step in strongly"
+                        )
+                    else:
+                        _pb_why = (
+                            f"Key Fibonacci retracement AND {_pb_swing_type} "
+                            f"both sit at {_fmt_price(_fib_entry_price)} — this is where "
+                            f"{_pb_participant} are likely to step in strongly"
+                        )
+                else:
+                    if _fib_entry_label:
+                        _pb_why = (
+                            f"Fibonacci {_fib_entry_label} retracement sits at "
+                            f"{_fmt_price(_fib_entry_price)} — this is where "
+                            f"{_pb_participant} are likely to step in"
+                        )
+                    else:
+                        _pb_why = (
+                            f"Key price level at {_fmt_price(_fib_entry_price)} — "
+                            f"this is where {_pb_participant} are likely to step in"
+                        )
+            except (TypeError, ValueError):
+                _pb_why = (
+                    f"Key price level at {_fmt_price(_fib_entry_price)} — "
+                    f"this is where {_pb_participant} are likely to step in"
+                )
+
+            if _pb_past_entry:
                 block += [
-                    f"Price is already at or past the ideal entry level of {_fmt_price(_fib_entry_price)}",
-                    f"Current price is {_fmt_price(_cur_price)} — enter immediately if you have not already done so",
-                    f"If price has already moved more than 15 pips past {_fmt_price(_fib_entry_price)} do not enter — you have missed this trade",
-                    "Wait for the next scan instead — chasing price always leads to worse results",
+                    "⏳ <b>PULLBACK ENTRY</b>",
+                    "Price ran away without a pullback — skip this trade — "
+                    "wait for the next pullback opportunity on this pair",
                 ]
             else:
-                block.append(
-                    f"Watch for price to reach {_fmt_price(_fib_entry_price)} — this is a key price level where {_participant} are likely to step in"
+                _pb_dip_str = (
+                    f"price needs to {_pb_move_word} {_pb_dist_pips} pips to the ideal level"
+                    if _pb_dist_pips else
+                    f"price needs to {_pb_move_word} to this level"
                 )
-                if _dist_pips is not None:
-                    block.append(
-                        f"Current price is {_fmt_price(_cur_price)} — you are waiting for price to "
-                        f"{_move_word} {_dist_pips} pips to the ideal entry level"
-                    )
                 block += [
-                    f"If price reaches {_fmt_price(_fib_entry_price)} enter the trade immediately",
-                    f"If price does not reach {_fmt_price(_fib_entry_price)} by {_ew_cut} Auckland tonight skip this trade and wait for tomorrow",
+                    f"⏳ <b>PULLBACK ENTRY</b> — do not enter at current price",
+                    f"Current price: {_fmt_price(_cur_price)}",
+                    f"Ideal entry level: {_fmt_price(_fib_entry_price)} — {_pb_dip_str}",
+                    f"Why this level: {_pb_why}",
                     "",
-                    "<b>HOW TO KNOW IF YOU MISSED THE ENTRY:</b>",
-                    f"If price has already moved more than 15 pips past {_fmt_price(_fib_entry_price)} do not chase it",
-                    "Wait for the next scan instead — chasing price always leads to worse results",
+                    f"If price reaches {_fmt_price(_fib_entry_price)} — enter immediately",
+                    f"If price does not reach {_fmt_price(_fib_entry_price)} by {_ew_cut} Auckland — skip this trade entirely",
                 ]
-            block += [
-                "",
-                "<b>WHY THIS PRICE LEVEL:</b>",
-                f"The system has identified {_fmt_price(_fib_entry_price)} as the ideal entry because it is a key price zone where the market has previously reversed {_reversal}",
-                "Entering here gives the best possible risk to reward ratio for this trade",
-                f"Your stop loss is {_pip_to_stop} away at {_fmt_price(adj_stop)} and your target is {_pip_to_target} away at {_fmt_price(adj_tgt)}",
-            ]
+                if _pb_rr_pullback_str and _pb_rr_market_str:
+                    block.append(
+                        f"Do not chase price {_pb_chase_word} — a patient entry at "
+                        f"{_fmt_price(_fib_entry_price)} gives you R:R of {_pb_rr_pullback_str} "
+                        f"vs only {_pb_rr_market_str} if you enter now"
+                    )
+                else:
+                    block.append(
+                        f"Do not chase price {_pb_chase_word} — "
+                        "wait for the pullback to get the best risk to reward"
+                    )
         else:
             block += [
                 f"⏰ <b>EXACT ENTRY INSTRUCTIONS:</b>",
