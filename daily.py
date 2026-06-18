@@ -2898,6 +2898,77 @@ def _build_system_learning_report(date: str) -> list:
     except Exception:
         pass
 
+    # ── ML TRAINING DATA BALANCE ───────────────────────────────────────────────
+    try:
+        from src import ml_predictor as _mlp_bal
+        _bal_meta   = _mlp_bal._load_meta()
+        _bal_wins   = _bal_meta.get("n_wins_training")
+        _bal_loss   = _bal_meta.get("n_losses_training")
+        _bal_n      = _bal_meta.get("n_trades")
+        _bal_biased = _bal_meta.get("is_biased", False)
+        _bal_lpct   = _bal_meta.get("prediction_loss_pct")
+
+        sec += ["", "<b>ML TRAINING DATA BALANCE</b>"]
+        if _bal_wins is not None and _bal_loss is not None and _bal_n is not None:
+            _bal_ratio_str = f"{_bal_wins} WIN + {_bal_loss} LOSS"
+            if _bal_biased:
+                sec.append(
+                    f"⚠️ ML model biased — predicting LOSS on {_bal_lpct}% of training "
+                    f"examples ({_bal_ratio_str}) — class weights applied automatically"
+                )
+            else:
+                _bal_r = round(_bal_loss / _bal_wins, 1) if _bal_wins > 0 else None
+                sec.append(
+                    f"ML training data: {_bal_n} trades used ({_bal_ratio_str}) "
+                    f"— PARTIAL_WIN counted as WIN — class weights applied"
+                )
+                if _bal_r is not None:
+                    if _bal_r <= 3.0:
+                        sec.append(f"✅ Class ratio {_bal_r}:1 — well balanced training data — model learning genuine patterns")
+                    else:
+                        sec.append(f"Class ratio {_bal_r}:1 — class weights correcting imbalance — model learning genuine patterns")
+        else:
+            _raw_pw = sum(1 for r in rows if r.get("status") in ("WIN", "PARTIAL_WIN"))
+            _raw_ls = sum(1 for r in rows if r.get("status") == "LOSS")
+            sec.append(
+                f"Model not yet trained — {_raw_pw} WIN/PARTIAL_WIN + {_raw_ls} LOSS recorded "
+                f"(PARTIAL_WIN will count as WIN when training runs)"
+            )
+        any_added = True
+    except Exception:
+        pass
+
+    # ── LEARNING VELOCITY ─────────────────────────────────────────────────────
+    try:
+        from datetime import timedelta as _lv_td
+        _lv_cutoff = (datetime.now() - _lv_td(days=7)).strftime("%Y-%m-%d")
+        _lv_new = [
+            r for r in rows
+            if r.get("status") in ("WIN", "LOSS", "PARTIAL_WIN")
+            and (r.get("closed_at") or r.get("date") or "")[:10] >= _lv_cutoff
+        ]
+        _lv_count = len(_lv_new)
+        sec += ["", "<b>LEARNING VELOCITY</b>"]
+        if _lv_count >= 5:
+            sec.append(
+                f"✅ This week {_lv_count} new decisive outcomes added — "
+                f"learning velocity strong"
+            )
+        elif _lv_count >= 2:
+            sec.append(
+                f"This week {_lv_count} new decisive outcomes added — "
+                f"learning velocity improving"
+            )
+        else:
+            sec.append(
+                f"⚠️ This week {_lv_count} new decisive outcome"
+                f"{'s' if _lv_count != 1 else ''} added — learning too slow — "
+                f"target calibration should improve this automatically"
+            )
+        any_added = True
+    except Exception:
+        pass
+
     # ── 4. BEST AND WORST PAIRS ────────────────────────────────────────────────
     pair_stats: dict = {}
     for r in decisive:
