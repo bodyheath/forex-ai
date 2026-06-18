@@ -4563,7 +4563,8 @@ def _send_telegram_summary(
             all_sections.append(["", "━━━━━━━━━━━━━━━━━━━━━", _dd_banner])
 
         # OPEN TRADES — compact format for intraday (always first)
-        _ot_compact = _build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak, compact=True)
+        _ot_conf_map_id = {r["pair"]: _eff_conf(r) for r in deep_results if r.get("pair")}
+        _ot_compact = _build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak, compact=True, cur_conf_map=_ot_conf_map_id)
         all_sections.append(_ot_compact)
 
         # ── SESSION FOCUS (5pm = London, 11pm = New York) ─────────────────────
