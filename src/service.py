@@ -44,11 +44,22 @@ def analyse_and_log(
 
     parsed = recparse.parse(result["report"])
 
-    # Hard MTF gate: TRADE_THIS YES requires weekly+daily both agreeing on direction.
+    # Graduated MTF gate: block trades where weekly actively opposes daily+4H,
+    # or neither weekly nor daily show a directional signal.
     # If MTF data is unavailable (qualifies defaults to True) we don't block.
     _mtf = result.get("bundle", {}).get("mtf", {})
     if parsed.get("trade_this") == "YES" and _mtf and not _mtf.get("qualifies", True):
         parsed["trade_this"] = "NO"
+
+    # Apply MTF confidence penalty for weak signals (weekly-only or mixed).
+    # Reduces confidence BEFORE the watch-list threshold check in daily.py.
+    _mtf_penalty = _mtf.get("conf_penalty", 0) if _mtf else 0
+    if _mtf_penalty > 0 and parsed.get("trade_this") == "YES":
+        try:
+            _raw_conf = float(parsed.get("confidence") or 5)
+            parsed["confidence"] = str(max(1, round(_raw_conf - _mtf_penalty)))
+        except (TypeError, ValueError):
+            pass
 
     rec_id = tracker.log_recommendation(
         result["pair"], parsed, result["availability"]["count"], result["report"]
