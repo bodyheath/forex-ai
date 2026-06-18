@@ -6221,6 +6221,21 @@ def run() -> int:
             _log_line(logf, f"Smart selection failed ({exc}) — falling back to watchlist.")
             pairs_today = list(config.WATCHLIST)
 
+        # 2b-i. Opportunity gap detection — compare ranked pairs to last scan prices
+        _opportunity_data: dict = {}
+        try:
+            _forced_gap_pairs, _opportunity_data = _detect_opportunity_gaps(
+                ranked_all, _prev_scan_prices, scan_mode,
+                log=lambda m: _log_line(logf, m),
+            )
+            if _forced_gap_pairs:
+                _log_line(logf, f"Gap detection: {len(_forced_gap_pairs)} pair(s) forced into analysis: {', '.join(_forced_gap_pairs)}")
+                for _gp in _forced_gap_pairs:
+                    if _gp not in pairs_today:
+                        pairs_today.append(_gp)
+        except Exception as _gap_exc:
+            _log_line(logf, f"Gap detection failed ({_gap_exc}) — continuing without it")
+
         # 2b. COST OPTIMISATION — Pre-filter using free data before Twelve Data fetch
         try:
             if ranked_all:
