@@ -371,6 +371,7 @@ def train(quiet: bool = False) -> dict:
         #   min_samples_leaf=15 — no pattern learned from < 15 examples (safeguard 1)
         #   n_estimators=100    — fewer trees = simpler model (complexity penalty)
         #   max_features=0.7    — random feature subsets at each split (complexity penalty)
+        # class imbalance handled via sample_weight passed to fit()
         base   = GradientBoostingClassifier(
             n_estimators=100, max_depth=3, learning_rate=0.05,
             min_samples_leaf=MIN_PATTERN_SAMPLES, subsample=0.8,
@@ -379,21 +380,24 @@ def train(quiet: bool = False) -> dict:
         method = "isotonic"
         mtype  = "GradientBoosting"
     else:
-        # C=0.1 — strong L2 regularisation suppresses rare single-occurrence patterns
-        base   = LogisticRegression(C=0.1, max_iter=1000, random_state=42)
+        # C=0.1 — strong L2 regularisation; class_weight="balanced" corrects WIN/LOSS ratio
+        base   = LogisticRegression(C=0.1, max_iter=1000, random_state=42,
+                                    class_weight="balanced")
         method = "sigmoid"
         mtype  = "LogisticRegression"
 
+    _fit_kw = {"sample_weight": _sw} if _sw is not None else {}
+
     if skip_cv:
         # Fit base model first, then wrap with prefit calibration (no CV required).
-        base.fit(X_s, y)
+        base.fit(X_s, y, **_fit_kw)
         model = CalibratedClassifierCV(base, cv="prefit", method="sigmoid")
-        model.fit(X_s, y)
+        model.fit(X_s, y, **_fit_kw)
         if not quiet:
             print(f"[ml_predictor] {no_cv_msg}")
     else:
         model = CalibratedClassifierCV(base, cv=cv_k, method=method)
-        model.fit(X_s, y)
+        model.fit(X_s, y, **_fit_kw)
 
     # ROC-AUC cross-validation (in-sample, k-fold) — skipped when min_class < 2
     roc_auc = roc_std = 0.0
