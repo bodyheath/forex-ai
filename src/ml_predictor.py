@@ -299,8 +299,8 @@ def train(quiet: bool = False) -> dict:
         _save_meta(meta)
         return meta
 
-    # Require a minimum of decisive outcomes (WIN + LOSS only) before training.
-    # EXPIRED / BREAKEVEN are excluded because they don't cleanly represent edge direction.
+    # Require a minimum of labelled outcomes before training.
+    # WIN/PARTIAL_WIN → y=1, LOSS → y=0.  EXPIRED/BREAKEVEN excluded (ambiguous direction).
     _d_wins, _d_losses = _count_decisive_trades()
     _d_total = _d_wins + _d_losses
     if _d_total < MIN_TRADES:
