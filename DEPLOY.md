@@ -11,11 +11,10 @@
 
 Replace `yourusername` with your actual GitHub username throughout this guide.
 
-> **Privacy note:** GitHub Pages requires a **public repository** on the free plan. This means
-> your code, trade history (`trades.csv`), and dashboard will be publicly visible on the internet.
-> Your API keys are stored as encrypted Secrets and are **never** visible — not even to you in
-> plain text after you save them. If you want a private repo, GitHub Pro ($4/month) unlocks
-> Pages for private repos.
+> **Privacy note:** The main `forex-ai` repository is private — your code and trade history are not publicly visible.
+> The dashboard is published to a separate public repository (`forex-ai-dashboard`) so it remains accessible at
+> `https://bodyheath.github.io/forex-ai-dashboard`. Your API keys are stored as encrypted Secrets and are
+> **never** visible — not even to you in plain text after you save them.
 
 ---
 
