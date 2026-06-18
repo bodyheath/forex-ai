@@ -3074,6 +3074,16 @@ def _build_system_learning_report(date: str) -> list:
             sec.append("⚠️ Confidence scoring needs review")
         any_added = True
 
+    # ── DATA QUALITY REPORT ───────────────────────────────────────────────────
+    try:
+        from src import data_quality as _dq_lr
+        _dq_lr_lines = _dq_lr.weekly_report(_dq_lr.load_state())
+        if _dq_lr_lines:
+            sec.extend(_dq_lr_lines)
+            any_added = True
+    except Exception:
+        pass
+
     # ── 6. OVERALL LEARNING VERDICT ────────────────────────────────────────────
     if any_added or n_dec >= 10:
         parts = []
