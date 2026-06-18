@@ -238,7 +238,16 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
             if outcome is None:
                 continue
 
-            updated = research_tracker.update_outcome(rec_id, outcome, close_price=price)
+            # For stop/target hits use the exact level as close price — not the
+            # live market price which may have drifted past the level between
+            # periodic checks.  This gives the correct R-multiple and pip count.
+            if outcome == "WIN":
+                close_recorded = _to_float(row.get("target")) or price
+            elif outcome == "LOSS":
+                close_recorded = _to_float(row.get("stop_loss")) or price
+            else:
+                close_recorded = price
+            updated = research_tracker.update_outcome(rec_id, outcome, close_price=close_recorded)
             r_txt   = f", R={updated.get('r_multiple')}, pips={updated.get('pips')}"
             log(
                 f"  Research #{rec_id} {pair} {direction}: "
