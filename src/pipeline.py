@@ -128,7 +128,7 @@ def run(pair: str, log=print, force_deep: bool = False,
     # Use pair_threshold_override if set (high-performing pairs escalate at lower confidence)
     _eff_threshold = pair_threshold_override if pair_threshold_override is not None else sonnet_threshold
     if haiku["confidence"] < _eff_threshold:
-        log(f"  Haiku-only (conf {haiku['confidence']} < threshold {sonnet_threshold}).")
+        log(f"  Haiku-only (conf {haiku['confidence']} < threshold {_eff_threshold}).")
         return {
             "pair":         canonical,
             "bundle":       bundle,
