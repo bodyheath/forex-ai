@@ -4836,6 +4836,27 @@ def _send_telegram_summary(
     # INTRADAY SCANS (9AM / 5PM / 11PM) — unified expanded format
     # ═══════════════════════════════════════════════════════════════════════════
     elif scan_mode in ("morning", "prelondon", "preny"):
+        # ── DATA QUALITY ASSESSMENT (intraday)
+        _dq_quality_id: dict = {}
+        _dq_state_id:   dict = {}
+        try:
+            from src import data_quality as _dq_id_pre
+            _dq_quality_id = _dq_id_pre.assess_scan(deep_results)
+            _dq_state_id   = _dq_id_pre.update_state(_dq_quality_id, scan_mode)
+            _dq_hv_id = _dq_id_pre.high_volume_alert(_dq_quality_id)
+            if _dq_hv_id:
+                try:
+                    _telegram(_dq_hv_id)
+                except Exception:
+                    pass
+            for _dq_al_id in _dq_id_pre.consecutive_alerts(_dq_state_id):
+                try:
+                    _telegram(_dq_al_id)
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
         # Header — include session context line for 5pm and 11pm
         if scan_mode == "morning":
             _hdr_id = [f"<b>🤖 FOREX AI — 🌏 9AM MORNING CHECK — {today_short}</b>"]
