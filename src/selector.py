@@ -1158,6 +1158,22 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
             "atr5":       _atr5,
         }
 
+    # ── Dynamic merit boosters ───────────────────────────────────────────────────
+    log("\n  Dynamic merit boosters:")
+    _any_dynamic = prev_prices or wl_cache.get("watchlist_pairs") or wl_cache.get("near_miss")
+    if not _any_dynamic and not _SESSION_BOOST_CCYS.get(scan_mode):
+        log("  (no previous scan data — boosters inactive on first run)")
+    carry_forward = _apply_dynamic_boosts(pair_scores, prev_prices, wl_cache, scan_mode, log)
+
+    # Save price snapshot for next scan's breakout / currency boost detection
+    _snap_to_save = {
+        pair: meta["cur_close"]
+        for pair, meta in pair_scores.items()
+        if meta.get("cur_close") is not None
+    }
+    if _snap_to_save:
+        _save_scan_snapshot(_snap_to_save)
+
     ranked = sorted(pair_scores.items(), key=lambda x: x[1]["score"], reverse=True)
 
     # ── OHLCV fetch summary ───────────────────────────────────────────────────
