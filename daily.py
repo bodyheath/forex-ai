@@ -3966,6 +3966,35 @@ def _send_telegram_summary(
             "━━━━━━━━━━━━━━━━━━━━━",
             f"📈 Confidence: {_conf_display}/10  {_conf_bar(_conf_display)}",
         ]
+        # MTF timeframe display line
+        try:
+            _mtf_tb      = r.get("bundle", {}).get("mtf", {})
+            _mtf_gate_tb = _mtf_tb.get("mtf_gate", "") if isinstance(_mtf_tb, dict) else ""
+            _mtf_sigs_tb = _mtf_tb.get("signals", {}) if isinstance(_mtf_tb, dict) else {}
+            if _mtf_gate_tb and _mtf_sigs_tb:
+                def _sig_word(sig, tf_for_neutral):
+                    if sig in ("BUY", "SELL"):
+                        return sig
+                    return "consolidating (neutral)" if tf_for_neutral == "daily" else "neutral"
+                _w_word   = _sig_word(_mtf_sigs_tb.get("weekly", "NEUTRAL"), "weekly")
+                _d_word   = _sig_word(_mtf_sigs_tb.get("daily",  "NEUTRAL"), "daily")
+                _h4_word  = _sig_word(_mtf_sigs_tb.get("h4",     "NEUTRAL"), "h4")
+                _tf_bar   = f"Timeframes: Weekly {_w_word} · Daily {_d_word} · 4H {_h4_word}"
+                _dir_word = "uptrend" if direction == "BUY" else "downtrend"
+                if _mtf_gate_tb == "strong_all3":
+                    _tf_tag = "all timeframes aligned — highest quality setup"
+                elif _mtf_gate_tb == "strong_w_d":
+                    _tf_tag = "weekly and daily aligned — valid setup"
+                elif _mtf_gate_tb == "strong_w_4h":
+                    _tf_tag = f"classic pullback entry within weekly {_dir_word} — high quality setup"
+                elif _mtf_gate_tb in ("weak_weekly_only", "weak_mixed"):
+                    _tf_tag = "weekly trend only — reduced confidence — watch list"
+                else:
+                    _tf_tag = None
+                if _tf_tag:
+                    block.append(f"📊 {_tf_bar} — {_tf_tag}")
+        except Exception:
+            pass
         # Second opinion summary line
         _so_tb = r.get("second_opinion")
         if _so_tb:
