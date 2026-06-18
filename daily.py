@@ -4803,7 +4803,7 @@ def _send_telegram_summary(
             if _eff_conf(r) <= 4
             and r["pair"].upper() not in _open_pair_set
             and not any(_is_inverse(r["pair"], op) for op in _open_pair_set)
-            and _quality_grades.get(r["pair"], _trade_quality_grade(r)).get("grade") != "F"
+            and _quality_grades.get(r["pair"], _trade_quality_grade(r)).get("grade") not in ("D", "F")
         ][:2]
 
         if _watch_items:
