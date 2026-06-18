@@ -3200,6 +3200,7 @@ def _send_telegram_summary(
     research_result: dict = None,
     threshold_revert_msg: str = None,
     cost_lines: list = None,
+    opportunity_data: dict = None,
 ) -> None:
     """Build and send Telegram notifications with format tailored to each scan mode."""
     closed_today    = closed_today    or []
