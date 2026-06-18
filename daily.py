@@ -4004,7 +4004,8 @@ def _send_telegram_summary(
             all_sections.append(["", "━━━━━━━━━━━━━━━━━━━━━", _dd_banner])
 
         # OPEN TRADES — always at the top so it's the first thing seen
-        all_sections.append(_build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak))
+        _ot_conf_map = {r["pair"]: _eff_conf(r) for r in deep_results if r.get("pair")}
+        all_sections.append(_build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak, cur_conf_map=_ot_conf_map))
 
         # MARKET CONTEXT
         _patience = _compute_patience_score(ctx)
