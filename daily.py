@@ -4478,11 +4478,6 @@ def _send_telegram_summary(
             )
         if run_duration_min > 20:
             health_issues.append(f"Run took {run_duration_min:.0f} minutes — longer than normal")
-        import os as _os
-        if not _os.getenv("ACCOUNT_BALANCE"):
-            health_issues.append(
-                "Account balance not configured — set ACCOUNT_BALANCE in GitHub secrets"
-            )
         health_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "⚠️ <b>SYSTEM HEALTH</b>"]
         if threshold_revert_msg:
             health_sec.append(threshold_revert_msg)
