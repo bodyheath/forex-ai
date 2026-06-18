@@ -4787,7 +4787,7 @@ def _send_telegram_summary(
         )
         _watch_items_raw    = [r for r in _all_candidates
                                if _eff_conf(r) >= 5
-                               and _quality_grades.get(r["pair"], _trade_quality_grade(r)).get("grade") != "F"]
+                               and _quality_grades.get(r["pair"], _trade_quality_grade(r)).get("grade") not in ("D", "F")]
         # Deduplicate inverse pairs vs yes_trades and within watch list
         _wi_seen: set = {r["pair"].upper().replace("/", "") for r in yes_trades}
         _watch_items = []
