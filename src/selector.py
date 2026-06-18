@@ -1026,6 +1026,17 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
             f"{chg:+.3f}%  {why}"
         )
 
+    # ── Performance multiplier summary log ───────────────────────────────────
+    _boosted  = [(p, m["breakdown"]["perf_multiplier"]) for p, m in pair_scores.items()
+                 if m["breakdown"].get("perf_multiplier", 1.0) > 1.0]
+    _reduced  = [(p, m["breakdown"]["perf_multiplier"]) for p, m in pair_scores.items()
+                 if m["breakdown"].get("perf_multiplier", 1.0) < 1.0]
+    if _boosted:
+        log(f"  Pair performance boost (+20%): {', '.join(p for p, _ in _boosted)}")
+    if _reduced:
+        log(f"  Pair performance penalty: "
+            + ", ".join(f"{p} ×{m:.2f}" for p, m in _reduced))
+
     selected = [pair for pair, _ in ranked[:top_n]]
 
     if not selected:
