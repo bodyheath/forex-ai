@@ -730,7 +730,13 @@ def _compute_patience_score(ctx: dict) -> dict:
 
     desc_body = ", ".join(parts)
 
-    if score >= 8:
+    if _ro_env:
+        _vix_ro_desc = ctx.get("vix")
+        if _vix_ro_desc is not None and _vix_ro_desc > 25:
+            suffix = "elevated risk aversion — high caution recommended"
+        else:
+            suffix = "risk-off environment — safe haven pairs favoured — conditions selective"
+    elif score >= 8:
         suffix = "ideal conditions for A/B setups"
     elif score >= 6:
         suffix = "consider waiting for cleaner setups"
