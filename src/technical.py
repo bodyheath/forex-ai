@@ -671,7 +671,7 @@ def _detect_divergence(df: pd.DataFrame, rsi: pd.Series, pair: str = "") -> dict
     hi_arr  = tail["high"].values
     lo_arr  = tail["low"].values
     rsi_arr = rsi_tail.values
-    pip     = _pip_size(float(tail["close"].iloc[-1]))
+    pip     = _pip_size(pair if pair else float(tail["close"].iloc[-1]))
     dec     = 5 if pip < 0.001 else 3
 
     peaks   = _local_peaks(hi_arr, n=3)
