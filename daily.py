@@ -6251,6 +6251,28 @@ def run() -> int:
             f"meaningful(conf>=5)={len(meaningful)} · failed={len(failed_pairs)}",
         )
 
+        # Save watchlist cache for next scan's dynamic boosters
+        # Includes: watchlist pairs (conf 5.0–6.9) and near-miss pairs (conf 5.0–5.9)
+        try:
+            _wl_pairs = [r["pair"] for r in deep_results if 5.0 <= (_conf(r) or 0) <= 6.9]
+            _nm_pairs = {r["pair"]: _conf(r) for r in deep_results if 5.0 <= (_conf(r) or 0) <= 5.9}
+            _wl_cache_path = config.DATA_DIR / "watchlist_cache.json"
+            _wl_cache_path.write_text(
+                json.dumps({
+                    "timestamp":       __import__("time").time(),
+                    "watchlist_pairs": _wl_pairs,
+                    "near_miss":       _nm_pairs,
+                }, indent=2),
+                encoding="utf-8",
+            )
+            _log_line(
+                logf,
+                f"Scan state saved for dynamic boosters: "
+                f"{len(_wl_pairs)} watchlist pairs, {len(_nm_pairs)} near-miss pairs → watchlist_cache.json",
+            )
+        except Exception as _wc_exc:
+            _log_line(logf, f"Watchlist cache save failed: {_wc_exc}")
+
         # Save morning-ranked state so intraday scans can pick the closest-to-trigger pairs
         if scan_mode == "full":
             try:
