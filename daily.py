@@ -2282,12 +2282,12 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
                 sec.append(f"Current price: {_fmt_price(cur)}{stale_note}")
 
         if stop:
-            _stop_verb = "rises" if dirn == "BUY" else "falls"
+            _stop_verb = "falls" if dirn == "BUY" else "rises"
             sec.append(
                 f"Stop loss at: {_fmt_price(stop)} — if price {_stop_verb} here the trade closes automatically with a small loss"
             )
         if target:
-            _tgt_verb = "falls" if dirn == "BUY" else "rises"
+            _tgt_verb = "rises" if dirn == "BUY" else "falls"
             sec.append(
                 f"Target at: {_fmt_price(target)} — if price {_tgt_verb} here the trade closes automatically with a profit"
             )
