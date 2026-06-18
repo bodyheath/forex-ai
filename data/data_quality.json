@@ -11,12 +11,24 @@
       "pos_ok": 18,
       "overall_pct": 82,
       "high_conf_fallback_count": 1
+    },
+    {
+      "ts": "2026-06-18T18:46:17",
+      "mode": "full",
+      "n_deep": 26,
+      "tech_ok": 26,
+      "tech_total": 26,
+      "fund_ok": 26,
+      "sent_ok": 26,
+      "pos_ok": 22,
+      "overall_pct": 97,
+      "high_conf_fallback_count": 4
     }
   ],
   "consecutive_fail": {
-    "technical": 1,
+    "technical": 0,
     "fundamental": 0,
     "sentiment": 0,
-    "positioning": 1
+    "positioning": 2
   }
 }
