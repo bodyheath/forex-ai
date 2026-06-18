@@ -3834,6 +3834,165 @@ def _send_telegram_summary(
         except (TypeError, ValueError):
             pass
 
+        # ── Confluence zone detection (7+ confidence only) ────────────────────
+        if _is_high_conf and _fib_entry_price is not None:
+            _cz_entry = None
+            try:
+                _cz_entry = float(_fib_entry_price)
+            except (TypeError, ValueError):
+                pass
+
+            if _cz_entry is not None:
+                _cz_window = _tb_pip * 10   # 10-pip window for technical levels
+                _cz_win_rn = _tb_pip * 20   # 20-pip window for round numbers
+
+                _cz_factors = []
+
+                # Factor 1: Fibonacci retracement (38.2%, 50%, or 61.8%)
+                try:
+                    if isinstance(_fib, dict) and _fib.get("status") == "ok":
+                        _cz_fib_pool = (
+                            _fib.get("nearest_below", []) + _fib.get("nearest_above", [])
+                        )
+                        _cz_fib_hits = [
+                            (lb, float(px)) for lb, px in _cz_fib_pool
+                            if any(pct in str(lb) for pct in ("38.2", "50", "61.8"))
+                            and abs(float(px) - _cz_entry) <= _cz_window
+                        ]
+                        if _cz_fib_hits:
+                            _cz_fb = min(_cz_fib_hits, key=lambda x: abs(x[1] - _cz_entry))
+                            _cz_factors.append(
+                                f"Fibonacci {_cz_fb[0]} retracement at {_fmt_price(_cz_fb[1])}"
+                            )
+                except Exception:
+                    pass
+
+                # Factor 2: Recent swing high or low (direction-appropriate)
+                try:
+                    _cz_sw_key   = "recent_low_20"  if direction == "BUY" else "recent_high_20"
+                    _cz_sw_label = "swing low"       if direction == "BUY" else "swing high"
+                    _cz_sw_val   = (
+                        float(_tb_daily.get(_cz_sw_key) or 0)
+                        if isinstance(_tb_daily, dict) else 0
+                    )
+                    if _cz_sw_val > 0 and abs(_cz_sw_val - _cz_entry) <= _cz_window:
+                        _cz_factors.append(
+                            f"Recent 20-day {_cz_sw_label} at {_fmt_price(_cz_sw_val)}"
+                        )
+                except Exception:
+                    pass
+
+                # Factor 3: Round number (00 or 50 level — wider window)
+                try:
+                    _cz_pr_pips    = round(_cz_entry / _tb_pip)
+                    _cz_nearest_50 = round(_cz_pr_pips / 50) * 50
+                    _cz_rn_price   = round(_cz_nearest_50 * _tb_pip, 5)
+                    if abs(_cz_rn_price - _cz_entry) <= _cz_win_rn:
+                        _cz_rn_type = "00 level" if (_cz_nearest_50 % 100 == 0) else "50 level"
+                        _cz_factors.append(
+                            f"Round number {_fmt_price(_cz_rn_price)} ({_cz_rn_type})"
+                            f" nearby — acts as price magnet"
+                        )
+                except Exception:
+                    pass
+
+                # Factor 4: 200 day moving average
+                try:
+                    _cz_sma200 = (
+                        _tb_daily.get("sma200") if isinstance(_tb_daily, dict) else None
+                    )
+                    if _cz_sma200 and _cz_sma200 != "n/a":
+                        if abs(float(_cz_sma200) - _cz_entry) <= _cz_window:
+                            _cz_factors.append(
+                                f"200 day moving average at {_fmt_price(_cz_sma200)}"
+                            )
+                except Exception:
+                    pass
+
+                # Factor 5: Bollinger Band (midline, upper, or lower — whichever is nearest)
+                try:
+                    _cz_bb_hits = []
+                    for _cz_bb_key, _cz_bb_lbl in [
+                        ("sma20",    "Bollinger Band midline (20 SMA)"),
+                        ("bb_upper", "Bollinger upper band"),
+                        ("bb_lower", "Bollinger lower band"),
+                    ]:
+                        _cz_bb_val = (
+                            _tb_daily.get(_cz_bb_key) if isinstance(_tb_daily, dict) else None
+                        )
+                        if _cz_bb_val:
+                            _cz_bb_dist = abs(float(_cz_bb_val) - _cz_entry)
+                            if _cz_bb_dist <= _cz_window:
+                                _cz_bb_hits.append((_cz_bb_dist, _cz_bb_lbl, float(_cz_bb_val)))
+                    if _cz_bb_hits:
+                        _cz_bb_best = min(_cz_bb_hits, key=lambda x: x[0])
+                        _cz_factors.append(
+                            f"{_cz_bb_best[1]} at {_fmt_price(_cz_bb_best[2])}"
+                        )
+                except Exception:
+                    pass
+
+                # Factor 6: Weekly range high or low
+                try:
+                    _cz_wk_tech  = (
+                        r.get("bundle", {}).get("technical", {}).get("weekly", {})
+                    )
+                    if isinstance(_cz_wk_tech, dict):
+                        _cz_wk_key   = "recent_low_20"   if direction == "BUY" else "recent_high_20"
+                        _cz_wk_label = "weekly range low" if direction == "BUY" else "weekly range high"
+                        _cz_wk_val   = float(_cz_wk_tech.get(_cz_wk_key) or 0)
+                        if _cz_wk_val > 0 and abs(_cz_wk_val - _cz_entry) <= _cz_window:
+                            _cz_factors.append(
+                                f"Previous {_cz_wk_label} at {_fmt_price(_cz_wk_val)}"
+                            )
+                except Exception:
+                    pass
+
+                # Score and confidence adjustment
+                _cz_count = len(_cz_factors)
+                if _cz_count <= 1:
+                    _cz_conf_delta  = -0.5
+                    _cz_verdict_em  = "⚠️"
+                    _cz_verdict_txt = (
+                        "LOW CONFLUENCE — entering at a random price level — "
+                        "lower probability setup — confidence reduced"
+                    )
+                elif _cz_count <= 3:
+                    _cz_conf_delta  = 0
+                    _cz_verdict_em  = "📊"
+                    _cz_verdict_txt = (
+                        "MODERATE CONFLUENCE — reasonable entry with "
+                        "multiple confirming factors"
+                    )
+                else:
+                    _cz_conf_delta  = 1
+                    _cz_verdict_em  = "🎯"
+                    _cz_verdict_txt = (
+                        "HIGH CONFLUENCE ZONE — multiple independent reasons for "
+                        "price to bounce here — highest probability entry available"
+                    )
+
+                if _cz_conf_delta != 0:
+                    try:
+                        _cz_new = max(1.0, round(float(_conf_display) + _cz_conf_delta, 1))
+                        _conf_display = (
+                            str(int(_cz_new)) if _cz_new == int(_cz_new) else str(_cz_new)
+                        )
+                    except (TypeError, ValueError):
+                        pass
+
+                block.append("━━━━━━━━━━━━━━━━━━━━━")
+                block.append(
+                    f"📐 <b>Entry confluence: {_cz_count} "
+                    f"factor{'s' if _cz_count != 1 else ''} "
+                    f"align at {_fmt_price(_cz_entry)}</b>"
+                )
+                for _cz_desc in _cz_factors:
+                    block.append(f"✅ {_cz_desc}")
+                if not _cz_factors:
+                    block.append("❌ No key technical levels found near this entry")
+                block.append(f"{_cz_verdict_em} {_cz_verdict_txt}")
+
         block.append("━━━━━━━━━━━━━━━━━━━━━")
         if _is_high_conf and _fib_entry_price is not None and _cur_price is not None:
             _pb_move_word   = "dip"    if direction == "BUY" else "rally"
