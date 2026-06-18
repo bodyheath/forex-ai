@@ -241,7 +241,12 @@ def _build_forecast_desc(event_name: str, currency: str,
     if forecast:
         fmt_fc = _fmt_value(forecast)
         if unit:
-            parts.append(f"forecast {fmt_fc} {unit}".strip())
+            # Avoid "3.5% % unemployment" when forecast already ends with %
+            display_unit = unit.lstrip("% ") if fmt_fc.endswith("%") else unit
+            if display_unit:
+                parts.append(f"forecast {fmt_fc} {display_unit}")
+            else:
+                parts.append(f"forecast {fmt_fc}")
         else:
             parts.append(f"forecast {fmt_fc}")
 
