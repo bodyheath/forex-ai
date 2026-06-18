@@ -108,7 +108,8 @@ def run(pair: str, log=print, force_deep: bool = False,
 
     # Stage 1: Haiku full analysis (every pair in scope)
     log("Haiku: full analysis ...")
-    haiku = analyst.analyse_haiku_full(canonical, bundle)
+    haiku = analyst.analyse_haiku_full(canonical, bundle,
+                                       threshold_override=pair_threshold_override)
     log(f"  Haiku: conf={haiku['confidence']}/10 {haiku['direction']} — {haiku['reason']}")
 
     # Very low confidence → screened out (kept out of Watch List too)
