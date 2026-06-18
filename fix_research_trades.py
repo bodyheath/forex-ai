@@ -88,18 +88,30 @@ def main():
     print("-" * 95)
 
     for row in rows:
-        reason = row.get("exit_reason", "")
-        if reason not in ("STOP_HIT", "TARGET_HIT"):
-            continue
-
+        status    = row.get("status", "")
+        reason    = row.get("exit_reason", "")
         pair      = row.get("pair", "")
         direction = (row.get("direction") or "").upper()
         entry     = _to_float(row.get("entry"))
+        stop      = _to_float(row.get("stop_loss"))
+        target    = _to_float(row.get("target"))
+        old_close = _to_float(row.get("close_price"))
 
-        if reason == "STOP_HIT":
-            correct_close = _to_float(row.get("stop_loss"))
+        # Determine the correct close price:
+        # - Explicit exit_reason takes precedence
+        # - For older trades without exit_reason, infer from status + price position
+        if reason == "STOP_HIT" or reason == "TARGET_HIT":
+            correct_close = stop if reason == "STOP_HIT" else target
+        elif status == "WIN" and target and old_close and direction == "BUY" and old_close > target:
+            correct_close = target    # price went beyond target; close at target
+        elif status == "WIN" and target and old_close and direction == "SELL" and old_close < target:
+            correct_close = target
+        elif status == "LOSS" and stop and old_close and direction == "BUY" and old_close < stop:
+            correct_close = stop      # price went beyond stop; close at stop
+        elif status == "LOSS" and stop and old_close and direction == "SELL" and old_close > stop:
+            correct_close = stop
         else:
-            correct_close = _to_float(row.get("target"))
+            continue
 
         if correct_close is None or entry is None:
             continue
