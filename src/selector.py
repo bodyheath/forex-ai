@@ -1275,7 +1275,64 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         log(f"  Pair performance penalty: "
             + ", ".join(f"{p} ×{m:.2f}" for p, m in _reduced))
 
-    selected = [pair for pair, _ in ranked[:top_n]]
+    # ── Diversity filter: max pairs per currency ─────────────────────────────────
+    # 6am (full, top_n=25): max 4 per currency — afternoon (top_n=20): max 3
+    _max_per_ccy = 4 if scan_mode == "full" else 3
+    _ccy_sel: dict = {}    # {currency: count in selected so far}
+    _div_skipped: list = []
+
+    # Count appearances per currency in the full ranked list (for log messages only)
+    _ccy_eligible: dict = {}
+    for _p, _ in ranked:
+        _pts = _p.split("/")
+        if len(_pts) == 2:
+            for _c in _pts:
+                _ccy_eligible[_c] = _ccy_eligible.get(_c, 0) + 1
+
+    selected: list = []
+    for pair, _ in ranked:
+        if len(selected) >= top_n:
+            break
+        parts = pair.split("/")
+        if len(parts) != 2:
+            selected.append(pair)
+            continue
+        base, quote = parts
+        if _ccy_sel.get(base, 0) >= _max_per_ccy or _ccy_sel.get(quote, 0) >= _max_per_ccy:
+            _div_skipped.append(pair)
+            continue
+        selected.append(pair)
+        _ccy_sel[base]  = _ccy_sel.get(base, 0) + 1
+        _ccy_sel[quote] = _ccy_sel.get(quote, 0) + 1
+
+    # If the diversity filter left us short, backfill from skipped pairs (relax cap)
+    if len(selected) < top_n and _div_skipped:
+        _sel_set = set(selected)
+        for pair in _div_skipped:
+            if len(selected) >= top_n:
+                break
+            if pair not in _sel_set:
+                selected.append(pair)
+                log(f"  Diversity overflow: {pair} added (cap relaxed to fill {top_n}-pair pool)")
+
+    # Log diversity filter results
+    if _div_skipped:
+        _capped = {
+            ccy
+            for pair in _div_skipped
+            for ccy in pair.split("/")
+            if len(pair.split("/")) == 2 and _ccy_sel.get(ccy, 0) >= _max_per_ccy
+        }
+        _cap_parts = [
+            f"{ccy} pairs capped at {_max_per_ccy} "
+            f"({_ccy_eligible.get(ccy, _max_per_ccy)} were eligible)"
+            for ccy in sorted(_capped)
+        ]
+        _skipped_str = ", ".join(_div_skipped[:8]) + (
+            f" (+{len(_div_skipped) - 8} more)" if len(_div_skipped) > 8 else ""
+        )
+        log(f"\n  Diversity filter applied — {' — '.join(_cap_parts)}")
+        log(f"  Pairs skipped ({len(_div_skipped)}): {_skipped_str}")
 
     # Force-include watchlist carry-forward pairs regardless of merit rank
     for _cf in carry_forward:
