@@ -934,10 +934,10 @@ def analyse(base: str, quote: str) -> dict:
         return {
             "status":  "ok",
             "source":  "Twelve Data",
-            "monthly": _summarise(monthly, "Monthly"),
-            "weekly":  _summarise(weekly,  "Weekly"),
-            "daily":   _summarise(daily,   "Daily"),
-            "4h":      _summarise(four_h,  "4-Hour"),
+            "monthly": _summarise(monthly, "Monthly", pair=symbol),
+            "weekly":  _summarise(weekly,  "Weekly",  pair=symbol),
+            "daily":   _summarise(daily,   "Daily",   pair=symbol),
+            "4h":      _summarise(four_h,  "4-Hour",  pair=symbol),
         }
     except Exception as exc:  # noqa: BLE001 - degrade gracefully
         return {"status": "UNAVAILABLE", "error": str(exc)}
