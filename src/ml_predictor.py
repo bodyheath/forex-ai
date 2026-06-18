@@ -418,6 +418,16 @@ def train(quiet: bool = False) -> dict:
 
     win_rate = round(float(y.mean()), 3)
 
+    # Bias check: if model predicts LOSS > 80% of the time on training data it hasn't
+    # corrected the class imbalance — flag for the Monday learning report.
+    try:
+        _preds_tr  = model.predict(X_s)
+        _pred_lp   = int((1 - _preds_tr).sum() / len(_preds_tr) * 100)
+        _is_biased = _pred_lp > 80
+    except Exception:
+        _pred_lp   = 50
+        _is_biased = False
+
     # Feature importances
     importances: dict = {}
     try:
