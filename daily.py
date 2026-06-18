@@ -6438,6 +6438,13 @@ def run() -> int:
                         pass
                 if _sweep_new:
                     _log_line(logf, f"Research sweep: {_sweep_new} additional trade(s) logged.")
+                if scan_mode == "full":
+                    _total_cov = len(deep_results) + len(_sweep_candidates)
+                    _log_line(logf,
+                        f"Morning scan analysed top {len(deep_results)} pairs in depth — "
+                        f"{len(_sweep_candidates)} additional pairs screened by research sweep — "
+                        f"{_total_cov} pairs total coverage"
+                    )
 
             # Running total — visible in every GitHub Actions run
             try:
