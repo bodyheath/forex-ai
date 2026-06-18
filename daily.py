@@ -4758,6 +4758,13 @@ def _send_telegram_summary(
         health_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "⚠️ <b>SYSTEM HEALTH</b>"]
         if threshold_revert_msg:
             health_sec.append(threshold_revert_msg)
+        # Data quality scorecard
+        try:
+            from src import data_quality as _dq_hs
+            if _dq_quality:
+                health_sec.extend(_dq_hs.build_scorecard(_dq_quality))
+        except Exception:
+            pass
         for issue in health_issues:
             health_sec.append(f"- {issue}")
         # ML model status line
