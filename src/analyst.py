@@ -352,12 +352,15 @@ def _haiku_system_prompt(threshold_override: "float | None" = None) -> str:
     )
 
 
-def analyse_haiku_full(pair: str, bundle: dict) -> dict:
+def analyse_haiku_full(pair: str, bundle: dict,
+                        threshold_override: "float | None" = None) -> dict:
     """Haiku full analysis for all pairs.
 
     Returns dict with keys: confidence (int 1-10), direction (str), report (str), reason (str).
     The report is compatible with recparse.parse() — contains all score fields the
     Watch List and dashboard need. No entry/stop/target (Sonnet provides those for conf>=threshold).
+    threshold_override: if set, replaces the global confidence threshold in the prompt
+    (used for pairs with demonstrated 70%+ win rate).
     """
     user_msg = _compress_bundle(pair, bundle)
 
@@ -365,7 +368,7 @@ def analyse_haiku_full(pair: str, bundle: dict) -> dict:
         return client.messages.create(
             model=config.HAIKU_MODEL,
             max_tokens=250,
-            system=_haiku_system_prompt(),
+            system=_haiku_system_prompt(threshold_override=threshold_override),
             messages=[{"role": "user", "content": user_msg}],
         )
 
