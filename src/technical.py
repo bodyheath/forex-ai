@@ -912,6 +912,8 @@ def _summarise(df: pd.DataFrame, label: str, pair: str = "") -> dict:
         "sma20": round(sma20_val, 5),
         "sma50": round(sma50, 5),
         "sma200": (round(sma200, 5) if not np.isnan(sma200) else "n/a"),
+        "bb_upper": round(float(bb_upper), 5),
+        "bb_lower": round(float(bb_lower), 5),
         "atr14": round(atr.iloc[-1], 5),
         "stochastic_k": round(stoch_k_val, 1) if stoch_k_val == stoch_k_val else None,
         "stochastic_d": round(stoch_d_val, 1) if stoch_d_val == stoch_d_val else None,
