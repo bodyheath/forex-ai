@@ -73,3 +73,8 @@ jobs:
           git diff --staged --quiet || git commit -m "chore: intraday scan $(date -u +'%Y-%m-%d %H:%M UTC')"
           git pull --rebase origin main
           git push origin HEAD:main
+
+  publish-dashboard:
+    needs: scan
+    uses: ./.github/workflows/publish-dashboard.yml
+    secrets: inherit
