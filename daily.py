@@ -4751,6 +4751,27 @@ def _send_telegram_summary(
         except Exception:
             pass
 
+        # News reminders for open trades — add to changes section
+        try:
+            from src import economic_calendar as _ec_chg
+            for _ot_row_chg in _ot_open_trades:
+                _ot_pair_chg = _ot_row_chg.get("pair", "")
+                if not _ot_pair_chg:
+                    continue
+                _chg_evs = _ec_chg.events_for_pair(_ot_pair_chg, hours=48)
+                for _chg_ev in _chg_evs[:2]:
+                    _chg_ccy  = _chg_ev["currency"]
+                    _chg_en   = _chg_ev["plain_name"]
+                    _chg_ak   = _chg_ev["ak_display"]
+                    _chg_hrs  = _chg_ev.get("hours_away", 48)
+                    _chg_time = "very soon" if _chg_hrs <= 6 else "within 24 hours" if _chg_hrs <= 24 else "within 48 hours"
+                    _changes_lines.append(
+                        f"⚠️ Reminder: {_chg_ccy} {_chg_en} releases {_chg_time} ({_chg_ak}) "
+                        f"— directly affects your open {_ot_pair_chg} trade"
+                    )
+        except Exception:
+            pass
+
         chg_sec = ["", "━━━━━━━━━━━━━━━━━━━━━",
                    f"🔄 <b>CHANGES SINCE {_prev_scan_label.upper()} SCAN</b>"]
         if _changes_lines:
