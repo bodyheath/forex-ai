@@ -295,7 +295,7 @@ def _haiku_system_prompt() -> str:
     rr  = cfg.get("min_rr", 1.3)
     return (
         "Forex analyst. Score all 5 data layers 1-10 and output confidence.\n"
-        f"TRADE_THIS: YES only if confidence>={thr}, R:R>={rr}, MTF weekly+daily both agree, >=4 fundamental layers agree. UNAVAILABLE=score 1.\n"
+        f"TRADE_THIS: YES only if confidence>={thr}, R:R>={rr}, MTF weekly+daily both agree, >=4 fundamental layers agree. UNAVAILABLE=score 5 (neutral — missing data has no directional bias).\n"
         "MTF rule: check MTF line in data — if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless. Monthly is context only, 4H is optional bonus.\n"
         "TECHNICAL scoring rules (enforce exactly — no exceptions):\n"
         "  RSI tiers: <30=9-10BUY  30-35=7-8BUY  35-45=5-6BUY  45-55=3-4NEUTRAL  "
@@ -305,7 +305,7 @@ def _haiku_system_prompt() -> str:
         "  T_sig in D1 line is the pre-computed baseline — use it as your TECHNICAL_SCORE unless "
         "a strong contradictory factor justifies adjusting by ±1\n"
         "  HARD RULE: TECHNICAL_SCORE >= 3 whenever RSI+MACD data present. "
-        "TECHNICAL_SCORE = 1 ONLY when D1:UNAVAILABLE.\n"
+        "TECHNICAL_SCORE = 5 when D1:UNAVAILABLE (neutral — a data fetch failure is not bearish).\n"
         "CANDLE: PAT= in D1/4H lines = Python-detected pattern (e.g. pin_bar_at_key_level:bul). "
         "Already factored into T_sig. Use as supporting evidence for CONFIDENCE and KEY_THESIS — "
         "pin bar at key level + RSI oversold = highest-probability setup.\n"
