@@ -672,6 +672,15 @@ def _compute_patience_score(ctx: dict) -> dict:
     raw = vix_pts + news_pts + mtf_pts + trend_pts  # 0–10
     score = max(1, min(10, round(raw)))
 
+    # Risk-OFF override: cap score regardless of other components
+    _ro_env = "risk-off" in (ctx.get("risk_env") or "").lower()
+    if _ro_env:
+        _vix_ro = ctx.get("vix")
+        if _vix_ro is not None and _vix_ro > 25:
+            score = min(score, 4)
+        else:
+            score = min(score, 6)
+
     # Build description from the weakest factors
     parts = []
     notable = ctx.get("high_impact_notable") or []
