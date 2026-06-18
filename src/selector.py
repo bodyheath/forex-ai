@@ -1134,15 +1134,19 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         else:
             chg, mom = 0.0, 3
 
-        # ATR and current close — used by dynamic breakout and currency boosters
-        _snap_h = snapshot.get("highs", []) if snapshot else []
-        _snap_l = snapshot.get("lows",  []) if snapshot else []
-        _n_atr  = min(5, len(_snap_h))
-        _atr5   = (
+        # ATR, current/previous close and open — used by dynamic boosters and gap detection
+        _snap_h  = snapshot.get("highs",  []) if snapshot else []
+        _snap_l  = snapshot.get("lows",   []) if snapshot else []
+        _snap_c  = snapshot.get("closes", []) if snapshot else []
+        _snap_o  = snapshot.get("opens",  []) if snapshot else []
+        _n_atr   = min(5, len(_snap_h))
+        _atr5    = (
             sum(_snap_h[i] - _snap_l[i] for i in range(_n_atr)) / _n_atr
             if _n_atr > 0 else None
         )
-        _cur_close = snapshot["closes"][0] if snapshot and snapshot.get("closes") else None
+        _cur_close  = _snap_c[0] if _snap_c else None
+        _prev_close = _snap_c[1] if len(_snap_c) >= 2 else None
+        _open_0     = _snap_o[0] if _snap_o else None
 
         pair_scores[pair] = {
             "score":      score,
@@ -1156,6 +1160,8 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
             "quote":      quote,
             "cur_close":  _cur_close,
             "atr5":       _atr5,
+            "prev_close": _prev_close,
+            "open_0":     _open_0,
         }
 
     # ── Dynamic merit boosters ───────────────────────────────────────────────────
