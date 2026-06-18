@@ -2224,6 +2224,27 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
             # 50% milestone reminder
             if _pct_row >= 50:
                 sec.append(f"⚠️ Halfway — move stop loss to entry price to guarantee no loss")
+            # Confidence drop warning (compact)
+            if cur_conf_map is not None:
+                _entry_conf_c = None
+                try:
+                    _entry_conf_c = int(float(row.get("confidence") or 0)) or None
+                except (TypeError, ValueError):
+                    pass
+                _cur_conf_c = cur_conf_map.get(_cpair)
+                if _entry_conf_c and _cur_conf_c is not None and (_entry_conf_c - _cur_conf_c) >= 2:
+                    sec.append(f"⚠️ Confidence dropped {_entry_conf_c}→{_cur_conf_c}/10 — conditions have weakened — monitor closely")
+            # News reminder (compact)
+            try:
+                from src import economic_calendar as _ec_ot_c
+                _ot_evs_c = _ec_ot_c.events_for_pair(_cpair, hours=48)
+                for _ot_ev_c in _ot_evs_c[:1]:
+                    _ot_ccy_c = _ot_ev_c["currency"]
+                    _ot_en_c  = _ot_ev_c["plain_name"]
+                    _ot_ak_c  = _ot_ev_c["ak_display"]
+                    sec.append(f"⚠️ {_ot_ccy_c} {_ot_en_c} within 48h ({_ot_ak_c}) — affects your {_cpair} trade")
+            except Exception:
+                pass
         return sec
 
     for row in open_trades:
