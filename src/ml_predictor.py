@@ -469,6 +469,13 @@ def train(quiet: bool = False) -> dict:
         "model_type":            mtype,
         "feature_cols":          FEATURE_COLS,
         "importances":           importances,
+        # Training data composition (PARTIAL_WIN counted as WIN)
+        "n_wins_training":       n_wins_tr,
+        "n_losses_training":     n_losses_tr,
+        "partial_wins_as_wins":  True,
+        "class_weights_applied": True,
+        "prediction_loss_pct":   _pred_lp,
+        "is_biased":             _is_biased,
         # Anti-curve-fitting safeguards
         "min_samples_enforced":  MIN_PATTERN_SAMPLES,
         "complexity_penalty":    True,
