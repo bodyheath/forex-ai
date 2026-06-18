@@ -33,6 +33,7 @@ Flow:
   g) Compute full 8-factor score; log the breakdown; return top 15.
 """
 
+import json
 import time
 import numpy as np
 from datetime import datetime, timedelta
