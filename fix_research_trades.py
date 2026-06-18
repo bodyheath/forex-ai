@@ -116,7 +116,6 @@ def main():
         if correct_close is None or entry is None:
             continue
 
-        old_close = _to_float(row.get("close_price"))
         old_pips  = _to_float(row.get("pips"))
 
         # Check whether close_price is already at the stop/target
