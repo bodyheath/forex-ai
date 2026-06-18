@@ -803,10 +803,186 @@ def _compute_rich_score(
     return round(total, 2), bd
 
 
+# ── Dynamic booster helpers ───────────────────────────────────────────────────
+
+def _pip_size(pair: str) -> float:
+    """Return pip size: 0.01 for JPY pairs, 0.0001 for all others."""
+    return 0.01 if pair.upper().endswith("JPY") else 0.0001
+
+
+def _load_scan_snapshot() -> dict:
+    """Load price snapshot saved by the previous scan. Returns {} if stale or absent."""
+    try:
+        raw = json.loads(_SCAN_SNAPSHOT_FILE.read_text(encoding="utf-8"))
+        if (time.time() - float(raw.get("timestamp", 0))) / 3600.0 > 12.0:
+            return {}
+        return raw.get("prices", {})
+    except Exception:
+        return {}
+
+
+def _load_watchlist_cache_data() -> dict:
+    """Load watchlist/near-miss data saved by the previous scan. Returns {} if stale."""
+    try:
+        raw = json.loads(_WATCHLIST_CACHE_FILE.read_text(encoding="utf-8"))
+        if (time.time() - float(raw.get("timestamp", 0))) / 3600.0 > 12.0:
+            return {}
+        return raw
+    except Exception:
+        return {}
+
+
+def _save_scan_snapshot(prices: dict) -> None:
+    """Persist close prices for all scored pairs — used by next scan's breakout check."""
+    try:
+        _SCAN_SNAPSHOT_FILE.write_text(
+            json.dumps({"timestamp": time.time(), "prices": prices}, indent=2),
+            encoding="utf-8",
+        )
+    except Exception:
+        pass
+
+
+def _apply_dynamic_boosts(
+    pair_scores: dict,
+    prev_prices: dict,
+    wl_cache: dict,
+    scan_mode: str,
+    log=print,
+) -> list:
+    """Apply five dynamic merit boosters in-place on pair_scores.
+
+    Returns list of carry-forward pairs (watchlist from last scan) to force-include.
+
+    Boosters applied:
+      1. Breakout boost       +15 — moved > 0.8x ATR since last scan
+      2. Watchlist carry-fwd  —    force-include regardless of rank (no score change)
+      3. Currency boost       +10 — any USD cross moved > 0.5x ATR (all ccy pairs boosted)
+      4. Near-miss re-queue   +5  — scored conf 5.0–5.9 in previous scan
+      5. Session transition   +8  — currencies entering peak session (London / New York)
+    """
+    carry_forward: list = []
+
+    # ── Booster 1: Breakout boost (+15) ───────────────────────────────────────
+    if prev_prices:
+        for pair, meta in pair_scores.items():
+            prev = prev_prices.get(pair)
+            cur  = meta.get("cur_close")
+            atr  = meta.get("atr5")
+            if prev is None or cur is None or not atr:
+                continue
+            pip   = _pip_size(pair)
+            move  = abs(cur - prev)
+            ratio = move / atr
+            if ratio >= 0.8:
+                meta["score"] = round(meta["score"] + 15, 2)
+                meta["breakdown"]["dynamic_breakout"] = 15
+                log(
+                    f"  {pair} moved {round(move / pip):.0f} pips since last scan "
+                    f"({ratio:.1f}x ATR) — breakout boost applied +15 points"
+                )
+
+    # ── Booster 2: Watchlist carry-forward ────────────────────────────────────
+    prev_wl = wl_cache.get("watchlist_pairs", [])
+    if prev_wl:
+        _tmp_ranked = sorted(pair_scores.items(), key=lambda x: x[1]["score"], reverse=True)
+        _rank_map   = {p: i + 1 for i, (p, _) in enumerate(_tmp_ranked)}
+        for pair in prev_wl:
+            if pair in pair_scores:
+                carry_forward.append(pair)
+                _rk = _rank_map.get(pair, "?")
+                log(
+                    f"  {pair} carried forward from previous watch list — "
+                    f"included in analysis regardless of rank {_rk} merit position"
+                )
+
+    # ── Booster 3: Cross-pair currency boost (+10) ────────────────────────────
+    if prev_prices:
+        _USD_CROSSES = {
+            "EUR/USD": "EUR",
+            "GBP/USD": "GBP",
+            "AUD/USD": "AUD",
+            "NZD/USD": "NZD",
+            "USD/JPY": "JPY",
+            "USD/CAD": "CAD",
+            "USD/CHF": "CHF",
+        }
+        hot_ccys: set = set()
+        for cross, ccy in _USD_CROSSES.items():
+            m = pair_scores.get(cross)
+            if m is None:
+                continue
+            prev = prev_prices.get(cross)
+            cur  = m.get("cur_close")
+            atr  = m.get("atr5")
+            if prev is None or cur is None or not atr:
+                continue
+            ratio = abs(cur - prev) / atr
+            if ratio >= 0.5:
+                hot_ccys.add(ccy)
+                pip    = _pip_size(cross)
+                pips   = round(abs(cur - prev) / pip)
+                is_inv = cross.startswith("USD/")
+                moved_up = cur > prev
+                direction = "strengthened" if (moved_up != is_inv) else "weakened"
+                log(
+                    f"  {ccy} {direction} {pips} pips vs USD since last scan "
+                    f"({ratio:.1f}x ATR) — all {ccy} pairs boosted +10 in merit scoring"
+                )
+        if hot_ccys:
+            for pair, meta in pair_scores.items():
+                base  = meta.get("base", "")
+                quote = meta.get("quote", "")
+                if base in hot_ccys or quote in hot_ccys:
+                    meta["score"] = round(meta["score"] + 10, 2)
+                    meta["breakdown"]["dynamic_ccy_boost"] = (
+                        meta["breakdown"].get("dynamic_ccy_boost", 0) + 10
+                    )
+
+    # ── Booster 4: Near-miss re-queue (+5) ────────────────────────────────────
+    prev_nm = wl_cache.get("near_miss", {})
+    for pair, prev_conf in prev_nm.items():
+        if pair not in pair_scores:
+            continue
+        try:
+            conf_val = float(prev_conf)
+        except (TypeError, ValueError):
+            continue
+        if 5.0 <= conf_val <= 5.9:
+            pair_scores[pair]["score"] = round(pair_scores[pair]["score"] + 5, 2)
+            pair_scores[pair]["breakdown"]["dynamic_near_miss"] = 5
+            log(
+                f"  {pair} scored {conf_val:.1f} last scan — "
+                f"near-miss boost applied +5 merit points"
+            )
+
+    # ── Booster 5: Session transition boost (+8) ──────────────────────────────
+    boost_ccys = _SESSION_BOOST_CCYS.get(scan_mode, set())
+    if boost_ccys:
+        session_label = (
+            "London session starting" if scan_mode == "prelondon"
+            else "New York session starting"
+        )
+        n_boosted = 0
+        for pair, meta in pair_scores.items():
+            if meta.get("base", "") in boost_ccys or meta.get("quote", "") in boost_ccys:
+                meta["score"] = round(meta["score"] + 8, 2)
+                meta["breakdown"]["dynamic_session"] = 8
+                n_boosted += 1
+        if n_boosted:
+            log(
+                f"  {session_label} — "
+                f"{', '.join(sorted(boost_ccys))} pairs boosted +8 merit points "
+                f"({n_boosted} pairs affected)"
+            )
+
+    return carry_forward
+
+
 # ── Main selection ────────────────────────────────────────────────────────────
 
 def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
-                 log=print) -> dict:
+                 log=print, scan_mode: str = "") -> dict:
     """Score the full Twelve Data forex universe and return the top_n pairs.
 
     Selection is pure-merit: every liquid pair is scored on all 8 factors.
