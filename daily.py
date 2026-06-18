@@ -2789,6 +2789,115 @@ def _build_system_learning_report(date: str) -> list:
             sec.append("Entry quality consistent across recent trades")
         any_added = True
 
+    # ── TARGET CALIBRATION ANALYSIS ───────────────────────────────────────────
+    # Runs always (not gated on trade count) so it shows from the first Monday.
+    try:
+        def _pip_sz(pair_str: str) -> float:
+            cl = pair_str.upper().replace("/", "").replace("-", "")
+            if len(cl) >= 6:
+                if cl[3:6] == "JPY": return 0.01
+                if cl[:3] == "JPY": return 0.000001
+            return 0.01 if "JPY" in pair_str.upper() else 0.0001
+
+        _tc_closed = [
+            r for r in rows
+            if r.get("status") in ("WIN", "LOSS", "EXPIRED", "PARTIAL_WIN")
+            and r.get("entry") and r.get("stop_loss") and r.get("target") and r.get("pips")
+        ]
+        _tc_results = []
+        for _tcr in _tc_closed:
+            try:
+                _tc_entry  = float(_tcr["entry"])
+                _tc_stop   = float(_tcr["stop_loss"])
+                _tc_target = float(_tcr["target"])
+                _tc_pips   = float(_tcr["pips"])
+                _tc_ps     = _pip_sz(_tcr["pair"])
+                _tc_stop_d = abs(_tc_entry - _tc_stop) / _tc_ps
+                _tc_tgt_d  = abs(_tc_target - _tc_entry) / _tc_ps
+                if _tc_stop_d <= 0 or _tc_tgt_d <= 0 or _tc_stop_d > 200 or _tc_tgt_d > 500:
+                    continue
+                _tc_results.append({
+                    "status":       _tcr["status"],
+                    "stop_pips":    round(_tc_stop_d, 1),
+                    "target_pips":  round(_tc_tgt_d, 1),
+                    "achieved":     round(_tc_pips, 1),
+                    "mfe":          _f(_tcr.get("mfe_pips")),
+                })
+            except (TypeError, ValueError, ZeroDivisionError):
+                pass
+
+        if _tc_results:
+            _tc_exp     = [r for r in _tc_results if r["status"] == "EXPIRED"]
+            _tc_exp_pos = [r for r in _tc_exp if r["achieved"] > 0]
+            _tc_all_tgt = [r["target_pips"] for r in _tc_results]
+            _tc_all_stp = [r["stop_pips"] for r in _tc_results]
+            _tc_mfe_raw = [r["mfe"] for r in _tc_results if r["mfe"] is not None and r["mfe"] > 0]
+
+            _tc_avg_tgt = sum(_tc_all_tgt) / len(_tc_all_tgt) if _tc_all_tgt else 0
+            _tc_avg_stp = sum(_tc_all_stp) / len(_tc_all_stp) if _tc_all_stp else 0
+            _tc_avg_mfe = sum(_tc_mfe_raw) / len(_tc_mfe_raw) if _tc_mfe_raw else 0
+            _tc_avg_ach = (
+                sum(r["achieved"] for r in _tc_exp_pos) / len(_tc_exp_pos)
+                if _tc_exp_pos else 0
+            )
+
+            # Old multiplier (from data) vs new
+            _tc_old_mult = round(_tc_avg_tgt / _tc_avg_stp, 1) if _tc_avg_stp > 0 else 2.0
+            _tc_new_mult = 1.0
+
+            # Projected WIN conversion: EXPIRED positives that would WIN at new target
+            _tc_new_tgt_p  = _tc_avg_stp * _tc_new_mult   # pips at 1.0x stop
+            _tc_conv_would = sum(1 for r in _tc_exp_pos if r["achieved"] >= _tc_new_tgt_p)
+            _tc_conv_pct   = (_tc_conv_would / len(_tc_exp_pos) * 100) if _tc_exp_pos else 0
+
+            # PARTIAL_WIN trades that would become full WIN at new target
+            _tc_pw_conv = sum(
+                1 for r in _tc_results
+                if r["status"] == "PARTIAL_WIN" and r["achieved"] >= _tc_new_tgt_p
+            )
+
+            # Current decisive rate (WIN+LOSS out of all closed)
+            _tc_total  = len(_tc_results)
+            _tc_dec    = sum(1 for r in _tc_results if r["status"] in ("WIN", "LOSS"))
+            _tc_dec_pct = _tc_dec / _tc_total * 100 if _tc_total else 0
+            _tc_proj_dec = _tc_dec + _tc_conv_would + _tc_pw_conv
+            _tc_proj_pct = _tc_proj_dec / _tc_total * 100 if _tc_total else 0
+
+            sec += ["", "<b>TARGET CALIBRATION ANALYSIS</b>"]
+            if _tc_avg_mfe > 0:
+                sec.append(
+                    f"Average MFE: {_tc_avg_mfe:.0f} pips — "
+                    f"average stop: {_tc_avg_stp:.0f} pips — "
+                    f"average target: {_tc_avg_tgt:.0f} pips ({_tc_old_mult}x stop)"
+                )
+            else:
+                sec.append(
+                    f"Average stop: {_tc_avg_stp:.0f} pips — "
+                    f"average target: {_tc_avg_tgt:.0f} pips ({_tc_old_mult}x stop)"
+                )
+            if _tc_exp_pos:
+                sec.append(
+                    f"EXPIRED trades moved avg {_tc_avg_ach:.0f} pips in right direction "
+                    f"before expiry — target of {_tc_avg_tgt:.0f} pips was too far"
+                )
+            sec.append(
+                f"Research target reduced: {_tc_old_mult}x ATR → {_tc_new_mult}x ATR "
+                f"(fund trade targets unchanged)"
+            )
+            sec.append(
+                f"Projected improvement: {_tc_dec} decisive outcomes → "
+                f"~{_tc_proj_dec} decisive outcomes "
+                f"({_tc_dec_pct:.0f}% → {_tc_proj_pct:.0f}% decisive rate)"
+            )
+            if _tc_conv_would > 0 or _tc_pw_conv > 0:
+                sec.append(
+                    f"✅ ~{_tc_conv_would} expired trades + {_tc_pw_conv} partial wins "
+                    f"would convert to full WIN with tighter research target"
+                )
+            any_added = True
+    except Exception:
+        pass
+
     # ── 4. BEST AND WORST PAIRS ────────────────────────────────────────────────
     pair_stats: dict = {}
     for r in decisive:
