@@ -142,9 +142,11 @@ def _temporal_cv_scores(X_s, y) -> dict:
 # ── Decisive trade counter ─────────────────────────────────────────────────────
 
 def _count_decisive_trades() -> tuple:
-    """Count WIN and LOSS outcomes only (excludes EXPIRED / BREAKEVEN / PARTIAL_WIN).
+    """Count training-eligible outcomes: WIN/PARTIAL_WIN (→ y=1) and LOSS (→ y=0).
 
     Returns (n_wins, n_losses).  Called before training to gate on minimum data.
+    PARTIAL_WIN is counted as WIN since it maps to y=1 in the training set.
+    EXPIRED/BREAKEVEN excluded — they don't cleanly represent edge direction.
     """
     n_wins = n_losses = 0
     research_csv = config.DATA_DIR / "research_trades.csv"
@@ -152,7 +154,7 @@ def _count_decisive_trades() -> tuple:
         with research_csv.open("r", encoding="utf-8", newline="") as fh:
             for r in csv.DictReader(fh):
                 s = r.get("status", "").upper()
-                if s == "WIN":
+                if s in ("WIN", "PARTIAL_WIN"):
                     n_wins += 1
                 elif s == "LOSS":
                     n_losses += 1
@@ -160,7 +162,7 @@ def _count_decisive_trades() -> tuple:
         with config.TRADES_CSV.open("r", encoding="utf-8", newline="") as fh:
             for r in csv.DictReader(fh):
                 s = r.get("status", "").upper()
-                if s == "WIN":
+                if s in ("WIN", "PARTIAL_WIN"):
                     n_wins += 1
                 elif s == "LOSS":
                     n_losses += 1
