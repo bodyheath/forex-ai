@@ -4256,7 +4256,7 @@ def _send_telegram_summary(
                 _raw_fund_all = list(_trk_fund.load())
                 _tt_vals = sorted({str(r.get("trade_this", "")) for r in _raw_fund_all[:200]})
                 print(f"[DEBUG FUND] raw rows={len(_raw_fund_all)} · trade_this unique values: {_tt_vals}", file=sys.stderr)
-                _all_fund_t = [r for r in _raw_fund_all if r.get("trade_this") == "YES"]
+                _all_fund_t = [r for r in _raw_fund_all if str(r.get("trade_this", "")).strip().upper() == "YES"]
                 print(f"[DEBUG FUND] after YES filter: {len(_all_fund_t)} fund trades", file=sys.stderr)
                 _open_ft    = [r for r in _all_fund_t if r.get("status") == "OPEN"]
                 _closed_ft  = [r for r in _all_fund_t
