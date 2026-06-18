@@ -151,6 +151,16 @@ _COUNTRY_CURRENCY = {
 
 _PRICE_FETCH_LIMIT = 30
 
+# Paths for dynamic booster state — persisted between scans
+_SCAN_SNAPSHOT_FILE  = config.DATA_DIR / "scan_price_snapshot.json"
+_WATCHLIST_CACHE_FILE = config.DATA_DIR / "watchlist_cache.json"
+
+# Currencies entering peak liquidity per scan mode (session transition boost)
+_SESSION_BOOST_CCYS: dict = {
+    "prelondon": {"EUR", "GBP", "CHF", "NOK", "SEK"},
+    "preny":     {"USD", "CAD"},
+}
+
 
 # ── Universe, calendar, rates, performance ───────────────────────────────────
 
