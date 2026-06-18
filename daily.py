@@ -1113,12 +1113,16 @@ def _what_needs_to_change(parsed: dict) -> str:
     parts = []
     if missing:
         parts.append(f"Restore {' + '.join(missing)} data")
+    _DIMENSION_PLAIN = {
+        "Technical":   "price charts need a clearer trend signal",
+        "Fundamental": "interest rate advantage needs to strengthen",
+        "Sentiment":   "news tone needs to become more positive",
+        "Positioning": "institutional investors need to increase their position",
+        "Macro":       "global economic conditions need to improve",
+    }
     if weak:
-        for name, score in sorted(weak.items(), key=lambda x: x[1])[:2]:
-            if score <= 5:
-                parts.append(f"{name} at {score}/10 — needs momentum shift to 7+")
-            else:
-                parts.append(f"{name} at {score}/10 — one confirmation away from 7+")
+        for name, _sc in sorted(weak.items(), key=lambda x: x[1])[:2]:
+            parts.append(_DIMENSION_PLAIN.get(name, f"{name} needs to strengthen"))
     if not parts:
         parts.append("All layers close — wait for price to reach key level")
     return "; ".join(parts)
