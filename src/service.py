@@ -11,6 +11,7 @@ def analyse_and_log(
     shared_fundamental=None,
     shared_macro=None,
     sonnet_threshold: int = 6,
+    pair_threshold_override: "float | None" = None,
 ) -> dict:
     result = pipeline.run(
         pair,
@@ -19,6 +20,7 @@ def analyse_and_log(
         shared_fundamental=shared_fundamental,
         shared_macro=shared_macro,
         sonnet_threshold=sonnet_threshold,
+        pair_threshold_override=pair_threshold_override,
     )
     if result.get("screened_out"):
         screen = result.get("screen", {})
