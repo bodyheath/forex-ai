@@ -6113,7 +6113,7 @@ def run() -> int:
 
         # 4. Pre-fetch Twelve Data candles — 20 pairs for 6am, 15 for afternoon scans
         # Reducing from 25×4TF=100 to 15×4TF=60 calls on afternoon scans saves ~6-7 min.
-        _warm_cap = 20 if scan_mode == "full" else 15
+        _warm_cap = 25 if scan_mode == "full" else 15
         try:
             from src import technical as _tech
             _tech.warm_cache(pre_filtered[:_warm_cap], log=lambda m: _log_line(logf, m))
