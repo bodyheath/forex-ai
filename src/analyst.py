@@ -468,14 +468,16 @@ def _build_sonnet_message(pair: str, bundle: dict, haiku_report: str) -> str:
     return "\n".join(parts)
 
 
-def analyse(pair: str, bundle: dict, haiku_report: str = "") -> str:
+def analyse(pair: str, bundle: dict, haiku_report: str = "",
+            threshold_override: "float | None" = None) -> str:
     """Sonnet confirmation for high-confidence pairs.
 
     Input: ~400-600 tokens (compressed data + Haiku report).
     Output: max 400 tokens (full structured format with entry/stop/target).
     Only called for pairs where Haiku confidence >= sonnet_threshold (6 for full scan, 7 for intraday).
+    threshold_override: if set, replaces the global confidence threshold in the Sonnet prompt.
     """
-    system_prompt = _load_system_prompt()
+    system_prompt = _load_system_prompt(threshold_override=threshold_override)
     user_message  = _build_sonnet_message(pair, bundle, haiku_report)
 
     def _call(client):
