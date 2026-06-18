@@ -1,0 +1,43 @@
+name: Publish Dashboard
+
+# Called automatically from daily.yml and intraday.yml after every scan,
+# and can also be triggered manually via Actions → Run workflow.
+
+on:
+  workflow_call:   # invoked by daily.yml and intraday.yml
+  workflow_dispatch:  # manual re-publish
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out main repo (latest docs/)
+        uses: actions/checkout@v4
+        with:
+          # Default GITHUB_TOKEN — read-only access to this repo is enough
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push docs/ to forex-ai-dashboard
+        env:
+          DASHBOARD_TOKEN: ${{ secrets.DASHBOARD_TOKEN }}
+        run: |
+          git clone \
+            https://x-access-token:${DASHBOARD_TOKEN}@github.com/bodyheath/forex-ai-dashboard.git \
+            dashboard-repo
+
+          # Copy all docs/ contents (including .nojekyll) to the root of the dashboard repo.
+          # This overwrites existing files but never deletes untracked ones (e.g. README.md).
+          cp -r docs/. dashboard-repo/
+
+          cd dashboard-repo
+
+          git config user.name  "forex-ai[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          # Only commit if something actually changed
+          git diff --staged --quiet && echo "No dashboard changes — skipping push." && exit 0
+
+          git commit -m "Dashboard update $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push origin HEAD:main
