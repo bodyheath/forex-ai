@@ -4571,16 +4571,21 @@ def _send_telegram_summary(
         if scan_mode == "prelondon":
             _sf_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "🌆 <b>LONDON SESSION FOCUS</b>"]
             _sf_sec.append("London opens in 2 hours — EUR GBP CHF pairs are most active during this session")
-            _london_pairs = [r for r in (watch_list + upcoming)
-                             if any(c in r["pair"].upper() for c in ("EUR", "GBP", "CHF"))
-                             and _quality_grades.get(r["pair"], _trade_quality_grade(r)).get("grade") != "F"]
+            _london_pairs_raw = [r for r in (watch_list + upcoming)
+                                 if any(c in r["pair"].upper() for c in ("EUR", "GBP", "CHF"))
+                                 and _quality_grades.get(r["pair"], _trade_quality_grade(r)).get("grade") not in ("D", "F")]
+            # Dedup inverse pairs within session focus list
+            _sf_lseen: set = set()
+            _london_pairs = []
+            for _r in _london_pairs_raw:
+                _p = _r["pair"].upper().replace("/", "")
+                _inv = _p[3:] + _p[:3]
+                if _p not in _sf_lseen and _inv not in _sf_lseen:
+                    _london_pairs.append(_r)
+                    _sf_lseen.add(_p)
             if _london_pairs:
                 for _lp in _london_pairs[:3]:
-                    _lp_grade = (_quality_grades.get(_lp["pair"]) or _trade_quality_grade(_lp)).get("grade", "C")
-                    if _lp_grade == "D":
-                        _sf_sec.append(f"{_lp['pair']} — worth monitoring but not ready to enter yet")
-                    else:
-                        _sf_sec.append(f"{_lp['pair']} entry window opens at 7pm Auckland — be ready")
+                    _sf_sec.append(f"{_lp['pair']} entry window opens at 7pm Auckland — be ready")
             else:
                 _sf_sec.append("No EUR or GBP pairs on watch list today — London session may be quiet for us")
             all_sections.append(_sf_sec)
@@ -4588,16 +4593,21 @@ def _send_telegram_summary(
             _sf_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "🌃 <b>NEW YORK SESSION FOCUS</b>"]
             _sf_sec.append("New York opens in 2 hours — USD CAD pairs are most active during this session")
             _sf_sec.append("London and New York overlap from 1am to 4am Auckland — highest volume period of the entire week — best time for EUR USD GBP pairs")
-            _ny_pairs = [r for r in (watch_list + upcoming)
-                         if any(c in r["pair"].upper() for c in ("USD", "CAD"))
-                         and _quality_grades.get(r["pair"], _trade_quality_grade(r)).get("grade") != "F"]
+            _ny_pairs_raw = [r for r in (watch_list + upcoming)
+                             if any(c in r["pair"].upper() for c in ("USD", "CAD"))
+                             and _quality_grades.get(r["pair"], _trade_quality_grade(r)).get("grade") not in ("D", "F")]
+            # Dedup inverse pairs within session focus list
+            _sf_nyseen: set = set()
+            _ny_pairs = []
+            for _r in _ny_pairs_raw:
+                _p = _r["pair"].upper().replace("/", "")
+                _inv = _p[3:] + _p[:3]
+                if _p not in _sf_nyseen and _inv not in _sf_nyseen:
+                    _ny_pairs.append(_r)
+                    _sf_nyseen.add(_p)
             if _ny_pairs:
                 for _np in _ny_pairs[:3]:
-                    _np_grade = (_quality_grades.get(_np["pair"]) or _trade_quality_grade(_np)).get("grade", "C")
-                    if _np_grade == "D":
-                        _sf_sec.append(f"{_np['pair']} — worth monitoring but not ready to enter yet")
-                    else:
-                        _sf_sec.append(f"{_np['pair']} entry window opens at 1am Auckland — be ready when New York opens")
+                    _sf_sec.append(f"{_np['pair']} entry window opens at 1am Auckland — be ready when New York opens")
             else:
                 _sf_sec.append("No USD or CAD pairs on watch list tonight — New York session may be quiet for us")
             all_sections.append(_sf_sec)
