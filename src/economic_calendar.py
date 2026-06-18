@@ -1,7 +1,7 @@
 """Economic calendar — high impact event fetching and pair-level news warnings.
 
-Data source: Twelve Data economic calendar API (same credentials and endpoint
-already used by src/selector.py for pair pre-scoring).
+Primary data source: Forex Factory XML feed (free, no API key required).
+Fallback: Twelve Data economic calendar API.
 
 Events are fetched for the next 7 days, filtered to HIGH impact only, and
 cached for 3 hours to avoid redundant API calls.
@@ -11,7 +11,7 @@ Public API
 get_events_7d()
     Return list[dict] of all HIGH impact events in the next 7 days.
     Each dict: currency, event, plain_name, plain_desc, dt_utc, dt_ak,
-               ak_display, avoid_advice.
+               ak_display, avoid_advice, forecast, previous.
 
 events_for_pair(pair, hours=48)
     Return events within `hours` for either currency in `pair`.
@@ -19,7 +19,8 @@ events_for_pair(pair, hours=48)
 
 build_calendar_section()
     Return list[str] of Telegram-ready lines for the 7-day event timeline.
-    Returns [] when no events available or Twelve Data unreachable.
+    Returns [] when no events available. Shows a fallback message when both
+    Forex Factory and Twelve Data are unreachable.
 
 warning_lines_for_pair(pair, events)
     Return list[str] of ⚠️ warning lines for a trade block (empty when none).
@@ -33,7 +34,13 @@ import config
 from src import cache
 
 _CACHE_KEY = "CAL:events_7d"
-_CACHE_TTL  = 3.0   # hours — generous enough to avoid quota burn
+_CACHE_TTL  = 3.0   # hours
+_FF_URL     = "https://nfs.faireconomy.media/ff_calendar_thisweek.xml"
+
+# Updated on each real (non-cached) fetch so build_calendar_section()
+# can show the fallback message when both sources fail.
+# "forex_factory" | "twelve_data" | "none" | ""
+_last_source: str = ""
 
 # ── Plain English event name lookup ───────────────────────────────────────────
 # (keyword_in_lowercase, plain_name, plain_description)
@@ -98,6 +105,32 @@ _COUNTRY_CURRENCY = {
     "sweden": "SEK", "norway": "NOK", "denmark": "DKK",
 }
 
+# Forecast direction metadata: (keyword, unit_label, bullish_when)
+# bullish_when: "above" = higher result strengthens the currency
+#               "below" = lower result strengthens the currency
+_FORECAST_META = [
+    ("non-farm payroll",     "new jobs",           "above"),
+    ("nonfarm payroll",      "new jobs",           "above"),
+    ("employment change",    "new jobs",           "above"),
+    ("payroll",              "jobs",               "above"),
+    ("unemployment rate",    "% unemployment",     "below"),
+    ("claimant count",       "claims",             "below"),
+    ("jobless claims",       "claims",             "below"),
+    ("consumer price index", "%",                  "above"),
+    ("cpi",                  "%",                  "above"),
+    ("producer price",       "%",                  "above"),
+    ("ppi",                  "%",                  "above"),
+    ("gdp",                  "% growth",           "above"),
+    ("retail sales",         "% change",           "above"),
+    ("pmi",                  "",                   "above"),
+    ("trade balance",        "",                   "above"),
+    ("current account",      "",                   "above"),
+    ("interest rate",        "%",                  "above"),
+    ("rate decision",        "%",                  "above"),
+    ("cash rate",            "%",                  "above"),
+    ("fed funds",            "%",                  "above"),
+]
+
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -137,22 +170,198 @@ def _parse_dt(dt_str: str):
     return None
 
 
-# ── Public API ────────────────────────────────────────────────────────────────
+def _is_us_dst(dt: datetime) -> bool:
+    """True when US Eastern is in DST (EDT=UTC-4) rather than EST (UTC-5)."""
+    year = dt.year
+    mar1      = datetime(year, 3, 1)
+    sun2_mar  = mar1 + timedelta(days=(6 - mar1.weekday()) % 7 + 7)
+    dst_start = sun2_mar.replace(hour=2)
+    nov1      = datetime(year, 11, 1)
+    sun1_nov  = nov1 + timedelta(days=(6 - nov1.weekday()) % 7)
+    dst_end   = sun1_nov.replace(hour=2)
+    return dst_start <= dt < dst_end
 
-def get_events_7d() -> list:
-    """Fetch HIGH impact events for the next 7 days from Twelve Data. Cached 3h.
 
-    Returns list of event dicts sorted by dt_utc.
-    Each dict has: currency, event, plain_name, plain_desc, dt_utc (str),
-                   dt_ak (str), ak_display, avoid_advice.
+def _eastern_to_utc(dt_eastern: datetime) -> datetime:
+    """Convert US Eastern time to UTC (auto-detects EST vs EDT)."""
+    offset = 4 if _is_us_dst(dt_eastern) else 5
+    return dt_eastern + timedelta(hours=offset)
+
+
+def _fmt_value(v: str) -> str:
+    """Format Forex Factory value strings for plain-English display.
+
+    '185K' → '185,000'  |  '1.5%' → '1.5%'  |  '2.3B' → '2.3 billion'
     """
-    cached = cache.get(_CACHE_KEY, ttl_hours=_CACHE_TTL)
-    if cached is not None:
-        return cached
+    v = v.strip()
+    if not v:
+        return v
+    if len(v) > 1 and v[-1].upper() == "K":
+        try:
+            num = float(v[:-1].replace(",", ""))
+            result = round(num * 1_000)
+            return f"{result:,}"
+        except ValueError:
+            pass
+    if len(v) > 1 and v[-1].upper() == "M":
+        try:
+            num = float(v[:-1].replace(",", ""))
+            return f"{num:.1f} million"
+        except ValueError:
+            pass
+    if len(v) > 1 and v[-1].upper() == "B":
+        try:
+            num = float(v[:-1].replace(",", ""))
+            return f"{num:.1f} billion"
+        except ValueError:
+            pass
+    return v
 
+
+def _build_forecast_desc(event_name: str, currency: str,
+                          forecast: str, previous: str, plain_desc: str) -> str:
+    """Build a plain-English forecast context string.
+
+    Returns formatted string when forecast/previous data is present, otherwise
+    falls back to the generic plain_desc.
+
+    Example: 'forecast 185,000 new jobs — previous 175,000 — a result above
+              185,000 will likely strengthen USD'
+    """
+    if not forecast and not previous:
+        return plain_desc
+
+    parts = []
+    unit, direction = "", None
+    for keyword, unit_text, bullish_when in _FORECAST_META:
+        if keyword in event_name.lower():
+            unit, direction = unit_text, bullish_when
+            break
+
+    if forecast:
+        fmt_fc = _fmt_value(forecast)
+        if unit:
+            parts.append(f"forecast {fmt_fc} {unit}".strip())
+        else:
+            parts.append(f"forecast {fmt_fc}")
+
+    if previous:
+        parts.append(f"previous {_fmt_value(previous)}")
+
+    if forecast and direction:
+        fmt_fc = _fmt_value(forecast)
+        word   = "above" if direction == "above" else "below"
+        parts.append(f"a result {word} {fmt_fc} will likely strengthen {currency}")
+
+    return " — ".join(parts) if parts else plain_desc
+
+
+# ── Forex Factory primary fetcher ─────────────────────────────────────────────
+
+def _fetch_forex_factory():
+    """Fetch HIGH impact events from Forex Factory XML feed.
+
+    Returns list of event dicts on success (possibly empty when no events this
+    week), or None on network/parse failure.
+    """
+    try:
+        import xml.etree.ElementTree as ET
+        r = requests.get(
+            _FF_URL,
+            timeout=15,
+            headers={"User-Agent": "Mozilla/5.0 (forex-ai calendar)"},
+        )
+        r.raise_for_status()
+        root = ET.fromstring(r.content)
+    except Exception as e:
+        print(f"[ECO-CAL] Forex Factory fetch failed: {e}")
+        return None
+
+    now_utc = datetime.utcnow()
+    events = []
+    _skipped_impact = 0
+    _skipped_ccy    = 0
+    _skipped_dt     = 0
+
+    for ev in root.findall("event"):
+        impact = (ev.findtext("impact") or "").strip().lower()
+        if impact != "high":
+            _skipped_impact += 1
+            continue
+
+        currency = (ev.findtext("country") or "").strip().upper()
+        if currency not in _VALID_CCYS:
+            _skipped_ccy += 1
+            continue
+
+        title    = (ev.findtext("title")    or "").strip()
+        date_str = (ev.findtext("date")     or "").strip()  # "Jun 06 2025"
+        time_str = (ev.findtext("time")     or "").strip()  # "8:30am", "Tentative"
+        forecast = (ev.findtext("forecast") or "").strip()
+        previous = (ev.findtext("previous") or "").strip()
+
+        try:
+            date_part = datetime.strptime(date_str, "%b %d %Y")
+        except ValueError:
+            _skipped_dt += 1
+            continue
+
+        time_lower = time_str.lower().replace(" ", "")
+        if time_lower in ("tentative", "allday", ""):
+            hour, minute = 0, 0
+        else:
+            try:
+                if ":" in time_lower:
+                    t = datetime.strptime(time_lower, "%I:%M%p")
+                else:
+                    t = datetime.strptime(time_lower, "%I%p")
+                hour, minute = t.hour, t.minute
+            except ValueError:
+                hour, minute = 0, 0
+
+        dt_eastern = date_part.replace(hour=hour, minute=minute)
+        dt_utc     = _eastern_to_utc(dt_eastern)
+
+        if dt_utc < now_utc - timedelta(hours=1):
+            _skipped_dt += 1
+            continue
+
+        dt_ak       = _to_auckland(dt_utc)
+        plain, desc = _plain_name_desc(title)
+        desc        = _build_forecast_desc(title, currency, forecast, previous, desc)
+
+        events.append({
+            "currency":     currency,
+            "event":        title,
+            "plain_name":   plain,
+            "plain_desc":   desc,
+            "dt_utc":       dt_utc.strftime("%Y-%m-%d %H:%M"),
+            "dt_ak":        dt_ak.strftime("%Y-%m-%d %H:%M"),
+            "ak_display":   _ak_display(dt_ak),
+            "avoid_advice": f"avoid new {currency} trades until after this releases",
+            "forecast":     forecast,
+            "previous":     previous,
+        })
+
+    print(
+        f"[ECO-CAL] Forex Factory: {len(events)} HIGH-impact events kept "
+        f"(skipped: {_skipped_impact} non-high, {_skipped_ccy} unknown ccy, "
+        f"{_skipped_dt} bad/past dt)"
+    )
+    events.sort(key=lambda e: e["dt_utc"])
+    return events
+
+
+# ── Twelve Data fallback fetcher ──────────────────────────────────────────────
+
+def _fetch_twelve_data():
+    """Fetch HIGH impact events from Twelve Data economic calendar.
+
+    Returns list of event dicts on success (possibly empty), or None on failure.
+    """
     if not config.TWELVE_DATA_KEY:
-        print("[ECO-CAL] TWELVE_DATA_KEY not set — economic calendar unavailable")
-        return []
+        print("[ECO-CAL] TWELVE_DATA_KEY not set — Twelve Data calendar unavailable")
+        return None
 
     now_utc = datetime.utcnow()
     end_utc = now_utc + timedelta(days=7)
@@ -167,30 +376,27 @@ def get_events_7d() -> list:
             timeout=15,
         )
         data = r.json()
-    except Exception as _api_err:
-        print(f"[ECO-CAL] API request failed: {_api_err}")
-        cache.set(_CACHE_KEY, [])
-        return []
+    except Exception as e:
+        print(f"[ECO-CAL] Twelve Data fetch failed: {e}")
+        return None
 
     raw = data.get("result", data)
     if isinstance(raw, dict):
         raw = raw.get("events", [])
     if not isinstance(raw, list):
-        print(f"[ECO-CAL] Unexpected API response structure — top-level keys: {list(data.keys()) if isinstance(data, dict) else type(data).__name__}")
-        cache.set(_CACHE_KEY, [])
-        return []
+        print(
+            f"[ECO-CAL] Twelve Data unexpected response — keys: "
+            f"{list(data.keys()) if isinstance(data, dict) else type(data).__name__}"
+        )
+        return None
 
-    print(f"[ECO-CAL] API returned {len(raw)} raw events before impact/currency filter")
-    if raw:
-        _sample = raw[0]
-        print(f"[ECO-CAL] Sample event keys: {list(_sample.keys()) if isinstance(_sample, dict) else _sample}")
+    print(f"[ECO-CAL] Twelve Data: {len(raw)} raw events before impact/currency filter")
 
     events = []
     _skipped_impact = 0
-    _skipped_ccy = 0
-    _skipped_dt = 0
+    _skipped_ccy    = 0
+    _skipped_dt     = 0
     for ev in raw:
-        # Impact filter — HIGH only
         imp_raw = ev.get("importance", "")
         if isinstance(imp_raw, int):
             importance = {3: "high", 2: "medium", 1: "low"}.get(imp_raw, "")
@@ -200,7 +406,6 @@ def get_events_7d() -> list:
             _skipped_impact += 1
             continue
 
-        # Currency resolution
         cur_raw  = (ev.get("currency") or ev.get("country") or "").strip()
         currency = (
             cur_raw.upper() if len(cur_raw) == 3
@@ -210,17 +415,13 @@ def get_events_7d() -> list:
             _skipped_ccy += 1
             continue
 
-        # Datetime parsing (UTC)
         dt_str = str(ev.get("datetime", "") or ev.get("date", ""))
         dt_utc = _parse_dt(dt_str)
-        if dt_utc is None:
+        if dt_utc is None or dt_utc < now_utc - timedelta(hours=1):
             _skipped_dt += 1
             continue
-        if dt_utc < now_utc - timedelta(hours=1):
-            _skipped_dt += 1
-            continue  # already past
 
-        dt_ak      = _to_auckland(dt_utc)
+        dt_ak       = _to_auckland(dt_utc)
         plain, desc = _plain_name_desc(ev.get("event", ""))
 
         events.append({
@@ -232,16 +433,55 @@ def get_events_7d() -> list:
             "dt_ak":        dt_ak.strftime("%Y-%m-%d %H:%M"),
             "ak_display":   _ak_display(dt_ak),
             "avoid_advice": f"avoid new {currency} trades until after this releases",
+            "forecast":     "",
+            "previous":     "",
         })
 
     print(
-        f"[ECO-CAL] Filter result: {len(events)} HIGH-impact events kept "
-        f"(skipped: {_skipped_impact} non-high, {_skipped_ccy} unknown currency, "
-        f"{_skipped_dt} bad/past datetime)"
+        f"[ECO-CAL] Twelve Data: {len(events)} HIGH-impact events kept "
+        f"(skipped: {_skipped_impact} non-high, {_skipped_ccy} unknown ccy, "
+        f"{_skipped_dt} bad/past dt)"
     )
     events.sort(key=lambda e: e["dt_utc"])
-    cache.set(_CACHE_KEY, events)
     return events
+
+
+# ── Public API ────────────────────────────────────────────────────────────────
+
+def get_events_7d() -> list:
+    """Fetch HIGH impact events for the next 7 days.
+
+    Primary source: Forex Factory XML feed.
+    Fallback: Twelve Data economic calendar API.
+    Results cached for 3 hours.
+
+    Returns list of event dicts sorted by dt_utc. Returns [] when both sources
+    are unreachable (not cached — allows retry on next call).
+    """
+    global _last_source
+
+    cached = cache.get(_CACHE_KEY, ttl_hours=_CACHE_TTL)
+    if cached is not None:
+        return cached
+
+    # Primary: Forex Factory
+    ff = _fetch_forex_factory()
+    if ff is not None:
+        _last_source = "forex_factory"
+        cache.set(_CACHE_KEY, ff)
+        return ff
+
+    # Fallback: Twelve Data
+    td = _fetch_twelve_data()
+    if td is not None:
+        _last_source = "twelve_data"
+        cache.set(_CACHE_KEY, td)
+        return td
+
+    # Both sources failed — don't cache so the next call retries
+    _last_source = "none"
+    print("[ECO-CAL] Both Forex Factory and Twelve Data unavailable")
+    return []
 
 
 def events_for_pair(pair: str, hours: float = 48.0) -> list:
@@ -273,12 +513,12 @@ def events_for_pair(pair: str, hours: float = 48.0) -> list:
 def build_calendar_section() -> list:
     """Return Telegram-ready lines for the 7-day high impact event timeline.
 
-    Returns [] when no events are available.
+    Returns [] when no events are scheduled. Shows a fallback message when
+    both data sources are unreachable.
     """
     all_ev  = get_events_7d()
     now_utc = datetime.utcnow()
 
-    # Re-filter so stale cache entries don't show past events
     future = []
     for e in all_ev:
         try:
@@ -289,6 +529,13 @@ def build_calendar_section() -> list:
             future.append(e)
 
     if not future:
+        if _last_source == "none":
+            return [
+                "",
+                "━━━━━━━━━━━━━━━━━━━━━",
+                "📅 <b>UPCOMING HIGH IMPACT EVENTS — Next 7 Days</b>",
+                "📅 Economic calendar temporarily unavailable — check back at next scan",
+            ]
         return []
 
     lines = [
@@ -318,11 +565,11 @@ def warning_lines_for_pair(pair: str, events: list = None) -> list:
 
     lines = []
     for ev in events:
-        ccy       = ev["currency"]
-        plain     = ev["plain_name"]
-        ak_disp   = ev["ak_display"]       # "Friday 2:00pm Auckland"
-        day       = ak_disp.split()[0]     # "Friday"
-        hours     = ev.get("hours_away", 24)
+        ccy     = ev["currency"]
+        plain   = ev["plain_name"]
+        ak_disp = ev["ak_display"]
+        day     = ak_disp.split()[0]
+        hours   = ev.get("hours_away", 24)
 
         if hours <= 6:
             timing = f"very soon ({ak_disp})"
@@ -331,7 +578,6 @@ def warning_lines_for_pair(pair: str, events: list = None) -> list:
         else:
             timing = f"on {day} ({ak_disp})"
 
-        # Use natural language based on whether it is a meeting or a data release
         low = plain.lower()
         is_meeting = any(kw in low for kw in (
             "meeting", "decision", "policy statement", "rate statement"
