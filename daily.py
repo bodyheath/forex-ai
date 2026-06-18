@@ -5827,6 +5827,132 @@ def _next_scan_footer(scan_mode: str, now_ak: datetime) -> str:
     return f"⏰ Next full scan {nxt_short} at 6am Auckland"
 
 
+def _detect_opportunity_gaps(
+    ranked_all: list,
+    prev_prices: dict,
+    scan_mode: str,
+    log=print,
+) -> "tuple[list, dict]":
+    """Detect significant price moves and gaps between scans.
+
+    Compares cur_close (OHLCV) against prev scan snapshot for every ranked pair.
+    Returns (forced_pairs, opportunity_data).
+
+    forced_pairs    — pairs to inject into analysis regardless of merit rank
+    opportunity_data — heatmap, gaps, velocity alerts for the Telegram message
+    """
+    from src.selector import _pip_size as _sel_pip
+
+    _SIG_MOVE_ATR   = 1.5   # >1.5x ATR → forced into analysis
+    _VEL_ATR        = 0.5   # >0.5x ATR counts toward velocity alert
+    _VEL_COUNT      = 5     # 5+ pairs of same currency → velocity alert
+
+    forced_pairs: list = []
+    movements:    list = []   # {pair, pips, signed_pips, direction, atr_ratio}
+    gaps:         list = []   # {pair, pips, direction_str}
+
+    for pair, meta in ranked_all:
+        cur_close  = meta.get("cur_close")
+        atr5       = meta.get("atr5")
+        open_0     = meta.get("open_0")
+        prev_close = meta.get("prev_close")
+        pip        = _sel_pip(pair)
+
+        # ── Between-scan movement ───────────────────────────────────────────
+        prev_scan = prev_prices.get(pair)
+        if cur_close is not None and prev_scan is not None and atr5 and atr5 > 0:
+            move     = cur_close - prev_scan
+            move_abs = abs(move)
+            pips     = round(move_abs / pip)
+            ratio    = move_abs / atr5
+            if pips > 0:
+                movements.append({
+                    "pair":        pair,
+                    "pips":        pips,
+                    "signed_pips": round(move / pip),
+                    "direction":   "+" if move >= 0 else "-",
+                    "atr_ratio":   ratio,
+                })
+            if ratio >= _SIG_MOVE_ATR:
+                if pair not in forced_pairs:
+                    forced_pairs.append(pair)
+                log(
+                    f"[GAP] {pair} moved {pips} pips since last scan "
+                    f"({ratio:.1f}x ATR) — forced into analysis pool — "
+                    f"significant move detected"
+                )
+
+        # ── Gap detection: today's open vs yesterday's close ────────────────
+        if open_0 is not None and prev_close is not None:
+            gap      = open_0 - prev_close
+            gap_abs  = abs(gap)
+            gap_pips = round(gap_abs / pip)
+            threshold = 10 if pair.upper().endswith("JPY") else 30
+            if gap_pips >= threshold:
+                gap_dir = "higher" if gap > 0 else "lower"
+                gaps.append({"pair": pair, "pips": gap_pips, "direction": gap_dir})
+                if pair not in forced_pairs:
+                    forced_pairs.append(pair)
+                log(
+                    f"[GAP] {pair} opened {gap_pips} pips {gap_dir} than last close — "
+                    f"this may represent a genuine breakout or a news reaction — "
+                    f"forced into analysis"
+                )
+
+    # ── Sort movements by absolute pips for heatmap ─────────────────────────
+    movements.sort(key=lambda x: x["pips"], reverse=True)
+
+    # ── Velocity alert: 5+ pairs of same currency moving same direction ──────
+    ccy_counts: dict = {}   # {ccy: {"+": [pairs], "-": [pairs]}}
+    for m in movements:
+        if m["atr_ratio"] < _VEL_ATR:
+            continue
+        parts = m["pair"].split("/")
+        if len(parts) != 2:
+            continue
+        base, quote = parts
+        # base strengthens when pair goes up; quote weakens when pair goes up
+        base_dir  = m["direction"]
+        quote_dir = "-" if m["direction"] == "+" else "+"
+        for ccy, ccy_dir in ((base, base_dir), (quote, quote_dir)):
+            if ccy not in ccy_counts:
+                ccy_counts[ccy] = {"+": [], "-": []}
+            ccy_counts[ccy][ccy_dir].append(m["pair"])
+
+    velocity_alerts: list = []
+    for ccy, dirs in ccy_counts.items():
+        for ccy_dir, pairs_list in dirs.items():
+            if len(pairs_list) >= _VEL_COUNT:
+                direction_word = "strengthened" if ccy_dir == "+" else "weakened"
+                velocity_alerts.append({
+                    "currency":  ccy,
+                    "direction": direction_word,
+                    "count":     len(pairs_list),
+                    "pairs":     pairs_list,
+                })
+                log(
+                    f"[GAP] Broad {ccy} move detected — {len(pairs_list)} {ccy} pairs all "
+                    f"{direction_word} significantly since last scan — "
+                    f"{', '.join(pairs_list[:6])}"
+                )
+
+    # ── Log the movement heatmap ─────────────────────────────────────────────
+    if movements:
+        top3 = movements[:3]
+        hm_str = " · ".join(
+            f"{m['pair']} {m['direction']}{m['pips']} pips" for m in top3
+        )
+        log(f"[GAP] Movement heatmap (top movers): {hm_str}")
+
+    opportunity_data: dict = {
+        "heatmap":       movements[:5],
+        "gaps":          gaps,
+        "velocity":      velocity_alerts,
+        "forced_count":  len(forced_pairs),
+    }
+    return forced_pairs, opportunity_data
+
+
 def run() -> int:
     # ── Auckland startup log — very first line, before all guards and checks ──
     _startup_ak = _auckland_now()
