@@ -131,12 +131,62 @@ def analyse(tech_bundle: dict) -> dict:
         f"{_ABBREV[tf]}:{sig}" for tf, sig in signals.items()
     )
 
-    # Weekly AND daily must both agree — 4H is optional bonus
-    qualifies = (
-        dominant != "NEUTRAL"
-        and signals["weekly"] == dominant
-        and signals["daily"] == dominant
-    )
+    # ── Graduated MTF gate ────────────────────────────────────────────────────
+    w   = signals["weekly"]
+    d   = signals["daily"]
+    h4  = signals["h4"]
+
+    if dominant == "NEUTRAL" or w == "NEUTRAL":
+        # No weekly directional signal — no basis for a swing trade
+        mtf_gate     = "no_signal"
+        qualifies    = False
+        conf_penalty = 0
+    elif w != dominant:
+        # Weekly actively opposes the direction that Daily+4H majority suggests
+        # ("Weekly opposes Daily and 4H simultaneously" per spec)
+        mtf_gate     = "blocked"
+        qualifies    = False
+        conf_penalty = 0
+    else:
+        # Weekly agrees with dominant — now classify strength from D and 4H
+        _d_agrees   = (d == dominant)
+        _d_neutral  = (d == "NEUTRAL")
+        _d_opposes  = (d != "NEUTRAL" and not _d_agrees)
+        _h4_agrees  = (h4 == dominant)
+        _h4_neutral = (h4 == "NEUTRAL")
+        _h4_opposes = (h4 != "NEUTRAL" and not _h4_agrees)
+
+        if _d_agrees and _h4_agrees:
+            # STRONGEST: Weekly + Daily + 4H all agree
+            mtf_gate     = "strong_all3"
+            qualifies    = True
+            conf_penalty = 0
+        elif _d_agrees:
+            # STRONG: Weekly + Daily agree (4H neutral or opposing)
+            mtf_gate     = "strong_w_d"
+            qualifies    = True
+            conf_penalty = 0
+        elif _h4_agrees and _d_neutral:
+            # STRONG: Weekly + 4H agree, Daily consolidating (neutral)
+            # Classic pullback — daily consolidation within weekly trend
+            mtf_gate     = "strong_w_4h"
+            qualifies    = True
+            conf_penalty = 0
+        elif _d_neutral and _h4_neutral:
+            # WEAK: only Weekly is directional, D and 4H both neutral
+            mtf_gate     = "weak_weekly_only"
+            qualifies    = True
+            conf_penalty = 1
+        elif _d_opposes and _h4_opposes:
+            # BLOCKED: Daily and 4H both actively oppose the weekly direction
+            mtf_gate     = "blocked"
+            qualifies    = False
+            conf_penalty = 0
+        else:
+            # WEAK: mixed signals — some opposition but not fully blocked
+            mtf_gate     = "weak_mixed"
+            qualifies    = True
+            conf_penalty = 1
 
     return {
         "signals":        signals,
@@ -145,4 +195,6 @@ def analyse(tech_bundle: dict) -> dict:
         "weighted_score": round(weighted_score, 2),
         "breakdown":      breakdown,
         "qualifies":      qualifies,
+        "mtf_gate":       mtf_gate,
+        "conf_penalty":   conf_penalty,
     }
