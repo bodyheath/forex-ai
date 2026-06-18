@@ -5873,6 +5873,14 @@ def run() -> int:
         deep_results          = []
         analysed_pairs: set   = set()
 
+        # Load pair performance map for per-pair threshold overrides
+        _pair_perf_map: dict = {}
+        try:
+            from src import selector as _sel_pm
+            _pair_perf_map = _sel_pm.load_pair_performance()
+        except Exception:
+            pass
+
         def _process_batch(pairs, force_deep=False):
             nonlocal filtered_count
             for pair in pairs:
@@ -5880,12 +5888,19 @@ def run() -> int:
                     _log_line(logf, f"  {pair}: CACHE HIT (already analysed this run)")
                     continue
                 analysed_pairs.add(pair)
+                # Per-pair threshold: 70%+ win rate from 10+ trades → lower threshold to 5.5
+                _pth_override = None
+                _pp = _pair_perf_map.get(pair, {})
+                if isinstance(_pp, dict) and _pp.get("wr", 0) >= 0.70 and _pp.get("n", 0) >= 10:
+                    _pth_override = 5.5
+                    _log_line(logf, f"  {pair}: proven edge (wr={_pp['wr']:.0%}, n={_pp['n']}) — threshold lowered to 5.5")
                 result = _analyse_pair(
                     pair, logf,
                     force_deep=force_deep,
                     shared_fundamental=_shared_fund.get(pair),
                     shared_macro=_shared_macro,
                     sonnet_threshold=sonnet_thresh,
+                    pair_threshold_override=_pth_override,
                 )
                 if result is None:
                     failed_pairs.append(pair)
