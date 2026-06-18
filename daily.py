@@ -5308,6 +5308,12 @@ def _send_telegram_summary(
 
         # SYSTEM HEALTH — always show on all intraday scans
         _intraday_health = ["", "━━━━━━━━━━━━━━━━━━━━━", "⚠️ <b>SYSTEM HEALTH</b>"]
+        try:
+            from src import data_quality as _dq_ih
+            if _dq_quality_id:
+                _intraday_health.extend(_dq_ih.build_scorecard(_dq_quality_id))
+        except Exception:
+            pass
         if cost_lines:
             _intraday_health.extend(cost_lines)
         else:
