@@ -5659,7 +5659,8 @@ def run() -> int:
                 )
                 if _rsrc in ("haiku", "haiku_sweep"):
                     _ind_e, _ind_s, _ind_t, _ = _calc_indicative_levels(
-                        r_result["pair"], _rp, r_result.get("bundle", {})
+                        r_result["pair"], _rp, r_result.get("bundle", {}),
+                        research_mode=True,   # tighter 1.0x ATR target for faster ML signal
                     )
                     if _ind_e and _ind_s and _ind_t:
                         _rp = dict(_rp)
