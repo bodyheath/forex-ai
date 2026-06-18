@@ -4674,6 +4674,46 @@ def _send_telegram_summary(
                 ctx_lines.append(f"📊 <b>Today's trade threshold: {_ctx_thr}/10</b> — {_thr_reason}")
         except Exception:
             pass
+
+        # Opportunity gap detection: heatmap, gap alerts, velocity alerts
+        try:
+            _od = opportunity_data or {}
+            _heatmap   = _od.get("heatmap", [])
+            _gap_alerts = _od.get("gaps", [])
+            _velocity  = _od.get("velocity", [])
+
+            # Movement heatmap (top 3 movers)
+            if _heatmap:
+                _hm_parts = []
+                for _hm in _heatmap[:3]:
+                    _hm_parts.append(f"{_hm['pair']} {_hm['direction']}{_hm['pips']} pips")
+                ctx_lines.append(
+                    f"📊 <b>Biggest movers since last scan:</b> "
+                    f"{' · '.join(_hm_parts)} — "
+                    f"these pairs have been prioritised for analysis"
+                )
+
+            # Gap alerts
+            for _gap in _gap_alerts:
+                ctx_lines.append(
+                    f"📊 Significant gap detected: {_gap['pair']} opened "
+                    f"{_gap['pips']} pips {_gap['direction']} than last scan — "
+                    f"this may represent a genuine breakout or a news reaction — "
+                    f"forced into analysis"
+                )
+
+            # Velocity alerts (broad currency moves)
+            for _vel in _velocity:
+                ctx_lines.append(
+                    f"📊 Broad {_vel['currency']} move detected — "
+                    f"{_vel['count']} {_vel['currency']} pairs all {_vel['direction']} "
+                    f"significantly since last scan — this suggests a macro "
+                    f"{_vel['currency']} event — all {_vel['currency']} pairs have "
+                    f"been prioritised"
+                )
+        except Exception:
+            pass
+
         all_sections.append(ctx_lines)
 
         # ECONOMIC CALENDAR — 7-day high impact event timeline (every 6am scan)
