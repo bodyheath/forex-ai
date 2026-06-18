@@ -194,7 +194,7 @@ def _load_training_data():
     rows_X, rows_y = [], []
 
     def _add(trade_id, source_table: str, trade_row: dict, outcome: str):
-        if outcome == "WIN":
+        if outcome in ("WIN", "PARTIAL_WIN"):  # PARTIAL_WIN → WIN for ML training
             y = 1
         elif outcome in ("LOSS", "EXPIRED", "BREAKEVEN"):
             y = 0
