@@ -1918,11 +1918,16 @@ def _compute_expiry_days_from_rr(rr: float) -> int:
         return 5
 
 
-def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict) -> tuple:
+def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict,
+                             research_mode: bool = False) -> tuple:
     """Return (entry, stop, target, meta) for indicative display.
 
     Stop = 1.0x ATR(14), rounded to nearest 5 pips.
-    Target = nearest Fibonacci level in [1.5x, 2.5x] ATR range, else 2.0x ATR.
+    Target (display mode):  nearest Fibonacci in [1.5x, 2.5x] ATR, else 2.0x ATR.
+    Target (research_mode): nearest Fibonacci in [0.8x, 1.2x] ATR, else 1.0x ATR.
+      research_mode=True uses a tighter target so research trades resolve as WIN/LOSS
+      faster (more decisive outcomes for ML training).  Fund trade display is always
+      called with the default research_mode=False — targets are never changed.
     meta dict: {atr, stop_atr_mult, target_atr_mult, expiry_days, quality_flag}
 
     Uses Claude's parsed entry/stop/target when present.  When stop or target
