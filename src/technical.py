@@ -551,12 +551,34 @@ _FIB_LEVELS = [
 ]
 
 
-def _pip_size(price: float) -> float:
-    """Return pip size: 0.01 for JPY-style pairs (price ≥ 10), 0.0001 for others."""
-    return 0.01 if price >= 10.0 else 0.0001
+def _pip_size(price_or_pair) -> float:
+    """Return pip size based on pair name (preferred) or price heuristic.
+
+    Pair-based (pass a string like "EUR/USD" or "USDJPY"):
+      quote JPY  → 0.01    (USD/JPY, EUR/JPY, NOK/JPY, HKD/JPY …)
+      base  JPY  → 0.000001 (JPY/USD, JPY/EUR — rare inverted pairs)
+      else       → 0.0001  (all standard, HKD, SGD, NOK, SEK, MXN, ZAR …)
+
+    Price heuristic fallback (pass a float): JPY pairs trade ≥ 50;
+    NOK/SEK/HKD/MXN/ZAR pairs all trade < 50, so 50 is a safe boundary.
+    """
+    if isinstance(price_or_pair, str):
+        cleaned = price_or_pair.upper().replace("/", "").replace("-", "")
+        if len(cleaned) >= 6:
+            quote = cleaned[3:6]
+            base  = cleaned[:3]
+            if quote == "JPY":
+                return 0.01
+            if base == "JPY":
+                return 0.000001
+        elif "JPY" in price_or_pair.upper():
+            return 0.01
+        return 0.0001
+    # Numeric fallback: JPY pairs never trade below 50 (lowest AUD/JPY ≈ 80)
+    return 0.01 if float(price_or_pair) >= 50.0 else 0.0001
 
 
-def _fibonacci(df: pd.DataFrame, current_price: float) -> dict:
+def _fibonacci(df: pd.DataFrame, current_price: float, pair: str = "") -> dict:
     """Identify the swing high/low from ~3 months of daily data and compute
     Fibonacci retracement (23.6%–78.6%) and extension (127.2%, 161.8%) levels.
 
