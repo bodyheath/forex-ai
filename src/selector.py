@@ -1262,6 +1262,18 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
 
     selected = [pair for pair, _ in ranked[:top_n]]
 
+    # Force-include watchlist carry-forward pairs regardless of merit rank
+    for _cf in carry_forward:
+        if _cf not in selected and _cf in pair_scores:
+            selected.append(_cf)
+            _cf_rank = next(
+                (i + 1 for i, (p, _) in enumerate(ranked) if p == _cf), "?"
+            )
+            log(
+                f"  {_cf}: carry-forward pair added to selected list "
+                f"(rank {_cf_rank} → forced in, total selected: {len(selected)})"
+            )
+
     if not selected:
         log("  WARNING: no price data — falling back to config.WATCHLIST.")
         return {
