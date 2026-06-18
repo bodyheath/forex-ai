@@ -739,7 +739,8 @@ def _compute_rich_score(
     bd["7_news_catalyst"] = round(f7, 2)
 
     # ── 8. System Performance (max 10) ───────────────────────────────────────
-    wr = perf_map.get(pair)
+    _perf = perf_map.get(pair)
+    wr    = _perf["wr"] if _perf else None
     if wr is None:
         f8 = 5.0    # neutral — insufficient history (< 3 trades)
     elif wr >= 0.70:
