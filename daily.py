@@ -6071,7 +6071,7 @@ def run() -> int:
         ranked_all    = []
         pairs_today   = []
         try:
-            selection     = selector.select_pairs(top_n=_top_n, log=lambda m: _log_line(logf, m))
+            selection     = selector.select_pairs(top_n=_top_n, log=lambda m: _log_line(logf, m), scan_mode=scan_mode)
             pairs_today   = selection["selected"]
             ranked_all    = selection["ranked"]
             universe_size = selection["universe_size"]
