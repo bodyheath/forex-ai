@@ -176,7 +176,7 @@ def _load_training_data():
 
     Returns (X_array, y_array, n) or (None, None, n) if < MIN_TRADES available.
     X columns follow FEATURE_COLS order exactly.
-    y: 1=WIN, 0=LOSS/EXPIRED/BREAKEVEN
+    y: 1=WIN/PARTIAL_WIN, 0=LOSS/EXPIRED/BREAKEVEN
     """
     try:
         import numpy as np
