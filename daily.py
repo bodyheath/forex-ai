@@ -2365,7 +2365,7 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
             if cur:
                 sec.append(f"Current price: {_fmt_price(cur)}{stale_note}")
 
-        # Confidence drop warning
+        # Confidence monitoring — improvement, stability, or deterioration since entry
         if cur_conf_map is not None:
             _entry_conf_f = None
             try:
@@ -2374,14 +2374,45 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
                 pass
             _cur_conf_f = cur_conf_map.get(pair)
             if _entry_conf_f and _cur_conf_f is not None:
-                _conf_drop_f = _entry_conf_f - _cur_conf_f
-                if _conf_drop_f >= 2:
+                _conf_delta_f = _cur_conf_f - _entry_conf_f   # positive = improved
+                if _conf_delta_f >= 1:
+                    sec.append(
+                        f"✅ Trade thesis strengthening — confidence improved from "
+                        f"{_entry_conf_f}/10 at entry to {_cur_conf_f}/10 today"
+                    )
+                elif _conf_delta_f == 0:
+                    sec.append(f"Confidence stable at {_entry_conf_f}/10 since entry")
+                elif _conf_delta_f == -1:
+                    sec.append(
+                        f"Confidence eased from {_entry_conf_f}/10 at entry to "
+                        f"{_cur_conf_f}/10 today — within normal variation"
+                    )
+                else:
                     _urg_f = "🚨" if _cur_conf_f < 3 else "⚠️"
                     sec.append(
                         f"{_urg_f} {pair} confidence dropped from {_entry_conf_f}/10 at entry to "
                         f"{_cur_conf_f}/10 today — the conditions that supported this trade have "
                         f"weakened — monitor closely"
                     )
+        # Session monitoring reminder for this pair
+        try:
+            _stl_f     = _session_time_label(pair, now_ak)
+            _dom_ccy_f = next(
+                (c for c in _SESSION_PRIORITY
+                 if c in {pair.replace("/", "")[:3].upper(),
+                          pair.replace("/", "")[3:6].upper()}),
+                None,
+            )
+            _sess_nm_f = _SESSION_AUCKLAND.get(_dom_ccy_f, ("London", ""))[0] if _dom_ccy_f else "London"
+            if _dom_ccy_f:
+                sec.append(
+                    f"⏰ Check at {_stl_f} — "
+                    f"{_dom_ccy_f} pairs most active during {_sess_nm_f} session"
+                )
+            else:
+                sec.append(f"⏰ Check at {_stl_f}")
+        except Exception:
+            pass
 
         # News reminder for open trade
         try:
