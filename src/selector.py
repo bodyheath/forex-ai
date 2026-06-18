@@ -1214,17 +1214,24 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         f"  {'Rk':<3} {'Pair':<10} {'Total':>6}  "
         f"{'Momtm':>6} {'Tech':>5} {'FunDiv':>7} "
         f"{'Trend':>6} {'Vol':>4} {'Sess':>5} {'News':>5} {'Sys':>4}  "
-        f"24h%   why_selected"
+        f"{'Dyn':>4}  24h%   why_selected"
     )
-    log(f"\n  Top {min(top_n, len(ranked))} pairs by 8-factor merit score (max 100):")
+    log(f"\n  Top {min(top_n, len(ranked))} pairs by 8-factor merit score + dynamic boosts (max 100+):")
     log(hdr)
     log("  " + "-" * (len(hdr) - 2))
     for rank, (pair, meta) in enumerate(ranked[:top_n], 1):
         bd  = meta["breakdown"]
         chg = meta["change_24h"]
+        # Dynamic boost total for this pair
+        dyn_total = (
+            bd.get("dynamic_breakout", 0)
+            + bd.get("dynamic_ccy_boost", 0)
+            + bd.get("dynamic_near_miss", 0)
+            + bd.get("dynamic_session", 0)
+        )
         # Build a one-word "why" tag based on the top-scoring factor
-        factor_vals = {k: v for k, v in bd.items()}
-        top_factor  = max(factor_vals, key=factor_vals.get)
+        _static_vals = {k: v for k, v in bd.items() if not k.startswith("dynamic")}
+        top_factor   = max(_static_vals, key=_static_vals.get) if _static_vals else ""
         why_tags = {
             "1_momentum_quality":       f"+{chg:+.2f}% move",
             "2_technical_setup":        "RSI/S-R setup",
@@ -1236,6 +1243,8 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
             "8_system_performance":     "historical edge",
         }
         why = why_tags.get(top_factor, "")
+        if dyn_total > 0:
+            why = f"[+{dyn_total:.0f} dyn boost] {why}".strip()
         log(
             f"  #{rank:<2} {pair:<10} {meta['score']:>6.1f}  "
             f"{bd.get('1_momentum_quality', 0):>6.1f} "
@@ -1246,7 +1255,7 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
             f"{bd.get('6_session_timing', 0):>5.1f} "
             f"{bd.get('7_news_catalyst', 0):>5.1f} "
             f"{bd.get('8_system_performance', 0):>4.1f}  "
-            f"{chg:+.3f}%  {why}"
+            f"{dyn_total:>4.0f}  {chg:+.3f}%  {why}"
         )
 
     # ── Performance multiplier summary log ───────────────────────────────────
