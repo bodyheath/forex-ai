@@ -4246,6 +4246,29 @@ def _send_telegram_summary(
     # 6AM FULL SCAN — comprehensive morning briefing
     # ═══════════════════════════════════════════════════════════════════════════
     if scan_mode == "full":
+        # ── DATA QUALITY ASSESSMENT — runs before message assembly so alerts fire first
+        _dq_quality: dict = {}
+        _dq_state:   dict = {}
+        try:
+            from src import data_quality as _dq
+            _dq_quality = _dq.assess_scan(deep_results)
+            _dq_state   = _dq.update_state(_dq_quality, scan_mode)
+            # Immediate alert: >8 candle failures
+            _dq_hv = _dq.high_volume_alert(_dq_quality)
+            if _dq_hv:
+                try:
+                    _telegram(_dq_hv)
+                except Exception:
+                    pass
+            # Immediate alerts: consecutive data source failures
+            for _dq_alert in _dq.consecutive_alerts(_dq_state):
+                try:
+                    _telegram(_dq_alert)
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
         _hdr_full = [
             f"<b>🤖 FOREX AI — 🌅 {_fmt_date_nz(now_ak)}</b>",
             f"Universe: {universe_size} · Deep analysed: <b>{n_deep}</b> · {setup_line}",
