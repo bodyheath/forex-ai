@@ -420,6 +420,11 @@ def _load_pair_performance() -> dict:
         return {}
 
 
+def load_pair_performance() -> dict:
+    """Public wrapper for _load_pair_performance().  Cached; safe to call from daily.py."""
+    return _load_pair_performance()
+
+
 # ── OHLCV snapshot ────────────────────────────────────────────────────────────
 
 def _fetch_ohlcv_snapshot(pair: str):
