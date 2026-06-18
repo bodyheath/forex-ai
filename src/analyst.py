@@ -287,11 +287,11 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
 
 # ── Stage 1: Haiku full analysis ───────────────────────────────────────────────
 
-def _haiku_system_prompt() -> str:
+def _haiku_system_prompt(threshold_override: "float | None" = None) -> str:
     """Build the Haiku system prompt using the active threshold config."""
     from src import threshold_manager
     cfg = threshold_manager.load()
-    thr = int(cfg.get("confidence_threshold", 6))
+    thr = threshold_override if threshold_override is not None else int(cfg.get("confidence_threshold", 6))
     rr  = cfg.get("min_rr", 1.3)
     return (
         "Forex analyst. Score all 5 data layers 1-10 and output confidence.\n"
