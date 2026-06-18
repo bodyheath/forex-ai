@@ -2082,7 +2082,9 @@ def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict,
         meta["stop_atr_mult"]   = round(sd / atr, 1) if atr > 0 else None
         meta["target_atr_mult"] = round(td / atr, 1) if atr > 0 else None
         meta["expiry_days"]     = _compute_expiry_days_from_rr(rr)
-        meta["quality_flag"]    = "LOW QUALITY SETUP" if rr < 1.5 else ""
+        # research_mode intentionally uses 1:1 R:R — don't flag as low quality
+        _rr_threshold = 0.5 if research_mode else 1.5
+        meta["quality_flag"]    = "LOW QUALITY SETUP" if rr < _rr_threshold else ""
     except (TypeError, ValueError, ZeroDivisionError):
         pass
 
