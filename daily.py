@@ -2325,6 +2325,41 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
             if cur:
                 sec.append(f"Current price: {_fmt_price(cur)}{stale_note}")
 
+        # Confidence drop warning
+        if cur_conf_map is not None:
+            _entry_conf_f = None
+            try:
+                _entry_conf_f = int(float(row.get("confidence") or 0)) or None
+            except (TypeError, ValueError):
+                pass
+            _cur_conf_f = cur_conf_map.get(pair)
+            if _entry_conf_f and _cur_conf_f is not None:
+                _conf_drop_f = _entry_conf_f - _cur_conf_f
+                if _conf_drop_f >= 2:
+                    _urg_f = "🚨" if _cur_conf_f < 3 else "⚠️"
+                    sec.append(
+                        f"{_urg_f} {pair} confidence dropped from {_entry_conf_f}/10 at entry to "
+                        f"{_cur_conf_f}/10 today — the conditions that supported this trade have "
+                        f"weakened — monitor closely"
+                    )
+
+        # News reminder for open trade
+        try:
+            from src import economic_calendar as _ec_ot_f
+            _ot_evs_f = _ec_ot_f.events_for_pair(pair, hours=48)
+            for _ot_ev_f in _ot_evs_f[:2]:
+                _ot_ccy_f = _ot_ev_f["currency"]
+                _ot_en_f  = _ot_ev_f["plain_name"]
+                _ot_ak_f  = _ot_ev_f["ak_display"]
+                _ot_hrs_f = _ot_ev_f.get("hours_away", 48)
+                _timing_f = "very soon" if _ot_hrs_f <= 6 else "within 24 hours" if _ot_hrs_f <= 24 else "within 48 hours"
+                sec.append(
+                    f"⚠️ Reminder: {_ot_ccy_f} {_ot_en_f} releases {_timing_f} ({_ot_ak_f}) "
+                    f"— directly affects your open {pair} trade"
+                )
+        except Exception:
+            pass
+
         if stop:
             _stop_verb = "falls" if dirn == "BUY" else "rises"
             sec.append(
