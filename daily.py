@@ -6178,6 +6178,17 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Threshold check failed: {exc}")
 
+        # Load previous scan price snapshot BEFORE select_pairs() overwrites it
+        # Used by both opportunity gap detection and the dynamic boosts in selector
+        _prev_scan_prices: dict = {}
+        try:
+            from src.selector import _load_scan_snapshot as _lss
+            _prev_scan_prices = _lss()
+            if _prev_scan_prices:
+                _log_line(logf, f"Previous scan price snapshot loaded: {len(_prev_scan_prices)} pairs")
+        except Exception as _psp_exc:
+            _log_line(logf, f"Prev price snapshot unavailable ({_psp_exc}) — gap detection inactive this scan")
+
         # 2. Smart pair selection
         from src import threshold_manager as _thresh_mgr
         _trade_conf   = _thresh_mgr.get_confidence_threshold()
