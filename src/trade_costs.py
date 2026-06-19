@@ -270,6 +270,47 @@ def check_viability(pair: str, direction: str, entry, stop, target,
     }
 
 
+# Default ATR table in price units (approximate daily ATR for suitability check)
+_DEFAULT_ATR: dict = {
+    "EUR/HKD": 0.020, "NZD/HKD": 0.020, "USD/HKD": 0.001,
+    "GBP/HKD": 0.030, "AUD/HKD": 0.018, "CAD/HKD": 0.015,
+    "CHF/HKD": 0.025, "SGD/HKD": 0.010, "HKD/JPY": 0.005,
+}
+
+
+def is_pair_suitable(pair: str) -> tuple:
+    """Return (suitable: bool, reason: str) based on spread vs ATR.
+
+    Returns (False, reason) if the spread exceeds 33% of the pair's estimated ATR.
+    This flags pairs where transaction costs eat too much of the expected move.
+
+    The ATR lookup uses _DEFAULT_ATR for known pairs; unknown pairs are assumed suitable.
+    """
+    try:
+        spread_pips = get_spread(pair)
+        atr = _DEFAULT_ATR.get(pair.upper())
+        if atr is None:
+            # Try reversed pair key
+            clean = pair.upper().replace("/", "")
+            if len(clean) >= 6:
+                rev = clean[3:6] + "/" + clean[:3]
+                atr = _DEFAULT_ATR.get(rev)
+        if atr is None:
+            return (True, "")
+        pip_sz  = _pip_size(pair)
+        atr_pips = atr / pip_sz
+        threshold = atr_pips * 0.33
+        if spread_pips > threshold:
+            return (
+                False,
+                f"{pair}: spread {spread_pips:.1f}p exceeds 33% of ATR "
+                f"({atr_pips:.0f}p) — transaction costs too high relative to daily move",
+            )
+        return (True, "")
+    except Exception:
+        return (True, "")
+
+
 def net_pips_for_closed_trade(pair: str, direction: str, entry_price: float,
                                gross_pips: float, days_held: float,
                                base_rate: float = None,
