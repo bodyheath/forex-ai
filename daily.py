@@ -38,13 +38,17 @@ _SESSION_AUCKLAND = {
     "EUR": ("London",        "7pm–4am"),
     "GBP": ("London",        "7pm–4am"),
     "CHF": ("London",        "7pm–4am"),
+    "NOK": ("London",        "7pm–4am"),
+    "SEK": ("London",        "7pm–4am"),
     "JPY": ("Tokyo",         "12pm–9pm"),
+    "SGD": ("Tokyo",         "12pm–9pm"),
+    "HKD": ("Tokyo",         "12pm–9pm"),
     "USD": ("New York",      "1am–10am"),
     "CAD": ("New York",      "1am–10am"),
     "AUD": ("Sydney/Tokyo",  "9am–9pm"),
     "NZD": ("Sydney/Tokyo",  "9am–9pm"),
 }
-_SESSION_PRIORITY = ["EUR", "GBP", "CHF", "AUD", "NZD", "JPY", "USD", "CAD"]
+_SESSION_PRIORITY = ["EUR", "GBP", "CHF", "AUD", "NZD", "NOK", "SEK", "SGD", "HKD", "JPY", "USD", "CAD"]
 
 
 # ── Auckland / New Zealand time helpers ────────────────────────────────────────
