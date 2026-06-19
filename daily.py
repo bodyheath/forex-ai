@@ -6448,12 +6448,17 @@ def run() -> int:
         except Exception as _psp_exc:
             _log_line(logf, f"Prev price snapshot unavailable ({_psp_exc}) — gap detection inactive this scan")
 
+        # Twelve Data health check — single test request before any analysis
+        _td_healthy = _check_twelvedata_health(log=lambda m: _log_line(logf, m))
+
         # 2. Smart pair selection
         from src import threshold_manager as _thresh_mgr
         _trade_conf   = _thresh_mgr.get_confidence_threshold()
-        _top_n     = 25 if scan_mode == "full" else _SCAN_TOP_N
+        # Cap pair count at 15 if near the 800-call daily limit
+        _at_td_limit = _twelvedata_call_limit_reached()
+        _top_n     = 15 if _at_td_limit else (25 if scan_mode == "full" else _SCAN_TOP_N)
         # 6am: 25 deep + 15 research sweep = 40; afternoon: 20 deep + 5 sweep = 25
-        _td_cap    = 40 if scan_mode == "full" else 25
+        _td_cap    = 30 if _at_td_limit else (40 if scan_mode == "full" else 25)
         # Sonnet threshold equals trade threshold so every potential TRADE_THIS YES
         # pair gets entry/stop/target — essential when threshold is 6 (data collection).
         sonnet_thresh = _trade_conf
