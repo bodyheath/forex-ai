@@ -136,6 +136,36 @@ def _compute_result(row: dict, status: str, exit_price):
     return r_multiple, pips
 
 
+def check_inverse_open(pair: str, direction: str) -> str | None:
+    """Return a warning string if an open fund trade is the inverse of this pair/direction.
+
+    "AUD/CAD" BUY is equivalent to "CAD/AUD" SELL — same directional bet.
+    Returns warning string if such an inverse trade is already open, None otherwise.
+    """
+    try:
+        cleaned = pair.upper().replace("/", "")
+        if len(cleaned) < 6:
+            return None
+        inv_pair = cleaned[3:6] + "/" + cleaned[:3]
+        inv_dir  = "SELL" if direction.upper() == "BUY" else "BUY"
+        rows = load()
+        for row in rows:
+            if row.get("status") != "OPEN":
+                continue
+            rp = (row.get("pair") or "").upper().replace("/", "")
+            rd = (row.get("direction") or "").upper()
+            rp_slash = rp[:3] + "/" + rp[3:6] if len(rp) >= 6 else rp
+            if rp_slash.upper() == inv_pair.upper() and rd == inv_dir:
+                return (
+                    f"WARNING: Inverse pair conflict — {inv_pair} {inv_dir} already open "
+                    f"(same directional bet as {pair} {direction.upper()}). "
+                    f"Avoid doubling exposure."
+                )
+    except Exception:
+        pass
+    return None
+
+
 def update_outcome(rec_id: int, status: str, exit_price=None, notes: str = "") -> dict:
     status = status.upper()
     if status not in OUTCOME_STATUSES:
