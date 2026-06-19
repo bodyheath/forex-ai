@@ -4639,12 +4639,12 @@ def _send_telegram_summary(
         scores = ctx.get("ccy_scores", {})
         _roff_ctx = "risk-off" in env_str.lower()
         _safe_h = {"JPY", "CHF", "USD"}
-        _comm_c = {"AUD", "NZD"}
+        _risk_off_warn_ccys = {"AUD", "NZD", "GBP", "EUR", "NOK", "SEK", "CAD"}
         if sc:
-            if _roff_ctx and sc in _comm_c:
+            if _roff_ctx and sc in _risk_off_warn_ccys:
                 sc_reason = "data shows strength but risk-off conditions favour safe havens"
                 ctx_lines.append(f"💪 Strongest: <b>{sc}</b> — {sc_reason} (+{scores.get(sc,0):.0f})")
-                ctx_lines.append("⚠️ Risk-OFF environment — JPY, CHF, USD typically outperform — verify before trading AUD/NZD")
+                ctx_lines.append(f"⚠️ Risk-OFF environment — JPY, CHF, USD typically outperform — verify before trading {sc}")
             elif _roff_ctx and sc in _safe_h:
                 sc_reason = "safe haven demand — expected in risk-off environment"
                 ctx_lines.append(f"💪 Strongest: <b>{sc}</b> — {sc_reason} (+{scores.get(sc,0):.0f})")
@@ -4653,7 +4653,7 @@ def _send_telegram_summary(
                 ctx_lines.append(f"💪 Strongest: <b>{sc}</b> — {sc_reason} (+{scores.get(sc,0):.0f})")
         if wc:
             if _roff_ctx:
-                wc_reason = "risk-off selling pressure" if wc in _comm_c else "weak fundamentals"
+                wc_reason = "risk-off selling pressure" if wc in _risk_off_warn_ccys else "weak fundamentals"
             else:
                 wc_reason = "low rates + risk-on selling" if "risk-on" in env_str else "weak fundamentals"
             ctx_lines.append(f"📉 Weakest: <b>{wc}</b> — {wc_reason} ({scores.get(wc,0):.0f})")
