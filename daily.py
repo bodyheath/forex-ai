@@ -132,10 +132,10 @@ def _session_time_label(pair: str, now_ak: datetime) -> str:
         sess_name, window, start_h = "Tokyo session peak", "12pm–3pm", 12
     elif ccys & {"EUR", "GBP", "CHF"}:
         sess_name, window, start_h = "London session peak", "7pm–10pm", 19
-    elif ccys & {"USD", "CAD"}:
-        sess_name, window, start_h = "New York session peak", "1am–4am", 1
     elif ccys & {"AUD", "NZD"}:
         sess_name, window, start_h = "Sydney/Tokyo peak", "9am–1pm", 9
+    elif ccys & {"USD", "CAD"}:
+        sess_name, window, start_h = "New York session peak", "1am–4am", 1
     else:
         sess_name, window, start_h = "London open", "7pm–9pm", 19
 
