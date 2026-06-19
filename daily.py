@@ -5598,6 +5598,9 @@ def _send_telegram_summary(
             for rr in _approaching_items:
                 ap_sec.extend(_approaching_entry(rr))
             all_sections.append(ap_sec)
+        else:
+            all_sections.append(["", "━━━━━━━━━━━━━━━━━━━━━", "📡 <b>APPROACHING SIGNAL</b>",
+                                  "📡 No approaching signals today — all analysed pairs either qualified for watch list or scored below minimum threshold"])
 
         # RESEARCH TRADES — compact summary for all intraday scans
         _cpt_rt_sec = _build_compact_research_section()
