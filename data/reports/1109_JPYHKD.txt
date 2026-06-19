@@ -1,0 +1,17 @@
+PAIR: JPY/HKD
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5
+FUNDAMENTAL_SCORE: 5
+SENTIMENT_SCORE: 6
+POSITIONING_SCORE: 5
+MACRO_SCORE: 5
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: HKD sentiment (8art) slightly stronger than JPY (7art) in a low-volatility macro environment (VIX=18.4), but D1 data unavailability prevents technical confirmation and MTF validation.
+RISK_FACTORS: [D1 technical data missing — cannot validate RSI/MACD/patterns or confirm daily timeframe direction; MTF rule cannot be satisfied without weekly+daily agreement]
+TRADE_THIS: NO
+
+**Rationale:**
+- **D1:UNAVAILABLE** → TECHNICAL_SCORE defaults to 5 (neutral, per HARD RULE).
+- **FUND:UNAVAILABLE** → FUNDAMENTAL_SCORE = 5 (
