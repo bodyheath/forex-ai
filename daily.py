@@ -5846,6 +5846,9 @@ def _get_scan_mode() -> str:
     if mode in _SCAN_MODES:
         return mode
     now = _auckland_now()
+    # Saturday morning lightweight gap check (weekday 5 = Saturday, hours 5–8am)
+    if now.weekday() == 5 and now.hour in (5, 6, 7, 8):
+        return "saturday"
     # Sunday morning gap scan (weekday 6 = Sunday, hours 5–8am)
     if now.weekday() == 6 and now.hour in (5, 6, 7, 8):
         return "gap"
