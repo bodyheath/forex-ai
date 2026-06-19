@@ -61,6 +61,17 @@ def analyse_and_log(
         except (TypeError, ValueError):
             pass
 
+    # Check for inverse pair conflict before logging fund trade
+    if parsed.get("trade_this") == "YES":
+        try:
+            _inv_warn = tracker.check_inverse_open(
+                result["pair"], parsed.get("direction") or ""
+            )
+            if _inv_warn:
+                log(f"[service] {_inv_warn}")
+        except Exception:
+            pass
+
     rec_id = tracker.log_recommendation(
         result["pair"], parsed, result["availability"]["count"], result["report"]
     )
