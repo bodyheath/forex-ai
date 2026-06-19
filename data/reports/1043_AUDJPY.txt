@@ -1,0 +1,16 @@
+PAIR: AUD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD rate rising faster than JPY (+3.70% differential) supports bullish bias, but D1 unavailability prevents technical confirmation; COT unwinding in AUD long positions creates execution risk.
+RISK_FACTORS: [1) D1 data missing — no RSI/MACD/pattern validation; [2) AUD COT UNWINDING institutional conviction while net long at 64% = potential reversal trap or profit-taking near resistance]
+TRADE_THIS: NO
+
+**Rationale:**
+- **Technical:** D1:UNAVAILABLE = TECHNICAL_SCORE defaults to 5 (neutral, no directional bias from data fetch failure).

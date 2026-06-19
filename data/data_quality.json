@@ -1,82 +1,34 @@
 {
   "scans": [
     {
-      "ts": "2026-06-18T11:33:19",
-      "mode": "preny",
-      "n_deep": 20,
-      "tech_ok": 12,
-      "tech_total": 20,
-      "fund_ok": 20,
-      "sent_ok": 20,
-      "pos_ok": 18,
-      "overall_pct": 82,
-      "high_conf_fallback_count": 1
-    },
-    {
-      "ts": "2026-06-18T18:46:17",
-      "mode": "full",
-      "n_deep": 26,
-      "tech_ok": 26,
-      "tech_total": 26,
-      "fund_ok": 26,
-      "sent_ok": 26,
-      "pos_ok": 22,
-      "overall_pct": 97,
-      "high_conf_fallback_count": 4
-    },
-    {
-      "ts": "2026-06-18T21:32:58",
-      "mode": "morning",
-      "n_deep": 21,
-      "tech_ok": 6,
-      "tech_total": 21,
-      "fund_ok": 21,
-      "sent_ok": 21,
-      "pos_ok": 17,
-      "overall_pct": 68,
-      "high_conf_fallback_count": 11
-    },
-    {
-      "ts": "2026-06-19T05:38:18",
+      "ts": "2026-06-19T17:21:40",
       "mode": "prelondon",
       "n_deep": 20,
-      "tech_ok": 17,
+      "tech_ok": 7,
       "tech_total": 20,
       "fund_ok": 20,
       "sent_ok": 20,
       "pos_ok": 18,
-      "overall_pct": 92,
-      "high_conf_fallback_count": 3
+      "overall_pct": 72,
+      "high_conf_fallback_count": 9
     },
     {
-      "ts": "2026-06-19T11:38:36",
-      "mode": "preny",
-      "n_deep": 20,
-      "tech_ok": 13,
-      "tech_total": 20,
-      "fund_ok": 20,
-      "sent_ok": 20,
-      "pos_ok": 18,
-      "overall_pct": 84,
-      "high_conf_fallback_count": 3
-    },
-    {
-      "ts": "2026-06-19T18:47:03",
+      "ts": "2026-06-20T11:04:53",
       "mode": "full",
       "n_deep": 23,
-      "tech_ok": 20,
+      "tech_ok": 0,
       "tech_total": 23,
       "fund_ok": 23,
       "sent_ok": 23,
-      "pos_ok": 20,
-      "overall_pct": 92,
-      "high_conf_fallback_count": 0
+      "pos_ok": 21,
+      "overall_pct": 58,
+      "high_conf_fallback_count": 13
     }
   ],
   "consecutive_fail": {
-    "technical": 4,
+    "technical": 2,
     "fundamental": 0,
     "sentiment": 0,
-    "positioning": 6
+    "positioning": 2
   }
 }

@@ -20,7 +20,7 @@ import config
 from src import cache
 
 _TIMEOUT = 30
-STALE_DAYS = 30
+STALE_DAYS = 14
 
 
 def _series_for(market_name: str) -> list:
@@ -28,7 +28,17 @@ def _series_for(market_name: str) -> list:
     key = f"COT:exact:{market_name}"
     cached = cache.get(key, ttl_hours=12.0)
     if cached is not None:
-        return cached
+        # Check if the cached data is itself stale (> 14 days old)
+        if cached:
+            _rdate = (cached[0].get("report_date_as_yyyy_mm_dd") or "")
+            _age   = _days_old(_rdate)
+            if _age is not None and _age > STALE_DAYS:
+                # Ignore stale cache — force a fresh fetch below
+                pass
+            else:
+                return cached
+        else:
+            return cached
     try:
         escaped = market_name.replace("'", "''")  # SoQL string-literal escaping
         resp = requests.get(

@@ -1,0 +1,22 @@
+PAIR: AUD/USD
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5
+FUNDAMENTAL_SCORE: 6
+SENTIMENT_SCORE: 4
+POSITIONING_SCORE: 3
+MACRO_SCORE: 5
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: AUD rate advantage (+0.80% diff, rising AUD rates vs flat USD) supports upside, but institutional unwinding and missing D1 technicals prevent high-confidence entry.
+
+RISK_FACTORS: 
+1. D1 data unavailable — no RSI/MACD/pattern confirmation; TECHNICAL_SCORE capped at neutral 5 per protocol.
+2. COT unwinding: institutions reducing long AUD positions mid-quarter signals weakening conviction despite fundamental support; reduces POSITIONING_SCORE to 3 and flags reversal risk.
+
+TRADE_THIS: NO
+
+**Rationale:**
+- **TECHNICAL_SCORE = 5:** D1:UNAVAILABLE triggers protocol hard rule
