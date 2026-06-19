@@ -2254,6 +2254,35 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
     else:
         sec.append(f"<b>{_n} open {_tw}</b>")
 
+    # Detect inverse pair duplicates in open trades (same directional bet on both sides)
+    try:
+        _ot_cleaned = [(r.get("pair","").upper().replace("/",""), (r.get("direction") or "").upper()) for r in open_trades]
+        for _ip1 in range(len(_ot_cleaned)):
+            for _ip2 in range(_ip1+1, len(_ot_cleaned)):
+                _p1c, _d1c = _ot_cleaned[_ip1]
+                _p2c, _d2c = _ot_cleaned[_ip2]
+                if len(_p1c) >= 6 and len(_p2c) >= 6:
+                    _p1_inv = _p1c[3:6] + _p1c[:3]
+                    _opp_d  = "SELL" if _d1c == "BUY" else "BUY"
+                    if _p1_inv == _p2c and _d2c == _opp_d:
+                        _pp1 = open_trades[_ip1].get("pair","")
+                        _pp2 = open_trades[_ip2].get("pair","")
+                        sec.append(
+                            f"⚠️ DUPLICATE EXPOSURE: {_pp1} {_d1c} and {_pp2} {_d2c} are inverse pairs — same directional bet — consider closing one"
+                        )
+    except Exception:
+        pass
+
+    # HKD concentration warning — >=2 open trades with HKD in the pair
+    try:
+        _hkd_trades = [r for r in open_trades if "HKD" in (r.get("pair","").upper())]
+        if len(_hkd_trades) >= 2:
+            sec.append(
+                f"⚠️ HKD CONCENTRATION: {len(_hkd_trades)} open trades involve HKD — HKD pairs have wide spreads (4 pips) relative to their ATR — consider reducing exposure"
+            )
+    except Exception:
+        pass
+
     _CCY_FULL = {
         "USD": "US Dollar",   "EUR": "Euro",         "GBP": "British Pound",
         "JPY": "Japanese Yen","AUD": "Australian Dollar","NZD": "New Zealand Dollar",
