@@ -2619,10 +2619,10 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
 
         elif entry:
             if stop:
-                _sv = "rises" if dirn == "BUY" else "falls"
+                _sv = "falls" if dirn == "BUY" else "rises"
                 sec.append(f"Stop loss at: {_fmt_price(stop)} — if price {_sv} here the trade closes with a small loss")
             if target:
-                _tv = "falls" if dirn == "BUY" else "rises"
+                _tv = "rises" if dirn == "BUY" else "falls"
                 sec.append(f"Target at: {_fmt_price(target)} — if price {_tv} here the trade closes with a profit")
             sec.append("Current price: ⚠️ price unavailable — check your broker app")
             sec.append(f"What to do: Check again at {_check_line.replace('⏰ <b>','').replace('</b>','').replace('⏰ ','')}")
