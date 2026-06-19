@@ -118,6 +118,55 @@ def _to_float(val):
         return None
 
 
+def validate_pip_size(pair: str, pips: float, direction: str) -> str | None:
+    """Return a warning string if abs(pips) > 500 on non-JPY pairs (unexpected large move).
+
+    NOK/HKD pip_size is 0.0001 which produces large pip counts — this is mathematically
+    correct but worth flagging for review when the count is extreme.
+    """
+    try:
+        quote = pair.upper().replace("/", "")
+        is_jpy = (len(quote) >= 6 and quote[3:6] == "JPY") or "JPY" in pair.upper()
+        if not is_jpy and abs(float(pips)) > 500:
+            return (
+                f"VALIDATION NOTE: {pair} {direction} closed with {pips:+.0f} pips — "
+                f"value >500 pips on non-JPY pair; verify pip_size=0.0001 is correct for this pair."
+            )
+    except Exception:
+        pass
+    return None
+
+
+def check_inverse_open_research(pair: str, direction: str) -> str | None:
+    """Return a warning string if an open research trade is the inverse of this pair/direction.
+
+    "AUD/CAD" BUY is equivalent to "CAD/AUD" SELL — same directional bet.
+    Returns warning string if such an inverse trade is already open, None otherwise.
+    """
+    try:
+        cleaned = pair.upper().replace("/", "")
+        if len(cleaned) < 6:
+            return None
+        inv_pair = cleaned[3:6] + "/" + cleaned[:3]
+        inv_dir  = "SELL" if direction.upper() == "BUY" else "BUY"
+        rows = load()
+        for row in rows:
+            if row.get("status") != "OPEN":
+                continue
+            rp = (row.get("pair") or "").upper().replace("/", "")
+            rd = (row.get("direction") or "").upper()
+            rp_slash = rp[:3] + "/" + rp[3:6] if len(rp) >= 6 else rp
+            if rp_slash.upper() == inv_pair.upper() and rd == inv_dir:
+                return (
+                    f"WARNING: Inverse pair conflict — {inv_pair} {inv_dir} already open "
+                    f"(same directional bet as {pair} {direction.upper()}). "
+                    f"Avoid doubling research exposure."
+                )
+    except Exception:
+        pass
+    return None
+
+
 def log_research_trade(pair: str, parsed: dict, source: str, scan_mode: str,
                        extra_fields: dict = None) -> int:
     """Append one research trade; return its assigned id.
