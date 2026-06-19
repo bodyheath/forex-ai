@@ -178,10 +178,10 @@ def _entry_window_for_pair(pair: str) -> tuple:
         return (12, 0, 13, 30, "12:00pm–1:30pm", "3:00pm", "Tokyo open")
     if ccys & {"EUR", "GBP", "CHF"}:
         return (19, 0, 20, 30, "7:00pm–8:30pm", "11:00pm", "London open")
-    if ccys & {"USD", "CAD"}:
-        return (1, 0, 2, 30, "1:00am–2:30am", "3:00am", "New York open")
     if ccys & {"AUD", "NZD"}:
         return (9, 0, 10, 30, "9:00am–10:30am", "12:00pm", "Sydney open")
+    if ccys & {"USD", "CAD"}:
+        return (1, 0, 2, 30, "1:00am–2:30am", "3:00am", "New York open")
     return (19, 0, 20, 30, "7:00pm–8:30pm", "11:00pm", "London open")
 
 
