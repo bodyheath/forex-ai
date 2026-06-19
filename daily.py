@@ -755,6 +755,25 @@ def _compute_patience_score(ctx: dict) -> dict:
 
     description = f"{desc_body} — {suffix}" if desc_body else suffix
 
+    # Final hard regime override — import market_regime to detect ranging/risk-off
+    try:
+        from src import market_regime as _mr_ps
+        _regime_data  = _mr_ps.detect()
+        _regime_str_ps = (_regime_data.get("regime") or "").lower()
+        if "ranging" in _regime_str_ps and "high" in _regime_str_ps:
+            score = min(score, 4)
+            description = "high volatility ranging market — chaotic conditions — extreme caution recommended"
+        elif "ranging" in _regime_str_ps:
+            score = min(score, 6)
+            description = "ranging market — directionless conditions — mean reversion setups preferred"
+        elif "risk_off" in _regime_str_ps or "risk-off" in _regime_str_ps:
+            score = min(score, 6)
+            if "elevated risk aversion" not in description:
+                description = "risk-off environment — safe haven pairs favoured — conditions selective"
+        # Only trending_risk_on should show score above 6 without other dampeners
+    except Exception:
+        pass
+
     return {
         "score":     score,
         "raw":       round(raw, 1),
