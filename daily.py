@@ -4991,8 +4991,8 @@ def _send_telegram_summary(
                 except Exception:
                     pass
 
-                # ML milestone (activates at 10 closed trades)
-                _ml_need = max(0, 10 - _n_closed)
+                # ML milestone (activates at 10 decisive trades — WIN or LOSS only)
+                _ml_need = max(0, 10 - len(_decisive_ft))
                 _ml_str  = (f"Need {_ml_need} more closed trade{'s' if _ml_need != 1 else ''} "
                             f"for ML activation") if _ml_need > 0 else "ML model active"
 
