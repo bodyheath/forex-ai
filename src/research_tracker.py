@@ -307,6 +307,19 @@ def update_outcome(rec_id: int, status: str, close_price=None,
     target["closed_at"]   = _now()
     target["exit_reason"] = exit_reason
     _write_all(rows)
+
+    # Validate pip size — log warning for unexpectedly large pip counts
+    if pips not in ("", None):
+        try:
+            _pip_warn = validate_pip_size(
+                target.get("pair", ""), float(pips), target.get("direction", "")
+            )
+            if _pip_warn:
+                import sys as _sys
+                print(f"[research_tracker] {_pip_warn}", file=_sys.stderr)
+        except Exception:
+            pass
+
     return target
 
 
