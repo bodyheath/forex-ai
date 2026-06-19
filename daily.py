@@ -6745,6 +6745,14 @@ def run() -> int:
                 }
                 # ─────────────────────────────────────────────────────────────
 
+                # Check for inverse pair conflict before logging research trade
+                try:
+                    _inv_warn_rt = _rt.check_inverse_open_research(r_result["pair"], _rdir)
+                    if _inv_warn_rt:
+                        _log_line(logf, f"[research_tracker] {_inv_warn_rt}")
+                except Exception:
+                    pass
+
                 _rt_id = _rt.log_research_trade(
                     r_result["pair"], _rp, _rsrc, _smode,
                     extra_fields=_extra_rt,
