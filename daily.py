@@ -5970,6 +5970,8 @@ def _next_scan_footer(scan_mode: str, now_ak: datetime) -> str:
     nxt_short  = _fmt_date_short_nz(nxt)
     is_weekday = now_ak.weekday() < 5
 
+    if scan_mode == "saturday":
+        return "⏰ Next scan Sunday morning — gap check before markets open"
     if scan_mode == "gap":
         return "⏰ Next scan Monday 6am Auckland — full market analysis"
     if scan_mode == "full" and is_weekday:
