@@ -320,6 +320,78 @@ def _telegram(message: str) -> None:
             print(f"[TELEGRAM] FAILED — {name}: {exc} | preview: {_preview}", file=sys.stderr)
 
 
+_API_USAGE_FILE = config.DATA_DIR / "api_usage.json"
+
+
+def _check_twelvedata_health(log=print) -> bool:
+    """Test Twelve Data API with a single EUR/USD price request.
+
+    Returns True if the API is responsive, False if unavailable.
+    Also tracks daily call count in data/api_usage.json and warns when
+    approaching the 800-call free tier limit.
+    """
+    if not config.TWELVE_DATA_KEY:
+        return False
+
+    # Update and check daily call counter
+    try:
+        from datetime import date as _date
+        _today = str(_date.today())
+        _usage: dict = {}
+        if _API_USAGE_FILE.exists():
+            try:
+                _usage = json.loads(_API_USAGE_FILE.read_text(encoding="utf-8"))
+            except Exception:
+                _usage = {}
+        # Reset counter if it's a new day
+        if _usage.get("date") != _today:
+            _usage = {"date": _today, "calls": 0}
+        _calls_today = int(_usage.get("calls") or 0)
+        if _calls_today > 700:
+            log(
+                f"⚠️ Twelve Data daily limit approaching — {_calls_today} calls used today — "
+                f"reducing pair count to preserve data quality"
+            )
+        _usage["calls"] = _calls_today + 1
+        _API_USAGE_FILE.write_text(json.dumps(_usage), encoding="utf-8")
+    except Exception:
+        pass
+
+    # Single health-check request
+    try:
+        _url = (
+            f"https://api.twelvedata.com/price"
+            f"?symbol=EUR%2FUSD&apikey={config.TWELVE_DATA_KEY}"
+        )
+        _resp = urllib.request.urlopen(_url, timeout=10)
+        _data = json.loads(_resp.read().decode())
+        if isinstance(_data, dict) and _data.get("status") == "error":
+            log(
+                f"❌ Twelve Data API unavailable — technical scores will be neutral this scan "
+                f"— consider waiting for next scan before acting ({_data.get('message','')})"
+            )
+            return False
+        return True
+    except Exception as _exc:
+        log(
+            f"❌ Twelve Data API unavailable — technical scores will be neutral this scan "
+            f"— consider waiting for next scan before acting ({_exc})"
+        )
+        return False
+
+
+def _twelvedata_call_limit_reached() -> bool:
+    """Return True if today's Twelve Data call count exceeds 700."""
+    try:
+        from datetime import date as _date
+        if not _API_USAGE_FILE.exists():
+            return False
+        _usage = json.loads(_API_USAGE_FILE.read_text(encoding="utf-8"))
+        return _usage.get("date") == str(_date.today()) and int(_usage.get("calls") or 0) > 700
+    except Exception:
+        return False
+
+
 def _fmt_price(v) -> str:
     if v is None:
         return "—"
