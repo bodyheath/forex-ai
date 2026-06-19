@@ -5786,6 +5786,63 @@ def _send_telegram_summary(
         if cost_lines:
             all_sections.append(["", "━━━━━━━━━━━━━━━━━━━━━", "⚠️ <b>SYSTEM HEALTH</b>"] + cost_lines)
 
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SATURDAY GAP CHECK — lightweight weekend scan to save API credits
+    # ═══════════════════════════════════════════════════════════════════════════
+    elif scan_mode == "saturday":
+        _sat_hdr = [
+            f"<b>🤖 FOREX AI — 🌏 SATURDAY CHECK — {_fmt_date_nz(now_ak)}</b>",
+            "Lightweight Saturday gap check — saving API credits for Monday full scan",
+        ]
+        all_sections.append(_sat_hdr)
+
+        # Brief gap check on major pairs only (minimal API usage)
+        _sat_gaps = []
+        _sat_checked = []
+        _sat_pairs = ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCAD"]
+        for _sp in _sat_pairs:
+            try:
+                import requests as _rq_sat
+                _sp_resp = _rq_sat.get(
+                    "https://api.twelvedata.com/time_series",
+                    params={
+                        "symbol":     _sp,
+                        "interval":   "1day",
+                        "outputsize": 2,
+                        "format":     "JSON",
+                        "apikey":     config.TWELVE_DATA_KEY,
+                    },
+                    timeout=12,
+                )
+                _sp_data = _sp_resp.json().get("values", [])
+                if len(_sp_data) < 2:
+                    continue
+                _sp_cur  = float(_sp_data[0]["close"])
+                _sp_prev = float(_sp_data[1]["close"])
+                _sp_pips = (_sp_cur - _sp_prev) / _pip_size(_sp)
+                _sat_checked.append(_sp)
+                if abs(_sp_pips) >= 15:
+                    _sp_sign = "+" if _sp_pips > 0 else ""
+                    _sp_dir  = "⬆️" if _sp_pips > 0 else "⬇️"
+                    _sat_gaps.append(
+                        f"{_sp_dir} <b>{_sp}</b> — Gap: {_sp_sign}{int(round(_sp_pips))} pips"
+                    )
+            except Exception:
+                pass
+
+        if _sat_gaps:
+            _sat_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "⚡ <b>SATURDAY GAPS</b>",
+                        f"Checked {len(_sat_checked)} major pairs:"]
+            _sat_sec.extend(_sat_gaps)
+            all_sections.append(_sat_sec)
+        else:
+            all_sections.append([
+                "", "━━━━━━━━━━━━━━━━━━━━━",
+                "✅ <b>SATURDAY — NO SIGNIFICANT GAPS</b>",
+                f"Checked {len(_sat_checked)} major pairs — markets calm",
+                "Full analysis resumes Monday 6am Auckland",
+            ])
+
     # ── FOOTER (all modes) ─────────────────────────────────────────────────────
     all_sections.append([
         "",
