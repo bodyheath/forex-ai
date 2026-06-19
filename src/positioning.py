@@ -53,6 +53,17 @@ def _series_for(market_name: str) -> list:
         resp.raise_for_status()
         rows = resp.json()
         cache.set(key, rows)
+        # Warn if fresh data is also stale
+        if rows:
+            _rd = (rows[0].get("report_date_as_yyyy_mm_dd") or "")
+            _da = _days_old(_rd)
+            if _da is not None and _da > STALE_DAYS:
+                import sys as _sys
+                print(
+                    f"[COT] WARNING — fresh fetch for '{market_name}' is still stale: "
+                    f"latest report {_rd[:10]} ({_da} days old)",
+                    file=_sys.stderr,
+                )
         return rows
     except Exception:  # noqa: BLE001
         return []
