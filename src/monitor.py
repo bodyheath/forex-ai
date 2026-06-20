@@ -798,6 +798,14 @@ def run(log=print) -> dict:
         _write_monitor_log(result)
         return result
 
+    # ── File lock — prevents duplicate processing if runs overlap ────────────
+    _lock_held = _try_acquire_lock(log)
+    if not _lock_held:
+        result["skipped_reason"] = "lock_held"
+        log("Monitor: another instance is already running (lock held) — skipping this run.")
+        _write_monitor_log(result)
+        return result
+
     # ── Smart skip: exit immediately if no open trades ────────────────────────
     try:
         from src import tracker as _trk
