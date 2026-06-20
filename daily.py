@@ -4111,6 +4111,7 @@ def _send_telegram_summary(
         # Kill zone timing — +0.5 when pair is in an aligned session window; −0.5 outside all
         _kz_line = None
         _kz_key  = "OUTSIDE"
+        _kz_result = {}
         try:
             from src import kill_zones as _kz_mod
             _kz_parts = pair.split("/")
