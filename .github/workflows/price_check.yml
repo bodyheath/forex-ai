@@ -1,0 +1,59 @@
+name: Between-Scan Price Check
+
+# Scheduling via cron-job.org → workflow_dispatch (same pattern as intraday.yml).
+# cron-job.org tracks NZST/NZDT DST transitions automatically.
+#
+# Suggested cron-job.org schedule: every 2 hours during active Auckland sessions:
+#   Asian session  (7pm–4am Auckland)  → approx 07:00–16:00 UTC
+#   London/NY session (9am–6pm Auckland) → approx 21:00–06:00 UTC
+#
+# Simple trigger: fire every 2 hours at :00 (00:00, 02:00, 04:00, ... UTC).
+# The script itself is stateless — duplicate/missed fires are harmless.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: price-check
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run between-scan price check
+        env:
+          TWELVE_DATA_KEY:    ${{ secrets.TWELVE_DATA_KEY }}
+          TELEGRAM_TOKEN:     ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID_2: ${{ secrets.TELEGRAM_CHAT_ID_2 }}
+          TELEGRAM_CHAT_ID_3: ${{ secrets.TELEGRAM_CHAT_ID_3 }}
+          ACCOUNT_BALANCE:    ${{ secrets.ACCOUNT_BALANCE || '10000' }}
+          ACCOUNT_CURRENCY:   ${{ secrets.ACCOUNT_CURRENCY || 'USD' }}
+        run: python check_prices.py
+
+      - name: Commit partial profit state
+        run: |
+          git config user.name "forex-ai[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/partial_profit_state.json
+          git diff --staged --quiet || git commit -m "chore: price check $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git pull --rebase origin main
+          git push origin HEAD:main
