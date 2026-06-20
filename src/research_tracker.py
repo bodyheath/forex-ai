@@ -452,5 +452,24 @@ def update_post_close(rec_id: int, current_price: float) -> dict:
     target["post_close_max_move_pips"]  = max(prev_max, max_move)
     target["post_close_reversal_pips"]  = max(prev_rev, max_rev)
     target["post_close_checked_at"]     = _now()
+
+    # days_to_target_after_close: set (once) when target is first reached
+    if target_reached and not target.get("days_to_target_after_close"):
+        closed_at_str = target.get("closed_at") or ""
+        try:
+            closed_dt   = datetime.strptime(closed_at_str[:19], "%Y-%m-%d %H:%M:%S")
+            days_to_tgt = round((datetime.now() - closed_dt).total_seconds() / 86400, 1)
+            target["days_to_target_after_close"] = days_to_tgt
+        except Exception:
+            pass
+
+    # entry_level_revisited: true if price comes back within 5 pips of entry after close
+    if entry is not None:
+        entry_revisit_threshold = 5 * ps
+        if abs(current_price - entry) <= entry_revisit_threshold:
+            target["entry_level_revisited"] = "true"
+        elif not target.get("entry_level_revisited"):
+            target["entry_level_revisited"] = "false"
+
     _write_all(rows)
     return target
