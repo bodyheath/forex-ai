@@ -3704,6 +3704,34 @@ def _send_telegram_summary(
             _yt_deduped.append(_r)
             _yt_seen.add(_p)
     yes_trades = _yt_deduped
+
+    # ── Cascade target levels for YES fund trades ─────────────────────────────
+    # Computed after deduplication so only real fund trades get cascade fields.
+    try:
+        from src import cascade as _casc_yt
+        from src import tracker as _trk_casc_yt
+        for _yt in yes_trades:
+            _yt_id  = _yt.get("id")
+            _yt_p   = _yt.get("parsed", {}) or {}
+            _yt_e   = float((_yt_p.get("entry") or 0))
+            _yt_s   = float((_yt_p.get("stop_loss") or 0))
+            _yt_t   = float((_yt_p.get("target") or 0))
+            _yt_d   = (_yt_p.get("direction") or "").upper()
+            _yt_b   = _yt.get("bundle", {}) or {}
+            _yt_atr = float(((_yt_b.get("technical") or {}).get("daily", {}).get("atr14") or 0))
+            if _yt_id and _yt_e and _yt_s and _yt_t and _yt_d in ("BUY", "SELL"):
+                _yt_t1, _yt_t2, _yt_t3 = _casc_yt.compute_levels(
+                    _yt_e, _yt_s, _yt_t, _yt_d, atr=_yt_atr or None,
+                )
+                if _yt_t1 is not None:
+                    _trk_casc_yt.update_fields(
+                        int(_yt_id),
+                        t1_price=_yt_t1, t2_price=_yt_t2, t3_price=_yt_t3,
+                        effective_stop=_yt_s,
+                    )
+    except Exception:
+        pass
+
     # C-grade demoted to watchlist only in normal mode; restricted tiers skip C entirely
     _c_grade_yes = (
         [r for r in _yes_raw if _quality_grades.get(r["pair"], {}).get("grade") == "C"
