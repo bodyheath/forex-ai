@@ -422,6 +422,15 @@ def train(quiet: bool = False) -> dict:
 
     win_rate = round(float(y.mean()), 3)
 
+    # Track consecutive healthy holdouts (holdout AUC > 0.65) for the reliability gate.
+    # A model is trusted for display (but NOT for score adjustments) only after 3
+    # consecutive weekly retrains with holdout_auc >= 0.65.
+    _prev_consec = _load_meta().get("n_consecutive_reliable", 0)
+    if _hold_auc is not None and _hold_auc >= 0.65:
+        _n_consecutive_reliable = _prev_consec + 1
+    else:
+        _n_consecutive_reliable = 0
+
     # Bias check: if model predicts LOSS > 80% of the time on training data it hasn't
     # corrected the class imbalance — flag for the Monday learning report.
     try:
