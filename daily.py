@@ -6569,6 +6569,9 @@ def run() -> int:
             pairs_today   = selection["selected"]
             ranked_all    = selection["ranked"]
             universe_size = selection["universe_size"]
+            _all_ohlcv_failed = selection.get("all_ohlcv_failed", False)
+            if _all_ohlcv_failed:
+                _log_line(logf, "⚠️ All OHLCV snapshots failed — pair ranking based on fundamental factors only — selection quality reduced this scan")
             _log_line(
                 logf,
                 f"Scanning full universe of {universe_size} pairs — selecting top pairs by merit score. "
