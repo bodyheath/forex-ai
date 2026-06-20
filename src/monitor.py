@@ -874,8 +874,15 @@ def run(log=print) -> dict:
         )
 
     # ── Step 1: Batch price fetch ─────────────────────────────────────────────
-    all_open = _fund_open + _res_open
-    all_pairs = list({r.get("pair", "") for r in all_open if r.get("pair")})
+    all_open    = _fund_open + _res_open
+    _fund_pairs = sorted({r.get("pair", "") for r in _fund_open if r.get("pair")})
+    _res_pairs  = sorted({r.get("pair", "") for r in _res_open  if r.get("pair")})
+    all_pairs   = sorted({r.get("pair", "") for r in all_open   if r.get("pair")})
+    log(
+        f"Monitor: building price fetch list — "
+        f"{len(_fund_pairs)} fund pair(s) + {len(_res_pairs)} research pair(s) = "
+        f"{len(_fund_pairs) + len(_res_pairs)} total (after dedup: {len(all_pairs)} unique pairs to fetch)"
+    )
     prices, batch_calls = _batch_price_fetch(all_pairs, log=log)
     result["api_calls_used"] += batch_calls
     log(f"Monitor: fetched prices for {len(prices)}/{len(all_pairs)} pairs in {batch_calls} API call(s).")
