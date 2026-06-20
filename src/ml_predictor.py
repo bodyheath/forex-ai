@@ -361,7 +361,7 @@ def train(quiet: bool = False) -> dict:
         _save_meta(meta)
         return {"skipped": True, "model_ready": False, "n_trades": _d_total, "message": msg}
 
-    X, y, n = _load_training_data()
+    X, y, soft_weights, n = _load_training_data()
 
     if X is None:
         meta = _load_meta()
@@ -379,12 +379,67 @@ def train(quiet: bool = False) -> dict:
     scaler = StandardScaler()
     X_s    = scaler.fit_transform(X)
 
-    # Class imbalance correction: weight minority class up so the model can't
-    # exploit "predict LOSS always" as a cheap strategy.
+    # ── Soft label sample weights ──────────────────────────────────────────────
+    # Combine per-outcome quality weights (1.0 for WIN/LOSS, 0.7 for PARTIAL_WIN,
+    # 0.3–0.85 for EXPIRED based on target proximity) with class-balance correction.
     try:
-        _sw = compute_sample_weight("balanced", y)
+        _balance_sw = compute_sample_weight("balanced", y)
+        if soft_weights is not None:
+            import numpy as _np_sw
+            _sw = soft_weights * _balance_sw
+        else:
+            _sw = _balance_sw
     except Exception:
-        _sw = None
+        _sw = soft_weights if soft_weights is not None else None
+
+    # ── SMOTE: synthetic minority oversampling ─────────────────────────────────
+    # Generate synthetic WIN examples by interpolating between existing wins in
+    # feature space until we reach a 1:2 WIN:LOSS ratio.  Falls back gracefully
+    # when imbalanced-learn is not installed.
+    n_real_wins   = int(y.sum())
+    n_losses_orig = n - n_real_wins
+    n_synthetic   = 0
+    smote_applied = False
+
+    try:
+        from imblearn.over_sampling import SMOTE as _SMOTE
+        import numpy as _np_sm
+
+        # Target 1:2 WIN:LOSS ratio — never exceed n_losses for a 1:1 cap
+        target_wins = min(n_losses_orig, max(n_real_wins, n_losses_orig // 2))
+
+        if target_wins > n_real_wins and n_real_wins >= 2:
+            k_nb = min(5, n_real_wins - 1)  # k_neighbors must be < minority count
+            _smote = _SMOTE(
+                sampling_strategy={1: target_wins},
+                k_neighbors=k_nb,
+                random_state=42,
+            )
+            X_s_res, y_res = _smote.fit_resample(X_s, y)
+            n_synthetic   = target_wins - n_real_wins
+
+            # Build combined weight array: original sample weights preserved;
+            # synthetic WIN samples assigned 90% of the average real-WIN soft weight
+            _avg_win_sw = float(_np_sm.mean(soft_weights[y == 1])) if (
+                soft_weights is not None and n_real_wins > 0
+            ) else 1.0
+            _synth_w = _np_sm.full(n_synthetic, min(0.9, _avg_win_sw * 0.9))
+            _sw = _np_sm.concatenate([_sw, _synth_w]) if _sw is not None else None
+
+            X_s = X_s_res
+            y   = y_res
+            n   = len(y)
+            smote_applied = True
+            if not quiet:
+                print(
+                    f"[ml_predictor] SMOTE: {n_real_wins} real WIN → +{n_synthetic} synthetic "
+                    f"= {target_wins} total WIN vs {n_losses_orig} LOSS (1:{n_losses_orig/target_wins:.1f})"
+                )
+    except ImportError:
+        if not quiet:
+            print("[ml_predictor] imbalanced-learn not installed — SMOTE skipped (pip install imbalanced-learn)")
+    except Exception:
+        pass  # SMOTE failed — continue with original data
 
     # Determine safe CV fold count.  Cap at the smallest class size so stratified
     # splitting never requests more folds than there are examples of the rarer class.
