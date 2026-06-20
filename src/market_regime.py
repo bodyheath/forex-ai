@@ -306,9 +306,47 @@ def _classify(vix, vix_trend, yield_curve, gold_5d_pct,
     return regime, sigs, risk_on, risk_off
 
 
+def _check_regime_change(current_regime: str) -> None:
+    """Persist regime to disk; send Telegram alert if it changed since last scan."""
+    try:
+        prev_regime = None
+        if _REGIME_STATE_FILE.exists():
+            try:
+                data = json.loads(_REGIME_STATE_FILE.read_text(encoding="utf-8"))
+                prev_regime = data.get("regime")
+            except Exception:
+                pass
+
+        if prev_regime and prev_regime != current_regime:
+            prev_info = REGIMES.get(prev_regime, {})
+            curr_info = REGIMES.get(current_regime, {})
+            prev_lbl  = prev_info.get("display_label", prev_regime)
+            curr_lbl  = curr_info.get("display_label", current_regime)
+            curr_emoji = curr_info.get("emoji", "📊")
+            curr_sysmsg = curr_info.get("system_message", "")
+            alert = (
+                f"{curr_emoji} <b>Market regime change detected</b>\n\n"
+                f"Previous: <b>{prev_lbl}</b>\n"
+                f"Current:  <b>{curr_lbl}</b>\n\n"
+                f"{curr_sysmsg}"
+            )
+            try:
+                from src import telegram_alert as _ta
+                _ta.send(alert)
+            except Exception:
+                pass
+
+        _REGIME_STATE_FILE.write_text(
+            json.dumps({"regime": current_regime}, indent=2),
+            encoding="utf-8",
+        )
+    except Exception:
+        pass
+
+
 # ── Public API ────────────────────────────────────────────────────────────────
 
-def detect(macro_signals: dict = None) -> dict:
+def detect(macro_signals: dict = None, ccy_strength: dict = None) -> dict:
     """Detect and return the global market regime.
 
     macro_signals: dict from macro.analyse()["signals"]. If None, fetches fresh.
