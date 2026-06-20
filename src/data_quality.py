@@ -72,8 +72,15 @@ def assess_scan(deep_results: list) -> dict:
         }
 
     tech_ok = fund_ok = sent_ok = pos_ok = 0
-    cot_max_age = 0
     high_conf_fallback = []
+
+    # Get COT data age directly from positioning module (more accurate than parsing reason strings)
+    cot_max_age = 0
+    try:
+        from src import positioning as _pos_dq
+        cot_max_age = _pos_dq.get_cot_worst_age_days()
+    except Exception:
+        pass
 
     for r in deep_results:
         bundle = r.get("bundle") or {}
@@ -94,13 +101,14 @@ def assess_scan(deep_results: list) -> dict:
         pq   = p.get("quote") or {}
         p_ok = pb.get("status") == "ok" or pq.get("status") == "ok"
 
-        # COT staleness — extract days from reason string
-        for pd in [pb, pq]:
-            reason = pd.get("reason") or ""
-            if "stale" in reason:
-                m = re.search(r"(\d+)\s+days?\s+old", reason)
-                if m:
-                    cot_max_age = max(cot_max_age, int(m.group(1)))
+        # COT staleness also captured from positioning bundle reason strings (fallback)
+        if cot_max_age == 0:
+            for pd in [pb, pq]:
+                reason = pd.get("reason") or ""
+                if "stale" in reason:
+                    m = re.search(r"(\d+)\s+days?\s+old", reason)
+                    if m:
+                        cot_max_age = max(cot_max_age, int(m.group(1)))
 
         if t_ok: tech_ok += 1
         if f_ok: fund_ok += 1
