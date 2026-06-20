@@ -8063,7 +8063,7 @@ def run() -> int:
                     # 4. Fibonacci
                     _cl_rt_fib   = bool((_qg_rt or {}).get("fib_near", False))
                     # 5. RSI divergence
-                    _cl_rt_div   = _extra_rt.get("divergence_type", "NONE") not in ("NONE", None, "")
+                    _cl_rt_div   = _extra_rt.get("rsi_divergence_type", "NONE") not in ("NONE", None, "")
                     # 6. Currency strength double-aligned
                     _cl_rt_cs    = False
                     try:
