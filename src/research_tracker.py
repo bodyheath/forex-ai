@@ -306,7 +306,7 @@ def _compute_result(row: dict, status: str, close_price) -> tuple:
 
 
 def update_outcome(rec_id: int, status: str, close_price=None,
-                   exit_reason: str = "") -> dict:
+                   exit_reason: str = "", cascading_pips=None) -> dict:
     status = status.upper()
     if status not in OUTCOME_STATUSES:
         raise ValueError(f"status must be one of {sorted(OUTCOME_STATUSES)}")
@@ -316,7 +316,15 @@ def update_outcome(rec_id: int, status: str, close_price=None,
     if target is None:
         raise ValueError(f"no research trade with id {rec_id}")
 
-    r_mult, pips = _compute_result(target, status, close_price)
+    if cascading_pips is not None and status in ("FULL_WIN", "WIN", "PARTIAL_WIN"):
+        pips   = round(float(cascading_pips), 1)
+        ps     = _pip_size(target.get("pair", ""))
+        entry  = _to_float(target.get("entry"))
+        stop   = _to_float(target.get("stop_loss"))
+        risk   = abs(entry - stop) if entry is not None and stop is not None else 0
+        r_mult = round((pips * ps) / risk, 2) if risk > 0 and ps > 0 else ""
+    else:
+        r_mult, pips = _compute_result(target, status, close_price)
 
     net_pips = pips
     if pips not in ("", None):
