@@ -6955,12 +6955,13 @@ def run() -> int:
                     pass
 
         # Haiku analyses all pairs; Sonnet only called for conf >= sonnet_thresh
-        _log_line(logf, f"Analysing {len(pairs_today)} pairs (Haiku all, Sonnet if conf>={sonnet_thresh}): {', '.join(pairs_today)}")
-        _process_batch(pairs_today, force_deep=True)
+        # Uses pre_filtered (deduped) not pairs_today to avoid analysing inverse pairs twice
+        _log_line(logf, f"Analysing {len(pre_filtered)} pairs (Haiku all, Sonnet if conf>={sonnet_thresh}): {', '.join(pre_filtered)}")
+        _process_batch(pre_filtered, force_deep=True)
 
         # Auto-expand if fewer than 3 meaningful results
         meaningful = [r for r in deep_results if _conf(r) >= 5]
-        next_idx   = len(pairs_today)
+        next_idx   = len(pre_filtered)
 
         while len(meaningful) < 3 and len(deep_results) < 25 and next_idx < len(ranked_all):
             extra_pairs = [p for p, _ in ranked_all[next_idx:next_idx + 5]
