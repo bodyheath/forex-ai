@@ -7564,6 +7564,18 @@ def run() -> int:
                 except Exception:
                     pass
 
+                # Market structure break at entry — used as ML feature
+                try:
+                    from src import technical as _tech_ms_rt
+                    if r_result["pair"] not in _mstruct_cache:
+                        _mstruct_cache[r_result["pair"]] = _tech_ms_rt.get_market_structure(
+                            r_result["pair"]
+                        )
+                    _ms_rt = _mstruct_cache.get(r_result["pair"], {})
+                    _extra_rt["market_structure_break"] = _ms_rt.get("result", "CONTINUATION")
+                except Exception:
+                    pass
+
                 # Check for inverse pair conflict — BLOCK research trade if inverse already open
                 _rt_inv_blocked = False
                 try:
