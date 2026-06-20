@@ -5324,6 +5324,10 @@ def _send_telegram_summary(
             )
         if run_duration_min > 20:
             health_issues.append(f"Run took {run_duration_min:.0f} minutes — longer than normal")
+        if all_ohlcv_failed:
+            health_issues.append(
+                "⚠️ Pre-scoring data unavailable — pair ranking based on fundamental factors only — selection quality reduced this scan"
+            )
         health_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "⚠️ <b>SYSTEM HEALTH</b>"]
         if threshold_revert_msg:
             health_sec.append(threshold_revert_msg)
