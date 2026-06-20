@@ -811,4 +811,6 @@ def extract(pair: str, parsed: dict, bundle: dict,
         "monthly_trend_aligned":   _safe(extra_data.get("monthly_trend_aligned"), 0.5),
         "hhhl_aligned":            _safe(extra_data.get("hhhl_aligned"), 0.5),
         "kill_zone_entry":         _encode_kill_zone(extra_data.get("kill_zone_entry", "")),
+        "market_structure_break":  _encode_market_structure(
+                                       extra_data.get("market_structure_break", "")),
     }
