@@ -6589,6 +6589,45 @@ def run() -> int:
             _log_line(logf, f"Pre-filter failed ({exc}) — using selector output.")
             pre_filtered = pairs_today
 
+        # Dedup inverse pairs BEFORE analysis to avoid wasting API credits.
+        # Prefer the more standard direction: USD/XXX over XXX/USD, AUD/XXX over XXX/AUD, etc.
+        # Standard-direction preference order (base currency preference):
+        _STD_BASE_ORDER = ["EUR", "GBP", "AUD", "NZD", "USD", "CAD", "CHF", "JPY",
+                           "NOK", "SEK", "SGD", "HKD"]
+
+        def _is_more_standard(p1: str, p2: str) -> bool:
+            """Return True if p1 is more conventionally standard than p2 (its inverse)."""
+            b1 = p1.split("/")[0].upper() if "/" in p1 else p1[:3].upper()
+            b2 = p2.split("/")[0].upper() if "/" in p2 else p2[:3].upper()
+            r1 = _STD_BASE_ORDER.index(b1) if b1 in _STD_BASE_ORDER else 99
+            r2 = _STD_BASE_ORDER.index(b2) if b2 in _STD_BASE_ORDER else 99
+            return r1 <= r2
+
+        _pf_seen: set = set()
+        _pf_deduped: list = []
+        for _pp in pre_filtered:
+            _pc = _pp.upper().replace("/", "")
+            _pi = _pc[3:] + _pc[:3]
+            if _pc in _pf_seen or _pi in _pf_seen:
+                # inverse already queued — keep more standard direction
+                if _pi in _pf_seen:
+                    # our pair IS the inverse — check if we should swap
+                    _existing = next((x for x in _pf_deduped if x.upper().replace("/","") == _pi), None)
+                    if _existing and not _is_more_standard(_existing, _pp):
+                        _pf_deduped = [x for x in _pf_deduped if x.upper().replace("/","") != _pi]
+                        _pf_deduped.append(_pp)
+                        _pf_seen.discard(_pi)
+                        _pf_seen.add(_pc)
+                        _log_line(logf, f"Analysis dedup: {_existing} replaced by {_pp} — more standard direction")
+                    else:
+                        _log_line(logf, f"Analysis dedup: {_pp} removed — {_existing or _pc} is more standard direction and already queued")
+                continue
+            _pf_seen.add(_pc)
+            _pf_deduped.append(_pp)
+        if len(_pf_deduped) < len(pre_filtered):
+            _log_line(logf, f"Analysis dedup: {len(pre_filtered)} → {len(_pf_deduped)} pairs after removing inverse duplicates")
+        pre_filtered = _pf_deduped
+
         # 3. Batch pre-fetch shared data (FRED, COT, macro) once — all cached 12h
         _shared_fund: dict = {}
         _shared_macro      = None
