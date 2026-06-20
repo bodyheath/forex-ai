@@ -179,6 +179,22 @@ def _compute_result(row: dict, status: str, exit_price):
     return r_multiple, pips
 
 
+def update_fields(rec_id: int, **kwargs) -> None:
+    """Update arbitrary fields on a trade row without changing its status.
+
+    Only updates keys that exist in FIELDS.  Used by cascade milestone tracking
+    to record T1/T2/T3 hits and move the effective_stop without closing the trade.
+    """
+    rows = load()
+    target = next((r for r in rows if str(r.get("id")) == str(rec_id)), None)
+    if target is None:
+        return
+    for k, v in kwargs.items():
+        if k in FIELDS:
+            target[k] = v
+    _write_all(rows)
+
+
 def check_inverse_open(pair: str, direction: str) -> str | None:
     """Return a warning string if an open fund trade is the inverse of this pair/direction.
 
