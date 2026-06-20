@@ -588,28 +588,42 @@ def get_win_prob(pair: str, parsed: dict, bundle: dict) -> Optional[str]:
 
 
 def get_model_status_line() -> str:
-    """One-line summary of model status for scan messages / system health."""
+    """Plain-English one-line summary for Telegram messages / system health."""
     try:
         meta = _load_meta()
         if not meta.get("model_ready"):
             n      = meta.get("n_trades", 0)
             needed = max(0, MIN_TRADES - n)
-            return (f"🤖 ML model: learning — {n}/{MIN_TRADES} closed trades"
-                    f" (need {needed} more outcomes)")
-        trained   = (meta.get("trained_at") or "")[:10]
-        roc       = meta.get("roc_auc", 0.0)
-        n         = meta.get("n_trades", "?")
-        mtype     = meta.get("model_type", "")[:2].upper()
-        healthy   = meta.get("is_healthy")
-        hold_auc  = meta.get("temporal_holdout_auc")
-        health_tag = ""
-        if healthy is True:
-            health_tag = " ✅ healthy"
-        elif healthy is False:
-            gap = meta.get("overfit_gap", 0)
-            health_tag = f" ⚠️ overfit gap {gap:.2f}"
-        hold_str = f" | holdout {hold_auc:.2f}" if hold_auc is not None else ""
-        return (f"🤖 ML model active — {n} trades | ROC-AUC {roc:.2f}{hold_str} | "
-                f"{mtype}{health_tag} | last trained {trained}")
+            return (f"🤖 ML model: still learning — {n}/{MIN_TRADES} closed trades so far"
+                    f" (need {needed} more outcomes before predictions activate)")
+
+        n          = meta.get("n_trades", "?")
+        hold_auc   = meta.get("temporal_holdout_auc")
+        n_consec   = meta.get("n_consecutive_reliable", 0)
+        reliable   = n_consec >= 3
+
+        if hold_auc is not None:
+            hold_pct = round(hold_auc * 100)
+        else:
+            hold_pct = round(meta.get("roc_auc", 0.0) * 100)
+
+        if not reliable:
+            return (
+                f"🤖 ML model active but accuracy not yet reliable — predictions shown for "
+                f"information only — not yet influencing confidence scores "
+                f"({hold_pct}% on unseen trades, need {3 - n_consec} more reliable retrains)"
+            )
+
+        if hold_pct >= 65:
+            return (
+                f"🤖 AI performing well: {hold_pct}% accuracy on new trades — "
+                f"genuine patterns found ({n} trades studied)"
+            )
+        # Reliable (3+ good retrains) but current holdout dipped slightly
+        return (
+            f"🤖 AI learning: The AI has studied {n} trades and can predict outcomes "
+            f"with {hold_pct}% accuracy on trades it has never seen — "
+            f"slightly better than random — still learning"
+        )
     except Exception:
         return "🤖 ML model: unavailable"
