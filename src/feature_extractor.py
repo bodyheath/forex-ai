@@ -849,4 +849,10 @@ def extract(pair: str, parsed: dict, bundle: dict,
                                        extra_data.get("market_structure_break", "")),
         "divergence_type":         _encode_divergence(extra_data.get("divergence_type", "")),
         "checklist_score":         float(extra_data.get("checklist_score", 0) or 0),
+        # interaction terms
+        "hhhl_x_monthly":            round(hhhl_x_monthly,            4),
+        "rsi_x_fibonacci":           round(rsi_x_fibonacci,           4),
+        "momentum_x_cot":            round(momentum_x_cot,            4),
+        "kill_zone_x_confluence":    round(kill_zone_x_confluence,    4),
+        "currency_strength_x_trend": round(currency_strength_x_trend, 4),
     }
