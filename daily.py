@@ -6803,6 +6803,7 @@ _SCAN_MODES: dict = {
     "full":      ("6am Full Scan",          set()),
     "gap":       ("Sunday Gap Scan",        set()),
     "saturday":  ("Saturday Gap Check",     set()),
+    "monitor":   ("Between-Scan Monitor",   set()),
 }
 
 # All 4 scans select from the full universe by 8-factor merit score — no mode filtering
