@@ -5186,8 +5186,6 @@ def _send_telegram_summary(
                                if r.get("status") == "LOSS" or
                                (r.get("status") in ("BREAKEVEN","EXPIRED") and
                                 float(r.get("pips") or 0) < 0)]
-                for _dbg_r in _closed_ft[:15]:
-                    print(f"[DEBUG CLOSED] pair={_dbg_r.get('pair')} status={_dbg_r.get('status')!r} pips={_dbg_r.get('pips')!r}", file=sys.stderr)
                 _expired_ft = [r for r in _closed_ft if r.get("status") == "EXPIRED"]
                 _decisive_ft = _wins_ft + _losses_ft
                 _n_total    = len(_all_fund_t)
