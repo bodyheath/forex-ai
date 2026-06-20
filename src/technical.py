@@ -1260,3 +1260,93 @@ def get_trend_structure(pair: str) -> dict:
         "lh": lh, "ll": ll,
         "detail": detail,
     }
+
+
+def get_market_structure(pair: str) -> dict:
+    """Detect market structure breaks from the most recent 20 daily candles.
+
+    A bullish break occurs when the latest close exceeds the most recent
+    2-bar pivot swing high in the preceding 19 candles.  A bearish break
+    occurs when the latest close falls below the most recent swing low.
+
+    Reads from TD:{pair}:1day:400 cache — zero new API calls.
+
+    Returns:
+        {
+          "result":       "BULLISH_BREAK" | "BEARISH_BREAK" | "CONTINUATION",
+          "swing_high":   float | None,   most recent pivot high found
+          "swing_low":    float | None,   most recent pivot low found
+          "break_level":  float | None,   the level that was broken (if any)
+          "latest_close": float | None,
+        }
+    """
+    _neutral = {
+        "result": "CONTINUATION",
+        "swing_high": None, "swing_low": None,
+        "break_level": None, "latest_close": None,
+    }
+
+    cached = cache.get(f"TD:{pair}:1day:400", ttl_hours=24.0)
+    if not isinstance(cached, dict) or not cached.get("values"):
+        return _neutral
+
+    raw = (cached["values"] or [])[:20]
+    if len(raw) < 8:
+        return _neutral
+
+    # Reverse to chronological order (oldest first)
+    arr = list(reversed(raw))
+
+    highs, lows, closes = [], [], []
+    for v in arr:
+        try:
+            highs.append(float(v["high"]))
+            lows.append(float(v["low"]))
+            closes.append(float(v["close"]))
+        except (KeyError, TypeError, ValueError):
+            pass
+
+    n = len(highs)
+    if n < 8:
+        return _neutral
+
+    latest_close = closes[-1]
+
+    # 2-bar pivot: candle i must be strictly greater than the 2 candles on each side.
+    # Scan within arr[0 : n-1] (historical candles only) from newest to oldest.
+    SWING    = 2
+    scan_max = n - 1 - SWING - 1  # last index within the historical window with right-side room
+    scan_min = SWING
+
+    swing_high: float = None
+    swing_low:  float = None
+
+    for i in range(scan_max, scan_min - 1, -1):
+        if swing_high is None:
+            if all(highs[i] > highs[i - k] for k in range(1, SWING + 1)) and \
+               all(highs[i] > highs[i + k] for k in range(1, SWING + 1)):
+                swing_high = highs[i]
+        if swing_low is None:
+            if all(lows[i] < lows[i - k] for k in range(1, SWING + 1)) and \
+               all(lows[i] < lows[i + k] for k in range(1, SWING + 1)):
+                swing_low = lows[i]
+        if swing_high is not None and swing_low is not None:
+            break
+
+    result      = "CONTINUATION"
+    break_level = None
+
+    if swing_high is not None and latest_close > swing_high:
+        result      = "BULLISH_BREAK"
+        break_level = swing_high
+    elif swing_low is not None and latest_close < swing_low:
+        result      = "BEARISH_BREAK"
+        break_level = swing_low
+
+    return {
+        "result":       result,
+        "swing_high":   swing_high,
+        "swing_low":    swing_low,
+        "break_level":  break_level,
+        "latest_close": latest_close,
+    }
