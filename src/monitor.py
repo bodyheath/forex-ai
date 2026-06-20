@@ -287,8 +287,10 @@ def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) ->
 
         # Stop check (only if T3 not hit in this candle)
         elif _casc.effective_stop_hit(row_state, stop_price):
-            milestones.append({"level": "STOP", "price": stop_price, "candle_dt": dt, "pips": None})
-            log(f"  Monitor: {pair} effective stop hit at {stop_price} during {dt} candle")
+            # Use the stop level (not the candle extreme) as the close price
+            eff = _to_float(row_state.get("effective_stop") or row_state.get("stop_loss"))
+            milestones.append({"level": "STOP", "price": eff, "candle_dt": dt, "pips": None})
+            log(f"  Monitor: {pair} effective stop {eff} hit (candle extreme {stop_price}) during {dt}")
             break
 
     return milestones, row_state
