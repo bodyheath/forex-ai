@@ -7192,6 +7192,7 @@ def run() -> int:
                     threshold_revert_msg=threshold_revert_msg,
                     cost_lines=_cost_lines,
                     opportunity_data=_opportunity_data,
+                    all_ohlcv_failed=_all_ohlcv_failed,
                 )
             except Exception as _tg_exc:
                 print(f"[telegram] _send_telegram_summary CRASHED: {_tg_exc}", file=sys.stderr)
