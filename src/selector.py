@@ -1333,7 +1333,11 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
             "8_system_performance":     "historical edge",
         }
         why = why_tags.get(top_factor, "")
-        if dyn_total > 0:
+        mom_boost = bd.get("dynamic_momentum", 0)
+        if mom_boost:
+            mom_count = wl_cache.get("momentum_counts", {}).get(pair, 0)
+            why = f"[momentum +{mom_boost:.0f}/{mom_count}sc] {why}".strip()
+        elif dyn_total > 0:
             why = f"[+{dyn_total:.0f} dyn boost] {why}".strip()
         log(
             f"  #{rank:<2} {pair:<10} {meta['score']:>6.1f}  "
