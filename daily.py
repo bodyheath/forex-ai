@@ -1606,6 +1606,30 @@ def _build_research_section(research_result=None) -> list:
                     f"a good sign even at an early low win rate. This is how professional traders operate."
                 )
 
+    # Pip validation audit — flag NOK/HKD/SGD trades with >500 pips (mathematically correct
+    # but large due to price scale — 0.0001 pip size on 9.5 NOK means 500 pips = 0.05 NOK)
+    try:
+        _large_pip_flags = []
+        for _r_audit in closed:
+            _rp_str = _r_audit.get("pair", "")
+            _rp_quote = _rp_str.split("/")[-1].upper() if "/" in _rp_str else _rp_str[-3:].upper()
+            _rp_pips = _f(_r_audit.get("pips"))
+            if _rp_pips is not None and abs(_rp_pips) > 500 and _rp_quote != "JPY":
+                _rp_dir  = _r_audit.get("direction", "")
+                _large_pip_flags.append(
+                    f"#{_r_audit.get('id','?')} {_rp_str} {_rp_dir} {_rp_pips:+.0f}p"
+                )
+        if _large_pip_flags:
+            sec.append("")
+            sec.append(
+                f"⚠️ Pip validation — {len(_large_pip_flags)} trade(s) show >500 pips on non-JPY pair "
+                f"(pip_size=0.0001 is correct — large values reflect NOK/HKD price scale):"
+            )
+            for _flag in _large_pip_flags[:5]:
+                sec.append(f"  {_flag}")
+    except Exception:
+        pass
+
     # Expiry analysis breakdown
     n_expiry_total = len(expired_rows) + len(partial_wins)
     if n_expiry_total > 0:
