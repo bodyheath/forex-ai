@@ -61,14 +61,28 @@ def analyse_and_log(
         except (TypeError, ValueError):
             pass
 
-    # Check for inverse pair conflict before logging fund trade
+    # Check for inverse pair conflict before logging fund trade — BLOCK if detected
     if parsed.get("trade_this") == "YES":
         try:
             _inv_warn = tracker.check_inverse_open(
                 result["pair"], parsed.get("direction") or ""
             )
             if _inv_warn:
-                log(f"[service] {_inv_warn}")
+                log(f"[service] BLOCKING trade — {_inv_warn}")
+                parsed["trade_this"] = "NO"
+                result["inverse_blocked"] = _inv_warn
+        except Exception:
+            pass
+
+    # Check currency concentration — max 2 open fund trades per currency
+    if parsed.get("trade_this") == "YES":
+        try:
+            _conc_warn = tracker.check_currency_concentration(
+                result["pair"], parsed.get("direction") or ""
+            )
+            if _conc_warn:
+                log(f"[service] CONCENTRATION WARNING — {_conc_warn}")
+                result["concentration_warning"] = _conc_warn
         except Exception:
             pass
 
