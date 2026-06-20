@@ -482,14 +482,33 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
         pips   = m["pips"]
         cdt    = m["candle_dt"] or ""
 
+        # Deduplication: skip if we already sent this alert within the window
+        if level in ("T1", "T2", "T3"):
+            _prev_ts = _check_milestone_sent(pair, level)
+            if _prev_ts:
+                log(
+                    f"  Monitor: duplicate alert suppressed — {pair} {level} already sent "
+                    f"{_prev_ts} — skipping Telegram"
+                )
+                # Still apply the CSV update in case the previous write didn't persist
+                # (but don't re-send Telegram)
+                _send_telegram = False
+            else:
+                _send_telegram = True
+        else:
+            _send_telegram = True
+
         if level == "T1":
             _trk.update_fields(
                 rec_id,
                 t1_hit="TRUE", t1_hit_price=mprice,
                 t1_hit_pips=pips, effective_stop=row.get("entry"),
             )
+            _verify_milestone_write(rec_id, "T1", _trk, pair, log=log)
             log(f"  Monitor fund #{rec_id} {pair}: T1 recorded at {mprice} (+{pips:.1f}p)")
-            if ta:
+            if _send_telegram:
+                _record_milestone_sent(pair, "T1", rec_id, trade_type="fund")
+            if ta and _send_telegram:
                 try:
                     ta.send(
                         f"✅ <b>{pair} has reached its first profit target</b>\n\n"
@@ -507,8 +526,11 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
             _trk.update_fields(
                 rec_id, t2_hit="TRUE", t2_hit_price=mprice, t2_hit_pips=pips,
             )
+            _verify_milestone_write(rec_id, "T2", _trk, pair, log=log)
             log(f"  Monitor fund #{rec_id} {pair}: T2 recorded at {mprice} (+{pips:.1f}p)")
-            if ta:
+            if _send_telegram:
+                _record_milestone_sent(pair, "T2", rec_id, trade_type="fund")
+            if ta and _send_telegram:
                 try:
                     ta.send(
                         f"💰 <b>{pair} has reached its second profit target</b>\n\n"
