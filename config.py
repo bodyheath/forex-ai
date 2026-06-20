@@ -57,6 +57,7 @@ ACCOUNT_BALANCE  = float(os.getenv("ACCOUNT_BALANCE") or "10000")
 ACCOUNT_CURRENCY = os.getenv("ACCOUNT_CURRENCY") or "USD"
 
 RISK_PROFILE_FILE = DATA_DIR / "risk_profile.json"
+PARTIAL_PROFIT_STATE_FILE = DATA_DIR / "partial_profit_state.json"
 
 # Stage-2 deep-analysis model. Override with CLAUDE_MODEL in .env.
 # Using `or` (not the default= arg) so that an empty string from GitHub Actions
