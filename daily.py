@@ -4120,8 +4120,12 @@ def _send_telegram_summary(
                 _kz_line   = _kz_result.get("display_line")
                 if _kz_delta:
                     try:
-                        _kz_new = float(_conf_display) + _kz_delta
-                        _conf_display = str(max(1, min(10, round(_kz_new * 2) / 2)))
+                        _kz_new = max(1.0, min(10.0,
+                            round((float(_conf_display) + _kz_delta) * 2) / 2))
+                        _conf_display = (
+                            str(int(_kz_new)) if _kz_new == int(_kz_new)
+                            else f"{_kz_new:.1f}"
+                        )
                     except (TypeError, ValueError):
                         pass
         except Exception:
