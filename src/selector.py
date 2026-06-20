@@ -1368,6 +1368,8 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
     _max_per_ccy = 4 if scan_mode == "full" else 3
     _ccy_sel: dict = {}    # {currency: count in selected so far}
     _div_skipped: list = []
+    _filled_ccys: set = set()  # currencies that filled slots after first diversity skip
+    _div_first_skip = False
 
     # Count appearances per currency in the full ranked list (for log messages only)
     _ccy_eligible: dict = {}
@@ -1388,10 +1390,14 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         base, quote = parts
         if _ccy_sel.get(base, 0) >= _max_per_ccy or _ccy_sel.get(quote, 0) >= _max_per_ccy:
             _div_skipped.append(pair)
+            _div_first_skip = True
             continue
         selected.append(pair)
         _ccy_sel[base]  = _ccy_sel.get(base, 0) + 1
         _ccy_sel[quote] = _ccy_sel.get(quote, 0) + 1
+        if _div_first_skip:
+            _filled_ccys.add(base)
+            _filled_ccys.add(quote)
 
     # If the diversity filter left us short, backfill from skipped pairs (relax cap)
     if len(selected) < top_n and _div_skipped:
@@ -1401,7 +1407,14 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
                 break
             if pair not in _sel_set:
                 selected.append(pair)
-                log(f"  Diversity overflow: {pair} added (cap relaxed to fill {top_n}-pair pool)")
+                _ov_parts = pair.split("/")
+                _ov_reasons = [
+                    f"{_c} cap not yet reached"
+                    for _c in _ov_parts
+                    if len(_ov_parts) == 2 and _ccy_sel.get(_c, 0) < _max_per_ccy
+                ]
+                _ov_why = " — ".join(_ov_reasons) if _ov_reasons else "cap relaxed"
+                log(f"  Diversity overflow: {pair} added — {_ov_why} — filling remaining slots")
 
     # Log diversity filter results
     if _div_skipped:
@@ -1419,7 +1432,12 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
         _skipped_str = ", ".join(_div_skipped[:8]) + (
             f" (+{len(_div_skipped) - 8} more)" if len(_div_skipped) > 8 else ""
         )
-        log(f"\n  Diversity filter applied — {' — '.join(_cap_parts)}")
+        _fill_ccys_disp = sorted(_filled_ccys - _capped)
+        _fill_str = (
+            f" — {' '.join(_fill_ccys_disp)} pairs added to fill remaining slots"
+            if _fill_ccys_disp else ""
+        )
+        log(f"\n  Diversity filter applied — {' — '.join(_cap_parts)}{_fill_str}")
         log(f"  Pairs skipped ({len(_div_skipped)}): {_skipped_str}")
 
     # Force-include watchlist carry-forward pairs regardless of merit rank
