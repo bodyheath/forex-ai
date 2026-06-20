@@ -1,24 +1,25 @@
 """Global market regime detector — single source of truth for trading conditions.
 
 Classifies the current macro environment into one of four regimes using VIX,
-bond yields, gold (XAU/USD), and the yield curve.  Every regime carries its own
-confidence threshold and conditions-score cap so the trading conditions score is
-always consistent with the regime — no more contradictions.
+bond yields, gold (XAU/USD), the yield curve, S&P 500 vs 50-day MA, and currency
+strength confirmation.  Every regime carries its own confidence threshold and
+conditions-score cap so the trading conditions score is always consistent with the
+regime — no more contradictions.
 
 Regimes
 -------
   trending_risk_on   — low VIX, risk appetite; favour AUD/NZD/CAD; threshold 5.5
   trending_risk_off  — elevated VIX, flight to safety; favour JPY/CHF/USD; threshold 6
   ranging_low_vol    — calm but directionless; mean-reversion; threshold 7; cap 6/10
-  ranging_high_vol   — chaotic; position sizes −50%; threshold 8; cap 4/10
+  ranging_high_vol   — chaotic; position sizes −50%; threshold 7.5; cap 4/10
 
 Public API
 ----------
-detect(macro_signals=None) -> dict
+detect(macro_signals=None, ccy_strength=None) -> dict
     Compute and return the global regime.  Caches result for 2 hours.
 
 regime_currency_bonus(regime, base, quote) -> float
-    Pair-selection score bonus (0–12 pts) for alignment with the regime.
+    Pair-selection score bonus (0–8 pts) for alignment with the regime.
 
 regime_display_lines(regime_data) -> list[str]
     Plain-English Telegram lines for the 6am message (regime + system message).
@@ -30,6 +31,8 @@ telegram_line(regime_data) -> str
     Legacy single-line regime label (backward-compat).
 """
 
+import json
+import pathlib
 import requests
 
 import config
@@ -37,6 +40,8 @@ from src import cache
 
 _CACHE_KEY = "REGIME:global"
 _CACHE_TTL  = 2.0   # hours
+
+_REGIME_STATE_FILE = pathlib.Path("data/regime_state.json")
 
 # ── Currency classifications ───────────────────────────────────────────────────
 _RISK_ON_CCYS  = {"AUD", "NZD", "CAD", "GBP", "EUR"}
