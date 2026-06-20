@@ -1,0 +1,64 @@
+name: Between-Scan Monitor
+
+# GitHub built-in scheduler — runs every 2 hours, all 7 days including weekends.
+# No cron-job.org setup needed for this workflow.
+#
+# Cost estimate:
+#   ~2 minutes per run × 12 runs/day × 30 days = ~720 minutes/month
+#   Combined with existing scans (~400 min/month): ~1120 total — well within
+#   the 2000-minute free-tier limit.
+#
+# API estimate:
+#   Batch price: 2 calls/run · OHLCV for hot/warm: 5-10 calls/run
+#   ~84-144 additional calls/day — total stays under 800/day free tier.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */2 * * *"    # every 2 hours at :00 UTC
+
+concurrency:
+  group: monitor
+  cancel-in-progress: true
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run monitor
+        env:
+          SCAN_MODE:          monitor
+          TWELVE_DATA_KEY:    ${{ secrets.TWELVE_DATA_KEY }}
+          TELEGRAM_TOKEN:     ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID_2: ${{ secrets.TELEGRAM_CHAT_ID_2 }}
+          TELEGRAM_CHAT_ID_3: ${{ secrets.TELEGRAM_CHAT_ID_3 }}
+          ACCOUNT_BALANCE:    ${{ secrets.ACCOUNT_BALANCE || '10000' }}
+          ACCOUNT_CURRENCY:   ${{ secrets.ACCOUNT_CURRENCY || 'USD' }}
+        run: python daily.py
+
+      - name: Commit monitor state
+        run: |
+          git config user.name "forex-ai[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/trades.csv data/research_trades.csv data/monitor_log.json data/api_usage.json
+          git diff --staged --quiet || git commit -m "chore: monitor $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git pull --rebase origin main
+          git push origin HEAD:main
