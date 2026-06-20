@@ -85,6 +85,8 @@ FEATURE_COLS = [
     "market_structure_break",   # BULLISH_BREAK=1, CONTINUATION=0, BEARISH_BREAK=-1
     # ── RSI divergence ─────────────────────────────────────────────────────
     "divergence_type",          # BULLISH=2, HIDDEN_BULLISH=1, NONE=0, HIDDEN_BEARISH=-1, BEARISH=-2
+    # ── Pre-trade checklist ────────────────────────────────────────────────
+    "checklist_score",          # 0-10 integer: number of quality criteria passed
 ]
 
 
