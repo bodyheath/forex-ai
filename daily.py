@@ -4884,6 +4884,8 @@ def _send_telegram_summary(
     # Currency strength scores — computed once in 6am block, used in _trade_block
     # and _log_one_research across all scan modes.  {} = no data (no boost applied).
     _ccy_strength: dict = {}
+    # Monthly trend cache — lazy-populated per pair on first access in _trade_block
+    _monthly_trends: dict = {}
 
     # ═══════════════════════════════════════════════════════════════════════════
     # 6AM FULL SCAN — comprehensive morning briefing
