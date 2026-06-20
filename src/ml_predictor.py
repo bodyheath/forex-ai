@@ -169,19 +169,60 @@ def _count_decisive_trades() -> tuple:
     return n_wins, n_losses
 
 
+# ── Soft label weight computation ─────────────────────────────────────────────
+
+def _soft_weight(status: str, trade_row: dict) -> float:
+    """Return a quality-based sample weight (0.0–1.0) for this trade.
+
+    WIN/LOSS get full weight.  PARTIAL_WIN gets 0.7 (less certain signal).
+    EXPIRED trades are weighted by how close to target price was at expiry —
+    a trade that got 90% of the way to target before expiring is still
+    informative and is weighted 0.85 rather than 0.4.
+    """
+    s = status.upper()
+    if s == "WIN":
+        return 1.0
+    if s == "PARTIAL_WIN":
+        return 0.7   # solid win but only partial target — high quality signal
+    if s == "LOSS":
+        return 1.0   # definitive loss — full training weight
+    if s in ("EXPIRED", "EXPIRED_PROFITABLE", "EXPIRED_LOSS", "EXPIRED_NEUTRAL"):
+        try:
+            direction = (trade_row.get("direction") or "BUY").upper()
+            entry = _safe_float(trade_row.get("entry"))
+            tgt   = _safe_float(trade_row.get("target"))
+            close = _safe_float(trade_row.get("close_price"))
+            if entry and tgt and close and abs(tgt - entry) > 1e-10:
+                prog = ((close - entry) / (tgt - entry)
+                        if direction == "BUY"
+                        else (entry - close) / (entry - tgt))
+                if prog >= 0.75:
+                    return 0.85  # nearly reached target — strong near-WIN signal
+                if prog >= 0.25:
+                    return 0.50  # meaningful progress — moderate signal
+                return 0.30      # little progress — weak signal
+        except (TypeError, ValueError, ZeroDivisionError):
+            pass
+        return 0.40   # EXPIRED with no price data — low weight
+    if s == "BREAKEVEN":
+        return 0.30   # very ambiguous outcome
+    return 0.50       # unknown outcome — moderate weight
+
+
 # ── Training data loader ───────────────────────────────────────────────────────
 
 def _load_training_data():
     """Merge closed trade outcomes with features.
 
-    Returns (X_array, y_array, n) or (None, None, n) if < MIN_TRADES available.
+    Returns (X_array, y_array, soft_weights_array, n) or (None, None, None, n).
     X columns follow FEATURE_COLS order exactly.
-    y: 1=WIN/PARTIAL_WIN, 0=LOSS/EXPIRED/BREAKEVEN
+    y:  1=WIN/PARTIAL_WIN, 0=LOSS/EXPIRED/BREAKEVEN
+    sw: per-sample quality weight reflecting outcome certainty (0.3–1.0)
     """
     try:
         import numpy as np
     except ImportError:
-        return None, None, 0
+        return None, None, None, 0
 
     # Load rich feature store indexed by (source_table, trade_id)
     feat_map: dict = {}
@@ -191,10 +232,10 @@ def _load_training_data():
                 key = (r.get("source_table", ""), r.get("trade_id", ""))
                 feat_map[key] = r
 
-    rows_X, rows_y = [], []
+    rows_X, rows_y, rows_w = [], [], []
 
     def _add(trade_id, source_table: str, trade_row: dict, outcome: str):
-        if outcome in ("WIN", "PARTIAL_WIN"):  # PARTIAL_WIN → WIN for ML training
+        if outcome in ("WIN", "PARTIAL_WIN"):
             y = 1
         elif outcome in ("LOSS", "EXPIRED", "BREAKEVEN"):
             y = 0
@@ -208,8 +249,6 @@ def _load_training_data():
             except Exception:
                 return
         else:
-            # Fallback: build feature vector from scores in trade row.
-            # New extended features (beyond original 15) default to neutral/0.
             try:
                 ts   = trade_row.get("timestamp") or trade_row.get("date") or ""
                 mo   = int(ts.split("-")[1]) if len(ts.split("-")) >= 2 else 6
@@ -218,7 +257,6 @@ def _load_training_data():
                 dirn = (trade_row.get("direction") or "BUY").upper()
                 rr   = _safe_float(trade_row.get("reward_risk"), 1.5)
                 conf = _safe_float(trade_row.get("confidence"), 5.0)
-                # Build a dict matching FEATURE_COLS with best-effort values
                 base = {
                     "confidence":    conf,
                     "tech_score":    _safe_float(trade_row.get("technical") or
@@ -240,7 +278,6 @@ def _load_training_data():
                     "ribbon_aligned":0.0,
                     "month_sin":     ms,
                     "month_cos":     mc,
-                    # extended — best-effort from new research_trades columns
                     "grade_num":     _safe_float({"A":5,"B":4,"C":3,"D":2,"F":1}.get(
                                          (trade_row.get("grade") or "").upper(), 0), 0.0),
                     "rr_over_2":     1.0 if rr > 2.0 else 0.0,
@@ -256,15 +293,14 @@ def _load_training_data():
 
         rows_X.append(vec)
         rows_y.append(y)
+        rows_w.append(_soft_weight(outcome, trade_row))
 
-    # Research paper trades
     research_csv = config.DATA_DIR / "research_trades.csv"
     if research_csv.exists():
         with research_csv.open("r", encoding="utf-8", newline="") as fh:
             for r in csv.DictReader(fh):
                 _add(r.get("id"), "research", r, r.get("status", ""))
 
-    # Main live trades
     if config.TRADES_CSV.exists():
         with config.TRADES_CSV.open("r", encoding="utf-8", newline="") as fh:
             for r in csv.DictReader(fh):
@@ -272,9 +308,14 @@ def _load_training_data():
 
     n = len(rows_X)
     if n < MIN_TRADES:
-        return None, None, n
+        return None, None, None, n
 
-    return np.array(rows_X, dtype=float), np.array(rows_y, dtype=int), n
+    return (
+        np.array(rows_X, dtype=float),
+        np.array(rows_y, dtype=int),
+        np.array(rows_w, dtype=float),
+        n,
+    )
 
 
 # ── Training ───────────────────────────────────────────────────────────────────
