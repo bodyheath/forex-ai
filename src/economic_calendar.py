@@ -423,15 +423,15 @@ def _fetch_forex_factory():
                 "currency":     currency,
                 "event":        f"[Medium] {title}",
                 "plain_name":   plain,
-                "plain_desc":   f"📅 Medium impact: {desc}",
+                "plain_desc":   f"⚠️ Medium impact: {desc}",
                 "dt_utc":       dt_utc.strftime("%Y-%m-%d %H:%M"),
                 "dt_ak":        dt_ak.strftime("%Y-%m-%d %H:%M"),
                 "ak_display":   _ak_display(dt_ak),
-                "avoid_advice": f"monitor {currency} — medium-impact event",
+                "avoid_advice": f"monitor {currency} — may cause minor movement",
                 "forecast":     forecast,
                 "previous":     previous,
             })
-        print(f"[ECO-CAL] Medium-impact fallback: {len(events)} events (skipped {_med_skipped_ccy} unknown ccy, {_med_skipped_dt} bad/past dt)")
+        print(f"[ECO-CAL] Medium-impact fallback: {len(events)} events (skipped {_med_skipped_ccy} unknown ccy, {_med_skipped_dt} bad/past dt)", file=sys.stderr)
 
     events.sort(key=lambda e: e["dt_utc"])
     return events
