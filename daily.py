@@ -6566,9 +6566,10 @@ def run() -> int:
         )
         _log_line(logf, f"Active thresholds: conf>={_trade_conf}, R:R>={_thresh_mgr.get_min_rr()}{_coll_note}")
 
-        universe_size = len(selector.UNIVERSE)
-        ranked_all    = []
-        pairs_today   = []
+        universe_size     = len(selector.UNIVERSE)
+        ranked_all        = []
+        pairs_today       = []
+        _all_ohlcv_failed = False
         try:
             selection     = selector.select_pairs(top_n=_top_n, log=lambda m: _log_line(logf, m), scan_mode=scan_mode)
             pairs_today   = selection["selected"]
