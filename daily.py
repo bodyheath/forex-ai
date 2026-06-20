@@ -1126,6 +1126,14 @@ def _trade_quality_grade(r: dict) -> dict:
     _fa_alignment_g = _fa_grade.get("alignment", "MIXED")
     _has_fund_tailwind = (_fa_alignment_g == "TAILWIND" and _fa_aligned_g >= 3)
 
+    # Hard block: zero ATR means stop/target cannot be safely calibrated
+    if atr14 == 0:
+        return {
+            "grade": "F",
+            "reasons": ["ATR unavailable — cannot set safe stop distance"],
+            "atr_zero": True,
+        }
+
     # ── Grade F — never trade ─────────────────────────────────────────────
     if rib_strongly_against or w_d_conflict or rr < 1.3:
         grade = "F"
