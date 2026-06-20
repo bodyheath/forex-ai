@@ -18,6 +18,7 @@ Strategy:
 """
 
 import json
+import os
 import time
 from datetime import date as _date_mod
 from datetime import datetime, timedelta
@@ -31,6 +32,8 @@ from src import cascade as _casc
 _PRICE_URL    = "https://api.twelvedata.com/price"
 _OHLCV_URL    = "https://api.twelvedata.com/time_series"
 _MONITOR_LOG  = config.DATA_DIR / "monitor_log.json"
+_MILESTONE_LOG = config.DATA_DIR / "milestone_log.json"
+_LOCK_FILE    = config.DATA_DIR / "monitor.lock"
 _API_USAGE    = config.DATA_DIR / "api_usage.json"
 _OHLCV_CANDLES = 4          # 4 hours of hourly candles
 _API_BUDGET_LIMIT = 700     # daily call threshold — skip OHLCV above this
@@ -38,6 +41,8 @@ _BATCH_SIZE   = 20          # pairs per batch price request
 _FETCH_TIMEOUT = 15         # seconds per HTTP request
 _HOT_THRESHOLD  = 0.70      # price ≥ 70% of way to target → HOT
 _WARM_THRESHOLD = 0.40      # price ≥ 40% of way to target → WARM
+_DEDUP_HOURS  = 24          # suppress duplicate alerts within this window
+_LOCK_TIMEOUT = 120         # seconds before a stale lock is removed
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
