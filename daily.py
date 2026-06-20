@@ -5846,7 +5846,16 @@ def _send_telegram_summary(
                               if r.get("status") == "LOSS" or
                               (r.get("status") in ("BREAKEVEN","EXPIRED") and float(r.get("pips") or 0) < 0)]
                 _dec_id    = _w_ft_id + _l_ft_id
-                _ml_need_id  = max(0, 10 - len(_dec_id))
+                _decisive_rt_id = 0
+                try:
+                    from src import research_tracker as _rt_ml_id
+                    _decisive_rt_id = sum(
+                        1 for _r in _rt_ml_id.load()
+                        if _r.get("status") in ("WIN", "LOSS")
+                    )
+                except Exception:
+                    pass
+                _ml_need_id  = max(0, 10 - (len(_dec_id) + _decisive_rt_id))
                 _ml_stat_id  = (
                     f"learning — need {_ml_need_id} more decisive trade{'s' if _ml_need_id != 1 else ''} for activation"
                     if _ml_need_id > 0 else "active — correctly predicting from training data"
