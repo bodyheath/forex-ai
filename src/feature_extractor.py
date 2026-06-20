@@ -72,6 +72,9 @@ FEATURE_COLS = [
     "vix_vs_20d",               # VIX vs 20d avg: 1=elevated, -1=suppressed, 0=flat
     "atr_5d_vs_20d",            # 5d ATR / 20d ATR (>1.0 = expanding volatility)
     "atr_expanding",            # 1 if ATR increasing 3+ consecutive days, else 0
+    # ── Currency strength at entry ─────────────────────────────────────────
+    "base_ccy_strength",        # -100 to +100 strength of base currency across all pairs
+    "quote_ccy_strength",       # -100 to +100 strength of quote currency across all pairs
 ]
 
 
