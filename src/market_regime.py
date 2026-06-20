@@ -388,10 +388,25 @@ def detect(macro_signals: dict = None, ccy_strength: dict = None) -> dict:
     except Exception:
         pass
 
-    gold_5d_pct = _fetch_gold_change_pct()
+    gold_5d_pct  = _fetch_gold_change_pct()
+    spx_above_50d = _fetch_spx_above_50d()
+
+    # Derive top currencies by score (highest to lowest)
+    top_ccys = None
+    if ccy_strength:
+        try:
+            sorted_ccys = sorted(
+                ccy_strength.keys(),
+                key=lambda c: (ccy_strength[c] or {}).get("score", 0),
+                reverse=True,
+            )
+            top_ccys = sorted_ccys[:3]
+        except Exception:
+            pass
 
     regime, signal_lines, risk_on, risk_off = _classify(
-        vix, vix_trend, yield_curve, gold_5d_pct
+        vix, vix_trend, yield_curve, gold_5d_pct,
+        spx_above_50d=spx_above_50d, top_ccys=top_ccys,
     )
 
     info = REGIMES.get(regime, REGIMES[_DEFAULT_REGIME])
@@ -399,6 +414,7 @@ def detect(macro_signals: dict = None, ccy_strength: dict = None) -> dict:
     result = {
         "regime":           regime,
         "label":            info["label"],
+        "display_label":    info.get("display_label", info["label"]),
         "emoji":            info["emoji"],
         "description":      info["description"],
         "favour_ccys":      sorted(info["favour_ccys"]),
@@ -415,11 +431,13 @@ def detect(macro_signals: dict = None, ccy_strength: dict = None) -> dict:
         "vix":              vix,
         "yield_curve":      yield_curve,
         "gold_5d_pct":      gold_5d_pct,
+        "spx_above_50d":    spx_above_50d,
         "signal_lines":     signal_lines,
         "risk_on_score":    risk_on,
         "risk_off_score":   risk_off,
     }
     cache.set(_CACHE_KEY, result)
+    _check_regime_change(regime)
     return result
 
 
