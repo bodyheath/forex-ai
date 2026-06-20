@@ -75,6 +75,8 @@ FEATURE_COLS = [
     # ── Currency strength at entry ─────────────────────────────────────────
     "base_ccy_strength",        # -100 to +100 strength of base currency across all pairs
     "quote_ccy_strength",       # -100 to +100 strength of quote currency across all pairs
+    # ── Monthly trend filter ──────────────────────────────────────────────
+    "monthly_trend_aligned",    # 1=aligned, 0=counter-trend, 0.5=neutral monthly trend
 ]
 
 
