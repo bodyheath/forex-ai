@@ -442,10 +442,10 @@ def detect(macro_signals: dict = None, ccy_strength: dict = None) -> dict:
 
 
 def regime_currency_bonus(regime: str, base: str, quote: str) -> float:
-    """Pair-selection score bonus (0–12 pts) for alignment with the current regime.
+    """Pair-selection score bonus (0–8 pts) for alignment with the current regime.
 
     Pairs with both a favoured and an avoided currency score highest (e.g.
-    AUD/JPY in risk-on).  Partial alignment scores 6 pts.
+    AUD/JPY in risk-on).  Partial alignment scores 4 pts.
     """
     info   = REGIMES.get(regime, {})
     favour = info.get("favour_ccys", set())
@@ -454,17 +454,17 @@ def regime_currency_bonus(regime: str, base: str, quote: str) -> float:
     if not favour:
         return 0.0   # ranging regimes — no directional currency bias
 
-    base_fav   = base  in favour
-    quote_fav  = quote in favour
-    base_avoid = base  in avoid
+    base_fav    = base  in favour
+    quote_fav   = quote in favour
+    base_avoid  = base  in avoid
     quote_avoid = quote in avoid
 
     # Strong alignment: one side favoured, other side avoided (e.g. AUD/JPY risk-on)
     if (base_fav and quote_avoid) or (base_avoid and quote_fav):
-        return 12.0
+        return 8.0
     # Partial alignment: one side aligned
     elif base_fav or quote_fav or base_avoid or quote_avoid:
-        return 6.0
+        return 4.0
     return 0.0
 
 
