@@ -106,8 +106,8 @@ def _temporal_cv_scores(X_s, y) -> dict:
         cv_k = min(5, max(2, len(y_tr) // 4))
         if len(y_tr) >= 50:
             base   = GradientBoostingClassifier(
-                n_estimators=100, max_depth=3, learning_rate=0.05,
-                min_samples_leaf=MIN_PATTERN_SAMPLES, subsample=0.8,
+                n_estimators=50, max_depth=3, learning_rate=0.05,
+                min_samples_leaf=5, subsample=0.8,
                 max_features=0.7, random_state=42,
             )
             method = "isotonic"
