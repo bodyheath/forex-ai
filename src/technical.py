@@ -143,14 +143,19 @@ def _fetch_ohlcv_yahoo(pair: str, interval: str, outputsize: int) -> dict:
     }
 
 
-def _td_request(symbol: str, interval: str, outputsize: int) -> dict:
-    """Call Twelve Data time_series with caching and error/rate-limit detection."""
+def _td_request(symbol: str, interval: str, outputsize: int, _log=None) -> dict:
+    """Call Twelve Data time_series with caching, Yahoo Finance fallback on 429.
+
+    When Twelve Data returns HTTP 429 (rate limit) for a daily/weekly/monthly
+    interval, immediately retries via Yahoo Finance instead of waiting 30 seconds.
+    4H requests are always Twelve Data only (Yahoo intra-day data is less reliable).
+    """
     key = f"TD:{symbol}:{interval}:{outputsize}"
     cached = cache.get(key, ttl_hours=_INTERVAL_TTL.get(interval, _CACHE_TTL))
     if cached is not None:
         return cached
 
-    global _td_calls_this_run
+    global _td_calls_this_run, _yf_sourced_pairs
 
     def _do_fetch(sym: str) -> dict:
         global _td_calls_this_run
@@ -182,7 +187,19 @@ def _td_request(symbol: str, interval: str, outputsize: int) -> dict:
     if _alt == symbol:
         _alt = None
 
-    data = _do_fetch(symbol)
+    try:
+        data = _do_fetch(symbol)
+    except RuntimeError as exc:
+        # On rate limit, immediately fall back to Yahoo Finance for supported intervals.
+        if "rate limit" in str(exc).lower() and interval in _YF_FALLBACK_INTERVALS:
+            msg = f"Technical: Twelve Data rate limit — falling back to Yahoo Finance for {symbol} — zero API quota used."
+            if _log:
+                _log(msg)
+            data = _fetch_ohlcv_yahoo(symbol, interval, outputsize)
+            _yf_sourced_pairs.add(symbol)
+            cache.set(key, data)
+            return data
+        raise
 
     # Twelve Data signals problems with {"status": "error", "code": ..., "message": ...}
     # On error: wait 30s and retry with alternative symbol format before failing.
