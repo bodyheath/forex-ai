@@ -172,9 +172,40 @@ def _fetch_gold_change_pct():
         return None
 
 
+def _fetch_spx_above_50d():
+    """Return True if SPX is above its 50-day MA, False if below, None on failure."""
+    if not config.TWELVE_DATA_KEY:
+        return None
+    cached = cache.get("REGIME:spx_50d", ttl_hours=3.0)
+    if cached is not None:
+        return cached
+    try:
+        resp = requests.get(
+            "https://api.twelvedata.com/time_series",
+            params={
+                "symbol":     "SPX",
+                "interval":   "1day",
+                "outputsize": 55,
+                "apikey":     config.TWELVE_DATA_KEY,
+            },
+            timeout=12,
+        )
+        values = resp.json().get("values", [])
+        if len(values) < 51:
+            return None
+        current = float(values[0]["close"])
+        ma50    = sum(float(v["close"]) for v in values[1:51]) / 50
+        result  = current > ma50
+        cache.set("REGIME:spx_50d", result)
+        return result
+    except Exception:
+        return None
+
+
 # ── Classification algorithm ───────────────────────────────────────────────────
 
-def _classify(vix, vix_trend, yield_curve, gold_5d_pct):
+def _classify(vix, vix_trend, yield_curve, gold_5d_pct,
+              spx_above_50d=None, top_ccys=None):
     """Return (regime_key, signal_lines, risk_on_score, risk_off_score)."""
     risk_on  = 0
     risk_off = 0
