@@ -80,6 +80,9 @@ FIELDS = [
     # ── Currency strength at entry ──────────────────────────────────────────
     "base_currency_strength",     # -100 to +100 strength score for base currency at entry
     "quote_currency_strength",    # -100 to +100 strength score for quote currency at entry
+    # ── Monthly trend filter ─────────────────────────────────────────────────
+    "monthly_trend",              # BUY | SELL | NEUTRAL — monthly candle direction at entry
+    "monthly_trend_aligned",      # 1=aligned with monthly trend, 0=counter-trend, 0.5=neutral
 ]
 
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN"}
