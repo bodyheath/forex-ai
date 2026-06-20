@@ -208,18 +208,26 @@ def build_scorecard(quality: dict) -> list:
     p_tot  = quality.get("pos_total", n)
     p_fail = p_tot - p_ok
     cot_age = quality.get("cot_max_age_days", 0)
-    if p_fail == 0 and not cot_age:
-        lines.append(f"✅ CFTC COT positioning: {p_ok}/{p_tot} pairs with current data")
-    elif cot_age:
-        age_icon = "❌" if cot_age > 14 else "⚠️"
+    if cot_age > 14:
         lines.append(
-            f"{age_icon} CFTC COT positioning: {p_ok}/{p_tot} pairs — "
-            f"data is {cot_age} days old — positioning scores may be outdated"
+            f"❌ COT positioning data: {cot_age} days old — CRITICAL — "
+            f"fetching fresh now — positioning scores unreliable until refreshed"
         )
+    elif cot_age > 7:
+        lines.append(
+            f"⚠️ COT positioning data: {cot_age} days old — getting stale — "
+            f"positioning scores may be slightly outdated"
+        )
+    elif cot_age > 0:
+        lines.append(
+            f"✅ COT positioning data: {cot_age} days old — current and reliable"
+        )
+    elif p_fail == 0:
+        lines.append(f"✅ CFTC COT positioning: {p_ok}/{p_tot} pairs with current data")
     else:
         lines.append(
             f"⚠️ CFTC COT positioning: {p_ok}/{p_tot} pairs — "
-            f"{p_fail} pairs unavailable"
+            f"{p_fail} pairs unavailable (no COT contract for these currencies)"
         )
 
     # ── Economic calendar freshness ───────────────────────────────────────────
