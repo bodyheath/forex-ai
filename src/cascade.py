@@ -110,7 +110,7 @@ def pips_at(entry, level, pair, direction):
 
 def t1_hit(row: dict, price: float) -> bool:
     """True if price has crossed T1 and T1 not yet recorded."""
-    if str(row.get("t1_hit", "")).upper() == "TRUE":
+    if _is_true(row.get("t1_hit")):
         return False
     t1 = _to_float(row.get("t1_price"))
     if t1 is None:
@@ -162,7 +162,7 @@ def cascade_outcome(row: dict) -> str:
         return "FULL_WIN"
     if str(row.get("t2_hit", "")).upper() == "TRUE":
         return "WIN"
-    if str(row.get("t1_hit", "")).upper() == "TRUE":
+    if _is_true(row.get("t1_hit")):
         return "PARTIAL_WIN"
     return "LOSS"
 
@@ -186,6 +186,6 @@ def total_pips(row: dict) -> float:
 def expiry_extension(row: dict, base_expiry: int) -> int:
     """Extend expiry: +3d after T1, +5d after T2; cap at 21 days total."""
     t2 = str(row.get("t2_hit", "")).upper() == "TRUE"
-    t1 = str(row.get("t1_hit", "")).upper() == "TRUE"
+    t1 = _is_true(row.get("t1_hit"))
     ext = base_expiry + (5 if t2 else (3 if t1 else 0))
     return min(ext, 21)
