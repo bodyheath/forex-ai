@@ -98,6 +98,13 @@ def _encode_grade(grade: str) -> float:
     )
 
 
+def _encode_kill_zone(kz: str) -> float:
+    return {
+        "OVERLAP": 5.0, "LONDON_CLOSE": 4.0, "NEW_YORK": 3.0,
+        "LONDON": 2.0, "TOKYO": 1.0, "OUTSIDE": 0.0,
+    }.get((kz or "").upper(), 0.0)
+
+
 def _encode_ribbon(ribbon_state: str) -> float:
     return {
         "ALIGNED_BULL": 2.0, "PARTIAL_BULL": 1.0, "NEUTRAL": 0.0,
