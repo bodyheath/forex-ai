@@ -1317,6 +1317,7 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
             + bd.get("dynamic_ccy_boost", 0)
             + bd.get("dynamic_near_miss", 0)
             + bd.get("dynamic_session", 0)
+            + bd.get("dynamic_momentum", 0)
         )
         # Build a one-word "why" tag based on the top-scoring factor
         _static_vals = {k: v for k, v in bd.items() if not k.startswith("dynamic")}
