@@ -1,19 +1,19 @@
 PAIR: USD/CHF
-DIRECTION: BUY
-CONFIDENCE: 5/10
-TECHNICAL_SCORE: 5
-FUNDAMENTAL_SCORE: 7
-SENTIMENT_SCORE: 5
-POSITIONING_SCORE: 4
-MACRO_SCORE: 4
-DIVERGENCE: NONE
-OSCILLATOR_CONFLUENCE: NONE
-KEY_THESIS: USD rate flat + CHF falling supports USD strength, but D1 data unavailable blocks confirmation; 31% CHF short positioning offers contrarian edge if reversal occurs.
-RISK_FACTORS: [1] D1 technical data missing—no RSI/MACD/pattern confirmation; reversal risk high without entry-level validation. [2] Flat USD rate + stable COT momentum = weak conviction; macro backdrop (VIX 18.4, tight curve 0.3) suggests low volatility environment—risk of range-bound chop.
-TRADE_THIS: NO
-
----
-
-**Rationale:**
-
-- **TECHNICAL_SCORE = 5** (neutral, enforced HARD RULE:
+DIRECTION: SELL
+CONFIDENCE: 7/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 0.8072
+TARGET: 0.7930
+STOP_LOSS: 0.8117
+REWARD_RISK_RATIO: 3.2:1
+BEST_ENTRY_TIME: London open 20:00–22:00 NZST
+NEWS_WARNING: USD flat-rate environment — monitor Fed speakers and Swiss CPI within 48h
+KEY_THESIS: RSI at 70.3 with triple oscillator SELL confluence (RSI+Stoch 89.2+CCI 188.6) and W/D/4H MTF full SELL alignment targets mean reversion toward 0.7930 Fib support, despite bullish EMA ribbon creating short-side friction.
+RISK_FACTORS: [1] EMA ribbon fully aligned bull (5/5 fan) — ribbon has not broken structure; a SELL entry here fights trend momentum and risks premature stop-out if price consolidates higher before reversing. [2] Bullish RSI divergence (moderate, 32p/4pt) directly conflicts with SELL thesis — divergence-driven bounce could push price toward 0.8117 stop before any downside resolution.
+TRADE_THIS: YES

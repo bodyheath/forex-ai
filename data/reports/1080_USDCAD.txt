@@ -1,0 +1,24 @@
+I need to carefully analyze this USD/CAD setup with conflicting signals.
+
+**Key tensions to resolve:**
+
+**SELL signals:**
+- RSI 88.6 (>70 = 9-10 SELL tier)
+- TRIPLE_SELL oscillator confluence (RSI, Stoch 94.1, CCI 182.1) → +2 confidence
+- MTF unanimous: M/W/D/4H all SELL → full weight
+- D1 T_sig=SELL_7 anchor
+- 4H T_sig=8 SELL
+
+**CONFLICTING/RISK factors:**
+- RIB=ALIGNED_BULL fan 5/5 — this is a significant contradiction. Full bull ribbon = trend continuation bias. Rules say "aligned ribbon = trend continuation bias." This doesn't reduce T_sig but raises reversal risk.
+- PAT=pin_bar_at_key_level:bul on BOTH D1 and 4H — bullish candle patterns conflict with SELL direction
+- FUND: USD flat rate, CAD falling = USD/CAD fundamentally supported (USD stronger vs falling CAD) — this supports UPSIDE, conflicts with SELL
+- Oil at 84.7 = moderately high, typically CAD-supportive, mildly favoring CAD = mild SELL USD/CAD
+- SMD=-4 NEUTRAL
+- Golden-cross structure, price well above SMA50/SMA200
+
+**Candle patterns:** Pin bar at key level BUL on both D1 and 4H = bullish reversal candles. Rules say "already factored into T_sig anchor" but use as supporting evidence. These CONFLICT with SELL direction.
+
+**FI
+KEY_THESIS: Extreme RSI overbought (88.6) + triple-oscillator SELL confluence + pin bar at key level + unanimous MTF alignment (Monthly/Weekly/Daily/4H all SELL) = high-probability reversal setup despite bullish structure.
+RISK_FACTORS: [1] Ribbon fully ALIGNED_BULL (5/5 EMA fan) contradicts directional signal — trend structure still intact, reversal may fail. [2] Price firmly above SMA50/SMA200 with golden-cross — structural uptrend support may catch pullback; requires tight stop above 1.4200 to manage structural hold risk.

@@ -1,0 +1,32 @@
+{
+  "977": {
+    "pair": "CAD/AUD",
+    "stage": 0,
+    "alerts_sent": {
+      "stage1": false,
+      "stage2": false,
+      "pct80": false
+    }
+  },
+  "1030": {
+    "pair": "EUR/HKD",
+    "stage": 1,
+    "alerts_sent": {
+      "stage1": true,
+      "stage2": false,
+      "pct80": false
+    },
+    "breakeven_stop": 8.9517,
+    "stage1_reached_at": "2026-06-20 17:09:14",
+    "stage1_price": 8.99228
+  },
+  "1032": {
+    "pair": "NZD/HKD",
+    "stage": 0,
+    "alerts_sent": {
+      "stage1": false,
+      "stage2": false,
+      "pct80": false
+    }
+  }
+}
