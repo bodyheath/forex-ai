@@ -95,6 +95,7 @@ REGIMES = {
     },
     "ranging_low_vol": {
         "label":           "Ranging — Low Volatility",
+        "display_label":   "Ranging Low Volatility",
         "emoji":           "⚖️",
         "description":     (
             "markets are calm but directionless. "
