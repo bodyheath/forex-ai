@@ -1,12 +1,15 @@
 PAIR: NZD/CHF
-DIRECTION: NEUTRAL
-CONFIDENCE: 3/10
-TECHNICAL_SCORE: 3/10
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
 FUNDAMENTAL_SCORE: 5/10
 SENTIMENT_SCORE: 5/10
-POSITIONING_SCORE: 4/10
+POSITIONING_SCORE: 5/10
 MACRO_SCORE: 5/10
 DIVERGENCE: NONE
 OSCILLATOR_CONFLUENCE: NONE
-KEY_THESIS: Pin bar at key resistance level on D1 uptrend structure conflicts with RSI neutral (49.1) and 4H range-bound consolidation; MTF agreement failure (W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL vs M:BUY) blocks trade signal.
-RISK_FACTORS: [1] MTF misalignment — weekly, daily, and 4H all neutral while monthly bullish creates directional ambiguity; price at FIB 50% resistance (0.46332, 4p away) with no oscillator confirmation (OSC:NONE, stoch_k=48.9 mid-range). [
+KEY_THESIS: Price at 50% Fib support with golden-cross structure on D1, but MTF misalignment (W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL) and neutral oscillators prevent conviction trade.
+RISK_FACTORS: [1] MTF weekly + daily both neutral — no dual timeframe confirmation (MTF rule: conf=0/3 disqualifies TRADE_THIS); [2] OSC=NONE (no oscillator confluence), RSI=50.7 (mid-neutral zone), and ribbon only 3/5 aligned signal weakening trend momentum.
+TRADE_THIS: NO
+
+**Rationale:**

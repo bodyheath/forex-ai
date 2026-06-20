@@ -1,13 +1,19 @@
-```
 PAIR: AUD/CHF
 DIRECTION: SELL
-CONFIDENCE: 5/10
+CONFIDENCE: 6/10
 TECHNICAL_SCORE: 5/10
-FUNDAMENTAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
 SENTIMENT_SCORE: 5/10
-POSITIONING_SCORE: 4/10
+POSITIONING_SCORE: 5/10
 MACRO_SCORE: 5/10
 DIVERGENCE: NONE
 OSCILLATOR_CONFLUENCE: PARTIAL_SELL
-KEY_THESIS: D1 overbought (RSI 61.5, MACD minimal positive), 4H RSI severely overbought (72.0), and COT unwinding AUD longs creates sell setup, but bullish ribbon alignment and golden-cross structure conflict—reversal risk high.
-RISK_FACTORS: [1] MTF conflict: Weekly and Daily both SELL but D1 trend structure remains bullish (golden cross, price > SMA50 > SMA200, IHS pattern)—uptrend structure intact despite overbought technicals. [2] COT AUD unwinding while positioned net LONG 64%—large institutional
+ENTRY: 0.5665
+TARGET: 0.5600
+STOP_LOSS: 0.5695
+REWARD_RISK_RATIO: 2.2:1
+BEST_ENTRY_TIME: London open 18:00–20:00 NZST
+NEWS_WARNING: AUD employment data and CHF SNB commentary risk within 48h — check calendar
+KEY_THESIS: MTF unanimous SELL (M/W/D/4H all aligned) with bearish pin bar at 78.6% Fib resistance (4 pips away) and overbought stochastic (92.5) flags exhaustion, but ALIGNED_BULL ribbon fan and positive rate differential (+4.47% AUD rising vs CHF falling) create significant headwind against the sell thesis.
+RISK_FACTORS: ALIGNED_BULL EMA ribbon (5/5 fan) is a powerful trend-continuation signal directly conflicting with the SELL — early capitulation above 0.5695 invalidates setup entirely. Fundamental backdrop (AUD rising rates, CHF falling rates) and oil at 84.7 (risk-on) favour AUD strength, meaning any broad risk-on session could accelerate a break higher through resistance.
+TRADE_THIS: NO
