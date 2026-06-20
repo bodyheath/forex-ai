@@ -4183,6 +4183,73 @@ def _send_telegram_summary(
         except Exception:
             pass
 
+        # RSI divergence — +1.0 regular (reversal), +0.5 hidden (continuation)
+        _div_line = None
+        _div_type_tb = "NONE"
+        try:
+            from src import technical as _tech_div
+            if pair not in _rsi_div_cache:
+                _rsi_div_cache[pair] = _tech_div.get_rsi_divergence(pair)
+            _div = _rsi_div_cache.get(pair, {})
+
+            if direction == "BUY":
+                _div_type_tb = _div.get("low_divergence", "NONE")
+                _div_det     = _div.get("low_details") or {}
+            else:
+                _div_type_tb = _div.get("high_divergence", "NONE")
+                _div_det     = _div.get("high_details") or {}
+
+            _div_boost = (
+                1.0 if _div_type_tb in ("BULLISH", "BEARISH") else
+                0.5 if _div_type_tb in ("HIDDEN_BULLISH", "HIDDEN_BEARISH") else
+                0.0
+            )
+            if _div_boost and _div_det:
+                try:
+                    _div_new = max(1.0, min(10.0, float(_conf_display) + _div_boost))
+                    _conf_display = (
+                        str(int(_div_new)) if _div_new == int(_div_new)
+                        else f"{_div_new:.1f}"
+                    )
+                except (TypeError, ValueError):
+                    pass
+                _div_pl = _fmt_price(_div_det.get("price_level", 0))
+                _div_rl = _div_det.get("rsi_level", 0)
+                if _div_type_tb == "BULLISH":
+                    _div_line = (
+                        f"📊 RSI divergence confirmed: Price made a lower low at "
+                        f"{_div_pl} but RSI made a higher low at {_div_rl} — "
+                        f"bullish momentum divergence — historically one of the most "
+                        f"reliable reversal signals — confidence boosted by 1"
+                    )
+                elif _div_type_tb == "BEARISH":
+                    _div_line = (
+                        f"📊 RSI divergence confirmed: Price made a higher high at "
+                        f"{_div_pl} but RSI made a lower high at {_div_rl} — "
+                        f"bearish momentum divergence — historically one of the most "
+                        f"reliable reversal signals — confidence boosted by 1"
+                    )
+                elif _div_type_tb == "HIDDEN_BULLISH":
+                    _div_line = (
+                        f"📊 RSI divergence confirmed: Price made a higher low at "
+                        f"{_div_pl} but RSI made a lower low at {_div_rl} — "
+                        f"hidden bullish divergence — confirms uptrend continuation — "
+                        f"confidence boosted by 0.5"
+                    )
+                else:  # HIDDEN_BEARISH
+                    _div_line = (
+                        f"📊 RSI divergence confirmed: Price made a lower high at "
+                        f"{_div_pl} but RSI made a higher high at {_div_rl} — "
+                        f"hidden bearish divergence — confirms downtrend continuation — "
+                        f"confidence boosted by 0.5"
+                    )
+            else:
+                _div_line = (
+                    "📊 RSI divergence: none detected — standard RSI signal only"
+                )
+        except Exception:
+            pass
+
         _qg_tb = _quality_grades.get(pair, _trade_quality_grade(r))
         _tb_grade = (_qg_tb or {}).get("grade", "B")
 
