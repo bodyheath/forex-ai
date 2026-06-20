@@ -5166,9 +5166,6 @@ def _send_telegram_summary(
 
                 # Load all main fund trades for stats (YES rows only — not analysis sequence IDs)
                 _raw_fund_all = list(_trk_fund.load())
-                _tt_vals = sorted({str(r.get("trade_this", "")) for r in _raw_fund_all})
-                _yes_raw_count = sum(1 for r in _raw_fund_all if str(r.get("trade_this","")).strip().upper() == "YES")
-                print(f"[DEBUG FUND] raw rows={len(_raw_fund_all)} · trade_this unique values (all rows): {_tt_vals} · YES count: {_yes_raw_count}", file=sys.stderr)
                 _all_fund_t = [r for r in _raw_fund_all if str(r.get("trade_this", "")).strip().upper() == "YES"]
                 # Deduplicate: keep only the latest row per pair+direction (prevents multi-scan double counting)
                 _seen_ft: dict = {}
@@ -5178,7 +5175,6 @@ def _send_telegram_summary(
                         _fkey = (_fr.get("pair","").upper(), (_fr.get("direction") or "").upper(), "OPEN")
                     _seen_ft[_fkey] = _fr
                 _all_fund_t = list(_seen_ft.values())
-                print(f"[DEBUG FUND] after YES filter+dedup: {len(_all_fund_t)} fund trades", file=sys.stderr)
                 _open_ft    = [r for r in _all_fund_t if r.get("status") == "OPEN"]
                 _closed_ft  = [r for r in _all_fund_t
                                if r.get("status") in ("WIN","LOSS","BREAKEVEN","EXPIRED")]
