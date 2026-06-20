@@ -904,10 +904,22 @@ def run(log=print) -> dict:
         if price is None:
             return
 
-        # Duplicate prevention: log if already at max milestone
-        if str(row.get("t3_hit", "")).upper() == "TRUE":
+        # Fast-path: all cascade targets already recorded in CSV — nothing to do
+        if _is_true(row.get("t3_hit")):
             log(f"  Monitor: {pair} #{row.get('id')} all targets already recorded — skipping")
             return
+
+        # Check milestone log for any levels already sent, log them for each hit level
+        for _chk_lvl in ("T1", "T2", "T3"):
+            _field_map = {"T1": "t1_hit", "T2": "t2_hit", "T3": "t3_hit"}
+            if _is_true(row.get(_field_map[_chk_lvl])):
+                _prev = _check_milestone_sent(pair, _chk_lvl)
+                if not _prev:
+                    pass   # already in CSV but not in dedup log — log it now
+                    _record_milestone_sent(
+                        pair, _chk_lvl, int(row.get("id", 0)),
+                        trade_type="fund" if is_fund else "research",
+                    )
 
         # Detect milestones using candle data (HOT/WARM) or spot price (COLD)
         if candles:
@@ -917,6 +929,26 @@ def run(log=print) -> dict:
 
         if not milestones:
             return
+
+        # Pre-filter milestones that were already sent via the dedup log.
+        # The _apply_*_milestones functions do the same check, but doing it here
+        # provides an early log line before any CSV writes happen.
+        _dedup_filtered = []
+        for _m in milestones:
+            _lvl = _m["level"]
+            if _lvl in ("T1", "T2", "T3"):
+                _prev_ts = _check_milestone_sent(pair, _lvl)
+                if _prev_ts:
+                    log(
+                        f"  Monitor: {pair} #{row.get('id')} {_lvl} already recorded — "
+                        f"skipping duplicate — no Telegram sent (last sent {_prev_ts})"
+                    )
+                    continue
+            _dedup_filtered.append(_m)
+
+        if not _dedup_filtered:
+            return
+        milestones = _dedup_filtered
 
         # Apply to appropriate tracker
         if is_fund:
