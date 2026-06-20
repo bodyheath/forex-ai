@@ -6679,11 +6679,22 @@ def run() -> int:
         # 2. Smart pair selection
         from src import threshold_manager as _thresh_mgr
         _trade_conf   = _thresh_mgr.get_confidence_threshold()
-        # Cap pair count at 15 if near the 800-call daily limit
+        # Cap pair count based on daily API usage
         _at_td_limit = _twelvedata_call_limit_reached()
-        _top_n     = 15 if _at_td_limit else (25 if scan_mode == "full" else _SCAN_TOP_N)
-        # 6am: 25 deep + 15 research sweep = 40; afternoon: 20 deep + 5 sweep = 25
-        _td_cap    = 30 if _at_td_limit else (40 if scan_mode == "full" else 25)
+        if scan_mode != "full" and _td_used_start > 400:
+            # Afternoon scan with >400 calls: preserve the daily limit
+            _top_n  = 10
+            _td_cap = 15
+            _log_line(logf,
+                f"⚠️ Afternoon scan with {_td_used_start} TD calls used — "
+                f"reducing pair count to 10 to preserve daily limit")
+        elif _at_td_limit:
+            _top_n  = 15
+            _td_cap = 30
+        else:
+            _top_n  = 25 if scan_mode == "full" else _SCAN_TOP_N
+            # 6am: 25 deep + 15 research sweep = 40; afternoon: 20 deep + 5 sweep = 25
+            _td_cap = 40 if scan_mode == "full" else 25
         # Sonnet threshold equals trade threshold so every potential TRADE_THIS YES
         # pair gets entry/stop/target — essential when threshold is 6 (data collection).
         sonnet_thresh = _trade_conf
