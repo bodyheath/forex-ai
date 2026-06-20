@@ -7752,6 +7752,69 @@ def run() -> int:
                 except Exception:
                     pass
 
+                # Pre-trade quality checklist score — ML feature
+                try:
+                    _rt_dir_cl   = _rp.get("direction", "").upper()
+                    # 1. Monthly trend
+                    _cl_rt_mt    = (_extra_rt.get("monthly_trend_aligned", 0.5) == 1)
+                    # 2. Weekly trend
+                    _cl_rt_wk    = (r_result.get("bundle", {}).get("mtf", {})
+                                    .get("signals", {}).get("weekly", "NEUTRAL") == _rt_dir_cl)
+                    # 3. HHHL
+                    _cl_rt_hhhl  = (_extra_rt.get("hhhl_aligned", 0.5) == 1.0)
+                    # 4. Fibonacci
+                    _cl_rt_fib   = bool((_qg_rt or {}).get("fib_near", False))
+                    # 5. RSI divergence
+                    _cl_rt_div   = _extra_rt.get("divergence_type", "NONE") not in ("NONE", None, "")
+                    # 6. Currency strength double-aligned
+                    _cl_rt_cs    = False
+                    try:
+                        from src import currency_strength as _cs_cl_rt
+                        _rt_pcl = r_result["pair"].split("/")
+                        if len(_rt_pcl) == 2 and _ccy_strength:
+                            _cl_rt_cs_boost, _ = _cs_cl_rt.alignment_note(
+                                _rt_pcl[0], _rt_pcl[1], _rt_dir_cl, _ccy_strength
+                            )
+                            _cl_rt_cs = bool(_cl_rt_cs_boost)
+                    except Exception:
+                        pass
+                    # 7. COT institutional aligned
+                    _cl_rt_cot_b   = (r_result.get("bundle", {}).get("positioning", {})
+                                      .get("base", {})) or {}
+                    _cl_rt_cot_dir = str(_cl_rt_cot_b.get("direction", "")).upper()
+                    _cl_rt_cot_mom = _cl_rt_cot_b.get("cot_momentum", "STABLE")
+                    _cl_rt_cot     = (
+                        (_rt_dir_cl == "BUY"  and "LONG"  in _cl_rt_cot_dir and _cl_rt_cot_mom != "REVERSING") or
+                        (_rt_dir_cl == "SELL" and "SHORT" in _cl_rt_cot_dir and _cl_rt_cot_mom != "REVERSING")
+                    )
+                    # 8. No high impact news within 24h
+                    _cl_rt_no_news = True
+                    try:
+                        from src import economic_calendar as _ec_cl_rt
+                        _cl_rt_no_news = not bool(
+                            _ec_cl_rt.events_for_pair(r_result["pair"], hours=24)
+                        )
+                    except Exception:
+                        pass
+                    # 9. R:R >= 2.0
+                    _cl_rt_rr = False
+                    try:
+                        _rt_e_cl = float(_rp.get("entry") or 0)
+                        _rt_s_cl = float(_rp.get("stop_loss") or 0)
+                        _rt_t_cl = float(_rp.get("target") or 0)
+                        if _rt_e_cl and _rt_s_cl and abs(_rt_e_cl - _rt_s_cl) > 0:
+                            _cl_rt_rr = (abs(_rt_t_cl - _rt_e_cl) / abs(_rt_e_cl - _rt_s_cl) >= 2.0)
+                    except (TypeError, ValueError, ZeroDivisionError):
+                        pass
+                    # 10. Kill zone
+                    _cl_rt_kz    = (_extra_rt.get("kill_zone_entry", "OUTSIDE") != "OUTSIDE")
+                    _extra_rt["checklist_score"] = sum(1 for c in [
+                        _cl_rt_mt, _cl_rt_wk, _cl_rt_hhhl, _cl_rt_fib, _cl_rt_div,
+                        _cl_rt_cs, _cl_rt_cot, _cl_rt_no_news, _cl_rt_rr, _cl_rt_kz,
+                    ] if c)
+                except Exception:
+                    pass
+
                 # Check for inverse pair conflict — BLOCK research trade if inverse already open
                 _rt_inv_blocked = False
                 try:
