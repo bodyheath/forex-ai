@@ -1350,3 +1350,156 @@ def get_market_structure(pair: str) -> dict:
         "break_level":  break_level,
         "latest_close": latest_close,
     }
+
+
+def get_rsi_divergence(pair: str) -> dict:
+    """Detect RSI divergence from daily OHLCV data.
+
+    Computes RSI-14 (Wilder's smoothing) over the most recent 150 daily
+    candles and identifies 3-bar pivot swing highs and lows.  Compares
+    the last two swings of each type to classify divergence.
+
+    Low-based (swing lows):
+      BULLISH        — price lower low  + RSI higher low  (reversal signal)
+      HIDDEN_BULLISH — price higher low + RSI lower low   (continuation signal)
+
+    High-based (swing highs):
+      BEARISH        — price higher high + RSI lower high  (reversal signal)
+      HIDDEN_BEARISH — price lower high  + RSI higher high (continuation signal)
+
+    Returns:
+        {
+          "low_divergence":  "BULLISH" | "HIDDEN_BULLISH" | "NONE",
+          "high_divergence": "BEARISH" | "HIDDEN_BEARISH" | "NONE",
+          "low_details":  {"price_level", "rsi_level", "prev_price", "prev_rsi"} | None,
+          "high_details": same structure | None,
+        }
+    """
+    _neutral = {
+        "low_divergence":  "NONE",
+        "high_divergence": "NONE",
+        "low_details":     None,
+        "high_details":    None,
+    }
+
+    cached = cache.get(f"TD:{pair}:1day:400", ttl_hours=24.0)
+    if not isinstance(cached, dict) or not cached.get("values"):
+        return _neutral
+
+    raw = (cached["values"] or [])[:150]
+    if len(raw) < 40:
+        return _neutral
+
+    # Reverse to chronological order (oldest first)
+    arr = list(reversed(raw))
+
+    closes: list = []
+    highs:  list = []
+    lows:   list = []
+    for v in arr:
+        try:
+            closes.append(float(v["close"]))
+            highs.append(float(v["high"]))
+            lows.append(float(v["low"]))
+        except (KeyError, TypeError, ValueError):
+            pass
+
+    n = len(closes)
+    if n < 40:
+        return _neutral
+
+    # ── RSI-14 (Wilder's smoothing) ──────────────────────────────────────────
+    RSI_PERIOD = 14
+    diffs  = [closes[i] - closes[i - 1] for i in range(1, n)]
+    gains  = [max(d, 0.0) for d in diffs]
+    losses = [max(-d, 0.0) for d in diffs]
+
+    avg_gain = sum(gains[:RSI_PERIOD]) / RSI_PERIOD
+    avg_loss = sum(losses[:RSI_PERIOD]) / RSI_PERIOD
+
+    rsi_vals = [float('nan')] * n
+
+    def _rsi_from_avgs(ag, al):
+        if al > 0:
+            return 100.0 - 100.0 / (1.0 + ag / al)
+        return 100.0 if ag > 0 else 50.0
+
+    rsi_vals[RSI_PERIOD] = _rsi_from_avgs(avg_gain, avg_loss)
+
+    for i in range(RSI_PERIOD + 1, n):
+        g = gains[i - 1]
+        l = losses[i - 1]
+        avg_gain = (avg_gain * (RSI_PERIOD - 1) + g) / RSI_PERIOD
+        avg_loss = (avg_loss * (RSI_PERIOD - 1) + l) / RSI_PERIOD
+        rsi_vals[i] = _rsi_from_avgs(avg_gain, avg_loss)
+
+    # ── 3-bar pivot swing detection ───────────────────────────────────────────
+    SWING = 3
+    swing_highs: list = []   # (high_price, rsi)
+    swing_lows:  list = []   # (low_price,  rsi)
+
+    for i in range(SWING, n - SWING):
+        rv = rsi_vals[i]
+        if rv != rv:          # NaN: RSI not yet warmed up
+            continue
+        h = highs[i]
+        lo = lows[i]
+        if (all(h  > highs[i - k] for k in range(1, SWING + 1)) and
+                all(h  > highs[i + k] for k in range(1, SWING + 1))):
+            swing_highs.append((h, rv))
+        if (all(lo < lows[i - k]  for k in range(1, SWING + 1)) and
+                all(lo < lows[i + k]  for k in range(1, SWING + 1))):
+            swing_lows.append((lo, rv))
+
+    # ── Low-based divergence ──────────────────────────────────────────────────
+    low_div     = "NONE"
+    low_details = None
+    if len(swing_lows) >= 2:
+        sl_prev = swing_lows[-2]    # older swing low
+        sl_curr = swing_lows[-1]    # more recent swing low
+        p_ll = sl_curr[0] < sl_prev[0]   # price lower low
+        r_hl = sl_curr[1] > sl_prev[1]   # RSI higher low
+        p_hl = sl_curr[0] > sl_prev[0]   # price higher low
+        r_ll = sl_curr[1] < sl_prev[1]   # RSI lower low
+        if p_ll and r_hl:
+            low_div = "BULLISH"
+            low_details = {
+                "price_level": sl_curr[0], "rsi_level": round(sl_curr[1], 1),
+                "prev_price":  sl_prev[0], "prev_rsi":  round(sl_prev[1], 1),
+            }
+        elif p_hl and r_ll:
+            low_div = "HIDDEN_BULLISH"
+            low_details = {
+                "price_level": sl_curr[0], "rsi_level": round(sl_curr[1], 1),
+                "prev_price":  sl_prev[0], "prev_rsi":  round(sl_prev[1], 1),
+            }
+
+    # ── High-based divergence ─────────────────────────────────────────────────
+    high_div     = "NONE"
+    high_details = None
+    if len(swing_highs) >= 2:
+        sh_prev = swing_highs[-2]
+        sh_curr = swing_highs[-1]
+        p_hh = sh_curr[0] > sh_prev[0]   # price higher high
+        r_lh = sh_curr[1] < sh_prev[1]   # RSI lower high
+        p_lh = sh_curr[0] < sh_prev[0]   # price lower high
+        r_hh = sh_curr[1] > sh_prev[1]   # RSI higher high
+        if p_hh and r_lh:
+            high_div = "BEARISH"
+            high_details = {
+                "price_level": sh_curr[0], "rsi_level": round(sh_curr[1], 1),
+                "prev_price":  sh_prev[0], "prev_rsi":  round(sh_prev[1], 1),
+            }
+        elif p_lh and r_hh:
+            high_div = "HIDDEN_BEARISH"
+            high_details = {
+                "price_level": sh_curr[0], "rsi_level": round(sh_curr[1], 1),
+                "prev_price":  sh_prev[0], "prev_rsi":  round(sh_prev[1], 1),
+            }
+
+    return {
+        "low_divergence":  low_div,
+        "high_divergence": high_div,
+        "low_details":     low_details,
+        "high_details":    high_details,
+    }
