@@ -81,6 +81,8 @@ FEATURE_COLS = [
     "hhhl_aligned",             # 1=structure confirms direction, 0=broken, 0.5=no data
     # ── Kill zone timing ───────────────────────────────────────────────────
     "kill_zone_entry",          # numeric encoding: OVERLAP=5, LONDON_CLOSE=4, NEW_YORK=3, LONDON=2, TOKYO=1, OUTSIDE=0
+    # ── Market structure break ─────────────────────────────────────────────
+    "market_structure_break",   # BULLISH_BREAK=1, CONTINUATION=0, BEARISH_BREAK=-1
 ]
 
 
