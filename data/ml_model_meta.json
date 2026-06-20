@@ -1,10 +1,10 @@
 {
-  "trained_at": "2026-06-20T16:19:50.403393",
+  "trained_at": "2026-06-20T16:29:00.380860",
   "model_ready": true,
   "n_trades": 111,
   "win_rate": 0.216,
-  "roc_auc": 0.678,
-  "roc_auc_std": 0.121,
+  "roc_auc": 0.724,
+  "roc_auc_std": 0.108,
   "model_type": "GradientBoosting",
   "feature_cols": [
     "confidence",
@@ -64,18 +64,18 @@
     "atr_expanding"
   ],
   "importances": {
-    "confidence": 0.0061,
-    "tech_score": 0.1155,
-    "fund_score": 0.1778,
-    "sent_score": 0.1207,
-    "pos_score": 0.0082,
-    "macro_score": 0.0128,
-    "rsi14": 0.0871,
-    "macd_signal": 0.0993,
-    "atr_pct": 0.297,
-    "reward_risk": 0.0,
-    "direction_buy": 0.027,
-    "mtf_count": 0.0485,
+    "confidence": 0.0033,
+    "tech_score": 0.0606,
+    "fund_score": 0.1696,
+    "sent_score": 0.1512,
+    "pos_score": 0.0148,
+    "macro_score": 0.0057,
+    "rsi14": 0.1365,
+    "macd_signal": 0.0238,
+    "atr_pct": 0.2806,
+    "reward_risk": 0.0102,
+    "direction_buy": 0.0377,
+    "mtf_count": 0.1061,
     "ribbon_aligned": 0.0,
     "month_sin": 0.0,
     "month_cos": 0.0,
@@ -124,13 +124,13 @@
   "n_losses_training": 87,
   "partial_wins_as_wins": true,
   "class_weights_applied": true,
-  "prediction_loss_pct": 60,
+  "prediction_loss_pct": 62,
   "is_biased": false,
   "min_samples_enforced": 15,
   "complexity_penalty": true,
-  "temporal_holdout_auc": 0.545,
-  "overfit_gap": 0.133,
-  "is_healthy": false,
+  "temporal_holdout_auc": 0.765,
+  "overfit_gap": -0.041,
+  "is_healthy": true,
   "period_win_rates": [
     0.297,
     0.243,
@@ -142,6 +142,19 @@
       "trained_at": "2026-06-20",
       "roc_auc": 0.678,
       "n_trades": 111
+    },
+    {
+      "trained_at": "2026-06-20",
+      "roc_auc": 0.724,
+      "n_trades": 111
     }
-  ]
+  ],
+  "cv_fold_scores": [
+    0.806,
+    0.694,
+    0.888,
+    0.612,
+    0.618
+  ],
+  "n_consecutive_reliable": 1
 }
