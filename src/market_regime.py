@@ -1,25 +1,33 @@
-"""Global market regime detector.
+"""Global market regime detector — single source of truth for trading conditions.
 
 Classifies the current macro environment into one of four regimes using VIX,
-bond yields, gold (XAU/USD), and the yield curve:
+bond yields, gold (XAU/USD), and the yield curve.  Every regime carries its own
+confidence threshold and conditions-score cap so the trading conditions score is
+always consistent with the regime — no more contradictions.
 
-  trending_risk_on   — low VIX, risk appetite; favour AUD/NZD/CAD
-  trending_risk_off  — elevated VIX, flight to safety; favour JPY/CHF/USD
-  ranging_low_vol    — calm but directionless; favour mean-reversion setups
-  ranging_high_vol   — chaotic; reduce position sizes 50%, raise conf to 8
+Regimes
+-------
+  trending_risk_on   — low VIX, risk appetite; favour AUD/NZD/CAD; threshold 5.5
+  trending_risk_off  — elevated VIX, flight to safety; favour JPY/CHF/USD; threshold 6
+  ranging_low_vol    — calm but directionless; mean-reversion; threshold 7; cap 6/10
+  ranging_high_vol   — chaotic; position sizes −50%; threshold 8; cap 4/10
 
 Public API
 ----------
 detect(macro_signals=None) -> dict
-    Compute and return the global regime. Caches result for 2 hours.
-    macro_signals: optional pre-fetched dict from macro.analyse()["signals"].
-    When omitted, fetches FRED data independently (FRED caches its own calls).
+    Compute and return the global regime.  Caches result for 2 hours.
 
 regime_currency_bonus(regime, base, quote) -> float
-    Return selector score bonus (0–8 pts) for a pair aligned with the regime.
+    Pair-selection score bonus (0–12 pts) for alignment with the regime.
+
+regime_display_lines(regime_data) -> list[str]
+    Plain-English Telegram lines for the 6am message (regime + system message).
+
+conditions_telegram_line(regime_data, conditions_score) -> str
+    Single-line conditions summary for intraday scans.
 
 telegram_line(regime_data) -> str
-    Return the plain-English Telegram display line for the 6am message.
+    Legacy single-line regime label (backward-compat).
 """
 
 import requests
@@ -37,54 +45,86 @@ _RISK_OFF_CCYS = {"JPY", "CHF", "USD"}
 # ── Regime metadata ────────────────────────────────────────────────────────────
 REGIMES = {
     "trending_risk_on": {
-        "label":         "Risk-ON",
-        "emoji":         "🟢",
-        "description":   (
+        "label":           "Trending — Risk On",
+        "emoji":           "🟢",
+        "description":     (
             "investors are confident and taking risks. "
             "Currencies that pay higher interest rates like AUD and NZD "
             "tend to do well in this environment."
         ),
-        "favour_ccys":   {"AUD", "NZD", "CAD"},
-        "avoid_ccys":    {"JPY", "CHF"},
-        "conf_override": None,
-        "size_mult":     1.0,
+        "favour_ccys":     {"AUD", "NZD", "CAD"},
+        "avoid_ccys":      {"JPY", "CHF"},
+        # Threshold and conditions rules — regime is the single source of truth
+        "conf_threshold":  5.5,   # lower bar — more opportunities in calm markets
+        "conditions_cap":  9,     # conditions can reach 9/10 in ideal risk-on
+        "threshold_reason": "risk-on environment — threshold lowered to capture opportunities",
+        "system_message":   (
+            "The system is running with a lower confidence threshold today — "
+            "more opportunities may be flagged in risk-on conditions."
+        ),
+        # Legacy fields
+        "conf_override":   None,
+        "size_mult":       1.0,
     },
     "trending_risk_off": {
-        "label":         "Risk-OFF",
-        "emoji":         "🔴",
-        "description":   (
+        "label":           "Trending — Risk Off",
+        "emoji":           "🔴",
+        "description":     (
             "investors are cautious and moving to safe havens. "
             "JPY, CHF and USD tend to strengthen in this environment."
         ),
-        "favour_ccys":   {"JPY", "CHF", "USD"},
-        "avoid_ccys":    {"AUD", "NZD"},
-        "conf_override": None,
-        "size_mult":     1.0,
+        "favour_ccys":     {"JPY", "CHF", "USD"},
+        "avoid_ccys":      {"AUD", "NZD"},
+        "conf_threshold":  6.0,   # standard bar — be selective
+        "conditions_cap":  6,     # max 6/10 — markets are stressed
+        "threshold_reason": "risk-off environment — standard threshold maintained",
+        "system_message":   (
+            "The system is selective today — "
+            "safe haven and counter-trend setups are favoured — "
+            "AUD and NZD signals should be treated with extra caution."
+        ),
+        "conf_override":   None,
+        "size_mult":       1.0,
     },
     "ranging_low_vol": {
-        "label":         "Ranging — Low Volatility",
-        "emoji":         "⚖️",
-        "description":   (
+        "label":           "Ranging — Low Volatility",
+        "emoji":           "⚖️",
+        "description":     (
             "markets are calm but directionless. "
             "Mean-reversion setups tend to work better than trend-following right now."
         ),
-        "favour_ccys":   set(),
-        "avoid_ccys":    set(),
-        "conf_override": None,
-        "size_mult":     1.0,
+        "favour_ccys":     set(),
+        "avoid_ccys":      set(),
+        "conf_threshold":  7.0,   # higher bar — directional trades need conviction
+        "conditions_cap":  6,     # max 6/10 — no clear direction
+        "threshold_reason": "ranging market — higher bar required for directional trades",
+        "system_message":   (
+            "The system is being more selective than usual — "
+            "only the cleanest setups will be recommended today."
+        ),
+        "conf_override":   None,
+        "size_mult":       1.0,
     },
     "ranging_high_vol": {
-        "label":         "Ranging — High Volatility",
-        "emoji":         "⚠️",
-        "description":   (
+        "label":           "Ranging — High Volatility",
+        "emoji":           "⚠️",
+        "description":     (
             "markets are chaotic with large unpredictable swings. "
             "Position sizes are automatically reduced by 50% and only "
             "the highest conviction trades are taken."
         ),
-        "favour_ccys":   set(),
-        "avoid_ccys":    set(),
-        "conf_override": 8,    # equivalent to raising threshold to 7.5+ with int confidence
-        "size_mult":     0.5,
+        "favour_ccys":     set(),
+        "avoid_ccys":      set(),
+        "conf_threshold":  8.0,   # only highest conviction — equivalent to 7.5 rounded up
+        "conditions_cap":  4,     # max 4/10 — chaotic conditions
+        "threshold_reason": "high volatility — only confidence 8+ trades taken, position sizes halved",
+        "system_message":   (
+            "High volatility mode active — "
+            "position sizes reduced by 50% — "
+            "only confidence 8+ setups will be shown today."
+        ),
+        "conf_override":   8,     # legacy field kept for backward-compat
+        "size_mult":       0.5,
     },
 }
 
@@ -94,7 +134,7 @@ _DEFAULT_REGIME = "ranging_low_vol"
 # ── Gold via Twelve Data ───────────────────────────────────────────────────────
 
 def _fetch_gold_change_pct():
-    """5-day XAU/USD % change from Twelve Data. Returns None on any failure."""
+    """5-day XAU/USD % change from Twelve Data.  Returns None on any failure."""
     if not config.TWELVE_DATA_KEY:
         return None
     cached = cache.get("REGIME:gold_5d", ttl_hours=3.0)
@@ -132,7 +172,6 @@ def _classify(vix, vix_trend, yield_curve, gold_5d_pct):
     sigs     = []
 
     # VIX level — the primary signal
-    # 16-20 is the neutral band: historically normal, no directional signal alone.
     if vix is not None:
         if vix < 13:
             risk_on += 3
@@ -215,9 +254,10 @@ def detect(macro_signals: dict = None) -> dict:
     macro_signals: dict from macro.analyse()["signals"]. If None, fetches fresh.
     Caches result for 2 hours so all callers in a run share the same regime.
 
-    Returns dict: regime, label, emoji, description, favour_ccys (list),
-    avoid_ccys (list), conf_override (int|None), size_mult (float),
-    vix, yield_curve, gold_5d_pct, signal_lines (list[str]),
+    Returns dict with: regime, label, emoji, description, favour_ccys (list),
+    avoid_ccys (list), conf_override (int|None), conf_threshold (float),
+    conditions_cap (int), threshold_reason (str), system_message (str),
+    size_mult (float), vix, yield_curve, gold_5d_pct, signal_lines (list[str]),
     risk_on_score, risk_off_score.
     """
     cached = cache.get(_CACHE_KEY, ttl_hours=_CACHE_TTL)
@@ -231,8 +271,8 @@ def detect(macro_signals: dict = None) -> dict:
         except Exception:
             macro_signals = {}
 
-    vix        = None
-    vix_trend  = None
+    vix         = None
+    vix_trend   = None
     yield_curve = None
 
     try:
@@ -259,31 +299,37 @@ def detect(macro_signals: dict = None) -> dict:
     info = REGIMES.get(regime, REGIMES[_DEFAULT_REGIME])
 
     result = {
-        "regime":         regime,
-        "label":          info["label"],
-        "emoji":          info["emoji"],
-        "description":    info["description"],
-        "favour_ccys":    sorted(info["favour_ccys"]),   # list for JSON cache
-        "avoid_ccys":     sorted(info["avoid_ccys"]),    # list for JSON cache
-        "conf_override":  info["conf_override"],
-        "size_mult":      info["size_mult"],
-        "vix":            vix,
-        "yield_curve":    yield_curve,
-        "gold_5d_pct":    gold_5d_pct,
-        "signal_lines":   signal_lines,
-        "risk_on_score":  risk_on,
-        "risk_off_score": risk_off,
+        "regime":           regime,
+        "label":            info["label"],
+        "emoji":            info["emoji"],
+        "description":      info["description"],
+        "favour_ccys":      sorted(info["favour_ccys"]),
+        "avoid_ccys":       sorted(info["avoid_ccys"]),
+        # Threshold and conditions (single source of truth)
+        "conf_threshold":   info["conf_threshold"],
+        "conditions_cap":   info["conditions_cap"],
+        "threshold_reason": info["threshold_reason"],
+        "system_message":   info["system_message"],
+        # Legacy
+        "conf_override":    info["conf_override"],
+        "size_mult":        info["size_mult"],
+        # Signal details
+        "vix":              vix,
+        "yield_curve":      yield_curve,
+        "gold_5d_pct":      gold_5d_pct,
+        "signal_lines":     signal_lines,
+        "risk_on_score":    risk_on,
+        "risk_off_score":   risk_off,
     }
     cache.set(_CACHE_KEY, result)
     return result
 
 
 def regime_currency_bonus(regime: str, base: str, quote: str) -> float:
-    """Selector score bonus (0–8 pts) for a pair aligned with the current regime.
+    """Pair-selection score bonus (0–12 pts) for alignment with the current regime.
 
-    At the selector stage the trade direction is unknown, so we score how many
-    regime-relevant currencies appear in the pair — pairs with both a favoured
-    and an avoided currency score highest (e.g. AUD/JPY in risk-on).
+    Pairs with both a favoured and an avoided currency score highest (e.g.
+    AUD/JPY in risk-on).  Partial alignment scores 6 pts.
     """
     info   = REGIMES.get(regime, {})
     favour = info.get("favour_ccys", set())
@@ -295,22 +341,63 @@ def regime_currency_bonus(regime: str, base: str, quote: str) -> float:
     base_fav   = base  in favour
     quote_fav  = quote in favour
     base_avoid = base  in avoid
-    quote_fav_from_avoid = quote in avoid
+    quote_avoid = quote in avoid
 
     # Strong alignment: one side favoured, other side avoided (e.g. AUD/JPY risk-on)
-    if (base_fav and quote_fav_from_avoid) or (base_avoid and quote_fav):
-        return 8.0
+    if (base_fav and quote_avoid) or (base_avoid and quote_fav):
+        return 12.0
     # Partial alignment: one side aligned
-    elif base_fav or quote_fav or base_avoid or quote_fav_from_avoid:
-        return 4.0
+    elif base_fav or quote_fav or base_avoid or quote_avoid:
+        return 6.0
     return 0.0
 
 
+def regime_display_lines(regime_data: dict) -> list:
+    """Return plain-English Telegram lines for the 6am MARKET CONTEXT section.
+
+    Returns a list of 1–2 strings:
+      [0] Primary regime line:  "📊 Market environment today: Trending — Risk On — ..."
+      [1] System message line:  "The system is running with a lower confidence threshold..."
+    """
+    if not regime_data:
+        return []
+    emoji   = regime_data.get("emoji", "📊")
+    label   = regime_data.get("label", "Unknown")
+    desc    = (regime_data.get("description") or "").strip()
+    sysmsg  = (regime_data.get("system_message") or "").strip()
+
+    # Capitalise first letter of description
+    if desc:
+        desc = desc[0].upper() + desc[1:]
+
+    lines = [f"📊 <b>Market environment today: {label}</b> — {desc}"]
+    if sysmsg:
+        lines.append(sysmsg)
+    return lines
+
+
+def conditions_telegram_line(regime_data: dict, conditions_score: int) -> str:
+    """Single-line conditions summary: regime label + score + brief description."""
+    if not regime_data:
+        return f"📊 Trading conditions: {conditions_score}/10"
+    label = regime_data.get("label", "")
+    cap   = regime_data.get("conditions_cap", 10)
+    if conditions_score >= cap:
+        quality = "at capacity for this regime"
+    elif conditions_score >= cap - 2:
+        quality = "approaching capacity"
+    else:
+        quality = "below average"
+    return f"📊 Trading conditions: {conditions_score}/10 — {label} — {quality}"
+
+
 def telegram_line(regime_data: dict) -> str:
-    """Plain-English regime line for the 6am Telegram MARKET CONTEXT section."""
+    """Legacy single-line regime label for backward-compatibility."""
     if not regime_data:
         return ""
     emoji = regime_data.get("emoji", "📊")
     label = regime_data.get("label", "Unknown")
-    desc  = regime_data.get("description", "")
-    return f"{emoji} <b>Market environment today: {label}</b> — {desc}"
+    desc  = (regime_data.get("description") or "").strip()
+    if desc:
+        desc = desc[0].upper() + desc[1:]
+    return f"{emoji} <b>Market environment: {label}</b> — {desc}"
