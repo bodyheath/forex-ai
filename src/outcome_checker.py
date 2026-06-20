@@ -257,7 +257,7 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                     cascading_total_pips_weighted=_wp,
                 )
                 _cp = _to_float(row.get("t3_price") or row.get("target"))
-                _notes_fw = f"FULL_WIN: T1(+{_casc._to_float(row.get('t1_hit_pips')) or 0:.0f}p) T2(+{_casc._to_float(row.get('t2_hit_pips')) or 0:.0f}p) T3(+{_t3p:.0f}p) = {_wp:.1f}p weighted"
+                _notes_fw = f"FULL_WIN: T1(+{_to_float(row.get('t1_hit_pips')) or 0:.0f}p) T2(+{_to_float(row.get('t2_hit_pips')) or 0:.0f}p) T3(+{_t3p:.0f}p) = {_wp:.1f}p weighted"
                 updated = tracker.update_outcome(
                     rec_id, "FULL_WIN",
                     exit_price=_cp,
