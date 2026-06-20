@@ -3396,6 +3396,7 @@ def _send_telegram_summary(
     threshold_revert_msg: str = None,
     cost_lines: list = None,
     opportunity_data: dict = None,
+    all_ohlcv_failed: bool = False,
 ) -> None:
     """Build and send Telegram notifications with format tailored to each scan mode."""
     closed_today    = closed_today    or []
