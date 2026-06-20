@@ -7056,6 +7056,18 @@ def run() -> int:
         file=sys.stderr,
     )
 
+    # ── MONITOR MODE: lightweight between-scan check — bypass guard + full pipeline
+    if scan_mode == "monitor":
+        with log_path.open("a", encoding="utf-8") as logf:
+            try:
+                from src import monitor as _mon
+                _mon.run(log=lambda m: _log_line(logf, m))
+            except Exception as _mon_exc:
+                import traceback as _mon_tb
+                _log_line(logf, f"Monitor run failed: {_mon_exc}")
+                _log_line(logf, _mon_tb.format_exc())
+        return 0
+
     # ── Duplicate-run guard ────────────────────────────────────────────────────
     # State is stored in data/run_guard.json (committed to git after every run
     # so it persists across GitHub Actions stateless runners).  The guard blocks
