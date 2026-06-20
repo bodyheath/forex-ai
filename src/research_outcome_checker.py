@@ -196,15 +196,16 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
     closed_hist = [r for r in rows if r.get("status") in research_tracker.OUTCOME_STATUSES]
 
     # ── Audit log — visible in every GitHub Actions run ──────────────────────
-    wins_hist    = sum(1 for r in closed_hist if r.get("status") == "WIN")
-    losses_hist  = sum(1 for r in closed_hist if r.get("status") == "LOSS")
-    expired_hist = sum(1 for r in closed_hist if r.get("status") == "EXPIRED")
-    partial_hist = sum(1 for r in closed_hist if r.get("status") == "PARTIAL_WIN")
+    wins_hist      = sum(1 for r in closed_hist if r.get("status") == "WIN")
+    full_win_hist  = sum(1 for r in closed_hist if r.get("status") == "FULL_WIN")
+    losses_hist    = sum(1 for r in closed_hist if r.get("status") == "LOSS")
+    expired_hist   = sum(1 for r in closed_hist if r.get("status") == "EXPIRED")
+    partial_hist   = sum(1 for r in closed_hist if r.get("status") == "PARTIAL_WIN")
     log(
         f"Research outcome audit: {len(rows)} total trades — "
         f"{len(open_trades)} OPEN · {len(no_levels)} NO_PRICE_LEVELS · "
-        f"{wins_hist} WIN · {losses_hist} LOSS · {expired_hist} EXPIRED · "
-        f"{partial_hist} PARTIAL_WIN"
+        f"{wins_hist} WIN · {full_win_hist} FULL_WIN · {losses_hist} LOSS · "
+        f"{expired_hist} EXPIRED · {partial_hist} PARTIAL_WIN"
     )
 
     if not open_trades:
