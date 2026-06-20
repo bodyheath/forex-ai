@@ -3270,7 +3270,7 @@ def _build_system_learning_report(date: str) -> list:
     except Exception:
         pass
 
-    # ── ML TRAINING DATA BALANCE ───────────────────────────────────────────────
+    # ── ML TRAINING QUALITY REPORT ─────────────────────────────────────────────
     try:
         from src import ml_predictor as _mlp_bal
         _bal_meta   = _mlp_bal._load_meta()
@@ -3279,32 +3279,69 @@ def _build_system_learning_report(date: str) -> list:
         _bal_n      = _bal_meta.get("n_trades")
         _bal_biased = _bal_meta.get("is_biased", False)
         _bal_lpct   = _bal_meta.get("prediction_loss_pct")
+        _bal_rw     = _bal_meta.get("n_real_wins")
+        _bal_synth  = _bal_meta.get("n_synthetic_wins", 0)
+        _bal_smote  = _bal_meta.get("smote_applied", False)
+        _bal_soft   = _bal_meta.get("soft_labels_applied", False)
+        _bal_nix    = _bal_meta.get("n_interaction_features", 0)
+        _bal_hold   = _bal_meta.get("temporal_holdout_auc")
+        _acc_hist   = _bal_meta.get("accuracy_history", [])
+        _prev_hold  = _acc_hist[-2].get("roc_auc") if len(_acc_hist) >= 2 else None
 
-        sec += ["", "<b>ML TRAINING DATA BALANCE</b>"]
+        sec += ["", "<b>ML TRAINING QUALITY REPORT</b>"]
         if _bal_wins is not None and _bal_loss is not None and _bal_n is not None:
-            _bal_ratio_str = f"{_bal_wins} WIN + {_bal_loss} LOSS"
             if _bal_biased:
                 sec.append(
                     f"⚠️ ML model biased — predicting LOSS on {_bal_lpct}% of training "
-                    f"examples ({_bal_ratio_str}) — class weights applied automatically"
+                    f"examples — class weights applied"
+                )
+            # SMOTE breakdown
+            if _bal_smote and _bal_rw is not None and _bal_synth:
+                _bal_r = round(_bal_loss / _bal_wins, 2) if _bal_wins > 0 else None
+                _bal_r_str = f"{_bal_r:.2f}:1" if _bal_r else "?:1"
+                sec.append(
+                    f"ML training: {_bal_rw} genuine WIN trades + {_bal_synth} SMOTE "
+                    f"synthetic WIN trades = {_bal_wins} effective WIN examples vs "
+                    f"{_bal_loss} LOSS — class ratio {_bal_r_str} — "
+                    f"model can now find genuine WIN patterns"
                 )
             else:
-                _bal_r = round(_bal_loss / _bal_wins, 1) if _bal_wins > 0 else None
+                _bal_r = round(_bal_loss / _bal_wins, 1) if _bal_wins and _bal_wins > 0 else None
+                _bal_r_str = f"{_bal_r}:1" if _bal_r else "?:1"
+                _smote_note = " — SMOTE not applied (need imbalanced-learn)" if not _bal_smote else ""
                 sec.append(
-                    f"ML training data: {_bal_n} trades used ({_bal_ratio_str}) "
-                    f"— PARTIAL_WIN counted as WIN — class weights applied"
+                    f"ML training data: {_bal_n} trades ({_bal_wins} WIN + {_bal_loss} LOSS) "
+                    f"— ratio {_bal_r_str}{_smote_note}"
                 )
-                if _bal_r is not None:
-                    if _bal_r <= 3.0:
-                        sec.append(f"✅ Class ratio {_bal_r}:1 — well balanced training data — model learning genuine patterns")
-                    else:
-                        sec.append(f"Class ratio {_bal_r}:1 — class weights correcting imbalance — model learning genuine patterns")
+            # Soft labels indicator
+            if _bal_soft:
+                sec.append(
+                    "✅ Soft label weighting active — WIN=1.0, PARTIAL_WIN=0.7, "
+                    "LOSS=1.0, EXPIRED weighted by target proximity (0.3–0.85)"
+                )
+            # Interaction features indicator
+            if _bal_nix:
+                sec.append(
+                    f"✅ {_bal_nix} feature interaction terms added — "
+                    "hhhl×monthly, rsi×fib, momentum×cot, killzone×confluence, ccy_strength×trend"
+                )
+            # Effective training set and AUC comparison
+            _prev_auc_str = f"{round(_prev_hold * 100):.0f}%" if _prev_hold else "—"
+            _curr_auc_str = f"{round(_bal_hold * 100):.0f}%" if _bal_hold else "—"
+            sec.append(
+                f"Effective training set: {_bal_n} examples — "
+                f"holdout AUC: previous {_prev_auc_str} → current {_curr_auc_str}"
+            )
+            if _bal_r and _bal_r <= 3.0:
+                sec.append("✅ Class ratio well balanced — model learning genuine patterns")
+            elif _bal_r:
+                sec.append(f"Class ratio {_bal_r_str} — class weights + SMOTE correcting imbalance")
         else:
             _raw_pw = sum(1 for r in rows if r.get("status") in ("WIN", "PARTIAL_WIN"))
             _raw_ls = sum(1 for r in rows if r.get("status") == "LOSS")
             sec.append(
                 f"Model not yet trained — {_raw_pw} WIN/PARTIAL_WIN + {_raw_ls} LOSS recorded "
-                f"(PARTIAL_WIN will count as WIN when training runs)"
+                f"— SMOTE + soft labels will activate on next training run"
             )
         any_added = True
     except Exception:
