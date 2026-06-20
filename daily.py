@@ -7498,6 +7498,16 @@ def run() -> int:
                 except Exception:
                     pass
 
+                # Kill zone at entry — used as ML feature
+                try:
+                    from src import kill_zones as _kz_rt
+                    _rt_kz_parts = r_result["pair"].split("/")
+                    if len(_rt_kz_parts) == 2:
+                        _rt_kz = _kz_rt.check(_rt_kz_parts[0], _rt_kz_parts[1])
+                        _extra_rt["kill_zone_entry"] = _rt_kz.get("zone_key") or "OUTSIDE"
+                except Exception:
+                    pass
+
                 # Check for inverse pair conflict — BLOCK research trade if inverse already open
                 _rt_inv_blocked = False
                 try:
