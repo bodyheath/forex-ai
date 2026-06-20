@@ -830,7 +830,7 @@ def _compute_rich_score(
         f8 = 0.0    # consistent loser — small penalty
     bd["8_system_performance"] = round(f8, 2)
 
-    # ── 9. Regime Alignment (max 12) ─────────────────────────────────────────
+    # ── 9. Regime Alignment (max 8) ──────────────────────────────────────────
     f9 = 0.0
     if regime:
         try:
