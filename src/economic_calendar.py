@@ -299,13 +299,14 @@ def _fetch_forex_factory():
         if len(_sample_impacts) >= 5:
             break
     if _sample_impacts:
-        print(f"[ECO-CAL] Raw impact sample values: {_sample_impacts}")
+        print(f"[ECO-CAL] Raw impact sample values: {_sample_impacts}", file=sys.stderr)
 
     # Forex Factory uses "High", "Medium", "Low" (title case) in its XML.
     # Lowercased + stripped, valid high-impact strings include "high" and "3"
-    # (some versions use numeric 3=high, 2=medium, 1=low).
-    _HIGH_IMPACTS   = {"high", "3"}
-    _MEDIUM_IMPACTS = {"medium", "2"}
+    # (some versions use numeric 3=high, 2=medium, 1=low). Extra variants for
+    # different feed versions / encoding changes.
+    _HIGH_IMPACTS   = {"high", "3", "high impact", "red", "🔴"}
+    _MEDIUM_IMPACTS = {"medium", "2", "medium impact", "orange", "🟠"}
 
     # First pass: collect HIGH-impact events
     for ev in _all_events:
