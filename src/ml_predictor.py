@@ -367,14 +367,16 @@ def train(quiet: bool = False) -> dict:
         no_cv_msg = None
 
     if n >= 50:
-        # Anti-overfitting params:
-        #   min_samples_leaf=15 — no pattern learned from < 15 examples (safeguard 1)
-        #   n_estimators=100    — fewer trees = simpler model (complexity penalty)
-        #   max_features=0.7    — random feature subsets at each split (complexity penalty)
+        # Anti-overfitting params for small dataset:
+        #   n_estimators=50     — fewer trees = simpler model (less memorisation)
+        #   max_depth=3         — shallow trees generalise better
+        #   min_samples_leaf=5  — each leaf needs 5 samples (regularisation)
+        #   subsample=0.8       — 80% of data per tree (stochastic gradient boosting)
+        #   max_features=0.7    — random feature subsets per split (decorrelation)
         # class imbalance handled via sample_weight passed to fit()
         base   = GradientBoostingClassifier(
-            n_estimators=100, max_depth=3, learning_rate=0.05,
-            min_samples_leaf=MIN_PATTERN_SAMPLES, subsample=0.8,
+            n_estimators=50, max_depth=3, learning_rate=0.05,
+            min_samples_leaf=5, subsample=0.8,
             max_features=0.7, random_state=42,
         )
         method = "isotonic"
