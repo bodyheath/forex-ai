@@ -77,6 +77,8 @@ FEATURE_COLS = [
     "quote_ccy_strength",       # -100 to +100 strength of quote currency across all pairs
     # ── Monthly trend filter ──────────────────────────────────────────────
     "monthly_trend_aligned",    # 1=aligned, 0=counter-trend, 0.5=neutral monthly trend
+    # ── HHHL trend structure filter ───────────────────────────────────────
+    "hhhl_aligned",             # 1=structure confirms direction, 0=broken, 0.5=no data
 ]
 
 
