@@ -115,6 +115,7 @@ REGIMES = {
     },
     "ranging_high_vol": {
         "label":           "Ranging — High Volatility",
+        "display_label":   "Ranging High Volatility",
         "emoji":           "⚠️",
         "description":     (
             "markets are chaotic with large unpredictable swings. "
@@ -123,13 +124,13 @@ REGIMES = {
         ),
         "favour_ccys":     set(),
         "avoid_ccys":      set(),
-        "conf_threshold":  8.0,   # only highest conviction — equivalent to 7.5 rounded up
+        "conf_threshold":  7.5,   # only highest conviction trades
         "conditions_cap":  4,     # max 4/10 — chaotic conditions
-        "threshold_reason": "high volatility — only confidence 8+ trades taken, position sizes halved",
+        "threshold_reason": "high volatility — only confidence 7.5+ trades taken, position sizes halved",
         "system_message":   (
             "High volatility mode active — "
             "position sizes reduced by 50% — "
-            "only confidence 8+ setups will be shown today."
+            "only confidence 7.5+ setups will be shown today."
         ),
         "conf_override":   8,     # legacy field kept for backward-compat
         "size_mult":       0.5,
