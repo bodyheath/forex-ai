@@ -3641,8 +3641,13 @@ def _send_telegram_summary(
             except (KeyError, TypeError):
                 pass
         _grd = _mr_scan.detect(_regime_macro_sigs or None)
-        if _grd.get("conf_override"):
-            _trade_conf_thr = max(_trade_conf_thr, _grd["conf_override"])
+        # Regime is the single source of truth for confidence threshold
+        _regime_thr = _grd.get("conf_threshold")
+        if _regime_thr is not None:
+            _trade_conf_thr = float(_regime_thr)
+        elif _grd.get("conf_override"):
+            # Legacy fallback only
+            _trade_conf_thr = max(_trade_conf_thr, float(_grd["conf_override"]))
     except Exception:
         pass
 
