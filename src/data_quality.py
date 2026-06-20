@@ -169,12 +169,26 @@ def build_scorecard(quality: dict) -> list:
         lines.append("No deep analysis run — data quality report unavailable")
         return lines
 
-    # ── Twelve Data candles ───────────────────────────────────────────────────
-    t_ok   = quality.get("tech_ok",   0)
-    t_tot  = quality.get("tech_total", n)
-    t_fail = t_tot - t_ok
-    if t_fail == 0:
+    # ── Candle data sources (Twelve Data + Yahoo Finance fallback) ───────────
+    t_ok    = quality.get("tech_ok",    0)
+    t_td_ok = quality.get("tech_td_ok", 0)
+    t_yf_ok = quality.get("tech_yf_ok", 0)
+    t_tot   = quality.get("tech_total",  n)
+    t_fail  = t_tot - t_ok
+
+    # When both sources contributed, show a split breakdown line.
+    if t_td_ok > 0 and t_yf_ok > 0:
+        lines.append(
+            f"✅ Twelve Data candles: {t_td_ok}/{t_tot} pairs (fresh) · "
+            f"✅ Yahoo Finance fallback: {t_yf_ok}/{t_tot} pairs (fresh) — "
+            f"{t_ok}/{t_tot} total coverage"
+        )
+    elif t_fail == 0:
         lines.append(f"✅ Twelve Data candles: {t_ok}/{t_tot} pairs fetched successfully")
+    elif t_yf_ok > 0 and t_td_ok == 0:
+        lines.append(
+            f"✅ Yahoo Finance candles: {t_yf_ok}/{t_tot} pairs (Twelve Data rate-limited this scan)"
+        )
     elif t_fail <= 3:
         lines.append(
             f"⚠️ Twelve Data candles: {t_ok}/{t_tot} pairs — "
