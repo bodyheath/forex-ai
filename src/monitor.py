@@ -817,12 +817,14 @@ def run(log=print) -> dict:
         log(f"Monitor: failed to load trade data — {exc}")
         result["skipped_reason"] = "load_error"
         _write_monitor_log(result)
+        _release_lock()
         return result
 
     if not _fund_open and not _res_open:
         result["skipped_reason"] = "no_open_trades"
         log("Monitor: no open trades — skipping — zero API calls used.")
         _write_monitor_log(result)
+        _release_lock()
         return result
 
     result["trades_checked_fund"]     = len(_fund_open)
