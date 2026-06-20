@@ -35,14 +35,112 @@ _INTERVAL_TTL: dict = {
 # Per-run Twelve Data API call counter (cache misses only — live API calls).
 _td_calls_this_run: int = 0
 
+# Per-run Yahoo Finance call counter and set of pairs sourced from Yahoo.
+_yf_calls_this_run: int = 0
+_yf_sourced_pairs: set  = set()
+
+# Intervals where Yahoo Finance is a valid fallback (daily resolution is high quality).
+# 4h is excluded — Yahoo's intra-day data is less reliable.
+_YF_FALLBACK_INTERVALS = frozenset(("1day", "1week", "1month"))
+
+# Yahoo Finance interval codes corresponding to Twelve Data interval names.
+_YF_INTERVAL_MAP = {"1day": "1d", "1week": "1wk", "1month": "1mo"}
+
+# How far back to fetch per interval so we always get enough candles.
+_YF_PERIOD_MAP = {"1d": "5y", "1wk": "10y", "1mo": "10y"}
+
 
 def reset_call_count() -> None:
-    global _td_calls_this_run
+    global _td_calls_this_run, _yf_calls_this_run, _yf_sourced_pairs
     _td_calls_this_run = 0
+    _yf_calls_this_run = 0
+    _yf_sourced_pairs  = set()
 
 
 def get_call_count() -> int:
     return _td_calls_this_run
+
+
+def get_yahoo_call_count() -> int:
+    return _yf_calls_this_run
+
+
+def get_yahoo_sourced_pairs() -> set:
+    return set(_yf_sourced_pairs)
+
+
+def _pair_to_yahoo_symbol(pair: str) -> str:
+    """Convert 'AUD/JPY' to Yahoo Finance ticker format.
+
+    USD/XXX pairs → '{XXX}=X'  (e.g. USD/JPY → JPY=X, USD/CHF → CHF=X)
+    All others   → '{BASE}{QUOTE}=X'  (e.g. AUD/JPY → AUDJPY=X)
+    """
+    parts = pair.upper().replace(" ", "").split("/")
+    if len(parts) != 2:
+        return pair.replace("/", "") + "=X"
+    base, quote = parts
+    if base == "USD":
+        return f"{quote}=X"
+    return f"{base}{quote}=X"
+
+
+def _fetch_ohlcv_yahoo(pair: str, interval: str, outputsize: int) -> dict:
+    """Fetch OHLCV candle data from Yahoo Finance.
+
+    Returns a dict in identical format to the Twelve Data time_series response
+    so it can be passed directly to _frame_from_td() and cached under the same key.
+    """
+    import yfinance as yf  # lazy import — only loaded when actually needed
+
+    global _yf_calls_this_run
+
+    yf_interval = _YF_INTERVAL_MAP.get(interval)
+    if yf_interval is None:
+        raise ValueError(f"Yahoo Finance fallback does not support interval {interval!r}")
+
+    period  = _YF_PERIOD_MAP[yf_interval]
+    symbol  = _pair_to_yahoo_symbol(pair)
+
+    _yf_calls_this_run += 1
+    ticker = yf.Ticker(symbol)
+    df     = ticker.history(period=period, interval=yf_interval, auto_adjust=True)
+
+    if df is None or df.empty:
+        raise RuntimeError(f"Yahoo Finance: no data returned for {symbol} ({pair})")
+
+    # Normalise column names to lowercase (handles both old and new yfinance versions).
+    df.columns = [str(c).lower() for c in df.columns]
+
+    for col in ("open", "high", "low", "close"):
+        if col not in df.columns:
+            raise RuntimeError(f"Yahoo Finance: missing '{col}' column for {symbol}")
+
+    # Drop rows with any NaN in OHLC.
+    df = df[["open", "high", "low", "close"]].dropna().tail(outputsize)
+
+    if df.empty:
+        raise RuntimeError(f"Yahoo Finance: all candles NaN for {symbol}")
+
+    # Strip timezone from index so strftime works uniformly.
+    if hasattr(df.index, "tz") and df.index.tz is not None:
+        df.index = df.index.tz_localize(None)
+
+    # Build values list newest-first (matches Twelve Data format consumed by _frame_from_td).
+    values = []
+    for dt, row in df.iloc[::-1].iterrows():
+        values.append({
+            "datetime": dt.strftime("%Y-%m-%d"),
+            "open":     str(round(float(row["open"]),  6)),
+            "high":     str(round(float(row["high"]),  6)),
+            "low":      str(round(float(row["low"]),   6)),
+            "close":    str(round(float(row["close"]), 6)),
+        })
+
+    return {
+        "meta":   {"symbol": pair, "source": "Yahoo Finance"},
+        "values": values,
+        "status": "ok",
+    }
 
 
 def _td_request(symbol: str, interval: str, outputsize: int) -> dict:
