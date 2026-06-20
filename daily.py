@@ -7124,7 +7124,7 @@ def run() -> int:
                     pass
 
                 if _rt_inv_blocked:
-                    continue
+                    return False  # skip log_research_trade() — inverse already open
 
                 _rt_id = _rt.log_research_trade(
                     r_result["pair"], _rp, _rsrc, _smode,
