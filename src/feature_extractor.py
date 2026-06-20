@@ -115,6 +115,13 @@ def _encode_market_structure(ms: str) -> float:
     }.get((ms or "").upper(), 0.0)
 
 
+def _encode_divergence(div: str) -> float:
+    return {
+        "BULLISH": 2.0, "HIDDEN_BULLISH": 1.0, "NONE": 0.0,
+        "HIDDEN_BEARISH": -1.0, "BEARISH": -2.0,
+    }.get((div or "").upper(), 0.0)
+
+
 def _encode_ribbon(ribbon_state: str) -> float:
     return {
         "ALIGNED_BULL": 2.0, "PARTIAL_BULL": 1.0, "NEUTRAL": 0.0,
