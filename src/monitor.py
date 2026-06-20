@@ -327,7 +327,8 @@ def _detect_spot_milestones(row: dict, price: float, pair: str) -> tuple:
         row_state.update({"t3_hit": "TRUE", "t3_hit_price": price, "t3_hit_pips": t3p})
         milestones.append({"level": "T3", "price": price, "candle_dt": None, "pips": t3p})
     elif _casc.effective_stop_hit(row_state, price):
-        milestones.append({"level": "STOP", "price": price, "candle_dt": None, "pips": None})
+        eff = _to_float(row_state.get("effective_stop") or row_state.get("stop_loss"))
+        milestones.append({"level": "STOP", "price": eff, "candle_dt": None, "pips": None})
 
     return milestones, row_state
 
