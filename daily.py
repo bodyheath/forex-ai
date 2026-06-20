@@ -7038,7 +7038,14 @@ def run() -> int:
                 _fa_rt     = _fa_rt if isinstance(_fa_rt, dict) else {}
 
                 # Grade — recompute directly (avoids _quality_grades scope issue)
-                _grade_rt  = _trade_quality_grade(r_result).get("grade", "")
+                _qg_rt     = _trade_quality_grade(r_result)
+                _grade_rt  = _qg_rt.get("grade", "")
+
+                # Hard gate: never open research trade when ATR=0 — stop/target cannot be set
+                if _qg_rt.get("atr_zero"):
+                    _log_line(logf,
+                        f"[research] {r_result['pair']} skipped — ATR=0 — cannot set safe stop distance")
+                    return False
 
                 # Correlation agreement: count other pairs with same base CCY and direction
                 _pair_base_rt = r_result["pair"].split("/")[0].upper() if "/" in r_result["pair"] else ""
