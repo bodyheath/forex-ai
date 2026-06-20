@@ -403,11 +403,13 @@ def train(quiet: bool = False) -> dict:
 
     # ROC-AUC cross-validation (in-sample, k-fold) — skipped when min_class < 2
     roc_auc = roc_std = 0.0
+    cv_fold_scores: list = []
     if not skip_cv:
         try:
-            cv_s    = cross_val_score(model, X_s, y, cv=cv_k, scoring="roc_auc")
-            roc_auc = round(float(np.mean(cv_s)), 3)
-            roc_std = round(float(np.std(cv_s)),  3)
+            cv_s        = cross_val_score(model, X_s, y, cv=cv_k, scoring="roc_auc")
+            roc_auc     = round(float(np.mean(cv_s)), 3)
+            roc_std     = round(float(np.std(cv_s)),  3)
+            cv_fold_scores = [round(float(s), 3) for s in cv_s]
         except Exception:
             roc_auc = roc_std = 0.0
 
