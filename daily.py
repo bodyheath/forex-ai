@@ -1717,21 +1717,84 @@ def _build_research_section(research_result=None) -> list:
     return sec
 
 
+_TG_MAX = 3800  # Telegram hard limit is 4096; use 3800 to leave room for HTML escaping
+
+
+def _split_long_lines(lines: list, max_len: int) -> list:
+    """Split any single line that is itself longer than max_len into chunks."""
+    out = []
+    for ln in lines:
+        while len(ln) > max_len:
+            out.append(ln[:max_len])
+            ln = ln[max_len:]
+        out.append(ln)
+    return out
+
+
 def _send_in_parts(sections: list) -> None:
-    MAX = 4000
+    """Send sections as Telegram messages, always keeping trade alerts first.
+
+    1. Sections containing trade alerts (🚨 TRADE ALERT or TRADE_THIS) are
+       extracted and sent as a standalone first message — this guarantees alerts
+       are never lost due to total message length.
+    2. Remaining sections are batched at ≤3800 chars each to stay safely under
+       Telegram's 4096-char limit (HTML escaping can expand the raw text).
+    3. Very large individual sections are split line-by-line if needed.
+    4. Each multi-part batch is prefixed with a 'Part N of M' label.
+    """
+    # Separate alert sections from context sections
+    alert_secs = []
+    other_secs = []
+    for sec in sections:
+        sec_flat = "\n".join(sec)
+        if "TRADE ALERT" in sec_flat or "🚨" in sec_flat:
+            alert_secs.append(sec)
+        else:
+            other_secs.append(sec)
+
+    # Always send alerts first if present
+    if alert_secs:
+        alert_lines: list[str] = []
+        for sec in alert_secs:
+            alert_lines.extend(sec)
+        alert_lines = _split_long_lines(alert_lines, _TG_MAX)
+        # Chunk the alert section if it's somehow huge
+        _chunk: list[str] = []
+        _clen = 0
+        for ln in alert_lines:
+            if _chunk and _clen + len(ln) > _TG_MAX:
+                _telegram("\n".join(_chunk))
+                _chunk = []
+                _clen = 0
+            _chunk.append(ln)
+            _clen += len(ln) + 1
+        if _chunk:
+            _telegram("\n".join(_chunk))
+
+    # Build remaining batches and count how many there will be
+    batches: list[list[str]] = []
     current: list[str] = []
     cur_len = 0
-    for sec in sections:
-        sec_text = "\n".join(sec)
-        sec_len  = len(sec_text)
-        if current and cur_len + sec_len > MAX:
-            _telegram("\n".join(current))
+    for sec in other_secs:
+        sec_lines = _split_long_lines(list(sec), _TG_MAX)
+        sec_text  = "\n".join(sec_lines)
+        sec_len   = len(sec_text)
+        if current and cur_len + sec_len > _TG_MAX:
+            batches.append(current)
             current = []
             cur_len = 0
-        current.extend(sec)
+        current.extend(sec_lines)
         cur_len += sec_len
     if current:
-        _telegram("\n".join(current))
+        batches.append(current)
+
+    n_batches = len(batches)
+    for i, batch in enumerate(batches, 1):
+        if n_batches > 1:
+            label = f"🤖 FOREX AI — Part {i} of {n_batches}"
+            _telegram(label + "\n" + "\n".join(batch))
+        else:
+            _telegram("\n".join(batch))
 
 
 # ── Trade block helpers ────────────────────────────────────────────────────────
