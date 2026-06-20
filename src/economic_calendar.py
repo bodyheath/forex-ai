@@ -288,9 +288,28 @@ def _fetch_forex_factory():
     _skipped_ccy    = 0
     _skipped_dt     = 0
 
-    for ev in root.findall("event"):
+    # Log first 5 raw impact values so we can verify the actual string format
+    _all_events = root.findall("event")
+    _sample_impacts = []
+    for _ev in _all_events[:10]:
+        _iv = (_ev.findtext("impact") or "").strip()
+        if _iv and _iv not in _sample_impacts:
+            _sample_impacts.append(_iv)
+        if len(_sample_impacts) >= 5:
+            break
+    if _sample_impacts:
+        print(f"[ECO-CAL] Raw impact sample values: {_sample_impacts}")
+
+    # Forex Factory uses "High", "Medium", "Low" (title case) in its XML.
+    # Lowercased + stripped, valid high-impact strings include "high" and "3"
+    # (some versions use numeric 3=high, 2=medium, 1=low).
+    _HIGH_IMPACTS   = {"high", "3"}
+    _MEDIUM_IMPACTS = {"medium", "2"}
+
+    # First pass: collect HIGH-impact events
+    for ev in _all_events:
         impact = (ev.findtext("impact") or "").strip().lower()
-        if impact != "high":
+        if impact not in _HIGH_IMPACTS:
             _skipped_impact += 1
             continue
 
