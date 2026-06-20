@@ -21,6 +21,7 @@ import requests
 
 import config
 from src import tracker
+from src import cascade as _casc
 
 _PRICE_URL   = "https://api.twelvedata.com/price"
 _EXPIRY_DAYS = 5    # fallback; actual expiry is computed from R:R
