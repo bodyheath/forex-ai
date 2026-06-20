@@ -9,7 +9,7 @@ name: Between-Scan Monitor
 #   the 2000-minute free-tier limit.
 #
 # API estimate:
-#   Batch price: 2 calls/run · OHLCV for hot/warm: 5-10 calls/run
+#   Batch price: 2 calls/run (20/batch, up to 40 unique pairs) · OHLCV for hot/warm: 5-10 calls/run
 #   ~84-144 additional calls/day — total stays under 800/day free tier.
 
 on:
