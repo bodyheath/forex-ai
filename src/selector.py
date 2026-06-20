@@ -1346,18 +1346,22 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
                 f"(rank {_cf_rank} → forced in, total selected: {len(selected)})"
             )
 
+    _all_ohlcv_failed = len(snap_fail) > 0 and len(snap_ok) == 0
+
     if not selected:
         log("  WARNING: no price data — falling back to config.WATCHLIST.")
         return {
-            "selected":      list(config.WATCHLIST),
-            "ranked":        ranked,
-            "universe_size": universe_size,
-            "prescreened":   len(candidates),
+            "selected":        list(config.WATCHLIST),
+            "ranked":          ranked,
+            "universe_size":   universe_size,
+            "prescreened":     len(candidates),
+            "all_ohlcv_failed": _all_ohlcv_failed,
         }
 
     return {
-        "selected":      selected,
-        "ranked":        ranked,
-        "universe_size": universe_size,
-        "prescreened":   len(candidates),
+        "selected":        selected,
+        "ranked":          ranked,
+        "universe_size":   universe_size,
+        "prescreened":     len(candidates),
+        "all_ohlcv_failed": _all_ohlcv_failed,
     }
