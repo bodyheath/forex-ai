@@ -3518,6 +3518,14 @@ def _send_telegram_summary(
     if _atr_zero_pairs:
         for _azp in _atr_zero_pairs:
             print(f"[ATR BLOCK] ⚠️ {_azp} excluded — ATR calculation failed — cannot set safe stop loss distance", file=sys.stderr)
+        try:
+            _atr_alert_lines = [
+                f"⚠️ {p} excluded — ATR calculation returned zero — cannot set safe stop loss distance — pair skipped"
+                for p in _atr_zero_pairs
+            ]
+            _telegram("⚠️ ATR zero exclusions this scan:\n" + "\n".join(_atr_alert_lines))
+        except Exception:
+            pass
 
     # Extract drawdown mode early (before _risk_state is fully initialised below)
     # so it can be applied in the yes_trades filter immediately.
