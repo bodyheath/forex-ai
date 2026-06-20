@@ -5923,7 +5923,7 @@ def _send_telegram_summary(
                              "capital_protection":"⬇️","streak_protection":"⬇️",
                              "reduced":"➡️","normal":"🟢","enhanced":"⬆️"}.get(
                              _dd_mode_id if _dd_mode_id != "normal" else _rmode_id, "🟢")
-                _all_ft_id = [r for r in _trk_id.load() if r.get("trade_this") == "YES"]
+                _all_ft_id = [r for r in _trk_id.load() if str(r.get("trade_this","")).strip().upper() == "YES"]
                 _cls_ft_id = [r for r in _all_ft_id if r.get("status") in ("WIN","LOSS","BREAKEVEN","EXPIRED")]
                 _opn_ft_id = [r for r in _all_ft_id if r.get("status") == "OPEN"]
                 _w_ft_id   = [r for r in _cls_ft_id
