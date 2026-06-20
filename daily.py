@@ -3387,6 +3387,66 @@ def _build_system_learning_report(date: str) -> list:
     except Exception:
         pass
 
+    # ── CASCADING TARGET PERFORMANCE ─────────────────────────────────────────
+    try:
+        _casc_rows = [
+            r for r in rows
+            if r.get("status") in ("WIN", "FULL_WIN", "LOSS", "PARTIAL_WIN")
+            and r.get("cascading_total_pips_weighted") not in (None, "")
+        ]
+        if _casc_rows:
+            _cn_fw  = sum(1 for r in _casc_rows if r.get("status") == "FULL_WIN")
+            _cn_win = sum(1 for r in _casc_rows if r.get("status") == "WIN")
+            _cn_pw  = sum(1 for r in _casc_rows if r.get("status") == "PARTIAL_WIN")
+            _cn_ls  = sum(1 for r in _casc_rows if r.get("status") == "LOSS")
+            _cn_tot = len(_casc_rows)
+            _cn_pos = _cn_fw + _cn_win + _cn_pw
+            _casc_pips_total = sum(
+                float(r.get("cascading_total_pips_weighted") or 0)
+                for r in _casc_rows
+            )
+            _casc_wr = round(_cn_pos / _cn_tot * 100) if _cn_tot else 0
+            # Retroactive: how many old trades would have hit T1/T2?
+            _old_rows = [
+                r for r in rows
+                if r.get("status") in ("WIN", "LOSS", "PARTIAL_WIN", "EXPIRED")
+                and r.get("cascading_total_pips_weighted") in (None, "")
+                and r.get("entry") and r.get("stop_loss") and r.get("mfe_pips")
+            ]
+            _retro_t1 = _retro_t2 = 0
+            for _rr in _old_rows:
+                try:
+                    _rr_mfe = float(_rr.get("mfe_pips") or 0)
+                    _rr_e   = float(_rr.get("entry") or 0)
+                    _rr_s   = float(_rr.get("stop_loss") or 0)
+                    _rr_dir = (_rr.get("direction") or "").upper()
+                    _rr_ps  = 0.01 if "JPY" in _rr.get("pair", "") else 0.0001
+                    _rr_atr = abs(_rr_e - _rr_s) / _rr_ps  # stop distance in pips
+                    if _rr_atr > 0:
+                        if _rr_mfe >= 0.4 * _rr_atr:
+                            _retro_t1 += 1
+                        if _rr_mfe >= 0.7 * _rr_atr:
+                            _retro_t2 += 1
+                except Exception:
+                    pass
+            sec += ["", "<b>CASCADING TARGET PERFORMANCE</b>"]
+            sec.append(
+                f"Cascade-tracked trades: {_cn_tot} — "
+                f"{_cn_fw} FULL_WIN · {_cn_win} WIN · {_cn_pw} PARTIAL_WIN · {_cn_ls} LOSS "
+                f"— {_casc_wr}% profitable outcomes — {_casc_pips_total:.0f}p total (weighted)"
+            )
+            if _old_rows:
+                _r1_pct = round(_retro_t1 / len(_old_rows) * 100) if _old_rows else 0
+                _r2_pct = round(_retro_t2 / len(_old_rows) * 100) if _old_rows else 0
+                sec.append(
+                    f"Retroactive (MFE analysis): {len(_old_rows)} historical trades — "
+                    f"{_retro_t1} ({_r1_pct}%) would have banked T1 (+0.4×ATR) · "
+                    f"{_retro_t2} ({_r2_pct}%) would have reached T2 (+0.7×ATR)"
+                )
+            any_added = True
+    except Exception:
+        pass
+
     # ── 4. BEST AND WORST PAIRS ────────────────────────────────────────────────
     pair_stats: dict = {}
     for r in decisive:
