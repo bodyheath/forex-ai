@@ -4131,6 +4131,58 @@ def _send_telegram_summary(
         except Exception:
             pass
 
+        # Market structure break — +1.5 when break confirms trade direction
+        _ms_line = None
+        _ms_result_tb = "CONTINUATION"
+        try:
+            from src import technical as _tech_ms
+            if pair not in _mstruct_cache:
+                _mstruct_cache[pair] = _tech_ms.get_market_structure(pair)
+            _ms = _mstruct_cache.get(pair, {})
+            _ms_result_tb = _ms.get("result", "CONTINUATION")
+            _ms_break_lvl = _ms.get("break_level")
+            _ms_aligned   = (
+                (direction == "BUY"  and _ms_result_tb == "BULLISH_BREAK") or
+                (direction == "SELL" and _ms_result_tb == "BEARISH_BREAK")
+            )
+            if _ms_aligned and _ms_break_lvl is not None:
+                try:
+                    _ms_new = max(1.0, min(10.0, float(_conf_display) + 1.5))
+                    _conf_display = (
+                        str(int(_ms_new)) if _ms_new == int(_ms_new)
+                        else f"{_ms_new:.1f}"
+                    )
+                except (TypeError, ValueError):
+                    pass
+                _ms_lvl_fmt = _fmt_price(_ms_break_lvl)
+                if direction == "BUY":
+                    _ms_line = (
+                        f"📊 Market structure: ✅ Bullish break — price just closed "
+                        f"above the previous swing high at {_ms_lvl_fmt} — "
+                        f"this signals the downtrend has ended and confirms the BUY "
+                        f"direction — confidence boosted"
+                    )
+                else:
+                    _ms_line = (
+                        f"📊 Market structure: ✅ Bearish break — price just closed "
+                        f"below the previous swing low at {_ms_lvl_fmt} — "
+                        f"this signals the uptrend has ended and confirms the SELL "
+                        f"direction — confidence boosted"
+                    )
+            else:
+                if direction == "BUY":
+                    _ms_line = (
+                        "📊 Market structure: ➡️ Continuation — existing downtrend "
+                        "intact — no bullish structure break yet — standard confidence"
+                    )
+                else:
+                    _ms_line = (
+                        "📊 Market structure: ➡️ Continuation — existing uptrend "
+                        "intact — no bearish structure break yet — standard confidence"
+                    )
+        except Exception:
+            pass
+
         _qg_tb = _quality_grades.get(pair, _trade_quality_grade(r))
         _tb_grade = (_qg_tb or {}).get("grade", "B")
 
