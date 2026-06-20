@@ -824,6 +824,16 @@ def run(log=print) -> dict:
         _write_monitor_log(result)
         return result
 
+    # ── Startup delay — back off if another run was active in the last 5 min ─
+    if _API_USAGE.exists():
+        _secs_since_activity = time.time() - _API_USAGE.stat().st_mtime
+        if _secs_since_activity < 300:
+            log(
+                f"Monitor: recent API activity detected ({int(_secs_since_activity)}s ago) — "
+                f"waiting 90 seconds for rate limit to clear"
+            )
+            time.sleep(90)
+
     # ── Smart skip: exit immediately if no open trades ────────────────────────
     try:
         from src import tracker as _trk
