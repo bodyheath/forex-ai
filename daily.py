@@ -7123,9 +7123,16 @@ def run() -> int:
         try:
             from src import analyst as _anl, technical as _tech_mod
             run_stats = _anl.get_run_stats()
-            td_calls  = _tech_mod.get_call_count()
+            _tech_td  = _tech_mod.get_call_count()
         except Exception:
-            run_stats, td_calls = {}, 0
+            run_stats, _tech_td = {}, 0
+        # Read total daily call count from api_usage.json (includes selector OHLCV calls)
+        try:
+            _au = json.loads(_API_USAGE_FILE.read_text(encoding="utf-8")) if _API_USAGE_FILE.exists() else {}
+            from datetime import date as _date_td
+            td_calls = int(_au.get("calls", 0)) if _au.get("date") == str(_date_td.today()) else _tech_td
+        except Exception:
+            td_calls = _tech_td
 
         _log_line(logf, (
             f"[COST] Haiku in={run_stats.get('haiku_input',0)} out={run_stats.get('haiku_output',0)} · "
