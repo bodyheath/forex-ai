@@ -4049,6 +4049,64 @@ def _send_telegram_summary(
                     f"highest probability direction"
                 )
 
+        # Trend structure filter — HH/HL for BUY, LH/LL for SELL; penalty −2 if broken
+        _ts_line = None
+        _hhhl_aligned_tb = None
+        try:
+            from src import technical as _tech_ts
+            if pair not in _trend_structures:
+                _trend_structures[pair] = _tech_ts.get_trend_structure(pair)
+            _ts = _trend_structures.get(pair, {})
+            if _ts.get("status") == "ok":
+                if direction == "BUY":
+                    _ts_valid = _ts.get("buy_valid", False)
+                    _hhhl_aligned_tb = 1 if _ts_valid else 0
+                    if _ts_valid:
+                        _ts_line = (
+                            "📊 Trend structure: ✅ Higher highs and higher lows confirmed — "
+                            "uptrend intact — BUY signal valid"
+                        )
+                    else:
+                        _ts_specific = (
+                            "price is making lower lows" if _ts.get("ll") else
+                            "price is not making higher highs" if not _ts.get("hh") else
+                            "price is not making higher lows"
+                        )
+                        _ts_line = (
+                            f"⚠️ Trend structure broken — {_ts_specific} — "
+                            f"BUY signal is counter-structure — higher risk"
+                        )
+                        try:
+                            _conf_display = str(max(1, round(float(_conf_display) - 2)))
+                        except (TypeError, ValueError):
+                            pass
+                elif direction == "SELL":
+                    _ts_valid = _ts.get("sell_valid", False)
+                    _hhhl_aligned_tb = 1 if _ts_valid else 0
+                    if _ts_valid:
+                        _ts_line = (
+                            "📊 Trend structure: ✅ Lower highs and lower lows confirmed — "
+                            "downtrend intact — SELL signal valid"
+                        )
+                    else:
+                        _ts_specific = (
+                            "price is making higher highs" if _ts.get("hh") else
+                            "price is not making lower highs" if not _ts.get("lh") else
+                            "price is not making lower lows"
+                        )
+                        _ts_line = (
+                            f"⚠️ Trend structure broken — {_ts_specific} — "
+                            f"SELL signal is counter-structure — higher risk"
+                        )
+                        try:
+                            _conf_display = str(max(1, round(float(_conf_display) - 2)))
+                        except (TypeError, ValueError):
+                            pass
+            else:
+                _hhhl_aligned_tb = None  # insufficient data — no penalty
+        except Exception:
+            pass
+
         _qg_tb = _quality_grades.get(pair, _trade_quality_grade(r))
         _tb_grade = (_qg_tb or {}).get("grade", "B")
 
