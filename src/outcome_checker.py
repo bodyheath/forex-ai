@@ -159,7 +159,12 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
         _ppc = None
         _pp_state = {}
 
-    # ── Step 3: outcome determination + close ─────────────────────────────
+    # ── Step 3: cascade + outcome determination + close ───────────────────
+    try:
+        from src import telegram_alert as _ta_casc
+    except Exception:
+        _ta_casc = None
+
     for row in open_trades:
         rec_id    = int(row.get("id", 0))
         pair      = row.get("pair", "")
@@ -171,7 +176,139 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                 log(f"  #{rec_id} {pair}: price unavailable, skipping.")
                 continue
 
-            # Effective stop: breakeven if stage 1 was reached
+            # ── CASCADE: initialise levels if not yet stored ─────────────────
+            if not _casc._to_float(row.get("t1_price")):
+                try:
+                    _ct1, _ct2, _ct3 = _casc.compute_levels(
+                        row.get("entry"), row.get("stop_loss"),
+                        row.get("target"), direction,
+                    )
+                    if _ct1 is not None:
+                        tracker.update_fields(
+                            rec_id,
+                            t1_price=_ct1, t2_price=_ct2, t3_price=_ct3,
+                            effective_stop=row.get("stop_loss"),
+                        )
+                        row.update({
+                            "t1_price": _ct1, "t2_price": _ct2, "t3_price": _ct3,
+                            "effective_stop": row.get("stop_loss"),
+                        })
+                except Exception:
+                    pass
+
+            # ── CASCADE: check milestones (greedy) ───────────────────────────
+            _closed_this = False
+
+            if _casc.t1_hit(row, price):
+                _t1p = _casc.pips_at(row.get("entry"), row.get("t1_price"), pair, direction)
+                tracker.update_fields(
+                    rec_id, t1_hit="TRUE", t1_hit_price=price,
+                    t1_hit_pips=_t1p, effective_stop=row.get("entry"),
+                )
+                row.update({
+                    "t1_hit": "TRUE", "t1_hit_price": price,
+                    "t1_hit_pips": _t1p, "effective_stop": row.get("entry"),
+                })
+                log(f"  #{rec_id} {pair}: T1 hit at {price} (+{_t1p:.1f}p) — stop at breakeven")
+                if _ta_casc:
+                    try:
+                        _ta_casc.send(
+                            f"✅ <b>{pair} — T1 target hit (+{_t1p:.1f} pips)</b>\n\n"
+                            f"First target reached — 40% of position banked.\n"
+                            f"Stop loss moved to breakeven — no loss possible now.\n\n"
+                            f"Direction: {direction}  |  Price: {price}\n"
+                            f"Remaining 60% running toward T2 and T3."
+                        )
+                    except Exception:
+                        pass
+
+            if _casc.t2_hit(row, price):
+                _t2p = _casc.pips_at(row.get("entry"), row.get("t2_price"), pair, direction)
+                tracker.update_fields(rec_id, t2_hit="TRUE", t2_hit_price=price, t2_hit_pips=_t2p)
+                row.update({"t2_hit": "TRUE", "t2_hit_price": price, "t2_hit_pips": _t2p})
+                log(f"  #{rec_id} {pair}: T2 hit at {price} (+{_t2p:.1f}p) — 70% banked")
+                if _ta_casc:
+                    try:
+                        _ta_casc.send(
+                            f"💰 <b>{pair} — T2 target hit (+{_t2p:.1f} pips)</b>\n\n"
+                            f"Second target reached — 70% of position banked.\n"
+                            f"Final 30% running to full target with stop at breakeven.\n\n"
+                            f"Direction: {direction}  |  Price: {price}\n"
+                            f"Worst case: final tranche closes at entry (breakeven)."
+                        )
+                    except Exception:
+                        pass
+
+            if _casc.t3_hit(row, price):
+                _t3p = _casc.pips_at(
+                    row.get("entry"),
+                    row.get("t3_price") or row.get("target"),
+                    pair, direction,
+                )
+                tracker.update_fields(
+                    rec_id, t3_hit="TRUE", t3_hit_price=price, t3_hit_pips=_t3p,
+                )
+                row.update({"t3_hit": "TRUE", "t3_hit_price": price, "t3_hit_pips": _t3p})
+                _wp = _casc.weighted_pips(row)
+                _tp = _casc.total_pips(row)
+                tracker.update_fields(
+                    rec_id,
+                    cascading_total_pips=_tp,
+                    cascading_total_pips_weighted=_wp,
+                )
+                _cp = _to_float(row.get("t3_price") or row.get("target"))
+                _notes_fw = f"FULL_WIN: T1(+{_casc._to_float(row.get('t1_hit_pips')) or 0:.0f}p) T2(+{_casc._to_float(row.get('t2_hit_pips')) or 0:.0f}p) T3(+{_t3p:.0f}p) = {_wp:.1f}p weighted"
+                updated = tracker.update_outcome(
+                    rec_id, "FULL_WIN",
+                    exit_price=_cp,
+                    notes=_notes_fw,
+                    cascading_pips=_wp,
+                )
+                log(f"  #{rec_id} {pair} {direction}: FULL_WIN — {_wp:.1f}p weighted")
+                if _ta_casc:
+                    try:
+                        _ta_casc.send(
+                            f"🎯 <b>{pair} — FULL WIN — all three targets hit!</b>\n\n"
+                            f"T1 +{_casc._to_float(row.get('t1_hit_pips')) or 0:.1f}p (40%)  "
+                            f"T2 +{_casc._to_float(row.get('t2_hit_pips')) or 0:.1f}p (30%)  "
+                            f"T3 +{_t3p:.1f}p (30%)\n"
+                            f"Weighted total: +{_wp:.1f} pips\n\n"
+                            f"Direction: {direction}  |  Final price: {price}"
+                        )
+                    except Exception:
+                        pass
+                closed.append(updated)
+                _closed_this = True
+
+            elif _casc.effective_stop_hit(row, price):
+                _casc_oc = _casc.cascade_outcome(row)
+                _wp      = _casc.weighted_pips(row) if _casc_oc != "LOSS" else None
+                _tp      = _casc.total_pips(row)    if _casc_oc != "LOSS" else None
+                if _wp:
+                    tracker.update_fields(
+                        rec_id,
+                        cascading_total_pips=_tp,
+                        cascading_total_pips_weighted=_wp,
+                    )
+                _cp      = _to_float(row.get("effective_stop") or row.get("stop_loss"))
+                _notes_c = f"Auto-closed: {_casc_oc} at {_cp}"
+                if _wp:
+                    _notes_c += f" | cascade: {_wp:.1f}p weighted"
+                updated  = tracker.update_outcome(
+                    rec_id, _casc_oc,
+                    exit_price=_cp,
+                    notes=_notes_c,
+                    cascading_pips=_wp if _wp else None,
+                )
+                r_txt = f", R={updated.get('r_multiple')}, pips={updated.get('pips')}"
+                log(f"  #{rec_id} {pair} {direction}: {_casc_oc} at {_cp}{r_txt}")
+                closed.append(updated)
+                _closed_this = True
+
+            if _closed_this:
+                continue
+
+            # ── Partial profit checker (breakeven stop migration) ────────────
             _eff_stop = row.get("stop_loss")
             _pp_stage = 0
             if _ppc is not None:
@@ -180,17 +317,21 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
 
             _bp_protected = _pp_stage >= 1
 
+            # ── EXPIRY CHECK ─────────────────────────────────────────────────
+            _base_exp = _compute_expiry_days(row)
+            _ext_exp  = _casc.expiry_extension(row, _base_exp)
+
             outcome = _determine_outcome(
                 direction, price,
                 row.get("entry"), _eff_stop, row.get("target"),
                 row.get("timestamp", ""),
-                expiry_days=_compute_expiry_days(row),
+                expiry_days=_ext_exp,
                 breakeven_protected=_bp_protected,
             )
             if outcome is None:
                 continue  # still open
 
-            # Stage 2 + breakeven stop hit → partial profit already locked, this is WIN
+            # Stage 2 + breakeven stop hit → partial profit already locked, WIN
             if outcome == "BREAKEVEN" and _pp_stage >= 2:
                 outcome = "WIN"
 
