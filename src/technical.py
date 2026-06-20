@@ -1119,11 +1119,12 @@ def warm_cache(pairs: list, log=print) -> None:
     n_success = 0
     n_failed  = 0
     errors    = 0
+    _yf_before = _yf_calls_this_run
     for pair, interval, outputsize in needed:
         if api_n > 0:
             time.sleep(10)
         try:
-            _td_request(pair, interval, outputsize)
+            _td_request(pair, interval, outputsize, _log=log)
             log(f"  Cached {pair} {interval}")
             n_success += 1
             _pairs_ok.add(pair)
@@ -1138,12 +1139,17 @@ def warm_cache(pairs: list, log=print) -> None:
         api_n += 1
 
     # Neutral fallbacks = pairs that needed a fetch but had zero successful timeframes
-    n_neutral = len(_pairs_needing_fetch - _pairs_ok)
-    status = "complete" if errors == 0 else f"complete with {errors} error(s)"
+    n_neutral   = len(_pairs_needing_fetch - _pairs_ok)
+    n_yf_used   = _yf_calls_this_run - _yf_before
+    status      = "complete" if errors == 0 else f"complete with {errors} error(s)"
+    yf_note     = (
+        f" · Yahoo Finance fallback: {n_yf_used} call(s) used — zero Twelve Data quota"
+        if n_yf_used > 0 else ""
+    )
     log(
         f"Technical pre-fetch {status}: {api_n} API call(s) made. "
         f"Candle fetch: {n_success} successful, {n_failed} failed after retry, "
-        f"{n_neutral} neutral fallbacks"
+        f"{n_neutral} neutral fallbacks{yf_note}"
     )
 
 
