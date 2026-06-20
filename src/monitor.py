@@ -1,0 +1,836 @@
+"""Between-scan trade monitor: batch price + OHLCV candle cascade detection.
+
+Runs every 2 hours via GitHub Actions schedule.  Catches milestones (T1/T2/T3
+and stop hits) that occur between regular scans, including price spikes that
+fully reverse before the next scheduled scan.
+
+Strategy:
+  1. Batch current price fetch for all open trades (2 API calls max, 20/batch).
+  2. Classify trades into HOT/WARM/COLD zones by proximity to next cascade target.
+  3. Fetch 4 hourly OHLCV candles for HOT+WARM zone trades (1 API call per pair).
+  4. Detect milestones using candle HIGH (BUY targets/SELL stops) and
+     candle LOW (SELL targets/BUY stops) — catches spikes that reversed.
+  5. Apply cascade updates to trades.csv / research_trades.csv.
+  6. Send individual Telegram alerts for fund trade milestones.
+  7. Send one batch Telegram summary if any research milestones were hit.
+  8. Update MFE/MAE for research trades using OHLCV extremes.
+  9. Write data/monitor_log.json every run.
+"""
+
+import json
+import time
+from datetime import date as _date_mod
+from datetime import datetime, timedelta
+from pathlib import Path
+
+import requests
+
+import config
+from src import cascade as _casc
+
+_PRICE_URL    = "https://api.twelvedata.com/price"
+_OHLCV_URL    = "https://api.twelvedata.com/time_series"
+_MONITOR_LOG  = config.DATA_DIR / "monitor_log.json"
+_API_USAGE    = config.DATA_DIR / "api_usage.json"
+_OHLCV_CANDLES = 4          # 4 hours of hourly candles
+_API_BUDGET_LIMIT = 700     # daily call threshold — skip OHLCV above this
+_BATCH_SIZE   = 20          # pairs per batch price request
+_FETCH_TIMEOUT = 15         # seconds per HTTP request
+_HOT_THRESHOLD  = 0.70      # price ≥ 70% of way to target → HOT
+_WARM_THRESHOLD = 0.40      # price ≥ 40% of way to target → WARM
+
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+def _to_float(val):
+    try:
+        return float(val)
+    except (TypeError, ValueError):
+        return None
+
+
+def _get_td_calls_today() -> int:
+    try:
+        usage = json.loads(_API_USAGE.read_text(encoding="utf-8")) if _API_USAGE.exists() else {}
+        return int(usage.get("calls", 0)) if usage.get("date") == str(_date_mod.today()) else 0
+    except Exception:
+        return 0
+
+
+def _increment_td_usage(n: int = 1) -> None:
+    try:
+        usage: dict = {}
+        if _API_USAGE.exists():
+            try:
+                usage = json.loads(_API_USAGE.read_text(encoding="utf-8"))
+            except Exception:
+                usage = {}
+        today = str(_date_mod.today())
+        if usage.get("date") != today:
+            usage = {"date": today, "calls": 0}
+        usage["calls"] = int(usage.get("calls", 0)) + n
+        _API_USAGE.write_text(json.dumps(usage), encoding="utf-8")
+    except Exception:
+        pass
+
+
+def _auckland_now() -> datetime:
+    try:
+        from zoneinfo import ZoneInfo
+        return datetime.now(ZoneInfo("Pacific/Auckland"))
+    except Exception:
+        from datetime import timezone
+        utc = datetime.now(timezone.utc)
+        off = 13 if utc.month in (10, 11, 12, 1, 2, 3) else 12
+        return utc.astimezone(timezone(timedelta(hours=off)))
+
+
+def _is_weekend() -> bool:
+    return _auckland_now().weekday() >= 5
+
+
+def _write_monitor_log(data: dict) -> None:
+    try:
+        _MONITOR_LOG.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+
+
+# ── Zone classification ───────────────────────────────────────────────────────
+
+def _next_cascade_target(row: dict):
+    """Return the next unmet cascade target price, or None."""
+    if str(row.get("t1_hit", "")).upper() != "TRUE":
+        return _to_float(row.get("t1_price"))
+    if str(row.get("t2_hit", "")).upper() != "TRUE":
+        return _to_float(row.get("t2_price"))
+    if str(row.get("t3_hit", "")).upper() != "TRUE":
+        return _to_float(row.get("t3_price") or row.get("target"))
+    return None
+
+
+def _classify_zone(row: dict, price: float) -> str:
+    """Return 'HOT', 'WARM', or 'COLD' based on price proximity to target/stop."""
+    if price is None:
+        return "COLD"
+    entry     = _to_float(row.get("entry"))
+    stop      = _to_float(row.get("effective_stop") or row.get("stop_loss"))
+    direction = (row.get("direction") or "").upper()
+
+    if not entry or not stop or direction not in ("BUY", "SELL"):
+        return "COLD"
+
+    # Progress toward next unmet target
+    next_tgt = _next_cascade_target(row)
+    target_zone = "COLD"
+    if next_tgt is not None:
+        total = abs(next_tgt - entry)
+        if total > 0:
+            progress = (
+                (price - entry) / total if direction == "BUY"
+                else (entry - price) / total
+            )
+            if progress >= _HOT_THRESHOLD:
+                target_zone = "HOT"
+            elif progress >= _WARM_THRESHOLD:
+                target_zone = "WARM"
+
+    # Proximity to stop
+    stop_range = abs(entry - stop)
+    stop_zone = "COLD"
+    if stop_range > 0:
+        stop_prox = (
+            max(0.0, (entry - price) / stop_range) if direction == "BUY"
+            else max(0.0, (price - entry) / stop_range)
+        )
+        if stop_prox >= _HOT_THRESHOLD:
+            stop_zone = "HOT"
+        elif stop_prox >= _WARM_THRESHOLD:
+            stop_zone = "WARM"
+
+    # Return worst (most urgent) zone
+    order = {"HOT": 0, "WARM": 1, "COLD": 2}
+    return min(target_zone, stop_zone, key=lambda z: order[z])
+
+
+# ── API calls ─────────────────────────────────────────────────────────────────
+
+def _batch_price_fetch(pairs: list, log=print) -> tuple:
+    """Return ({pair: float}, calls_made). Batches 20 pairs per request."""
+    if not pairs:
+        return {}, 0
+    prices = {}
+    calls  = 0
+    for i in range(0, len(pairs), _BATCH_SIZE):
+        batch = pairs[i : i + _BATCH_SIZE]
+        symbol_str = ",".join(batch)
+        try:
+            resp = requests.get(
+                _PRICE_URL,
+                params={"symbol": symbol_str, "apikey": config.TWELVE_DATA_KEY},
+                timeout=_FETCH_TIMEOUT,
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            if len(batch) == 1:
+                if isinstance(data, dict) and "price" in data and data.get("status") != "error":
+                    prices[batch[0]] = float(data["price"])
+            else:
+                for pair in batch:
+                    pd = data.get(pair, {})
+                    if isinstance(pd, dict) and "price" in pd and pd.get("status") != "error":
+                        prices[pair] = float(pd["price"])
+            calls += 1
+        except Exception as exc:
+            log(f"  Monitor: batch price fetch error (batch {i // _BATCH_SIZE + 1}): {exc}")
+    _increment_td_usage(calls)
+    return prices, calls
+
+
+def _fetch_ohlcv_1h(pair: str, log=print) -> list:
+    """Return last 4 hourly OHLCV candles for pair (newest first)."""
+    try:
+        resp = requests.get(
+            _OHLCV_URL,
+            params={
+                "symbol":     pair,
+                "interval":   "1h",
+                "outputsize": _OHLCV_CANDLES,
+                "apikey":     config.TWELVE_DATA_KEY,
+            },
+            timeout=_FETCH_TIMEOUT,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        if isinstance(data, dict) and data.get("status") == "error":
+            return []
+        return data.get("values", [])
+    except Exception as exc:
+        log(f"  Monitor: OHLCV fetch error for {pair}: {exc}")
+        return []
+
+
+# ── Candle-based milestone detection ─────────────────────────────────────────
+
+def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) -> tuple:
+    """Return (milestones_list, updated_row_state).
+
+    milestones_list: each item is a dict with keys:
+        level     — "T1", "T2", "T3", "STOP"
+        price     — candle extreme that triggered the level
+        candle_dt — datetime string of the candle
+        pips      — pip distance from entry (None for STOP)
+
+    Processes candles from oldest to newest, applying greedy cascade so that a
+    single candle crossing T1+T2+T3 fires all three in sequence.
+    """
+    direction = (row.get("direction") or "").upper()
+    if direction not in ("BUY", "SELL"):
+        return [], row
+
+    row_state  = dict(row)   # mutable local copy for greedy tracking
+    milestones = []
+
+    for candle in reversed(candles):   # API returns newest first → oldest first
+        high = _to_float(candle.get("high"))
+        low  = _to_float(candle.get("low"))
+        dt   = candle.get("datetime", "")
+        if high is None or low is None:
+            continue
+
+        # BUY: profit goes up → use HIGH for targets, LOW for stop
+        # SELL: profit goes down → use LOW for targets, HIGH for stop
+        tgt_price  = high if direction == "BUY" else low
+        stop_price = low  if direction == "BUY" else high
+
+        # Greedy cascade: T1 → T2 → T3 (sequential guards enforced by _casc)
+        if _casc.t1_hit(row_state, tgt_price):
+            t1p = _casc.pips_at(row_state.get("entry"), row_state.get("t1_price"), pair, direction)
+            row_state.update({
+                "t1_hit":       "TRUE",
+                "t1_hit_price": tgt_price,
+                "t1_hit_pips":  t1p,
+                "effective_stop": row_state.get("entry"),
+            })
+            milestones.append({"level": "T1", "price": tgt_price, "candle_dt": dt, "pips": t1p})
+            side_label = "HIGH" if direction == "BUY" else "LOW"
+            log(
+                f"  Monitor: {pair} candle {side_label} {tgt_price} crossed T1 "
+                f"{row.get('t1_price')} during {dt} candle — T1 recorded as hit "
+                f"even if current price is now below T1 — partial WIN locked in"
+            )
+
+        if _casc.t2_hit(row_state, tgt_price):
+            t2p = _casc.pips_at(row_state.get("entry"), row_state.get("t2_price"), pair, direction)
+            row_state.update({
+                "t2_hit":       "TRUE",
+                "t2_hit_price": tgt_price,
+                "t2_hit_pips":  t2p,
+            })
+            milestones.append({"level": "T2", "price": tgt_price, "candle_dt": dt, "pips": t2p})
+            log(f"  Monitor: {pair} T2 hit at {tgt_price} (+{t2p:.1f}p) — 70% banked")
+
+        if _casc.t3_hit(row_state, tgt_price):
+            t3p = _casc.pips_at(
+                row_state.get("entry"),
+                row_state.get("t3_price") or row_state.get("target"),
+                pair, direction,
+            )
+            row_state.update({
+                "t3_hit":       "TRUE",
+                "t3_hit_price": tgt_price,
+                "t3_hit_pips":  t3p,
+            })
+            milestones.append({"level": "T3", "price": tgt_price, "candle_dt": dt, "pips": t3p})
+            log(f"  Monitor: {pair} T3 (FULL_WIN) hit at {tgt_price} (+{t3p:.1f}p)")
+            break   # trade closed — no further milestone checks
+
+        # Stop check (only if T3 not hit in this candle)
+        elif _casc.effective_stop_hit(row_state, stop_price):
+            milestones.append({"level": "STOP", "price": stop_price, "candle_dt": dt, "pips": None})
+            log(f"  Monitor: {pair} effective stop hit at {stop_price} during {dt} candle")
+            break
+
+    return milestones, row_state
+
+
+def _detect_spot_milestones(row: dict, price: float, pair: str) -> tuple:
+    """Detect milestones from a single spot price (COLD zone, no OHLCV)."""
+    direction = (row.get("direction") or "").upper()
+    if direction not in ("BUY", "SELL") or price is None:
+        return [], row
+
+    row_state  = dict(row)
+    milestones = []
+
+    if _casc.t1_hit(row_state, price):
+        t1p = _casc.pips_at(row_state.get("entry"), row_state.get("t1_price"), pair, direction)
+        row_state.update({
+            "t1_hit": "TRUE", "t1_hit_price": price,
+            "t1_hit_pips": t1p, "effective_stop": row_state.get("entry"),
+        })
+        milestones.append({"level": "T1", "price": price, "candle_dt": None, "pips": t1p})
+
+    if _casc.t2_hit(row_state, price):
+        t2p = _casc.pips_at(row_state.get("entry"), row_state.get("t2_price"), pair, direction)
+        row_state.update({"t2_hit": "TRUE", "t2_hit_price": price, "t2_hit_pips": t2p})
+        milestones.append({"level": "T2", "price": price, "candle_dt": None, "pips": t2p})
+
+    if _casc.t3_hit(row_state, price):
+        t3p = _casc.pips_at(
+            row_state.get("entry"),
+            row_state.get("t3_price") or row_state.get("target"),
+            pair, direction,
+        )
+        row_state.update({"t3_hit": "TRUE", "t3_hit_price": price, "t3_hit_pips": t3p})
+        milestones.append({"level": "T3", "price": price, "candle_dt": None, "pips": t3p})
+    elif _casc.effective_stop_hit(row_state, price):
+        milestones.append({"level": "STOP", "price": price, "candle_dt": None, "pips": None})
+
+    return milestones, row_state
+
+
+# ── Cascade application ───────────────────────────────────────────────────────
+
+def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
+                           log=print, ta=None, is_weekend: bool = False) -> list:
+    """Apply detected milestones to trades.csv. Return list of closed row dicts."""
+    from src import tracker as _trk
+    rec_id    = int(row.get("id", 0))
+    pair      = row.get("pair", "")
+    direction = (row.get("direction") or "").upper()
+
+    wknd_note = (
+        "\n\n📅 <i>Weekend monitor — prices are Friday market close. "
+        "Next live prices Monday 6am Auckland. "
+        "Milestone recorded and will be confirmed at Monday open.</i>"
+        if is_weekend else ""
+    )
+
+    closed_rows = []
+
+    for m in milestones:
+        level  = m["level"]
+        mprice = m["price"]
+        pips   = m["pips"]
+        cdt    = m["candle_dt"] or ""
+
+        if level == "T1":
+            _trk.update_fields(
+                rec_id,
+                t1_hit="TRUE", t1_hit_price=mprice,
+                t1_hit_pips=pips, effective_stop=row.get("entry"),
+            )
+            log(f"  Monitor fund #{rec_id} {pair}: T1 recorded at {mprice} (+{pips:.1f}p)")
+            if ta:
+                try:
+                    ta.send(
+                        f"✅ <b>{pair} has reached its first profit target</b>\n\n"
+                        f"40% of position banked at +{pips:.1f} pips.\n"
+                        f"Stop loss moved to breakeven — this trade can no longer lose money.\n"
+                        f"No action needed from you.\n\n"
+                        f"Direction: {direction}  |  T1 price: {mprice}"
+                        f"{f'  |  Candle: {cdt}' if cdt else ''}"
+                        + wknd_note
+                    )
+                except Exception:
+                    pass
+
+        elif level == "T2":
+            _trk.update_fields(
+                rec_id, t2_hit="TRUE", t2_hit_price=mprice, t2_hit_pips=pips,
+            )
+            log(f"  Monitor fund #{rec_id} {pair}: T2 recorded at {mprice} (+{pips:.1f}p)")
+            if ta:
+                try:
+                    ta.send(
+                        f"💰 <b>{pair} has reached its second profit target</b>\n\n"
+                        f"Another 30% of position banked at +{pips:.1f} pips (70% total).\n"
+                        f"Final 30% running toward full target with stop at breakeven.\n\n"
+                        f"Direction: {direction}  |  T2 price: {mprice}"
+                        f"{f'  |  Candle: {cdt}' if cdt else ''}"
+                        + wknd_note
+                    )
+                except Exception:
+                    pass
+
+        elif level == "T3":
+            _trk.update_fields(
+                rec_id, t3_hit="TRUE", t3_hit_price=mprice, t3_hit_pips=pips,
+            )
+            _wp = _casc.weighted_pips(row_state)
+            _tp = _casc.total_pips(row_state)
+            _trk.update_fields(
+                rec_id,
+                cascading_total_pips=_tp,
+                cascading_total_pips_weighted=_wp,
+            )
+            t1p_str = f"{_to_float(row_state.get('t1_hit_pips')) or 0:.1f}"
+            t2p_str = f"{_to_float(row_state.get('t2_hit_pips')) or 0:.1f}"
+            updated = _trk.update_outcome(
+                rec_id, "FULL_WIN",
+                exit_price=_to_float(row_state.get("t3_price") or row_state.get("target")),
+                notes=f"FULL_WIN via monitor: T1+{t1p_str}p T2+{t2p_str}p T3+{pips:.1f}p = {_wp:.1f}p weighted",
+                cascading_pips=_wp,
+            )
+            log(f"  Monitor fund #{rec_id} {pair}: FULL_WIN — {_wp:.1f}p weighted")
+            if ta:
+                try:
+                    ta.send(
+                        f"🎯 <b>{pair} has hit its full profit target</b>\n\n"
+                        f"Final 30% of position closed — trade complete.\n"
+                        f"T1 +{t1p_str}p (40%)  T2 +{t2p_str}p (30%)  T3 +{pips:.1f}p (30%)\n"
+                        f"Weighted total: +{_wp:.1f} pips\n\n"
+                        f"Direction: {direction}  |  Final price: {mprice}"
+                        + wknd_note
+                    )
+                except Exception:
+                    pass
+            closed_rows.append(updated)
+            break   # trade closed — skip further milestones
+
+        elif level == "STOP":
+            casc_oc = _casc.cascade_outcome(row_state)
+            _wp     = _casc.weighted_pips(row_state) if casc_oc != "LOSS" else None
+            _tp     = _casc.total_pips(row_state)    if casc_oc != "LOSS" else None
+            if _wp:
+                _trk.update_fields(
+                    rec_id,
+                    cascading_total_pips=_tp,
+                    cascading_total_pips_weighted=_wp,
+                )
+            updated = _trk.update_outcome(
+                rec_id, casc_oc,
+                exit_price=mprice,
+                notes=f"Monitor: {casc_oc} at {mprice}{f' | cascade: {_wp:.1f}p' if _wp else ''}",
+                cascading_pips=_wp,
+            )
+            log(f"  Monitor fund #{rec_id} {pair}: {casc_oc} at {mprice}")
+            if ta:
+                try:
+                    _r_txt = f"R={updated.get('r_multiple')}"
+                    ta.send(
+                        f"📊 <b>{pair} stop loss triggered — trade closed</b>\n\n"
+                        f"Outcome: {casc_oc}  |  Exit: {mprice}  |  {_r_txt}\n"
+                        f"Outcome recorded — ML training data updated."
+                        + wknd_note
+                    )
+                except Exception:
+                    pass
+            closed_rows.append(updated)
+            break   # trade closed
+
+    return closed_rows
+
+
+def _apply_research_milestones(row: dict, milestones: list, row_state: dict,
+                               log=print) -> tuple:
+    """Apply detected milestones to research_trades.csv.
+
+    Returns (closed_row_or_None, summary_fragment_str).
+    summary_fragment_str is appended to the batch Telegram message.
+    """
+    from src import research_tracker as _rt
+    rec_id    = int(row.get("id", 0))
+    pair      = row.get("pair", "")
+    direction = (row.get("direction") or "").upper()
+
+    closed_row = None
+    fragments  = []
+
+    for m in milestones:
+        level  = m["level"]
+        mprice = m["price"]
+        pips   = m["pips"]
+
+        if level == "T1":
+            _rt.update_fields(
+                rec_id,
+                t1_hit="TRUE", t1_hit_price=mprice,
+                t1_hit_pips=pips, effective_stop=row.get("entry"),
+            )
+            fragments.append(f"{pair} T1 hit (+{pips:.1f} pips partial WIN)")
+            log(f"  Monitor research #{rec_id} {pair}: T1 at {mprice} (+{pips:.1f}p)")
+
+        elif level == "T2":
+            _rt.update_fields(
+                rec_id, t2_hit="TRUE", t2_hit_price=mprice, t2_hit_pips=pips,
+            )
+            fragments.append(f"{pair} T2 hit (+{pips:.1f} pips)")
+            log(f"  Monitor research #{rec_id} {pair}: T2 at {mprice} (+{pips:.1f}p)")
+
+        elif level == "T3":
+            _rt.update_fields(
+                rec_id, t3_hit="TRUE", t3_hit_price=mprice, t3_hit_pips=pips,
+            )
+            _wp = _casc.weighted_pips(row_state)
+            _tp = _casc.total_pips(row_state)
+            _rt.update_fields(
+                rec_id,
+                cascading_total_pips=_tp,
+                cascading_total_pips_weighted=_wp,
+            )
+            closed_row = _rt.update_outcome(
+                rec_id, "FULL_WIN",
+                close_price=_to_float(row_state.get("t3_price") or row_state.get("target")),
+                exit_reason="TARGET_HIT",
+                cascading_pips=_wp,
+            )
+            fragments.append(f"{pair} FULL_WIN (+{_wp:.1f}p weighted)")
+            log(f"  Monitor research #{rec_id} {pair}: FULL_WIN {_wp:.1f}p")
+            break
+
+        elif level == "STOP":
+            casc_oc = _casc.cascade_outcome(row_state)
+            _wp     = _casc.weighted_pips(row_state) if casc_oc != "LOSS" else None
+            _tp     = _casc.total_pips(row_state)    if casc_oc != "LOSS" else None
+            if _wp:
+                _rt.update_fields(
+                    rec_id,
+                    cascading_total_pips=_tp,
+                    cascading_total_pips_weighted=_wp,
+                )
+            closed_row = _rt.update_outcome(
+                rec_id, casc_oc,
+                close_price=mprice,
+                exit_reason="STOP_HIT",
+                cascading_pips=_wp,
+            )
+            label = f"+{_wp:.1f}p cascade" if _wp else "LOSS"
+            fragments.append(f"{pair} stop hit ({label})")
+            log(f"  Monitor research #{rec_id} {pair}: {casc_oc} at {mprice}")
+            break
+
+    summary = " · ".join(fragments)
+    return closed_row, summary
+
+
+# ── MFE / MAE update ─────────────────────────────────────────────────────────
+
+def _update_mfe_mae_from_ohlcv(rec_id: int, direction: str, candles: list) -> bool:
+    """Update MFE and MAE using candle extremes. Returns True if updated."""
+    from src import research_tracker as _rt
+    if not candles:
+        return False
+    highs = [_to_float(c.get("high")) for c in candles if _to_float(c.get("high")) is not None]
+    lows  = [_to_float(c.get("low"))  for c in candles if _to_float(c.get("low"))  is not None]
+    if not highs or not lows:
+        return False
+    d = direction.upper()
+    if d == "BUY":
+        _rt.update_mfe_mae(rec_id, max(highs))   # best MFE candidate
+        _rt.update_mfe_mae(rec_id, min(lows))    # worst MAE candidate
+    elif d == "SELL":
+        _rt.update_mfe_mae(rec_id, min(lows))    # best MFE candidate for SELL
+        _rt.update_mfe_mae(rec_id, max(highs))   # worst MAE candidate for SELL
+    else:
+        return False
+    return True
+
+
+# ── Cascade initialisation ────────────────────────────────────────────────────
+
+def _ensure_cascade_levels(row: dict, tracker_mod, log=print) -> dict:
+    """If t1_price not set, compute and store cascade levels. Return updated row."""
+    if _to_float(row.get("t1_price")):
+        return row
+    try:
+        ct1, ct2, ct3 = _casc.compute_levels(
+            row.get("entry"), row.get("stop_loss"),
+            row.get("target"), row.get("direction"),
+        )
+        if ct1 is not None:
+            tracker_mod.update_fields(
+                int(row.get("id", 0)),
+                t1_price=ct1, t2_price=ct2, t3_price=ct3,
+                effective_stop=row.get("stop_loss"),
+            )
+            row = dict(row)
+            row.update({
+                "t1_price": ct1, "t2_price": ct2, "t3_price": ct3,
+                "effective_stop": row.get("stop_loss"),
+            })
+    except Exception as exc:
+        log(f"  Monitor: cascade init failed for #{row.get('id')} {row.get('pair')}: {exc}")
+    return row
+
+
+# ── Main entry point ──────────────────────────────────────────────────────────
+
+def run(log=print) -> dict:
+    """Run the between-scan monitor. Returns the monitor_log dict written to disk."""
+    now_ak   = _auckland_now()
+    is_wknd  = now_ak.weekday() >= 5   # Saturday or Sunday (Auckland)
+    now_str  = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    next_6am = "6am Auckland"
+
+    result = {
+        "timestamp":               now_str,
+        "trades_checked_fund":     0,
+        "trades_checked_research": 0,
+        "hot_zone_count":          0,
+        "warm_zone_count":         0,
+        "cold_zone_count":         0,
+        "api_calls_used":          0,
+        "milestones_hit":          [],
+        "mfe_mae_updated":         0,
+        "skipped_reason":          "",
+    }
+
+    if not config.TWELVE_DATA_KEY:
+        result["skipped_reason"] = "no_api_key"
+        log("Monitor: TWELVE_DATA_KEY not set — skipping.")
+        _write_monitor_log(result)
+        return result
+
+    # ── Smart skip: exit immediately if no open trades ────────────────────────
+    try:
+        from src import tracker as _trk
+        from src import research_tracker as _rt
+        _fund_open = [r for r in _trk.load() if r.get("status") == "OPEN"
+                      and r.get("trade_this") == "YES"]
+        _res_open  = [r for r in _rt.load()  if r.get("status") == "OPEN"]
+    except Exception as exc:
+        log(f"Monitor: failed to load trade data — {exc}")
+        result["skipped_reason"] = "load_error"
+        _write_monitor_log(result)
+        return result
+
+    if not _fund_open and not _res_open:
+        result["skipped_reason"] = "no_open_trades"
+        log("Monitor: no open trades — skipping — zero API calls used.")
+        _write_monitor_log(result)
+        return result
+
+    result["trades_checked_fund"]     = len(_fund_open)
+    result["trades_checked_research"] = len(_res_open)
+    log(
+        f"Monitor: {len(_fund_open)} open fund trade(s) · "
+        f"{len(_res_open)} open research trade(s) · "
+        f"{'weekend mode — Friday close prices' if is_wknd else 'live prices'}"
+    )
+
+    # ── API budget check ──────────────────────────────────────────────────────
+    calls_today   = _get_td_calls_today()
+    ohlcv_allowed = calls_today < _API_BUDGET_LIMIT
+    if not ohlcv_allowed:
+        log(
+            f"Monitor: API daily limit approaching ({calls_today}/800 used) — "
+            f"running current price check only — OHLCV skipped to preserve calls "
+            f"for scheduled scans"
+        )
+
+    # ── Step 1: Batch price fetch ─────────────────────────────────────────────
+    all_open = _fund_open + _res_open
+    all_pairs = list({r.get("pair", "") for r in all_open if r.get("pair")})
+    prices, batch_calls = _batch_price_fetch(all_pairs, log=log)
+    result["api_calls_used"] += batch_calls
+    log(f"Monitor: fetched prices for {len(prices)}/{len(all_pairs)} pairs in {batch_calls} API call(s).")
+
+    # ── Step 2: Ensure cascade levels + zone classification ──────────────────
+    for i, row in enumerate(_fund_open):
+        _fund_open[i] = _ensure_cascade_levels(row, _trk, log=log)
+    for i, row in enumerate(_res_open):
+        _res_open[i] = _ensure_cascade_levels(row, _rt, log=log)
+
+    def _zone(rows_list):
+        zones = {"HOT": [], "WARM": [], "COLD": []}
+        for row in rows_list:
+            z = _classify_zone(row, prices.get(row.get("pair", "")))
+            zones[z].append(row)
+        return zones
+
+    fund_zones = _zone(_fund_open)
+    res_zones  = _zone(_res_open)
+
+    total_hot  = len(fund_zones["HOT"])  + len(res_zones["HOT"])
+    total_warm = len(fund_zones["WARM"]) + len(res_zones["WARM"])
+    total_cold = len(fund_zones["COLD"]) + len(res_zones["COLD"])
+    result["hot_zone_count"]  = total_hot
+    result["warm_zone_count"] = total_warm
+    result["cold_zone_count"] = total_cold
+    log(
+        f"Monitor: zones — HOT={total_hot} WARM={total_warm} COLD={total_cold} — "
+        f"{'fetching OHLCV for HOT+WARM' if ohlcv_allowed else 'OHLCV skipped (API limit)'}"
+    )
+
+    # ── Step 3: OHLCV fetch for HOT + WARM ────────────────────────────────────
+    hot_warm_pairs = list({
+        row.get("pair", "")
+        for row in (fund_zones["HOT"] + fund_zones["WARM"] +
+                    res_zones["HOT"]  + res_zones["WARM"])
+        if row.get("pair")
+    })
+    candle_map: dict = {}   # pair → list of candle dicts
+    if ohlcv_allowed and hot_warm_pairs:
+        for pair in hot_warm_pairs:
+            time.sleep(0.1)   # light courtesy delay — free tier
+            candles = _fetch_ohlcv_1h(pair, log=log)
+            candle_map[pair] = candles
+            result["api_calls_used"] += 1
+            _increment_td_usage(1)
+            if candles:
+                log(f"  Monitor: OHLCV fetched for {pair} ({len(candles)} candles)")
+
+    # ── Step 4+5: Detect milestones and apply cascade updates ─────────────────
+    try:
+        from src import telegram_alert as _ta
+    except Exception:
+        _ta = None
+
+    fund_closed: list = []
+    research_fragments: list = []
+
+    def _process_trade(row, candles, is_fund: bool):
+        pair      = row.get("pair", "")
+        direction = (row.get("direction") or "").upper()
+        price     = prices.get(pair)
+
+        if price is None:
+            return
+
+        # Duplicate prevention: log if already at max milestone
+        if str(row.get("t3_hit", "")).upper() == "TRUE":
+            log(f"  Monitor: {pair} #{row.get('id')} all targets already recorded — skipping")
+            return
+
+        # Detect milestones using candle data (HOT/WARM) or spot price (COLD)
+        if candles:
+            milestones, row_state = _detect_candle_milestones(row, candles, pair, log=log)
+        else:
+            milestones, row_state = _detect_spot_milestones(row, price, pair)
+
+        if not milestones:
+            return
+
+        # Apply to appropriate tracker
+        if is_fund:
+            closed = _apply_fund_milestones(
+                row, milestones, row_state, log=log,
+                ta=_ta, is_weekend=is_wknd,
+            )
+            fund_closed.extend(closed)
+        else:
+            closed_row, frag = _apply_research_milestones(
+                row, milestones, row_state, log=log,
+            )
+            if frag:
+                research_fragments.append(frag)
+
+        # Record in result milestones list
+        for m in milestones:
+            result["milestones_hit"].append({
+                "type":      "fund" if is_fund else "research",
+                "pair":      pair,
+                "level":     m["level"],
+                "price":     m["price"],
+                "pips":      m["pips"],
+                "candle_dt": m.get("candle_dt"),
+            })
+
+    for row in _fund_open:
+        pair    = row.get("pair", "")
+        candles = candle_map.get(pair, []) if ohlcv_allowed else []
+        _process_trade(row, candles, is_fund=True)
+
+    for row in _res_open:
+        pair    = row.get("pair", "")
+        candles = candle_map.get(pair, []) if ohlcv_allowed else []
+        _process_trade(row, candles, is_fund=False)
+
+    # ── Step 6: MFE/MAE updates for research trades ───────────────────────────
+    mfe_updated = 0
+    for row in _res_open:
+        pair      = row.get("pair", "")
+        direction = (row.get("direction") or "").upper()
+        rec_id    = int(row.get("id", 0) or 0)
+        try:
+            candles = candle_map.get(pair, [])
+            if candles:
+                if _update_mfe_mae_from_ohlcv(rec_id, direction, candles):
+                    mfe_updated += 1
+            else:
+                # COLD zone: update from current spot price only
+                p = prices.get(pair)
+                if p is not None:
+                    _rt.update_mfe_mae(rec_id, p)
+                    mfe_updated += 1
+        except Exception:
+            pass
+
+    result["mfe_mae_updated"] = mfe_updated
+    if mfe_updated:
+        log(f"Monitor: MFE/MAE updated for {mfe_updated} research trade(s).")
+
+    # ── Step 7: Telegram summary for research milestones ─────────────────────
+    if research_fragments and _ta:
+        now_fmt = now_ak.strftime("%-I%p").lower().replace("m", "").rstrip("0") or "12am"
+        wknd_txt = "\n📅 <i>Weekend monitor — Friday close prices.</i>" if is_wknd else ""
+        try:
+            _ta.send(
+                f"🔬 <b>Monitor update ({now_fmt} check): "
+                f"{len(research_fragments)} research trade milestone"
+                f"{'s' if len(research_fragments) != 1 else ''} hit</b>\n\n"
+                + " · ".join(research_fragments)
+                + f"\n\nML training data updated — next full scan {next_6am}"
+                + wknd_txt
+            )
+        except Exception:
+            pass
+
+    # ── Summary log ──────────────────────────────────────────────────────────
+    n_ms = len(result["milestones_hit"])
+    if n_ms:
+        log(
+            f"Monitor complete: {n_ms} milestone(s) detected — "
+            f"{len(fund_closed)} fund trade(s) closed — "
+            f"{len(research_fragments)} research milestone(s) recorded."
+        )
+    else:
+        log(
+            f"Monitor complete: no milestones — all {len(all_open)} trades within normal range — "
+            f"{result['api_calls_used']} API calls used."
+        )
+
+    _write_monitor_log(result)
+    return result
