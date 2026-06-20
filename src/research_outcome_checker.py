@@ -28,12 +28,27 @@ _POST_CLOSE_DAYS   = 5      # track for this many days after a trade closes
 
 
 def _compute_expiry_days(row: dict) -> int:
-    """Dynamic expiry from R:R: max(7, round(rr * 2)).
+    """Volatility-based expiry:
+      - High volatility  (atr_percentile_6m > 1.2) → 5 days  (trade resolves faster)
+      - Low volatility   (atr_percentile_6m < 0.8) → 10 days (trade needs more time)
+      - Normal volatility                           → 7 days
 
-    Stop ≈ 1x ATR ≈ ADR, so rr ≈ target_pips / adr_pips.
-    For a 2:1 R:R this gives 7 days; for 3:1 gives 7; for 4:1 gives 8.
-    Falls back to _EXPIRY_DAYS if levels are missing.
+    Falls back to R:R-based formula for rows where atr_percentile_6m is missing,
+    and ultimately to _EXPIRY_DAYS=7 if levels are missing too.
     """
+    try:
+        atr_pct = row.get("atr_percentile_6m")
+        if atr_pct not in (None, ""):
+            atr_val = float(atr_pct)
+            if atr_val > 1.2:
+                return 5
+            if atr_val < 0.8:
+                return 10
+            return 7
+    except (TypeError, ValueError):
+        pass
+
+    # Fallback: R:R-based formula
     try:
         entry  = float(row.get("entry")     or 0)
         stop   = float(row.get("stop_loss") or 0)
