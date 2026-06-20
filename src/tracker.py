@@ -62,8 +62,35 @@ def _save_report_file(rec_id: int, pair: str, report: str) -> str:
 
 
 def log_recommendation(pair: str, parsed: dict, data_sources, report: str) -> int:
-    """Append one recommendation; return its assigned id."""
+    """Append one recommendation; return its assigned id.
+
+    If a YES trade for this pair is already OPEN, returns the existing id and
+    overwrites the report file — prevents duplicate OPEN rows on re-analysis.
+    """
     rows = load()
+
+    # Guard: if this is a YES trade, check for an existing OPEN row for the same pair
+    if parsed.get("trade_this") == "YES":
+        existing = next(
+            (r for r in rows
+             if r.get("pair", "").upper() == pair.upper()
+             and r.get("status") == "OPEN"),
+            None,
+        )
+        if existing:
+            # Update the existing row with the new analysis instead of creating a duplicate
+            rec_id = int(existing["id"])
+            _save_report_file(rec_id, pair, report)
+            existing["timestamp"]     = _now()
+            existing["confidence"]    = parsed.get("confidence")
+            existing["entry"]         = parsed.get("entry") or existing.get("entry", "")
+            existing["target"]        = parsed.get("target") or existing.get("target", "")
+            existing["stop_loss"]     = parsed.get("stop_loss") or existing.get("stop_loss", "")
+            existing["key_thesis"]    = parsed.get("key_thesis") or existing.get("key_thesis", "")
+            existing["best_entry_time"] = parsed.get("best_entry_time") or existing.get("best_entry_time", "")
+            _write_all(rows)
+            return rec_id
+
     rec_id = _next_id(rows)
     report_file = _save_report_file(rec_id, pair, report)
     status = "OPEN" if parsed.get("trade_this") == "YES" else "NO_TRADE"
