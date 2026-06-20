@@ -110,7 +110,12 @@ def assess_scan(deep_results: list) -> dict:
                     if m:
                         cot_max_age = max(cot_max_age, int(m.group(1)))
 
-        if t_ok: tech_ok += 1
+        if t_ok:
+            tech_ok += 1
+            if t.get("source") == "Yahoo Finance":
+                tech_yf_ok += 1
+            else:
+                tech_td_ok += 1
         if f_ok: fund_ok += 1
         if s_ok: sent_ok += 1
         if p_ok: pos_ok  += 1
