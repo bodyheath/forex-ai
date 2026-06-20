@@ -8042,11 +8042,11 @@ def run() -> int:
                     _div_rt  = _rsi_div_cache.get(r_result["pair"], {})
                     _rt_dir_div = _rp.get("direction", "").upper()
                     if _rt_dir_div == "BUY":
-                        _extra_rt["divergence_type"] = _div_rt.get("low_divergence", "NONE")
+                        _extra_rt["rsi_divergence_type"] = _div_rt.get("low_divergence", "NONE")
                     elif _rt_dir_div == "SELL":
-                        _extra_rt["divergence_type"] = _div_rt.get("high_divergence", "NONE")
+                        _extra_rt["rsi_divergence_type"] = _div_rt.get("high_divergence", "NONE")
                     else:
-                        _extra_rt["divergence_type"] = "NONE"
+                        _extra_rt["rsi_divergence_type"] = "NONE"
                 except Exception:
                     pass
 
