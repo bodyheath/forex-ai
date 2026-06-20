@@ -4364,6 +4364,8 @@ def _send_telegram_summary(
             _action_line = f"👁 <b>{_pfx}WATCH ONLY: {direction} {pair} — Grade {_tb_grade}</b>"
 
         block = [""]
+        if _cl_score >= 9:
+            block.append("🏆 <b>PREMIUM SETUP</b>")
         if _grade_alert_hdr:
             block.append(_grade_alert_hdr)
             block.append("")
@@ -4381,6 +4383,7 @@ def _send_telegram_summary(
             block.append(_ms_line)
         if _div_line:
             block.append(_div_line)
+        block += _cl_display
         block += [
             "━━━━━━━━━━━━━━━━━━━━━",
             _grade_display_line(_qg_tb),
