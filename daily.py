@@ -4004,6 +4004,7 @@ def _send_telegram_summary(
 
         # Currency strength alignment boost (+1) and note
         _cs_boost_line = None
+        _cs_boost = 0
         try:
             from src import currency_strength as _cs_tb
             _tb_parts = pair.split("/")
