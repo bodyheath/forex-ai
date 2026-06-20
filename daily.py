@@ -5155,8 +5155,18 @@ def _send_telegram_summary(
                 except Exception:
                     pass
 
-                # ML milestone (activates at 10 decisive trades — WIN or LOSS only)
-                _ml_need = max(0, 10 - len(_decisive_ft))
+                # ML milestone — counts decisive FUND trades + decisive RESEARCH trades combined
+                _decisive_rt_ml = 0
+                try:
+                    from src import research_tracker as _rt_ml_mod
+                    _decisive_rt_ml = sum(
+                        1 for _r in _rt_ml_mod.load()
+                        if _r.get("status") in ("WIN", "LOSS")
+                    )
+                except Exception:
+                    pass
+                _decisive_combined_ml = len(_decisive_ft) + _decisive_rt_ml
+                _ml_need = max(0, 10 - _decisive_combined_ml)
                 _ml_str  = (f"Need {_ml_need} more closed trade{'s' if _ml_need != 1 else ''} "
                             f"for ML activation") if _ml_need > 0 else "ML model active"
 
