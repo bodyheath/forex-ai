@@ -792,4 +792,5 @@ def extract(pair: str, parsed: dict, bundle: dict,
         "base_ccy_strength":       _safe(extra_data.get("base_currency_strength"), 0.0),
         "quote_ccy_strength":      _safe(extra_data.get("quote_currency_strength"), 0.0),
         "monthly_trend_aligned":   _safe(extra_data.get("monthly_trend_aligned"), 0.5),
+        "hhhl_aligned":            _safe(extra_data.get("hhhl_aligned"), 0.5),
     }
