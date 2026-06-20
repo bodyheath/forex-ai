@@ -191,7 +191,6 @@ def _series_for(market_name: str) -> list:
             if rows:
                 _rd = (rows[0].get("report_date_as_yyyy_mm_dd") or "")
                 _da = _days_old(_rd)
-                import sys as _sys
                 print(
                     f"[COT] '{market_name}': latest report {_rd[:10]} ({_da} days old)",
                     file=_sys.stderr,
