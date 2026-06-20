@@ -695,6 +695,11 @@ def _derive_market_context(deep_results: list, risk_data: dict) -> dict:
 def _compute_patience_score(ctx: dict) -> dict:
     """Rate today's trading conditions 1-10 from four factors.
 
+    The regime detector is the single source of truth: its conditions_cap
+    sets the hard maximum before the 4-factor calculation even runs.
+    This permanently prevents contradictions like "ranging market — 8/10
+    strong trend clarity".
+
     VIX (0-3): calm market scores high, fear index > 25 scores 0.
     News (0-3): more high-impact events this week = lower score.
     MTF agreement (0-2): high avg weighted_score = cleaner trends.
@@ -703,6 +708,19 @@ def _compute_patience_score(ctx: dict) -> dict:
     Returns dict with 'score' (int 1-10), 'description' (str), and
     individual component scores for debugging.
     """
+    # ── Step 1: detect regime and get the hard conditions cap ─────────────
+    _regime_data_ps = {}
+    _conditions_cap = 10
+    _regime_key_ps  = ""
+    try:
+        from src import market_regime as _mr_ps
+        _regime_data_ps = _mr_ps.detect()
+        _regime_key_ps  = (_regime_data_ps.get("regime") or "").lower()
+        _conditions_cap = int(_regime_data_ps.get("conditions_cap", 10) or 10)
+    except Exception:
+        pass
+
+    # ── Step 2: four-factor raw score ─────────────────────────────────────
     # VIX component (0-3)
     vix = ctx.get("vix")
     if vix is None:
@@ -752,37 +770,47 @@ def _compute_patience_score(ctx: dict) -> dict:
         trend_pts = 0.0
 
     raw = vix_pts + news_pts + mtf_pts + trend_pts  # 0–10
-    score = max(1, min(10, round(raw)))
 
-    # Risk-OFF override: cap score regardless of other components
-    _ro_env = "risk-off" in (ctx.get("risk_env") or "").lower()
-    if _ro_env:
-        _vix_ro = ctx.get("vix")
-        if _vix_ro is not None and _vix_ro > 25:
-            score = min(score, 4)
-        else:
-            score = min(score, 6)
+    # ── Step 3: apply regime cap FIRST — this is the single source of truth
+    score = max(1, min(_conditions_cap, round(raw)))
 
-    # Build description from the weakest factors
-    parts = []
+    # ── Step 4: build description driven by regime (no contradictions) ────
     notable = ctx.get("high_impact_notable") or []
 
-    if avg_mtf is not None and avg_mtf < 0.45:
-        parts.append("choppy market")
-    elif avg_mtf is not None and avg_mtf < 0.70:
-        parts.append("moderate trend clarity")
-    elif avg_mtf is not None:
-        parts.append("strong trend clarity")
+    # High-vol ranging: hard override — all description comes from regime
+    if "ranging" in _regime_key_ps and "high" in _regime_key_ps:
+        description = (
+            "high volatility ranging market — chaotic conditions — "
+            "position sizes halved and only highest conviction trades recommended"
+        )
+        return {
+            "score": score, "raw": round(raw, 1),
+            "vix_pts": vix_pts, "news_pts": news_pts,
+            "mtf_pts": mtf_pts, "trend_pts": trend_pts,
+            "description": description,
+        }
 
-    if vix is not None and vix > 25:
-        parts.append("VIX elevated")
-    elif vix is not None and vix > 20:
-        parts.append("VIX above average")
+    parts = []
+    if "ranging" in _regime_key_ps:
+        # Ranging: regime-driven primary description — suppress trend clarity contradiction
+        parts = ["ranging market — directionless conditions"]
+    else:
+        # Trending: let 4-factor detail drive secondary description
+        if avg_mtf is not None and avg_mtf < 0.45:
+            parts.append("choppy market")
+        elif avg_mtf is not None and avg_mtf < 0.70:
+            parts.append("moderate trend clarity")
+        elif avg_mtf is not None:
+            parts.append("strong trend clarity")
+
+        if vix is not None and vix > 25:
+            parts.append("VIX elevated")
+        elif vix is not None and vix > 20:
+            parts.append("VIX above average")
 
     if hi > 0:
         if notable:
             ev_label = notable[0]
-            # shorten well-known events
             for kw, short in [("Non-Farm", "NFP"), ("Nonfarm", "NFP"),
                                ("Federal Reserve", "Fed rate decision"),
                                ("FOMC", "FOMC"), ("Consumer Price", "CPI")]:
@@ -793,62 +821,39 @@ def _compute_patience_score(ctx: dict) -> dict:
         else:
             parts.append(f"{hi} high-impact event{'s' if hi != 1 else ''} this week")
 
-    if qpct is not None and qpct < 0.25:
+    if qpct is not None and qpct < 0.25 and "ranging" not in _regime_key_ps:
         parts.append("few pairs with clear directional bias")
-
-    # Consistency check: if market environment is ranging/low-volatility, cap score
-    # and override MTF description to avoid "strong trend clarity" contradiction
-    _env_lo = (ctx.get("risk_env") or "").lower()
-    if "ranging" in _env_lo or "low volatility" in _env_lo:
-        score = min(score, 5)
-        parts = [
-            "ranging market — limited directional bias"
-            if p in ("strong trend clarity", "moderate trend clarity")
-            else p
-            for p in parts
-        ]
-        if not any("ranging" in p for p in parts):
-            parts.insert(0, "ranging market")
 
     desc_body = ", ".join(parts)
 
-    if _ro_env:
-        _vix_ro_desc = ctx.get("vix")
-        if _vix_ro_desc is not None and _vix_ro_desc > 25:
+    # Suffix is regime-first
+    if "risk_off" in _regime_key_ps:
+        if vix is not None and vix > 25:
             suffix = "elevated risk aversion — high caution recommended"
         else:
             suffix = "risk-off environment — safe haven pairs favoured — conditions selective"
-    elif score >= 8:
-        suffix = "ideal conditions for A/B setups"
-    elif score >= 6:
-        suffix = "consider waiting for cleaner setups"
-    elif score >= 4:
-        suffix = "be selective — only A-grade setups"
-    elif score >= 2:
-        suffix = "strong recommendation to reduce size"
+    elif "ranging" in _regime_key_ps:
+        suffix = "mean reversion setups preferred — avoid breakout chasing"
+    elif "risk_on" in _regime_key_ps:
+        if score >= 8:
+            suffix = "ideal conditions — A/B setups in favoured risk-on pairs"
+        elif score >= 6:
+            suffix = "good conditions for risk-on setups — favour AUD, NZD, CAD"
+        else:
+            suffix = "risk-on environment — patience for clean entries"
     else:
-        suffix = "strong recommendation to stay in cash today"
+        if score >= 8:
+            suffix = "ideal conditions for A/B setups"
+        elif score >= 6:
+            suffix = "consider waiting for cleaner setups"
+        elif score >= 4:
+            suffix = "be selective — only A-grade setups"
+        elif score >= 2:
+            suffix = "strong recommendation to reduce size"
+        else:
+            suffix = "strong recommendation to stay in cash today"
 
     description = f"{desc_body} — {suffix}" if desc_body else suffix
-
-    # Final hard regime override — import market_regime to detect ranging/risk-off
-    try:
-        from src import market_regime as _mr_ps
-        _regime_data  = _mr_ps.detect()
-        _regime_str_ps = (_regime_data.get("regime") or "").lower()
-        if "ranging" in _regime_str_ps and "high" in _regime_str_ps:
-            score = min(score, 4)
-            description = "high volatility ranging market — chaotic conditions — extreme caution recommended"
-        elif "ranging" in _regime_str_ps:
-            score = min(score, 6)
-            description = "ranging market — directionless conditions — mean reversion setups preferred"
-        elif "risk_off" in _regime_str_ps or "risk-off" in _regime_str_ps:
-            score = min(score, 6)
-            if "elevated risk aversion" not in description:
-                description = "risk-off environment — safe haven pairs favoured — conditions selective"
-        # Only trending_risk_on should show score above 6 without other dampeners
-    except Exception:
-        pass
 
     return {
         "score":     score,
