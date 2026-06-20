@@ -4255,6 +4255,88 @@ def _send_telegram_summary(
         _qg_tb = _quality_grades.get(pair, _trade_quality_grade(r))
         _tb_grade = (_qg_tb or {}).get("grade", "B")
 
+        # ── Pre-trade quality checklist (10 criteria, +1 each) ──────────────
+        _cl_weekly_sig     = (r.get("bundle", {}).get("mtf", {})
+                               .get("signals", {}).get("weekly", "NEUTRAL"))
+        _cl_weekly_aligned = (_cl_weekly_sig == direction)
+
+        _cl_cot_base = (r.get("bundle", {}).get("positioning", {})
+                         .get("base", {})) or {}
+        _cl_cot_dir  = str(_cl_cot_base.get("direction", "")).upper()
+        _cl_cot_mom  = _cl_cot_base.get("cot_momentum", "STABLE")
+        _cl_cot_ok   = (
+            (direction == "BUY"  and "LONG"  in _cl_cot_dir and _cl_cot_mom != "REVERSING") or
+            (direction == "SELL" and "SHORT" in _cl_cot_dir and _cl_cot_mom != "REVERSING")
+        )
+
+        _cl_no_news      = True
+        _cl_news_hrs_str = None
+        try:
+            from src import economic_calendar as _ec_cl
+            _cl_news_ev = _ec_cl.events_for_pair(pair, hours=24)
+            _cl_no_news = not bool(_cl_news_ev)
+            if _cl_news_ev:
+                _cl_news_hrs_str = str(round(_cl_news_ev[0].get("hours_away") or 0))
+        except Exception:
+            pass
+
+        _cl_fib_near = bool((_qg_tb or {}).get("fib_near", False))
+        _cl_rr_ok    = (rr_num is not None and rr_num >= 2.0)
+        _cl_kz_ok    = bool((_kz_result or {}).get("aligned", False))
+        _cl_hhhl_ok  = (_hhhl_aligned_tb == 1)
+        _cl_div_ok   = (_div_type_tb not in ("NONE", None, ""))
+
+        _cl_criteria = [
+            _mt_aligned,           # 1. Monthly trend aligned
+            _cl_weekly_aligned,    # 2. Weekly trend aligned
+            _cl_hhhl_ok,           # 3. Daily HHHL structure confirmed
+            _cl_fib_near,          # 4. Fibonacci entry zone
+            _cl_div_ok,            # 5. RSI divergence confirmed
+            (_cs_boost > 0),       # 6. Currency strength double-aligned
+            _cl_cot_ok,            # 7. COT institutional aligned
+            _cl_no_news,           # 8. No high impact news within 24h
+            _cl_rr_ok,             # 9. R:R >= 2.0
+            _cl_kz_ok,             # 10. Kill zone
+        ]
+        _cl_score = sum(1 for c in _cl_criteria if c)
+
+        if _cl_score < 7:
+            return []
+
+        _cl_news_label = (
+            f"No high impact news within 24h"
+            if _cl_no_news
+            else f"News event in {_cl_news_hrs_str}h — slight caution"
+        )
+        _cl_rr_label = (
+            f"R:R {rr_str}"
+            if _cl_rr_ok
+            else f"R:R {rr_str} (below 2.0:1 target)"
+        )
+        _cl_item_labels = [
+            "Monthly trend aligned",
+            "Weekly trend aligned",
+            "Daily trend structure confirmed",
+            "Fibonacci entry zone",
+            "RSI divergence confirmed",
+            "Currency strength double-aligned",
+            "COT institutional aligned",
+            _cl_news_label,
+            _cl_rr_label,
+            "Kill zone entry",
+        ]
+        _cl_display = [f"📋 Pre-trade checklist: {_cl_score}/10"]
+        for _cl_lbl, _cl_val in zip(_cl_item_labels, _cl_criteria):
+            _cl_display.append(f"{'✅' if _cl_val else '❌'} {_cl_lbl}")
+        if _cl_score >= 9:
+            _cl_display.append(
+                "🏆 Premium setup — 1.25-1.5% position size recommended"
+            )
+        else:
+            _cl_display.append(
+                "💼 Standard setup — 0.75-1.0% position size recommended"
+            )
+
         # Plain English description of what the trade is betting on
         _CCY_FULL_TB = {
             "USD": "US Dollar", "EUR": "Euro", "GBP": "British Pound",
