@@ -492,12 +492,14 @@ def train(quiet: bool = False) -> dict:
         # Anti-curve-fitting safeguards
         "min_samples_enforced":  MIN_PATTERN_SAMPLES,
         "complexity_penalty":    True,
-        "temporal_holdout_auc":  _hold_auc,
-        "overfit_gap":           _overfit_g,
-        "is_healthy":            _is_healthy,
-        "period_win_rates":      _temporal.get("period_win_rates"),
-        "period_stable":         _temporal.get("period_stable"),
-        "accuracy_history":      _acc_history,
+        "temporal_holdout_auc":    _hold_auc,
+        "overfit_gap":             _overfit_g,
+        "is_healthy":              _is_healthy,
+        "period_win_rates":        _temporal.get("period_win_rates"),
+        "period_stable":           _temporal.get("period_stable"),
+        "accuracy_history":        _acc_history,
+        "cv_fold_scores":          cv_fold_scores,
+        "n_consecutive_reliable":  _n_consecutive_reliable,
     }
     _save_meta(meta)
 
