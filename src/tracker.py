@@ -18,10 +18,26 @@ FIELDS = [
     "entry", "target", "stop_loss", "reward_risk", "trade_this", "data_sources",
     "status", "exit_price", "r_multiple", "pips", "net_pips", "closed_at", "notes",
     "report_file", "key_thesis", "best_entry_time",
+    # ── Cascading targets (append-only) ──────────────────────────────────────
+    "t1_price",                   # entry ± 0.4× ATR
+    "t2_price",                   # entry ± 0.7× ATR
+    "t3_price",                   # existing target
+    "t1_hit",                     # TRUE / FALSE
+    "t1_hit_price",               # live price when T1 triggered
+    "t1_hit_pips",                # pip profit on 40% closed at T1
+    "t2_hit",                     # TRUE / FALSE
+    "t2_hit_price",
+    "t2_hit_pips",                # pip profit on 30% closed at T2
+    "t3_hit",                     # TRUE / FALSE
+    "t3_hit_price",
+    "t3_hit_pips",                # pip profit on final 30% at T3
+    "effective_stop",             # starts as stop_loss; moves to entry after T1 hit
+    "cascading_total_pips",       # sum of pips across all hit portions
+    "cascading_total_pips_weighted",  # 0.4×t1 + 0.3×t2 + 0.3×t3
 ]
 
-# status values: NO_TRADE | OPEN | WIN | LOSS | BREAKEVEN | SKIPPED | EXPIRED
-OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "SKIPPED", "EXPIRED"}
+# status values: NO_TRADE | OPEN | WIN | LOSS | BREAKEVEN | SKIPPED | EXPIRED | PARTIAL_WIN | FULL_WIN
+OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "SKIPPED", "EXPIRED", "PARTIAL_WIN", "FULL_WIN"}
 
 
 def _now() -> str:
