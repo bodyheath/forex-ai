@@ -484,6 +484,25 @@ def _fetch_ohlcv_snapshot(pair: str):
     if cached is not None:
         return cached
 
+    # Try to reuse the technical.py daily cache (populated by warm_cache, 12h TTL)
+    # This avoids redundant API calls on afternoon scans when 6am data is still fresh
+    _td_key = f"TD:{pair}:1day:400"
+    _td_raw = cache.get(_td_key)
+    if isinstance(_td_raw, dict) and "values" in _td_raw:
+        _closes, _highs, _lows, _opens = [], [], [], []
+        for _v in (_td_raw["values"] or [])[:20]:
+            try:
+                _closes.append(float(_v["close"]))
+                _highs.append(float(_v["high"]))
+                _lows.append(float(_v["low"]))
+                _opens.append(float(_v["open"]))
+            except (KeyError, ValueError):
+                pass
+        if len(_closes) >= 2:
+            _result = {"closes": _closes, "highs": _highs, "lows": _lows, "opens": _opens}
+            cache.set(cache_key, _result)
+            return _result
+
     if not config.TWELVE_DATA_KEY:
         return None
 
