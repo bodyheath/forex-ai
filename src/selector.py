@@ -438,6 +438,27 @@ def load_pair_performance() -> dict:
 
 # ── OHLCV snapshot ────────────────────────────────────────────────────────────
 
+def _increment_td_usage() -> None:
+    """Increment today's Twelve Data call counter in data/api_usage.json."""
+    try:
+        import json as _json
+        from datetime import date as _date
+        _f = config.DATA_DIR / "api_usage.json"
+        _usage: dict = {}
+        if _f.exists():
+            try:
+                _usage = _json.loads(_f.read_text(encoding="utf-8"))
+            except Exception:
+                _usage = {}
+        _today = str(_date.today())
+        if _usage.get("date") != _today:
+            _usage = {"date": _today, "calls": 0}
+        _usage["calls"] = int(_usage.get("calls", 0)) + 1
+        _f.write_text(_json.dumps(_usage), encoding="utf-8")
+    except Exception:
+        pass
+
+
 def _fetch_ohlcv_snapshot(pair: str):
     """Fetch 20 daily OHLCV candles for a pair. Cached under global TTL.
 
@@ -453,6 +474,7 @@ def _fetch_ohlcv_snapshot(pair: str):
         return None
 
     symbol = pair.replace("/", "")
+    _increment_td_usage()
     try:
         r = requests.get(
             "https://api.twelvedata.com/time_series",
