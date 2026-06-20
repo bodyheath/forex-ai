@@ -438,6 +438,20 @@ def load_pair_performance() -> dict:
 
 # ── OHLCV snapshot ────────────────────────────────────────────────────────────
 
+def _get_td_calls_today() -> int:
+    """Return today's Twelve Data call count from api_usage.json."""
+    try:
+        import json as _json
+        from datetime import date as _date
+        _f = config.DATA_DIR / "api_usage.json"
+        if not _f.exists():
+            return 0
+        _usage = _json.loads(_f.read_text(encoding="utf-8"))
+        return int(_usage.get("calls", 0)) if _usage.get("date") == str(_date.today()) else 0
+    except Exception:
+        return 0
+
+
 def _increment_td_usage() -> None:
     """Increment today's Twelve Data call counter in data/api_usage.json."""
     try:
