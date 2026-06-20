@@ -77,6 +77,9 @@ FIELDS = [
     "days_to_target_after_close", # days from trade close to target being hit (blank if not hit)
     "price_at_expiry_momentum",   # price move direction at expiry: UP | DOWN | FLAT
     "entry_level_revisited",      # true/false — did price revisit entry within 5 days after close?
+    # ── Currency strength at entry ──────────────────────────────────────────
+    "base_currency_strength",     # -100 to +100 strength score for base currency at entry
+    "quote_currency_strength",    # -100 to +100 strength score for quote currency at entry
 ]
 
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN"}
