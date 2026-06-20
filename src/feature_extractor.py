@@ -107,6 +107,12 @@ def _encode_kill_zone(kz: str) -> float:
     }.get((kz or "").upper(), 0.0)
 
 
+def _encode_market_structure(ms: str) -> float:
+    return {
+        "BULLISH_BREAK": 1.0, "CONTINUATION": 0.0, "BEARISH_BREAK": -1.0,
+    }.get((ms or "").upper(), 0.0)
+
+
 def _encode_ribbon(ribbon_state: str) -> float:
     return {
         "ALIGNED_BULL": 2.0, "PARTIAL_BULL": 1.0, "NEUTRAL": 0.0,
