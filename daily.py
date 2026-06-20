@@ -5372,9 +5372,13 @@ def _send_telegram_summary(
         _risk_off_warn_ccys = {"AUD", "NZD", "GBP", "EUR", "NOK", "SEK", "CAD"}
         if sc:
             if _roff_ctx and sc in _risk_off_warn_ccys:
-                sc_reason = "data shows strength but risk-off conditions favour safe havens"
-                ctx_lines.append(f"💪 Strongest: <b>{sc}</b> — {sc_reason} (+{scores.get(sc,0):.0f})")
-                ctx_lines.append(f"⚠️ Risk-OFF environment — JPY, CHF, USD typically outperform — verify before trading {sc}")
+                # Risk-off: demote risk-on currencies — surface the strongest safe haven instead
+                sc_reason = "data shows relative strength but regime favours safe havens — treat with caution"
+                ctx_lines.append(f"⚠️ Strongest (risk-on skew): <b>{sc}</b> — {sc_reason} (+{scores.get(sc,0):.0f})")
+                _sh_scores = {c: scores.get(c, 0) for c in _safe_h}
+                _best_sh = max(_sh_scores, key=_sh_scores.get) if _sh_scores else None
+                if _best_sh and _sh_scores.get(_best_sh, 0) > 0:
+                    ctx_lines.append(f"💪 Regime favourite: <b>{_best_sh}</b> — safe haven demand (+{_sh_scores[_best_sh]:.0f})")
             elif _roff_ctx and sc in _safe_h:
                 sc_reason = "safe haven demand — expected in risk-off environment"
                 ctx_lines.append(f"💪 Strongest: <b>{sc}</b> — {sc_reason} (+{scores.get(sc,0):.0f})")
