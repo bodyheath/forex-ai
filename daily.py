@@ -6663,12 +6663,30 @@ def run() -> int:
             from src import ml_predictor as _mlp
             _ml_meta = _mlp.retrain_if_stale(quiet=True)
             if _ml_meta:
+                _hold_pct = round((_ml_meta.get("temporal_holdout_auc") or 0) * 100)
+                _n_consec = _ml_meta.get("n_consecutive_reliable", 0)
                 _log_line(logf, f"ML model retrained: {_ml_meta.get('n_trades',0)} trades, "
-                                 f"ROC-AUC {_ml_meta.get('roc_auc',0):.3f}")
+                                 f"holdout accuracy {_hold_pct}% on new trades "
+                                 f"(reliable retrains: {_n_consec}/3)")
             else:
                 _log_line(logf, f"ML model: {_mlp.get_model_status_line()}")
         except Exception as _ml_exc:
             _log_line(logf, f"ML model step: {_ml_exc}")
+
+        # COT cache diagnostics — log status for all tracked markets, delete stale entries
+        try:
+            from src import positioning as _pos_cot
+            _cot_summary = _pos_cot.log_and_clean_cot_status(
+                log_fn=lambda m: _log_line(logf, m)
+            )
+            if _cot_summary.get("deleted_stale", 0):
+                _log_line(
+                    logf,
+                    f"[COT] Deleted {_cot_summary['deleted_stale']} stale cache "
+                    f"entries — fresh data will be fetched during pair analysis"
+                )
+        except Exception as _cot_diag_exc:
+            _log_line(logf, f"[COT] Cache diagnostics failed: {_cot_diag_exc}")
 
         # Threshold auto-adjust: revert conf 6→7 / R:R 1.3→1.5 if win rate < 45% after 50 trades
         threshold_revert_msg = None
