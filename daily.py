@@ -6818,8 +6818,8 @@ def run() -> int:
                 _fa_rt     = r_result.get("_fundamental_alignment") or {}
                 _fa_rt     = _fa_rt if isinstance(_fa_rt, dict) else {}
 
-                # Grade from quality_grades (computed during scoring)
-                _grade_rt  = _quality_grades.get(r_result["pair"], {}).get("grade", "")
+                # Grade — recompute directly (avoids _quality_grades scope issue)
+                _grade_rt  = _trade_quality_grade(r_result).get("grade", "")
 
                 # Correlation agreement: count other pairs with same base CCY and direction
                 _pair_base_rt = r_result["pair"].split("/")[0].upper() if "/" in r_result["pair"] else ""
