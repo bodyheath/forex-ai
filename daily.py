@@ -6667,6 +6667,7 @@ def run() -> int:
         _td_healthy = _check_twelvedata_health(log=lambda m: _log_line(logf, m))
 
         # Log Twelve Data daily call status at scan start
+        _td_used_start = 0  # safe default — updated in try block below
         try:
             _au_start = json.loads(_API_USAGE_FILE.read_text(encoding="utf-8")) if _API_USAGE_FILE.exists() else {}
             from datetime import date as _date_start
