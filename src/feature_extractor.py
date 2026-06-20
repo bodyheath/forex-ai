@@ -93,6 +93,12 @@ FEATURE_COLS = [
     "momentum_x_cot",           # divergence_type_norm × cot_momentum_num (clipped)
     "kill_zone_x_confluence",   # kill_zone_binary × (checklist_score/10)
     "currency_strength_x_trend", # base_ccy_strength × monthly_trend_aligned
+    # ── Cascading target context (append-only) ─────────────────────────────
+    "t1_reached",               # 1 if T1 was hit (post-close), else 0
+    "t2_reached",               # 1 if T2 was hit (post-close), else 0
+    "max_target_reached",       # 0=none, 1=T1 only, 2=T2, 3=T3/FULL_WIN
+    "pips_at_t1",               # pip distance from entry to T1 (ATR × 0.4 / pip_size)
+    "trade_closed_at_t1_only",  # 1 if T1 hit but T2 not hit and trade is PARTIAL_WIN
 ]
 
 
