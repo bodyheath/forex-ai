@@ -4107,6 +4107,26 @@ def _send_telegram_summary(
         except Exception:
             pass
 
+        # Kill zone timing — +0.5 when pair is in an aligned session window; −0.5 outside all
+        _kz_line = None
+        _kz_key  = "OUTSIDE"
+        try:
+            from src import kill_zones as _kz_mod
+            _kz_parts = pair.split("/")
+            if len(_kz_parts) == 2:
+                _kz_result = _kz_mod.check(_kz_parts[0], _kz_parts[1])
+                _kz_key    = _kz_result.get("zone_key") or "OUTSIDE"
+                _kz_delta  = _kz_result.get("conf_delta", 0.0)
+                _kz_line   = _kz_result.get("display_line")
+                if _kz_delta:
+                    try:
+                        _kz_new = float(_conf_display) + _kz_delta
+                        _conf_display = str(max(1, min(10, round(_kz_new * 2) / 2)))
+                    except (TypeError, ValueError):
+                        pass
+        except Exception:
+            pass
+
         _qg_tb = _quality_grades.get(pair, _trade_quality_grade(r))
         _tb_grade = (_qg_tb or {}).get("grade", "B")
 
