@@ -7926,6 +7926,29 @@ def run() -> int:
                 if _rt_inv_blocked:
                     return False  # skip log_research_trade() — inverse already open
 
+                # ── Cascade target levels at entry ────────────────────────────
+                try:
+                    from src import cascade as _casc_rt_log
+                    _casc_e_rt = float((_rp.get("entry") or 0))
+                    _casc_s_rt = float((_rp.get("stop_loss") or 0))
+                    _casc_t_rt = float((_rp.get("target") or 0))
+                    _casc_d_rt = (_rp.get("direction") or "").upper()
+                    _casc_atr_rt = float((_daily_rt.get("atr14") or 0))
+                    if _casc_e_rt and _casc_s_rt and _casc_t_rt and _casc_d_rt in ("BUY", "SELL"):
+                        _ct1_rt, _ct2_rt, _ct3_rt = _casc_rt_log.compute_levels(
+                            _casc_e_rt, _casc_s_rt, _casc_t_rt, _casc_d_rt,
+                            atr=_casc_atr_rt or None,
+                        )
+                        if _ct1_rt is not None:
+                            _extra_rt.update({
+                                "t1_price":      _ct1_rt,
+                                "t2_price":      _ct2_rt,
+                                "t3_price":      _ct3_rt,
+                                "effective_stop": _casc_s_rt,
+                            })
+                except Exception:
+                    pass
+
                 _rt_id = _rt.log_research_trade(
                     r_result["pair"], _rp, _rsrc, _smode,
                     extra_fields=_extra_rt,
