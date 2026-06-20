@@ -405,16 +405,17 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
         except Exception as exc:
             log(f"  Research #{rec_id} {pair}: outcome check error — {exc}")
 
-    wins       = sum(1 for r in closed if r.get("status") == "WIN")
-    losses     = sum(1 for r in closed if r.get("status") == "LOSS")
-    expired    = sum(1 for r in closed if r.get("status") == "EXPIRED")
-    partial    = sum(1 for r in closed if r.get("status") == "PARTIAL_WIN")
+    wins      = sum(1 for r in closed if r.get("status") == "WIN")
+    full_wins = sum(1 for r in closed if r.get("status") == "FULL_WIN")
+    losses    = sum(1 for r in closed if r.get("status") == "LOSS")
+    expired   = sum(1 for r in closed if r.get("status") == "EXPIRED")
+    partial   = sum(1 for r in closed if r.get("status") == "PARTIAL_WIN")
     still_open = len(open_trades) - len(closed)
     if closed:
         log(
             f"Research outcome check complete: closed {len(closed)} trade(s) this run — "
-            f"{wins} WIN · {losses} LOSS · {expired} EXPIRED · {partial} PARTIAL_WIN · "
-            f"{still_open} still open."
+            f"{wins} WIN · {full_wins} FULL_WIN · {losses} LOSS · "
+            f"{expired} EXPIRED · {partial} PARTIAL_WIN · {still_open} still open."
         )
     else:
         log(
