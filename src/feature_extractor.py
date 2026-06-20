@@ -825,4 +825,5 @@ def extract(pair: str, parsed: dict, bundle: dict,
         "market_structure_break":  _encode_market_structure(
                                        extra_data.get("market_structure_break", "")),
         "divergence_type":         _encode_divergence(extra_data.get("divergence_type", "")),
+        "checklist_score":         float(extra_data.get("checklist_score", 0) or 0),
     }
