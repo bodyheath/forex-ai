@@ -136,7 +136,7 @@ def t3_hit(row: dict, price: float) -> bool:
     """True if T2 was hit and price has crossed T3 (T3 not yet recorded)."""
     if not _is_true(row.get("t2_hit")):
         return False
-    if str(row.get("t3_hit", "")).upper() == "TRUE":
+    if _is_true(row.get("t3_hit")):
         return False
     t3 = _to_float(row.get("t3_price")) or _to_float(row.get("target"))
     if t3 is None:
@@ -158,7 +158,7 @@ def effective_stop_hit(row: dict, price: float) -> bool:
 
 def cascade_outcome(row: dict) -> str:
     """Determine closed outcome from which targets were hit."""
-    if str(row.get("t3_hit", "")).upper() == "TRUE":
+    if _is_true(row.get("t3_hit")):
         return "FULL_WIN"
     if _is_true(row.get("t2_hit")):
         return "WIN"
