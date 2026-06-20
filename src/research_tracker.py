@@ -83,6 +83,8 @@ FIELDS = [
     # ── Monthly trend filter ─────────────────────────────────────────────────
     "monthly_trend",              # BUY | SELL | NEUTRAL — monthly candle direction at entry
     "monthly_trend_aligned",      # 1=aligned with monthly trend, 0=counter-trend, 0.5=neutral
+    # ── HHHL trend structure filter ──────────────────────────────────────────
+    "hhhl_aligned",               # 1=structure confirms direction, 0=broken structure, 0.5=no data
 ]
 
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN"}
