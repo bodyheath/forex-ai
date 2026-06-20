@@ -2476,13 +2476,24 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
     except Exception:
         pass
 
-    # HKD concentration warning — >=2 open trades with HKD in the pair
+    # Currency concentration warning — flag any currency appearing in 3+ open trades
     try:
-        _hkd_trades = [r for r in open_trades if "HKD" in (r.get("pair","").upper())]
-        if len(_hkd_trades) >= 2:
-            sec.append(
-                f"⚠️ HKD CONCENTRATION: {len(_hkd_trades)} open trades involve HKD — HKD pairs have wide spreads (4 pips) relative to their ATR — consider reducing exposure"
-            )
+        _ccy_count: dict = {}
+        for _r in open_trades:
+            _pc = _r.get("pair", "").upper().replace("/", "").replace("-", "")
+            if len(_pc) >= 6:
+                for _cc in [_pc[:3], _pc[3:6]]:
+                    _ccy_count[_cc] = _ccy_count.get(_cc, 0) + 1
+        for _cc, _cnt in sorted(_ccy_count.items(), key=lambda x: -x[1]):
+            if _cnt >= 3:
+                sec.append(
+                    f"⚠️ Currency concentration: {_cc} appears in {_cnt} open trades "
+                    f"— combined {_cc} risk exceeds 2% guideline — consider reducing"
+                )
+            elif _cnt == 2 and _cc == "HKD":
+                sec.append(
+                    f"⚠️ HKD concentration: {_cnt} open trades involve HKD — HKD pairs have wide spreads relative to ATR — monitor closely"
+                )
     except Exception:
         pass
 
