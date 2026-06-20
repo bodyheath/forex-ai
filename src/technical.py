@@ -1103,3 +1103,65 @@ def read_cached_indicators(pair: str) -> dict | None:
         }
     except Exception:
         return None
+
+
+def get_monthly_trend(pair: str) -> dict:
+    """Return the dominant monthly trend direction for a forex pair.
+
+    Reads from the already-cached TD:{pair}:1month:60 data — zero API calls.
+    Falls back to NEUTRAL when the cache is cold or data is insufficient.
+
+    Returns:
+        {"trend": "BUY" | "SELL" | "NEUTRAL",
+         "strength": "strong" | "moderate" | "weak",
+         "n_months": int}  — number of complete months used
+    """
+    cached = cache.get(f"TD:{pair}:1month:60", ttl_hours=48.0)
+    if not isinstance(cached, dict) or not cached.get("values"):
+        return {"trend": "NEUTRAL", "strength": "weak", "n_months": 0}
+
+    from datetime import datetime as _dt
+    _now_prefix = _dt.utcnow().strftime("%Y-%m")
+
+    closes, opens, highs, lows = [], [], [], []
+    for v in cached["values"]:
+        # Skip the current (potentially incomplete) month
+        if (v.get("datetime") or "")[:7] == _now_prefix:
+            continue
+        try:
+            closes.append(float(v["close"]))
+            opens.append(float(v["open"]))
+            highs.append(float(v["high"]))
+            lows.append(float(v["low"]))
+        except (KeyError, TypeError, ValueError):
+            pass
+        if len(closes) >= 6:
+            break
+
+    if len(closes) < 3:
+        return {"trend": "NEUTRAL", "strength": "weak", "n_months": len(closes)}
+
+    # Monthly ATR (average true range proxy: high − low per candle)
+    n = min(5, len(closes))
+    monthly_atr = sum(highs[i] - lows[i] for i in range(n)) / n if n > 0 else 0
+
+    # 3-month directional move (closes[0] = last complete month, closes[2] = 3 months ago)
+    n_back = min(2, len(closes) - 1)
+    move_3m = closes[0] - closes[n_back]
+
+    # Candle colour count over last 3 complete months
+    n_check = min(3, len(closes))
+    n_bull = sum(1 for i in range(n_check) if closes[i] > opens[i])
+    n_bear = sum(1 for i in range(n_check) if closes[i] < opens[i])
+
+    # Significance threshold: move must be at least 20% of monthly ATR
+    sig = monthly_atr * 0.20 if monthly_atr > 0 else 0
+
+    if move_3m > sig and n_bull >= 2:
+        strength = "strong" if (move_3m > monthly_atr * 0.7 or n_bull == 3) else "moderate"
+        return {"trend": "BUY", "strength": strength, "n_months": n_check}
+    elif move_3m < -sig and n_bear >= 2:
+        strength = "strong" if (move_3m < -monthly_atr * 0.7 or n_bear == 3) else "moderate"
+        return {"trend": "SELL", "strength": strength, "n_months": n_check}
+    else:
+        return {"trend": "NEUTRAL", "strength": "weak", "n_months": n_check}
