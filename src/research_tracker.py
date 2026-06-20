@@ -89,6 +89,8 @@ FIELDS = [
     "kill_zone_entry",            # LONDON | NEW_YORK | OVERLAP | TOKYO | LONDON_CLOSE | OUTSIDE
     # ── Market structure break ────────────────────────────────────────────────
     "market_structure_break",     # BULLISH_BREAK | BEARISH_BREAK | CONTINUATION
+    # ── RSI divergence ────────────────────────────────────────────────────────
+    "divergence_type",            # BULLISH | BEARISH | HIDDEN_BULLISH | HIDDEN_BEARISH | NONE
 ]
 
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN"}
