@@ -618,7 +618,7 @@ def _compute_rich_score(
     """Compute 9-factor composite pre-selection score.
 
     Returns (total_score, breakdown_dict).
-    Max: mom=15, tech=20, fundiv=15, trend=10, vol=10, sess=10, news=10, sys=10, regime=8.
+    Max: mom=15, tech=20, fundiv=15, trend=10, vol=10, sess=10, news=10, sys=10, regime=12.
     """
     closes = snapshot.get("closes", []) if snapshot else []
     highs  = snapshot.get("highs",  []) if snapshot else []
