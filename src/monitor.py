@@ -547,6 +547,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
             _trk.update_fields(
                 rec_id, t3_hit="TRUE", t3_hit_price=mprice, t3_hit_pips=pips,
             )
+            _verify_milestone_write(rec_id, "T3", _trk, pair, log=log)
             _wp = _casc.weighted_pips(row_state)
             _tp = _casc.total_pips(row_state)
             _trk.update_fields(
@@ -563,7 +564,9 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 cascading_pips=_wp,
             )
             log(f"  Monitor fund #{rec_id} {pair}: FULL_WIN — {_wp:.1f}p weighted")
-            if ta:
+            if _send_telegram:
+                _record_milestone_sent(pair, "T3", rec_id, trade_type="fund")
+            if ta and _send_telegram:
                 try:
                     ta.send(
                         f"🎯 <b>{pair} has hit its full profit target</b>\n\n"
