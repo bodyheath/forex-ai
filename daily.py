@@ -5434,6 +5434,11 @@ def _send_telegram_summary(
                 health_sec.extend(_dq_hs.build_scorecard(_dq_quality))
         except Exception:
             pass
+        # Always show Twelve Data API usage
+        _td_remaining_hs = max(0, 800 - td_calls)
+        health_sec.append(
+            f"📊 Twelve Data API: {td_calls}/800 calls used today — {_td_remaining_hs} remaining"
+        )
         for issue in health_issues:
             health_sec.append(f"- {issue}")
         # ML model status line
