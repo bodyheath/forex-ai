@@ -4172,6 +4172,8 @@ def _send_telegram_summary(
             block.append(_monthly_trend_line)
         if _ts_line:
             block.append(_ts_line)
+        if _kz_line:
+            block.append(_kz_line)
         block += [
             "━━━━━━━━━━━━━━━━━━━━━",
             _grade_display_line(_qg_tb),
