@@ -3959,6 +3959,17 @@ def _send_telegram_summary(
             except (TypeError, ValueError, ZeroDivisionError):
                 pass
 
+        # Monthly trend filter — counter-trend trades penalised −2 on displayed confidence
+        _monthly_trend_line = None
+        _monthly_trend_data = {}
+        try:
+            from src import technical as _tech_mt
+            if pair not in _monthly_trends:
+                _monthly_trends[pair] = _tech_mt.get_monthly_trend(pair)
+            _monthly_trend_data = _monthly_trends.get(pair, {})
+        except Exception:
+            pass
+
         # R:R < 1.5 → LOW QUALITY flag; reduce displayed confidence by 1
         _low_quality = rr_num is not None and rr_num < 1.5
         _conf_display = conf
