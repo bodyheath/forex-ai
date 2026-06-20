@@ -6171,7 +6171,14 @@ def _send_telegram_summary(
     all_sections = _clean_sections
 
     all_sections = [[ln for ln in sec if _is_ok_line(ln)] for sec in all_sections]
-    _send_in_parts(all_sections)
+    # Build short urgent pre-alerts for each YES trade — sent as individual messages first
+    _urgent_pre = [
+        f"🚨 NEW TRADE ALERT — {_yr['pair']} "
+        f"{(_yr.get('parsed') or {}).get('direction', '').upper()} "
+        f"— confidence {_eff_conf(_yr):.0f}/10 — full details in next message"
+        for _yr in yes_trades
+    ]
+    _send_in_parts(all_sections, urgent_alerts=_urgent_pre)
 
 
 # ── Daily run ──────────────────────────────────────────────────────────────────
