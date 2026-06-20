@@ -578,13 +578,21 @@ def train(quiet: bool = False) -> dict:
         "model_type":            mtype,
         "feature_cols":          FEATURE_COLS,
         "importances":           importances,
-        # Training data composition (PARTIAL_WIN counted as WIN)
+        # Training data composition
         "n_wins_training":       n_wins_tr,
         "n_losses_training":     n_losses_tr,
         "partial_wins_as_wins":  True,
         "class_weights_applied": True,
         "prediction_loss_pct":   _pred_lp,
         "is_biased":             _is_biased,
+        # SMOTE synthetic oversampling metadata
+        "smote_applied":         smote_applied,
+        "n_real_wins":           n_real_wins,
+        "n_synthetic_wins":      n_synthetic,
+        "n_losses_orig":         n_losses_orig,
+        # Soft label quality weighting metadata
+        "soft_labels_applied":   True,
+        "n_interaction_features": 5,
         # Anti-curve-fitting safeguards
         "min_samples_enforced":  MIN_PATTERN_SAMPLES,
         "complexity_penalty":    True,
