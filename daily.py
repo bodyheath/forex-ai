@@ -3447,6 +3447,56 @@ def _build_system_learning_report(date: str) -> list:
     except Exception:
         pass
 
+    # ── MONITOR PERFORMANCE (past 7 days) ─────────────────────────────────────
+    try:
+        _mon_log_lr = config.DATA_DIR / "monitor_log.json"
+        if _mon_log_lr.exists():
+            _mon_lr = json.loads(_mon_log_lr.read_text(encoding="utf-8"))
+            # Collect all milestone events from this week's monitor runs
+            # (monitor_log.json only stores the most recent run; derive week stats
+            # from research_trades.csv milestones closed in the last 7 days)
+            _mon_cutoff = (datetime.now() - __import__("datetime").timedelta(days=7)).strftime("%Y-%m-%d")
+            _mon_week_rows = [
+                r for r in rows
+                if r.get("closed_at", "")[:10] >= _mon_cutoff
+                and r.get("status") in ("WIN", "FULL_WIN", "PARTIAL_WIN", "LOSS")
+            ]
+            _mon_t1_week = sum(1 for r in _mon_week_rows if str(r.get("t1_hit","")).upper() == "TRUE")
+            _mon_t2_week = sum(1 for r in _mon_week_rows if str(r.get("t2_hit","")).upper() == "TRUE")
+            _mon_wp_total = sum(
+                float(r.get("cascading_total_pips_weighted") or 0)
+                for r in _mon_week_rows
+                if r.get("cascading_total_pips_weighted") not in (None, "")
+            )
+            _mon_mfe_ct = sum(
+                1 for r in rows
+                if r.get("status") == "OPEN"
+                and r.get("mfe_pips") not in (None, "")
+                and float(r.get("mfe_pips") or 0) > 0
+            )
+            _mon_last_ts = _mon_lr.get("timestamp", "")
+            _mon_last_str = _mon_last_ts[:16].replace("T", " ") if _mon_last_ts else "unknown"
+            _mon_api_last = _mon_lr.get("api_calls_used", 0)
+            _mon_calls_est = _mon_api_last * 12 * 7  # rough weekly estimate
+            if _mon_t1_week + _mon_t2_week > 0:
+                sec += ["", "<b>MONITOR PERFORMANCE THIS WEEK</b>"]
+                sec.append(
+                    f"Estimated 84 monitor runs (12/day × 7 days) — last run at {_mon_last_str} UTC"
+                )
+                sec.append(
+                    f"T1 milestones banked this week: {_mon_t1_week} trades — "
+                    f"T2 milestones banked: {_mon_t2_week} trades"
+                )
+                if _mon_wp_total > 0:
+                    sec.append(f"Additional weighted pips captured: +{_mon_wp_total:.0f}p total")
+                sec.append(
+                    f"MFE/MAE tracking active on {_mon_mfe_ct} open research trade(s) — "
+                    f"~{_mon_calls_est} API calls used by monitor this week (estimate)"
+                )
+                any_added = True
+    except Exception:
+        pass
+
     # ── 4. BEST AND WORST PAIRS ────────────────────────────────────────────────
     pair_stats: dict = {}
     for r in decisive:
