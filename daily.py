@@ -7034,23 +7034,81 @@ def run() -> int:
         )
 
         # Save watchlist cache for next scan's dynamic boosters
-        # Includes: watchlist pairs (conf 5.0–6.9) and near-miss pairs (conf 5.0–5.9)
+        # Includes: watchlist pairs (conf 5.0–6.9), near-miss pairs (conf 5.0–5.9),
+        # and momentum_counts tracking consecutive scan appearances for Booster 6.
         try:
+            import time as _wc_time
             _wl_pairs = [r["pair"] for r in deep_results if 5.0 <= (_conf(r) or 0) <= 6.9]
             _nm_pairs = {r["pair"]: _conf(r) for r in deep_results if 5.0 <= (_conf(r) or 0) <= 5.9}
             _wl_cache_path = config.DATA_DIR / "watchlist_cache.json"
+
+            # Load previous momentum state to build rolling consecutive-scan counts
+            _prev_momentum: dict = {}
+            _prev_grace:    dict = {}
+            try:
+                if _wl_cache_path.exists():
+                    _prev_wl_data  = json.loads(_wl_cache_path.read_text(encoding="utf-8"))
+                    _prev_momentum = _prev_wl_data.get("momentum_counts", {})
+                    _prev_grace    = _prev_wl_data.get("momentum_grace",  {})
+            except Exception:
+                pass
+
+            _wl_set         = set(_wl_pairs)
+            _new_momentum:  dict = {}
+            _new_grace:     dict = {}
+            _momentum_gains: list = []
+
+            # Increment count for pairs currently in the watchlist
+            for _mp in _wl_pairs:
+                _old_cnt = _prev_momentum.get(_mp, 0)
+                _new_cnt = _old_cnt + 1
+                _new_momentum[_mp] = _new_cnt
+                # No grace needed — pair is present this scan
+                if _new_cnt >= 2:
+                    _momentum_gains.append((_mp, _new_cnt))
+
+            # Apply 1-scan grace period for pairs absent from watchlist this scan
+            for _mp, _old_cnt in _prev_momentum.items():
+                if _mp in _wl_set:
+                    continue   # already handled above
+                _old_grace = _prev_grace.get(_mp, 0)
+                if _old_grace < 1:
+                    # First miss — preserve count for one more scan
+                    _new_momentum[_mp] = _old_cnt
+                    _new_grace[_mp]    = _old_grace + 1
+                # Second consecutive miss → drop from dict (count resets to 0 next scan)
+
             _wl_cache_path.write_text(
                 json.dumps({
-                    "timestamp":       __import__("time").time(),
+                    "timestamp":       _wc_time.time(),
                     "watchlist_pairs": _wl_pairs,
                     "near_miss":       _nm_pairs,
+                    "momentum_counts": _new_momentum,
+                    "momentum_grace":  _new_grace,
                 }, indent=2),
                 encoding="utf-8",
             )
+
+            _mom_log = ""
+            if _momentum_gains:
+                _mom_log = (
+                    " — momentum streaks: "
+                    + ", ".join(
+                        f"{p}×{c}" for p, c in sorted(_momentum_gains, key=lambda x: -x[1])
+                    )
+                )
+                for _mp, _mc in _momentum_gains:
+                    _log_line(
+                        logf,
+                        f"[momentum] {_mp} appeared in watch list for {_mc} consecutive "
+                        f"scans — momentum accumulation boost +{min(_mc * 3, 12)} merit "
+                        f"points will apply next scan.",
+                    )
             _log_line(
                 logf,
                 f"Scan state saved for dynamic boosters: "
-                f"{len(_wl_pairs)} watchlist pairs, {len(_nm_pairs)} near-miss pairs → watchlist_cache.json",
+                f"{len(_wl_pairs)} watchlist pairs, {len(_nm_pairs)} near-miss pairs, "
+                f"{len(_new_momentum)} momentum-tracked pairs → watchlist_cache.json{_mom_log}",
             )
         except Exception as _wc_exc:
             _log_line(logf, f"Watchlist cache save failed: {_wc_exc}")
