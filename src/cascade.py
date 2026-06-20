@@ -121,7 +121,7 @@ def t1_hit(row: dict, price: float) -> bool:
 
 def t2_hit(row: dict, price: float) -> bool:
     """True if T1 was hit and price has crossed T2 (T2 not yet recorded)."""
-    if str(row.get("t1_hit", "")).upper() != "TRUE":
+    if not _is_true(row.get("t1_hit")):
         return False
     if str(row.get("t2_hit", "")).upper() == "TRUE":
         return False
