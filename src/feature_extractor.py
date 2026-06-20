@@ -79,6 +79,8 @@ FEATURE_COLS = [
     "monthly_trend_aligned",    # 1=aligned, 0=counter-trend, 0.5=neutral monthly trend
     # ── HHHL trend structure filter ───────────────────────────────────────
     "hhhl_aligned",             # 1=structure confirms direction, 0=broken, 0.5=no data
+    # ── Kill zone timing ───────────────────────────────────────────────────
+    "kill_zone_entry",          # numeric encoding: OVERLAP=5, LONDON_CLOSE=4, NEW_YORK=3, LONDON=2, TOKYO=1, OUTSIDE=0
 ]
 
 
