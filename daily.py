@@ -6549,6 +6549,16 @@ def run() -> int:
         # Twelve Data health check — single test request before any analysis
         _td_healthy = _check_twelvedata_health(log=lambda m: _log_line(logf, m))
 
+        # Log Twelve Data daily call status at scan start
+        try:
+            _au_start = json.loads(_API_USAGE_FILE.read_text(encoding="utf-8")) if _API_USAGE_FILE.exists() else {}
+            from datetime import date as _date_start
+            _td_used_start = int(_au_start.get("calls", 0)) if _au_start.get("date") == str(_date_start.today()) else 0
+            _td_remaining  = max(0, 800 - _td_used_start)
+            _log_line(logf, f"Twelve Data calls today: {_td_used_start}/800 — {_td_remaining} remaining")
+        except Exception:
+            pass
+
         # 2. Smart pair selection
         from src import threshold_manager as _thresh_mgr
         _trade_conf   = _thresh_mgr.get_confidence_threshold()
