@@ -3049,40 +3049,66 @@ def _build_system_learning_report(date: str) -> list:
         pass
 
     # ── ML HEALTH CHECK ───────────────────────────────────────────────────────
-    # Shows whether the model learned real patterns (generalise to new data) or
-    # just memorised the training set (overfit / curve-fitted).
+    # Plain-English verdict on whether the model finds real patterns or memorises.
     try:
         from src import ml_predictor as _mlp_hc
         _hc = _mlp_hc._load_meta()
         if _hc.get("model_ready") and _hc.get("overfit_gap") is not None:
-            _hc_roc   = _hc.get("roc_auc", 0.0)
-            _hc_hold  = _hc.get("temporal_holdout_auc", 0.0)
-            _hc_gap   = _hc.get("overfit_gap", 0.0)
-            _hc_hlthy = _hc.get("is_healthy", True)
-            _hc_p_wr  = _hc.get("period_win_rates") or []
-            _hc_stbl  = _hc.get("period_stable")
+            _hc_roc    = _hc.get("roc_auc", 0.0)
+            _hc_hold   = _hc.get("temporal_holdout_auc", 0.0)
+            _hc_gap    = _hc.get("overfit_gap", 0.0)
+            _hc_hlthy  = _hc.get("is_healthy", True)
+            _hc_p_wr   = _hc.get("period_win_rates") or []
+            _hc_stbl   = _hc.get("period_stable")
+            _hc_consec = _hc.get("n_consecutive_reliable", 0)
+            _hc_folds  = _hc.get("cv_fold_scores") or []
 
             sec.append("")
             sec.append("<b>ML HEALTH CHECK</b>")
+
+            # Per-fold cross-validation scores (the true expected accuracy on new trades)
+            if _hc_folds:
+                _fold_strs = [f"fold {i+1} accuracy {round(s*100)}%" for i, s in enumerate(_hc_folds)]
+                _avg_fold  = round(sum(_hc_folds) / len(_hc_folds) * 100, 1)
+                sec.append(
+                    f"ML cross-validation: {' · '.join(_fold_strs)} · average {_avg_fold}% — "
+                    f"this is the true expected accuracy on new trades"
+                )
+
+            # Plain-English holdout verdict
+            _hold_pct = round(_hc_hold * 100)
+            _train_pct = round(_hc_roc * 100)
             if _hc_hlthy and _hc_gap < 0.05:
                 sec.append(
-                    f"✅ The AI model is healthy — its accuracy on new trades "
-                    f"({_hc_hold * 100:.0f}%) matches its accuracy on training data "
-                    f"({_hc_roc * 100:.0f}%)."
+                    f"✅ The AI model is healthy — {_hold_pct}% accuracy on trades it has never seen "
+                    f"(matches training accuracy of {_train_pct}%) — genuine patterns found, not memorised."
                 )
             elif _hc_hlthy:
                 sec.append(
-                    f"🟡 The AI model is acceptable — slight gap between training accuracy "
-                    f"({_hc_roc * 100:.0f}%) and new-trade accuracy ({_hc_hold * 100:.0f}%) "
-                    f"— normal for this dataset size."
+                    f"🟡 The AI model is learning — {_hold_pct}% accuracy on new trades "
+                    f"vs {_train_pct}% on training data — small gap is normal for this dataset size."
                 )
             else:
                 sec.append(
-                    f"⚠️ Warning — the AI model appears to have memorised historical "
-                    f"patterns that are not repeating — training accuracy "
-                    f"{_hc_roc * 100:.0f}% vs new data accuracy {_hc_hold * 100:.0f}% "
-                    f"— gathering more data before trusting predictions."
+                    f"⚠️ The AI model is memorising, not learning — {_train_pct}% accuracy on "
+                    f"training data drops to {_hold_pct}% on new trades — more data needed before "
+                    f"predictions can be trusted."
                 )
+
+            # Reliability gate status
+            if _hc_consec >= 3:
+                sec.append(
+                    f"✅ Model reliability confirmed — {_hc_consec} consecutive retrains with "
+                    f"holdout accuracy ≥ 65% — AI predictions are now considered reliable."
+                )
+            else:
+                _needed = 3 - _hc_consec
+                sec.append(
+                    f"🤖 ML model active but accuracy not yet reliable — predictions shown for "
+                    f"information only — not yet influencing confidence scores "
+                    f"(need {_needed} more retrain{'s' if _needed != 1 else ''} with ≥ 65% holdout accuracy)"
+                )
+
             if len(_hc_p_wr) == 3:
                 _wr_strs = [f"{r * 100:.0f}%" for r in _hc_p_wr]
                 if _hc_stbl:
