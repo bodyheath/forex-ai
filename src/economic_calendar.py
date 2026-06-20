@@ -26,6 +26,7 @@ warning_lines_for_pair(pair, events)
     Return list[str] of ⚠️ warning lines for a trade block (empty when none).
 """
 
+import sys
 from datetime import datetime, timedelta, timezone
 
 import requests
