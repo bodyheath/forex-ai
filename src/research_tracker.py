@@ -345,7 +345,7 @@ def update_outcome(rec_id: int, status: str, close_price=None,
 
     # Derive exit_reason from status if not explicitly provided
     if not exit_reason:
-        if status == "WIN":
+        if status in ("WIN", "FULL_WIN"):
             exit_reason = "TARGET_HIT"
         elif status == "LOSS":
             exit_reason = "STOP_HIT"
