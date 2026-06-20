@@ -468,27 +468,36 @@ def regime_currency_bonus(regime: str, base: str, quote: str) -> float:
     return 0.0
 
 
+_REGIME_ADDENDUM = {
+    "trending_risk_on":  "Trend-following trades are favoured — higher-yielding currencies tend to outperform.",
+    "trending_risk_off": "Trend-following trades favour safe havens — JPY and CHF setups are prioritised.",
+    "ranging_low_vol":   "Trend-following trades are less reliable in this environment.",
+    "ranging_high_vol":  "All directional trades carry elevated risk — reduce exposure and be very selective.",
+}
+
+
 def regime_display_lines(regime_data: dict) -> list:
     """Return plain-English Telegram lines for the 6am MARKET CONTEXT section.
 
     Returns a list of 1–2 strings:
-      [0] Primary regime line:  "📊 Market environment today: Trending — Risk On — ..."
-      [1] System message line:  "The system is running with a lower confidence threshold..."
+      [0] "📊 Market regime: Trending Risk On — ..."
+      [1] System message + regime addendum
     """
     if not regime_data:
         return []
-    emoji   = regime_data.get("emoji", "📊")
-    label   = regime_data.get("label", "Unknown")
+    regime  = regime_data.get("regime", "")
+    label   = regime_data.get("display_label") or regime_data.get("label", "Unknown")
     desc    = (regime_data.get("description") or "").strip()
     sysmsg  = (regime_data.get("system_message") or "").strip()
+    addend  = _REGIME_ADDENDUM.get(regime, "")
 
-    # Capitalise first letter of description
     if desc:
         desc = desc[0].upper() + desc[1:]
 
-    lines = [f"📊 <b>Market environment today: {label}</b> — {desc}"]
-    if sysmsg:
-        lines.append(sysmsg)
+    lines = [f"📊 <b>Market regime: {label}</b> — {desc}"]
+    second = " ".join(filter(None, [sysmsg, addend]))
+    if second:
+        lines.append(second)
     return lines
 
 
