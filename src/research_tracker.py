@@ -85,6 +85,8 @@ FIELDS = [
     "monthly_trend_aligned",      # 1=aligned with monthly trend, 0=counter-trend, 0.5=neutral
     # ── HHHL trend structure filter ──────────────────────────────────────────
     "hhhl_aligned",               # 1=structure confirms direction, 0=broken structure, 0.5=no data
+    # ── Kill zone timing ─────────────────────────────────────────────────────
+    "kill_zone_entry",            # LONDON | NEW_YORK | OVERLAP | TOKYO | LONDON_CLOSE | OUTSIDE
 ]
 
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN"}
