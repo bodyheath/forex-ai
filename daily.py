@@ -2411,7 +2411,9 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
                         _pp1 = open_trades[_ip1].get("pair","")
                         _pp2 = open_trades[_ip2].get("pair","")
                         sec.append(
-                            f"⚠️ DUPLICATE EXPOSURE: {_pp1} {_d1c} and {_pp2} {_d2c} are inverse pairs — same directional bet — consider closing one"
+                            f"⚠️ Risk warning: <b>{_pp1} {_d1c}</b> and <b>{_pp2} {_d2c}</b> are both open "
+                            f"— combined risk is ~2% on a single currency relationship "
+                            f"— consider closing one"
                         )
     except Exception:
         pass
