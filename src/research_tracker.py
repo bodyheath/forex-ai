@@ -330,6 +330,24 @@ def update_outcome(rec_id: int, status: str, close_price=None,
     target["net_pips"]    = net_pips
     target["closed_at"]   = _now()
     target["exit_reason"] = exit_reason
+
+    # Record momentum direction at expiry for EXPIRED / PARTIAL_WIN trades
+    if status in ("EXPIRED", "PARTIAL_WIN") and close_price is not None:
+        try:
+            cp_f   = _to_float(close_price)
+            entry_f = _to_float(target.get("entry"))
+            dirn   = (target.get("direction") or "").upper()
+            if cp_f is not None and entry_f is not None and dirn in ("BUY", "SELL"):
+                profit = (cp_f - entry_f) if dirn == "BUY" else (entry_f - cp_f)
+                if profit > 0:
+                    target["price_at_expiry_momentum"] = "UP"
+                elif profit < 0:
+                    target["price_at_expiry_momentum"] = "DOWN"
+                else:
+                    target["price_at_expiry_momentum"] = "FLAT"
+        except Exception:
+            pass
+
     _write_all(rows)
 
     # Validate pip size — log warning for unexpectedly large pip counts
