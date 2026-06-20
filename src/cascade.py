@@ -29,6 +29,16 @@ T2_SIZE = 0.30
 T3_SIZE = 0.30
 
 
+def _is_true(val) -> bool:
+    """Return True when a CSV boolean field is set.
+
+    Handles str ("TRUE", "1", "YES"), bool True, and int 1 consistently so the
+    caller never needs to know whether the value came from a CSV string, a
+    Python boolean, or a JSON number.
+    """
+    return str(val).strip().upper() in ("TRUE", "1", "YES")
+
+
 def _pip_size(pair: str) -> float:
     cleaned = (pair or "").upper().replace("/", "").replace("-", "")
     if len(cleaned) >= 6:
