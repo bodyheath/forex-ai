@@ -4295,6 +4295,8 @@ def _send_telegram_summary(
             block.append(_kz_line)
         if _ms_line:
             block.append(_ms_line)
+        if _div_line:
+            block.append(_div_line)
         block += [
             "━━━━━━━━━━━━━━━━━━━━━",
             _grade_display_line(_qg_tb),
