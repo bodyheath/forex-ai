@@ -1036,6 +1036,24 @@ def _apply_dynamic_boosts(
                 f"({n_boosted} pairs affected)"
             )
 
+    # ── Booster 6: Momentum accumulation (+3 per consecutive scan, max +12) ───
+    # Rewards pairs that have been consistently appearing in the watchlist over
+    # multiple scans — a pair near the threshold for 3+ scans is much more
+    # likely to break through than one that just appeared today.
+    prev_momentum = wl_cache.get("momentum_counts", {})
+    if prev_momentum:
+        for pair, count in prev_momentum.items():
+            if pair not in pair_scores or count <= 0:
+                continue
+            boost = min(count * 3, 12)
+            pair_scores[pair]["score"] = round(pair_scores[pair]["score"] + boost, 2)
+            pair_scores[pair]["breakdown"]["dynamic_momentum"] = boost
+            log(
+                f"  {pair} appeared in watch list for {count} consecutive "
+                f"scan{'s' if count != 1 else ''} — "
+                f"momentum accumulation boost +{boost} merit points applied."
+            )
+
     return carry_forward
 
 
