@@ -285,28 +285,46 @@ def _batch_price_fetch(pairs: list, log=print) -> tuple:
         return {}, 0
     prices = {}
     calls  = 0
+    _MAX_RETRIES = 2
     for i in range(0, len(pairs), _BATCH_SIZE):
-        batch = pairs[i : i + _BATCH_SIZE]
+        batch      = pairs[i : i + _BATCH_SIZE]
         symbol_str = ",".join(batch)
-        try:
-            resp = requests.get(
-                _PRICE_URL,
-                params={"symbol": symbol_str, "apikey": config.TWELVE_DATA_KEY},
-                timeout=_FETCH_TIMEOUT,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            if len(batch) == 1:
-                if isinstance(data, dict) and "price" in data and data.get("status") != "error":
-                    prices[batch[0]] = float(data["price"])
-            else:
-                for pair in batch:
-                    pd = data.get(pair, {})
-                    if isinstance(pd, dict) and "price" in pd and pd.get("status") != "error":
-                        prices[pair] = float(pd["price"])
-            calls += 1
-        except Exception as exc:
-            log(f"  Monitor: batch price fetch error (batch {i // _BATCH_SIZE + 1}): {exc}")
+        batch_num  = i // _BATCH_SIZE + 1
+        for attempt in range(_MAX_RETRIES + 1):
+            try:
+                resp = requests.get(
+                    _PRICE_URL,
+                    params={"symbol": symbol_str, "apikey": config.TWELVE_DATA_KEY},
+                    timeout=_FETCH_TIMEOUT,
+                )
+                if resp.status_code == 429:
+                    if attempt < _MAX_RETRIES:
+                        log(
+                            f"  Monitor: batch price fetch hit rate limit — "
+                            f"waiting 60 seconds before retry {attempt + 1} of {_MAX_RETRIES}"
+                        )
+                        time.sleep(60)
+                        continue
+                    log(
+                        f"  Monitor: batch price fetch hit rate limit after {_MAX_RETRIES} retries — "
+                        f"batch {batch_num} skipped"
+                    )
+                    break
+                resp.raise_for_status()
+                data = resp.json()
+                if len(batch) == 1:
+                    if isinstance(data, dict) and "price" in data and data.get("status") != "error":
+                        prices[batch[0]] = float(data["price"])
+                else:
+                    for pair in batch:
+                        pd = data.get(pair, {})
+                        if isinstance(pd, dict) and "price" in pd and pd.get("status") != "error":
+                            prices[pair] = float(pd["price"])
+                calls += 1
+                break
+            except Exception as exc:
+                log(f"  Monitor: batch price fetch error (batch {batch_num}): {exc}")
+                break
     _increment_td_usage(calls)
     return prices, calls
 
