@@ -1165,3 +1165,98 @@ def get_monthly_trend(pair: str) -> dict:
         return {"trend": "SELL", "strength": strength, "n_months": n_check}
     else:
         return {"trend": "NEUTRAL", "strength": "weak", "n_months": n_check}
+
+
+def get_trend_structure(pair: str) -> dict:
+    """Identify swing-based HH/HL (uptrend) or LH/LL (downtrend) structure.
+
+    Reads from the already-cached TD:{pair}:1day:400 data — zero API calls.
+    Uses a 5-bar swing detector: a swing high requires the candle's high to be
+    strictly greater than the 5 candles on each side; likewise for swing lows.
+
+    Returns:
+        {
+          "status":     "ok" | "insufficient",
+          "buy_valid":  bool | None,   # True = HH + HL confirmed
+          "sell_valid": bool | None,   # True = LH + LL confirmed
+          "hh": bool, "hl": bool,      # individual higher-high / higher-low flags
+          "lh": bool, "ll": bool,      # individual lower-high  / lower-low  flags
+          "detail": str,               # human-readable summary of structure seen
+        }
+    """
+    cached = cache.get(f"TD:{pair}:1day:400", ttl_hours=24.0)
+    if not isinstance(cached, dict) or not cached.get("values"):
+        return {"status": "insufficient", "buy_valid": None, "sell_valid": None,
+                "hh": False, "hl": False, "lh": False, "ll": False, "detail": "no data"}
+
+    highs: list = []
+    lows:  list = []
+    # values are newest-first; take last 120 candles and reverse to oldest-first
+    for v in reversed((cached["values"] or [])[:120]):
+        try:
+            highs.append(float(v["high"]))
+            lows.append(float(v["low"]))
+        except (KeyError, TypeError, ValueError):
+            pass
+
+    n = len(highs)
+    if n < 30:
+        return {"status": "insufficient", "buy_valid": None, "sell_valid": None,
+                "hh": False, "hl": False, "lh": False, "ll": False, "detail": "insufficient data"}
+
+    SWING = 5  # candles on each side required to confirm a swing point
+
+    swing_highs: list = []  # chronological: oldest → newest
+    swing_lows:  list = []
+
+    for i in range(SWING, n - SWING):
+        h = highs[i]
+        lo = lows[i]
+        if all(h > highs[i - k] for k in range(1, SWING + 1)) and \
+           all(h > highs[i + k] for k in range(1, SWING + 1)):
+            swing_highs.append(h)
+        if all(lo < lows[i - k] for k in range(1, SWING + 1)) and \
+           all(lo < lows[i + k] for k in range(1, SWING + 1)):
+            swing_lows.append(lo)
+
+    if len(swing_highs) < 2 or len(swing_lows) < 2:
+        return {"status": "insufficient", "buy_valid": None, "sell_valid": None,
+                "hh": False, "hl": False, "lh": False, "ll": False,
+                "detail": "not enough swing points"}
+
+    # Most recent two of each (list is oldest-first, so [-1] = most recent)
+    sh1, sh2 = swing_highs[-1], swing_highs[-2]
+    sl1, sl2 = swing_lows[-1],  swing_lows[-2]
+
+    hh = sh1 > sh2  # higher high
+    hl = sl1 > sl2  # higher low
+    lh = sh1 < sh2  # lower high
+    ll = sl1 < sl2  # lower low
+
+    if hh and hl:
+        detail = "higher highs and higher lows"
+    elif lh and ll:
+        detail = "lower highs and lower lows"
+    elif hh and ll:
+        detail = "higher highs but lower lows (diverging)"
+    elif lh and hl:
+        detail = "lower highs but higher lows (converging)"
+    elif ll:
+        detail = "lower low detected"
+    elif lh:
+        detail = "lower high detected"
+    elif hh:
+        detail = "higher high, flat low"
+    elif hl:
+        detail = "higher low, flat high"
+    else:
+        detail = "neutral structure"
+
+    return {
+        "status":     "ok",
+        "buy_valid":  bool(hh and hl),
+        "sell_valid": bool(lh and ll),
+        "hh": hh, "hl": hl,
+        "lh": lh, "ll": ll,
+        "detail": detail,
+    }
