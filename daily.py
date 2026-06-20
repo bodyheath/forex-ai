@@ -3991,6 +3991,25 @@ def _send_telegram_summary(
             except (TypeError, ValueError):
                 pass
 
+        # Currency strength alignment boost (+1) and note
+        _cs_boost_line = None
+        try:
+            from src import currency_strength as _cs_tb
+            _tb_parts = pair.split("/")
+            if len(_tb_parts) == 2 and _ccy_strength:
+                _cs_boost, _cs_note = _cs_tb.alignment_note(
+                    _tb_parts[0], _tb_parts[1], direction, _ccy_strength
+                )
+                if _cs_boost:
+                    try:
+                        _conf_display = str(min(10, int(float(_conf_display)) + _cs_boost))
+                    except (TypeError, ValueError):
+                        pass
+                if _cs_note:
+                    _cs_boost_line = _cs_note
+        except Exception:
+            pass
+
         _qg_tb = _quality_grades.get(pair, _trade_quality_grade(r))
         _tb_grade = (_qg_tb or {}).get("grade", "B")
 
