@@ -7451,6 +7451,27 @@ def run() -> int:
                 except Exception:
                     pass
 
+                # HHHL trend structure at entry — used as ML feature
+                try:
+                    from src import technical as _tech_ts_rt
+                    if r_result["pair"] not in _trend_structures:
+                        _trend_structures[r_result["pair"]] = _tech_ts_rt.get_trend_structure(
+                            r_result["pair"]
+                        )
+                    _ts_rt = _trend_structures.get(r_result["pair"], {})
+                    _rt_dir_ts = _rp.get("direction", "").upper()
+                    if _ts_rt.get("status") != "ok":
+                        _hhhl_rt = 0.5  # insufficient data
+                    elif _rt_dir_ts == "BUY":
+                        _hhhl_rt = 1.0 if _ts_rt.get("buy_valid") else 0.0
+                    elif _rt_dir_ts == "SELL":
+                        _hhhl_rt = 1.0 if _ts_rt.get("sell_valid") else 0.0
+                    else:
+                        _hhhl_rt = 0.5
+                    _extra_rt["hhhl_aligned"] = _hhhl_rt
+                except Exception:
+                    pass
+
                 # Check for inverse pair conflict — BLOCK research trade if inverse already open
                 _rt_inv_blocked = False
                 try:
