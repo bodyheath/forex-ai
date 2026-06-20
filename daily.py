@@ -5317,6 +5317,10 @@ def _send_telegram_summary(
                 f"{len(failed_pairs)} pair{'s' if len(failed_pairs) > 1 else ''} "
                 "failed analysis — check GitHub Actions logs"
             )
+        for _azp in _atr_zero_pairs:
+            health_issues.append(
+                f"⚠️ {_azp} excluded — ATR calculation failed — cannot set safe stop distance"
+            )
         if run_duration_min > 20:
             health_issues.append(f"Run took {run_duration_min:.0f} minutes — longer than normal")
         health_sec = ["", "━━━━━━━━━━━━━━━━━━━━━", "⚠️ <b>SYSTEM HEALTH</b>"]
