@@ -3438,6 +3438,15 @@ def _send_telegram_summary(
     # Grade all results — used by display helpers and filtering below
     _quality_grades: dict = {r["pair"]: _trade_quality_grade(r) for r in deep_results}
 
+    # Log pairs excluded due to zero ATR
+    _atr_zero_pairs = [
+        pair for pair, qg in _quality_grades.items()
+        if qg.get("atr_zero")
+    ]
+    if _atr_zero_pairs:
+        for _azp in _atr_zero_pairs:
+            print(f"[ATR BLOCK] ⚠️ {_azp} excluded — ATR calculation failed — cannot set safe stop loss distance", file=sys.stderr)
+
     # Extract drawdown mode early (before _risk_state is fully initialised below)
     # so it can be applied in the yes_trades filter immediately.
     _dd_mode: str = (risk_data or {}).get("risk_state", {}).get("drawdown_mode", "normal")
