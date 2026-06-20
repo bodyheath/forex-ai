@@ -7193,14 +7193,21 @@ def run() -> int:
                 _rt_all  = _rt.load()
                 _rt_open = sum(1 for r in _rt_all if r.get("status") == "OPEN")
                 _log_line(logf,
-                    f"Research trades: {_rt_logged} new this scan "
+                    f"✅ Research trade logger: working — {_rt_logged} new trades opened this scan "
                     f"(total: {len(_rt_all)} | open: {_rt_open})")
             except Exception:
-                if _rt_logged:
-                    _log_line(logf, f"Research trades opened this scan: {_rt_logged}")
+                _log_line(logf, f"✅ Research trade logger: working — {_rt_logged} new trades opened this scan")
 
         except Exception as exc:
             _log_line(logf, f"Research trade logging failed: {exc}")
+            try:
+                _telegram(
+                    "🚨 Research trade logging failed — ML training data not being collected "
+                    "— check GitHub Actions log immediately\n"
+                    f"Error: {exc}"
+                )
+            except Exception:
+                pass
 
         # 6. Rebuild dashboard
         try:
