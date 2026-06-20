@@ -7307,6 +7307,21 @@ def run() -> int:
                 except Exception:
                     pass
 
+                # Currency strength at entry — used as ML features
+                try:
+                    _rt_parts = r_result["pair"].split("/")
+                    if len(_rt_parts) == 2 and _ccy_strength:
+                        _rt_base_ccy  = _rt_parts[0].upper()
+                        _rt_quote_ccy = _rt_parts[1].upper()
+                        _extra_rt["base_currency_strength"]  = (
+                            _ccy_strength.get(_rt_base_ccy,  {}).get("score", "")
+                        )
+                        _extra_rt["quote_currency_strength"] = (
+                            _ccy_strength.get(_rt_quote_ccy, {}).get("score", "")
+                        )
+                except Exception:
+                    pass
+
                 # Check for inverse pair conflict — BLOCK research trade if inverse already open
                 _rt_inv_blocked = False
                 try:
