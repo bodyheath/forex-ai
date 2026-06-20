@@ -5409,34 +5409,28 @@ def _send_telegram_summary(
             pass
         if ctx.get("monthly_bias"):
             ctx_lines.append(f"📅 Monthly structural bias: <b>{ctx['monthly_bias']}</b> — background context only")
-        # Market regime — plain-English macro environment summary
+        # Market regime — authoritative plain-English environment + system behaviour
         try:
-            from src import market_regime as _mr_ctx
-            _rd_ctx = _mr_ctx.detect()
-            _regime_line = _mr_ctx.telegram_line(_rd_ctx)
-            if _regime_line:
-                ctx_lines.append(_regime_line)
-                if _rd_ctx.get("conf_override"):
-                    ctx_lines.append(
-                        f"ℹ️ <b>High volatility mode active</b> — "
-                        f"only confidence {_rd_ctx['conf_override']}+ trades taken, "
-                        f"position sizes halved."
-                    )
+            for _reg_line in _mr_ctx.regime_display_lines(_rd_ctx):
+                ctx_lines.append(_reg_line)
         except Exception:
             pass
+        # Trading conditions — score is already capped by regime (no contradiction possible)
         _ps = _patience["score"]
         _pd = _patience["description"]
         ctx_lines.append(f"📊 <b>Today's trading conditions: {_ps}/10</b> — {_pd}")
-        # Threshold display — always show so investor knows the current bar to clear
+        # Confidence threshold — set by regime (single source of truth)
         try:
-            from src import threshold_manager as _tm_ctx
-            _ctx_thr = _tm_ctx.get_confidence_threshold()
-            if _ctx_thr != 7:
-                _thr_reason = (
-                    f"raised to {_ctx_thr} due to high-volatility market regime"
-                    if _ctx_thr > 7 else f"currently {_ctx_thr}"
-                )
-                ctx_lines.append(f"📊 <b>Today's trade threshold: {_ctx_thr}/10</b> — {_thr_reason}")
+            _conf_thr = float(_rd_ctx.get("conf_threshold") or 0)
+            if not _conf_thr:
+                from src import threshold_manager as _tm_ctx
+                _conf_thr = float(_tm_ctx.get_confidence_threshold())
+            _thr_reason = (_rd_ctx.get("threshold_reason") or "")
+            _thr_display = int(_conf_thr) if _conf_thr == int(_conf_thr) else _conf_thr
+            ctx_lines.append(
+                f"📊 <b>Today's confidence threshold: {_thr_display}/10</b>"
+                + (f" — {_thr_reason}" if _thr_reason else "")
+            )
         except Exception:
             pass
 
