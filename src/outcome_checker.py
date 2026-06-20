@@ -269,8 +269,8 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                     try:
                         _ta_casc.send(
                             f"🎯 <b>{pair} — FULL WIN — all three targets hit!</b>\n\n"
-                            f"T1 +{_casc._to_float(row.get('t1_hit_pips')) or 0:.1f}p (40%)  "
-                            f"T2 +{_casc._to_float(row.get('t2_hit_pips')) or 0:.1f}p (30%)  "
+                            f"T1 +{_to_float(row.get('t1_hit_pips')) or 0:.1f}p (40%)  "
+                            f"T2 +{_to_float(row.get('t2_hit_pips')) or 0:.1f}p (30%)  "
                             f"T3 +{_t3p:.1f}p (30%)\n"
                             f"Weighted total: +{_wp:.1f} pips\n\n"
                             f"Direction: {direction}  |  Final price: {price}"
