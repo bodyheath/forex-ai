@@ -1,9 +1,17 @@
 """Automatic daily outcome detection for open trade recommendations.
 
-Fetches the live price for every OPEN trade from Twelve Data, then closes any
-trade that has hit its target (WIN), stop loss (LOSS), or been open for 5+
-days (EXPIRED).  Returns the list of closed trade row dicts so the caller can
-immediately run win/loss analysis on them.
+Fetches the live price for every OPEN trade from Twelve Data, then:
+  1. Runs partial_profit_checker — moves stops to breakeven at 50%, records
+     partial closes at 75%, and sends Telegram alerts for each milestone.
+  2. Closes any trade that has hit its target (WIN), effective stop (LOSS or
+     BREAKEVEN), or been open for 5+ days (EXPIRED).
+
+When a trade has been partially closed (stage 2), the final exit uses the
+blended average of the partial close price and the current price so the
+recorded pips accurately reflect the two-tranche exit.
+
+Returns the list of closed trade row dicts so the caller can immediately
+run win/loss analysis on them.
 """
 
 import time
@@ -27,11 +35,7 @@ def _to_float(val):
 
 
 def _compute_expiry_days(row: dict) -> int:
-    """Dynamic expiry from R:R: max(4, round(rr * 1.5) + 1).
-
-    Stop ≈ 1x ATR ≈ ADR, so rr ≈ target_pips / adr_pips.
-    Falls back to _EXPIRY_DAYS if levels are missing.
-    """
+    """Dynamic expiry from R:R: max(4, round(rr * 1.5) + 1)."""
     try:
         entry  = float(row.get("entry")     or 0)
         stop   = float(row.get("stop_loss") or 0)
@@ -65,8 +69,14 @@ def _fetch_live_price(pair: str) -> float | None:
 
 def _determine_outcome(direction: str, price: float,
                        entry, stop, target, opened_at: str,
-                       expiry_days: int = None) -> str | None:
-    """Return 'WIN', 'LOSS', 'EXPIRED', or None (trade still open)."""
+                       expiry_days: int = None,
+                       breakeven_protected: bool = False) -> str | None:
+    """Return 'WIN', 'LOSS', 'BREAKEVEN', 'EXPIRED', or None (still open).
+
+    breakeven_protected=True means the stop has been moved to the breakeven
+    level by partial_profit_checker.  When that stop is hit, the outcome is
+    BREAKEVEN (not LOSS) — the trade closes at entry price, no loss recorded.
+    """
     expiry = expiry_days if expiry_days is not None else _EXPIRY_DAYS
     try:
         opened = datetime.strptime(opened_at[:19], "%Y-%m-%d %H:%M:%S")
@@ -86,26 +96,28 @@ def _determine_outcome(direction: str, price: float,
         if price >= target:
             return "WIN"
         if price <= stop:
-            return "LOSS"
+            return "BREAKEVEN" if breakeven_protected else "LOSS"
     else:
         if price <= target:
             return "WIN"
         if price >= stop:
-            return "LOSS"
+            return "BREAKEVEN" if breakeven_protected else "LOSS"
     return None
 
 
 def check_open_trades(log=print, price_cache: dict | None = None) -> list:
     """Check all OPEN trades; close any that hit target/stop/expiry.
 
-    ``price_cache`` is an optional {pair: float} dict pre-fetched by
-    price_fetcher.fetch_prices_for_open_trades().  When a pair's price is
-    present in the cache the direct API call and rate-limit sleep are both
-    skipped.  Falls back to the live /price endpoint for cache misses.
+    Workflow:
+      1. For each open trade, fetch current price (cache or live API).
+      2. Run partial_profit_checker.run() — handles stage 1 (breakeven stop
+         migration) and stage 2 (50% partial close recording + alert).
+      3. Determine outcome using the effective stop (breakeven if stage 1+).
+      4. For stage-2 trades, blend the partial close price with the final
+         exit price so recorded pips reflect both tranches.
+      5. Write the outcome to tracker (trades.csv).
 
-    Returns a list of updated trade row dicts for each trade that was closed
-    this run.  Fully fault-tolerant: errors on individual trades are swallowed
-    and logged so the rest of the daily run is never blocked.
+    Returns a list of updated trade row dicts for each trade closed this run.
     """
     if not config.TWELVE_DATA_KEY:
         log("Outcome check: TWELVE_DATA_KEY not set — skipping.")
@@ -121,40 +133,85 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
 
     log(f"Outcome check: monitoring {len(open_trades)} open trade(s).")
     closed = []
-    _last_api_t = 0.0  # timestamp of the last direct API call (for rate limiting)
+    _last_api_t = 0.0
 
+    # ── Step 1: build price cache for all open trades ─────────────────────
+    full_cache = dict(price_cache or {})
+    for row in open_trades:
+        pair = row.get("pair", "")
+        if pair not in full_cache:
+            _elapsed = time.time() - _last_api_t
+            if _last_api_t > 0 and _elapsed < _FETCH_DELAY:
+                time.sleep(_FETCH_DELAY - _elapsed)
+            price = _fetch_live_price(pair)
+            _last_api_t = time.time()
+            if price is not None:
+                full_cache[pair] = price
+
+    # ── Step 2: partial profit milestones (stage 1 / stage 2) ────────────
+    try:
+        from src import partial_profit_checker as _ppc
+        _ppc.run(open_trades, full_cache, log)
+        _pp_state = _ppc.load_state()
+    except Exception as exc:
+        log(f"  Partial profit checker error — {exc}")
+        _ppc = None
+        _pp_state = {}
+
+    # ── Step 3: outcome determination + close ─────────────────────────────
     for row in open_trades:
         rec_id    = int(row.get("id", 0))
         pair      = row.get("pair", "")
         direction = (row.get("direction") or "").upper()
 
         try:
-            if price_cache and pair in price_cache:
-                price = price_cache[pair]
-            else:
-                # Rate-limit guard: ensure ≥ _FETCH_DELAY between live API calls
-                _elapsed = time.time() - _last_api_t
-                if _last_api_t > 0 and _elapsed < _FETCH_DELAY:
-                    time.sleep(_FETCH_DELAY - _elapsed)
-                price = _fetch_live_price(pair)
-                _last_api_t = time.time()
+            price = full_cache.get(pair)
             if price is None:
                 log(f"  #{rec_id} {pair}: price unavailable, skipping.")
                 continue
 
+            # Effective stop: breakeven if stage 1 was reached
+            _eff_stop = row.get("stop_loss")
+            _pp_stage = 0
+            if _ppc is not None:
+                _pp_stage = _ppc.get_stage(str(rec_id), _pp_state)
+                _eff_stop = _ppc.effective_stop(str(rec_id), row.get("stop_loss"), _pp_state)
+
+            _bp_protected = _pp_stage >= 1
+
             outcome = _determine_outcome(
                 direction, price,
-                row.get("entry"), row.get("stop_loss"), row.get("target"),
+                row.get("entry"), _eff_stop, row.get("target"),
                 row.get("timestamp", ""),
                 expiry_days=_compute_expiry_days(row),
+                breakeven_protected=_bp_protected,
             )
             if outcome is None:
                 continue  # still open
 
+            # Stage 2 + breakeven stop hit → partial profit already locked, this is WIN
+            if outcome == "BREAKEVEN" and _pp_stage >= 2:
+                outcome = "WIN"
+
+            # Blended exit price for stage-2 trades
+            _final_exit = price
+            _partial_note = ""
+            if _ppc is not None and _pp_stage >= 2:
+                _final_exit = _ppc.blended_exit_price(str(rec_id), price, _pp_state)
+                _partial_price = _pp_state.get(str(rec_id), {}).get("partial_close_price", "")
+                _partial_pips  = _pp_state.get(str(rec_id), {}).get("partial_close_pips", 0)
+                if _partial_price:
+                    _partial_note = (
+                        f" | Partial close: 50% at {_partial_price} "
+                        f"(+{_partial_pips:.1f}p), 50% at {price} "
+                        f"(blended {_final_exit:.5f})"
+                    )
+
+            _notes = f"Auto-closed: {outcome} at {price}{_partial_note}"
             updated = tracker.update_outcome(
                 rec_id, outcome,
-                exit_price=price,
-                notes=f"Auto-closed by outcome checker: {outcome} at {price}",
+                exit_price=_final_exit,
+                notes=_notes,
             )
             r_txt = f", R={updated.get('r_multiple')}, pips={updated.get('pips')}"
             log(f"  #{rec_id} {pair} {direction}: {outcome} at {price}{r_txt}")
@@ -165,9 +222,11 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
 
     wins    = sum(1 for r in closed if r.get("status") == "WIN")
     losses  = sum(1 for r in closed if r.get("status") == "LOSS")
+    beven   = sum(1 for r in closed if r.get("status") == "BREAKEVEN")
     expired = sum(1 for r in closed if r.get("status") == "EXPIRED")
     if closed:
-        log(f"Outcome check complete: {wins} WIN, {losses} LOSS, {expired} EXPIRED.")
+        log(f"Outcome check complete: {wins} WIN, {losses} LOSS, "
+            f"{beven} BREAKEVEN, {expired} EXPIRED.")
     else:
         log("Outcome check: no trades hit target/stop today.")
     return closed
