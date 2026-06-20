@@ -39,34 +39,47 @@ def _series_for(market_name: str) -> list:
                 return cached
         else:
             return cached
-    try:
-        escaped = market_name.replace("'", "''")  # SoQL string-literal escaping
-        resp = requests.get(
-            config.COT_DATASET_URL,
-            params={
-                "$where": f"market_and_exchange_names = '{escaped}'",
-                "$order": "report_date_as_yyyy_mm_dd DESC",
-                "$limit": 52,
-            },
-            timeout=_TIMEOUT,
-        )
-        resp.raise_for_status()
-        rows = resp.json()
-        cache.set(key, rows)
-        # Warn if fresh data is also stale
-        if rows:
-            _rd = (rows[0].get("report_date_as_yyyy_mm_dd") or "")
-            _da = _days_old(_rd)
-            if _da is not None and _da > STALE_DAYS:
+    _last_exc = None
+    for _attempt in range(3):
+        try:
+            escaped = market_name.replace("'", "''")  # SoQL string-literal escaping
+            resp = requests.get(
+                config.COT_DATASET_URL,
+                params={
+                    "$where": f"market_and_exchange_names = '{escaped}'",
+                    "$order": "report_date_as_yyyy_mm_dd DESC",
+                    "$limit": 52,
+                },
+                timeout=_TIMEOUT,
+            )
+            resp.raise_for_status()
+            rows = resp.json()
+            if rows:
+                _rd = (rows[0].get("report_date_as_yyyy_mm_dd") or "")
+                _da = _days_old(_rd)
                 import sys as _sys
                 print(
-                    f"[COT] WARNING — fresh fetch for '{market_name}' is still stale: "
-                    f"latest report {_rd[:10]} ({_da} days old)",
+                    f"[COT] '{market_name}': latest report {_rd[:10]} ({_da} days old)",
                     file=_sys.stderr,
                 )
-        return rows
-    except Exception:  # noqa: BLE001
-        return []
+                if _da is not None and _da > STALE_DAYS:
+                    print(
+                        f"[COT] ❌ COT data: fetch failed — positioning scores set to neutral "
+                        f"(latest report {_rd[:10]} is {_da} days old — exceeds {STALE_DAYS}-day limit)",
+                        file=_sys.stderr,
+                    )
+                    # Don't cache stale data — retry on next run
+                    return rows
+            cache.set(key, rows)
+            return rows
+        except Exception as _exc:  # noqa: BLE001
+            _last_exc = _exc
+            if _attempt < 2:
+                import time as _time
+                _time.sleep(2)
+    import sys as _sys
+    print(f"[COT] ❌ COT data: fetch failed after 3 attempts for '{market_name}': {_last_exc}", file=_sys.stderr)
+    return []
 
 
 def _net_specs(row: dict):
