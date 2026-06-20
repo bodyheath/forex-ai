@@ -552,6 +552,16 @@ def retrain_if_stale(force: bool = False, quiet: bool = True) -> Optional[dict]:
 
 # ── Public helpers for Telegram display ───────────────────────────────────────
 
+def is_model_reliable() -> bool:
+    """Return True only when the model has had holdout AUC >= 0.65 for 3+ consecutive retrains.
+
+    Until this threshold is met the model is displayed for information only
+    and must NOT be used to adjust confidence scores.
+    """
+    meta = _load_meta()
+    return meta.get("model_ready", False) and meta.get("n_consecutive_reliable", 0) >= 3
+
+
 def get_win_prob(pair: str, parsed: dict, bundle: dict) -> Optional[str]:
     """Return formatted win-probability string for Telegram, or None.
 
