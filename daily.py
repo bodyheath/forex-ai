@@ -1710,6 +1710,40 @@ def _build_research_section(research_result=None) -> list:
             f" — deprioritised until conditions change"
         )
 
+    # Recent performance: last 11 decisive trades
+    try:
+        _rd_all = sorted(
+            [r for r in rows if r.get("status") in ("WIN", "LOSS") and r.get("closed_at")],
+            key=lambda x: (x.get("closed_at", ""), x.get("id", "0")),
+            reverse=True,
+        )[:11]
+        if _rd_all:
+            _rc_wins   = sum(1 for r in _rd_all if r.get("status") == "WIN")
+            _rc_losses = len(_rd_all) - _rc_wins
+            _rc_n      = len(_rd_all)
+            _large_pip_pairs = []
+            for _rrd in _rd_all:
+                try:
+                    _rp_pips  = float(_rrd.get("pips") or 0)
+                    _rp_pair  = _rrd.get("pair", "")
+                    _rp_quote = _rp_pair.split("/")[-1].upper() if "/" in _rp_pair else _rp_pair[-3:].upper()
+                    if abs(_rp_pips) > 500 and _rp_quote != "JPY":
+                        _large_pip_pairs.append(f"{_rp_pair} {_rp_pips:+.0f}p")
+                except (TypeError, ValueError):
+                    pass
+            sec.append("")
+            sec.append(
+                f"Recent performance: last {_rc_n} decisive trades — "
+                f"<b>{_rc_wins} WIN {_rc_losses} LOSS</b>"
+            )
+            if _large_pip_pairs:
+                sec.append(
+                    f"⚠️ Abnormal pip values (>500p on non-JPY) — likely NOK/HKD price scale: "
+                    + ", ".join(_large_pip_pairs)
+                )
+    except Exception:
+        pass
+
     # Days until / since threshold analysis
     sec.append("")
     if days_remaining > 0:
