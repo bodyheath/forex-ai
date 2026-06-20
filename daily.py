@@ -7367,6 +7367,28 @@ def run() -> int:
                 except Exception:
                     pass
 
+                # Monthly trend at entry — used as ML feature
+                try:
+                    from src import technical as _tech_rt
+                    if r_result["pair"] not in _monthly_trends:
+                        _monthly_trends[r_result["pair"]] = _tech_rt.get_monthly_trend(
+                            r_result["pair"]
+                        )
+                    _mt_rt = _monthly_trends.get(r_result["pair"], {})
+                    _mt_trend_rt = _mt_rt.get("trend", "NEUTRAL")
+                    _rt_dir = _rp.get("direction", "").upper()
+                    if _mt_trend_rt == "NEUTRAL":
+                        _mt_aligned_rt = 0.5
+                    elif (_rt_dir == "BUY" and _mt_trend_rt == "BUY") or \
+                         (_rt_dir == "SELL" and _mt_trend_rt == "SELL"):
+                        _mt_aligned_rt = 1
+                    else:
+                        _mt_aligned_rt = 0
+                    _extra_rt["monthly_trend"]         = _mt_trend_rt
+                    _extra_rt["monthly_trend_aligned"] = _mt_aligned_rt
+                except Exception:
+                    pass
+
                 # Check for inverse pair conflict — BLOCK research trade if inverse already open
                 _rt_inv_blocked = False
                 try:
