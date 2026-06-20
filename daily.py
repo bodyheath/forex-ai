@@ -4919,6 +4919,13 @@ def _send_telegram_summary(
                     pass
         all_sections.append(_build_open_trades_section(_ot_open_trades, _ot_px_cache, now_ak, cur_conf_map=_ot_conf_map))
 
+        # Currency strength — compute once here, reused in _trade_block + research logging
+        try:
+            from src import currency_strength as _cs_mod
+            _ccy_strength = _cs_mod.compute()
+        except Exception:
+            _ccy_strength = {}
+
         # MARKET CONTEXT
         _patience = _compute_patience_score(ctx)
         ctx_lines = ["", "━━━━━━━━━━━━━━━━━━━━━", "🌍 <b>MARKET CONTEXT</b>"]
