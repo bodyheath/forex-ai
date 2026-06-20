@@ -909,7 +909,7 @@ def _apply_dynamic_boosts(
     scan_mode: str,
     log=print,
 ) -> list:
-    """Apply five dynamic merit boosters in-place on pair_scores.
+    """Apply six dynamic merit boosters in-place on pair_scores.
 
     Returns list of carry-forward pairs (watchlist from last scan) to force-include.
 
@@ -919,6 +919,7 @@ def _apply_dynamic_boosts(
       3. Currency boost       +10 — any USD cross moved > 0.5x ATR (all ccy pairs boosted)
       4. Near-miss re-queue   +5  — scored conf 5.0–5.9 in previous scan
       5. Session transition   +8  — currencies entering peak session (London / New York)
+      6. Momentum accumulation +3/scan (max +12) — pair on watch list for N consecutive scans
     """
     carry_forward: list = []
 
