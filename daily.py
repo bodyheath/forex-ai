@@ -6652,6 +6652,24 @@ def run() -> int:
             _log_line(logf, f"Smart selection failed ({exc}) — falling back to watchlist.")
             pairs_today = list(config.WATCHLIST)
 
+        # Filter unsuitable pairs (spread > 33% of ATR — e.g. EUR/HKD, NZD/HKD)
+        try:
+            from src import trade_costs as _tc_suit
+            _suit_excluded = []
+            _suit_kept = []
+            for _sp in pairs_today:
+                _ok, _reason = _tc_suit.is_pair_suitable(_sp)
+                if _ok:
+                    _suit_kept.append(_sp)
+                else:
+                    _suit_excluded.append(_sp)
+                    _log_line(logf, f"[SUIT] Excluding {_sp}: {_reason}")
+            if _suit_excluded:
+                pairs_today = _suit_kept
+                _log_line(logf, f"Suitability filter: {len(_suit_excluded)} pair(s) excluded — {', '.join(_suit_excluded)}")
+        except Exception as _suit_exc:
+            _log_line(logf, f"Suitability filter skipped ({_suit_exc})")
+
         # 2b-i. Opportunity gap detection — compare ranked pairs to last scan prices
         _opportunity_data: dict = {}
         try:
