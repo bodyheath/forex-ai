@@ -1064,9 +1064,10 @@ def analyse(base: str, quote: str) -> dict:
         weekly  = _frame_from_td(_td_request(symbol, "1week",  200))
         daily   = _frame_from_td(_td_request(symbol, "1day",   400))
         four_h  = _frame_from_td(_td_request(symbol, "4h",     500))
+        source  = "Yahoo Finance" if symbol in _yf_sourced_pairs else "Twelve Data"
         return {
             "status":  "ok",
-            "source":  "Twelve Data",
+            "source":  source,
             "monthly": _summarise(monthly, "Monthly", pair=symbol),
             "weekly":  _summarise(weekly,  "Weekly",  pair=symbol),
             "daily":   _summarise(daily,   "Daily",   pair=symbol),
