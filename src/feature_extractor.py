@@ -785,4 +785,6 @@ def extract(pair: str, parsed: dict, bundle: dict,
         "vix_vs_20d":              vix_vs_20d_f,
         "atr_5d_vs_20d":           round(atr_5d_vs_20d, 3),
         "atr_expanding":           atr_expanding,
+        "base_ccy_strength":       _safe(extra_data.get("base_currency_strength"), 0.0),
+        "quote_ccy_strength":      _safe(extra_data.get("quote_currency_strength"), 0.0),
     }
