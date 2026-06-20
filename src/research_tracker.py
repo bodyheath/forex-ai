@@ -432,6 +432,22 @@ def update_mfe_mae(rec_id: int, current_price: float) -> dict:
     return target
 
 
+def update_fields(rec_id: int, **kwargs) -> None:
+    """Update arbitrary fields on an open research trade without changing its status.
+
+    Only updates keys that exist in FIELDS.  Used by cascade milestone tracking
+    to record T1/T2/T3 hits and move the effective_stop without closing the trade.
+    """
+    rows = load()
+    target = next((r for r in rows if str(r.get("id")) == str(rec_id)), None)
+    if target is None:
+        return
+    for k, v in kwargs.items():
+        if k in FIELDS:
+            target[k] = v
+    _write_all(rows)
+
+
 def update_post_close(rec_id: int, current_price: float) -> dict:
     """Update post-close tracking fields for a recently closed trade.
 
