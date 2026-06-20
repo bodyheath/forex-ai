@@ -204,6 +204,12 @@ def _series_for(market_name: str) -> list:
                     )
                     # Don't cache stale data — retry on next run
                     return rows
+                # Success: data is fresh
+                week_end = _rd[:10]
+                print(
+                    f"[COT] Fresh fetch successful — data from week ending {week_end}",
+                    file=_sys.stderr,
+                )
             cache.set(key, rows)
             return rows
         except Exception as _exc:  # noqa: BLE001
