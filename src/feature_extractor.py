@@ -765,6 +765,23 @@ def extract(pair: str, parsed: dict, bundle: dict,
     atr_5d_vs_20d  = _safe(extra_data.get("atr_5d_vs_20d"), 1.0)
     atr_expanding  = _safe(extra_data.get("atr_expanding"), 0.0)
 
+    # ── Feature interaction terms ────────────────────────────────────────────
+    _ix_hhhl     = _safe(extra_data.get("hhhl_aligned"), 0.5)
+    _ix_mt       = _safe(extra_data.get("monthly_trend_aligned"), 0.5)
+    _ix_kz       = _encode_kill_zone(extra_data.get("kill_zone_entry", ""))
+    _ix_div      = _encode_divergence(extra_data.get("divergence_type", ""))
+    _ix_cl       = float(extra_data.get("checklist_score", 0) or 0)
+    _ix_base_cs  = _safe(extra_data.get("base_currency_strength"), 0.0)
+    _ix_fib      = 1.0 if (
+        (bundle.get("technical") or {}).get("daily", {}).get("fibonacci", {}) or {}
+    ).get("near_levels") else 0.0
+
+    hhhl_x_monthly           = _ix_hhhl * _ix_mt
+    rsi_x_fibonacci          = (rsi14 / 100.0) * _ix_fib
+    momentum_x_cot           = ((_ix_div + 2.0) / 4.0) * max(-1.0, min(1.0, cot_momentum_num))
+    kill_zone_x_confluence   = (1.0 if _ix_kz > 0 else 0.0) * (_ix_cl / 10.0)
+    currency_strength_x_trend = _ix_base_cs * _ix_mt
+
     return {
         "confidence":              round(confidence,   2),
         "tech_score":              round(tech_score,   2),
