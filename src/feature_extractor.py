@@ -861,4 +861,16 @@ def extract(pair: str, parsed: dict, bundle: dict,
         "momentum_x_cot":            round(momentum_x_cot,            4),
         "kill_zone_x_confluence":    round(kill_zone_x_confluence,    4),
         "currency_strength_x_trend": round(currency_strength_x_trend, 4),
+        # cascade features — t1/t2/t3 reached are 0 at entry; pips_at_t1 is predictive
+        "t1_reached":              1.0 if str(extra_data.get("t1_hit", "")).upper() == "TRUE" else 0.0,
+        "t2_reached":              1.0 if str(extra_data.get("t2_hit", "")).upper() == "TRUE" else 0.0,
+        "max_target_reached":      (3.0 if str(extra_data.get("t3_hit", "")).upper() == "TRUE" else
+                                    2.0 if str(extra_data.get("t2_hit", "")).upper() == "TRUE" else
+                                    1.0 if str(extra_data.get("t1_hit", "")).upper() == "TRUE" else 0.0),
+        "pips_at_t1":              _safe(extra_data.get("t1_hit_pips")),
+        "trade_closed_at_t1_only": (1.0 if (
+            str(extra_data.get("t1_hit", "")).upper() == "TRUE"
+            and str(extra_data.get("t2_hit", "")).upper() != "TRUE"
+            and str(parsed.get("status") or extra_data.get("status", "")).upper() == "PARTIAL_WIN"
+        ) else 0.0),
     }
