@@ -5202,6 +5202,16 @@ def _send_telegram_summary(
                 _n_expired  = len(_expired_ft)
                 _wr_pct     = _n_wins / len(_decisive_ft) * 100 if _decisive_ft else 0.0
 
+                # Sanity check — alert if fund trade count is implausibly large
+                if _n_total > 20:
+                    try:
+                        _telegram(
+                            f"⚠️ Fund trade count anomaly — showing {_n_total} trades "
+                            f"but maximum expected is 20 — check trades.csv for data corruption"
+                        )
+                    except Exception:
+                        pass
+
                 # Best trade by pips
                 _best_str = "None yet"
                 try:
