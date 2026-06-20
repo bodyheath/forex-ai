@@ -123,7 +123,7 @@ def t2_hit(row: dict, price: float) -> bool:
     """True if T1 was hit and price has crossed T2 (T2 not yet recorded)."""
     if not _is_true(row.get("t1_hit")):
         return False
-    if str(row.get("t2_hit", "")).upper() == "TRUE":
+    if _is_true(row.get("t2_hit")):
         return False
     t2 = _to_float(row.get("t2_price"))
     if t2 is None:
@@ -160,7 +160,7 @@ def cascade_outcome(row: dict) -> str:
     """Determine closed outcome from which targets were hit."""
     if str(row.get("t3_hit", "")).upper() == "TRUE":
         return "FULL_WIN"
-    if str(row.get("t2_hit", "")).upper() == "TRUE":
+    if _is_true(row.get("t2_hit")):
         return "WIN"
     if _is_true(row.get("t1_hit")):
         return "PARTIAL_WIN"
@@ -185,7 +185,7 @@ def total_pips(row: dict) -> float:
 
 def expiry_extension(row: dict, base_expiry: int) -> int:
     """Extend expiry: +3d after T1, +5d after T2; cap at 21 days total."""
-    t2 = str(row.get("t2_hit", "")).upper() == "TRUE"
+    t2 = _is_true(row.get("t2_hit"))
     t1 = _is_true(row.get("t1_hit"))
     ext = base_expiry + (5 if t2 else (3 if t1 else 0))
     return min(ext, 21)
