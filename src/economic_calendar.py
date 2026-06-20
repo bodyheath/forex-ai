@@ -372,6 +372,65 @@ def _fetch_forex_factory():
         f"(skipped: {_skipped_impact} non-high, {_skipped_ccy} unknown ccy, "
         f"{_skipped_dt} bad/past dt)"
     )
+
+    # Fallback: if no HIGH-impact events found, include MEDIUM-impact events as well.
+    # This handles Forex Factory format changes and weeks with no high-impact releases.
+    if not events:
+        print("[ECO-CAL] No HIGH-impact events found — falling back to MEDIUM-impact events")
+        _med_skipped_ccy = 0
+        _med_skipped_dt  = 0
+        for ev in _all_events:
+            impact = (ev.findtext("impact") or "").strip().lower()
+            if impact not in _MEDIUM_IMPACTS:
+                continue
+            currency = (ev.findtext("country") or "").strip().upper()
+            if currency not in _VALID_CCYS:
+                _med_skipped_ccy += 1
+                continue
+            title    = (ev.findtext("title")    or "").strip()
+            date_str = (ev.findtext("date")     or "").strip()
+            time_str = (ev.findtext("time")     or "").strip()
+            forecast = (ev.findtext("forecast") or "").strip()
+            previous = (ev.findtext("previous") or "").strip()
+            try:
+                date_part = datetime.strptime(date_str, "%b %d %Y")
+            except ValueError:
+                _med_skipped_dt += 1
+                continue
+            time_lower = time_str.lower().replace(" ", "")
+            if time_lower in ("tentative", "allday", ""):
+                hour, minute = 0, 0
+            else:
+                try:
+                    if ":" in time_lower:
+                        t = datetime.strptime(time_lower, "%I:%M%p")
+                    else:
+                        t = datetime.strptime(time_lower, "%I%p")
+                    hour, minute = t.hour, t.minute
+                except ValueError:
+                    hour, minute = 0, 0
+            dt_eastern = date_part.replace(hour=hour, minute=minute)
+            dt_utc     = _eastern_to_utc(dt_eastern)
+            if dt_utc < now_utc - timedelta(hours=1):
+                _med_skipped_dt += 1
+                continue
+            dt_ak       = _to_auckland(dt_utc)
+            plain, desc = _plain_name_desc(title)
+            desc        = _build_forecast_desc(title, currency, forecast, previous, desc)
+            events.append({
+                "currency":     currency,
+                "event":        f"[Medium] {title}",
+                "plain_name":   plain,
+                "plain_desc":   f"📅 Medium impact: {desc}",
+                "dt_utc":       dt_utc.strftime("%Y-%m-%d %H:%M"),
+                "dt_ak":        dt_ak.strftime("%Y-%m-%d %H:%M"),
+                "ak_display":   _ak_display(dt_ak),
+                "avoid_advice": f"monitor {currency} — medium-impact event",
+                "forecast":     forecast,
+                "previous":     previous,
+            })
+        print(f"[ECO-CAL] Medium-impact fallback: {len(events)} events (skipped {_med_skipped_ccy} unknown ccy, {_med_skipped_dt} bad/past dt)")
+
     events.sort(key=lambda e: e["dt_utc"])
     return events
 
