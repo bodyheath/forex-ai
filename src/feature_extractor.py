@@ -87,6 +87,12 @@ FEATURE_COLS = [
     "divergence_type",          # BULLISH=2, HIDDEN_BULLISH=1, NONE=0, HIDDEN_BEARISH=-1, BEARISH=-2
     # ── Pre-trade checklist ────────────────────────────────────────────────
     "checklist_score",          # 0-10 integer: number of quality criteria passed
+    # ── Feature interaction terms ──────────────────────────────────────────
+    "hhhl_x_monthly",           # hhhl_aligned × monthly_trend_aligned
+    "rsi_x_fibonacci",          # (rsi14/100) × fib_near_flag
+    "momentum_x_cot",           # divergence_type_norm × cot_momentum_num (clipped)
+    "kill_zone_x_confluence",   # kill_zone_binary × (checklist_score/10)
+    "currency_strength_x_trend", # base_ccy_strength × monthly_trend_aligned
 ]
 
 
