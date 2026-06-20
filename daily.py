@@ -7647,6 +7647,24 @@ def run() -> int:
                 except Exception:
                     pass
 
+                # RSI divergence at entry — used as ML feature
+                try:
+                    from src import technical as _tech_div_rt
+                    if r_result["pair"] not in _rsi_div_cache:
+                        _rsi_div_cache[r_result["pair"]] = _tech_div_rt.get_rsi_divergence(
+                            r_result["pair"]
+                        )
+                    _div_rt  = _rsi_div_cache.get(r_result["pair"], {})
+                    _rt_dir_div = _rp.get("direction", "").upper()
+                    if _rt_dir_div == "BUY":
+                        _extra_rt["divergence_type"] = _div_rt.get("low_divergence", "NONE")
+                    elif _rt_dir_div == "SELL":
+                        _extra_rt["divergence_type"] = _div_rt.get("high_divergence", "NONE")
+                    else:
+                        _extra_rt["divergence_type"] = "NONE"
+                except Exception:
+                    pass
+
                 # Check for inverse pair conflict — BLOCK research trade if inverse already open
                 _rt_inv_blocked = False
                 try:
