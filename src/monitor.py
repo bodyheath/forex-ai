@@ -1048,4 +1048,5 @@ def run(log=print) -> dict:
         )
 
     _write_monitor_log(result)
+    _release_lock()
     return result
