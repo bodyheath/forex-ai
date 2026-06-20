@@ -635,26 +635,47 @@ def _apply_research_milestones(row: dict, milestones: list, row_state: dict,
         mprice = m["price"]
         pips   = m["pips"]
 
+        # Deduplication: skip if this milestone was already sent within the window
+        if level in ("T1", "T2", "T3"):
+            _prev_ts = _check_milestone_sent(pair, level)
+            if _prev_ts:
+                log(
+                    f"  Monitor: duplicate suppressed — {pair} research {level} "
+                    f"already sent {_prev_ts} — CSV update applied, Telegram skipped"
+                )
+                _send_frag = False
+            else:
+                _send_frag = True
+        else:
+            _send_frag = True
+
         if level == "T1":
             _rt.update_fields(
                 rec_id,
                 t1_hit="TRUE", t1_hit_price=mprice,
                 t1_hit_pips=pips, effective_stop=row.get("entry"),
             )
-            fragments.append(f"{pair} T1 hit (+{pips:.1f} pips partial WIN)")
+            _verify_milestone_write(rec_id, "T1", _rt, pair, log=log)
+            if _send_frag:
+                _record_milestone_sent(pair, "T1", rec_id, trade_type="research")
+                fragments.append(f"{pair} T1 hit (+{pips:.1f} pips partial WIN)")
             log(f"  Monitor research #{rec_id} {pair}: T1 at {mprice} (+{pips:.1f}p)")
 
         elif level == "T2":
             _rt.update_fields(
                 rec_id, t2_hit="TRUE", t2_hit_price=mprice, t2_hit_pips=pips,
             )
-            fragments.append(f"{pair} T2 hit (+{pips:.1f} pips)")
+            _verify_milestone_write(rec_id, "T2", _rt, pair, log=log)
+            if _send_frag:
+                _record_milestone_sent(pair, "T2", rec_id, trade_type="research")
+                fragments.append(f"{pair} T2 hit (+{pips:.1f} pips)")
             log(f"  Monitor research #{rec_id} {pair}: T2 at {mprice} (+{pips:.1f}p)")
 
         elif level == "T3":
             _rt.update_fields(
                 rec_id, t3_hit="TRUE", t3_hit_price=mprice, t3_hit_pips=pips,
             )
+            _verify_milestone_write(rec_id, "T3", _rt, pair, log=log)
             _wp = _casc.weighted_pips(row_state)
             _tp = _casc.total_pips(row_state)
             _rt.update_fields(
@@ -668,7 +689,9 @@ def _apply_research_milestones(row: dict, milestones: list, row_state: dict,
                 exit_reason="TARGET_HIT",
                 cascading_pips=_wp,
             )
-            fragments.append(f"{pair} FULL_WIN (+{_wp:.1f}p weighted)")
+            if _send_frag:
+                _record_milestone_sent(pair, "T3", rec_id, trade_type="research")
+                fragments.append(f"{pair} FULL_WIN (+{_wp:.1f}p weighted)")
             log(f"  Monitor research #{rec_id} {pair}: FULL_WIN {_wp:.1f}p")
             break
 
