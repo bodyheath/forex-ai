@@ -13,7 +13,7 @@ on:
         default: ''
 
 concurrency:
-  group: intraday-forex
+  group: intraday-scan
   cancel-in-progress: false
 
 jobs:
