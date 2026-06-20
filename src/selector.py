@@ -487,6 +487,10 @@ def _fetch_ohlcv_snapshot(pair: str):
     if not config.TWELVE_DATA_KEY:
         return None
 
+    # Cache-only mode: skip live calls when daily limit is near (≥780 calls)
+    if _get_td_calls_today() >= 780:
+        return None
+
     symbol = pair.replace("/", "")
     _increment_td_usage()
     try:
