@@ -5392,9 +5392,9 @@ def _send_telegram_summary(
                 f"Technical scores suppressed — T:1/2/N/A on {len(weak_tech)} pairs "
                 f"({_wt_pairs}) — check DIAG lines in Actions log"
             )
-        if td_calls > 600:
+        if td_calls > 700:
             health_issues.append(
-                f"Twelve Data quota at risk — {td_calls} calls used today (limit ~800)"
+                f"⚠️ Twelve Data daily limit approaching — pair count automatically reduced"
             )
         try:
             primary_bal = credit_data.get("primary_balance")
