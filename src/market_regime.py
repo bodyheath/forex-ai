@@ -74,6 +74,7 @@ REGIMES = {
     },
     "trending_risk_off": {
         "label":           "Trending — Risk Off",
+        "display_label":   "Trending Risk Off",
         "emoji":           "🔴",
         "description":     (
             "investors are cautious and moving to safe havens. "
