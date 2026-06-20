@@ -6892,9 +6892,16 @@ def run() -> int:
                     except Exception:
                         pass
                     _log_line(logf, f"  {pair}: INVERSE BLOCKED — {result['inverse_blocked']}")
-                # Log currency concentration warning
+                # Log and alert on currency concentration warning
                 if result.get("concentration_warning"):
                     _log_line(logf, f"  {pair}: {result['concentration_warning']}")
+                    try:
+                        _telegram(
+                            f"⚠️ Currency concentration — <b>{pair}</b>\n"
+                            f"{result['concentration_warning']}"
+                        )
+                    except Exception:
+                        pass
                 pp = result["parsed"]
                 skipped = "SKIP-UNCHANGED " if result.get("skipped_unchanged") else ""
                 verdict = f"{pp['trade_this']} | conf {pp['confidence']} | {pp['direction']}"
