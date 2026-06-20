@@ -1797,70 +1797,73 @@ def _split_long_lines(lines: list, max_len: int) -> list:
     return out
 
 
-def _send_in_parts(sections: list) -> None:
-    """Send sections as Telegram messages, always keeping trade alerts first.
+def _send_in_parts(sections: list, urgent_alerts: list = None) -> None:
+    """Send Telegram messages with guaranteed delivery of trade alerts.
 
-    1. Sections containing trade alerts (🚨 TRADE ALERT or TRADE_THIS) are
-       extracted and sent as a standalone first message — this guarantees alerts
-       are never lost due to total message length.
-    2. Remaining sections are batched at ≤3800 chars each to stay safely under
-       Telegram's 4096-char limit (HTML escaping can expand the raw text).
-    3. Very large individual sections are split line-by-line if needed.
-    4. Each multi-part batch is prefixed with a 'Part N of M' label.
+    1. urgent_alerts — each string sent as a standalone message FIRST so trade
+       signals are never buried or lost in a long message.
+    2. sections split semantically: critical (trades/watchlist/calendar) → Part 1,
+       lower priority (research/fund/health) → Part 2.
+    3. Each semantic group is batched at ≤_TG_MAX chars with Part N of M labels.
     """
-    # Separate alert sections from context sections
-    alert_secs = []
-    other_secs = []
-    for sec in sections:
-        sec_flat = "\n".join(sec)
-        if "TRADE ALERT" in sec_flat or "🚨" in sec_flat:
-            alert_secs.append(sec)
-        else:
-            other_secs.append(sec)
+    # 1. Send urgent pre-alerts individually first
+    for _ua in (urgent_alerts or []):
+        try:
+            _telegram(_ua)
+        except Exception:
+            pass
 
-    # Always send alerts first if present
-    if alert_secs:
-        alert_lines: list[str] = []
-        for sec in alert_secs:
-            alert_lines.extend(sec)
-        alert_lines = _split_long_lines(alert_lines, _TG_MAX)
-        # Chunk the alert section if it's somehow huge
-        _chunk: list[str] = []
-        _clen = 0
-        for ln in alert_lines:
-            if _chunk and _clen + len(ln) > _TG_MAX:
-                _telegram("\n".join(_chunk))
-                _chunk = []
-                _clen = 0
-            _chunk.append(ln)
-            _clen += len(ln) + 1
-        if _chunk:
-            _telegram("\n".join(_chunk))
+    # 2. Categorize sections — these headers indicate lower-priority Part 2 content
+    def _is_part2(sec):
+        flat = "\n".join(sec).upper()
+        return (
+            "SYSTEM HEALTH" in flat
+            or "FOREX AI FUND" in flat
+            or "WEEKLY PERFORMANCE" in flat
+            or "RESEARCH" in flat
+            or "💳" in "\n".join(sec)
+        )
 
-    # Build remaining batches and count how many there will be
-    batches: list[list[str]] = []
-    current: list[str] = []
-    cur_len = 0
-    for sec in other_secs:
-        sec_lines = _split_long_lines(list(sec), _TG_MAX)
-        sec_text  = "\n".join(sec_lines)
-        sec_len   = len(sec_text)
-        if current and cur_len + sec_len > _TG_MAX:
+    critical_secs = [s for s in sections if not _is_part2(s)]
+    lower_secs    = [s for s in sections if _is_part2(s)]
+
+    # 3. Build batches for each group
+    def _build_batches(secs):
+        batches = []
+        current: list = []
+        cur_len = 0
+        for sec in secs:
+            sec_lines = _split_long_lines(list(sec), _TG_MAX)
+            sec_len   = len("\n".join(sec_lines))
+            if current and cur_len + sec_len > _TG_MAX:
+                batches.append(current)
+                current = []
+                cur_len = 0
+            current.extend(sec_lines)
+            cur_len += sec_len
+        if current:
             batches.append(current)
-            current = []
-            cur_len = 0
-        current.extend(sec_lines)
-        cur_len += sec_len
-    if current:
-        batches.append(current)
+        return batches
 
-    n_batches = len(batches)
-    for i, batch in enumerate(batches, 1):
-        if n_batches > 1:
-            label = f"🤖 FOREX AI — Part {i} of {n_batches}"
+    critical_batches = _build_batches(critical_secs)
+    lower_batches    = _build_batches(lower_secs)
+    total_parts      = len(critical_batches) + len(lower_batches)
+
+    part_num = 1
+    for batch in critical_batches:
+        if total_parts > 1:
+            label = f"🤖 FOREX AI — Part {part_num} of {total_parts} — TRADES AND ALERTS"
             _telegram(label + "\n" + "\n".join(batch))
         else:
             _telegram("\n".join(batch))
+        part_num += 1
+    for batch in lower_batches:
+        if total_parts > 1:
+            label = f"🤖 FOREX AI — Part {part_num} of {total_parts} — RESEARCH AND SYSTEM"
+            _telegram(label + "\n" + "\n".join(batch))
+        else:
+            _telegram("\n".join(batch))
+        part_num += 1
 
 
 # ── Trade block helpers ────────────────────────────────────────────────────────
