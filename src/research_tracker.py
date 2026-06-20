@@ -90,7 +90,7 @@ FIELDS = [
     # ── Market structure break ────────────────────────────────────────────────
     "market_structure_break",     # BULLISH_BREAK | BEARISH_BREAK | CONTINUATION
     # ── RSI divergence ────────────────────────────────────────────────────────
-    "divergence_type",            # BULLISH | BEARISH | HIDDEN_BULLISH | HIDDEN_BEARISH | NONE
+    "rsi_divergence_type",        # BULLISH | BEARISH | HIDDEN_BULLISH | HIDDEN_BEARISH | NONE
     # ── Pre-trade checklist ───────────────────────────────────────────────────
     "checklist_score",            # 0-10 integer: number of criteria passed
     # ── Cascading targets (append-only) ──────────────────────────────────────
