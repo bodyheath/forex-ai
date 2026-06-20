@@ -4097,6 +4097,10 @@ def _send_telegram_summary(
             for _cw in _cal_warn_lines:
                 block.append(_cw)
 
+        # ── Currency strength alignment note ─────────────────────────────────────
+        if _cs_boost_line:
+            block.append(_cs_boost_line)
+
         # ── Plain English outcome summary ─────────────────────────────────────
         if risk_amt and profit_amt:
             block += [
