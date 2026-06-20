@@ -53,6 +53,30 @@ FIELDS = [
     "post_close_max_move_pips",   # max price move in original trade direction after close
     "post_close_reversal_pips",   # max reversal against original direction after close
     "post_close_checked_at",      # timestamp of last post-close check
+    # ── Candle quality at entry ─────────────────────────────────────────────
+    "entry_candle_type",          # PIN_BAR | ENGULFING_BULL | ENGULFING_BEAR | INSIDE_BAR | NORMAL
+    "entry_candle_body_ratio",    # body / total range (0.0–1.0)
+    "entry_candle_vs_avg",        # entry candle range vs prior 10-candle average (ratio)
+    # ── Price context at entry ──────────────────────────────────────────────
+    "dist_weekly_open_pips",      # pips from Monday weekly open (large = possible exhaustion)
+    "dist_round_number_pips",     # pips from nearest 50-pip round-number level
+    "new_20d_extreme",            # true/false — new 20-day high or low in last 3 candles
+    "inside_bars_before",         # consecutive inside bars immediately before entry (compression)
+    # ── COT context at entry ────────────────────────────────────────────────
+    "cot_weeks_in_direction",     # consecutive weeks COT positioned in trade direction
+    "cot_accelerating",           # 1=building, -1=fading, 0=stable
+    # ── Intermarket context at entry ───────────────────────────────────────
+    "us10y_direction",            # US 10Y yield trend: RISING | FALLING | FLAT
+    "gold_direction",             # Gold price trend: RISING | FALLING | FLAT
+    "sp500_direction",            # S&P 500 trend: RISING | FALLING | FLAT
+    "vix_vs_20d_avg",             # 1=elevated, -1=suppressed, 0=flat/unknown
+    # ── Volatility context at entry ─────────────────────────────────────────
+    "atr_5d_vs_20d",              # 5-day ATR / 20-day ATR (>1.0 = expanding volatility)
+    "atr_expanding",              # 1 if ATR increasing 3+ consecutive days, else 0
+    # ── Enhanced post-close tracking ───────────────────────────────────────
+    "days_to_target_after_close", # days from trade close to target being hit (blank if not hit)
+    "price_at_expiry_momentum",   # price move direction at expiry: UP | DOWN | FLAT
+    "entry_level_revisited",      # true/false — did price revisit entry within 5 days after close?
 ]
 
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN"}
