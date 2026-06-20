@@ -5017,6 +5017,8 @@ def _send_telegram_summary(
     _monthly_trends: dict = {}
     # Swing structure cache — lazy-populated per pair on first access in _trade_block
     _trend_structures: dict = {}
+    # Market structure break cache — lazy-populated per pair on first access in _trade_block
+    _mstruct_cache: dict = {}
 
     # ═══════════════════════════════════════════════════════════════════════════
     # 6AM FULL SCAN — comprehensive morning briefing
