@@ -7152,6 +7152,16 @@ def run() -> int:
                     "corr_agreement_count":   _corr_count,
                 }
                 # ─────────────────────────────────────────────────────────────
+                # Augment with OHLCV-based entry-context features (no new API calls)
+                try:
+                    from src import feature_extractor as _fe_ctx
+                    _ctx = _fe_ctx.compute_entry_context(
+                        r_result["pair"], _bundle_rt,
+                        _rp.get("direction", "BUY"),
+                    )
+                    _extra_rt.update(_ctx)
+                except Exception:
+                    pass
 
                 # Check for inverse pair conflict — BLOCK research trade if inverse already open
                 _rt_inv_blocked = False
