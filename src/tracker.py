@@ -193,6 +193,30 @@ def check_inverse_open(pair: str, direction: str) -> str | None:
     return None
 
 
+def check_currency_concentration(pair: str, direction: str, max_per_ccy: int = 2) -> str | None:
+    """Return warning string if opening this trade would put >= max_per_ccy open trades on any one currency."""
+    try:
+        cleaned = pair.upper().replace("/", "").replace("-", "")
+        if len(cleaned) < 6:
+            return None
+        base, quote = cleaned[:3], cleaned[3:6]
+        rows = load()
+        open_rows = [r for r in rows if r.get("status") == "OPEN"]
+        for ccy in [base, quote]:
+            count = sum(
+                1 for r in open_rows
+                if ccy in r.get("pair", "").upper().replace("/", "").replace("-", "")
+            )
+            if count >= max_per_ccy:
+                return (
+                    f"WARNING: {ccy} already appears in {count} open fund trade(s) "
+                    f"(max {max_per_ccy}) — {pair} {direction.upper()} would add a 3rd {ccy} exposure"
+                )
+    except Exception:
+        pass
+    return None
+
+
 def update_outcome(rec_id: int, status: str, exit_price=None, notes: str = "") -> dict:
     status = status.upper()
     if status not in OUTCOME_STATUSES:
