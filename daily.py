@@ -4966,6 +4966,14 @@ def _send_telegram_summary(
                 nw_list.append(f"{r['pair']}: {_nw_trunc}")
         if nw_list:
             ctx_lines.append(f"⚡ {nw_list[0]}")
+        # Currency strength meter — full ranking across all 12 currencies
+        try:
+            from src import currency_strength as _cs_ctx
+            _cs_lines = _cs_ctx.strength_display_lines(_ccy_strength, scan_mode)
+            if _cs_lines:
+                ctx_lines.extend(_cs_lines)
+        except Exception:
+            pass
         if ctx.get("monthly_bias"):
             ctx_lines.append(f"📅 Monthly structural bias: <b>{ctx['monthly_bias']}</b> — background context only")
         # Market regime — plain-English macro environment summary
