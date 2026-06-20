@@ -265,6 +265,26 @@ def _classify(vix, vix_trend, yield_curve, gold_5d_pct,
             risk_on += 1
             sigs.append(f"gold {gold_5d_pct:.1f}% 5d (mild risk-on preference)")
 
+    # S&P 500 vs 50-day MA — equity trend confirms risk direction
+    if spx_above_50d is True:
+        risk_on += 1
+        sigs.append("SPX above 50-day MA (equity trend bullish)")
+    elif spx_above_50d is False:
+        risk_off += 1
+        sigs.append("SPX below 50-day MA (equity trend bearish)")
+
+    # Currency strength confirmation — top currencies corroborate regime
+    if top_ccys:
+        top2 = [c.upper() for c in top_ccys[:2]]
+        risk_on_count  = sum(1 for c in top2 if c in _RISK_ON_CCYS)
+        risk_off_count = sum(1 for c in top2 if c in _RISK_OFF_CCYS)
+        if risk_on_count == 2:
+            risk_on += 1
+            sigs.append(f"currency strength confirms risk-on ({', '.join(top2)} leading)")
+        elif risk_off_count == 2:
+            risk_off += 1
+            sigs.append(f"currency strength confirms risk-off ({', '.join(top2)} leading)")
+
     # High volatility overrides direction — chaotic markets are their own regime
     high_vol = vix is not None and vix >= 28
 
