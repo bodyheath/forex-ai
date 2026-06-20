@@ -4021,6 +4021,34 @@ def _send_telegram_summary(
         except Exception:
             pass
 
+        # Monthly trend: apply −2 penalty for counter-trend trades; build display line
+        _mt_trend    = _monthly_trend_data.get("trend", "NEUTRAL")
+        _mt_strength = _monthly_trend_data.get("strength", "weak")
+        _mt_aligned  = (
+            (direction == "BUY"  and _mt_trend == "BUY")  or
+            (direction == "SELL" and _mt_trend == "SELL")
+        )
+        _mt_neutral  = (_mt_trend == "NEUTRAL")
+        if _mt_trend != "NEUTRAL":
+            if not _mt_aligned:
+                # Counter-trend: −2 confidence
+                try:
+                    _conf_display = str(max(1, round(float(_conf_display) - 2)))
+                except (TypeError, ValueError):
+                    pass
+                _monthly_trend_line = (
+                    f"⚠️ Monthly trend: {_mt_trend} — this {direction} trade is "
+                    f"counter-trend — treat with extra caution — "
+                    f"tighter position size recommended"
+                )
+            else:
+                _str_label = f"{_mt_strength} " if _mt_strength != "weak" else ""
+                _monthly_trend_line = (
+                    f"📊 Monthly trend: {_mt_trend} — this trade is aligned with "
+                    f"the dominant {_str_label}monthly trend — "
+                    f"highest probability direction"
+                )
+
         _qg_tb = _quality_grades.get(pair, _trade_quality_grade(r))
         _tb_grade = (_qg_tb or {}).get("grade", "B")
 
