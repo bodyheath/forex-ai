@@ -5491,7 +5491,7 @@ def _send_telegram_summary(
         _rd_ctx = {}
         try:
             from src import market_regime as _mr_ctx
-            _rd_ctx = _mr_ctx.detect()
+            _rd_ctx = _mr_ctx.detect(ccy_strength=_ccy_strength)
         except Exception:
             pass
         _regime_key_ctx = (_rd_ctx.get("regime") or "").lower()
