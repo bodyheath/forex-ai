@@ -51,6 +51,7 @@ _RISK_OFF_CCYS = {"JPY", "CHF", "USD"}
 REGIMES = {
     "trending_risk_on": {
         "label":           "Trending — Risk On",
+        "display_label":   "Trending Risk On",
         "emoji":           "🟢",
         "description":     (
             "investors are confident and taking risks. "
