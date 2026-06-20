@@ -7156,7 +7156,8 @@ def run() -> int:
 
     # ── MONITOR MODE: lightweight between-scan check — bypass guard + full pipeline
     if scan_mode == "monitor":
-        with log_path.open("a", encoding="utf-8") as logf:
+        _mon_log = config.REPORTS_DIR / f"daily_{_startup_ak.strftime('%Y-%m-%d')}.log"
+        with _mon_log.open("a", encoding="utf-8") as logf:
             try:
                 from src import monitor as _mon
                 _mon.run(log=lambda m: _log_line(logf, m))
