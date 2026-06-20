@@ -5349,6 +5349,14 @@ def _send_telegram_summary(
 
         # MARKET CONTEXT
         _patience = _compute_patience_score(ctx)
+        # Detect regime once — 2h cache, shared by all downstream references
+        _rd_ctx = {}
+        try:
+            from src import market_regime as _mr_ctx
+            _rd_ctx = _mr_ctx.detect()
+        except Exception:
+            pass
+        _regime_key_ctx = (_rd_ctx.get("regime") or "").lower()
         ctx_lines = ["", "━━━━━━━━━━━━━━━━━━━━━", "🌍 <b>MARKET CONTEXT</b>"]
         vix_str = f"VIX {ctx['vix']:.1f}" if ctx["vix"] else ""
         env_str = ctx["risk_env"]
@@ -5359,7 +5367,7 @@ def _send_telegram_summary(
         sc = ctx.get("strongest_ccy")
         wc = ctx.get("weakest_ccy")
         scores = ctx.get("ccy_scores", {})
-        _roff_ctx = "risk-off" in env_str.lower()
+        _roff_ctx = "risk_off" in _regime_key_ctx or "risk-off" in env_str.lower()
         _safe_h = {"JPY", "CHF", "USD"}
         _risk_off_warn_ccys = {"AUD", "NZD", "GBP", "EUR", "NOK", "SEK", "CAD"}
         if sc:
