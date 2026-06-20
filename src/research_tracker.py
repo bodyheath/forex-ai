@@ -87,6 +87,8 @@ FIELDS = [
     "hhhl_aligned",               # 1=structure confirms direction, 0=broken structure, 0.5=no data
     # ── Kill zone timing ─────────────────────────────────────────────────────
     "kill_zone_entry",            # LONDON | NEW_YORK | OVERLAP | TOKYO | LONDON_CLOSE | OUTSIDE
+    # ── Market structure break ────────────────────────────────────────────────
+    "market_structure_break",     # BULLISH_BREAK | BEARISH_BREAK | CONTINUATION
 ]
 
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN"}
