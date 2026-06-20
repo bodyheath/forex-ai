@@ -214,10 +214,8 @@ def _series_for(market_name: str) -> list:
         except Exception as _exc:  # noqa: BLE001
             _last_exc = _exc
             if _attempt < 2:
-                import time as _time
-                _time.sleep(2)
-    import sys as _sys
-    print(f"[COT] ❌ COT data: fetch failed after 3 attempts for '{market_name}': {_last_exc}", file=_sys.stderr)
+                _time_mod.sleep(2)
+    print(f"[COT] ❌ COT data: fetch failed after 3 attempts for '{market_name}': {_last_exc}", file=sys.stderr)
     return []
 
 
