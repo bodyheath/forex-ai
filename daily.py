@@ -6048,6 +6048,54 @@ def _send_telegram_summary(
             health_sec.append(_mlp_hs.get_model_status_line())
         except Exception:
             pass
+        # Monitor status line
+        try:
+            _mon_log_f = config.DATA_DIR / "monitor_log.json"
+            if _mon_log_f.exists():
+                _mon_data = json.loads(_mon_log_f.read_text(encoding="utf-8"))
+                _mon_ts   = _mon_data.get("timestamp", "")
+                _mon_ms   = _mon_data.get("milestones_hit", [])
+                _mon_hot  = _mon_data.get("hot_zone_count", 0)
+                _mon_skip = _mon_data.get("skipped_reason", "")
+                if _mon_ts:
+                    try:
+                        _mon_dt  = datetime.fromisoformat(_mon_ts.replace("Z", "+00:00"))
+                        _mon_ago = datetime.now(__import__("datetime").timezone.utc) - _mon_dt
+                        _mon_ago_min = int(_mon_ago.total_seconds() / 60)
+                        if _mon_ago_min < 60:
+                            _mon_ago_str = f"{_mon_ago_min}m ago"
+                        else:
+                            _mon_ago_str = f"{_mon_ago_min // 60}h {_mon_ago_min % 60}m ago"
+                    except Exception:
+                        _mon_ago_str = "recently"
+                    if _mon_skip in ("no_open_trades",):
+                        health_sec.append(
+                            f"✅ Last monitor: {_mon_ago_str} — no open trades — zero API calls used"
+                        )
+                    elif _mon_ms:
+                        _ms_pairs = " · ".join(
+                            f"{m['pair']} {m['level']} hit"
+                            for m in _mon_ms[:3]
+                        )
+                        health_sec.append(
+                            f"🔔 Last monitor: {_mon_ago_str} — {len(_mon_ms)} milestone(s) — {_ms_pairs}"
+                        )
+                    elif _mon_hot > 0:
+                        health_sec.append(
+                            f"⚠️ Last monitor: {_mon_ago_str} — {_mon_hot} trade(s) in hot zone — watching closely"
+                        )
+                    else:
+                        health_sec.append(
+                            f"✅ Last monitor: {_mon_ago_str} — all trades within normal range — no milestones hit"
+                        )
+                    # Warn if monitor ran more than 4 hours ago
+                    if _mon_ago_min > 240:
+                        health_sec.append(
+                            f"⚠️ Last monitor: {_mon_ago_str} — possible GitHub Actions delay — "
+                            f"checking now at next scan"
+                        )
+        except Exception:
+            pass
         if cost_lines:
             health_sec.extend(cost_lines)
         # Run statistics
