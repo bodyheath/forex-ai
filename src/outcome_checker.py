@@ -362,12 +362,15 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
         except Exception as exc:
             log(f"  #{rec_id} {pair}: outcome check error — {exc}")
 
-    wins    = sum(1 for r in closed if r.get("status") == "WIN")
-    losses  = sum(1 for r in closed if r.get("status") == "LOSS")
-    beven   = sum(1 for r in closed if r.get("status") == "BREAKEVEN")
-    expired = sum(1 for r in closed if r.get("status") == "EXPIRED")
+    wins      = sum(1 for r in closed if r.get("status") == "WIN")
+    full_wins = sum(1 for r in closed if r.get("status") == "FULL_WIN")
+    partial   = sum(1 for r in closed if r.get("status") == "PARTIAL_WIN")
+    losses    = sum(1 for r in closed if r.get("status") == "LOSS")
+    beven     = sum(1 for r in closed if r.get("status") == "BREAKEVEN")
+    expired   = sum(1 for r in closed if r.get("status") == "EXPIRED")
     if closed:
-        log(f"Outcome check complete: {wins} WIN, {losses} LOSS, "
+        log(f"Outcome check complete: {wins} WIN, {full_wins} FULL_WIN, "
+            f"{partial} PARTIAL_WIN, {losses} LOSS, "
             f"{beven} BREAKEVEN, {expired} EXPIRED.")
     else:
         log("Outcome check: no trades hit target/stop today.")
