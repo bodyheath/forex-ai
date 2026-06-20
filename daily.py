@@ -6773,6 +6773,22 @@ def run() -> int:
                         f"(score {s['score']}/5 — {s['reason']})",
                     )
                     continue
+                # Send Telegram alert if inverse fund trade was blocked
+                if result.get("inverse_blocked"):
+                    _bl_pair = result.get("pair", "?")
+                    _bl_dir  = (result.get("parsed") or {}).get("direction", "?")
+                    try:
+                        _telegram(
+                            f"⚠️ Trade blocked — <b>{_bl_pair} {_bl_dir}</b> would duplicate existing "
+                            f"inverse open trade — same directional bet — new trade not opened.\n"
+                            f"{result['inverse_blocked']}"
+                        )
+                    except Exception:
+                        pass
+                    _log_line(logf, f"  {pair}: INVERSE BLOCKED — {result['inverse_blocked']}")
+                # Log currency concentration warning
+                if result.get("concentration_warning"):
+                    _log_line(logf, f"  {pair}: {result['concentration_warning']}")
                 pp = result["parsed"]
                 skipped = "SKIP-UNCHANGED " if result.get("skipped_unchanged") else ""
                 verdict = f"{pp['trade_this']} | conf {pp['confidence']} | {pp['direction']}"
