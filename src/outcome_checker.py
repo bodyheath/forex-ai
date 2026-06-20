@@ -177,7 +177,7 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                 continue
 
             # ── CASCADE: initialise levels if not yet stored ─────────────────
-            if not _casc._to_float(row.get("t1_price")):
+            if not _to_float(row.get("t1_price")):
                 try:
                     _ct1, _ct2, _ct3 = _casc.compute_levels(
                         row.get("entry"), row.get("stop_loss"),
