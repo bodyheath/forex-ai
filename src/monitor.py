@@ -94,11 +94,130 @@ def _is_weekend() -> bool:
     return _auckland_now().weekday() >= 5
 
 
+def _is_true(val) -> bool:
+    """Return True when a CSV boolean field is set.
+
+    Handles str "TRUE"/"1"/"YES", bool True, and int 1 so callers never need
+    to know whether the value came from a CSV row (string) or Python code.
+    """
+    return str(val).strip().upper() in ("TRUE", "1", "YES")
+
+
 def _write_monitor_log(data: dict) -> None:
     try:
         _MONITOR_LOG.write_text(json.dumps(data, indent=2), encoding="utf-8")
     except Exception:
         pass
+
+
+# ── Milestone deduplication log ───────────────────────────────────────────────
+
+def _load_milestone_log() -> dict:
+    try:
+        if _MILESTONE_LOG.exists():
+            return json.loads(_MILESTONE_LOG.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    return {"sent": []}
+
+
+def _check_milestone_sent(pair: str, level: str, hours: int = _DEDUP_HOURS) -> str | None:
+    """Return ISO timestamp if this pair/level was already sent within `hours`, else None."""
+    log_data = _load_milestone_log()
+    cutoff   = datetime.utcnow() - timedelta(hours=hours)
+    for entry in log_data.get("sent", []):
+        if entry.get("pair") == pair and entry.get("level") == level:
+            ts_str = entry.get("timestamp", "")
+            try:
+                ts = datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%SZ")
+                if ts > cutoff:
+                    return ts_str
+            except Exception:
+                pass
+    return None
+
+
+def _record_milestone_sent(pair: str, level: str, trade_id: int,
+                           trade_type: str = "fund") -> None:
+    """Record that a milestone alert was sent — persists to milestone_log.json."""
+    log_data = _load_milestone_log()
+    sent     = log_data.get("sent", [])
+    sent.append({
+        "pair":       pair,
+        "level":      level,
+        "trade_id":   trade_id,
+        "trade_type": trade_type,
+        "timestamp":  datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+    })
+    log_data["sent"] = sent[-500:]   # keep last 500 entries (~3 weeks at normal pace)
+    try:
+        _MILESTONE_LOG.write_text(json.dumps(log_data, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+
+
+# ── File lock ─────────────────────────────────────────────────────────────────
+
+def _try_acquire_lock(log=print) -> bool:
+    """Atomically create monitor.lock. Returns True if lock was acquired."""
+    try:
+        fd = os.open(str(_LOCK_FILE), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        os.write(fd, str(os.getpid()).encode())
+        os.close(fd)
+        return True
+    except FileExistsError:
+        try:
+            age = time.time() - _LOCK_FILE.stat().st_mtime
+            if age > _LOCK_TIMEOUT:
+                try:
+                    _LOCK_FILE.unlink()
+                except Exception:
+                    pass
+                log(f"Monitor: stale lock ({age:.0f}s old) removed — re-acquiring")
+                return _try_acquire_lock(log)
+        except Exception:
+            pass
+        return False
+    except Exception:
+        return True   # if we can't create the lock, proceed without it
+
+
+def _release_lock() -> None:
+    try:
+        _LOCK_FILE.unlink()
+    except Exception:
+        pass
+
+
+# ── Write-back verification ───────────────────────────────────────────────────
+
+def _verify_milestone_write(rec_id: int, level: str, tracker_mod,
+                             pair: str, log=print) -> bool:
+    """Read the trade row back from CSV to confirm the milestone was persisted.
+
+    Returns True on success.  Logs a CRITICAL warning if the field is missing
+    so the operator knows there is a risk of duplicate alert on the next run.
+    """
+    field_map = {"T1": "t1_hit", "T2": "t2_hit", "T3": "t3_hit"}
+    field = field_map.get(level)
+    if not field:
+        return True   # STOP has no boolean field to verify
+    try:
+        rows = tracker_mod.load()
+        for row in rows:
+            if int(row.get("id", -1)) == rec_id:
+                if _is_true(row.get(field)):
+                    return True
+                log(
+                    f"⚠️ CRITICAL: milestone write failed for {pair} #{rec_id} — "
+                    f"{field} not persisted — risk of duplicate alert on next run"
+                )
+                return False
+        log(f"⚠️ CRITICAL: row #{rec_id} {pair} not found during write-back check")
+        return False
+    except Exception as exc:
+        log(f"  Monitor: write-back check error for #{rec_id} {pair}: {exc}")
+        return False
 
 
 # ── Zone classification ───────────────────────────────────────────────────────
