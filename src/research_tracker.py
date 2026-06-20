@@ -93,9 +93,25 @@ FIELDS = [
     "divergence_type",            # BULLISH | BEARISH | HIDDEN_BULLISH | HIDDEN_BEARISH | NONE
     # ── Pre-trade checklist ───────────────────────────────────────────────────
     "checklist_score",            # 0-10 integer: number of criteria passed
+    # ── Cascading targets (append-only) ──────────────────────────────────────
+    "t1_price",                   # entry ± 0.4× ATR
+    "t2_price",                   # entry ± 0.7× ATR
+    "t3_price",                   # existing target (= 1.0× ATR for research trades)
+    "t1_hit",                     # TRUE / FALSE
+    "t1_hit_price",               # live price when T1 was triggered
+    "t1_hit_pips",                # pip profit on 40% closed at T1
+    "t2_hit",                     # TRUE / FALSE
+    "t2_hit_price",
+    "t2_hit_pips",                # pip profit on 30% closed at T2
+    "t3_hit",                     # TRUE / FALSE
+    "t3_hit_price",
+    "t3_hit_pips",                # pip profit on final 30% at T3
+    "effective_stop",             # starts as stop_loss; moves to entry after T1 hit
+    "cascading_total_pips",       # sum of pips across all hit portions
+    "cascading_total_pips_weighted",  # 0.4×t1 + 0.3×t2 + 0.3×t3
 ]
 
-OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN"}
+OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN", "FULL_WIN"}
 
 
 def _now() -> str:
