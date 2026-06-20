@@ -12,7 +12,11 @@ Robustness:
   presenting years-old numbers as current.
 """
 
+import hashlib
+import sys
+import time as _time_mod
 from datetime import datetime, timezone
+from pathlib import Path
 
 import requests
 
@@ -21,6 +25,130 @@ from src import cache
 
 _TIMEOUT = 30
 STALE_DAYS = 14
+
+
+def _cache_path_for_key(key: str) -> Path:
+    """Return the disk Path for a cache key (mirrors cache._path_for internals)."""
+    digest = hashlib.sha256(key.encode("utf-8")).hexdigest()[:24]
+    return config.CACHE_DIR / f"{digest}.json"
+
+
+def _cot_cache_info(market_name: str) -> dict:
+    """Return diagnostic info about the COT cache entry for a market.
+
+    Returns:
+        file_path    — absolute path to cache file
+        file_exists  — bool
+        cache_age_h  — hours since last fetch (None if file absent)
+        data_age_d   — days since latest report date in cached data (None if absent)
+        status       — "fresh" | "stale" | "missing" | "fetching"
+    """
+    key  = f"COT:exact:{market_name}"
+    path = _cache_path_for_key(key)
+    if not path.exists():
+        return {"file_path": path, "file_exists": False,
+                "cache_age_h": None, "data_age_d": None, "status": "missing"}
+    try:
+        import json as _json
+        payload   = _json.loads(path.read_text(encoding="utf-8"))
+        cache_age = (_time_mod.time() - payload.get("_cached_at", 0)) / 3600.0
+        rows      = payload.get("value") or []
+        if rows and isinstance(rows, list):
+            rdate    = (rows[0].get("report_date_as_yyyy_mm_dd") or "")
+            data_age = _days_old(rdate)
+        else:
+            data_age = None
+        stale = data_age is not None and data_age > STALE_DAYS
+        return {
+            "file_path":   path,
+            "file_exists": True,
+            "cache_age_h": round(cache_age, 1),
+            "data_age_d":  data_age,
+            "status":      "stale" if stale else "fresh",
+        }
+    except Exception:
+        return {"file_path": path, "file_exists": True,
+                "cache_age_h": None, "data_age_d": None, "status": "missing"}
+
+
+def log_and_clean_cot_status(log_fn=None) -> dict:
+    """Log COT cache status for every tracked market; delete stale entries.
+
+    Should be called once per scan (before _for_currency is called) so that:
+    - The operator can see data age in the run log
+    - Stale cache files are proactively deleted so the next _series_for() call
+      gets a truly clean fetch from the CFTC API
+
+    log_fn — callable(str) for the scan log; defaults to stderr print.
+    Returns a summary dict with worst-case data age across all markets.
+    """
+    if log_fn is None:
+        log_fn = lambda m: print(m, file=sys.stderr)
+
+    markets_checked = 0
+    worst_data_age  = 0
+    any_deleted     = 0
+
+    for ccy, meta in config.CURRENCIES.items():
+        market = meta.get("cot_market")
+        if not market:
+            continue
+        markets_checked += 1
+        info = _cot_cache_info(market)
+        da   = info.get("data_age_d")
+        ca   = info.get("cache_age_h")
+        st   = info.get("status")
+
+        if da is not None and da > worst_data_age:
+            worst_data_age = da
+
+        if st == "missing":
+            log_fn(
+                f"[COT] {market}: no cache — will fetch from CFTC on next call"
+            )
+        elif st == "stale":
+            log_fn(
+                f"[COT] Cache is {da} days old for '{market}' — "
+                f"DELETING stale entry and fetching fresh data"
+            )
+            try:
+                path = info["file_path"]
+                if path.exists():
+                    path.unlink()
+                    any_deleted += 1
+                    log_fn(f"[COT] Deleted stale cache for '{market}' ✓")
+            except Exception as _del_exc:
+                log_fn(f"[COT] Could not delete cache for '{market}': {_del_exc}")
+        else:
+            ca_str = f"{ca:.1f}h" if ca is not None else "?"
+            da_str = f"{da}d" if da is not None else "?"
+            log_fn(
+                f"[COT] {market}: cache {ca_str} old · data {da_str} old · Status: fresh"
+            )
+
+    return {
+        "markets_checked": markets_checked,
+        "worst_data_age_days": worst_data_age,
+        "deleted_stale": any_deleted,
+    }
+
+
+def get_cot_worst_age_days() -> int:
+    """Return the maximum data age (days since COT report) across all tracked markets.
+
+    Used by data_quality.assess_scan() for the scorecard.  Returns 0 when all
+    markets have fresh data or no COT markets are configured.
+    """
+    worst = 0
+    for ccy, meta in config.CURRENCIES.items():
+        market = meta.get("cot_market")
+        if not market:
+            continue
+        info = _cot_cache_info(market)
+        da   = info.get("data_age_d")
+        if da is not None and da > worst:
+            worst = da
+    return worst
 
 
 def _series_for(market_name: str) -> list:
@@ -33,8 +161,14 @@ def _series_for(market_name: str) -> list:
             _rdate = (cached[0].get("report_date_as_yyyy_mm_dd") or "")
             _age   = _days_old(_rdate)
             if _age is not None and _age > STALE_DAYS:
-                # Ignore stale cache — force a fresh fetch below
-                pass
+                # Delete stale cache file so next run gets a clean fetch
+                try:
+                    _stale_path = _cache_path_for_key(key)
+                    if _stale_path.exists():
+                        _stale_path.unlink()
+                except Exception:
+                    pass
+                # Fall through to fresh fetch below
             else:
                 return cached
         else:
