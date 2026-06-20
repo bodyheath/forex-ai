@@ -5073,6 +5073,8 @@ def _send_telegram_summary(
     _trend_structures: dict = {}
     # Market structure break cache — lazy-populated per pair on first access in _trade_block
     _mstruct_cache: dict = {}
+    # RSI divergence cache — lazy-populated per pair on first access in _trade_block
+    _rsi_div_cache: dict = {}
 
     # ═══════════════════════════════════════════════════════════════════════════
     # 6AM FULL SCAN — comprehensive morning briefing
