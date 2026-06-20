@@ -224,11 +224,11 @@ def _verify_milestone_write(rec_id: int, level: str, tracker_mod,
 
 def _next_cascade_target(row: dict):
     """Return the next unmet cascade target price, or None."""
-    if str(row.get("t1_hit", "")).upper() != "TRUE":
+    if not _is_true(row.get("t1_hit")):
         return _to_float(row.get("t1_price"))
-    if str(row.get("t2_hit", "")).upper() != "TRUE":
+    if not _is_true(row.get("t2_hit")):
         return _to_float(row.get("t2_price"))
-    if str(row.get("t3_hit", "")).upper() != "TRUE":
+    if not _is_true(row.get("t3_hit")):
         return _to_float(row.get("t3_price") or row.get("target"))
     return None
 
