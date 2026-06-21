@@ -1672,45 +1672,66 @@ def run(log=print) -> dict:
         """
         pf = _pip_factor(pair)
 
-        # T1: Yahoo 1H OHLCV candles available (any age — weekend Friday candles included)
+        src = price_sources.get(pair, "none")  # "yahoo"|"twelve_data"|"stooq"|"none"
+
+        # T1-YF: Yahoo 1H OHLCV candles available (any age — weekend candles included)
         if pair in candle_map:
             clist  = candle_map[pair]
             newest = clist[0].get("datetime", "")[:13] if clist else "?"
             high_v = max((float(c.get("high", 0)) for c in clist), default=0)
             low_v  = min((float(c.get("low",  999999)) for c in clist), default=0)
             curr_p = prices.get(pair) or last_prices.get(pair)
-            label  = (f"[T1] {pair}: Yahoo 1H ({len(clist)} candles, newest {newest}) "
+            label  = (f"[T1-YF] {pair}: Yahoo 1H ({len(clist)} candles, newest {newest}) "
                       f"HIGH {high_v:.5g} LOW {low_v:.5g}")
-            return 1, clist, curr_p, label
+            return "t1_yf_ohlcv", clist, curr_p, label
 
-        # T2: Synthetic candle from rolling price history
+        # T1-TD: Twelve Data live price (+ synthetic candle if 3+ history readings)
+        if src == "twelve_data":
+            curr_p = prices[pair]
+            hist   = price_history.get(pair, [])
+            synth  = _build_synthetic_candle(hist) if len(hist) >= 3 else None
+            candles = [synth] if synth else None
+            note    = f"+ synthetic ({len(hist)} readings)" if synth else "spot price only"
+            label   = f"[T1-TD] {pair}: Twelve Data {curr_p} ({note})"
+            return "t1_td_backup", candles, curr_p, label
+
+        # T1-SQ: Stooq daily close (+ synthetic candle if 3+ history readings)
+        if src == "stooq":
+            curr_p = prices[pair]
+            hist   = price_history.get(pair, [])
+            synth  = _build_synthetic_candle(hist) if len(hist) >= 3 else None
+            candles = [synth] if synth else None
+            note    = f"+ synthetic ({len(hist)} readings)" if synth else "daily close only"
+            label   = f"[T1-SQ] {pair}: Stooq {curr_p} ({note})"
+            return "t1_sq_backup", candles, curr_p, label
+
+        # T2-SYN: Synthetic candle from rolling price history (no live external price)
         hist = price_history.get(pair, [])
         if len(hist) >= 3:
             synth = _build_synthetic_candle(hist)
             if synth:
-                curr_p = prices.get(pair) or last_prices.get(pair)
+                curr_p = last_prices.get(pair)
                 oldest = hist[0].get("timestamp", "")[:16]
-                label  = (f"[T2] {pair}: synthetic candle ({len(hist)} readings, "
+                label  = (f"[T2-SYN] {pair}: synthetic candle ({len(hist)} readings, "
                           f"oldest {oldest}) HIGH {synth['high']} LOW {synth['low']}")
-                return 2, [synth], curr_p, label
+                return "t2_synthetic", [synth], curr_p, label
 
-        # T3: Current price only (live from this run)
-        curr_p = prices.get(pair)
-        if curr_p is not None:
-            hist_n = len(hist)
-            label  = (f"[T3] {pair}: current price only "
-                      f"({hist_n} history readings) — price {curr_p}")
-            return 3, None, curr_p, label
+        # T3-CUR: Yahoo price but < 3 history readings (no synthetic possible)
+        if src == "yahoo":
+            curr_p = prices[pair]
+            label  = (f"[T3-CUR] {pair}: Yahoo price {curr_p} "
+                      f"(no candles, {len(hist)} history readings)")
+            return "t3_current_only", None, curr_p, label
 
-        # T4: Last known price from previous run (max ~30 min old)
+        # T4-PH: Last known price from previous run (all external sources unavailable)
         last_p = last_prices.get(pair)
         if last_p is not None:
-            label = (f"[T4] {pair}: last known price {last_p} "
-                     f"(Yahoo Finance unavailable this run)")
-            return 4, None, last_p, label
+            label = (f"[T4-PH] {pair}: last known price {last_p} "
+                     f"(all external sources unavailable this run)")
+            return "t4_last_known", None, last_p, label
 
-        # T0: No data at all — should never happen in normal operation
-        return 0, None, None, f"[T0] {pair}: NO PRICE DATA — cannot monitor"
+        # T0: Nothing at all — should never happen in normal operation
+        return "t0_no_data", None, None, f"[T0] {pair}: NO PRICE DATA — cannot monitor"
 
     # Resolve tiers for every unique pair (log once per pair, not per trade)
     pair_data: dict = {}
