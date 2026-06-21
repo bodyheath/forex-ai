@@ -182,18 +182,27 @@ def _fetch_ohlcv_yahoo(pair: str, interval: str, outputsize: int) -> dict:
 
 
 def _td_request(symbol: str, interval: str, outputsize: int, _log=None) -> dict:
-    """Call Twelve Data time_series with caching, Yahoo Finance fallback on 429.
+    """Fetch candle data with multi-source fallback and caching.
 
-    When Twelve Data returns HTTP 429 (rate limit) for a daily/weekly/monthly
-    interval, immediately retries via Yahoo Finance instead of waiting 30 seconds.
-    4H requests are always Twelve Data only (Yahoo intra-day data is less reliable).
+    Daily / weekly / monthly fallback priority (free sources first to preserve quota):
+      1. Cache (zero API calls)
+      2. Yahoo Finance (free, unlimited daily data)
+      3. Stooq (free, unlimited backup)
+      4. Twelve Data API (uses daily quota)
+
+    4H fallback priority (native 4H is higher quality than reconstruction):
+      1. Cache (zero API calls)
+      2. Twelve Data API
+      3. Yahoo Finance 1H reconstruction (~95% of native 4H quality)
     """
     key = f"TD:{symbol}:{interval}:{outputsize}"
     cached = cache.get(key, ttl_hours=_INTERVAL_TTL.get(interval, _CACHE_TTL))
     if cached is not None:
         return cached
 
-    global _td_calls_this_run, _yf_sourced_pairs
+    global _td_calls_this_run, _yf_calls_this_run, _stooq_calls_this_run
+    global _yf_4h_calls_this_run, _yf_sourced_pairs, _stooq_sourced_pairs
+    global _yf_4h_sourced_pairs
 
     def _do_fetch(sym: str) -> dict:
         global _td_calls_this_run
@@ -215,7 +224,6 @@ def _td_request(symbol: str, interval: str, outputsize: int, _log=None) -> dict:
         return resp.json()
 
     # Alternative symbol format: slash ↔ no-slash (e.g. "AUD/JPY" ↔ "AUDJPY").
-    # Twelve Data accepts both; some pairs only resolve under one format.
     _sym_clean = symbol.replace("/", "")
     _alt = (
         _sym_clean if "/" in symbol
@@ -225,18 +233,60 @@ def _td_request(symbol: str, interval: str, outputsize: int, _log=None) -> dict:
     if _alt == symbol:
         _alt = None
 
-    try:
-        data = _do_fetch(symbol)
-    except RuntimeError as exc:
-        # On rate limit, immediately fall back to Yahoo Finance for supported intervals.
-        if "rate limit" in str(exc).lower() and interval in _YF_FALLBACK_INTERVALS:
-            msg = f"Technical: Twelve Data rate limit — falling back to Yahoo Finance for {symbol} — zero API quota used."
-            if _log:
-                _log(msg)
+    # ── Daily / Weekly / Monthly: free sources first to preserve TD quota ──────
+    if interval in _YF_FALLBACK_INTERVALS:
+        # Priority 2: Yahoo Finance
+        try:
             data = _fetch_ohlcv_yahoo(symbol, interval, outputsize)
             _yf_sourced_pairs.add(symbol)
             cache.set(key, data)
             return data
+        except Exception:
+            if _log:
+                _log(
+                    f"Technical: Yahoo Finance unavailable for {symbol} "
+                    f"{interval} candles — trying Stooq backup"
+                )
+
+        # Priority 3: Stooq
+        try:
+            from src import stooq_data as _stooq_mod
+            _stooq_result = _stooq_mod.fetch_candles(symbol, outputsize, log=_log or print)
+        except Exception:
+            _stooq_result = None
+        if _stooq_result is not None:
+            if _log:
+                _log(
+                    f"Technical: Yahoo Finance unavailable for {symbol} "
+                    f"daily candles — using Stooq backup — zero API quota used — data cached"
+                )
+            _stooq_sourced_pairs.add(symbol)
+            _stooq_calls_this_run += 1
+            cache.set(key, _stooq_result)
+            return _stooq_result
+
+    # ── Twelve Data API (Priority 4 for d/w/m; Priority 2 for 4H) ─────────────
+    try:
+        data = _do_fetch(symbol)
+    except RuntimeError as exc:
+        # On 4H rate limit: try Yahoo Finance 1H reconstruction
+        if "rate limit" in str(exc).lower() and interval == "4h":
+            try:
+                from src.yahoo_finance import fetch_4h_candles as _fetch_4h_yf
+                _4h_result = _fetch_4h_yf(symbol, outputsize, log=_log or print)
+                if _4h_result is not None:
+                    if _log:
+                        _log(
+                            f"Technical: Twelve Data 4H rate limited for {symbol} — "
+                            f"reconstructing 4H from Yahoo Finance 1H candles — "
+                            f"quality approximately 95% of native 4H data"
+                        )
+                    _yf_4h_sourced_pairs.add(symbol)
+                    _yf_4h_calls_this_run += 1
+                    cache.set(key, _4h_result)
+                    return _4h_result
+            except Exception:
+                pass
         raise
 
     # Twelve Data signals problems with {"status": "error", "code": ..., "message": ...}
