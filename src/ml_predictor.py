@@ -637,6 +637,39 @@ def predict(features: dict) -> Optional[float]:
         return None
 
 
+def predict_blended(features: dict) -> Optional[float]:
+    """Return blended win probability combining batch GBM + online SGD models.
+
+    Online model weight scales with number of decisive outcomes it has seen:
+      n >= 50:  40% online + 60% batch
+      n >= 20:  25% online + 75% batch
+      n <  20:  10% online + 90% batch
+    Falls back to batch-only if online model not ready.
+    """
+    batch_p = predict(features)
+    try:
+        from src import online_learner as _ol
+        n_online = _ol.get_n_decisive()
+        online_p = _ol.predict_proba(features) if n_online > 0 else None
+    except Exception:
+        online_p = None
+        n_online = 0
+
+    if batch_p is None:
+        return online_p
+    if online_p is None or n_online < 5:
+        return batch_p
+
+    if n_online >= 50:
+        w_online = 0.40
+    elif n_online >= 20:
+        w_online = 0.25
+    else:
+        w_online = 0.10
+
+    return round(online_p * w_online + batch_p * (1.0 - w_online), 4)
+
+
 def retrain_if_stale(force: bool = False, quiet: bool = True) -> Optional[dict]:
     """Retrain if model is missing or was last trained > 7 days ago.
 
