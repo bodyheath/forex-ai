@@ -8527,8 +8527,14 @@ def run() -> int:
                     _wka_send, _wka_msg = _fs_cb.check_weekend_alert(_fs_cb_st, _wka_open)
                     if _wka_send:
                         _telegram(_wka_msg)
-                        _now_ak_wka = _fs_cb._auckland_now()
-                        _fs_cb_st["weekend_alert_sent_date"] = _now_ak_wka.strftime("%Y-%m-%d")
+                        try:
+                            from zoneinfo import ZoneInfo as _ZI_wka
+                        except ImportError:
+                            from backports.zoneinfo import ZoneInfo as _ZI_wka
+                        from datetime import datetime as _dt_wka
+                        _fs_cb_st["weekend_alert_sent_date"] = (
+                            _dt_wka.now(_ZI_wka("Pacific/Auckland")).strftime("%Y-%m-%d")
+                        )
                 except Exception:
                     pass
                 _fs_cb.save(_fs_cb_st)
