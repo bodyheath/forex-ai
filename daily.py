@@ -5796,6 +5796,28 @@ def _send_telegram_summary(
             print(f"[ECO-CAL] Exception in economic calendar: {_ec_err}", file=sys.stderr)
             print(_tb_cal.format_exc(), file=sys.stderr)
 
+        # MOVEMENT ALERTS (6am only — full-universe scan outside analysis batch)
+        try:
+            _mad = movement_alert_data or {}
+            _ma_alerts = _mad.get("full_scan_alerts", [])
+            _ma_weekly  = _mad.get("weekly", {})
+            if _ma_alerts:
+                _ma_sec = ["", "━━━━━━━━━━━━━━━━━━━━━",
+                           "📊 <b>Movement alerts outside top 25:</b>"]
+                for _ma in _ma_alerts[:5]:
+                    _ma_sec.append(
+                        f"⚡ {_ma['pair']} moved {_ma['pips']} pips since yesterday "
+                        f"({_ma['atr_ratio']}x ATR) — added to priority sweep"
+                    )
+                all_sections.append(_ma_sec)
+            elif _ma_weekly.get("movement_alerts_detected", 0) > 0:
+                all_sections.append([
+                    "", "━━━━━━━━━━━━━━━━━━━━━",
+                    "📊 <b>Movement alerts:</b> ✅ All significant movers already in analysis batch",
+                ])
+        except Exception:
+            pass
+
         # SYSTEM LEARNING REPORT (Monday 6am only)
         _slr = _build_system_learning_report(date)
         if _slr:
