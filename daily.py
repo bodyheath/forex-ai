@@ -5804,6 +5804,7 @@ def _send_telegram_summary(
         try:
             from src import fund_state as _fs_st
             _fs_st_lines = _fs_st.build_status_lines(_fund_st)
+            _fs_sz_lines = _fs_st.build_sizing_status_lines(_fund_st)
             if _fund_st_blocked:
                 _blk_pairs = ", ".join(
                     (_bt.get("pair") or "") for _bt, _ in _fund_st_blocked[:3]
@@ -5814,6 +5815,8 @@ def _send_telegram_summary(
             all_sections.append(
                 ["", "━━━━━━━━━━━━━━━━━━━━━", "⚙️ <b>FUND PROTECTION STATUS</b>"]
                 + _fs_st_lines
+                + [""]
+                + _fs_sz_lines
             )
         except Exception:
             pass
