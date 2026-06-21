@@ -8565,6 +8565,11 @@ def run() -> int:
                     "day_of_week":            _dow_rt,
                     "hour_auckland":          _hour_rt,
                     "corr_agreement_count":   _corr_count,
+                    # Dynamic threshold context
+                    "threshold_at_entry":              _threshold_data.get("final_threshold", ""),
+                    "regime_base_at_entry":            _threshold_data.get("regime_base", ""),
+                    "win_rate_adjustment_at_entry":    _threshold_data.get("win_rate_adjustment", ""),
+                    "data_quality_adjustment_at_entry": _threshold_data.get("data_quality_adjustment", ""),
                 }
                 # ─────────────────────────────────────────────────────────────
                 # Augment with OHLCV-based entry-context features (no new API calls)
