@@ -178,35 +178,53 @@ def build_scorecard(quality: dict) -> list:
         lines.append("No deep analysis run — data quality report unavailable")
         return lines
 
-    # ── Candle data sources (Twelve Data + Yahoo Finance fallback) ───────────
-    t_ok    = quality.get("tech_ok",    0)
-    t_td_ok = quality.get("tech_td_ok", 0)
-    t_yf_ok = quality.get("tech_yf_ok", 0)
-    t_tot   = quality.get("tech_total",  n)
-    t_fail  = t_tot - t_ok
+    # ── Candle data sources breakdown ────────────────────────────────────────
+    t_ok       = quality.get("tech_ok",       0)
+    t_td_ok    = quality.get("tech_td_ok",    0)
+    t_yf_ok    = quality.get("tech_yf_ok",    0)
+    t_stooq_ok = quality.get("tech_stooq_ok", 0)
+    t_4h_yf_ok = quality.get("tech_4h_yf_ok", 0)
+    t_tot      = quality.get("tech_total",     n)
+    t_fail     = t_tot - t_ok
 
-    # When both sources contributed, show a split breakdown line.
-    if t_td_ok > 0 and t_yf_ok > 0:
-        lines.append(
-            f"✅ Twelve Data candles: {t_td_ok}/{t_tot} pairs (fresh) · "
-            f"✅ Yahoo Finance fallback: {t_yf_ok}/{t_tot} pairs (fresh) — "
-            f"{t_ok}/{t_tot} total coverage"
-        )
+    _any_fallback = t_yf_ok > 0 or t_stooq_ok > 0
+
+    if t_fail == 0 and not _any_fallback:
+        # All from Twelve Data (cache or API)
+        lines.append(f"✅ Technical data: {t_ok}/{t_tot} pairs")
+        parts = [f"Twelve Data: {t_td_ok}"]
+        if t_yf_ok:    parts.append(f"Yahoo Finance: {t_yf_ok}")
+        if t_stooq_ok: parts.append(f"Stooq: {t_stooq_ok}")
+        lines.append(f"   {'  ·  '.join(parts)}")
     elif t_fail == 0:
-        lines.append(f"✅ Twelve Data candles: {t_ok}/{t_tot} pairs fetched successfully")
-    elif t_yf_ok > 0 and t_td_ok == 0:
+        # Full coverage with mixed sources
+        parts = [f"Twelve Data: {t_td_ok}"]
+        if t_yf_ok:    parts.append(f"Yahoo Finance: {t_yf_ok}")
+        if t_stooq_ok: parts.append(f"Stooq: {t_stooq_ok}")
         lines.append(
-            f"✅ Yahoo Finance candles: {t_yf_ok}/{t_tot} pairs (Twelve Data rate-limited this scan)"
+            f"✅ Candle data sources this scan: {t_ok}/{t_tot} pairs — "
+            + "  ·  ".join(parts)
         )
     elif t_fail <= 3:
         lines.append(
-            f"⚠️ Twelve Data candles: {t_ok}/{t_tot} pairs — "
+            f"⚠️ Candle data: {t_ok}/{t_tot} pairs — "
             f"{t_fail} using neutral T scores — analysis quality slightly reduced"
         )
     else:
         lines.append(
-            f"❌ Twelve Data candles: {t_ok}/{t_tot} pairs — "
+            f"❌ Candle data: {t_ok}/{t_tot} pairs — "
             f"technical analysis degraded — {t_fail} pairs on neutral fallback"
+        )
+
+    if t_stooq_ok > 0:
+        lines.append(f"   ✅ Stooq backup: {t_stooq_ok} pairs (Yahoo Finance unavailable)")
+
+    # 4H data breakdown — only show when Yahoo reconstruction was used
+    t_4h_native = t_ok - t_4h_yf_ok
+    if t_4h_yf_ok > 0:
+        lines.append(
+            f"   ✅ 4H data: {t_ok}/{t_tot} pairs "
+            f"({t_4h_native} cache/native · {t_4h_yf_ok} Yahoo reconstructed)"
         )
 
     # ── FRED interest rates ───────────────────────────────────────────────────
