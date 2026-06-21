@@ -1056,6 +1056,103 @@ def _ensure_cascade_levels(row: dict, tracker_mod, log=print) -> dict:
 
 # ── Main entry point ──────────────────────────────────────────────────────────
 
+def _build_synthetic_candle(readings: list) -> dict | None:
+    """Build a synthetic OHLCV candle from a list of price readings.
+
+    Each reading is {price: float, timestamp: str, source: str}.
+    Requires at least 3 readings; returns None otherwise.
+    """
+    if len(readings) < 3:
+        return None
+    vals = [r["price"] for r in readings if isinstance(r.get("price"), (int, float))]
+    if not vals:
+        return None
+    return {
+        "open":            str(readings[0]["price"]),
+        "high":            str(max(vals)),
+        "low":             str(min(vals)),
+        "close":           str(readings[-1]["price"]),
+        "datetime":        readings[-1].get("timestamp", "")[:16].replace("T", " "),
+        "source":          "synthetic_from_history",
+        "n_readings":      len(readings),
+        "oldest_reading":  readings[0].get("timestamp", ""),
+        "newest_reading":  readings[-1].get("timestamp", ""),
+    }
+
+
+def _check_market_reopen(now_ak, ta=None, log=print) -> bool:
+    """Send Sunday market-reopen alert once per week (5pm–6pm Auckland Sunday)."""
+    if now_ak.weekday() != 6:      # 6 = Sunday
+        return False
+    if not (17 <= now_ak.hour < 18):
+        return False
+    try:
+        reopen_data: dict = {}
+        if _MARKET_REOPEN_FILE.exists():
+            reopen_data = json.loads(_MARKET_REOPEN_FILE.read_text(encoding="utf-8"))
+        last_str = reopen_data.get("last_reopen_detected", "")
+        if last_str:
+            if (datetime.utcnow() - datetime.fromisoformat(last_str)).days < 6:
+                return False  # already sent this week
+        if ta:
+            try:
+                ta.send(
+                    "📊 <b>Forex markets reopening</b>\n\n"
+                    "Checking for Sunday opening moves and weekend gaps across all open trades.\n"
+                    "Live prices now available — next full scan 6am Auckland."
+                )
+            except Exception:
+                pass
+        reopen_data["last_reopen_detected"] = datetime.utcnow().isoformat()
+        reopen_data["reopen_alert_sent"]    = True
+        _MARKET_REOPEN_FILE.write_text(json.dumps(reopen_data, indent=2), encoding="utf-8")
+        log("Monitor: Sunday market reopen detected — alert sent")
+        return True
+    except Exception:
+        return False
+
+
+def build_monitor_data_quality_report() -> list:
+    """Return data-tier quality section for Monday learning report."""
+    try:
+        if not _MONITOR_HISTORY.exists():
+            return []
+        history = json.loads(_MONITOR_HISTORY.read_text(encoding="utf-8"))
+        runs = history.get("runs", [])
+    except Exception:
+        return []
+
+    cutoff = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    week = [r for r in runs if r.get("ts", "") >= cutoff and not r.get("skipped")]
+    if not week:
+        return []
+
+    total_t1 = sum(r.get("t1_yahoo_ohlcv", 0) for r in week)
+    total_t2 = sum(r.get("t2_synthetic",   0) for r in week)
+    total_t3 = sum(r.get("t3_current_only", 0) for r in week)
+    total_t4 = sum(r.get("t4_last_known",   0) for r in week)
+    total_t0 = sum(r.get("t0_no_data",      0) for r in week)
+    total    = total_t1 + total_t2 + total_t3 + total_t4 + total_t0
+
+    if total == 0:
+        return []
+
+    def pct(n):
+        return f"{round(n / total * 100)}%" if total else "0%"
+
+    lines = [
+        "",
+        "<b>MONITOR DATA QUALITY (this week)</b>",
+        f"T1 Yahoo 1H candles:    {pct(total_t1)} ({total_t1} checks)",
+        f"T2 synthetic history:   {pct(total_t2)} ({total_t2} checks)",
+        f"T3 current price only:  {pct(total_t3)} ({total_t3} checks)",
+        f"T4 last known price:    {pct(total_t4)} ({total_t4} checks)",
+        f"T0 no data:             {pct(total_t0)} ({total_t0} checks)"
+        + (" ✅" if total_t0 == 0 else " ⚠️"),
+    ]
+    return lines
+
+
 def run(log=print) -> dict:
     """Run the between-scan monitor. Returns the monitor_log dict written to disk."""
     now_ak   = _auckland_now()
