@@ -150,6 +150,8 @@ def assess_scan(deep_results: list) -> dict:
         "tech_ok":                  tech_ok,
         "tech_td_ok":               tech_td_ok,
         "tech_yf_ok":               tech_yf_ok,
+        "tech_stooq_ok":            tech_stooq_ok,
+        "tech_4h_yf_ok":            tech_4h_yf_ok,
         "tech_total":               n,
         "fund_ok":                  fund_ok,
         "fund_total":               n,
