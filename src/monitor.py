@@ -189,19 +189,12 @@ def _record_hot_alert_sent(pair: str) -> None:
             pass
 
 
-def _build_hot_alert_message(pair: str, row: dict, price: float | None) -> str:
-    """Build the HOT zone Telegram alert message with progress details."""
+def _build_hot_trade_lines(row: dict, price: float | None, pair: str) -> list:
+    """Return detail lines for one HOT trade — handles both target-approaching and
+    stop-approaching cases with correct direction-aware progress percentages."""
     direction = (row.get("direction") or "").upper()
     entry     = _to_float(row.get("entry"))
     stop      = _to_float(row.get("effective_stop") or row.get("stop_loss"))
-
-    # Determine the next unmet target level
-    if not _is_true(row.get("t1_hit")):
-        level, tgt = "T1", _to_float(row.get("t1_price"))
-    elif not _is_true(row.get("t2_hit")):
-        level, tgt = "T2", _to_float(row.get("t2_price"))
-    else:
-        level, tgt = "T3", _to_float(row.get("t3_price") or row.get("target"))
 
     pip_factor = 0.01 if "JPY" in pair else 0.0001
     decimals   = 3    if "JPY" in pair else 5
@@ -209,21 +202,108 @@ def _build_hot_alert_message(pair: str, row: dict, price: float | None) -> str:
     def _fmt(v):
         return f"{v:.{decimals}f}" if v is not None else "?"
 
-    lines = [f"\U0001f525 <b>{pair} approaching {level} target</b>", ""]
+    # Determine next unmet target
+    if not _is_true(row.get("t1_hit")):
+        level, tgt = "T1", _to_float(row.get("t1_price"))
+    elif not _is_true(row.get("t2_hit")):
+        level, tgt = "T2", _to_float(row.get("t2_price"))
+    else:
+        level, tgt = "T3", _to_float(row.get("t3_price") or row.get("target"))
 
-    if price is not None and tgt is not None and entry is not None and direction in ("BUY", "SELL"):
+    lines = []
+    if price is None or entry is None or direction not in ("BUY", "SELL"):
+        if tgt is not None:
+            lines.append(f"{level} target: {_fmt(tgt)}  ·  Current price: {_fmt(price)}")
+        return lines
+
+    # Direction-aware progress toward target
+    if tgt is not None:
         total = abs(tgt - entry)
-        if total > 0:
-            progress = (price - entry) / total if direction == "BUY" else (entry - price) / total
+        progress = (
+            ((price - entry) / total) if direction == "BUY"
+            else ((entry - price) / total)
+        ) if total > 0 else 0.0
+
+        if progress >= 1.0:
+            # Past the target — milestone should have been recorded this run
+            lines.append(f"🎯 {level} ALREADY CROSSED — {int(progress * 100)}% — recording milestone now")
+        elif progress >= 0:
             lines.append(f"Progress: {int(progress * 100)}% of the way to {level}")
+        else:
+            # Negative progress = price moved against trade → HOT is due to stop proximity
+            if stop is not None:
+                stop_range = abs(entry - stop)
+                stop_prox = (
+                    max(0.0, (entry - price) / stop_range) if direction == "BUY"
+                    else max(0.0, (price - entry) / stop_range)
+                ) if stop_range > 0 else 0.0
+                lines.append(
+                    f"⚠️ Approaching stop loss — {int(stop_prox * 100)}% of the way to stop"
+                )
+            else:
+                lines.append(f"⚠️ Price moving against trade direction")
+
         dist_pips = abs(tgt - price) / pip_factor
         lines.append(f"{level} target: {_fmt(tgt)}  ·  Current price: {_fmt(price)}")
         lines.append(f"Distance remaining: {dist_pips:.1f} pips")
     else:
-        lines.append(f"{level} target: {_fmt(tgt)}  ·  Current price: {_fmt(price)}")
+        lines.append(f"Current price: {_fmt(price)}")
 
     if stop is not None:
-        lines.append(f"Stop loss: {_fmt(stop)} (protected)")
+        dist_stop = abs(price - stop) / pip_factor
+        lines.append(f"Stop: {_fmt(stop)}  ·  {dist_stop:.1f} pips away")
+
+    return lines
+
+
+def _build_hot_alert_message(pair: str, hot_rows: list, price: float | None) -> str:
+    """Build the HOT zone Telegram alert for a pair.
+
+    Accepts all HOT-zone rows for the pair so multiple trades are shown in one
+    message rather than sending separate alerts per trade ID.
+    """
+    pip_factor = 0.01 if "JPY" in pair else 0.0001  # noqa: F841
+
+    # Determine header: "approaching target" vs "approaching stop"
+    # Use first row to decide the primary reason for HOT
+    _first = hot_rows[0] if hot_rows else {}
+    _dir   = (_first.get("direction") or "").upper()
+    _entry = _to_float(_first.get("entry"))
+    _price = price
+    _stop  = _to_float(_first.get("effective_stop") or _first.get("stop_loss"))
+
+    _approaching_stop = False
+    if _price is not None and _entry is not None and _dir in ("BUY", "SELL"):
+        if not _is_true(_first.get("t1_hit")):
+            _tgt = _to_float(_first.get("t1_price"))
+        elif not _is_true(_first.get("t2_hit")):
+            _tgt = _to_float(_first.get("t2_price"))
+        else:
+            _tgt = _to_float(_first.get("t3_price") or _first.get("target"))
+        if _tgt is not None:
+            _tot = abs(_tgt - _entry)
+            _prog = (
+                (_price - _entry) / _tot if _dir == "BUY" else (_entry - _price) / _tot
+            ) if _tot > 0 else 0.0
+            _approaching_stop = _prog < 0
+
+    if _approaching_stop:
+        header = f"⚠️ <b>{pair} approaching stop loss</b>"
+    else:
+        header = f"\U0001f525 <b>{pair} approaching target</b>"
+
+    lines = [header, ""]
+    if len(hot_rows) > 1:
+        lines.append(f"{len(hot_rows)} open trades on this pair:")
+
+    for _row in hot_rows:
+        trade_id = _row.get("id", "?")
+        _d       = (_row.get("direction") or "").upper()
+        if len(hot_rows) > 1:
+            lines.append(f"\nTrade #{trade_id} ({_d})")
+        else:
+            lines.append(f"{_d} · Trade #{trade_id}")
+        lines.extend(_build_hot_trade_lines(_row, price, pair))
 
     lines += ["", "Monitor checking every 30 minutes ✅"]
     return "\n".join(lines)
