@@ -5745,6 +5745,14 @@ def _send_telegram_summary(
                              "defensive": "A-grade setups", "caution": "A/B-grade setups"}.get(_dd_mode)
                 _tier_icon = {"preservation": "🔴", "defensive": "🟠", "caution": "⚠️"}.get(_dd_mode, "⚠️")
                 no_sec.append(f"{_tier_icon} Drawdown protection active — only {_tier_req} accepted. No qualifying setups found today.")
+            elif _fund_st_blocked:
+                _fsb_reason = _fund_st_blocked[0][1]
+                no_sec += [
+                    f"\U0001f6ab <b>Fund protection blocked {len(_fund_st_blocked)} setup(s)</b>",
+                    f"Reason: {_fsb_reason}",
+                    "Qualifying setups were found but fund protection limits prevented opening new trades.",
+                    "This is working as intended — protecting the fund from overtrading.",
+                ]
             else:
                 def _s1_sort_key(rr):
                     return float(rr.get("screen", {}).get("score") or 0)
