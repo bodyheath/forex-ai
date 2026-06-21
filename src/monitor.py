@@ -1074,8 +1074,8 @@ def run(log=print) -> dict:
             log(f"  Monitor: Yahoo 1H fetch error for {pair}: {exc}")
     result["yf_ohlcv_pairs"] = yf_ok
     log(
-        f"Monitor: Yahoo 1H OHLCV fetched for {yf_ok}/{len(all_pairs)} pairs — "
-        f"0 TD OHLCV calls used"
+        f"Monitor: Yahoo Finance 1H OHLCV — {yf_ok}/{len(all_pairs)} pairs — "
+        f"{_OHLCV_CANDLES} candles per pair — 0 Twelve Data calls"
     )
 
     # ── Step 3b: pip movement check vs last run (2c) ──────────────────────────
