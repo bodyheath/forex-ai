@@ -8500,15 +8500,37 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Risk management step failed: {exc}")
 
-        # Check daily P&L circuit breaker using current estimated_balance
+        # Fund state: circuit breaker, peak/drawdown, sizing state, weekend alert
         try:
             from src import fund_state as _fs_cb
             _fs_cb_st = _fs_cb.load()
             _cb_bal = (risk_data.get("profile") or {}).get("estimated_balance") if risk_data else None
             if _cb_bal:
+                # 1. Daily P&L circuit breaker
                 _fs_cb_st, _cb_alert = _fs_cb.check_circuit_breaker(_fs_cb_st, _cb_bal)
                 if _cb_alert:
                     _telegram(_cb_alert)
+                # 2. Peak balance / drawdown tracking — may fire pause or resume alert
+                _fs_cb_st, _dd_pause_alert, _dd_resume_alert = _fs_cb.update_peak_and_drawdown(
+                    _fs_cb_st, _cb_bal
+                )
+                if _dd_pause_alert:
+                    _telegram(_dd_pause_alert)
+                if _dd_resume_alert:
+                    _telegram(_dd_resume_alert)
+                # 3. Refresh sizing state for display in next scan
+                _fs_cb_st = _fs_cb.update_sizing_state(_fs_cb_st, _cb_bal)
+                # 4. Weekend position alert (fires once per Friday 2–4pm Auckland)
+                try:
+                    from src import tracker as _trk_wka
+                    _wka_open = [r for r in _trk_wka.load() if r.get("status") == "OPEN"]
+                    _wka_send, _wka_msg = _fs_cb.check_weekend_alert(_fs_cb_st, _wka_open)
+                    if _wka_send:
+                        _telegram(_wka_msg)
+                        _now_ak_wka = _fs_cb._auckland_now()
+                        _fs_cb_st["weekend_alert_sent_date"] = _now_ak_wka.strftime("%Y-%m-%d")
+                except Exception:
+                    pass
                 _fs_cb.save(_fs_cb_st)
         except Exception as _fs_cb_exc:
             _log_line(logf, f"Fund state circuit breaker check failed: {_fs_cb_exc}")
