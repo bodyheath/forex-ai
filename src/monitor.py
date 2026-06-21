@@ -1062,6 +1062,138 @@ def _ensure_cascade_levels(row: dict, tracker_mod, log=print) -> dict:
 
 # ── Main entry point ──────────────────────────────────────────────────────────
 
+def _fetch_stooq_prices(pairs: list, log=print) -> dict:
+    """Fetch daily close prices from Stooq (no API key, free).
+
+    Uses Stooq CSV API: https://stooq.com/q/l/?s=AUDJPY&f=sd2t2ohlcv&h&e=csv
+    Returns {pair: float} for pairs that respond successfully.
+    """
+    import csv as _csv
+    import io as _io
+    prices: dict = {}
+    for pair in pairs:
+        symbol = pair.replace("/", "").replace("-", "").upper()
+        try:
+            url = (f"https://stooq.com/q/l/?s={symbol}"
+                   f"&f=sd2t2ohlcv&h&e=csv")
+            resp = requests.get(url, timeout=_FETCH_TIMEOUT)
+            if resp.status_code != 200:
+                continue
+            reader = _csv.DictReader(_io.StringIO(resp.text))
+            for row in reader:
+                close_str = (row.get("Close") or row.get("close") or "").strip()
+                if close_str and close_str not in ("N/D", ""):
+                    prices[pair] = float(close_str)
+                break  # only first data row needed
+        except Exception as exc:
+            log(f"  [SQ] {pair}: Stooq fetch error — {exc}")
+    if prices:
+        log(f"  [SQ] Stooq returned {len(prices)}/{len(pairs)} pairs")
+    return prices
+
+
+def _get_backup_mode(log=print) -> str:
+    """Return 'td', 'stooq', or 'none' based on current TD quota.
+
+    Quota thresholds (preserving capacity for main daily scans):
+      > 700 calls today: disable ALL external backup — synthetic/internal only
+      > 600 calls today: skip TD, fall back to Stooq
+      <= 600 calls today: use TD as backup
+    """
+    calls_today = _get_td_calls_today()
+    if calls_today > 700:
+        log(f"  API quota critical — {calls_today}/800 calls used — "
+            f"external backup disabled — synthetic candle only")
+        return "none"
+    if calls_today > 600:
+        log(f"  TD quota protection — {calls_today}/800 calls used — "
+            f"skipping TD backup — trying Stooq instead")
+        return "stooq"
+    return "td"
+
+
+def _send_fallback_alerts(ta, td_pairs: list, sq_pairs: list,
+                          unavailable_pairs: list, log=print) -> None:
+    """Send Telegram alerts when backup data sources were activated."""
+    if ta is None:
+        return
+    try:
+        if len(td_pairs) >= 5:
+            ta.send(
+                f"⚠️ <b>Monitor: Yahoo Finance degraded this run</b>\n\n"
+                f"Twelve Data backup activated for {len(td_pairs)} pairs\n"
+                f"All trades still monitored ✅\n"
+                f"Yahoo Finance issues are usually temporary"
+            )
+    except Exception:
+        pass
+    try:
+        if sq_pairs:
+            ta.send(
+                f"⚠️ <b>Monitor: Yahoo AND Twelve Data failed</b>\n\n"
+                f"Stooq backup activated — reduced precision\n"
+                f"Pairs: {', '.join(sq_pairs[:5])}"
+                + (f" + {len(sq_pairs) - 5} more" if len(sq_pairs) > 5 else "")
+                + f"\nAll trades still monitored ✅\n"
+                  f"Investigating data source issues"
+            )
+    except Exception:
+        pass
+    for pair in unavailable_pairs:
+        try:
+            ta.send(
+                f"🚨 <b>Monitor: All external sources failed for {pair}</b>\n\n"
+                f"Using internal price history only\n"
+                f"Price may be up to 30 minutes old\n"
+                f"Manual check recommended if near a cascade target"
+            )
+        except Exception:
+            pass
+
+
+def build_monitor_source_report(days: int = 1) -> list:
+    """Return source reliability lines for 11pm daily digest or Monday report."""
+    try:
+        if not _MONITOR_HISTORY.exists():
+            return []
+        history = json.loads(_MONITOR_HISTORY.read_text(encoding="utf-8"))
+        runs    = history.get("runs", [])
+    except Exception:
+        return []
+
+    from datetime import timedelta as _td_td
+    cutoff = (datetime.utcnow() - _td_td(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    week   = [r for r in runs if r.get("ts", "") >= cutoff and not r.get("skipped")]
+    if not week:
+        return []
+
+    keys = [
+        ("t1_yf_ohlcv",    "Yahoo 1H OHLCV"),
+        ("t1_td_backup",   "Twelve Data backup"),
+        ("t1_sq_backup",   "Stooq backup"),
+        ("t2_synthetic",   "Synthetic candle"),
+        ("t3_current_only","Current price only"),
+        ("t4_last_known",  "Internal history"),
+        ("t0_no_data",     "No data"),
+    ]
+    totals = {k: sum(r.get(k, 0) for r in week) for k, _ in keys}
+    grand  = sum(totals.values())
+    if grand == 0:
+        return []
+
+    def pct(n): return f"{round(n / grand * 100)}%" if grand else "0%"
+
+    label = f"(last {days}d)" if days > 1 else "(today)"
+    lines = [f"<b>Monitor price sources {label}:</b>"]
+    for k, name in keys:
+        n = totals[k]
+        if n == 0 and k != "t0_no_data":
+            continue
+        flag = " ✅" if (k == "t0_no_data" and n == 0) else (" ⚠️" if k == "t0_no_data" and n > 0 else "")
+        lines.append(f"  {name}: {pct(n)} ({n} checks){flag}")
+    return lines
+
+
 def _build_synthetic_candle(readings: list) -> dict | None:
     """Build a synthetic OHLCV candle from a list of price readings.
 
