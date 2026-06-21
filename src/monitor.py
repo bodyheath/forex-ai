@@ -35,6 +35,7 @@ _MONITOR_LOG  = config.DATA_DIR / "monitor_log.json"
 _MILESTONE_LOG = config.DATA_DIR / "milestone_log.json"
 _LOCK_FILE    = config.DATA_DIR / "monitor.lock"
 _API_USAGE    = config.DATA_DIR / "api_usage.json"
+_HEARTBEAT_FILE = config.DATA_DIR / "heartbeat.json"
 _OHLCV_CANDLES = 6          # hourly candles per pair (Yahoo Finance 1H)
 _API_BUDGET_LIMIT = 700     # daily TD call threshold (for batch price fetch logging)
 _MONITOR_HISTORY  = config.DATA_DIR / "monitor_history.json"
