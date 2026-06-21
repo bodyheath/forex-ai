@@ -330,27 +330,71 @@ def _batch_price_fetch(pairs: list, log=print) -> tuple:
     return prices, calls
 
 
-def _fetch_ohlcv_1h(pair: str, log=print) -> list:
-    """Return last 4 hourly OHLCV candles for pair (newest first)."""
+def _append_to_monitor_history(result: dict) -> None:
+    """Append a compact record of this run to monitor_history.json."""
     try:
-        resp = requests.get(
-            _OHLCV_URL,
-            params={
-                "symbol":     pair,
-                "interval":   "1h",
-                "outputsize": _OHLCV_CANDLES,
-                "apikey":     config.TWELVE_DATA_KEY,
-            },
-            timeout=_FETCH_TIMEOUT,
-        )
-        resp.raise_for_status()
-        data = resp.json()
-        if isinstance(data, dict) and data.get("status") == "error":
-            return []
-        return data.get("values", [])
+        history: dict = {"runs": []}
+        if _MONITOR_HISTORY.exists():
+            try:
+                history = json.loads(_MONITOR_HISTORY.read_text(encoding="utf-8"))
+            except Exception:
+                history = {"runs": []}
+        history.setdefault("runs", [])
+        history["runs"].append({
+            "ts":                result.get("timestamp", ""),
+            "milestones":        len(result.get("milestones_hit", [])),
+            "hot":               result.get("hot_zone_count", 0),
+            "warm":              result.get("warm_zone_count", 0),
+            "td_calls":          result.get("api_calls_used", 0),
+            "yf_ohlcv_pairs":    result.get("yf_ohlcv_pairs", 0),
+            "approaching_alerts": result.get("approaching_alerts", 0),
+            "skipped":           result.get("skipped_reason", ""),
+        })
+        # Keep last 1000 runs (~3 weeks at 30-min intervals)
+        history["runs"] = history["runs"][-1000:]
+        _MONITOR_HISTORY.write_text(json.dumps(history, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+
+
+def build_monitor_weekly_report() -> str:
+    """Build a weekly performance summary from monitor_history.json.
+
+    Covers the last 7 days of recorded runs. Returns a formatted string
+    suitable for a Telegram message or log output.
+    """
+    try:
+        if not _MONITOR_HISTORY.exists():
+            return "Monitor history not yet available."
+        history = json.loads(_MONITOR_HISTORY.read_text(encoding="utf-8"))
+        runs = history.get("runs", [])
     except Exception as exc:
-        log(f"  Monitor: OHLCV fetch error for {pair}: {exc}")
-        return []
+        return f"Monitor history read error: {exc}"
+
+    cutoff = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    week   = [r for r in runs if r.get("ts", "") >= cutoff]
+
+    if not week:
+        return "No monitor runs recorded in the last 7 days."
+
+    active   = [r for r in week if not r.get("skipped")]
+    n_runs   = len(active)
+    n_ms     = sum(r.get("milestones", 0) for r in active)
+    n_hot    = sum(r.get("approaching_alerts", 0) for r in active)
+    yf_total = sum(r.get("yf_ohlcv_pairs", 0) for r in active)
+    td_total = sum(r.get("td_calls", 0) for r in active)
+    # Each Yahoo 1H fetch replaces one TD time_series call
+    td_saved = yf_total
+
+    return (
+        f"Monitor weekly report (last 7 days)\n"
+        f"  Runs completed:    {n_runs}\n"
+        f"  Milestones hit:    {n_ms}\n"
+        f"  HOT alerts sent:   {n_hot}\n"
+        f"  Yahoo OHLCV total: {yf_total} pair-fetches\n"
+        f"  TD calls used:     {td_total} (price only)\n"
+        f"  TD calls saved:    {td_saved} (replaced by Yahoo Finance)"
+    )
 
 
 # ── Candle-based milestone detection ─────────────────────────────────────────
