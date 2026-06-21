@@ -1268,6 +1268,16 @@ def run(log=print) -> dict:
 
     result["yf_price_pairs"] = len(prices)
 
+    # ── Update rolling price history (max 96 readings = 48h at 30-min intervals) ──
+    for _ph_pair, _ph_price in prices.items():
+        _hist = price_history.get(_ph_pair, [])
+        _hist.append({"price": _ph_price, "timestamp": now_str, "source": "yahoo_finance"})
+        price_history[_ph_pair] = _hist[-96:]
+    result["price_history"] = price_history
+
+    # ── Sunday market reopen detection ────────────────────────────────────────
+    _check_market_reopen(now_ak, ta=_ta if 'ta' in dir() or '_ta' in dir() else None, log=log)
+
     # ── Watchlist movement check — flag near-miss pairs approaching trade threshold ──
     _wl_priority_pairs: list = []
     try:
