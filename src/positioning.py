@@ -174,7 +174,15 @@ def _series_for(market_name: str) -> list:
         else:
             return cached
     _last_exc = None
+    _BACKOFF = [0, 60, 120]   # seconds to wait before each attempt (0 = immediate)
     for _attempt in range(3):
+        if _BACKOFF[_attempt] > 0:
+            print(
+                f"[COT] CFTC fetch failed (attempt {_attempt} of 3) — "
+                f"waiting {_BACKOFF[_attempt]} seconds before retry",
+                file=sys.stderr,
+            )
+            _time_mod.sleep(_BACKOFF[_attempt])
         try:
             escaped = market_name.replace("'", "''")  # SoQL string-literal escaping
             resp = requests.get(
@@ -213,8 +221,10 @@ def _series_for(market_name: str) -> list:
             return rows
         except Exception as _exc:  # noqa: BLE001
             _last_exc = _exc
-            if _attempt < 2:
-                _time_mod.sleep(2)
+            print(
+                f"[COT] CFTC fetch failed (attempt {_attempt + 1} of 3): {_exc}",
+                file=sys.stderr,
+            )
     print(f"[COT] ❌ COT data: fetch failed after 3 attempts for '{market_name}': {_last_exc}", file=sys.stderr)
     return []
 
