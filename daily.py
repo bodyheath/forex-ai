@@ -8173,11 +8173,14 @@ def run() -> int:
 
             _wl_cache_path.write_text(
                 json.dumps({
-                    "timestamp":       _wc_time.time(),
-                    "watchlist_pairs": _wl_pairs,
-                    "near_miss":       _nm_pairs,
-                    "momentum_counts": _new_momentum,
-                    "momentum_grace":  _new_grace,
+                    "timestamp":               _wc_time.time(),
+                    "watchlist_pairs":          _wl_pairs,
+                    "near_miss":               _nm_pairs,
+                    "near_miss_dirs":           _nm_dirs,
+                    "momentum_counts":          _new_momentum,
+                    "momentum_grace":           _new_grace,
+                    "watchlist_weekly_stats":   _prev_wl_weekly_sts,
+                    "priority_for_next_scan":   [],
                 }, indent=2),
                 encoding="utf-8",
             )
