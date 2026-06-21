@@ -3967,6 +3967,10 @@ def _send_telegram_summary(
                         consecutive_wins_at_entry=int(_fund_st.get("consecutive_wins") or 0),
                         drawdown_pct_at_entry=float(_fund_st.get("current_drawdown_pct") or 0.0),
                         position_size_pct_at_entry=_szg_pct,
+                        threshold_at_entry=threshold_data.get("final_threshold", "") if threshold_data else "",
+                        regime_base_at_entry=threshold_data.get("regime_base", "") if threshold_data else "",
+                        win_rate_adjustment_at_entry=threshold_data.get("win_rate_adjustment", "") if threshold_data else "",
+                        data_quality_adjustment_at_entry=threshold_data.get("data_quality_adjustment", "") if threshold_data else "",
                     )
             except Exception:
                 pass
