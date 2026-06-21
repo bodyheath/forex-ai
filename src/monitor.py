@@ -1855,12 +1855,12 @@ def run(log=print) -> dict:
 
     for row in _fund_open:
         pair = row.get("pair", "")
-        tier, candles_t, resolved_p = pair_data.get(pair, (0, None, None))
+        _, candles_t, resolved_p = pair_data.get(pair, ("t0_no_data", None, None))
         _process_trade(row, candles_t, resolved_p, is_fund=True)
 
     for row in _res_open:
         pair = row.get("pair", "")
-        tier, candles_t, resolved_p = pair_data.get(pair, (0, None, None))
+        _, candles_t, resolved_p = pair_data.get(pair, ("t0_no_data", None, None))
         _process_trade(row, candles_t, resolved_p, is_fund=False)
 
     # Data tier summary
