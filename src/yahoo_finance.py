@@ -37,6 +37,69 @@ def _pair_to_yahoo_symbol(pair: str) -> str:
     return f"{base}{quote}=X"
 
 
+def batch_fetch_prices(pairs: list, log=print) -> dict:
+    """Batch fetch current prices for all pairs via a single Yahoo Finance call.
+
+    Returns {pair: float}. Never raises — returns partial dict on any failure.
+    ~15-minute delay is fully acceptable for swing trade analysis.
+    """
+    try:
+        import yfinance as yf
+    except ImportError:
+        log("[YF-BATCH] yfinance not installed")
+        return {}
+
+    if not pairs:
+        return {}
+
+    sym_to_pair = {_pair_to_yahoo_symbol(p): p for p in pairs}
+    symbols     = list(sym_to_pair.keys())
+    prices: dict = {}
+
+    try:
+        data = yf.download(
+            tickers    =" ".join(symbols),
+            period     ="1d",
+            interval   ="1m",
+            progress   =False,
+            auto_adjust=True,
+            group_by   ="ticker",
+        )
+
+        if data is None or (hasattr(data, "empty") and data.empty):
+            log("[YF-BATCH] Download returned empty")
+            return {}
+
+        for sym, pair in sym_to_pair.items():
+            try:
+                if len(symbols) == 1:
+                    col = next((c for c in data.columns if str(c).lower() == "close"), None)
+                    if col is not None:
+                        vals = data[col].dropna()
+                        if not vals.empty:
+                            prices[pair] = float(vals.iloc[-1])
+                else:
+                    if hasattr(data.columns, "levels"):
+                        lvl0 = [str(c) for c in data.columns.get_level_values(0)]
+                        if sym in lvl0:
+                            vals = data[sym]["Close"].dropna()
+                        else:
+                            vals = data["Close"][sym].dropna()
+                    else:
+                        vals = data[sym]["Close"].dropna()
+                    if not vals.empty:
+                        prices[pair] = float(vals.iloc[-1])
+            except Exception:
+                pass
+
+    except Exception as exc:
+        log(f"[YF-BATCH] Batch download failed: {exc}")
+        return {}
+
+    log(f"[YF-BATCH] {len(prices)}/{len(pairs)} prices fetched (0 API calls)")
+    return prices
+
+
 def fetch_4h_candles(pair: str, n_candles: int, log=print) -> dict | None:
     """Reconstruct 4H candles by resampling Yahoo Finance 1H data.
 
