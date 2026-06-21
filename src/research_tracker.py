@@ -98,6 +98,11 @@ FIELDS = [
     "consecutive_wins_at_entry",  # fund win streak when trade was opened
     "drawdown_pct_at_entry",      # fund drawdown % from peak at time of entry
     "position_size_pct_at_entry", # adaptive risk % that would have been applied
+    # ── Dynamic threshold at entry ───────────────────────────────────────────
+    "threshold_at_entry",             # dynamic confidence threshold active when trade was opened
+    "regime_base_at_entry",           # regime component of the threshold
+    "win_rate_adjustment_at_entry",   # win rate component (negative = lowered threshold)
+    "data_quality_adjustment_at_entry", # data quality component
     # ── Cascading targets (append-only) ──────────────────────────────────────
     "t1_price",                   # entry ± 0.4× ATR
     "t2_price",                   # entry ± 0.7× ATR
