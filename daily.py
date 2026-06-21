@@ -3822,6 +3822,66 @@ def _send_telegram_summary(
             _yt_seen.add(_p)
     yes_trades = _yt_deduped
 
+    # ── Fund state: daily limits + circuit breaker ──────────────────────────────
+    # Applies ONLY to fund trades (trades.csv). Research trades are never affected.
+    _fund_st: dict = {}
+    _fund_st_blocked: list = []   # [(trade_dict, reason_str), ...]
+    try:
+        from src import fund_state as _fs
+        _cur_bal_fs = (risk_data.get("profile") or {}).get("estimated_balance") if risk_data else None
+        _fund_st = _fs.load()
+        _fund_st = _fs.reset_if_new_day(_fund_st, current_balance=_cur_bal_fs)
+        _fund_st = _fs.reset_if_new_week(_fund_st)
+        _yt_pass: list = []
+        for _yt in yes_trades:
+            _blk, _blk_rsn, _blk_tp = _fs.is_trading_blocked(_fund_st)
+            if _blk:
+                _fund_st = _fs.record_missed_opportunity(
+                    _fund_st, _yt.get("pair", ""),
+                    (_yt.get("parsed") or {}).get("direction", ""),
+                    _eff_conf(_yt),
+                    float((_yt.get("screen") or {}).get("score") or 0),
+                    _blk_tp,
+                )
+                _fund_st_blocked.append((_yt, _blk_rsn))
+                try:
+                    from src import tracker as _trk_fsb
+                    if _yt.get("id"):
+                        _trk_fsb.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                notes=f"Blocked: {_blk_rsn}")
+                except Exception:
+                    pass
+                continue
+            _ccy_blk, _ccy = _fs.check_currency_exposure(_yt.get("pair", ""), _ot_open_trades)
+            if _ccy_blk:
+                _blk_rsn_ccy = (
+                    f"Currency concentration — {_ccy} at {_fs.MAX_CURRENCY_EXPOSURE} open trades"
+                )
+                _fund_st = _fs.record_missed_opportunity(
+                    _fund_st, _yt.get("pair", ""),
+                    (_yt.get("parsed") or {}).get("direction", ""),
+                    _eff_conf(_yt),
+                    float((_yt.get("screen") or {}).get("score") or 0),
+                    "currency_exposure",
+                )
+                _fund_st_blocked.append((_yt, _blk_rsn_ccy))
+                try:
+                    from src import tracker as _trk_fsb
+                    if _yt.get("id"):
+                        _trk_fsb.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                notes=f"Blocked: {_blk_rsn_ccy}")
+                except Exception:
+                    pass
+                continue
+            _fund_st = _fs.increment_daily_trades(_fund_st)
+            _yt_pass.append(_yt)
+        _fs.save(_fund_st)
+        yes_trades = _yt_pass
+    except Exception as _fs_exc:
+        import traceback as _tb_fs
+        print(f"[FUND_STATE] {_fs_exc}", file=sys.stderr)
+        print(_tb_fs.format_exc(), file=sys.stderr)
+
     # ── Cascade target levels for YES fund trades ─────────────────────────────
     # Computed after deduplication so only real fund trades get cascade fields.
     try:
