@@ -267,20 +267,30 @@ def _build_forecast_desc(event_name: str, currency: str,
 def _fetch_forex_factory():
     """Fetch HIGH impact events from Forex Factory XML feed.
 
+    Retries up to 2 times on failure before returning None.
     Returns list of event dicts on success (possibly empty when no events this
     week), or None on network/parse failure.
     """
-    try:
-        import xml.etree.ElementTree as ET
-        r = requests.get(
-            _FF_URL,
-            timeout=15,
-            headers={"User-Agent": "Mozilla/5.0 (forex-ai calendar)"},
-        )
-        r.raise_for_status()
-        root = ET.fromstring(r.content)
-    except Exception as e:
-        print(f"[ECO-CAL] Forex Factory fetch failed: {e}")
+    import xml.etree.ElementTree as ET
+    import time as _time_ff
+    _last_exc = None
+    for _attempt in range(3):
+        try:
+            r = requests.get(
+                _FF_URL,
+                timeout=15,
+                headers={"User-Agent": "Mozilla/5.0 (forex-ai calendar)"},
+            )
+            r.raise_for_status()
+            root = ET.fromstring(r.content)
+            break
+        except Exception as e:
+            _last_exc = e
+            if _attempt < 2:
+                print(f"[ECO-CAL] Forex Factory attempt {_attempt + 1} failed: {e} — retrying in 10s")
+                _time_ff.sleep(10)
+    else:
+        print(f"[ECO-CAL] Forex Factory fetch failed after 3 attempts: {_last_exc}")
         return None
 
     now_utc = datetime.utcnow()
