@@ -22,6 +22,20 @@ import config
 from src import research_tracker
 from src import cascade as _casc
 
+
+def _online_learn(updated: dict) -> None:
+    """Feed a closed research trade to the online learner (best-effort)."""
+    try:
+        from src import online_learner as _ol
+        _ol.partial_fit_trade(
+            "research",
+            updated.get("id"),
+            updated.get("status", ""),
+            updated.get("closed_at", ""),
+        )
+    except Exception:
+        pass
+
 _PRICE_URL         = "https://api.twelvedata.com/price"
 _EXPIRY_DAYS       = 7      # fallback; actual expiry is computed from R:R
 _FETCH_DELAY       = 10     # seconds between calls; free tier = 8 req/min
