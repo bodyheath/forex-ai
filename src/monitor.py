@@ -1271,19 +1271,33 @@ def run(log=print) -> dict:
     # ── Step 3: Yahoo Finance 1H OHLCV for ALL open trades ────────────────────
     from src.yahoo_finance import fetch_1h_candles as _yf_1h
     candle_map: dict = {}   # pair → list of candle dicts (newest-first)
-    yf_ok = 0
+    yf_ok       = 0
+    _candle_cutoff = datetime.utcnow() - timedelta(hours=8)
     for pair in all_pairs:
         try:
             candles_result = _yf_1h(pair, _OHLCV_CANDLES, log=log)
             if candles_result and candles_result.get("values"):
-                candle_map[pair] = candles_result["values"]
-                yf_ok += 1
+                # Reject candles older than 8 hours — milestones from earlier
+                # windows should have been caught by previous monitor runs.
+                recent = []
+                for _c in candles_result["values"]:
+                    try:
+                        _cdt = datetime.strptime(_c["datetime"][:16], "%Y-%m-%d %H:%M")
+                        if _cdt >= _candle_cutoff:
+                            recent.append(_c)
+                    except (ValueError, KeyError):
+                        recent.append(_c)  # unparseable datetime — include it
+                if recent:
+                    candle_map[pair] = recent
+                    yf_ok += 1
+                else:
+                    log(f"  Monitor: {pair} — all {len(candles_result['values'])} candle(s) older than 8h cutoff — skipping OHLCV check")
         except Exception as exc:
             log(f"  Monitor: Yahoo 1H fetch error for {pair}: {exc}")
     result["yf_ohlcv_pairs"] = yf_ok
     log(
         f"Monitor: Yahoo Finance 1H OHLCV — {yf_ok}/{len(all_pairs)} pairs — "
-        f"{_OHLCV_CANDLES} candles per pair — 0 Twelve Data calls"
+        f"{_OHLCV_CANDLES} candles per pair (8h cutoff applied) — 0 Twelve Data calls"
     )
 
     # ── Step 3b: pip movement check vs last run (2c) ──────────────────────────
