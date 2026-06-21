@@ -6986,6 +6986,55 @@ def _send_telegram_summary(
             _intraday_health.append("Cost tracking unavailable")
         all_sections.append(_intraday_health)
 
+        # Item 9: Daily system health digest — preny (11pm) only
+        if scan_mode == "preny":
+            _digest = ["", "━━━━━━━━━━━━━━━━━━━━━", "📊 <b>DAILY SYSTEM DIGEST</b>"]
+            try:
+                # Monitor heartbeat
+                if _HEARTBEAT_FILE.exists():
+                    _hb_d = json.loads(_HEARTBEAT_FILE.read_text(encoding="utf-8"))
+                    _hb_ts_d = _hb_d.get("last_run", "")
+                    if _hb_ts_d:
+                        _digest.append(f"Last monitor check: {_hb_ts_d[11:16]} UTC")
+                else:
+                    _digest.append("Monitor heartbeat: no data yet")
+            except Exception:
+                pass
+            try:
+                # Monitor log — milestones today
+                from src import monitor as _mon_dg
+                if _mon_dg._MONITOR_LOG.exists():
+                    _ml_dg = json.loads(_mon_dg._MONITOR_LOG.read_text(encoding="utf-8"))
+                    _ms_n = len(_ml_dg.get("milestones_hit", []))
+                    _yf_n = _ml_dg.get("yf_price_pairs", 0)
+                    _digest.append(f"Monitor milestones today: {_ms_n}")
+                    _digest.append(f"Prices fetched (last check): {_yf_n} pairs")
+            except Exception:
+                pass
+            try:
+                # Scan status
+                if _SCAN_STATUS_FILE.exists():
+                    _ss_d = json.loads(_SCAN_STATUS_FILE.read_text(encoding="utf-8"))
+                    _ss_mode = _ss_d.get("mode", "?")
+                    _ss_done = _ss_d.get("completed", False)
+                    _ss_fin  = _ss_d.get("finished", "")[:16]
+                    if _ss_done:
+                        _digest.append(f"Last scan: {_ss_mode} completed at {_ss_fin} UTC")
+                    else:
+                        _digest.append(f"Last scan: {_ss_mode} — did not complete cleanly")
+            except Exception:
+                pass
+            try:
+                # Open trades count
+                from src import tracker as _trk_dg, research_tracker as _rt_dg
+                _fd_open = sum(1 for r in _trk_dg.load() if r.get("status") == "OPEN")
+                _rs_open = sum(1 for r in _rt_dg.load() if r.get("status") == "OPEN")
+                _digest.append(f"Open trades: {_fd_open} fund · {_rs_open} research")
+            except Exception:
+                pass
+            if len(_digest) > 3:
+                all_sections.append(_digest)
+
     # ═══════════════════════════════════════════════════════════════════════════
     # SUNDAY GAP SCAN — brief weekend gap detection message
     # ═══════════════════════════════════════════════════════════════════════════
