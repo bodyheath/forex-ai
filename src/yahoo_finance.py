@@ -130,3 +130,70 @@ def fetch_4h_candles(pair: str, n_candles: int, log=print) -> dict | None:
         "values": values,
         "status": "ok",
     }
+
+
+def fetch_1h_candles(pair: str, n_candles: int, log=print) -> dict | None:
+    """Fetch 1H candles from Yahoo Finance for pair.
+
+    Fetches 7 days of 1H bars and returns the last n_candles bars in Twelve
+    Data time_series format (newest-first). Returns None on any failure.
+    """
+    try:
+        import yfinance as yf
+    except ImportError:
+        log("[YF-1H] yfinance not installed — 1H candles unavailable")
+        return None
+
+    symbol = _pair_to_yahoo_symbol(pair)
+
+    try:
+        ticker = yf.Ticker(symbol)
+        df = ticker.history(period="7d", interval="1h", auto_adjust=True)
+    except Exception as exc:
+        log(f"[YF-1H] 1H fetch failed for {symbol} ({pair}): {exc}")
+        return None
+
+    if df is None or df.empty:
+        log(f"[YF-1H] No 1H data returned for {symbol} ({pair})")
+        return None
+
+    df.columns = [str(c).lower() for c in df.columns]
+    for col in ("open", "high", "low", "close"):
+        if col not in df.columns:
+            log(f"[YF-1H] Missing column '{col}' for {symbol}")
+            return None
+
+    df = df[["open", "high", "low", "close"]].dropna()
+
+    if df.empty:
+        log(f"[YF-1H] All 1H candles NaN for {symbol}")
+        return None
+
+    try:
+        if df.index.tz is not None:
+            df.index = df.index.tz_localize(None)
+    except Exception:
+        pass
+
+    # Drop last bar (may be incomplete) then take n_candles
+    df = df.iloc[:-1].tail(n_candles)
+
+    if df.empty:
+        log(f"[YF-1H] Not enough 1H data for {symbol}")
+        return None
+
+    values = []
+    for dt, row in df.iloc[::-1].iterrows():
+        values.append({
+            "datetime": dt.strftime("%Y-%m-%d %H:%M"),
+            "open":     str(round(float(row["open"]),  6)),
+            "high":     str(round(float(row["high"]),  6)),
+            "low":      str(round(float(row["low"]),   6)),
+            "close":    str(round(float(row["close"]), 6)),
+        })
+
+    return {
+        "meta":   {"symbol": pair, "source": "Yahoo Finance (1H)"},
+        "values": values,
+        "status": "ok",
+    }
