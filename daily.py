@@ -3635,6 +3635,17 @@ def _build_system_learning_report(date: str) -> list:
                 )
         sec += ["", "<b>6. OVERALL LEARNING VERDICT</b>", " ".join(parts)]
 
+    # ── FUND PROTECTION BLOCKED OPPORTUNITIES ─────────────────────────────────
+    try:
+        from src import fund_state as _fs_lr
+        _fs_lr_state = _fs_lr.load()
+        _fs_lr_lines = _fs_lr.build_blocked_opportunities_section(_fs_lr_state)
+        if _fs_lr_lines:
+            sec.extend(_fs_lr_lines)
+            any_added = True
+    except Exception:
+        pass
+
     return sec
 
 
