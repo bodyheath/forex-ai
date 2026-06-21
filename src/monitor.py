@@ -1206,6 +1206,7 @@ def run(log=print) -> dict:
     last_prices    = {k: float(v) for k, v in _prev_log.get("last_prices", {}).items()
                       if v is not None}
     previously_hot = set(_prev_log.get("previously_hot", []))
+    price_history  = _prev_log.get("price_history", {})
 
     # ── Telegram alert module (loaded once, used throughout) ─────────────────
     try:
