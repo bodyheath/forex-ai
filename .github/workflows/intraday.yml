@@ -1,8 +1,13 @@
 name: Intraday Forex Scans
 
-# Scheduling is handled exclusively by cron-job.org via the workflow_dispatch
-# API.  cron-job.org tracks NZST/NZDT DST changes correctly; a built-in
-# GitHub Actions schedule would fire in fixed UTC and create duplicate runs.
+# Scheduling architecture:
+#   9am Auckland (morning scan) — GitHub Actions built-in schedule.
+#     A 15-60 minute queue delay is acceptable for the morning scan.
+#     cron: "5 21 * * 0-4" = 21:05 UTC Sun-Thu = 9:05am Auckland Mon-Fri.
+#   5pm and 11pm scans — triggered exclusively by cron-job.org via
+#     workflow_dispatch API with scan_mode input. cron-job.org tracks
+#     NZST/NZDT DST changes correctly; GitHub built-in schedule fires
+#     in fixed UTC and would create duplicate runs for those windows.
 
 on:
   workflow_dispatch:
@@ -11,6 +16,8 @@ on:
         description: 'Override scan mode (morning / prelondon / preny / full / gap)'
         required: false
         default: ''
+  schedule:
+    - cron: "5 21 * * 0-4"   # 9:05am Auckland Mon-Fri (morning scan backup)
 
 concurrency:
   group: intraday-scan
@@ -37,6 +44,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Set scan mode
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "SCAN_MODE=morning" >> $GITHUB_ENV
+          else
+            echo "SCAN_MODE=${{ inputs.scan_mode }}" >> $GITHUB_ENV
+          fi
+
       - name: Run intraday scan
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -56,7 +71,7 @@ jobs:
           HAIKU_MODEL: ${{ secrets.HAIKU_MODEL || 'claude-haiku-4-5-20251001' }}
           ACCOUNT_BALANCE: ${{ secrets.ACCOUNT_BALANCE || '10000' }}
           ACCOUNT_CURRENCY: ${{ secrets.ACCOUNT_CURRENCY || 'USD' }}
-          SCAN_MODE: ${{ github.event.inputs.scan_mode }}
+          SCAN_MODE: ${{ env.SCAN_MODE }}
         run: python daily.py
 
       - name: Copy dashboard to GitHub Pages
