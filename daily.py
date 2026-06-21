@@ -8440,6 +8440,31 @@ def run() -> int:
             except Exception as _mr_exc:
                 _log_line(logf, f"Morning ranked save failed: {_mr_exc}")
 
+        # Dynamic confidence threshold — computed once here so research trades
+        # can stamp it as an ML feature before _send_telegram_summary is called.
+        _threshold_data: dict = {}
+        try:
+            from src import dynamic_threshold as _dth
+            from src import data_quality as _dq_thr
+            from src import research_tracker as _rt_thr_load
+            _dq_pre = _dq_thr.assess_scan(deep_results)
+            _threshold_data = _dth.compute(
+                quality_pct=_dq_pre.get("overall_pct", 100.0),
+                scan_mode=scan_mode,
+                research_trades=_rt_thr_load.load(),
+            )
+            _dth.append_history(_threshold_data)
+            _log_line(
+                logf,
+                f"Dynamic threshold: {_threshold_data['final_threshold']:.1f} "
+                f"(regime {_threshold_data.get('regime','?')} base "
+                f"{_threshold_data.get('regime_base','?')}, "
+                f"wr_adj {_threshold_data.get('win_rate_adjustment', 0):+.1f}, "
+                f"dq_adj {_threshold_data.get('data_quality_adjustment', 0):+.1f})",
+            )
+        except Exception as _thr_exc:
+            _log_line(logf, f"Dynamic threshold computation failed: {_thr_exc}")
+
         # Research trading mode: paper-trade conf>=4 pairs (0.01 lots)
         # conf-4 "borderline" setups are tracked separately — they build ML training
         # data and reveal where the real profitable threshold actually sits.
