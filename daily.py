@@ -4029,14 +4029,25 @@ def _send_telegram_summary(
             _yt_b   = _yt.get("bundle", {}) or {}
             _yt_atr = float(((_yt_b.get("technical") or {}).get("daily", {}).get("atr14") or 0))
             if _yt_id and _yt_e and _yt_s and _yt_t and _yt_d in ("BUY", "SELL"):
+                _yt_pair_up = (_yt.get("pair") or "").upper()
+                _yt_pst     = _pair_stats_all.get(_yt_pair_up, {})
+                _yt_adpt    = _yt_pst.get("adaptive_active") and _yt_pst.get("n_trades_with_mfe", 0) >= 10
+                _yt_t1m     = _yt_pst.get("t1_mult") if _yt_adpt else None
+                _yt_t2m     = _yt_pst.get("t2_mult") if _yt_adpt else None
+                _yt_t3m     = _yt_pst.get("t3_mult") if _yt_adpt else None
                 _yt_t1, _yt_t2, _yt_t3 = _casc_yt.compute_levels(
                     _yt_e, _yt_s, _yt_t, _yt_d, atr=_yt_atr or None,
+                    t1_mult=_yt_t1m, t2_mult=_yt_t2m, t3_mult=_yt_t3m,
                 )
                 if _yt_t1 is not None:
                     _trk_casc_yt.update_fields(
                         int(_yt_id),
                         t1_price=_yt_t1, t2_price=_yt_t2, t3_price=_yt_t3,
                         effective_stop=_yt_s,
+                        t1_was_adaptive="TRUE" if _yt_adpt else "FALSE",
+                        t1_target_atr_multiple=_yt_t1m if _yt_t1m is not None else 0.4,
+                        t2_target_atr_multiple=_yt_t2m if _yt_t2m is not None else 0.7,
+                        t3_target_atr_multiple=_yt_t3m if _yt_t3m is not None else 1.0,
                     )
     except Exception:
         pass
