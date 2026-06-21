@@ -933,12 +933,6 @@ def run(log=print) -> dict:
         "skipped_reason":          "",
     }
 
-    if not config.TWELVE_DATA_KEY:
-        result["skipped_reason"] = "no_api_key"
-        log("Monitor: TWELVE_DATA_KEY not set — skipping.")
-        _write_monitor_log(result)
-        return result
-
     # ── File lock — prevents duplicate processing if runs overlap ────────────
     _lock_held = _try_acquire_lock(log)
     if not _lock_held:
