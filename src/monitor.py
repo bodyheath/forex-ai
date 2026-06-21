@@ -1486,18 +1486,7 @@ def run(log=print) -> dict:
                 f"({ratio:.2f}x ATR={atr_pips:.1f}p)"
             )
 
-    # ── Step 4+5: Detect milestones and apply cascade updates ─────────────────
-
-    fund_closed: list = []
-    research_fragments: list = []
-
-    def _process_trade(row, candles, is_fund: bool):
-        pair      = row.get("pair", "")
-        direction = (row.get("direction") or "").upper()
-        price     = prices.get(pair)
-
-        if price is None:
-            return
+    # ── Step 3b: pip movement check vs last run ──────────────────────────────
 
         # Fast-path: all cascade targets already recorded in CSV — nothing to do
         if _is_true(row.get("t3_hit")):
