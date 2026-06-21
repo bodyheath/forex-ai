@@ -6556,6 +6556,13 @@ def _send_telegram_summary(
                         )
         except Exception:
             pass
+        # Monitor price source reliability (today)
+        try:
+            from src import monitor as _mon_sr
+            for _sr_line in _mon_sr.build_monitor_source_report(days=1):
+                health_sec.append(_sr_line)
+        except Exception:
+            pass
         if cost_lines:
             health_sec.extend(cost_lines)
         # Run statistics
