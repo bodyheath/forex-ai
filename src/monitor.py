@@ -330,6 +330,79 @@ def _batch_price_fetch(pairs: list, log=print) -> tuple:
     return prices, calls
 
 
+def _yahoo_price_batch(pairs: list, log=print) -> dict:
+    """Fetch current prices for all pairs from Yahoo Finance.
+
+    Uses yfinance.download() for a single batch call across all pairs.
+    Returns {pair: float} with the most recent close (~15 min delayed).
+    Never raises — returns partial dict on any per-pair failure.
+    15-minute delay is fully acceptable for swing trades targeting 40-200 pips.
+    """
+    try:
+        import yfinance as yf
+    except ImportError:
+        log("[YF-PRICE] yfinance not installed — Yahoo price fetch unavailable")
+        return {}
+
+    from src.yahoo_finance import _pair_to_yahoo_symbol
+
+    if not pairs:
+        return {}
+
+    sym_to_pair = {_pair_to_yahoo_symbol(p): p for p in pairs}
+    symbols     = list(sym_to_pair.keys())
+
+    prices: dict = {}
+    try:
+        data = yf.download(
+            tickers   =" ".join(symbols),
+            period    ="1d",
+            interval  ="1m",
+            progress  =False,
+            auto_adjust=True,
+            group_by  ="ticker",
+        )
+
+        if data is None or (hasattr(data, "empty") and data.empty):
+            log("[YF-PRICE] yfinance download returned empty data")
+            return {}
+
+        for sym, pair in sym_to_pair.items():
+            try:
+                if len(symbols) == 1:
+                    # Single-ticker: flat column structure
+                    col = next((c for c in data.columns
+                                if str(c).lower() == "close"), None)
+                    if col is not None:
+                        vals = data[col].dropna()
+                        if not vals.empty:
+                            prices[pair] = float(vals.iloc[-1])
+                else:
+                    # Multi-ticker: MultiIndex — try (ticker, field) then (field, ticker)
+                    if hasattr(data.columns, "levels"):
+                        lvl0 = [str(c) for c in data.columns.get_level_values(0)]
+                        if sym in lvl0:
+                            vals = data[sym]["Close"].dropna()
+                        else:
+                            vals = data["Close"][sym].dropna()
+                    else:
+                        vals = data[sym]["Close"].dropna()
+                    if not vals.empty:
+                        prices[pair] = float(vals.iloc[-1])
+            except Exception:
+                pass
+
+    except Exception as exc:
+        log(f"[YF-PRICE] Batch download failed: {exc}")
+        return {}
+
+    log(
+        f"Monitor: Yahoo Finance prices — {len(prices)}/{len(pairs)} pairs fetched — "
+        f"0 Twelve Data calls — 15min delay acceptable for swing trading"
+    )
+    return prices
+
+
 def _append_to_monitor_history(result: dict) -> None:
     """Append a compact record of this run to monitor_history.json."""
     try:
