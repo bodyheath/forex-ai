@@ -1248,9 +1248,10 @@ def warm_cache(pairs: list, log=print) -> None:
         if n_stooq > 0 else ""
     )
     log(
-        f"Technical pre-fetch {status}: {api_n} API call(s) made. "
+        f"Technical pre-fetch {status}: {api_n} call(s) attempted. "
         f"Candle fetch: {n_success} successful, {n_failed} failed after retry, "
-        f"{n_neutral} neutral fallbacks{yf_note}"
+        f"{n_neutral} neutral fallbacks{yf_note}{stooq_note}"
+        + (" — zero Twelve Data quota used" if n_yf_used + n_stooq >= n_success and n_success > 0 else "")
     )
 
 
