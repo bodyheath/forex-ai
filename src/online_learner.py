@@ -106,12 +106,12 @@ def partial_fit_trade(source_table: str, trade_id, outcome: str,
     scaler, clf, f_cols = _load_model()
 
     if clf is None:
+        # class_weight not supported for partial_fit; balance via sample_weight instead
         clf = SGDClassifier(
             loss="log_loss",
             alpha=0.01,
             learning_rate="optimal",
             random_state=42,
-            class_weight="balanced",
         )
         scaler = StandardScaler()
         f_cols = FEATURE_COLS
