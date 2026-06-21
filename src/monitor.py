@@ -1447,7 +1447,7 @@ def run(log=print) -> dict:
         f"({_OHLCV_CANDLES} candles each, no age cutoff)"
     )
 
-    # ── Step 3b: pip movement check vs last run (2c) ──────────────────────────
+    # Helper functions used in Step 4+5
     def _pip_factor(p: str) -> float:
         return 0.01 if "JPY" in p else 0.0001
 
@@ -1464,27 +1464,6 @@ def run(log=print) -> dict:
             except (ValueError, TypeError, KeyError):
                 continue
         return sum(trs) / len(trs) if trs else None
-
-    for pair in all_pairs:
-        curr = prices.get(pair)
-        prev = last_prices.get(pair)
-        if curr is None or prev is None:
-            continue
-        cands = candle_map.get(pair, [])
-        if not cands:
-            continue
-        atr = _quick_atr(cands)
-        if atr is None or atr <= 0:
-            continue
-        pf       = _pip_factor(pair)
-        pip_move = abs(curr - prev) / pf
-        atr_pips = atr / pf
-        ratio    = pip_move / atr_pips if atr_pips > 0 else 0
-        if ratio >= 0.3:
-            log(
-                f"  Monitor: {pair} moved {pip_move:.1f} pips since last run "
-                f"({ratio:.2f}x ATR={atr_pips:.1f}p)"
-            )
 
     # ── Step 4+5: Resolve data tier per pair, detect milestones, apply cascade ──
 
