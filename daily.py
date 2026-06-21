@@ -3687,6 +3687,16 @@ def _build_system_learning_report(date: str) -> list:
     except Exception:
         pass
 
+    # ── THRESHOLD PERFORMANCE THIS WEEK ───────────────────────────────────────
+    try:
+        from src import dynamic_threshold as _dth_lr
+        _thr_week_lines = _dth_lr.build_weekly_report_lines()
+        if _thr_week_lines:
+            sec.extend(_thr_week_lines)
+            any_added = True
+    except Exception:
+        pass
+
     return sec
 
 
