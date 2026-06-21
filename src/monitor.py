@@ -37,12 +37,14 @@ _LOCK_FILE    = config.DATA_DIR / "monitor.lock"
 _API_USAGE    = config.DATA_DIR / "api_usage.json"
 _OHLCV_CANDLES = 6          # hourly candles per pair (Yahoo Finance 1H)
 _API_BUDGET_LIMIT = 700     # daily TD call threshold (for batch price fetch logging)
-_MONITOR_HISTORY = config.DATA_DIR / "monitor_history.json"
+_MONITOR_HISTORY  = config.DATA_DIR / "monitor_history.json"
+_HOT_ZONE_ALERTS  = config.DATA_DIR / "hot_zone_alerts.json"
 _BATCH_SIZE   = 20          # pairs per batch price request
 _FETCH_TIMEOUT = 15         # seconds per HTTP request
 _HOT_THRESHOLD  = 0.70      # price ≥ 70% of way to target → HOT
 _WARM_THRESHOLD = 0.40      # price ≥ 40% of way to target → WARM
-_DEDUP_HOURS  = 24          # suppress duplicate alerts within this window
+_HOT_ALERT_COOLDOWN_HOURS = 4   # suppress duplicate HOT zone alerts within this window
+_DEDUP_HOURS  = 24          # suppress duplicate milestone alerts within this window
 _LOCK_TIMEOUT = 120         # seconds before a stale lock is removed
 
 
