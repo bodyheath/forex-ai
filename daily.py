@@ -5646,6 +5646,15 @@ def _send_telegram_summary(
                     _telegram(_dq_alert)
                 except Exception:
                     pass
+            # Item 4: Critical data quality alert — fire before main report
+            if _dq_quality.get("overall_pct", 100) < 30:
+                try:
+                    _telegram(
+                        f"⚠️ CRITICAL DATA QUALITY — only {_dq_quality.get('overall_pct', 0):.0f}% "
+                        f"of data sources responded — scan results may be unreliable"
+                    )
+                except Exception:
+                    pass
         except Exception:
             pass
 
