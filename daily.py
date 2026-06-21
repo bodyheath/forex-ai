@@ -7831,6 +7831,31 @@ def run() -> int:
         except Exception as _gap_exc:
             _log_line(logf, f"Gap detection failed ({_gap_exc}) — continuing without it")
 
+        # 2b-ii. Full-universe movement scan (6am only) — Yahoo Finance, free, all 130 pairs
+        _movement_alert_data: dict = {}
+        _movement_priority_set: set = set()
+        if scan_mode == "full":
+            try:
+                _mvt_universe = getattr(selector, "UNIVERSE", list(config.WATCHLIST))
+                # Extend universe from ranked_all (covers pairs added via TD universe)
+                _ranked_norm = {p for p, _ in ranked_all}
+                _mvt_universe = list(_mvt_universe) + [p for p in _ranked_norm if p not in _mvt_universe]
+                _mvt_pairs, _movement_alert_data = _scan_all_pairs_movement(
+                    _mvt_universe, ranked_all, pairs_today, scan_mode,
+                    log=lambda m: _log_line(logf, m),
+                )
+                for _mp in _mvt_pairs:
+                    if _mp not in pairs_today:
+                        pairs_today.append(_mp)
+                    _movement_priority_set.add(_mp)
+                if _mvt_pairs:
+                    _log_line(logf, f"Movement scan: {len(_mvt_pairs)} pair(s) outside batch added to priority sweep: {', '.join(_mvt_pairs)}")
+                else:
+                    _alerts_det = (_movement_alert_data.get("weekly") or {}).get("movement_alerts_detected", 0)
+                    _log_line(logf, f"Movement scan: {_alerts_det} alert(s) detected, all already in analysis batch")
+            except Exception as _mvt_exc:
+                _log_line(logf, f"Full-universe movement scan failed ({_mvt_exc}) — continuing")
+
         # 2b. COST OPTIMISATION — Pre-filter using free data before Twelve Data fetch
         try:
             if ranked_all:
