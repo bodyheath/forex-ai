@@ -33,6 +33,16 @@ _DEFAULTS: dict = {
     "observation_mode":       False,
     "observation_mode_until": None,
     "missed_opportunities":   [],
+    # ── Adaptive sizing fields ────────────────────────────────────────────────
+    "consecutive_wins":        0,
+    "peak_balance":            0.0,
+    "current_drawdown_pct":    0.0,
+    "current_sizing_pct":      1.0,
+    "sizing_mode":             "normal",
+    "sizing_reason":           "standard 1% risk",
+    "weekend_alert_sent_date": None,
+    "drawdown_paused":         False,
+    "max_drawdown_seen":       0.0,
 }
 
 
