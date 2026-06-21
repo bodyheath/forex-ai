@@ -1486,26 +1486,115 @@ def run(log=print) -> dict:
                 f"({ratio:.2f}x ATR={atr_pips:.1f}p)"
             )
 
-    # ── Step 3b: pip movement check vs last run ──────────────────────────────
+    # ── Step 4+5: Resolve data tier per pair, detect milestones, apply cascade ──
+
+    fund_closed: list = []
+    research_fragments: list = []
+    _tier_counts = result["data_tiers_used"]
+    _tier_key_map = {1: "t1_yahoo_ohlcv", 2: "t2_synthetic",
+                     3: "t3_current_only", 4: "t4_last_known", 0: "t0_no_data"}
+
+    def _resolve_pair_data(pair: str):
+        """Return (tier, candles_or_None, resolved_price, tier_label) for a pair."""
+        pf = _pip_factor(pair)
+
+        # T1: Yahoo 1H OHLCV candles available (any age — weekend Friday candles included)
+        if pair in candle_map:
+            clist  = candle_map[pair]
+            newest = clist[0].get("datetime", "")[:13] if clist else "?"
+            high_v = max((float(c.get("high", 0)) for c in clist), default=0)
+            low_v  = min((float(c.get("low",  999999)) for c in clist), default=0)
+            curr_p = prices.get(pair) or last_prices.get(pair)
+            label  = (f"[T1] {pair}: Yahoo 1H ({len(clist)} candles, newest {newest}) "
+                      f"HIGH {high_v:.5g} LOW {low_v:.5g}")
+            return 1, clist, curr_p, label
+
+        # T2: Synthetic candle from rolling price history
+        hist = price_history.get(pair, [])
+        if len(hist) >= 3:
+            synth = _build_synthetic_candle(hist)
+            if synth:
+                curr_p = prices.get(pair) or last_prices.get(pair)
+                oldest = hist[0].get("timestamp", "")[:16]
+                label  = (f"[T2] {pair}: synthetic candle ({len(hist)} readings, "
+                          f"oldest {oldest}) HIGH {synth['high']} LOW {synth['low']}")
+                return 2, [synth], curr_p, label
+
+        # T3: Current price only (live from this run)
+        curr_p = prices.get(pair)
+        if curr_p is not None:
+            hist_n = len(hist)
+            label  = (f"[T3] {pair}: current price only "
+                      f"({hist_n} history readings) — price {curr_p}")
+            return 3, None, curr_p, label
+
+        # T4: Last known price from previous run (max ~30 min old)
+        last_p = last_prices.get(pair)
+        if last_p is not None:
+            label = (f"[T4] {pair}: last known price {last_p} "
+                     f"(Yahoo Finance unavailable this run)")
+            return 4, None, last_p, label
+
+        # T0: No data at all — should never happen in normal operation
+        return 0, None, None, f"[T0] {pair}: NO PRICE DATA — cannot monitor"
+
+    # Resolve tiers for every unique pair (log once per pair, not per trade)
+    pair_data: dict = {}
+    for pair in all_pairs:
+        tier, candles_t, resolved_p, tier_label = _resolve_pair_data(pair)
+        pair_data[pair] = (tier, candles_t, resolved_p)
+        _tier_counts[_tier_key_map.get(tier, "t0_no_data")] += 1
+        log(tier_label)
+
+    # Part 7: log significant price movements (>= 0.5x ATR) as upgrade candidates
+    for pair in all_pairs:
+        curr = prices.get(pair)
+        prev = last_prices.get(pair)
+        if curr is None or prev is None:
+            continue
+        cands = candle_map.get(pair, [])
+        atr   = _quick_atr(cands) if cands else None
+        pf    = _pip_factor(pair)
+        if atr and atr > 0:
+            pip_move = abs(curr - prev) / pf
+            atr_pips = atr / pf
+            ratio    = pip_move / atr_pips if atr_pips > 0 else 0
+            if ratio >= 0.5:
+                log(
+                    f"  Monitor: {pair} SIGNIFICANT move {pip_move:.1f}p "
+                    f"({ratio:.2f}x ATR) since last run — best data tier used"
+                )
+            elif ratio >= 0.3:
+                log(
+                    f"  Monitor: {pair} moved {pip_move:.1f}p ({ratio:.2f}x ATR) since last run"
+                )
+
+    def _process_trade(row, candles, resolved_price, is_fund: bool):
+        pair      = row.get("pair", "")
+        direction = (row.get("direction") or "").upper()
+        price     = resolved_price
+
+        if price is None:
+            log(f"  Monitor: {pair} #{row.get('id')} skipped — no price data from any source")
+            return
 
         # Fast-path: all cascade targets already recorded in CSV — nothing to do
         if _is_true(row.get("t3_hit")):
             log(f"  Monitor: {pair} #{row.get('id')} all targets already recorded — skipping")
             return
 
-        # Check milestone log for any levels already sent, log them for each hit level
+        # Check milestone log for any levels already sent
         for _chk_lvl in ("T1", "T2", "T3"):
             _field_map = {"T1": "t1_hit", "T2": "t2_hit", "T3": "t3_hit"}
             if _is_true(row.get(_field_map[_chk_lvl])):
                 _prev = _check_milestone_sent(pair, _chk_lvl)
                 if not _prev:
-                    pass   # already in CSV but not in dedup log — log it now
                     _record_milestone_sent(
                         pair, _chk_lvl, int(row.get("id", 0)),
                         trade_type="fund" if is_fund else "research",
                     )
 
-        # Detect milestones using candle data (HOT/WARM) or spot price (COLD)
+        # Detect milestones — candle data (T1/T2) or spot price (T3/T4)
         if candles:
             milestones, row_state = _detect_candle_milestones(row, candles, pair, log=log)
         else:
@@ -1514,9 +1603,7 @@ def run(log=print) -> dict:
         if not milestones:
             return
 
-        # Pre-filter milestones that were already sent via the dedup log.
-        # The _apply_*_milestones functions do the same check, but doing it here
-        # provides an early log line before any CSV writes happen.
+        # Pre-filter already-sent milestones
         _dedup_filtered = []
         for _m in milestones:
             _lvl = _m["level"]
@@ -1525,7 +1612,7 @@ def run(log=print) -> dict:
                 if _prev_ts:
                     log(
                         f"  Monitor: {pair} #{row.get('id')} {_lvl} already recorded — "
-                        f"skipping duplicate — no Telegram sent (last sent {_prev_ts})"
+                        f"skipping duplicate (last sent {_prev_ts})"
                     )
                     continue
             _dedup_filtered.append(_m)
@@ -1560,14 +1647,27 @@ def run(log=print) -> dict:
             })
 
     for row in _fund_open:
-        pair    = row.get("pair", "")
-        candles = candle_map.get(pair, [])
-        _process_trade(row, candles, is_fund=True)
+        pair = row.get("pair", "")
+        tier, candles_t, resolved_p = pair_data.get(pair, (0, None, None))
+        _process_trade(row, candles_t, resolved_p, is_fund=True)
 
     for row in _res_open:
-        pair    = row.get("pair", "")
-        candles = candle_map.get(pair, [])
-        _process_trade(row, candles, is_fund=False)
+        pair = row.get("pair", "")
+        tier, candles_t, resolved_p = pair_data.get(pair, (0, None, None))
+        _process_trade(row, candles_t, resolved_p, is_fund=False)
+
+    # Data tier summary
+    _tc = _tier_counts
+    log(
+        f"Monitor data sources: "
+        f"T1(Yahoo 1H)={_tc['t1_yahoo_ohlcv']} "
+        f"T2(synthetic)={_tc['t2_synthetic']} "
+        f"T3(current)={_tc['t3_current_only']} "
+        f"T4(last known)={_tc['t4_last_known']} "
+        f"T0(none)={_tc['t0_no_data']}/{len(all_pairs)} pairs"
+    )
+    if _tc["t0_no_data"] == 0:
+        log("Monitor: all pairs covered — zero unmonitored trades")
 
     # ── Step 6: MFE/MAE updates for research trades ───────────────────────────
     mfe_updated = 0
