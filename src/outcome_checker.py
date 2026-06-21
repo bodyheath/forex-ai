@@ -318,6 +318,7 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                 r_txt = f", R={updated.get('r_multiple')}, pips={updated.get('pips')}"
                 log(f"  #{rec_id} {pair} {direction}: {_casc_oc} at {_cp}{r_txt}")
                 closed.append(updated)
+                _online_learn(updated)
                 _closed_this = True
 
             if _closed_this:
