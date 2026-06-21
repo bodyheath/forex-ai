@@ -83,6 +83,14 @@ def get_yahoo_sourced_pairs() -> set:
     return set(_yf_sourced_pairs)
 
 
+def get_stooq_sourced_pairs() -> set:
+    return set(_stooq_sourced_pairs)
+
+
+def get_yahoo_4h_sourced_pairs() -> set:
+    return set(_yf_4h_sourced_pairs)
+
+
 _YAHOO_SYMBOL_OVERRIDES: dict = {
     # USD-base pairs: Yahoo Finance uses {QUOTE}=X (equals the USD/XXX rate directly)
     "USD/JPY": "JPY=X",   "USD/CHF": "CHF=X",   "USD/CAD": "CAD=X",
