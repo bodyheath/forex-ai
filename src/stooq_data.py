@@ -4,6 +4,10 @@ No API key or account required. Unlimited free tier.
 Uses Stooq's direct CSV download URL via requests — no pandas-datareader needed.
 
 Symbol format: AUD/JPY -> audjpy (lowercase, slash removed).
+
+Note: Stooq may return a JavaScript challenge page for residential/VPN IPs.
+GitHub Actions datacenter IPs typically bypass this challenge.
+The function always returns None gracefully if Stooq is unavailable.
 """
 import io
 from datetime import datetime, timedelta
