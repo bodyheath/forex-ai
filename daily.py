@@ -4789,6 +4789,47 @@ def _send_telegram_summary(
         ]
         if _tb_atr_line:
             block.append(_tb_atr_line)
+
+        # ── Adaptive / standard cascade targets display ───────────────────────
+        if _tb_atr14 > 0:
+            try:
+                _pst_e = _pair_stats_all.get(pair.upper(), {})
+                _pst_n = _pst_e.get("n_trades_with_mfe", 0)
+                _e_f   = float(entry_raw)
+                if _pst_e.get("adaptive_active") and _pst_n >= 10:
+                    _t1m = _pst_e["t1_mult"]
+                    _t2m = _pst_e["t2_mult"]
+                    _t3m = _pst_e["t3_mult"]
+                    _ap  = round(_tb_atr14 / _tb_pip)
+                    _sgn = 1 if direction == "BUY" else -1
+                    _at1 = _e_f + _sgn * _t1m * _tb_atr14
+                    _at2 = _e_f + _sgn * _t2m * _tb_atr14
+                    _at3 = _e_f + _sgn * _t3m * _tb_atr14
+                    block += [
+                        "",
+                        f"📊 <b>Targets (adaptive — {_pst_n} {pair} trades):</b>",
+                        f"T1: {_fmt_price(_at1)} ({_t1m:.2f}x ATR — {round(_t1m * _ap)}p)",
+                        f"T2: {_fmt_price(_at2)} ({_t2m:.2f}x ATR — {round(_t2m * _ap)}p)",
+                        f"T3: {_fmt_price(_at3)} ({_t3m:.2f}x ATR — {round(_t3m * _ap)}p)",
+                        "Based on your own historical data for this pair ✅",
+                    ]
+                else:
+                    _needed = max(0, 10 - _pst_n)
+                    _ap     = round(_tb_atr14 / _tb_pip)
+                    _sgn    = 1 if direction == "BUY" else -1
+                    _st1    = _e_f + _sgn * 0.4 * _tb_atr14
+                    _st2    = _e_f + _sgn * 0.7 * _tb_atr14
+                    _st3    = _e_f + _sgn * 1.0 * _tb_atr14
+                    block += [
+                        "",
+                        f"📊 <b>Targets (standard — need {_needed} more trades):</b>",
+                        f"T1: {_fmt_price(_st1)} (0.40x ATR — {round(0.4 * _ap)}p)",
+                        f"T2: {_fmt_price(_st2)} (0.70x ATR — {round(0.7 * _ap)}p)",
+                        f"T3: {_fmt_price(_st3)} (1.00x ATR — {round(1.0 * _ap)}p)",
+                    ]
+            except Exception:
+                pass
+
         if _low_quality:
             block.append(f"⚠️ <b>LOW QUALITY SETUP — R:R {rr_str} below 1.5:1 minimum (confidence −1)</b>")
         if profit_amt and risk_amt:
