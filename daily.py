@@ -4092,6 +4092,13 @@ def _send_telegram_summary(
         _exposure   = risk_data.get("exposure", {})
         _risk_state = risk_data.get("risk_state", {})
 
+    _pair_stats_all: dict = {}
+    try:
+        from src import pair_statistics as _pstat_disp
+        _pair_stats_all = _pstat_disp.load()
+    except Exception:
+        pass
+
     ctx         = _derive_market_context(deep_results, risk_data)
     now_ak      = _auckland_now()
     today_short = _fmt_date_short_nz(now_ak)
