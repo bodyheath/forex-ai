@@ -69,15 +69,31 @@ def get_yahoo_sourced_pairs() -> set:
     return set(_yf_sourced_pairs)
 
 
+_YAHOO_SYMBOL_OVERRIDES: dict = {
+    # USD-base pairs: Yahoo Finance uses {QUOTE}=X (equals the USD/XXX rate directly)
+    "USD/JPY": "JPY=X",   "USD/CHF": "CHF=X",   "USD/CAD": "CAD=X",
+    "USD/HKD": "HKD=X",   "USD/SGD": "SGD=X",   "USD/NOK": "NOK=X",
+    "USD/SEK": "SEK=X",
+    # USD-quote pairs: Yahoo Finance uses {BASE}USD=X
+    "GBP/USD": "GBPUSD=X", "EUR/USD": "EURUSD=X",
+    "AUD/USD": "AUDUSD=X", "NZD/USD": "NZDUSD=X",
+}
+
+
 def _pair_to_yahoo_symbol(pair: str) -> str:
     """Convert 'AUD/JPY' to Yahoo Finance ticker format.
 
-    USD/XXX pairs → '{XXX}=X'  (e.g. USD/JPY → JPY=X, USD/CHF → CHF=X)
-    All others   → '{BASE}{QUOTE}=X'  (e.g. AUD/JPY → AUDJPY=X)
+    Explicit overrides for major USD pairs ensure correct direction.
+    USD/XXX pairs → '{XXX}=X'  (e.g. USD/JPY → JPY=X)
+    XXX/USD pairs → '{BASE}USD=X'  (e.g. GBP/USD → GBPUSD=X)
+    All others    → '{BASE}{QUOTE}=X'  (e.g. AUD/JPY → AUDJPY=X)
     """
-    parts = pair.upper().replace(" ", "").split("/")
+    cleaned = pair.upper().strip()
+    if cleaned in _YAHOO_SYMBOL_OVERRIDES:
+        return _YAHOO_SYMBOL_OVERRIDES[cleaned]
+    parts = cleaned.replace(" ", "").split("/")
     if len(parts) != 2:
-        return pair.replace("/", "") + "=X"
+        return cleaned.replace("/", "") + "=X"
     base, quote = parts
     if base == "USD":
         return f"{quote}=X"
