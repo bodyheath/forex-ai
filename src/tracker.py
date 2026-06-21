@@ -34,6 +34,11 @@ FIELDS = [
     "effective_stop",             # starts as stop_loss; moves to entry after T1 hit
     "cascading_total_pips",       # sum of pips across all hit portions
     "cascading_total_pips_weighted",  # 0.4×t1 + 0.3×t2 + 0.3×t3
+    # ── Adaptive sizing at entry ─────────────────────────────────────────────
+    "sizing_mode",                    # normal | win_streak | drawdown_caution | drawdown_protection
+    "consecutive_wins_at_entry",      # win streak length when trade was opened
+    "drawdown_pct_at_entry",          # fund drawdown % from peak at time of entry
+    "position_size_pct_at_entry",     # adaptive risk % applied to this trade
 ]
 
 # status values: NO_TRADE | OPEN | WIN | LOSS | BREAKEVEN | SKIPPED | EXPIRED | PARTIAL_WIN | FULL_WIN
