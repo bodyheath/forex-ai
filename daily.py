@@ -3646,6 +3646,47 @@ def _build_system_learning_report(date: str) -> list:
     except Exception:
         pass
 
+    # ── MISSED OPPORTUNITY DETECTION STATS ────────────────────────────────────
+    try:
+        _ma_path = config.DATA_DIR / "movement_alerts.json"
+        _wl_path = config.DATA_DIR / "watchlist_cache.json"
+        _ma_weekly: dict = {}
+        _wl_weekly: dict = {}
+        if _ma_path.exists():
+            _ma_weekly = json.loads(_ma_path.read_text(encoding="utf-8")).get("weekly_stats", {})
+        if _wl_path.exists():
+            _wl_weekly = json.loads(_wl_path.read_text(encoding="utf-8")).get("watchlist_weekly_stats", {})
+
+        _ma_det   = int(_ma_weekly.get("movement_alerts_detected", 0))
+        _ma_batch = int(_ma_weekly.get("already_in_batch",         0))
+        _ma_swept = int(_ma_weekly.get("outside_batch_swept",      0))
+        _ma_sigs  = int(_ma_weekly.get("swept_signals_found",      0))
+        _ma_trade = int(_ma_weekly.get("swept_became_trades",      0))
+        _wl_sent  = int(_wl_weekly.get("alerts_sent",              0))
+        _wl_promo = int(_wl_weekly.get("promoted_to_deep",         0))
+        _wl_trade = int(_wl_weekly.get("became_trade_alerts",      0))
+        _est_missed = _ma_trade + _wl_trade
+
+        if _ma_det > 0 or _wl_sent > 0:
+            _batch_pct = f" ({round(_ma_batch / _ma_det * 100)}%)" if _ma_det else ""
+            sec += [
+                "", "<b>7. MISSED OPPORTUNITY DETECTION THIS WEEK</b>",
+                f"Movement alerts detected: {_ma_det}",
+                f"Already in analysis batch: {_ma_batch}{_batch_pct}",
+                f"Outside batch — swept: {_ma_swept}",
+                f"Of swept pairs — signals found: {_ma_sigs}",
+                f"Of swept pairs — became trade alerts: {_ma_trade}",
+                "",
+                f"Watch list movement alerts sent: {_wl_sent}",
+                f"Watch list pairs promoted to deep analysis: {_wl_promo}",
+                f"Of those — became trade alerts: {_wl_trade}",
+                "",
+                f"Estimated opportunities missed without these systems: {_est_missed}",
+            ]
+            any_added = True
+    except Exception:
+        pass
+
     return sec
 
 
