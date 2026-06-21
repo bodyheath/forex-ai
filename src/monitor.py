@@ -1132,12 +1132,12 @@ def run(log=print) -> dict:
 
     for row in _fund_open:
         pair    = row.get("pair", "")
-        candles = candle_map.get(pair, []) if ohlcv_allowed else []
+        candles = candle_map.get(pair, [])
         _process_trade(row, candles, is_fund=True)
 
     for row in _res_open:
         pair    = row.get("pair", "")
-        candles = candle_map.get(pair, []) if ohlcv_allowed else []
+        candles = candle_map.get(pair, [])
         _process_trade(row, candles, is_fund=False)
 
     # ── Step 6: MFE/MAE updates for research trades ───────────────────────────
