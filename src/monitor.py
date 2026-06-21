@@ -1655,16 +1655,13 @@ def run(log=print) -> dict:
         direction = (row.get("direction") or "").upper()
         rec_id    = int(row.get("id", 0) or 0)
         try:
-            candles = candle_map.get(pair, [])
-            if candles:
-                if _update_mfe_mae_from_ohlcv(rec_id, direction, candles):
+            _, candles_mfe, resolved_p_mfe = pair_data.get(pair, (0, None, None))
+            if candles_mfe:
+                if _update_mfe_mae_from_ohlcv(rec_id, direction, candles_mfe):
                     mfe_updated += 1
-            else:
-                # COLD zone: update from current spot price only
-                p = prices.get(pair)
-                if p is not None:
-                    _rt.update_mfe_mae(rec_id, p)
-                    mfe_updated += 1
+            elif resolved_p_mfe is not None:
+                _rt.update_mfe_mae(rec_id, resolved_p_mfe)
+                mfe_updated += 1
         except Exception:
             pass
 
