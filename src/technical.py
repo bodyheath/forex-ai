@@ -59,10 +59,16 @@ _YF_PERIOD_MAP = {"1d": "5y", "1wk": "10y", "1mo": "10y"}
 
 
 def reset_call_count() -> None:
-    global _td_calls_this_run, _yf_calls_this_run, _yf_sourced_pairs
-    _td_calls_this_run = 0
-    _yf_calls_this_run = 0
-    _yf_sourced_pairs  = set()
+    global _td_calls_this_run, _yf_calls_this_run, _stooq_calls_this_run
+    global _yf_4h_calls_this_run, _yf_sourced_pairs, _stooq_sourced_pairs
+    global _yf_4h_sourced_pairs
+    _td_calls_this_run    = 0
+    _yf_calls_this_run    = 0
+    _stooq_calls_this_run = 0
+    _yf_4h_calls_this_run = 0
+    _yf_sourced_pairs     = set()
+    _stooq_sourced_pairs  = set()
+    _yf_4h_sourced_pairs  = set()
 
 
 def get_call_count() -> int:
