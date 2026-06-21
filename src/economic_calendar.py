@@ -541,6 +541,96 @@ def _fetch_twelve_data():
     return events
 
 
+# ── Financial Modeling Prep fallback fetcher ──────────────────────────────────
+
+_FMP_URL = "https://financialmodelingprep.com/api/v3/economic_calendar"
+
+def _fetch_fmp():
+    """Fetch HIGH impact events from Financial Modeling Prep free API.
+
+    FMP free tier requires no API key. Returns list of event dicts on success
+    (possibly empty), or None on failure.
+    """
+    now_utc = datetime.utcnow()
+    end_utc = now_utc + timedelta(days=7)
+    try:
+        r = requests.get(
+            _FMP_URL,
+            params={
+                "from": now_utc.strftime("%Y-%m-%d"),
+                "to":   end_utc.strftime("%Y-%m-%d"),
+            },
+            timeout=15,
+            headers={"User-Agent": "Mozilla/5.0 (forex-ai calendar)"},
+        )
+        r.raise_for_status()
+        raw = r.json()
+    except Exception as e:
+        print(f"[ECO-CAL] FMP fetch failed: {e}")
+        return None
+
+    if not isinstance(raw, list):
+        print(f"[ECO-CAL] FMP unexpected response type: {type(raw).__name__}")
+        return None
+
+    _HIGH_IMPACT_FMP = {"high", "3", "high impact"}
+    events = []
+    _skipped_impact = _skipped_ccy = _skipped_dt = 0
+    for ev in raw:
+        impact = str(ev.get("impact") or ev.get("importance") or "").strip().lower()
+        if impact not in _HIGH_IMPACT_FMP:
+            _skipped_impact += 1
+            continue
+
+        currency = str(ev.get("currency") or ev.get("country") or "").strip().upper()
+        if currency not in _VALID_CCYS:
+            _skipped_ccy += 1
+            continue
+
+        title    = str(ev.get("event") or ev.get("name") or "").strip()
+        date_str = str(ev.get("date") or "").strip()  # "2025-06-06 08:30:00" or "2025-06-06"
+
+        try:
+            if len(date_str) >= 16:
+                dt_utc = datetime.strptime(date_str[:16], "%Y-%m-%d %H:%M")
+            elif len(date_str) == 10:
+                dt_utc = datetime.strptime(date_str, "%Y-%m-%d")
+            else:
+                _skipped_dt += 1
+                continue
+        except ValueError:
+            _skipped_dt += 1
+            continue
+
+        if dt_utc < now_utc - timedelta(hours=1):
+            _skipped_dt += 1
+            continue
+
+        dt_ak       = _to_auckland(dt_utc)
+        plain, desc = _plain_name_desc(title)
+
+        events.append({
+            "currency":     currency,
+            "event":        title,
+            "plain_name":   plain,
+            "plain_desc":   desc,
+            "dt_utc":       dt_utc.strftime("%Y-%m-%d %H:%M"),
+            "dt_ak":        dt_ak.strftime("%Y-%m-%d %H:%M"),
+            "ak_display":   _ak_display(dt_ak),
+            "avoid_advice": f"avoid new {currency} trades until after this releases",
+            "forecast":     str(ev.get("estimate") or ev.get("forecast") or "").strip(),
+            "previous":     str(ev.get("previous") or "").strip(),
+        })
+
+    print(
+        f"[ECO-CAL] FMP: {len(events)} HIGH-impact events kept "
+        f"(skipped: {_skipped_impact} non-high, {_skipped_ccy} unknown ccy, "
+        f"{_skipped_dt} bad/past dt)"
+    )
+    events.sort(key=lambda e: e["dt_utc"])
+    return events
+
+
 # ── Public API ────────────────────────────────────────────────────────────────
 
 def get_events_7d() -> list:
