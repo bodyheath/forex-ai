@@ -835,6 +835,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 except Exception:
                     pass
             closed_rows.append(updated)
+            _online_learn_closure("main", updated)
             break   # trade closed — skip further milestones
 
         elif level == "STOP":
