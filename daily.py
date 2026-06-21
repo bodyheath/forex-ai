@@ -8128,15 +8128,23 @@ def run() -> int:
             _wl_cache_path = config.DATA_DIR / "watchlist_cache.json"
 
             # Load previous momentum state to build rolling consecutive-scan counts
-            _prev_momentum: dict = {}
-            _prev_grace:    dict = {}
+            _prev_momentum:      dict = {}
+            _prev_grace:         dict = {}
+            _prev_wl_weekly_sts: dict = {}
             try:
                 if _wl_cache_path.exists():
-                    _prev_wl_data  = json.loads(_wl_cache_path.read_text(encoding="utf-8"))
-                    _prev_momentum = _prev_wl_data.get("momentum_counts", {})
-                    _prev_grace    = _prev_wl_data.get("momentum_grace",  {})
+                    _prev_wl_data        = json.loads(_wl_cache_path.read_text(encoding="utf-8"))
+                    _prev_momentum       = _prev_wl_data.get("momentum_counts", {})
+                    _prev_grace          = _prev_wl_data.get("momentum_grace",  {})
+                    _prev_wl_weekly_sts  = _prev_wl_data.get("watchlist_weekly_stats", {})
             except Exception:
                 pass
+
+            # Signal direction for near-miss pairs (used by monitor.py for watchlist alerts)
+            _nm_dirs = {
+                r["pair"]: (r.get("parsed") or {}).get("direction", "")
+                for r in deep_results if 5.0 <= (_conf(r) or 0) <= 5.9
+            }
 
             _wl_set         = set(_wl_pairs)
             _new_momentum:  dict = {}
