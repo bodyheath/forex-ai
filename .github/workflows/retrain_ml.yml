@@ -55,3 +55,36 @@ jobs:
           git diff --staged --quiet || git commit -m "chore: weekly ML model retrain $(date -u +'%Y-%m-%d')"
           git pull --rebase origin main
           git push origin HEAD:main
+
+  notify-failure:
+    needs: retrain
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send failure alert via Telegram
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID_2: ${{ secrets.TELEGRAM_CHAT_ID_2 }}
+          TELEGRAM_CHAT_ID_3: ${{ secrets.TELEGRAM_CHAT_ID_3 }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 - <<'EOF'
+          import os, urllib.request, urllib.parse
+          token = os.environ.get("TELEGRAM_TOKEN", "")
+          chat_ids = [c for c in [
+              os.environ.get("TELEGRAM_CHAT_ID", ""),
+              os.environ.get("TELEGRAM_CHAT_ID_2", ""),
+              os.environ.get("TELEGRAM_CHAT_ID_3", ""),
+          ] if c]
+          if not token or not chat_ids:
+              exit(0)
+          msg = f"⛔ SYSTEM FAILURE — ML Retrain (retrain_ml.yml) failed\n{os.environ.get('RUN_URL', '')}"
+          url = f"https://api.telegram.org/bot{token}/sendMessage"
+          for chat_id in chat_ids:
+              try:
+                  data = urllib.parse.urlencode({"chat_id": chat_id, "text": msg}).encode()
+                  urllib.request.urlopen(url, data=data, timeout=10)
+              except Exception as e:
+                  print(f"Failed to send to {chat_id}: {e}")
+          EOF
