@@ -3748,6 +3748,16 @@ def _build_system_learning_report(date: str) -> list:
     except Exception:
         pass
 
+    # ── MONITOR SOURCE RELIABILITY (7-day) ────────────────────────────────────
+    try:
+        from src import monitor as _mon_src_lr
+        _msrc_lines = _mon_src_lr.build_monitor_source_report(days=7)
+        if _msrc_lines:
+            sec.extend(_msrc_lines)
+            any_added = True
+    except Exception:
+        pass
+
     return sec
 
 
