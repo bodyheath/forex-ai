@@ -531,6 +531,7 @@ def _append_to_monitor_history(result: dict) -> None:
             except Exception:
                 history = {"runs": []}
         history.setdefault("runs", [])
+        _dt = result.get("data_tiers_used", {})
         history["runs"].append({
             "ts":                 result.get("timestamp", ""),
             "milestones":         len(result.get("milestones_hit", [])),
@@ -541,6 +542,11 @@ def _append_to_monitor_history(result: dict) -> None:
             "yf_ohlcv_pairs":     result.get("yf_ohlcv_pairs", 0),
             "approaching_alerts": result.get("approaching_alerts", 0),
             "skipped":            result.get("skipped_reason", ""),
+            "t1_yahoo_ohlcv":     _dt.get("t1_yahoo_ohlcv",  0),
+            "t2_synthetic":       _dt.get("t2_synthetic",     0),
+            "t3_current_only":    _dt.get("t3_current_only",  0),
+            "t4_last_known":      _dt.get("t4_last_known",    0),
+            "t0_no_data":         _dt.get("t0_no_data",       0),
         })
         # Keep last 1000 runs (~3 weeks at 30-min intervals)
         history["runs"] = history["runs"][-1000:]
