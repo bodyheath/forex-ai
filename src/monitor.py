@@ -1117,6 +1117,98 @@ def run(log=print) -> dict:
 
     result["yf_price_pairs"] = len(prices)
 
+    # ── Watchlist movement check — flag near-miss pairs approaching trade threshold ──
+    _wl_priority_pairs: list = []
+    try:
+        _wl_cache_path_mon = config.DATA_DIR / "watchlist_cache.json"
+        if _wl_cache_path_mon.exists():
+            _wl_data_mon = json.loads(_wl_cache_path_mon.read_text(encoding="utf-8"))
+            _wl_age_mon  = (time.time() - float(_wl_data_mon.get("timestamp", 0))) / 3600.0
+            if _wl_age_mon <= 28:   # skip if cache older than 28h (stale)
+                _nm_mon      = _wl_data_mon.get("near_miss", {})      # {pair: conf}
+                _nm_dirs_mon = _wl_data_mon.get("near_miss_dirs", {}) # {pair: "BUY"/"SELL"}
+                _top5_mon    = sorted(_nm_mon.items(), key=lambda x: -float(x[1]))[:5]
+                _wl_pairs_to_check = [p for p, _ in _top5_mon if p]
+
+                if _wl_pairs_to_check:
+                    from src.yahoo_finance import batch_fetch_prices as _yf_batch_mon
+                    _wl_prices_mon = _yf_batch_mon(_wl_pairs_to_check, log=log)
+                    _prev_wl_prices = {k: float(v) for k, v in
+                                       _prev_log.get("watchlist_prices", {}).items() if v}
+                    _wl_alerts_sent = set(_prev_log.get("watchlist_alerts_sent", []))
+                    _today_ak_mon   = _auckland_now().strftime("%Y-%m-%d")
+
+                    from src.selector import _pip_size as _pip_sz_mon
+                    _priority_next_scan = list(_wl_data_mon.get("priority_for_next_scan", []))
+                    _monday_mon = (_auckland_now() - timedelta(days=_auckland_now().weekday())).strftime("%Y-%m-%d")
+                    _wl_sts_mon = _wl_data_mon.get("watchlist_weekly_stats", {})
+                    if _wl_sts_mon.get("week_start", "") != _monday_mon:
+                        _wl_sts_mon = {"week_start": _monday_mon, "alerts_sent": 0, "promoted_to_deep": 0, "became_trade_alerts": 0}
+
+                    for _wlp, _wlconf in _top5_mon:
+                        cur_mon = _wl_prices_mon.get(_wlp)
+                        if cur_mon is None or cur_mon <= 0:
+                            continue
+                        result.setdefault("watchlist_prices", {})[_wlp] = cur_mon
+
+                        alert_key = f"{_wlp}:{_today_ak_mon}"
+                        if alert_key in _wl_alerts_sent:
+                            continue
+
+                        prev_mon = _prev_wl_prices.get(_wlp)
+                        if prev_mon is None:
+                            continue
+
+                        pip_mon   = _pip_sz_mon(_wlp)
+                        move_mon  = cur_mon - prev_mon
+                        pips_mon  = round(abs(move_mon) / pip_mon)
+                        atr_mon   = cur_mon * 0.0080 if _wlp.upper().endswith("JPY") else cur_mon * 0.0008
+                        ratio_mon = abs(move_mon) / atr_mon if atr_mon > 0 else 0.0
+
+                        if ratio_mon < 0.5 or pips_mon < 3:
+                            continue
+
+                        exp_dir  = (_nm_dirs_mon.get(_wlp) or "").upper()
+                        act_dir  = "BUY" if move_mon > 0 else "SELL"
+                        if exp_dir and act_dir != exp_dir:
+                            continue
+
+                        log(
+                            f"Monitor: watchlist movement — {_wlp} {pips_mon} pips "
+                            f"({ratio_mon:.1f}x ATR) in {act_dir} direction (conf {_wlconf}/10)"
+                        )
+                        if _ta:
+                            try:
+                                _ta.send(
+                                    f"🔔 <b>Watch list movement detected</b>\n\n"
+                                    f"{_wlp} (watch list confidence {_wlconf}/10)\n"
+                                    f"Moved {pips_mon} pips in {act_dir} direction since last scan\n\n"
+                                    f"This may become a trade signal at next 6am Auckland scan "
+                                    f"— added to priority queue"
+                                )
+                            except Exception:
+                                pass
+                        _wl_alerts_sent.add(alert_key)
+                        _wl_priority_pairs.append(_wlp)
+                        if _wlp not in _priority_next_scan:
+                            _priority_next_scan.append(_wlp)
+
+                    if _wl_priority_pairs:
+                        _wl_sts_mon["alerts_sent"]       = _wl_sts_mon.get("alerts_sent", 0) + len(_wl_priority_pairs)
+                        _wl_sts_mon["promoted_to_deep"]  = _wl_sts_mon.get("promoted_to_deep", 0) + len(_wl_priority_pairs)
+                        _wl_data_mon["priority_for_next_scan"] = _priority_next_scan
+                        _wl_data_mon["watchlist_weekly_stats"] = _wl_sts_mon
+                        try:
+                            _wl_cache_path_mon.write_text(
+                                json.dumps(_wl_data_mon, indent=2), encoding="utf-8"
+                            )
+                        except Exception:
+                            pass
+
+                    result["watchlist_alerts_sent"] = sorted(_wl_alerts_sent)
+    except Exception as _wl_mon_exc:
+        log(f"Monitor: watchlist movement check failed — {_wl_mon_exc}")
+
     # ── Step 2: Ensure cascade levels + zone classification ──────────────────
     for i, row in enumerate(_fund_open):
         _fund_open[i] = _ensure_cascade_levels(row, _trk, log=log)
