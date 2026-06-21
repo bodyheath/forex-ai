@@ -71,7 +71,8 @@ def assess_scan(deep_results: list) -> dict:
             "high_conf_fallback": [], "high_conf_fallback_count": 0,
         }
 
-    tech_ok = tech_td_ok = tech_yf_ok = fund_ok = sent_ok = pos_ok = 0
+    tech_ok = tech_td_ok = tech_yf_ok = tech_stooq_ok = fund_ok = sent_ok = pos_ok = 0
+    tech_4h_yf_ok = 0
     high_conf_fallback = []
 
     # Get COT data age directly from positioning module (more accurate than parsing reason strings)
