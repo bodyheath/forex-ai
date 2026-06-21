@@ -1391,35 +1391,73 @@ def run(log=print) -> dict:
         f"{'weekend mode — Friday close prices' if is_wknd else 'live prices'}"
     )
 
-    # ── Step 1: Price fetch — Yahoo Finance primary, Twelve Data fallback ───────
+    # ── Step 1: Multi-source price fetch — Yahoo → Twelve Data → Stooq ─────────
     all_open    = _fund_open + _res_open
     _fund_pairs = sorted({r.get("pair", "") for r in _fund_open if r.get("pair")})
     _res_pairs  = sorted({r.get("pair", "") for r in _res_open  if r.get("pair")})
     all_pairs   = sorted({r.get("pair", "") for r in all_open   if r.get("pair")})
     log(
         f"Monitor: {len(_fund_pairs)} fund pair(s) + {len(_res_pairs)} research pair(s) — "
-        f"{len(all_pairs)} unique pairs — fetching via Yahoo Finance (0 TD calls)"
+        f"{len(all_pairs)} unique pairs — fetching via Yahoo Finance"
     )
 
+    # Primary: Yahoo Finance
     prices = _yahoo_price_batch(all_pairs, log=log)
+    price_sources: dict = {p: "yahoo" for p in prices}  # {pair: "yahoo"|"twelve_data"|"stooq"}
 
-    # Fallback to Twelve Data if Yahoo returned fewer than 50% of pairs
-    if len(prices) < len(all_pairs) * 0.5 and config.TWELVE_DATA_KEY:
+    _td_backup_pairs: list = []
+    _sq_backup_pairs: list = []
+    _yf_coverage = len(prices) / len(all_pairs) if all_pairs else 1.0
+
+    # Activate backup sources when Yahoo covers < 70% of pairs
+    if _yf_coverage < 0.70:
         _missing = [p for p in all_pairs if p not in prices]
-        log(
-            f"Monitor: Yahoo Finance partial failure ({len(prices)}/{len(all_pairs)} pairs) — "
-            f"falling back to Twelve Data for {len(_missing)} pairs"
-        )
-        _td_prices, _td_calls = _batch_price_fetch(_missing, log=log)
-        prices.update(_td_prices)
-        result["api_calls_used"] += _td_calls
+        _backup_mode = _get_backup_mode(log=log)
 
+        if _backup_mode == "td" and config.TWELVE_DATA_KEY:
+            log(
+                f"  Monitor: Yahoo degraded ({len(prices)}/{len(all_pairs)} pairs, "
+                f"{_yf_coverage:.0%}) — Twelve Data backup for {len(_missing)} pairs"
+            )
+            _td_prices, _td_calls = _batch_price_fetch(_missing, log=log)
+            result["api_calls_used"] += _td_calls
+            for _p, _v in _td_prices.items():
+                prices[_p] = _v
+                price_sources[_p] = "twelve_data"
+                _td_backup_pairs.append(_p)
+
+            # Still missing after TD? Try Stooq
+            _still_missing = [p for p in _missing if p not in prices]
+            if _still_missing:
+                _sq_prices = _fetch_stooq_prices(_still_missing, log=log)
+                for _p, _v in _sq_prices.items():
+                    prices[_p] = _v
+                    price_sources[_p] = "stooq"
+                    _sq_backup_pairs.append(_p)
+
+        elif _backup_mode == "stooq":
+            log(
+                f"  Monitor: Yahoo degraded + TD quota exceeded — "
+                f"Stooq backup for {len(_missing)} pairs"
+            )
+            _sq_prices = _fetch_stooq_prices(_missing, log=log)
+            for _p, _v in _sq_prices.items():
+                prices[_p] = _v
+                price_sources[_p] = "stooq"
+                _sq_backup_pairs.append(_p)
+
+        else:
+            log(f"  API quota critical — external backup disabled for {len(_missing)} pairs")
+
+    _unavailable = [p for p in all_pairs if p not in prices]
     result["yf_price_pairs"] = len(prices)
+    _send_fallback_alerts(_ta, _td_backup_pairs, _sq_backup_pairs, _unavailable, log=log)
 
     # ── Update rolling price history (max 96 readings = 48h at 30-min intervals) ──
     for _ph_pair, _ph_price in prices.items():
+        _src_label = price_sources.get(_ph_pair, "yahoo_finance")
         _hist = price_history.get(_ph_pair, [])
-        _hist.append({"price": _ph_price, "timestamp": now_str, "source": "yahoo_finance"})
+        _hist.append({"price": _ph_price, "timestamp": now_str, "source": _src_label})
         price_history[_ph_pair] = _hist[-96:]
     result["price_history"] = price_history
 
