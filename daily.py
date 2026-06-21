@@ -7160,6 +7160,13 @@ def _send_telegram_summary(
                 _intraday_health.append(_fa)
         except Exception:
             pass
+        # Monitor price source reliability (today)
+        try:
+            from src import monitor as _mon_ih
+            for _sr_line in _mon_ih.build_monitor_source_report(days=1):
+                _intraday_health.append(_sr_line)
+        except Exception:
+            pass
         all_sections.append(_intraday_health)
 
         # Item 9: Daily system health digest — preny (11pm) only
