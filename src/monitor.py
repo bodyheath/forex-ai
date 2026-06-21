@@ -1036,6 +1036,8 @@ def run(log=print) -> dict:
         "last_prices":             {},
         "previously_hot":          [],
         "skipped_reason":          "",
+        "watchlist_prices":        {},
+        "watchlist_alerts_sent":   [],
     }
 
     # ── File lock — prevents duplicate processing if runs overlap ────────────
