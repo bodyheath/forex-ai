@@ -989,29 +989,64 @@ def run(log=print) -> dict:
             except Exception:
                 pass
 
-    # ── Step 3: OHLCV fetch for HOT + WARM ────────────────────────────────────
-    hot_warm_pairs = list({
-        row.get("pair", "")
-        for row in (fund_zones["HOT"] + fund_zones["WARM"] +
-                    res_zones["HOT"]  + res_zones["WARM"])
-        if row.get("pair")
-    })
-    candle_map: dict = {}   # pair → list of candle dicts
-    if ohlcv_allowed and hot_warm_pairs:
-        for pair in hot_warm_pairs:
-            time.sleep(0.1)   # light courtesy delay — free tier
-            candles = _fetch_ohlcv_1h(pair, log=log)
-            candle_map[pair] = candles
-            result["api_calls_used"] += 1
-            _increment_td_usage(1)
-            if candles:
-                log(f"  Monitor: OHLCV fetched for {pair} ({len(candles)} candles)")
+    # ── Step 3: Yahoo Finance 1H OHLCV for ALL open trades ────────────────────
+    from src.yahoo_finance import fetch_1h_candles as _yf_1h
+    candle_map: dict = {}   # pair → list of candle dicts (newest-first)
+    yf_ok = 0
+    for pair in all_pairs:
+        try:
+            candles_result = _yf_1h(pair, _OHLCV_CANDLES, log=log)
+            if candles_result and candles_result.get("values"):
+                candle_map[pair] = candles_result["values"]
+                yf_ok += 1
+        except Exception as exc:
+            log(f"  Monitor: Yahoo 1H fetch error for {pair}: {exc}")
+    result["yf_ohlcv_pairs"] = yf_ok
+    log(
+        f"Monitor: Yahoo 1H OHLCV fetched for {yf_ok}/{len(all_pairs)} pairs — "
+        f"0 TD OHLCV calls used"
+    )
+
+    # ── Step 3b: pip movement check vs last run (2c) ──────────────────────────
+    def _pip_factor(p: str) -> float:
+        return 0.01 if "JPY" in p else 0.0001
+
+    def _quick_atr(cands: list) -> float | None:
+        if len(cands) < 2:
+            return None
+        trs = []
+        for i in range(len(cands) - 1):
+            try:
+                h = float(cands[i]["high"])
+                lo = float(cands[i]["low"])
+                cp = float(cands[i + 1]["close"])
+                trs.append(max(h - lo, abs(h - cp), abs(lo - cp)))
+            except (ValueError, TypeError, KeyError):
+                continue
+        return sum(trs) / len(trs) if trs else None
+
+    for pair in all_pairs:
+        curr = prices.get(pair)
+        prev = last_prices.get(pair)
+        if curr is None or prev is None:
+            continue
+        cands = candle_map.get(pair, [])
+        if not cands:
+            continue
+        atr = _quick_atr(cands)
+        if atr is None or atr <= 0:
+            continue
+        pf       = _pip_factor(pair)
+        pip_move = abs(curr - prev) / pf
+        atr_pips = atr / pf
+        ratio    = pip_move / atr_pips if atr_pips > 0 else 0
+        if ratio >= 0.3:
+            log(
+                f"  Monitor: {pair} moved {pip_move:.1f} pips since last run "
+                f"({ratio:.2f}x ATR={atr_pips:.1f}p)"
+            )
 
     # ── Step 4+5: Detect milestones and apply cascade updates ─────────────────
-    try:
-        from src import telegram_alert as _ta
-    except Exception:
-        _ta = None
 
     fund_closed: list = []
     research_fragments: list = []
