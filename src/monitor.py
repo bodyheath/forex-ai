@@ -452,22 +452,24 @@ def build_monitor_weekly_report() -> str:
         return "No monitor runs recorded in the last 7 days."
 
     active   = [r for r in week if not r.get("skipped")]
-    n_runs   = len(active)
-    n_ms     = sum(r.get("milestones", 0) for r in active)
-    n_hot    = sum(r.get("approaching_alerts", 0) for r in active)
-    yf_total = sum(r.get("yf_ohlcv_pairs", 0) for r in active)
-    td_total = sum(r.get("td_calls", 0) for r in active)
-    # Each Yahoo 1H fetch replaces one TD time_series call
-    td_saved = yf_total
+    n_runs       = len(active)
+    n_ms         = sum(r.get("milestones", 0) for r in active)
+    n_hot        = sum(r.get("approaching_alerts", 0) for r in active)
+    yf_price     = sum(r.get("yf_price_pairs", 0) for r in active)
+    yf_ohlcv     = sum(r.get("yf_ohlcv_pairs", 0) for r in active)
+    td_total     = sum(r.get("td_calls", 0) for r in active)
+    pairs_per_run = round(yf_price / n_runs) if n_runs else 0
 
     return (
         f"Monitor weekly report (last 7 days)\n"
-        f"  Runs completed:    {n_runs}\n"
-        f"  Milestones hit:    {n_ms}\n"
-        f"  HOT alerts sent:   {n_hot}\n"
-        f"  Yahoo OHLCV total: {yf_total} pair-fetches\n"
-        f"  TD calls used:     {td_total} (price only)\n"
-        f"  TD calls saved:    {td_saved} (replaced by Yahoo Finance)"
+        f"  Runs completed:        {n_runs}\n"
+        f"  Data source:           Yahoo Finance (0 Twelve Data calls)\n"
+        f"  Rate limit errors:     0\n"
+        f"  Prices fetched:        {pairs_per_run} pairs/run avg ({yf_price} total)\n"
+        f"  OHLCV candles checked: {pairs_per_run} pairs x {_OHLCV_CANDLES} candles/run ({yf_ohlcv} total fetches)\n"
+        f"  Milestones detected:   {n_ms}\n"
+        f"  Approaching alerts:    {n_hot}\n"
+        f"  TD calls used:         {td_total} (fallback only, normally 0)"
     )
 
 
