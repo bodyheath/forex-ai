@@ -1515,5 +1515,15 @@ def run(log=print) -> dict:
     result["previously_hot"] = sorted(current_hot_keys)
     _append_to_monitor_history(result)
     _write_monitor_log(result)
+
+    # Item 2: Write heartbeat — checked by daily.py to detect monitor downtime
+    try:
+        _HEARTBEAT_FILE.write_text(
+            json.dumps({"last_run": datetime.utcnow().isoformat()}),
+            encoding="utf-8",
+        )
+    except Exception:
+        pass
+
     _release_lock()
     return result
