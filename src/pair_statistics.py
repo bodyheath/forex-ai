@@ -226,14 +226,14 @@ def build_monday_report_lines() -> list:
         lines.append("Notable changes from standard:")
         for p, t1, prev_t1, n in sorted(notable_t1, key=lambda x: -abs(x[1] - T1_STD))[:3]:
             if prev_t1 is not None:
-                lines.append(f"{p} T1: {prev_t1:.2f}x → {t1:.2f}x ATR ({n} trades)")
+                lines.append(f"{p} T1: {prev_t1:.2f}x ->{t1:.2f}x ATR ({n} trades)")
             else:
-                lines.append(f"{p} T1: {T1_STD:.2f}x → {t1:.2f}x ATR ({n} trades)")
+                lines.append(f"{p} T1: {T1_STD:.2f}x ->{t1:.2f}x ATR ({n} trades)")
         for p, t3, prev_t3, n in sorted(notable_t3, key=lambda x: -abs(x[1] - T3_STD))[:3]:
             if prev_t3 is not None:
-                lines.append(f"{p} T3: {prev_t3:.2f}x → {t3:.2f}x ATR ({n} trades)")
+                lines.append(f"{p} T3: {prev_t3:.2f}x ->{t3:.2f}x ATR ({n} trades)")
             else:
-                lines.append(f"{p} T3: {T3_STD:.2f}x → {t3:.2f}x ATR ({n} trades)")
+                lines.append(f"{p} T3: {T3_STD:.2f}x ->{t3:.2f}x ATR ({n} trades)")
 
     # Retroactive analysis (one-time)
     retro = _retroactive_analysis(all_stats)
