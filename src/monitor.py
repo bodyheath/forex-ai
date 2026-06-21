@@ -995,6 +995,7 @@ def _apply_research_milestones(row: dict, milestones: list, row_state: dict,
             )
             label = f"+{_wp:.1f}p cascade" if _wp else "LOSS"
             fragments.append(f"{pair} stop hit ({label})")
+            _online_learn_closure("research", closed_row)
             log(f"  Monitor research #{rec_id} {pair}: {casc_oc} at {mprice}")
             break
 
