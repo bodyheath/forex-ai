@@ -60,11 +60,13 @@ def _to_float(val):
 
 # ── Level computation ─────────────────────────────────────────────────────────
 
-def compute_levels(entry, stop_loss, target, direction, atr=None):
+def compute_levels(entry, stop_loss, target, direction, atr=None,
+                   t1_mult=None, t2_mult=None, t3_mult=None):
     """Return (t1_price, t2_price, t3_price).
 
     T1 and T2 are from ATR (estimated as stop distance when atr is not given).
-    T3 is the existing target — unchanged.
+    T3 is the existing target by default; pass t3_mult to override with ATR-derived level.
+    Pass t1_mult / t2_mult to use adaptive multipliers (otherwise uses T1_MULT / T2_MULT).
     Returns (None, None, target_float) when ATR cannot be determined.
     """
     e = _to_float(entry)
@@ -81,17 +83,22 @@ def compute_levels(entry, stop_loss, target, direction, atr=None):
     else:
         return None, None, t
 
+    t1_m = t1_mult if t1_mult is not None else T1_MULT
+    t2_m = t2_mult if t2_mult is not None else T2_MULT
+
     d = (direction or "").upper()
     if d == "BUY":
-        t1 = e + T1_MULT * use_atr
-        t2 = e + T2_MULT * use_atr
+        t1 = e + t1_m * use_atr
+        t2 = e + t2_m * use_atr
+        t3 = (e + t3_mult * use_atr) if t3_mult is not None else t
     elif d == "SELL":
-        t1 = e - T1_MULT * use_atr
-        t2 = e - T2_MULT * use_atr
+        t1 = e - t1_m * use_atr
+        t2 = e - t2_m * use_atr
+        t3 = (e - t3_mult * use_atr) if t3_mult is not None else t
     else:
         return None, None, t
 
-    return round(t1, 6), round(t2, 6), round(t, 6) if t is not None else None
+    return round(t1, 6), round(t2, 6), round(t3, 6) if t3 is not None else None
 
 
 def pips_at(entry, level, pair, direction):
