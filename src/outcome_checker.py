@@ -374,6 +374,7 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
             r_txt = f", R={updated.get('r_multiple')}, pips={updated.get('pips')}"
             log(f"  #{rec_id} {pair} {direction}: {outcome} at {price}{r_txt}")
             closed.append(updated)
+            _online_learn(updated)
 
         except Exception as exc:
             log(f"  #{rec_id} {pair}: outcome check error — {exc}")
