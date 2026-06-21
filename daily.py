@@ -7789,10 +7789,43 @@ def run() -> int:
                 _log_line(logf, f"ML model retrained: {_ml_meta.get('n_trades',0)} trades, "
                                  f"holdout accuracy {_hold_pct}% on new trades "
                                  f"(reliable retrains: {_n_consec}/3)")
+                # Item 7: ML retraining failure alert
+                if _hold_pct < 50:
+                    try:
+                        _telegram(
+                            f"⚠️ ML MODEL QUALITY — retrained model accuracy is only {_hold_pct}% "
+                            f"(below 50% threshold) — predictions may be unreliable"
+                        )
+                    except Exception:
+                        pass
             else:
                 _log_line(logf, f"ML model: {_mlp.get_model_status_line()}")
         except Exception as _ml_exc:
             _log_line(logf, f"ML model step: {_ml_exc}")
+
+        # Item 6: GitHub token expiry warning — Monday 6am full scan only
+        if scan_mode == "full" and now_ak.weekday() == 0:
+            try:
+                import os as _os_gh
+                import requests as _req_gh
+                _gh_token = _os_gh.environ.get("GITHUB_TOKEN", "")
+                if _gh_token:
+                    _gh_resp = _req_gh.get(
+                        "https://api.github.com/user",
+                        headers={"Authorization": f"Bearer {_gh_token}"},
+                        timeout=10,
+                    )
+                    if _gh_resp.status_code == 401:
+                        _telegram(
+                            "⚠️ GITHUB TOKEN INVALID — GitHub API authentication returned 401 — "
+                            "push/checkout operations may fail — check GITHUB_TOKEN secret"
+                        )
+                    else:
+                        _log_line(logf, f"GitHub token valid (HTTP {_gh_resp.status_code})")
+                else:
+                    _log_line(logf, "GitHub token check skipped — GITHUB_TOKEN not in environment")
+            except Exception as _gh_exc:
+                _log_line(logf, f"GitHub token check failed: {_gh_exc}")
 
         # COT cache diagnostics — log status for all tracked markets, delete stale entries
         try:
