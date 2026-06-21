@@ -1152,14 +1152,21 @@ def analyse(base: str, quote: str) -> dict:
         weekly  = _frame_from_td(_td_request(symbol, "1week",  200))
         daily   = _frame_from_td(_td_request(symbol, "1day",   400))
         four_h  = _frame_from_td(_td_request(symbol, "4h",     500))
-        source  = "Yahoo Finance" if symbol in _yf_sourced_pairs else "Twelve Data"
+        if symbol in _yf_sourced_pairs:
+            source = "Yahoo Finance"
+        elif symbol in _stooq_sourced_pairs:
+            source = "Stooq"
+        else:
+            source = "Twelve Data"
+        source_4h = "Yahoo Finance" if symbol in _yf_4h_sourced_pairs else "Twelve Data"
         return {
-            "status":  "ok",
-            "source":  source,
-            "monthly": _summarise(monthly, "Monthly", pair=symbol),
-            "weekly":  _summarise(weekly,  "Weekly",  pair=symbol),
-            "daily":   _summarise(daily,   "Daily",   pair=symbol),
-            "4h":      _summarise(four_h,  "4-Hour",  pair=symbol),
+            "status":    "ok",
+            "source":    source,
+            "source_4h": source_4h,
+            "monthly":   _summarise(monthly, "Monthly", pair=symbol),
+            "weekly":    _summarise(weekly,  "Weekly",  pair=symbol),
+            "daily":     _summarise(daily,   "Daily",   pair=symbol),
+            "4h":        _summarise(four_h,  "4-Hour",  pair=symbol),
         }
     except Exception as exc:  # noqa: BLE001 - degrade gracefully
         return {"status": "UNAVAILABLE", "error": str(exc)}
