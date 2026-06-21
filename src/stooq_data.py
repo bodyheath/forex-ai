@@ -1,11 +1,22 @@
 """Stooq free forex daily candle backup source.
 
 No API key or account required. Unlimited free tier.
-Uses pandas_datareader with data_source='stooq'.
+Uses Stooq's direct CSV download URL via requests — no pandas-datareader needed.
 
-Stooq accepts slash-format forex pairs directly (AUD/JPY, EUR/USD, etc.).
+Symbol format: AUD/JPY -> audjpy (lowercase, slash removed).
 """
+import io
 from datetime import datetime, timedelta
+
+import requests
+
+_STOOQ_URL = "https://stooq.com/q/d/l/"
+_TIMEOUT   = 20
+
+
+def _pair_to_stooq_symbol(pair: str) -> str:
+    """Convert 'AUD/JPY' to Stooq symbol 'audjpy'."""
+    return pair.replace("/", "").replace(" ", "").lower()
 
 
 def fetch_candles(pair: str, n_candles: int, log=print) -> dict | None:
@@ -15,58 +26,76 @@ def fetch_candles(pair: str, n_candles: int, log=print) -> dict | None:
     Never raises — always returns None gracefully on errors.
     """
     try:
-        from pandas_datareader import data as pdr
+        import pandas as pd
     except ImportError:
-        log("[Stooq] pandas-datareader not installed — Stooq fallback unavailable")
+        log("[Stooq] pandas not installed — Stooq fallback unavailable")
+        return None
+
+    symbol   = _pair_to_stooq_symbol(pair)
+    end_dt   = datetime.utcnow()
+    days_req = max(int(n_candles * 1.6) + 30, 365)
+    start_dt = end_dt - timedelta(days=days_req)
+
+    try:
+        resp = requests.get(
+            _STOOQ_URL,
+            params={
+                "s":  symbol,
+                "d1": start_dt.strftime("%Y%m%d"),
+                "d2": end_dt.strftime("%Y%m%d"),
+                "i":  "d",
+            },
+            headers={"User-Agent": "Mozilla/5.0 (forex-ai stooq)"},
+            timeout=_TIMEOUT,
+        )
+        resp.raise_for_status()
+    except Exception as exc:
+        log(f"[Stooq] HTTP request failed for {pair} ({symbol}): {exc}")
+        return None
+
+    content = resp.text.strip()
+    if not content or "No data found" in content or len(content) < 20:
+        log(f"[Stooq] No data returned for {pair} ({symbol})")
         return None
 
     try:
-        end_dt   = datetime.utcnow()
-        days_req = max(int(n_candles * 1.6) + 30, 365)
-        start_dt = end_dt - timedelta(days=days_req)
-
-        df = pdr.DataReader(
-            pair,
-            data_source="stooq",
-            start=start_dt.strftime("%Y-%m-%d"),
-            end=end_dt.strftime("%Y-%m-%d"),
-        )
+        df = pd.read_csv(io.StringIO(content))
     except Exception as exc:
-        log(f"[Stooq] DataReader failed for {pair}: {exc}")
+        log(f"[Stooq] CSV parse failed for {pair}: {exc}")
         return None
 
-    if df is None or df.empty:
-        log(f"[Stooq] No data returned for {pair}")
-        return None
-
-    df.columns = [str(c).lower() for c in df.columns]
+    df.columns = [str(c).strip().lower() for c in df.columns]
 
     for col in ("open", "high", "low", "close"):
         if col not in df.columns:
-            log(f"[Stooq] Missing column '{col}' for {pair}")
+            log(f"[Stooq] Missing column '{col}' for {pair} — columns: {list(df.columns)}")
             return None
 
-    df = df[["open", "high", "low", "close"]].dropna()
+    date_col = next((c for c in df.columns if "date" in c), None)
+    if date_col is None:
+        log(f"[Stooq] No date column found for {pair} — columns: {list(df.columns)}")
+        return None
+
+    df = df[[date_col, "open", "high", "low", "close"]].dropna()
 
     if df.empty:
         log(f"[Stooq] All candles NaN for {pair}")
         return None
 
-    # Stooq returns newest-first — reverse to chronological order if needed
-    if len(df) > 1 and df.index[0] > df.index[1]:
-        df = df.iloc[::-1]
+    # Parse date and sort chronologically (Stooq returns newest-first)
+    try:
+        df[date_col] = pd.to_datetime(df[date_col])
+    except Exception as exc:
+        log(f"[Stooq] Date parse failed for {pair}: {exc}")
+        return None
 
-    df = df.tail(n_candles)
+    df = df.sort_values(date_col).tail(n_candles)
 
-    # Strip timezone for uniform downstream handling
-    if hasattr(df.index, "tz") and df.index.tz is not None:
-        df.index = df.index.tz_localize(None)
-
-    # Build values newest-first (Twelve Data format)
+    # Build values list newest-first (Twelve Data format)
     values = []
-    for dt, row in df.iloc[::-1].iterrows():
+    for _, row in df.iloc[::-1].iterrows():
         values.append({
-            "datetime": dt.strftime("%Y-%m-%d"),
+            "datetime": row[date_col].strftime("%Y-%m-%d"),
             "open":     str(round(float(row["open"]),  6)),
             "high":     str(round(float(row["high"]),  6)),
             "low":      str(round(float(row["low"]),   6)),
