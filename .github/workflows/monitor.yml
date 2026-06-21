@@ -1,21 +1,19 @@
 name: Between-Scan Monitor
 
-# GitHub built-in scheduler — runs every 2 hours, all 7 days including weekends.
-# No cron-job.org setup needed for this workflow.
+# Scheduling is handled exclusively by cron-job.org every 30 minutes.
+# No GitHub Actions built-in schedule — cron-job.org controls exact timing.
 #
 # Cost estimate:
-#   ~2 minutes per run × 12 runs/day × 30 days = ~720 minutes/month
-#   Combined with existing scans (~400 min/month): ~1120 total — well within
-#   the 2000-minute free-tier limit.
+#   ~2 minutes per run × 48 runs/day × 30 days = ~2880 minutes/month
+#   (free tier: 2000 min/month — keep an eye on usage)
 #
 # API estimate:
-#   Batch price: 2 calls/run (20/batch, up to 40 unique pairs) · OHLCV for hot/warm: 5-10 calls/run
-#   ~84-144 additional calls/day — total stays under 800/day free tier.
+#   Batch price: 2 calls/run (20/batch, up to 40 unique pairs)
+#   OHLCV: 0 Twelve Data calls — Yahoo Finance 1H candles used for all trades
+#   ~96 TD calls/day (price fetch only) — well under 800/day free tier.
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 */2 * * *"    # every 2 hours at :00 UTC
 
 concurrency:
   group: monitor-trades
@@ -42,9 +40,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Random startup delay
-        run: sleep $((RANDOM % 120))
-
       - name: Run monitor
         env:
           SCAN_MODE:          monitor
@@ -61,7 +56,7 @@ jobs:
         run: |
           git config user.name "forex-ai[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/trades.csv data/research_trades.csv data/monitor_log.json data/api_usage.json data/milestone_log.json
+          git add data/trades.csv data/research_trades.csv data/monitor_log.json data/api_usage.json data/milestone_log.json data/monitor_history.json
           git diff --staged --quiet || git commit -m "chore: monitor $(date -u +'%Y-%m-%d %H:%M UTC')"
           git pull --rebase origin main
           git push origin HEAD:main
