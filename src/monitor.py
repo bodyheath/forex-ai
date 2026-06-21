@@ -919,14 +919,12 @@ def run(log=print) -> dict:
         f"{'weekend mode — Friday close prices' if is_wknd else 'live prices'}"
     )
 
-    # ── API budget check ──────────────────────────────────────────────────────
-    calls_today   = _get_td_calls_today()
-    ohlcv_allowed = calls_today < _API_BUDGET_LIMIT
-    if not ohlcv_allowed:
+    # ── API budget check (informational — OHLCV uses Yahoo Finance, not TD) ────
+    calls_today = _get_td_calls_today()
+    if calls_today >= _API_BUDGET_LIMIT:
         log(
-            f"Monitor: API daily limit approaching ({calls_today}/800 used) — "
-            f"running current price check only — OHLCV skipped to preserve calls "
-            f"for scheduled scans"
+            f"Monitor: TD API at {calls_today}/800 calls today — "
+            f"OHLCV uses Yahoo Finance so batch price fetch will still proceed"
         )
 
     # ── Step 1: Batch price fetch ─────────────────────────────────────────────
