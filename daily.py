@@ -7779,6 +7779,25 @@ def run() -> int:
             _log_line(logf, f"Smart selection failed ({exc}) — falling back to watchlist.")
             pairs_today = list(config.WATCHLIST)
 
+        # Inject pairs flagged by watchlist movement alerts in monitor.py
+        _priority_from_wl: list = []
+        _wl_cache_path_pns = config.DATA_DIR / "watchlist_cache.json"
+        try:
+            if _wl_cache_path_pns.exists():
+                _pns_data = json.loads(_wl_cache_path_pns.read_text(encoding="utf-8"))
+                _pns_list = _pns_data.get("priority_for_next_scan", [])
+                for _pns_p in (_pns_list or []):
+                    if _pns_p and _pns_p not in pairs_today:
+                        pairs_today.append(_pns_p)
+                        _priority_from_wl.append(_pns_p)
+                if _priority_from_wl:
+                    _log_line(logf, f"Watchlist priority: {len(_priority_from_wl)} pair(s) from movement alert injected — {', '.join(_priority_from_wl)}")
+                    # Clear the flag — consumed this scan
+                    _pns_data["priority_for_next_scan"] = []
+                    _wl_cache_path_pns.write_text(json.dumps(_pns_data, indent=2), encoding="utf-8")
+        except Exception as _pns_exc:
+            _log_line(logf, f"Watchlist priority injection failed ({_pns_exc}) — continuing")
+
         # Filter unsuitable pairs (spread > 33% of ATR — e.g. EUR/HKD, NZD/HKD)
         try:
             from src import trade_costs as _tc_suit
