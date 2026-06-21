@@ -1214,7 +1214,8 @@ def warm_cache(pairs: list, log=print) -> None:
     n_success = 0
     n_failed  = 0
     errors    = 0
-    _yf_before = _yf_calls_this_run
+    _yf_before    = _yf_calls_this_run
+    _stooq_before = _stooq_calls_this_run
     for pair, interval, outputsize in needed:
         if api_n > 0:
             time.sleep(10)
@@ -1236,10 +1237,15 @@ def warm_cache(pairs: list, log=print) -> None:
     # Neutral fallbacks = pairs that needed a fetch but had zero successful timeframes
     n_neutral   = len(_pairs_needing_fetch - _pairs_ok)
     n_yf_used   = _yf_calls_this_run - _yf_before
+    n_stooq     = _stooq_calls_this_run - _stooq_before
     status      = "complete" if errors == 0 else f"complete with {errors} error(s)"
     yf_note     = (
-        f" · Yahoo Finance fallback: {n_yf_used} call(s) used — zero Twelve Data quota"
+        f" · Yahoo Finance: {n_yf_used} call(s)"
         if n_yf_used > 0 else ""
+    )
+    stooq_note  = (
+        f" · Stooq: {n_stooq} call(s)"
+        if n_stooq > 0 else ""
     )
     log(
         f"Technical pre-fetch {status}: {api_n} API call(s) made. "
