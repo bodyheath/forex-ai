@@ -58,7 +58,11 @@ def _auckland_now() -> datetime:
 
 
 def load() -> dict:
-    """Load fund_state.json, merging defaults for any missing keys."""
+    """Load fund_state.json, merging defaults for any missing keys.
+
+    Creates the file with defaults if it does not yet exist so that
+    ``git add data/`` always finds a committed version of the file.
+    """
     try:
         if _FILE.exists():
             data = json.loads(_FILE.read_text(encoding="utf-8"))
@@ -68,7 +72,13 @@ def load() -> dict:
             return data
     except Exception:
         pass
-    return dict(_DEFAULTS)
+    state = dict(_DEFAULTS)
+    try:
+        _FILE.parent.mkdir(parents=True, exist_ok=True)
+        _FILE.write_text(json.dumps(state, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+    return state
 
 
 def save(state: dict) -> None:
