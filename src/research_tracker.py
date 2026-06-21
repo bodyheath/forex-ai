@@ -93,6 +93,11 @@ FIELDS = [
     "rsi_divergence_type",        # BULLISH | BEARISH | HIDDEN_BULLISH | HIDDEN_BEARISH | NONE
     # ── Pre-trade checklist ───────────────────────────────────────────────────
     "checklist_score",            # 0-10 integer: number of criteria passed
+    # ── Adaptive sizing at entry (fund_state context) ─────────────────────────
+    "sizing_mode",                # normal | win_streak | drawdown_caution | drawdown_protection
+    "consecutive_wins_at_entry",  # fund win streak when trade was opened
+    "drawdown_pct_at_entry",      # fund drawdown % from peak at time of entry
+    "position_size_pct_at_entry", # adaptive risk % that would have been applied
     # ── Cascading targets (append-only) ──────────────────────────────────────
     "t1_price",                   # entry ± 0.4× ATR
     "t2_price",                   # entry ± 0.7× ATR
