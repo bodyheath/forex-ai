@@ -3738,6 +3738,16 @@ def _build_system_learning_report(date: str) -> list:
     except Exception:
         pass
 
+    # ── MONITOR DATA QUALITY ──────────────────────────────────────────────────
+    try:
+        from src import monitor as _mon_lr
+        _mq_lines = _mon_lr.build_monitor_data_quality_report()
+        if _mq_lines:
+            sec.extend(_mq_lines)
+            any_added = True
+    except Exception:
+        pass
+
     return sec
 
 
