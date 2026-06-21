@@ -1431,7 +1431,7 @@ def run(log=print) -> dict:
             fund_closed.extend(closed)
         else:
             closed_row, frag = _apply_research_milestones(
-                row, milestones, row_state, log=log,
+                row, milestones, row_state, log=log, ta=_ta,
             )
             if frag:
                 research_fragments.append(frag)
