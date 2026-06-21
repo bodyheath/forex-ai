@@ -1144,26 +1144,35 @@ def run(log=print) -> dict:
         f"fetching Yahoo 1H OHLCV for all {len(all_pairs)} pairs"
     )
 
-    # ── Detect newly-HOT trades and send early-warning alert (2d) ────────────
+    # ── Detect HOT trades and send early-warning alert (time-based dedup) ──────
+    # Uses hot_zone_alerts.json written IMMEDIATELY on send — not monitor_log.json
+    # (which is only written at end-of-run and may not be committed yet when the
+    # next concurrent run starts, causing duplicate alerts).
     current_hot_keys: set = set()
-    for row in fund_zones["HOT"] + res_zones["HOT"]:
-        current_hot_keys.add(f"{row.get('pair', '')}#{row.get('id', '')}")
+    _hot_rows: dict = {}   # key → row, for building the rich alert message
+    for _hr in fund_zones["HOT"] + res_zones["HOT"]:
+        _hk = f"{_hr.get('pair', '')}#{_hr.get('id', '')}"
+        current_hot_keys.add(_hk)
+        _hot_rows[_hk] = _hr
 
-    newly_hot = current_hot_keys - previously_hot
-    result["approaching_alerts"] = len(newly_hot)
-    for key in sorted(newly_hot):
-        _pair_str = key.split("#")[0]
-        log(f"  Monitor: {_pair_str} newly entered HOT zone — sending early warning")
+    _alerts_sent = 0
+    for _hk in sorted(current_hot_keys):
+        _pair_str = _hk.split("#")[0]
+        _prev_ts  = _check_hot_alert_sent(_pair_str)
+        if _prev_ts:
+            log(f"  Monitor: HOT zone alert suppressed for {_pair_str} — already sent {_prev_ts}")
+            continue
+        _hrow = _hot_rows.get(_hk, {})
+        log(f"  Monitor: {_pair_str} HOT zone — sending approaching target alert")
         if _ta:
             try:
-                _ta.send(
-                    f"\U0001f525 <b>{_pair_str} approaching target</b>\n\n"
-                    f"Trade has entered the HOT zone (≥70% progress to next cascade level).\n"
-                    f"No action needed — monitoring continues automatically.\n\n"
-                    f"Watch for milestone alert in the next few runs."
-                )
+                _ta.send(_build_hot_alert_message(_pair_str, _hrow, prices.get(_pair_str)))
             except Exception:
                 pass
+        _record_hot_alert_sent(_pair_str)
+        _alerts_sent += 1
+
+    result["approaching_alerts"] = _alerts_sent
 
     # ── Step 3: Yahoo Finance 1H OHLCV for ALL open trades ────────────────────
     from src.yahoo_finance import fetch_1h_candles as _yf_1h
