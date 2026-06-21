@@ -3884,8 +3884,70 @@ def _send_telegram_summary(
                 except Exception:
                     pass
                 continue
+            # ── Adaptive sizing ───────────────────────────────────────────────
+            _szg_pct, _szg_mode, _szg_reason = _fs.compute_sizing(
+                _fund_st,
+                _cur_bal_fs or float(config.ACCOUNT_BALANCE),
+                _eff_conf(_yt),
+            )
+            if _szg_pct is None:
+                # Drawdown tier quality requirement not met — block this trade
+                _fund_st = _fs.record_missed_opportunity(
+                    _fund_st, _yt.get("pair", ""),
+                    (_yt.get("parsed") or {}).get("direction", ""),
+                    _eff_conf(_yt),
+                    float((_yt.get("screen") or {}).get("score") or 0),
+                    "drawdown_quality",
+                )
+                _fund_st_blocked.append((_yt, _szg_reason))
+                try:
+                    from src import tracker as _trk_fsb2
+                    if _yt.get("id"):
+                        _trk_fsb2.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                 notes=f"Blocked: {_szg_reason}")
+                except Exception:
+                    pass
+                continue
+            _yt["_fs_sizing"] = {
+                "pct":      _szg_pct,
+                "mode":     _szg_mode,
+                "reason":   _szg_reason,
+                "balance":  _cur_bal_fs or float(config.ACCOUNT_BALANCE),
+                "wins":     int(_fund_st.get("consecutive_wins") or 0),
+                "drawdown": float(_fund_st.get("current_drawdown_pct") or 0.0),
+            }
+            # Stamp ML sizing fields on the fund trade row
+            try:
+                from src import tracker as _trk_szg
+                if _yt.get("id"):
+                    _trk_szg.update_fields(
+                        int(_yt["id"]),
+                        sizing_mode=_szg_mode,
+                        consecutive_wins_at_entry=int(_fund_st.get("consecutive_wins") or 0),
+                        drawdown_pct_at_entry=float(_fund_st.get("current_drawdown_pct") or 0.0),
+                        position_size_pct_at_entry=_szg_pct,
+                    )
+            except Exception:
+                pass
             _fund_st = _fs.increment_daily_trades(_fund_st)
             _yt_pass.append(_yt)
+        # Stamp ML sizing fields on matching research trades
+        try:
+            from src import research_tracker as _rtrk_szg
+            _fs_st_ref = _fund_st
+            for _yt_pass_r in _yt_pass:
+                _rr_id = _yt_pass_r.get("research_id")
+                _fsz   = _yt_pass_r.get("_fs_sizing")
+                if _rr_id and _fsz:
+                    _rtrk_szg.update_fields(
+                        int(_rr_id),
+                        sizing_mode=_fsz["mode"],
+                        consecutive_wins_at_entry=int(_fsz["wins"]),
+                        drawdown_pct_at_entry=float(_fsz["drawdown"]),
+                        position_size_pct_at_entry=float(_fsz["pct"]),
+                    )
+        except Exception:
+            pass
         _fs.save(_fund_st)
         yes_trades = _yt_pass
     except Exception as _fs_exc:
