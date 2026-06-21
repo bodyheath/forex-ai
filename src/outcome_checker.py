@@ -292,6 +292,7 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                     except Exception:
                         pass
                 closed.append(updated)
+                _online_learn(updated)
                 _closed_this = True
 
             elif _casc.effective_stop_hit(row, price):
