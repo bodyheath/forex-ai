@@ -401,6 +401,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                         f"expired as {_casc_oc} ({_wp:.1f}p cascade)"
                     )
                     closed.append(updated)
+                    _online_learn(updated)
                     continue
 
             close_recorded = price
