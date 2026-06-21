@@ -8,9 +8,10 @@ name: Between-Scan Monitor
 #   (free tier: 2000 min/month — keep an eye on usage)
 #
 # API estimate:
-#   Batch price: 2 calls/run (20/batch, up to 40 unique pairs)
-#   OHLCV: 0 Twelve Data calls — Yahoo Finance 1H candles used for all trades
-#   ~96 TD calls/day (price fetch only) — well under 800/day free tier.
+#   Prices: 0 Twelve Data calls — Yahoo Finance batch download (15min delay, acceptable for swing trades)
+#   OHLCV:  0 Twelve Data calls — Yahoo Finance 1H candles used for all trades
+#   TD fallback triggers only if Yahoo returns <50% pairs (rare edge case)
+#   Normal operation: 0 Twelve Data calls per monitor run — zero rate limit risk.
 
 on:
   workflow_dispatch:
