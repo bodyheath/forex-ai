@@ -203,8 +203,10 @@ def update_after_close(state: dict, outcome: str,
 
     if is_loss:
         state["consecutive_losses"] = state.get("consecutive_losses", 0) + 1
+        state["consecutive_wins"]   = 0
     elif is_win:
         state["consecutive_losses"] = 0
+        state["consecutive_wins"]   = state.get("consecutive_wins", 0) + 1
 
     alert = None
     if state.get("consecutive_losses", 0) >= CONSECUTIVE_LOSS_LIMIT:
