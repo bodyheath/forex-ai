@@ -61,11 +61,27 @@ jobs:
               print(f'  {pair}: T1={s[\"t1_mult\"]:.2f}x T2={s[\"t2_mult\"]:.2f}x T3={s[\"t3_mult\"]:.2f}x ({s[\"n_trades_with_mfe\"]} trades)')
           "
 
+      - name: Update continuous learning statistics
+        run: |
+          python -c "
+          import sys
+          sys.path.insert(0, '.')
+          from src import filter_effectiveness, regime_learning
+          fe = filter_effectiveness.update()
+          print('Filter effectiveness updated for', len([k for k in fe if not k.startswith('_')]), 'filters')
+          for alert in filter_effectiveness.get_alerts():
+              print('  ALERT:', alert)
+          regime_learning.update()
+          print('Regime and time-of-day win rates updated')
+          "
+
       - name: Commit model artifacts
         run: |
           git config user.name "forex-ai[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/ml_model.pkl data/ml_model_meta.json data/pair_statistics.json || true
+          git add data/filter_effectiveness.json data/regime_learning.json data/time_effectiveness.json || true
+          git add data/online_model.pkl data/online_model_meta.json || true
           git diff --staged --quiet || git commit -m "chore: weekly ML model retrain + adaptive targets $(date -u +'%Y-%m-%d')"
           git pull --rebase origin main
           git push origin HEAD:main
