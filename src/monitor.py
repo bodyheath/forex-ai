@@ -1178,6 +1178,14 @@ def run(log=print) -> dict:
         "skipped_reason":          "",
         "watchlist_prices":        {},
         "watchlist_alerts_sent":   [],
+        "data_tiers_used": {
+            "t1_yahoo_ohlcv":  0,
+            "t2_synthetic":    0,
+            "t3_current_only": 0,
+            "t4_last_known":   0,
+            "t0_no_data":      0,
+        },
+        "price_history": {},
     }
 
     # ── File lock — prevents duplicate processing if runs overlap ────────────
