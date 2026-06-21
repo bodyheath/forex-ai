@@ -1660,7 +1660,17 @@ def run(log=print) -> dict:
                      3: "t3_current_only", 4: "t4_last_known", 0: "t0_no_data"}
 
     def _resolve_pair_data(pair: str):
-        """Return (tier, candles_or_None, resolved_price, tier_label) for a pair."""
+        """Return (tier_tag, candles_or_None, resolved_price, tier_label) for a pair.
+
+        tier_tag matches a key in result['data_tiers_used']:
+          t1_yf_ohlcv    — Yahoo 1H OHLCV candles (best quality)
+          t1_td_backup   — Twelve Data live price  (+ synthetic candle if history >= 3)
+          t1_sq_backup   — Stooq live price        (+ synthetic candle if history >= 3)
+          t2_synthetic   — Internal synthetic candle (no live external price this run)
+          t3_current_only— Current price, < 3 history readings
+          t4_last_known  — Last known price from previous run
+          t0_no_data     — Nothing available
+        """
         pf = _pip_factor(pair)
 
         # T1: Yahoo 1H OHLCV candles available (any age — weekend Friday candles included)
