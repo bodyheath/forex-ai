@@ -1317,11 +1317,21 @@ def run(log=print) -> dict:
         "watchlist_prices":        {},
         "watchlist_alerts_sent":   [],
         "data_tiers_used": {
-            "t1_yahoo_ohlcv":  0,
-            "t2_synthetic":    0,
-            "t3_current_only": 0,
-            "t4_last_known":   0,
+            "t1_yf_ohlcv":     0,  # Yahoo 1H OHLCV candles
+            "t1_td_backup":    0,  # Twelve Data live price backup
+            "t1_sq_backup":    0,  # Stooq live price backup
+            "t2_synthetic":    0,  # Synthetic from rolling price history
+            "t3_current_only": 0,  # Current price only (< 3 history readings)
+            "t4_last_known":   0,  # Last known price from previous run
             "t0_no_data":      0,
+        },
+        "source_stats": {
+            "yahoo_finance":   0,
+            "twelve_data":     0,
+            "stooq":           0,
+            "synthetic":       0,
+            "internal_hist":   0,
+            "no_data":         0,
         },
         "price_history": {},
     }
