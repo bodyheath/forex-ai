@@ -715,11 +715,17 @@ def get_win_prob(pair: str, parsed: dict, bundle: dict) -> Optional[str]:
                 return f"Model learning: {n}/{MIN_TRADES} closed trades"
             return None
         feats = extract(pair, parsed, bundle)
-        p     = predict(feats)
+        p     = predict_blended(feats)
         if p is None:
             return None
         n = meta.get("n_trades", "?")
-        return f"{round(p * 100):.0f}% ({n} trades)"
+        try:
+            from src import online_learner as _ol_wgp
+            _n_ol = _ol_wgp.get_n_decisive()
+            suffix = f" +{_n_ol} live" if _n_ol >= 5 else ""
+        except Exception:
+            suffix = ""
+        return f"{round(p * 100):.0f}% ({n} trades{suffix})"
     except Exception:
         return None
 
