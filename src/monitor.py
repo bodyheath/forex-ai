@@ -1194,6 +1194,9 @@ def run(log=print) -> dict:
             f"{result['api_calls_used']} API calls used."
         )
 
+    result["last_prices"]    = {p: prices[p] for p in all_pairs if p in prices}
+    result["previously_hot"] = sorted(current_hot_keys)
+    _append_to_monitor_history(result)
     _write_monitor_log(result)
     _release_lock()
     return result
