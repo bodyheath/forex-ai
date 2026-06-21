@@ -58,8 +58,14 @@ def fetch_candles(pair: str, n_candles: int, log=print) -> dict | None:
         return None
 
     content = resp.text.strip()
-    if not content or "No data found" in content or len(content) < 20:
+    if not content or len(content) < 20:
         log(f"[Stooq] No data returned for {pair} ({symbol})")
+        return None
+    if content.lstrip().startswith("<") or "javascript" in content[:200].lower():
+        log(f"[Stooq] Bot protection detected for {pair} — datacenter IPs bypass this challenge")
+        return None
+    if "No data found" in content:
+        log(f"[Stooq] No data found for {pair} ({symbol})")
         return None
 
     try:
