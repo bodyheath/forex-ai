@@ -113,6 +113,106 @@ def _write_monitor_log(data: dict) -> None:
         pass
 
 
+# ── HOT zone alert deduplication ─────────────────────────────────────────────
+# Uses a dedicated hot_zone_alerts.json written IMMEDIATELY on each alert send,
+# rather than relying on monitor_log.json (written at end-of-run).
+# This prevents duplicate alerts when concurrent monitor runs both read a stale
+# monitor_log.json from git before the previous run has committed.
+
+def _check_hot_alert_sent(pair: str) -> str | None:
+    """Return human-readable elapsed string if this pair got a HOT alert within
+    the cooldown window, else None."""
+    try:
+        if not _HOT_ZONE_ALERTS.exists():
+            return None
+        data    = json.loads(_HOT_ZONE_ALERTS.read_text(encoding="utf-8"))
+        ts_str  = data.get("alerts_sent", {}).get(pair)
+        if not ts_str:
+            return None
+        ts      = datetime.strptime(ts_str[:19], "%Y-%m-%dT%H:%M:%S")
+        elapsed = datetime.utcnow() - ts
+        if elapsed < timedelta(hours=_HOT_ALERT_COOLDOWN_HOURS):
+            mins = int(elapsed.total_seconds() / 60)
+            return f"{mins} minutes ago" if mins < 60 else f"{int(mins / 60)}h{mins % 60:02d}m ago"
+    except Exception:
+        pass
+    return None
+
+
+def _record_hot_alert_sent(pair: str) -> None:
+    """Immediately write pair + UTC timestamp to hot_zone_alerts.json.
+
+    Uses a sidecar lock file to prevent interleaved writes from concurrent runs.
+    """
+    _lock = Path(str(_HOT_ZONE_ALERTS) + ".lock")
+    try:
+        # Acquire tiny lock (up to 3 seconds)
+        for _ in range(30):
+            try:
+                fd = os.open(str(_lock), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+                os.close(fd)
+                break
+            except FileExistsError:
+                time.sleep(0.1)
+
+        data: dict = {"alerts_sent": {}}
+        if _HOT_ZONE_ALERTS.exists():
+            try:
+                data = json.loads(_HOT_ZONE_ALERTS.read_text(encoding="utf-8"))
+            except Exception:
+                data = {"alerts_sent": {}}
+        data.setdefault("alerts_sent", {})
+        data["alerts_sent"][pair] = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+        _HOT_ZONE_ALERTS.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+    finally:
+        try:
+            _lock.unlink()
+        except Exception:
+            pass
+
+
+def _build_hot_alert_message(pair: str, row: dict, price: float | None) -> str:
+    """Build the HOT zone Telegram alert message with progress details."""
+    direction = (row.get("direction") or "").upper()
+    entry     = _to_float(row.get("entry"))
+    stop      = _to_float(row.get("effective_stop") or row.get("stop_loss"))
+
+    # Determine the next unmet target level
+    if not _is_true(row.get("t1_hit")):
+        level, tgt = "T1", _to_float(row.get("t1_price"))
+    elif not _is_true(row.get("t2_hit")):
+        level, tgt = "T2", _to_float(row.get("t2_price"))
+    else:
+        level, tgt = "T3", _to_float(row.get("t3_price") or row.get("target"))
+
+    pip_factor = 0.01 if "JPY" in pair else 0.0001
+    decimals   = 3    if "JPY" in pair else 5
+
+    def _fmt(v):
+        return f"{v:.{decimals}f}" if v is not None else "?"
+
+    lines = [f"\U0001f525 <b>{pair} approaching {level} target</b>", ""]
+
+    if price is not None and tgt is not None and entry is not None and direction in ("BUY", "SELL"):
+        total = abs(tgt - entry)
+        if total > 0:
+            progress = (price - entry) / total if direction == "BUY" else (entry - price) / total
+            lines.append(f"Progress: {int(progress * 100)}% of the way to {level}")
+        dist_pips = abs(tgt - price) / pip_factor
+        lines.append(f"{level} target: {_fmt(tgt)}  ·  Current price: {_fmt(price)}")
+        lines.append(f"Distance remaining: {dist_pips:.1f} pips")
+    else:
+        lines.append(f"{level} target: {_fmt(tgt)}  ·  Current price: {_fmt(price)}")
+
+    if stop is not None:
+        lines.append(f"Stop loss: {_fmt(stop)} (protected)")
+
+    lines += ["", "Monitor checking every 30 minutes ✅"]
+    return "\n".join(lines)
+
+
 # ── Milestone deduplication log ───────────────────────────────────────────────
 
 def _load_milestone_log() -> dict:
