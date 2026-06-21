@@ -7316,6 +7316,120 @@ def _detect_opportunity_gaps(
     return forced_pairs, opportunity_data
 
 
+def _scan_all_pairs_movement(
+    universe: list,
+    ranked_all: list,
+    pairs_today: list,
+    scan_mode: str,
+    log=print,
+) -> "tuple[list, dict]":
+    """Scan all eligible pairs for significant movement since the last 6am scan.
+
+    Runs only during 6am full scans. Uses Yahoo Finance batch price fetch (free,
+    no rate limits). Flags pairs that moved >1.0x daily ATR and are NOT already
+    in today's top-25 analysis batch — adds them to a priority sweep queue.
+
+    Returns (priority_pairs, alert_data).
+    """
+    if scan_mode != "full":
+        return [], {}
+
+    from src.yahoo_finance import batch_fetch_prices as _yf_batch
+    from src.selector import _pip_size as _sel_pip_mvt
+
+    _ATR_THRESHOLD = 1.0
+
+    # Build ATR reference map from ranked_all metadata (covers ~30 pairs)
+    _atr_map: dict = {}
+    for _pair_r, _meta_r in ranked_all:
+        _atr_r = _meta_r.get("atr5") or _meta_r.get("atr14")
+        if _atr_r and _atr_r > 0:
+            _atr_map[_pair_r] = float(_atr_r)
+
+    log(f"[MOVEMENT] Fetching Yahoo Finance prices for {len(universe)} pairs")
+    current_prices = _yf_batch(universe, log=log)
+    log(f"[MOVEMENT] {len(current_prices)}/{len(universe)} prices fetched")
+
+    # Load previous 6am prices
+    _prev_data: dict = {}
+    try:
+        if _MOVEMENT_ALERTS_FILE.exists():
+            _prev_data = json.loads(_MOVEMENT_ALERTS_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    prev_prices = _prev_data.get("last_scan_prices", {})
+
+    # Weekly stats — reset each Monday
+    now_ak_mvt  = _auckland_now()
+    today_str   = now_ak_mvt.strftime("%Y-%m-%d")
+    monday_str  = (now_ak_mvt - timedelta(days=now_ak_mvt.weekday())).strftime("%Y-%m-%d")
+    weekly      = _prev_data.get("weekly_stats", {})
+    if weekly.get("week_start", "") != monday_str:
+        weekly = {
+            "week_start":               monday_str,
+            "movement_alerts_detected": 0,
+            "already_in_batch":         0,
+            "outside_batch_swept":      0,
+            "swept_signals_found":      0,
+            "swept_became_trades":      0,
+        }
+
+    pairs_today_norm = {p.upper().replace("/", "") for p in pairs_today}
+    priority_pairs:  list = []
+    alert_rows:      list = []
+
+    for pair in universe:
+        cur  = current_prices.get(pair)
+        prev = prev_prices.get(pair)
+        if cur is None or prev is None or cur <= 0:
+            continue
+
+        pip      = _sel_pip_mvt(pair)
+        move_abs = abs(cur - prev)
+        pips     = round(move_abs / pip)
+        if pips <= 0:
+            continue
+
+        atr = _atr_map.get(pair)
+        if not atr or atr <= 0:
+            atr = cur * 0.0080 if pair.upper().endswith("JPY") else cur * 0.0008
+
+        ratio = move_abs / atr if atr > 0 else 0.0
+        if ratio < _ATR_THRESHOLD:
+            continue
+
+        weekly["movement_alerts_detected"] = weekly.get("movement_alerts_detected", 0) + 1
+
+        pair_norm = pair.upper().replace("/", "")
+        if pair_norm in pairs_today_norm:
+            weekly["already_in_batch"] = weekly.get("already_in_batch", 0) + 1
+            log(f"[MOVEMENT] {pair}: {pips} pips ({ratio:.1f}x ATR) — already in batch ✅")
+        else:
+            weekly["outside_batch_swept"] = weekly.get("outside_batch_swept", 0) + 1
+            priority_pairs.append(pair)
+            alert_rows.append({"pair": pair, "pips": pips, "atr_ratio": round(ratio, 1)})
+            log(f"[MOVEMENT] {pair}: {pips} pips ({ratio:.1f}x ATR) — outside batch — adding to priority sweep")
+
+    # Persist updated prices and stats
+    try:
+        _MOVEMENT_ALERTS_FILE.write_text(
+            json.dumps({
+                "last_scan_timestamp": now_ak_mvt.timestamp(),
+                "last_scan_date":      today_str,
+                "last_scan_prices":    {p: current_prices[p] for p in current_prices},
+                "weekly_stats":        weekly,
+            }, indent=2),
+            encoding="utf-8",
+        )
+    except Exception as _sav_exc:
+        log(f"[MOVEMENT] Save failed: {_sav_exc}")
+
+    return priority_pairs, {
+        "full_scan_alerts": alert_rows,
+        "weekly":           weekly,
+    }
+
+
 def run() -> int:
     # ── Auckland startup log — very first line, before all guards and checks ──
     _startup_ak = _auckland_now()
