@@ -973,6 +973,7 @@ def _apply_research_milestones(row: dict, milestones: list, row_state: dict,
                         )
                     except Exception:
                         pass
+            _online_learn_closure("research", closed_row)
             log(f"  Monitor research #{rec_id} {pair}: FULL_WIN {_wp:.1f}p")
             break
 
