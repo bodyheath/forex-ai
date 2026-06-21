@@ -3746,6 +3746,9 @@ def _send_telegram_summary(
         _trade_conf_thr = _tm_eff.get_confidence_threshold()
     except Exception:
         _trade_conf_thr = 7
+    # Dynamic threshold overrides the static one when available
+    if threshold_data and threshold_data.get("final_threshold"):
+        _trade_conf_thr = float(threshold_data["final_threshold"])
 
     _demoted_pairs = {
         r["pair"] for r in deep_results
