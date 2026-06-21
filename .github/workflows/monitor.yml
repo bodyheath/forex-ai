@@ -57,7 +57,7 @@ jobs:
         run: |
           git config user.name "forex-ai[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/trades.csv data/research_trades.csv data/monitor_log.json data/api_usage.json data/milestone_log.json data/monitor_history.json
+          git add data/trades.csv data/research_trades.csv data/monitor_log.json data/api_usage.json data/milestone_log.json data/monitor_history.json data/hot_zone_alerts.json
           git diff --staged --quiet || git commit -m "chore: monitor $(date -u +'%Y-%m-%d %H:%M UTC')"
           git pull --rebase origin main
           git push origin HEAD:main
