@@ -40,7 +40,7 @@ _FF_URL     = "https://nfs.faireconomy.media/ff_calendar_thisweek.xml"
 
 # Updated on each real (non-cached) fetch so build_calendar_section()
 # can show the fallback message when both sources fail.
-# "forex_factory" | "twelve_data" | "none" | ""
+# "forex_factory" | "fmp" | "twelve_data" | "none" | ""
 _last_source: str = ""
 
 # ── Plain English event name lookup ───────────────────────────────────────────
