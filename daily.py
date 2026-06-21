@@ -7127,6 +7127,19 @@ def _send_telegram_summary(
     all_sections = _clean_sections
 
     all_sections = [[ln for ln in sec if _is_ok_line(ln)] for sec in all_sections]
+    # ── Item 3: Scan completion marker — mark as completed ────────────────────
+    try:
+        _ss_prev: dict = {}
+        if _SCAN_STATUS_FILE.exists():
+            try:
+                _ss_prev = json.loads(_SCAN_STATUS_FILE.read_text(encoding="utf-8"))
+            except Exception:
+                pass
+        _ss_prev.update({"completed": True, "finished": datetime.utcnow().isoformat()})
+        _SCAN_STATUS_FILE.write_text(json.dumps(_ss_prev), encoding="utf-8")
+    except Exception:
+        pass
+
     # Build short urgent pre-alerts for each YES trade — sent as individual messages first
     _urgent_pre = [
         f"🚨 NEW TRADE ALERT — {_yr['pair']} "
