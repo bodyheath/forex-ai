@@ -7195,6 +7195,13 @@ def _send_telegram_summary(
             except Exception:
                 pass
             try:
+                # Monitor source reliability today
+                from src import monitor as _mon_preny
+                for _ps_line in _mon_preny.build_monitor_source_report(days=1):
+                    _digest.append(_ps_line)
+            except Exception:
+                pass
+            try:
                 # Scan status
                 if _SCAN_STATUS_FILE.exists():
                     _ss_d = json.loads(_SCAN_STATUS_FILE.read_text(encoding="utf-8"))
