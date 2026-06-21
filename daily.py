@@ -3697,6 +3697,16 @@ def _build_system_learning_report(date: str) -> list:
     except Exception:
         pass
 
+    # ── ADAPTIVE TARGET SYSTEM ─────────────────────────────────────────────────
+    try:
+        from src import pair_statistics as _pstat_lr
+        _pstat_lines = _pstat_lr.build_monday_report_lines()
+        if _pstat_lines:
+            sec.extend(_pstat_lines)
+            any_added = True
+    except Exception:
+        pass
+
     return sec
 
 
