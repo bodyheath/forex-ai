@@ -355,6 +355,215 @@ def build_status_lines(state: dict) -> list:
     ]
 
 
+def update_peak_and_drawdown(state: dict, current_balance: float) -> tuple:
+    """Update peak_balance, current_drawdown_pct, max_drawdown_seen.
+
+    Returns (updated_state, pause_alert_or_None, resume_alert_or_None).
+    pause_alert fires when drawdown first hits 10%; resume_alert fires when it recovers below 9%.
+    """
+    state = dict(state)
+    peak = float(state.get("peak_balance") or 0.0)
+    if peak <= 0:
+        peak = current_balance or float(config.ACCOUNT_BALANCE)
+    peak = max(peak, current_balance)
+    state["peak_balance"] = round(peak, 2)
+
+    dd_pct = (peak - current_balance) / peak * 100 if peak > 0 else 0.0
+    state["current_drawdown_pct"] = round(dd_pct, 2)
+    max_dd = max(float(state.get("max_drawdown_seen") or 0.0), dd_pct)
+    state["max_drawdown_seen"] = round(max_dd, 2)
+
+    pause_alert = None
+    resume_alert = None
+
+    if dd_pct >= 10.0 and not state.get("drawdown_paused"):
+        state["drawdown_paused"] = True
+        loss_usd = peak - current_balance
+        pause_alert = (
+            f"🚨 <b>URGENT: Fund has reached 10% drawdown — trading paused</b>\n\n"
+            f"${loss_usd:,.0f} loss ({dd_pct:.1f}%) from peak of ${peak:,.0f}.\n"
+            f"All new fund trade entries paused automatically.\n"
+            f"Existing trades remain open and monitored.\n"
+            f"System will auto-resume when drawdown recovers below 9%."
+        )
+    elif dd_pct < 9.0 and state.get("drawdown_paused"):
+        state["drawdown_paused"] = False
+        resume_alert = (
+            f"✅ <b>Fund recovering — drawdown now below 9%</b>\n\n"
+            f"Current drawdown: {dd_pct:.1f}% from peak.\n"
+            f"Resuming new trade entries at reduced 0.25% position size.\n"
+            f"Monitoring closely for continued recovery."
+        )
+
+    return state, pause_alert, resume_alert
+
+
+def compute_sizing(state: dict, current_balance: float,
+                   checklist_score: float = 10.0) -> tuple:
+    """Compute adaptive position size based on win streak and drawdown state.
+
+    Returns (size_pct, mode, reason).
+    size_pct is None when the trade is blocked by a drawdown tier quality requirement.
+
+    Sizing table (drawdown from peak):
+      0–3%:   1.0% base (win streak boost eligible)
+      3–5%:   0.75%
+      5–7%:   0.5% — requires confidence 8+
+      7–10%:  0.25% — requires confidence 9+
+      >=10%:  0.0 (trading paused)
+    """
+    drawdown  = float(state.get("current_drawdown_pct") or 0.0)
+    paused    = state.get("drawdown_paused", False) or state.get("circuit_breaker_active", False)
+
+    if paused or drawdown >= 10.0:
+        return 0.0, "drawdown_pause", f"Drawdown {drawdown:.1f}% — trading paused"
+
+    if drawdown >= 7.0:
+        if checklist_score < 9.0:
+            return None, "drawdown_blocked", f"Drawdown {drawdown:.1f}% from peak — requires confidence 9+"
+        base = 0.25
+        mode = "drawdown_protection"
+        reason = f"Drawdown protection — fund {drawdown:.1f}% from peak (0.25% risk)"
+    elif drawdown >= 5.0:
+        if checklist_score < 8.0:
+            return None, "drawdown_blocked", f"Drawdown {drawdown:.1f}% from peak — requires confidence 8+"
+        base = 0.5
+        mode = "drawdown_protection"
+        reason = f"Drawdown protection — fund {drawdown:.1f}% from peak (0.5% risk)"
+    elif drawdown >= 3.0:
+        base = 0.75
+        mode = "drawdown_caution"
+        reason = f"Drawdown caution — fund {drawdown:.1f}% from peak (0.75% risk)"
+    else:
+        base = 1.0
+        mode = "normal"
+        reason = "Standard 1% risk"
+
+    # Recovery boost: +0.05% per 1% recovered from max_drawdown, capped at 0.20%
+    max_dd = float(state.get("max_drawdown_seen") or 0.0)
+    if max_dd > drawdown and max_dd > 0.1:
+        recovery_boost = min((max_dd - drawdown) * 0.05, 0.20)
+        if recovery_boost >= 0.02:
+            base = round(base + recovery_boost, 3)
+            reason += f" (+{recovery_boost:.2f}% recovery)"
+
+    # Win streak boost — only when all conditions are met
+    wins          = int(state.get("consecutive_wins") or 0)
+    circuit_break = state.get("circuit_breaker_active", False)
+    fund_ok       = current_balance >= 10200.0
+
+    can_boost = (
+        drawdown < 3.0 and
+        fund_ok and
+        not circuit_break and
+        not paused and
+        not state.get("pause_until")
+    )
+
+    if can_boost and wins >= 3:
+        if wins >= 7:
+            boost = 0.35
+        elif wins >= 5:
+            boost = 0.20
+        else:
+            boost = 0.10
+        base  = base + boost
+        mode  = "win_streak"
+        reason = f"{wins} consecutive wins — streak bonus +{boost:.2f}%"
+
+    return min(round(base, 3), 1.5), mode, reason
+
+
+def update_sizing_state(state: dict, current_balance: float) -> dict:
+    """Refresh current_sizing_pct and sizing_mode for display (uses score=10 as baseline)."""
+    pct, mode, reason = compute_sizing(state, current_balance, checklist_score=10.0)
+    state = dict(state)
+    state["current_sizing_pct"] = float(pct) if pct is not None else 0.0
+    state["sizing_mode"]        = mode
+    state["sizing_reason"]      = reason
+    return state
+
+
+def check_weekend_alert(state: dict, open_trades: list) -> tuple:
+    """Return (should_send, alert_msg). Fires once per Friday 2–4pm Auckland."""
+    if not open_trades:
+        return False, ""
+    now = _auckland_now()
+    if now.weekday() != 4:        # not Friday
+        return False, ""
+    if not (14 <= now.hour < 16): # not 2pm–4pm Auckland
+        return False, ""
+    today = now.strftime("%Y-%m-%d")
+    if state.get("weekend_alert_sent_date") == today:
+        return False, ""
+
+    trade_lines = []
+    for t in open_trades[:5]:
+        pair      = t.get("pair", "?")
+        direction = (t.get("direction") or "?").upper()
+        trade_lines.append(f"• {pair} {direction}")
+
+    msg = (
+        f"💡 <b>Weekend approaching — markets close in approximately 2 hours</b>\n\n"
+        f"Open fund trades:\n" + "\n".join(trade_lines) + "\n\n"
+        f"Consider reducing positions by 50% before market close to protect against "
+        f"weekend gap risk — full positions can be restored Monday if setups remain valid."
+    )
+    return True, msg
+
+
+def build_sizing_status_lines(state: dict) -> list:
+    """Telegram-ready position sizing status for every scan."""
+    drawdown  = float(state.get("current_drawdown_pct") or 0.0)
+    wins      = int(state.get("consecutive_wins") or 0)
+    mode      = str(state.get("sizing_mode") or "normal")
+    pct       = float(state.get("current_sizing_pct") or 1.0)
+    cur_bal   = float(state.get("daily_opening_balance") or float(config.ACCOUNT_BALANCE))
+    fund_ok   = cur_bal >= 10200.0
+    dd_icon   = "✅" if drawdown < 3.0 else ("⚠️" if drawdown < 7.0 else "🚨")
+
+    if state.get("drawdown_paused"):
+        return [
+            "\U0001f4ca <b>Position sizing:</b>",
+            "Mode: 🚨 PAUSED — drawdown >= 10%",
+            f"Drawdown from peak: {drawdown:.1f}% 🚨",
+            "All new fund trade entries suspended — monitoring recovery",
+        ]
+
+    if mode == "win_streak":
+        return [
+            "\U0001f4ca <b>Position sizing:</b>",
+            f"Mode: ⚡ Win streak boost ({pct:.2f}% risk per trade)",
+            f"{wins} consecutive wins — streak bonus active",
+            f"Drawdown from peak: {drawdown:.1f}% — within normal range ✅",
+        ]
+
+    if mode in ("drawdown_protection", "drawdown_caution"):
+        min_conf = 9 if drawdown >= 7.0 else (8 if drawdown >= 5.0 else None)
+        lines = [
+            "\U0001f4ca <b>Position sizing:</b>",
+            f"Mode: 🛡️ Drawdown protection ({pct:.2f}% risk per trade)",
+            f"Drawdown from peak: {drawdown:.1f}% {dd_icon}",
+        ]
+        if min_conf:
+            lines.append(f"Minimum confidence for new trades: {min_conf}/10")
+        return lines
+
+    # Normal mode
+    needs     = max(0, 3 - wins)
+    fund_str  = "yes ✅" if fund_ok else "no ❌ (need $10,200)"
+    lines = [
+        "\U0001f4ca <b>Position sizing:</b>",
+        f"Mode: Normal ({pct:.2f}% risk per trade)",
+        f"Drawdown from peak: {drawdown:.1f}% ✅",
+        f"Consecutive wins: {wins}" + (
+            f" (need {needs} more for first boost)" if needs else " — ⚡ streak boost eligible"
+        ),
+        f"Fund above boost threshold: {fund_str}",
+    ]
+    return lines
+
+
 def build_blocked_opportunities_section(state: dict) -> list:
     """Section for Monday learning report: blocked opportunities in last 7 days."""
     opps = state.get("missed_opportunities") or []
