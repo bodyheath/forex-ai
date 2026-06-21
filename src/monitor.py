@@ -1276,7 +1276,7 @@ def run(log=print) -> dict:
     result["price_history"] = price_history
 
     # ── Sunday market reopen detection ────────────────────────────────────────
-    _check_market_reopen(now_ak, ta=_ta if 'ta' in dir() or '_ta' in dir() else None, log=log)
+    _check_market_reopen(now_ak, ta=_ta, log=log)
 
     # ── Watchlist movement check — flag near-miss pairs approaching trade threshold ──
     _wl_priority_pairs: list = []
