@@ -965,8 +965,29 @@ def run(log=print) -> dict:
     result["cold_zone_count"] = total_cold
     log(
         f"Monitor: zones — HOT={total_hot} WARM={total_warm} COLD={total_cold} — "
-        f"{'fetching OHLCV for HOT+WARM' if ohlcv_allowed else 'OHLCV skipped (API limit)'}"
+        f"fetching Yahoo 1H OHLCV for all {len(all_pairs)} pairs"
     )
+
+    # ── Detect newly-HOT trades and send early-warning alert (2d) ────────────
+    current_hot_keys: set = set()
+    for row in fund_zones["HOT"] + res_zones["HOT"]:
+        current_hot_keys.add(f"{row.get('pair', '')}#{row.get('id', '')}")
+
+    newly_hot = current_hot_keys - previously_hot
+    result["approaching_alerts"] = len(newly_hot)
+    for key in sorted(newly_hot):
+        _pair_str = key.split("#")[0]
+        log(f"  Monitor: {_pair_str} newly entered HOT zone — sending early warning")
+        if _ta:
+            try:
+                _ta.send(
+                    f"\U0001f525 <b>{_pair_str} approaching target</b>\n\n"
+                    f"Trade has entered the HOT zone (≥70% progress to next cascade level).\n"
+                    f"No action needed — monitoring continues automatically.\n\n"
+                    f"Watch for milestone alert in the next few runs."
+                )
+            except Exception:
+                pass
 
     # ── Step 3: OHLCV fetch for HOT + WARM ────────────────────────────────────
     hot_warm_pairs = list({
