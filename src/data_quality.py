@@ -113,10 +113,16 @@ def assess_scan(deep_results: list) -> dict:
 
         if t_ok:
             tech_ok += 1
-            if t.get("source") == "Yahoo Finance":
+            src    = t.get("source", "")
+            src_4h = t.get("source_4h", "")
+            if src == "Yahoo Finance":
                 tech_yf_ok += 1
+            elif src == "Stooq":
+                tech_stooq_ok += 1
             else:
                 tech_td_ok += 1
+            if src_4h == "Yahoo Finance":
+                tech_4h_yf_ok += 1
         if f_ok: fund_ok += 1
         if s_ok: sent_ok += 1
         if p_ok: pos_ok  += 1
