@@ -1655,9 +1655,8 @@ def run(log=print) -> dict:
 
     fund_closed: list = []
     research_fragments: list = []
-    _tier_counts = result["data_tiers_used"]
-    _tier_key_map = {1: "t1_yahoo_ohlcv", 2: "t2_synthetic",
-                     3: "t3_current_only", 4: "t4_last_known", 0: "t0_no_data"}
+    _tier_counts  = result["data_tiers_used"]
+    _source_stats = result["source_stats"]
 
     def _resolve_pair_data(pair: str):
         """Return (tier_tag, candles_or_None, resolved_price, tier_label) for a pair.
