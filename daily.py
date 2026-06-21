@@ -7117,6 +7117,19 @@ def _send_telegram_summary(
                 _intraday_health.extend([""] + _thr_lines_id)
         except Exception:
             pass
+        try:
+            from src import online_learner as _ol_id
+            _ol_status = _ol_id.build_status_line()
+            _intraday_health.append(_ol_status)
+        except Exception:
+            pass
+        try:
+            from src import filter_effectiveness as _fe_id
+            _fe_alerts = _fe_id.get_alerts()
+            for _fa in _fe_alerts:
+                _intraday_health.append(_fa)
+        except Exception:
+            pass
         all_sections.append(_intraday_health)
 
         # Item 9: Daily system health digest — preny (11pm) only
