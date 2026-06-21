@@ -5,6 +5,10 @@ Run from project root: python tests/test_data_sources.py
 import os
 import sys
 
+# Ensure UTF-8 output on Windows
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
@@ -39,17 +43,17 @@ def check_ohlcv_sanity(values: list) -> list:
     bad = []
     for v in values:
         try:
-            o = float(v["open"])
             h = float(v["high"])
             l = float(v["low"])
-            c = float(v["close"])
         except (KeyError, ValueError, TypeError):
             bad.append((v.get("datetime", "?"), "unparseable values"))
             continue
         if h < l:
             bad.append((v["datetime"], f"high {h} < low {l}"))
-        if o <= 0 or h <= 0 or l <= 0 or c <= 0:
-            bad.append((v["datetime"], f"non-positive price"))
+        o = float(v.get("open",  0))
+        c = float(v.get("close", 0))
+        if min(o, h, l, c) <= 0:
+            bad.append((v["datetime"], "non-positive price"))
     return bad
 
 
@@ -68,26 +72,26 @@ stooq_ok = 0
 for pair in STOOQ_PAIRS:
     result = stooq_fetch(pair, 100, log=print)
     if result is None:
-        print(f"  ❌ {pair}: Stooq returned None")
+        print(f"  FAIL {pair}: Stooq returned None")
         continue
     vals = result.get("values", [])
     if not vals:
-        print(f"  ❌ {pair}: Stooq returned empty values list")
+        print(f"  FAIL {pair}: Stooq returned empty values list")
         continue
 
     n    = len(vals)
-    last = vals[0]   # newest-first → first entry is newest
+    last = vals[0]   # newest-first -> first entry is newest
     atr  = compute_atr(vals)
     bad  = check_ohlcv_sanity(vals)
 
     if atr is None or atr == 0.0:
-        print(f"  ⚠️  {pair}: {n} candles returned but ATR={atr} (suspicious)")
+        print(f"  WARN {pair}: {n} candles returned but ATR={atr} (suspicious)")
     else:
         stooq_ok += 1
-        print(f"  ✅ {pair}: {n} candles · last close={last['close']} · ATR(14)={atr:.5f}")
+        print(f"  PASS {pair}: {n} candles | last close={last['close']} | ATR(14)={atr:.5f}")
     if bad:
         for dt, issue in bad[:3]:
-            print(f"     ⚠️  Bad bar at {dt}: {issue}")
+            print(f"       BAD bar at {dt}: {issue}")
 
 # ── TEST 2: Yahoo Finance 4H reconstruction ───────────────────────────────────
 print("\n[TEST 2] Yahoo Finance 4H reconstruction (AUD/JPY)")
@@ -99,11 +103,11 @@ result_4h = fetch_4h_candles(pair_4h, 100, log=print)
 yf_4h_ok  = False
 
 if result_4h is None:
-    print(f"  ❌ {pair_4h}: 4H reconstruction returned None")
+    print(f"  FAIL {pair_4h}: 4H reconstruction returned None")
 else:
     vals_4h = result_4h.get("values", [])
     if not vals_4h:
-        print(f"  ❌ {pair_4h}: 4H reconstruction returned empty values list")
+        print(f"  FAIL {pair_4h}: 4H reconstruction returned empty values list")
     else:
         n     = len(vals_4h)
         last  = vals_4h[0]
@@ -114,21 +118,21 @@ else:
         print(f"  Last bar: {last['datetime']}  O={last['open']}  H={last['high']}  L={last['low']}  C={last['close']}")
 
         if bad:
-            print(f"  ⚠️  {len(bad)} bars with OHLCV issues:")
+            print(f"  WARN: {len(bad)} bars with OHLCV issues:")
             for dt, issue in bad[:3]:
-                print(f"       {dt}: {issue}")
+                print(f"        {dt}: {issue}")
         else:
-            print(f"  ✅ OHLCV sanity: high >= low for all {n} bars")
+            print(f"  PASS OHLCV sanity: high >= low for all {n} bars")
 
         if atr is None or atr == 0.0:
-            print(f"  ⚠️  ATR(14) from 4H = {atr} (suspicious)")
+            print(f"  WARN ATR(14) from 4H = {atr} (suspicious)")
         else:
-            print(f"  ✅ ATR(14) from 4H = {atr:.5f}")
+            print(f"  PASS ATR(14) from 4H = {atr:.5f}")
             yf_4h_ok = True
 
 # ── SUMMARY ───────────────────────────────────────────────────────────────────
 print("\n" + "=" * 65)
 print("SUMMARY")
 print(f"Stooq daily candles: {stooq_ok}/{len(STOOQ_PAIRS)} pairs returned valid data")
-print(f"Yahoo Finance 4H:    {'✅ valid data with non-zero ATR' if yf_4h_ok else '❌ failed or zero ATR'}")
+print(f"Yahoo Finance 4H:    {'PASS valid data with non-zero ATR' if yf_4h_ok else 'FAIL - zero ATR or no data'}")
 print("=" * 65)
