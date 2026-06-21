@@ -7412,6 +7412,25 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Outcome step failed: {exc}")
 
+        # Update fund state: consecutive losses after trade closures
+        if closed_today:
+            try:
+                from src import fund_state as _fs_oc
+                _fs_oc_st = _fs_oc.load()
+                for _ct in closed_today:
+                    _ct_status = (_ct.get("status") or "").upper()
+                    if _ct_status in ("WIN", "LOSS", "BREAKEVEN", "FULL_WIN", "PARTIAL_WIN"):
+                        _fs_oc_st, _fs_oc_alert = _fs_oc.update_after_close(_fs_oc_st, _ct_status)
+                        if _fs_oc_alert:
+                            _telegram(_fs_oc_alert)
+                _fs_oc.save(_fs_oc_st)
+                _log_line(logf, (
+                    f"Fund state updated: {len(closed_today)} trade(s) closed — "
+                    f"consecutive_losses={_fs_oc_st.get('consecutive_losses', 0)}"
+                ))
+            except Exception as _fs_oc_exc:
+                _log_line(logf, f"Fund state trade-close update failed: {_fs_oc_exc}")
+
         try:
             from src import research_outcome_checker
             research_outcome_checker.check_open_research_trades(
