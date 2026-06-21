@@ -7075,7 +7075,8 @@ def _send_telegram_summary(
 
 # ── Daily run ──────────────────────────────────────────────────────────────────
 
-_RUN_GUARD_FILE = config.DATA_DIR / "run_guard.json"
+_RUN_GUARD_FILE      = config.DATA_DIR / "run_guard.json"
+_MOVEMENT_ALERTS_FILE = config.DATA_DIR / "movement_alerts.json"
 _COOLDOWN_SECS  = 5400  # 90 minutes — catches cron-job.org retries on long-running scans
 
 _ALERTS_FILE         = config.DATA_DIR / "last_alerts.json"
