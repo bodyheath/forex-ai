@@ -358,6 +358,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                     f"[MFE={updated.get('mfe_pips', '?')}p MAE={updated.get('mae_pips', '?')}p]"
                 )
                 closed.append(updated)
+                _online_learn(updated)
                 _closed_this = True
 
             if _closed_this:
