@@ -51,6 +51,7 @@ jobs:
           HAIKU_MODEL: ${{ secrets.HAIKU_MODEL || 'claude-haiku-4-5-20251001' }}
           ACCOUNT_BALANCE: ${{ secrets.ACCOUNT_BALANCE || '10000' }}
           ACCOUNT_CURRENCY: ${{ secrets.ACCOUNT_CURRENCY || 'USD' }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python daily.py
 
       - name: Copy dashboard to GitHub Pages
