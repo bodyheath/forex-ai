@@ -542,11 +542,13 @@ def _append_to_monitor_history(result: dict) -> None:
             "yf_ohlcv_pairs":     result.get("yf_ohlcv_pairs", 0),
             "approaching_alerts": result.get("approaching_alerts", 0),
             "skipped":            result.get("skipped_reason", ""),
-            "t1_yahoo_ohlcv":     _dt.get("t1_yahoo_ohlcv",  0),
-            "t2_synthetic":       _dt.get("t2_synthetic",     0),
-            "t3_current_only":    _dt.get("t3_current_only",  0),
-            "t4_last_known":      _dt.get("t4_last_known",    0),
-            "t0_no_data":         _dt.get("t0_no_data",       0),
+            "t1_yf_ohlcv":        _dt.get("t1_yf_ohlcv",      0),
+            "t1_td_backup":       _dt.get("t1_td_backup",      0),
+            "t1_sq_backup":       _dt.get("t1_sq_backup",      0),
+            "t2_synthetic":       _dt.get("t2_synthetic",       0),
+            "t3_current_only":    _dt.get("t3_current_only",    0),
+            "t4_last_known":      _dt.get("t4_last_known",      0),
+            "t0_no_data":         _dt.get("t0_no_data",         0),
         })
         # Keep last 1000 runs (~3 weeks at 30-min intervals)
         history["runs"] = history["runs"][-1000:]
