@@ -858,7 +858,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
 
 
 def _apply_research_milestones(row: dict, milestones: list, row_state: dict,
-                               log=print) -> tuple:
+                               log=print, ta=None) -> tuple:
     """Apply detected milestones to research_trades.csv.
 
     Returns (closed_row_or_None, summary_fragment_str).
@@ -868,6 +868,7 @@ def _apply_research_milestones(row: dict, milestones: list, row_state: dict,
     rec_id    = int(row.get("id", 0))
     pair      = row.get("pair", "")
     direction = (row.get("direction") or "").upper()
+    _cs       = _to_float(row.get("checklist_score") or 0)
 
     closed_row = None
     fragments  = []
@@ -911,6 +912,17 @@ def _apply_research_milestones(row: dict, milestones: list, row_state: dict,
             if _send_frag:
                 _record_milestone_sent(pair, "T2", rec_id, trade_type="research")
                 fragments.append(f"{pair} T2 hit (+{pips:.1f} pips)")
+                # Item 10: individual alert for high-quality research T2
+                if ta and _cs >= 8.0:
+                    try:
+                        ta.send(
+                            f"🔬 <b>HIGH-QUALITY RESEARCH MILESTONE</b>\n\n"
+                            f"{pair} {direction} — T2 hit at {mprice} (+{pips:.1f} pips)\n"
+                            f"Checklist score: {_cs:.0f}/10 — strong setup confirmed\n"
+                            f"ML training data updated"
+                        )
+                    except Exception:
+                        pass
             log(f"  Monitor research #{rec_id} {pair}: T2 at {mprice} (+{pips:.1f}p)")
 
         elif level == "T3":
@@ -934,6 +946,17 @@ def _apply_research_milestones(row: dict, milestones: list, row_state: dict,
             if _send_frag:
                 _record_milestone_sent(pair, "T3", rec_id, trade_type="research")
                 fragments.append(f"{pair} FULL_WIN (+{_wp:.1f}p weighted)")
+                # Item 10: individual alert for high-quality research FULL_WIN
+                if ta and _cs >= 8.0:
+                    try:
+                        ta.send(
+                            f"🔬 <b>HIGH-QUALITY RESEARCH FULL WIN</b>\n\n"
+                            f"{pair} {direction} — FULL WIN at {mprice} (+{_wp:.1f} pips weighted)\n"
+                            f"Checklist score: {_cs:.0f}/10 — all 3 targets hit\n"
+                            f"ML training data updated"
+                        )
+                    except Exception:
+                        pass
             log(f"  Monitor research #{rec_id} {pair}: FULL_WIN {_wp:.1f}p")
             break
 
