@@ -8742,6 +8742,17 @@ def run() -> int:
             except Exception:
                 _log_line(logf, f"✅ Research trade logger: working — {_rt_logged} new trades opened this scan")
 
+            # Item 5: Research trade logging verification
+            if yes_trades and _rt_logged == 0:
+                try:
+                    _telegram(
+                        f"⚠️ RESEARCH TRADE LOGGING — {len(yes_trades)} YES trade(s) found but "
+                        f"0 research trades were logged — ML training data gap — "
+                        f"check GitHub Actions logs"
+                    )
+                except Exception:
+                    pass
+
         except Exception as exc:
             _log_line(logf, f"Research trade logging failed: {exc}")
             try:
