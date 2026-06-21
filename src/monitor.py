@@ -1267,29 +1267,32 @@ def build_monitor_data_quality_report() -> list:
     if not week:
         return []
 
-    total_t1 = sum(r.get("t1_yahoo_ohlcv", 0) for r in week)
-    total_t2 = sum(r.get("t2_synthetic",   0) for r in week)
-    total_t3 = sum(r.get("t3_current_only", 0) for r in week)
-    total_t4 = sum(r.get("t4_last_known",   0) for r in week)
-    total_t0 = sum(r.get("t0_no_data",      0) for r in week)
-    total    = total_t1 + total_t2 + total_t3 + total_t4 + total_t0
-
-    if total == 0:
+    _keys = [
+        ("t1_yf_ohlcv",    "T1-YF  Yahoo 1H candles"),
+        ("t1_td_backup",   "T1-TD  Twelve Data backup"),
+        ("t1_sq_backup",   "T1-SQ  Stooq backup"),
+        ("t2_synthetic",   "T2-SYN synthetic history"),
+        ("t3_current_only","T3-CUR current price only"),
+        ("t4_last_known",  "T4-PH  last known price"),
+        ("t0_no_data",     "T0     no data"),
+    ]
+    totals = {k: sum(r.get(k, 0) for r in week) for k, _ in _keys}
+    grand  = sum(totals.values())
+    if grand == 0:
         return []
 
     def pct(n):
-        return f"{round(n / total * 100)}%" if total else "0%"
+        return f"{round(n / grand * 100)}%" if grand else "0%"
 
-    lines = [
-        "",
-        "<b>MONITOR DATA QUALITY (this week)</b>",
-        f"T1 Yahoo 1H candles:    {pct(total_t1)} ({total_t1} checks)",
-        f"T2 synthetic history:   {pct(total_t2)} ({total_t2} checks)",
-        f"T3 current price only:  {pct(total_t3)} ({total_t3} checks)",
-        f"T4 last known price:    {pct(total_t4)} ({total_t4} checks)",
-        f"T0 no data:             {pct(total_t0)} ({total_t0} checks)"
-        + (" ✅" if total_t0 == 0 else " ⚠️"),
-    ]
+    lines = ["", "<b>MONITOR DATA QUALITY (this week)</b>"]
+    for k, label in _keys:
+        n    = totals[k]
+        flag = ""
+        if k == "t0_no_data":
+            flag = " ✅" if n == 0 else " ⚠️"
+        elif k in ("t1_td_backup", "t1_sq_backup") and n == 0:
+            continue  # suppress zero-usage backup sources
+        lines.append(f"{label}: {pct(n)} ({n} checks){flag}")
     return lines
 
 
