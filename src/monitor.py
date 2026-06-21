@@ -1672,25 +1672,30 @@ def run(log=print) -> dict:
     # Uses hot_zone_alerts.json written IMMEDIATELY on send — not monitor_log.json
     # (which is only written at end-of-run and may not be committed yet when the
     # next concurrent run starts, causing duplicate alerts).
+    # Collect HOT rows keyed by trade (pair#id) for previously_hot tracking,
+    # and by pair for dedup/combined alerting — one alert per pair per 4 hours.
     current_hot_keys: set = set()
-    _hot_rows: dict = {}   # key → row, for building the rich alert message
+    _hot_by_pair: dict = {}   # pair → [row, ...] for combined alert messages
     for _hr in fund_zones["HOT"] + res_zones["HOT"]:
-        _hk = f"{_hr.get('pair', '')}#{_hr.get('id', '')}"
+        _hpair = _hr.get("pair", "")
+        _hk    = f"{_hpair}#{_hr.get('id', '')}"
         current_hot_keys.add(_hk)
-        _hot_rows[_hk] = _hr
+        _hot_by_pair.setdefault(_hpair, []).append(_hr)
 
     _alerts_sent = 0
-    for _hk in sorted(current_hot_keys):
-        _pair_str = _hk.split("#")[0]
-        _prev_ts  = _check_hot_alert_sent(_pair_str)
+    for _pair_str in sorted(_hot_by_pair):
+        _prev_ts = _check_hot_alert_sent(_pair_str)
         if _prev_ts:
-            log(f"  Monitor: HOT zone alert suppressed for {_pair_str} — already sent {_prev_ts}")
+            _n = len(_hot_by_pair[_pair_str])
+            log(f"  Monitor: HOT zone alert suppressed for {_pair_str} ({_n} trade(s)) — already sent {_prev_ts}")
             continue
-        _hrow = _hot_rows.get(_hk, {})
-        log(f"  Monitor: {_pair_str} HOT zone — sending approaching target alert")
+        _rows_for_pair = _hot_by_pair[_pair_str]
+        log(f"  Monitor: {_pair_str} HOT zone ({len(_rows_for_pair)} trade(s)) — sending approaching target alert")
         if _ta:
             try:
-                _ta.send(_build_hot_alert_message(_pair_str, _hrow, prices.get(_pair_str)))
+                _ta.send(_build_hot_alert_message(
+                    _pair_str, _rows_for_pair, prices.get(_pair_str)
+                ))
             except Exception:
                 pass
         _record_hot_alert_sent(_pair_str)
