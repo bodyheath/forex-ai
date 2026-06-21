@@ -1,145 +1,25 @@
 {
-  "timestamp": "2026-06-21T05:01:29Z",
+  "timestamp": "2026-06-21T05:31:21Z",
   "trades_checked_fund": 5,
-  "trades_checked_research": 56,
-  "hot_zone_count": 11,
-  "warm_zone_count": 22,
+  "trades_checked_research": 49,
+  "hot_zone_count": 5,
+  "warm_zone_count": 21,
   "cold_zone_count": 28,
   "api_calls_used": 0,
-  "yf_price_pairs": 35,
-  "yf_ohlcv_pairs": 35,
-  "approaching_alerts": 11,
+  "yf_price_pairs": 34,
+  "yf_ohlcv_pairs": 34,
+  "approaching_alerts": 4,
   "milestones_hit": [
     {
       "type": "research",
-      "pair": "AUD/JPY",
-      "level": "T2",
-      "price": 112.955002,
-      "pips": 45.5,
-      "candle_dt": "2026-06-19 21:00"
-    },
-    {
-      "type": "research",
-      "pair": "CAD/JPY",
-      "level": "T3",
-      "price": 113.649002,
-      "pips": 92.4,
-      "candle_dt": "2026-06-19 16:00"
-    },
-    {
-      "type": "research",
-      "pair": "GBP/CAD",
-      "level": "T2",
-      "price": 1.87086,
-      "pips": 45.5,
-      "candle_dt": "2026-06-19 21:00"
-    },
-    {
-      "type": "research",
-      "pair": "NZD/CAD",
-      "level": "T2",
-      "price": 0.81109,
-      "pips": 31.5,
-      "candle_dt": "2026-06-19 21:00"
-    },
-    {
-      "type": "research",
-      "pair": "AUD/CAD",
-      "level": "STOP",
-      "price": 0.9942,
-      "pips": null,
-      "candle_dt": "2026-06-19 16:00"
-    },
-    {
-      "type": "research",
-      "pair": "CAD/AUD",
-      "level": "STOP",
-      "price": 1.00578,
-      "pips": null,
-      "candle_dt": "2026-06-19 16:00"
-    },
-    {
-      "type": "research",
-      "pair": "EUR/AUD",
-      "level": "T1",
-      "price": 1.63483,
-      "pips": 30.0,
-      "candle_dt": "2026-06-19 16:00"
-    },
-    {
-      "type": "research",
-      "pair": "EUR/CAD",
-      "level": "STOP",
-      "price": 1.62663,
-      "pips": null,
-      "candle_dt": "2026-06-19 16:00"
-    },
-    {
-      "type": "research",
-      "pair": "EUR/AUD",
-      "level": "T2",
-      "price": 1.63483,
-      "pips": 52.5,
-      "candle_dt": "2026-06-19 16:00"
-    },
-    {
-      "type": "research",
       "pair": "AUD/CHF",
-      "level": "T1",
-      "price": 0.56487,
-      "pips": 10.5,
-      "candle_dt": "2026-06-19 19:00"
-    },
-    {
-      "type": "research",
-      "pair": "CAD/CHF",
-      "level": "T1",
-      "price": 0.5686,
-      "pips": 9.9,
-      "candle_dt": "2026-06-19 16:00"
-    },
-    {
-      "type": "research",
-      "pair": "CAD/CHF",
       "level": "STOP",
-      "price": 0.56982,
+      "price": 0.56605,
       "pips": null,
       "candle_dt": "2026-06-19 16:00"
-    },
-    {
-      "type": "research",
-      "pair": "GBP/CAD",
-      "level": "STOP",
-      "price": 1.87446,
-      "pips": null,
-      "candle_dt": "2026-06-19 21:00"
-    },
-    {
-      "type": "research",
-      "pair": "AUD/CHF",
-      "level": "T2",
-      "price": 0.56453,
-      "pips": 17.4,
-      "candle_dt": "2026-06-19 21:00"
-    },
-    {
-      "type": "research",
-      "pair": "AUD/SEK",
-      "level": "T1",
-      "price": 6.7073,
-      "pips": 154.8,
-      "candle_dt": "2026-06-19 18:00"
-    },
-    {
-      "type": "research",
-      "pair": "AUD/NZD",
-      "level": "STOP",
-      "price": 1.22153,
-      "pips": null,
-      "candle_dt": "2026-06-19 21:00"
     }
   ],
-  "mfe_mae_updated": 56,
+  "mfe_mae_updated": 49,
   "last_prices": {
     "AUD/CAD": 0.9914399981498718,
     "AUD/CHF": 0.5652999877929688,
@@ -148,7 +28,6 @@
     "AUD/SEK": 6.718100070953369,
     "AUD/USD": 0.701557457447052,
     "CAD/AUD": 1.007099986076355,
-    "CAD/CHF": 0.5696099996566772,
     "CAD/HKD": 5.536399841308594,
     "CAD/JPY": 113.95899963378906,
     "CAD/NOK": 6.844900131225586,
@@ -178,17 +57,11 @@
     "USD/SEK": 9.574080467224121
   },
   "previously_hot": [
-    "AUD/CHF#146",
     "AUD/CHF#160",
-    "CAD/AUD#104",
-    "CAD/JPY#80",
     "EUR/AUD#106",
-    "EUR/AUD#137",
     "GBP/CAD#114",
-    "GBP/CAD#89",
     "NZD/CAD#121",
-    "NZD/CAD#65",
-    "NZD/CAD#94"
+    "NZD/CAD#65"
   ],
   "skipped_reason": ""
 }
