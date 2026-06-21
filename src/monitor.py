@@ -1883,7 +1883,7 @@ def run(log=print) -> dict:
         direction = (row.get("direction") or "").upper()
         rec_id    = int(row.get("id", 0) or 0)
         try:
-            _, candles_mfe, resolved_p_mfe = pair_data.get(pair, (0, None, None))
+            _, candles_mfe, resolved_p_mfe = pair_data.get(pair, ("t0_no_data", None, None))
             if candles_mfe:
                 if _update_mfe_mae_from_ohlcv(rec_id, direction, candles_mfe):
                     mfe_updated += 1
