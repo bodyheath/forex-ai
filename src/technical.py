@@ -35,12 +35,20 @@ _INTERVAL_TTL: dict = {
 # Per-run Twelve Data API call counter (cache misses only — live API calls).
 _td_calls_this_run: int = 0
 
-# Per-run Yahoo Finance call counter and set of pairs sourced from Yahoo.
+# Per-run Yahoo Finance call counter and set of pairs sourced from Yahoo (daily).
 _yf_calls_this_run: int = 0
 _yf_sourced_pairs: set  = set()
 
-# Intervals where Yahoo Finance is a valid fallback (daily resolution is high quality).
-# 4h is excluded — Yahoo's intra-day data is less reliable.
+# Per-run Stooq call counter and set of pairs sourced from Stooq (daily).
+_stooq_calls_this_run: int = 0
+_stooq_sourced_pairs: set  = set()
+
+# Per-run counter and set of pairs whose 4H data came from Yahoo 1H reconstruction.
+_yf_4h_calls_this_run: int = 0
+_yf_4h_sourced_pairs: set  = set()
+
+# Intervals where free-source fallbacks are valid (daily resolution only).
+# 4h is excluded from Yahoo daily fallback — Yahoo's intra-day data is less reliable.
 _YF_FALLBACK_INTERVALS = frozenset(("1day", "1week", "1month"))
 
 # Yahoo Finance interval codes corresponding to Twelve Data interval names.
