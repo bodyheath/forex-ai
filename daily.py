@@ -8405,6 +8405,19 @@ def run() -> int:
         except Exception as exc:
             _log_line(logf, f"Risk management step failed: {exc}")
 
+        # Check daily P&L circuit breaker using current estimated_balance
+        try:
+            from src import fund_state as _fs_cb
+            _fs_cb_st = _fs_cb.load()
+            _cb_bal = (risk_data.get("profile") or {}).get("estimated_balance") if risk_data else None
+            if _cb_bal:
+                _fs_cb_st, _cb_alert = _fs_cb.check_circuit_breaker(_fs_cb_st, _cb_bal)
+                if _cb_alert:
+                    _telegram(_cb_alert)
+                _fs_cb.save(_fs_cb_st)
+        except Exception as _fs_cb_exc:
+            _log_line(logf, f"Fund state circuit breaker check failed: {_fs_cb_exc}")
+
         # 8. Fetch API credit balances
         credit_data = {}
         try:
