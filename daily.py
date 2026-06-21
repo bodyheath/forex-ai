@@ -7607,6 +7607,30 @@ def run() -> int:
     _timeout_timer.daemon = True
     _timeout_timer.start()
 
+    # ── Item 2: Monitor heartbeat check ───────────────────────────────────────
+    # Alert if monitor hasn't run in >90 minutes (expected every 30 min).
+    try:
+        if _HEARTBEAT_FILE.exists():
+            _hb = json.loads(_HEARTBEAT_FILE.read_text(encoding="utf-8"))
+            _hb_ts  = datetime.fromisoformat(_hb.get("last_run", ""))
+            _hb_gap = int((_now_utc - _hb_ts).total_seconds() / 60)
+            if _hb_gap > 90:
+                _telegram(
+                    f"⚠️ MONITOR HEARTBEAT — last between-scan check was {_hb_gap} minutes ago "
+                    f"(expected every 30 min) — cron-job.org monitor trigger may be down"
+                )
+    except Exception:
+        pass
+
+    # ── Item 3: Scan completion marker — mark as in-progress ──────────────────
+    try:
+        _SCAN_STATUS_FILE.write_text(
+            json.dumps({"completed": False, "started": _now_utc.isoformat(), "mode": scan_mode}),
+            encoding="utf-8",
+        )
+    except Exception:
+        pass
+
     _telegram_test()
 
     missing = config.missing_keys()
