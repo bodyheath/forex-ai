@@ -1,0 +1,132 @@
+"""Yahoo Finance 4H candle reconstruction from 1H hourly data.
+
+No API key or account required. Free unlimited access via yfinance.
+
+Reconstructs 4H candles by resampling 60 days of 1H data into 4-hour bars
+using standard OHLCV aggregation. Quality is approximately 95% of native 4H data.
+
+Note: _pair_to_yahoo_symbol() below uses the same fixed overrides as technical.py.
+"""
+
+_YAHOO_SYMBOL_OVERRIDES: dict = {
+    # USD-base pairs: Yahoo uses {QUOTE}=X
+    "USD/JPY": "JPY=X",   "USD/CHF": "CHF=X",   "USD/CAD": "CAD=X",
+    "USD/HKD": "HKD=X",   "USD/SGD": "SGD=X",   "USD/NOK": "NOK=X",
+    "USD/SEK": "SEK=X",
+    # USD-quote pairs: Yahoo uses {BASE}USD=X
+    "GBP/USD": "GBPUSD=X", "EUR/USD": "EURUSD=X",
+    "AUD/USD": "AUDUSD=X", "NZD/USD": "NZDUSD=X",
+}
+
+
+def _pair_to_yahoo_symbol(pair: str) -> str:
+    """Convert 'AUD/JPY' to Yahoo Finance ticker format.
+
+    Explicit overrides for major USD pairs ensure correct direction.
+    USD/XXX → '{XXX}=X' · XXX/USD → '{BASE}USD=X' · others → '{BASE}{QUOTE}=X'
+    """
+    cleaned = pair.upper().strip()
+    if cleaned in _YAHOO_SYMBOL_OVERRIDES:
+        return _YAHOO_SYMBOL_OVERRIDES[cleaned]
+    parts = cleaned.replace(" ", "").split("/")
+    if len(parts) != 2:
+        return cleaned.replace("/", "") + "=X"
+    base, quote = parts
+    if base == "USD":
+        return f"{quote}=X"
+    return f"{base}{quote}=X"
+
+
+def fetch_4h_candles(pair: str, n_candles: int, log=print) -> dict | None:
+    """Reconstruct 4H candles by resampling Yahoo Finance 1H data.
+
+    Fetches 60 days of 1H bars then resamples to 4H using:
+    - Open  = first 1H open in the 4H block
+    - High  = max of all 1H highs in the block
+    - Low   = min of all 1H lows in the block
+    - Close = last 1H close in the block
+
+    The last bar is discarded as it is likely incomplete.
+    Returns dict in Twelve Data time_series format, or None on any failure.
+    """
+    try:
+        import yfinance as yf
+    except ImportError:
+        log("[YF-4H] yfinance not installed — 4H reconstruction unavailable")
+        return None
+
+    symbol = _pair_to_yahoo_symbol(pair)
+
+    try:
+        ticker = yf.Ticker(symbol)
+        df_1h  = ticker.history(period="60d", interval="1h", auto_adjust=True)
+    except Exception as exc:
+        log(f"[YF-4H] 1H fetch failed for {symbol} ({pair}): {exc}")
+        return None
+
+    if df_1h is None or df_1h.empty:
+        log(f"[YF-4H] No 1H data returned for {symbol} ({pair})")
+        return None
+
+    df_1h.columns = [str(c).lower() for c in df_1h.columns]
+    for col in ("open", "high", "low", "close"):
+        if col not in df_1h.columns:
+            log(f"[YF-4H] Missing column '{col}' for {symbol}")
+            return None
+
+    df_1h = df_1h[["open", "high", "low", "close"]].dropna()
+
+    if df_1h.empty:
+        log(f"[YF-4H] All 1H candles NaN for {symbol}")
+        return None
+
+    try:
+        # Ensure UTC-aware index for consistent 4H alignment
+        if df_1h.index.tz is None:
+            df_1h.index = df_1h.index.tz_localize("UTC")
+        else:
+            df_1h.index = df_1h.index.tz_convert("UTC")
+
+        df_4h = df_1h.resample("4h").agg({
+            "open":  "first",
+            "high":  "max",
+            "low":   "min",
+            "close": "last",
+        }).dropna()
+
+        if df_4h.empty:
+            log(f"[YF-4H] No complete 4H bars formed for {symbol}")
+            return None
+
+        # Drop the last bar — likely a partial (incomplete 4H block)
+        df_4h = df_4h.iloc[:-1]
+
+        if df_4h.empty:
+            log(f"[YF-4H] Not enough data for complete 4H bars for {symbol}")
+            return None
+
+        # Convert tz-aware → tz-naive for uniform downstream handling
+        df_4h.index = df_4h.index.tz_localize(None)
+
+        df_4h = df_4h.tail(n_candles)
+
+    except Exception as exc:
+        log(f"[YF-4H] Resampling failed for {symbol}: {exc}")
+        return None
+
+    # Build values list newest-first (Twelve Data format)
+    values = []
+    for dt, row in df_4h.iloc[::-1].iterrows():
+        values.append({
+            "datetime": dt.strftime("%Y-%m-%d %H:%M"),
+            "open":     str(round(float(row["open"]),  6)),
+            "high":     str(round(float(row["high"]),  6)),
+            "low":      str(round(float(row["low"]),   6)),
+            "close":    str(round(float(row["close"]), 6)),
+        })
+
+    return {
+        "meta":   {"symbol": pair, "source": "Yahoo Finance (4H)"},
+        "values": values,
+        "status": "ok",
+    }
