@@ -5323,6 +5323,25 @@ def _send_telegram_summary(
                 block.append(mgmt)
         except (TypeError, ValueError):
             block.append(f"- Full target: {_fmt_price(adj_tgt)}")
+        # ── Adaptive position sizing display ──────────────────────────────────
+        _fs_sz_tb = r.get("_fs_sizing")
+        if _fs_sz_tb:
+            _as_pct_tb  = float(_fs_sz_tb.get("pct") or 1.0)
+            _as_mode_tb = str(_fs_sz_tb.get("mode") or "normal")
+            _as_rsn_tb  = str(_fs_sz_tb.get("reason") or "")
+            _as_bal_tb  = float(_fs_sz_tb.get("balance") or 0)
+            if _as_bal_tb > 0:
+                _as_usd_tb = round(_as_bal_tb * _as_pct_tb / 100, 0)
+                _mode_icon = (
+                    "⚡" if _as_mode_tb == "win_streak"
+                    else ("🛡️" if "drawdown" in _as_mode_tb else "💼")
+                )
+                block.append(
+                    f"{_mode_icon} Adaptive position size: {_as_pct_tb:.2f}% of fund "
+                    f"(${_as_usd_tb:,.0f} at risk)"
+                )
+                if _as_rsn_tb:
+                    block.append(f"   Sizing reason: {_as_rsn_tb}")
         return [ln for ln in block if ln]
 
     def _watch_entry(rr: dict) -> list:
