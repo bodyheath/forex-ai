@@ -1735,10 +1735,22 @@ def run(log=print) -> dict:
 
     # Resolve tiers for every unique pair (log once per pair, not per trade)
     pair_data: dict = {}
+    _src_stat_map = {
+        "t1_yf_ohlcv":    "yahoo_finance",
+        "t1_td_backup":   "twelve_data",
+        "t1_sq_backup":   "stooq",
+        "t2_synthetic":   "synthetic",
+        "t3_current_only":"yahoo_finance",
+        "t4_last_known":  "internal_hist",
+        "t0_no_data":     "no_data",
+    }
     for pair in all_pairs:
-        tier, candles_t, resolved_p, tier_label = _resolve_pair_data(pair)
-        pair_data[pair] = (tier, candles_t, resolved_p)
-        _tier_counts[_tier_key_map.get(tier, "t0_no_data")] += 1
+        tag, candles_t, resolved_p, tier_label = _resolve_pair_data(pair)
+        pair_data[pair] = (tag, candles_t, resolved_p)
+        _tier_counts[tag]                       = _tier_counts.get(tag, 0) + 1
+        _source_stats[_src_stat_map.get(tag, "no_data")] = (
+            _source_stats.get(_src_stat_map.get(tag, "no_data"), 0) + 1
+        )
         log(tier_label)
 
     # Part 7: log significant price movements (>= 0.5x ATR) as upgrade candidates
