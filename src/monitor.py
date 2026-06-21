@@ -987,27 +987,30 @@ def run(log=print) -> dict:
         f"{'weekend mode — Friday close prices' if is_wknd else 'live prices'}"
     )
 
-    # ── API budget check (informational — OHLCV uses Yahoo Finance, not TD) ────
-    calls_today = _get_td_calls_today()
-    if calls_today >= _API_BUDGET_LIMIT:
-        log(
-            f"Monitor: TD API at {calls_today}/800 calls today — "
-            f"OHLCV uses Yahoo Finance so batch price fetch will still proceed"
-        )
-
-    # ── Step 1: Batch price fetch ─────────────────────────────────────────────
+    # ── Step 1: Price fetch — Yahoo Finance primary, Twelve Data fallback ───────
     all_open    = _fund_open + _res_open
     _fund_pairs = sorted({r.get("pair", "") for r in _fund_open if r.get("pair")})
     _res_pairs  = sorted({r.get("pair", "") for r in _res_open  if r.get("pair")})
     all_pairs   = sorted({r.get("pair", "") for r in all_open   if r.get("pair")})
     log(
-        f"Monitor: building price fetch list — "
-        f"{len(_fund_pairs)} fund pair(s) + {len(_res_pairs)} research pair(s) = "
-        f"{len(_fund_pairs) + len(_res_pairs)} total (after dedup: {len(all_pairs)} unique pairs to fetch)"
+        f"Monitor: {len(_fund_pairs)} fund pair(s) + {len(_res_pairs)} research pair(s) — "
+        f"{len(all_pairs)} unique pairs — fetching via Yahoo Finance (0 TD calls)"
     )
-    prices, batch_calls = _batch_price_fetch(all_pairs, log=log)
-    result["api_calls_used"] += batch_calls
-    log(f"Monitor: fetched prices for {len(prices)}/{len(all_pairs)} pairs in {batch_calls} API call(s).")
+
+    prices = _yahoo_price_batch(all_pairs, log=log)
+
+    # Fallback to Twelve Data if Yahoo returned fewer than 50% of pairs
+    if len(prices) < len(all_pairs) * 0.5 and config.TWELVE_DATA_KEY:
+        _missing = [p for p in all_pairs if p not in prices]
+        log(
+            f"Monitor: Yahoo Finance partial failure ({len(prices)}/{len(all_pairs)} pairs) — "
+            f"falling back to Twelve Data for {len(_missing)} pairs"
+        )
+        _td_prices, _td_calls = _batch_price_fetch(_missing, log=log)
+        prices.update(_td_prices)
+        result["api_calls_used"] += _td_calls
+
+    result["yf_price_pairs"] = len(prices)
 
     # ── Step 2: Ensure cascade levels + zone classification ──────────────────
     for i, row in enumerate(_fund_open):
