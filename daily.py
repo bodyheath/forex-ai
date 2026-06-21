@@ -5344,7 +5344,7 @@ def _send_telegram_summary(
         dec = 3 if is_jpy else 5
         if _qg_ap["grade"] == "D":
             _ntc_ap   = _what_needs_to_change(pp)
-            _bar_n    = max(1, min(conf, 6))
+            _bar_n    = int(max(1, min(conf, 6)))
             _bar      = "█" * _bar_n + "░" * (7 - _bar_n)
             _rr_d_str = ""
             if ind_e and ind_s and ind_t:
