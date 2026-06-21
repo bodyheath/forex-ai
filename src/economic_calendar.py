@@ -636,12 +636,13 @@ def _fetch_fmp():
 def get_events_7d() -> list:
     """Fetch HIGH impact events for the next 7 days.
 
-    Primary source: Forex Factory XML feed.
-    Fallback: Twelve Data economic calendar API.
-    Results cached for 3 hours.
+    Priority order:
+      1. Forex Factory XML (2 retries before giving up)
+      2. Financial Modeling Prep free API (no key needed)
+      3. Twelve Data economic calendar API
+      4. Empty list — don't cache so the next call retries
 
-    Returns list of event dicts sorted by dt_utc. Returns [] when both sources
-    are unreachable (not cached — allows retry on next call).
+    Results cached for 3 hours.
     """
     global _last_source
 
@@ -656,16 +657,27 @@ def get_events_7d() -> list:
         cache.set(_CACHE_KEY, ff)
         return ff
 
-    # Fallback: Twelve Data
+    # Second fallback: Financial Modeling Prep
+    fmp = _fetch_fmp()
+    if fmp is not None:
+        _last_source = "fmp"
+        print(
+            f"[ECO-CAL] Calendar: Forex Factory unavailable — using Financial Modeling Prep fallback — "
+            f"{len(fmp)} HIGH impact events found"
+        )
+        cache.set(_CACHE_KEY, fmp)
+        return fmp
+
+    # Third fallback: Twelve Data
     td = _fetch_twelve_data()
     if td is not None:
         _last_source = "twelve_data"
         cache.set(_CACHE_KEY, td)
         return td
 
-    # Both sources failed — don't cache so the next call retries
+    # All sources failed — don't cache so the next call retries
     _last_source = "none"
-    print("[ECO-CAL] Both Forex Factory and Twelve Data unavailable")
+    print("[ECO-CAL] Forex Factory, FMP, and Twelve Data all unavailable")
     return []
 
 
