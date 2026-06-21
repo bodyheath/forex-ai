@@ -39,6 +39,11 @@ FIELDS = [
     "consecutive_wins_at_entry",      # win streak length when trade was opened
     "drawdown_pct_at_entry",          # fund drawdown % from peak at time of entry
     "position_size_pct_at_entry",     # adaptive risk % applied to this trade
+    # ── Dynamic threshold at entry ───────────────────────────────────────────
+    "threshold_at_entry",             # dynamic confidence threshold active when trade was opened
+    "regime_base_at_entry",           # regime component of the threshold
+    "win_rate_adjustment_at_entry",   # win rate component (negative = lowered threshold)
+    "data_quality_adjustment_at_entry", # data quality component
 ]
 
 # status values: NO_TRADE | OPEN | WIN | LOSS | BREAKEVEN | SKIPPED | EXPIRED | PARTIAL_WIN | FULL_WIN
