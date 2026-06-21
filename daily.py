@@ -8509,6 +8509,14 @@ def run() -> int:
             except Exception as _mr_exc:
                 _log_line(logf, f"Morning ranked save failed: {_mr_exc}")
 
+        # Pair statistics for adaptive cascade targets (read once; used by research trade logging)
+        _pair_stats_all: dict = {}
+        try:
+            from src import pair_statistics as _pstat_run
+            _pair_stats_all = _pstat_run.load()
+        except Exception:
+            pass
+
         # Dynamic confidence threshold — computed once here so research trades
         # can stamp it as an ML feature before _send_telegram_summary is called.
         _threshold_data: dict = {}
