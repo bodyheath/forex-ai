@@ -1868,17 +1868,24 @@ def run(log=print) -> dict:
         _, candles_t, resolved_p = pair_data.get(pair, ("t0_no_data", None, None))
         _process_trade(row, candles_t, resolved_p, is_fund=False)
 
-    # Data tier summary
+    # Data tier + source summary
     _tc = _tier_counts
-    log(
-        f"Monitor data sources: "
-        f"T1(Yahoo 1H)={_tc['t1_yahoo_ohlcv']} "
-        f"T2(synthetic)={_tc['t2_synthetic']} "
-        f"T3(current)={_tc['t3_current_only']} "
-        f"T4(last known)={_tc['t4_last_known']} "
-        f"T0(none)={_tc['t0_no_data']}/{len(all_pairs)} pairs"
-    )
-    if _tc["t0_no_data"] == 0:
+    _yf  = _tc.get("t1_yf_ohlcv", 0)
+    _td  = _tc.get("t1_td_backup", 0)
+    _sq  = _tc.get("t1_sq_backup", 0)
+    _syn = _tc.get("t2_synthetic", 0)
+    _cur = _tc.get("t3_current_only", 0)
+    _ph  = _tc.get("t4_last_known", 0)
+    _nod = _tc.get("t0_no_data", 0)
+    _parts = [f"[T1-YF]={_yf}"]
+    if _td:  _parts.append(f"[T1-TD]={_td}")
+    if _sq:  _parts.append(f"[T1-SQ]={_sq}")
+    if _syn: _parts.append(f"[T2-SYN]={_syn}")
+    if _cur: _parts.append(f"[T3-CUR]={_cur}")
+    if _ph:  _parts.append(f"[T4-PH]={_ph}")
+    if _nod: _parts.append(f"[T0]={_nod}")
+    log(f"Monitor data sources ({len(all_pairs)} pairs): {' '.join(_parts)}")
+    if _nod == 0:
         log("Monitor: all pairs covered — zero unmonitored trades")
 
     # ── Step 6: MFE/MAE updates for research trades ───────────────────────────
