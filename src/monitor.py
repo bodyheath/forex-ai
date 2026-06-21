@@ -923,6 +923,7 @@ def run(log=print) -> dict:
         "warm_zone_count":         0,
         "cold_zone_count":         0,
         "api_calls_used":          0,
+        "yf_price_pairs":          0,
         "yf_ohlcv_pairs":          0,
         "approaching_alerts":      0,
         "milestones_hit":          [],
