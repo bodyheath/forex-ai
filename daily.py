@@ -8086,6 +8086,38 @@ def run() -> int:
             f"meaningful(conf>=5)={len(meaningful)} · failed={len(failed_pairs)}",
         )
 
+        # Update movement alert stats for priority-swept pairs
+        if _movement_priority_set and _MOVEMENT_ALERTS_FILE.exists():
+            try:
+                _ma_data = json.loads(_MOVEMENT_ALERTS_FILE.read_text(encoding="utf-8"))
+                _ma_weekly = _ma_data.get("weekly_stats", {})
+                for _ma_r in deep_results:
+                    if _ma_r.get("pair") in _movement_priority_set:
+                        if (_conf(_ma_r) or 0) >= 5:
+                            _ma_weekly["swept_signals_found"] = _ma_weekly.get("swept_signals_found", 0) + 1
+                        if (_conf(_ma_r) or 0) >= 7 or ((_ma_r.get("parsed") or {}).get("trade_this") == "YES"):
+                            _ma_weekly["swept_became_trades"] = _ma_weekly.get("swept_became_trades", 0) + 1
+                _ma_data["weekly_stats"] = _ma_weekly
+                _MOVEMENT_ALERTS_FILE.write_text(json.dumps(_ma_data, indent=2), encoding="utf-8")
+            except Exception:
+                pass
+
+        # Update watchlist weekly stats for injected priority pairs
+        if _priority_from_wl:
+            try:
+                _wl_st_path = config.DATA_DIR / "watchlist_cache.json"
+                if _wl_st_path.exists():
+                    _wl_st_data = json.loads(_wl_st_path.read_text(encoding="utf-8"))
+                    _wl_st = _wl_st_data.get("watchlist_weekly_stats", {})
+                    for _wl_r in deep_results:
+                        if _wl_r.get("pair") in _priority_from_wl:
+                            if (_conf(_wl_r) or 0) >= 7 or ((_wl_r.get("parsed") or {}).get("trade_this") == "YES"):
+                                _wl_st["became_trade_alerts"] = _wl_st.get("became_trade_alerts", 0) + 1
+                    _wl_st_data["watchlist_weekly_stats"] = _wl_st
+                    _wl_st_path.write_text(json.dumps(_wl_st_data, indent=2), encoding="utf-8")
+            except Exception:
+                pass
+
         # Save watchlist cache for next scan's dynamic boosters
         # Includes: watchlist pairs (conf 5.0–6.9), near-miss pairs (conf 5.0–5.9),
         # and momentum_counts tracking consecutive scan appearances for Booster 6.
