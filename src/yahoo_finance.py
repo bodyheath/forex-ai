@@ -211,7 +211,7 @@ def fetch_1h_candles(pair: str, n_candles: int, log=print) -> dict | None:
 
     try:
         ticker = yf.Ticker(symbol)
-        df = ticker.history(period="7d", interval="1h", auto_adjust=True)
+        df = ticker.history(period="2d", interval="1h", auto_adjust=True)
     except Exception as exc:
         log(f"[YF-1H] 1H fetch failed for {symbol} ({pair}): {exc}")
         return None
