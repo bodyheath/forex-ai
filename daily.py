@@ -3707,6 +3707,37 @@ def _build_system_learning_report(date: str) -> list:
     except Exception:
         pass
 
+    # ── FILTER EFFECTIVENESS ───────────────────────────────────────────────────
+    try:
+        from src import filter_effectiveness as _fe_lr
+        _fe_lines = _fe_lr.build_monday_report_lines()
+        if _fe_lines:
+            sec.extend(_fe_lines)
+            any_added = True
+    except Exception:
+        pass
+
+    # ── REGIME + TIME-OF-DAY WIN RATES ────────────────────────────────────────
+    try:
+        from src import regime_learning as _rl_lr
+        _rl_lines = _rl_lr.build_monday_report_lines()
+        if _rl_lines:
+            sec.extend(_rl_lines)
+            any_added = True
+    except Exception:
+        pass
+
+    # ── ONLINE LEARNER STATUS ─────────────────────────────────────────────────
+    try:
+        from src import online_learner as _ol_lr
+        _ol_n = _ol_lr.get_n_decisive()
+        if _ol_n > 0:
+            sec.append("")
+            sec.append(f"<b>CONTINUOUS LEARNING</b>: {_ol_lr.build_status_line()}")
+            any_added = True
+    except Exception:
+        pass
+
     return sec
 
 
