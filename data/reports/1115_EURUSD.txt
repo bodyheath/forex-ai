@@ -1,20 +1,19 @@
 PAIR: EUR/USD
-DIRECTION: SELL
-CONFIDENCE: 3/10
-TECHNICAL_SCORE: 5/10
-FUNDAMENTAL_SCORE: 3/10
-SENTIMENT_SCORE: 6/10
-POSITIONING_SCORE: 3/10
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 5/10
 MACRO_SCORE: 5/10
 DIVERGENCE: NONE
-OSCILLATOR_CONFLUENCE: NONE
-KEY_THESIS: EUR fundamentals weakening (rising rates unable to support), institutions unwinding long positions—but D1 unavailable blocks high-conviction entry.
-RISK_FACTORS: [1] D1 data missing—no technical confirmation (RSI, MACD, pattern, candle structure); reversal or continuation risk unquantified. [2] COT unwinding reduces positioning conviction; if unwind completes without price break, reversal trap risk.
-TRADE_THIS: NO
-
----
-
-**Rationale:**
-
-- **TECHNICAL_SCORE = 5** (UNAVAILABLE rule: D1 missing = neutral, no directional bias)
-- **FUNDAMENTAL_SCORE =
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+ENTRY: 1.1469
+TARGET: 1.1665
+STOP_LOSS: 1.1339
+REWARD_RISK_RATIO: 1.51:1
+BEST_ENTRY_TIME: London open 20:00–22:00 NZST
+NEWS_WARNING: EUR/USD highly sensitive to Fed speakers and US CPI/PPI releases within 48h — confirm economic calendar before entry
+KEY_THESIS: RSI(32.6) oversold + inverse head and shoulders + bullish engulfing at lower Bollinger Band + partial oscillator confluence (Stoch 20.2, CCI -197) with weekly and daily both BUY confirms high-probability reversal setup at major support, targeting SMA50 at 1.1665.
+RISK_FACTORS: (1) ALIGNED_BEAR ribbon fully fanned bearish (5/5) signals dominant downtrend remains intact — reversal attempt may fail and resume lower toward FIB low 1.1444; (2) Negative rate differential (-1.38%) and price trading well below SMA50/SMA200 death-cross structure reduce fundamental conviction — this is a chart-driven countertrend trade with elevated failure risk.
+TRADE_THIS: YES
