@@ -873,15 +873,22 @@ def run(log=print) -> dict:
         _write_monitor_log(result)
         return result
 
-    # ── Startup delay — back off if another run was active in the last 5 min ─
-    if _API_USAGE.exists():
-        _secs_since_activity = time.time() - _API_USAGE.stat().st_mtime
-        if _secs_since_activity < 300:
-            log(
-                f"Monitor: recent API activity detected ({int(_secs_since_activity)}s ago) — "
-                f"waiting 90 seconds for rate limit to clear"
-            )
-            time.sleep(90)
+    # ── Load previous run state (last_prices, previously_hot) ────────────────
+    _prev_log: dict = {}
+    try:
+        if _MONITOR_LOG.exists():
+            _prev_log = json.loads(_MONITOR_LOG.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    last_prices    = {k: float(v) for k, v in _prev_log.get("last_prices", {}).items()
+                      if v is not None}
+    previously_hot = set(_prev_log.get("previously_hot", []))
+
+    # ── Telegram alert module (loaded once, used throughout) ─────────────────
+    try:
+        from src import telegram_alert as _ta
+    except Exception:
+        _ta = None
 
     # ── Smart skip: exit immediately if no open trades ────────────────────────
     try:
