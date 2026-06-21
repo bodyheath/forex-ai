@@ -6485,6 +6485,19 @@ def _send_telegram_summary(
             health_sec.append(_mlp_hs.get_model_status_line())
         except Exception:
             pass
+        # Online learner status
+        try:
+            from src import online_learner as _ol_hs
+            health_sec.append(_ol_hs.build_status_line())
+        except Exception:
+            pass
+        # Filter effectiveness alerts
+        try:
+            from src import filter_effectiveness as _fe_hs
+            for _fa in _fe_hs.get_alerts():
+                health_sec.append(_fa)
+        except Exception:
+            pass
         # Monitor status line
         try:
             _mon_log_f = config.DATA_DIR / "monitor_log.json"
