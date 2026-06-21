@@ -3713,6 +3713,7 @@ def _send_telegram_summary(
     opportunity_data: dict = None,
     all_ohlcv_failed: bool = False,
     movement_alert_data: dict = None,
+    threshold_data: dict = None,
 ) -> None:
     """Build and send Telegram notifications with format tailored to each scan mode."""
     closed_today    = closed_today    or []
