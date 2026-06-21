@@ -7000,6 +7000,13 @@ def _send_telegram_summary(
             _intraday_health.extend(cost_lines)
         else:
             _intraday_health.append("Cost tracking unavailable")
+        try:
+            from src import dynamic_threshold as _dth_id
+            _thr_lines_id = _dth_id.build_telegram_lines(threshold_data)
+            if _thr_lines_id:
+                _intraday_health.extend([""] + _thr_lines_id)
+        except Exception:
+            pass
         all_sections.append(_intraday_health)
 
         # Item 9: Daily system health digest — preny (11pm) only
