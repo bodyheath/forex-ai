@@ -5673,6 +5673,15 @@ def _send_telegram_summary(
         if _dd_banner:
             all_sections.append(["", "━━━━━━━━━━━━━━━━━━━━━", _dd_banner])
 
+        # DYNAMIC THRESHOLD — show beneath header for full scan
+        try:
+            from src import dynamic_threshold as _dth_disp
+            _thr_lines = _dth_disp.build_telegram_lines(threshold_data)
+            if _thr_lines:
+                all_sections.append(["", "━━━━━━━━━━━━━━━━━━━━━"] + _thr_lines)
+        except Exception:
+            pass
+
         # OPEN TRADES — always at the top so it's the first thing seen
         _ot_conf_map = {r["pair"]: _eff_conf(r) for r in deep_results if r.get("pair")}
         # Confidence crisis: send immediate separate alert before main message
