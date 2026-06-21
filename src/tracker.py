@@ -44,6 +44,11 @@ FIELDS = [
     "regime_base_at_entry",           # regime component of the threshold
     "win_rate_adjustment_at_entry",   # win rate component (negative = lowered threshold)
     "data_quality_adjustment_at_entry", # data quality component
+    # ── Adaptive cascade targets ──────────────────────────────────────────────
+    "t1_was_adaptive",            # TRUE when pair-specific MFE data was used
+    "t1_target_atr_multiple",     # actual T1 multiplier applied (0.4 standard)
+    "t2_target_atr_multiple",     # actual T2 multiplier applied (0.7 standard)
+    "t3_target_atr_multiple",     # actual T3 multiplier applied (1.0 standard)
 ]
 
 # status values: NO_TRADE | OPEN | WIN | LOSS | BREAKEVEN | SKIPPED | EXPIRED | PARTIAL_WIN | FULL_WIN
