@@ -29,6 +29,20 @@ import requests
 import config
 from src import cascade as _casc
 
+
+def _online_learn_closure(source_table: str, updated: dict) -> None:
+    """Feed a monitor-closed trade to the online learner (best-effort)."""
+    try:
+        from src import online_learner as _ol
+        _ol.partial_fit_trade(
+            source_table,
+            updated.get("id"),
+            updated.get("status", ""),
+            updated.get("closed_at", ""),
+        )
+    except Exception:
+        pass
+
 _PRICE_URL    = "https://api.twelvedata.com/price"
 _OHLCV_URL    = "https://api.twelvedata.com/time_series"
 _MONITOR_LOG  = config.DATA_DIR / "monitor_log.json"
