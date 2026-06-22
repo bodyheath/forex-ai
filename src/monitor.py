@@ -1861,6 +1861,37 @@ def run(log=print) -> dict:
                     _rng  = abs(_tgt0 - _entry)
                     _prog = (abs(_cur_p - _entry) / _rng * 100) if _rng > 0 else 0.0
                     _dist = abs(_tgt0 - _cur_p) / _pip_sz
+
+                    if _prog > 100:
+                        # Price has already crossed the target level — the HOT zone
+                        # cooldown may have delayed the alert past the actual crossing.
+                        # Candle-based Step 4+5 detection covers crossings within the
+                        # last 6 candles; trigger spot detection here to cover older ones.
+                        log(
+                            f"  Monitor: {_pair_str} HOT zone {_prog:.0f}% — price has "
+                            f"already crossed {_ms0} ({_tgt0}) — triggering immediate "
+                            f"spot milestone detection"
+                        )
+                        try:
+                            _spot_ms, _spot_state = _detect_spot_milestones(
+                                _r0, _cur_p, _pair_str
+                            )
+                            if _spot_ms:
+                                _fund_ids_hot = {int(r.get("id", -1)) for r in _fund_open}
+                                if int(_r0.get("id", -2)) in _fund_ids_hot:
+                                    _apply_fund_milestones(
+                                        _r0, _spot_ms, _spot_state, log=log, ta=_ta
+                                    )
+                                else:
+                                    _apply_research_milestones(
+                                        _r0, _spot_ms, _spot_state, log=log, ta=_ta
+                                    )
+                        except Exception as _spot_exc:
+                            log(
+                                f"  Monitor: immediate spot detection failed for "
+                                f"{_pair_str}: {_spot_exc}"
+                            )
+
                     _dn.send_fund_approaching(
                         _pair_str, _dir0, _prog, _tgt0, _cur_p, _dist, _stop0 or 0.0, _ms0
                     )
