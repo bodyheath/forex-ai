@@ -12,11 +12,13 @@
     "CAD/JPY": "2026-06-22T12:01:36Z",
     "USD/HKD": "2026-06-22T08:01:48Z",
     "CAD/NZD": "2026-06-22T08:31:33Z",
-    "USD/JPY": "2026-06-22T08:31:37Z",
+    "USD/JPY": "2026-06-22T12:31:39Z",
     "GBP/AUD": "2026-06-22T09:31:31Z",
     "GBP/JPY": "2026-06-22T09:31:32Z",
     "CAD/NOK": "2026-06-22T11:01:41Z",
-    "CHF/CAD": "2026-06-22T12:01:38Z"
+    "CHF/CAD": "2026-06-22T12:01:38Z",
+    "CAD/HKD": "2026-06-22T12:31:35Z",
+    "GBP/USD": "2026-06-22T12:31:37Z"
   },
   "pairs": {
     "HKD/JPY": {
@@ -27,7 +29,7 @@
     "USD/AUD": {
       "first_entered_hot": "2026-06-22T04:31:31Z",
       "last_alert_sent": "2026-06-22T08:31:35Z",
-      "continuously_hot": true
+      "continuously_hot": false
     },
     "AUD/USD": {
       "first_entered_hot": "2026-06-22T06:31:34Z",
@@ -61,8 +63,8 @@
     },
     "USD/JPY": {
       "first_entered_hot": "2026-06-22T08:31:37Z",
-      "last_alert_sent": "2026-06-22T08:31:37Z",
-      "continuously_hot": false
+      "last_alert_sent": "2026-06-22T12:31:39Z",
+      "continuously_hot": true
     },
     "GBP/AUD": {
       "first_entered_hot": "2026-06-22T09:31:31Z",
@@ -87,6 +89,16 @@
     "EUR/AUD": {
       "first_entered_hot": "2026-06-22T12:01:39Z",
       "last_alert_sent": "2026-06-22T12:01:39Z",
+      "continuously_hot": false
+    },
+    "CAD/HKD": {
+      "first_entered_hot": "2026-06-22T12:31:35Z",
+      "last_alert_sent": "2026-06-22T12:31:35Z",
+      "continuously_hot": false
+    },
+    "GBP/USD": {
+      "first_entered_hot": "2026-06-22T12:31:37Z",
+      "last_alert_sent": "2026-06-22T12:31:37Z",
       "continuously_hot": false
     }
   }
