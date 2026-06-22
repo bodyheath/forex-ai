@@ -845,9 +845,20 @@ def update_fund_dashboard(
     fund_best_trade_pips=0.0,
     fund_best_trade_pair="",
     fund_total_pips=0.0,
+    # FIX 7: Live equity parameters
+    unrealised_pnl_dollars=0.0,
+    unrealised_pnl_pips=0.0,
+    total_equity=0.0,
+    # FIX 11: Data collection mode display
+    data_collection_mode=False,
+    effective_threshold=7.0,
+    dynamic_threshold=7.0,
 ):
     if not WEBHOOK_FUND:
         return False
+
+    if total_equity == 0.0:
+        total_equity = fund_balance
 
     state = _load_dashboard_state()
     existing_message_id = state.get("fund_dashboard_message_id")
@@ -862,14 +873,23 @@ def update_fund_dashboard(
     else:
         streak = "➡️ Neutral"
 
+    # FIX 8: FTMO uses total equity not cash balance
     ftmo_pct_of_target = (ftmo_current_pct / ftmo_target_pct * 100) if ftmo_target_pct > 0 else 0
     ftmo_bar = _progress_bar(min(max(ftmo_pct_of_target, 0), 100), width=15)
+
+    # FIX 7: Show cash + unrealised + total equity
+    unreal_emoji  = "\U0001f7e2" if unrealised_pnl_dollars >= 0 else "\U0001f534"
+    equity_emoji  = "\U0001f4c8" if total_equity >= fund_balance else "\U0001f4c9"
+    equity_return = (total_equity - 10000.0) / 10000.0 * 100
 
     fields = []
     fields.append({
         "name":  "\U0001f4b0 Fund Status",
         "value": (
-            f"Balance: **${fund_balance:,.2f}** ({fund_return_pct:+.2f}%)\n"
+            f"\U0001f4b5 Cash: **${fund_balance:,.2f}** ({fund_return_pct:+.2f}%)\n"
+            f"{unreal_emoji} Unrealised: **${unrealised_pnl_dollars:+.2f}** ({unrealised_pnl_pips:+.1f}p)\n"
+            f"{'─' * 20}\n"
+            f"{equity_emoji} **Total equity: ${total_equity:,.2f}** ({equity_return:+.2f}%)\n"
             f"{fund_emoji} Today: {daily_pnl_pct:+.2f}% (${daily_pnl_dollars:+.2f})\n"
             f"{dd_emoji} Drawdown: {drawdown_pct:.2f}% · {streak}\n"
             f"Sizing: {sizing_mode} ({risk_pct:.2f}% per trade)"
