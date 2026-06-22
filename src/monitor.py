@@ -2210,15 +2210,6 @@ def run(log=print) -> dict:
             )
         except Exception:
             pass
-    try:
-        if _dn and research_fragments:
-            _disc_milestones = [
-                {"pair": f.split()[0] if f else "?", "level": "?", "pips": 0}
-                for f in research_fragments
-            ]
-            _dn.send_research_batch(_disc_milestones, "monitor")
-    except Exception:
-        pass
 
     # ── Summary log ──────────────────────────────────────────────────────────
     n_ms = len(result["milestones_hit"])
