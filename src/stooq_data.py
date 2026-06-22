@@ -1,4 +1,4 @@
-"""Stooq free forex daily candle backup source.
+﻿"""Stooq free forex daily candle backup source.
 
 No API key or account required. Unlimited free tier.
 Uses Stooq's direct CSV download URL via requests — no pandas-datareader needed.
@@ -10,7 +10,7 @@ GitHub Actions datacenter IPs typically bypass this challenge.
 The function always returns None gracefully if Stooq is unavailable.
 """
 import io
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import requests
 
@@ -36,7 +36,7 @@ def fetch_candles(pair: str, n_candles: int, log=print) -> dict | None:
         return None
 
     symbol   = _pair_to_stooq_symbol(pair)
-    end_dt   = datetime.utcnow()
+    end_dt   = datetime.now(timezone.utc).replace(tzinfo=None)
     days_req = max(int(n_candles * 1.6) + 30, 365)
     start_dt = end_dt - timedelta(days=days_req)
 

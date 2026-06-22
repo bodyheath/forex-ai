@@ -1,4 +1,4 @@
-"""Smart daily pair selection — 9-factor merit scoring.
+﻿"""Smart daily pair selection — 9-factor merit scoring.
 
 Scores the complete Twelve Data forex universe on nine axes before deciding
 which 15 pairs go to deep analysis:
@@ -36,7 +36,7 @@ Flow:
 import json
 import time
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import requests
 
@@ -210,7 +210,7 @@ def _fetch_calendar(hours_ahead: int = 48) -> list:
     if not config.TWELVE_DATA_KEY:
         return []
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     end = now + timedelta(hours=hours_ahead)
     try:
         r = requests.get(
@@ -289,7 +289,7 @@ def count_weekly_high_impact_events() -> tuple:
     if not config.TWELVE_DATA_KEY:
         return (0, [])
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     end = now + timedelta(days=7)
     try:
         r = requests.get(
@@ -783,7 +783,7 @@ def _compute_rich_score(
     # Sweet spot: high-impact event 6-24h away — near enough to be a catalyst,
     # far enough that we're not trading into the release itself.
     f7 = 0.0
-    now_utc = datetime.utcnow()
+    now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
     for ev in events:
         if ev.get("currency") not in (base, quote):
             continue
@@ -1107,7 +1107,7 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
     else:
         log("  Trade history: none yet — system performance factor set to neutral (5 pts)")
 
-    utc_hour = datetime.utcnow().hour
+    utc_hour = datetime.now(timezone.utc).replace(tzinfo=None).hour
 
     # Load previous scan state for dynamic boosters (non-fatal — falls back to {})
     prev_prices = _load_scan_snapshot()

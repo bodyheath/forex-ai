@@ -1,4 +1,4 @@
-"""Daily automation runner (intended for a 6am scheduled task).
+﻿"""Daily automation runner (intended for a 6am scheduled task).
 
 Sequence:
   1. Refresh learning memory from any outcomes recorded since the last run.
@@ -23,7 +23,7 @@ import time
 import traceback
 import urllib.parse
 import urllib.request
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 for _stream in (sys.stdout, sys.stderr):
     try:
@@ -7418,7 +7418,7 @@ def _send_telegram_summary(
                 _ss_prev = json.loads(_SCAN_STATUS_FILE.read_text(encoding="utf-8"))
             except Exception:
                 pass
-        _ss_prev.update({"completed": True, "finished": datetime.utcnow().isoformat()})
+        _ss_prev.update({"completed": True, "finished": datetime.now(timezone.utc).replace(tzinfo=None).isoformat()})
         _SCAN_STATUS_FILE.write_text(json.dumps(_ss_prev), encoding="utf-8")
     except Exception:
         pass
@@ -7805,7 +7805,7 @@ def run() -> int:
     _run_start = time.time()
 
     # ── Startup timezone diagnostics ──────────────────────────────────────────
-    _now_utc = datetime.utcnow()
+    _now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
     print(
         f"[startup] UTC time:      {_now_utc.strftime('%Y-%m-%d %H:%M:%S')} UTC",
         file=sys.stderr,
@@ -8881,8 +8881,9 @@ def run() -> int:
                         _mt_aligned_rt = 0
                     _extra_rt["monthly_trend"]         = _mt_trend_rt
                     _extra_rt["monthly_trend_aligned"] = _mt_aligned_rt
-                except Exception:
-                    pass
+                except Exception as _e_mt_rt:
+                    import sys as _sys_mt
+                    print(f"[rt-ml] monthly_trend_aligned failed for {r_result['pair']}: {_e_mt_rt}", file=_sys_mt.stderr)
 
                 # HHHL trend structure at entry — used as ML feature
                 try:

@@ -1,4 +1,4 @@
-"""Dry-run simulation of the 6am analysis pipeline.
+﻿"""Dry-run simulation of the 6am analysis pipeline.
 
 Checks all five safeguards against zero-deep-analysed and simulates which pairs
 would reach deep analysis tomorrow. Makes zero Telegram calls and saves nothing.
@@ -8,7 +8,7 @@ Uses the UNIVERSE fallback for pair scoring (no Twelve Data API calls needed).
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 for _stream in (sys.stdout, sys.stderr):
     try:
@@ -36,7 +36,7 @@ def section(title):
 # ── STEP 1: SELECTOR CHECK ──────────────────────────────────────────────────
 section("STEP 1  |  SELECTOR CHECK")
 
-utc_hour = datetime.utcnow().hour
+utc_hour = datetime.now(timezone.utc).replace(tzinfo=None).hour
 prescore_list = []
 exotic_filtered = 0
 for pair in _sel.UNIVERSE:

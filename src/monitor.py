@@ -1,4 +1,4 @@
-"""Between-scan trade monitor: batch price + OHLCV candle cascade detection.
+﻿"""Between-scan trade monitor: batch price + OHLCV candle cascade detection.
 
 Runs every 2 hours via GitHub Actions schedule.  Catches milestones (T1/T2/T3
 and stop hits) that occur between regular scans, including price spikes that
@@ -21,7 +21,7 @@ import json
 import os
 import time
 from datetime import date as _date_mod
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
@@ -158,7 +158,7 @@ def _check_hot_alert_sent(pair: str, is_currently_hot: bool = True) -> str | Non
         if not ts_str:
             return None
         ts       = datetime.strptime(ts_str[:19], "%Y-%m-%dT%H:%M:%S")
-        elapsed  = datetime.utcnow() - ts
+        elapsed  = datetime.now(timezone.utc).replace(tzinfo=None) - ts
         cont_hot = entry.get("continuously_hot", False)
         cooldown = timedelta(hours=24) if cont_hot else timedelta(hours=_HOT_ALERT_COOLDOWN_HOURS)
 
@@ -197,7 +197,7 @@ def _record_hot_alert_sent(pair: str, continuously_hot: bool = False) -> None:
             except Exception:
                 data = {"alerts_sent": {}, "pairs": {}}
 
-        now_str = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+        now_str = datetime.now(timezone.utc).replace(tzinfo=None).strftime("%Y-%m-%dT%H:%M:%SZ")
         data.setdefault("alerts_sent", {})[pair] = now_str   # keep legacy format
         data.setdefault("pairs", {})
         existing = data["pairs"].get(pair, {})
@@ -377,7 +377,7 @@ def _load_milestone_log() -> dict:
 def _check_milestone_sent(pair: str, level: str, hours: int = _DEDUP_HOURS) -> str | None:
     """Return ISO timestamp if this pair/level was already sent within `hours`, else None."""
     log_data = _load_milestone_log()
-    cutoff   = datetime.utcnow() - timedelta(hours=hours)
+    cutoff   = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=hours)
     for entry in log_data.get("sent", []):
         if entry.get("pair") == pair and entry.get("level") == level:
             ts_str = entry.get("timestamp", "")
@@ -400,7 +400,7 @@ def _record_milestone_sent(pair: str, level: str, trade_id: int,
         "level":      level,
         "trade_id":   trade_id,
         "trade_type": trade_type,
-        "timestamp":  datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "timestamp":  datetime.now(timezone.utc).replace(tzinfo=None).strftime("%Y-%m-%dT%H:%M:%SZ"),
     })
     log_data["sent"] = sent[-500:]   # keep last 500 entries (~3 weeks at normal pace)
     try:
@@ -705,7 +705,7 @@ def build_monitor_weekly_report() -> str:
     except Exception as exc:
         return f"Monitor history read error: {exc}"
 
-    cutoff = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    cutoff = (datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
     week   = [r for r in runs if r.get("ts", "") >= cutoff]
 
     if not week:
@@ -1298,7 +1298,7 @@ def build_monitor_source_report(days: int = 1) -> list:
         return []
 
     from datetime import timedelta as _td_td
-    cutoff = (datetime.utcnow() - _td_td(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    cutoff = (datetime.now(timezone.utc).replace(tzinfo=None) - _td_td(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ")
     week   = [r for r in runs if r.get("ts", "") >= cutoff and not r.get("skipped")]
     if not week:
         return []
@@ -1366,7 +1366,7 @@ def _check_market_reopen(now_ak, ta=None, log=print) -> bool:
             reopen_data = json.loads(_MARKET_REOPEN_FILE.read_text(encoding="utf-8"))
         last_str = reopen_data.get("last_reopen_detected", "")
         if last_str:
-            if (datetime.utcnow() - datetime.fromisoformat(last_str)).days < 6:
+            if (datetime.now(timezone.utc).replace(tzinfo=None) - datetime.fromisoformat(last_str)).days < 6:
                 return False  # already sent this week
         if ta:
             try:
@@ -1377,7 +1377,7 @@ def _check_market_reopen(now_ak, ta=None, log=print) -> bool:
                 )
             except Exception:
                 pass
-        reopen_data["last_reopen_detected"] = datetime.utcnow().isoformat()
+        reopen_data["last_reopen_detected"] = datetime.now(timezone.utc).replace(tzinfo=None).isoformat()
         reopen_data["reopen_alert_sent"]    = True
         _MARKET_REOPEN_FILE.write_text(json.dumps(reopen_data, indent=2), encoding="utf-8")
         log("Monitor: Sunday market reopen detected — alert sent")
@@ -1396,7 +1396,7 @@ def build_monitor_data_quality_report() -> list:
     except Exception:
         return []
 
-    cutoff = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    cutoff = (datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
     week = [r for r in runs if r.get("ts", "") >= cutoff and not r.get("skipped")]
     if not week:
         return []
@@ -1434,7 +1434,7 @@ def run(log=print) -> dict:
     """Run the between-scan monitor. Returns the monitor_log dict written to disk."""
     now_ak   = _auckland_now()
     is_wknd  = now_ak.weekday() >= 5   # Saturday or Sunday (Auckland)
-    now_str  = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    now_str  = datetime.now(timezone.utc).replace(tzinfo=None).strftime("%Y-%m-%dT%H:%M:%SZ")
     next_6am = "6am Auckland"
 
     result = {
@@ -2109,7 +2109,7 @@ def run(log=print) -> dict:
     # Item 2: Write heartbeat — checked by daily.py to detect monitor downtime
     try:
         _HEARTBEAT_FILE.write_text(
-            json.dumps({"last_run": datetime.utcnow().isoformat()}),
+            json.dumps({"last_run": datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}),
             encoding="utf-8",
         )
     except Exception:

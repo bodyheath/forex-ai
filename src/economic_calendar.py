@@ -1,4 +1,4 @@
-"""Economic calendar — high impact event fetching and pair-level news warnings.
+﻿"""Economic calendar — high impact event fetching and pair-level news warnings.
 
 Primary data source: Forex Factory XML feed (free, no API key required).
 Fallback: Twelve Data economic calendar API.
@@ -293,7 +293,7 @@ def _fetch_forex_factory():
         print(f"[ECO-CAL] Forex Factory fetch failed after 3 attempts: {_last_exc}")
         return None
 
-    now_utc = datetime.utcnow()
+    now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
     events = []
     _skipped_impact = 0
     _skipped_ccy    = 0
@@ -458,7 +458,7 @@ def _fetch_twelve_data():
         print("[ECO-CAL] TWELVE_DATA_KEY not set — Twelve Data calendar unavailable")
         return None
 
-    now_utc = datetime.utcnow()
+    now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
     end_utc = now_utc + timedelta(days=7)
     try:
         r = requests.get(
@@ -551,7 +551,7 @@ def _fetch_fmp():
     FMP free tier requires no API key. Returns list of event dicts on success
     (possibly empty), or None on failure.
     """
-    now_utc = datetime.utcnow()
+    now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
     end_utc = now_utc + timedelta(days=7)
     try:
         r = requests.get(
@@ -692,7 +692,7 @@ def events_for_pair(pair: str, hours: float = 48.0) -> list:
     ccys  = {c for c in (base, quote) if c}
 
     all_ev  = get_events_7d()
-    now_utc = datetime.utcnow()
+    now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
     result  = []
     for e in all_ev:
         if e["currency"] not in ccys:
@@ -714,7 +714,7 @@ def build_calendar_section() -> list:
     both data sources are unreachable.
     """
     all_ev  = get_events_7d()
-    now_utc = datetime.utcnow()
+    now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
 
     future = []
     for e in all_ev:

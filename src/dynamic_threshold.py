@@ -1,4 +1,4 @@
-"""Dynamic confidence entry threshold.
+﻿"""Dynamic confidence entry threshold.
 
 Three factors adjust the threshold each scan:
   1. Market regime  — read from data/regime_state.json (written by market_regime.py)
@@ -8,7 +8,7 @@ Three factors adjust the threshold each scan:
 Does NOT run regime detection itself; only reads regime_state.json.
 """
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import config
@@ -123,7 +123,7 @@ def append_history(threshold_data: dict) -> None:
                 history = json.loads(_THRESHOLD_HISTORY_FILE.read_text(encoding="utf-8"))
             except Exception:
                 history = []
-        entry = {**threshold_data, "timestamp": datetime.utcnow().isoformat()}
+        entry = {**threshold_data, "timestamp": datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}
         history.append(entry)
         history = history[-_MAX_HISTORY:]
         _THRESHOLD_HISTORY_FILE.write_text(json.dumps(history, indent=2), encoding="utf-8")
