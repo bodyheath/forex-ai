@@ -1061,6 +1061,15 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     )
                 except Exception:
                     pass
+            try:
+                if _dn:
+                    _was_protected = casc_oc != "LOSS"
+                    _stop_pips = abs(
+                        (_to_float(row_state.get("entry")) or mprice) - mprice
+                    ) / (0.01 if "JPY" in pair else 0.0001)
+                    _dn.send_fund_stop_hit(pair, direction, _stop_pips, _was_protected)
+            except Exception:
+                pass
             closed_rows.append(updated)
             _online_learn_closure("main", updated)
             break   # trade closed
