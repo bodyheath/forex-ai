@@ -49,6 +49,8 @@ FIELDS = [
     "t1_target_atr_multiple",     # actual T1 multiplier applied (0.4 standard)
     "t2_target_atr_multiple",     # actual T2 multiplier applied (0.7 standard)
     "t3_target_atr_multiple",     # actual T3 multiplier applied (1.0 standard)
+    "volatility_tier_at_entry",  # VERY_QUIET | QUIET | NORMAL | VOLATILE | VERY_VOLATILE
+    "atr_percentile_at_entry",   # atr_percentile_6m ratio used for tier (1.0 = normal)
 ]
 
 # status values: NO_TRADE | OPEN | WIN | LOSS | BREAKEVEN | SKIPPED | EXPIRED | PARTIAL_WIN | FULL_WIN
