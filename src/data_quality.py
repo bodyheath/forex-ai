@@ -402,11 +402,16 @@ _SOURCE_LABELS = {
 
 
 def consecutive_alerts(state: dict) -> list:
-    """Return Telegram strings for sources with 3+ consecutive scan failures."""
+    """Return Telegram strings for sources with 5+ consecutive scan failures.
+
+    FIX 3 Step 3: COT raises false alerts because USD Dollar Index is permanently
+    stale (2022 freeze). That currency now returns neutral instead of UNAVAILABLE,
+    so the positioning failure rate is lower. Threshold raised 3→5 to match.
+    """
     cf     = state.get("consecutive_fail", {})
     alerts = []
     for source, count in cf.items():
-        if count >= 3:
+        if count >= 5:
             label = _SOURCE_LABELS.get(source, source)
             alerts.append(
                 f"🚨 Data issue — {label} has failed for {count} consecutive scans "
