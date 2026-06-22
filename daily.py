@@ -34,6 +34,11 @@ for _stream in (sys.stdout, sys.stderr):
 import config
 from src import dashboard, learning, selector, service
 
+try:
+    from src import discord_notifier as _discord
+except Exception:
+    _discord = None
+
 _SESSION_AUCKLAND = {
     "EUR": ("London",        "7pm–4am"),
     "GBP": ("London",        "7pm–4am"),
