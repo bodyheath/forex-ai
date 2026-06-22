@@ -8903,8 +8903,9 @@ def run() -> int:
                     else:
                         _hhhl_rt = 0.5
                     _extra_rt["hhhl_aligned"] = _hhhl_rt
-                except Exception:
-                    pass
+                except Exception as _e_hhhl_rt:
+                    import sys as _sys_hhhl
+                    print(f"[rt-ml] hhhl_aligned failed for {r_result['pair']}: {_e_hhhl_rt}", file=_sys_hhhl.stderr)
 
                 # Kill zone at entry — used as ML feature
                 try:
