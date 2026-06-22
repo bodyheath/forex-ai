@@ -2325,9 +2325,16 @@ def run(log=print) -> dict:
                     elif _st_out == "PARTIAL_WIN":
                         _st_partial += 1
                         _win_pips_list.append(_fp)
-                    elif _st_out == "LOSS":
-                        _st_losses += 1
-                        _loss_pips_list.append(abs(_fp))
+                    elif _st_out in ("LOSS", "EXPIRED", "EXPIRED_LOSS", "STALE_EXIT"):
+                        # FIX 5: EXPIRED trades count as losses — not wins.
+                        # EXPIRED with positive pips means we exited early (partial);
+                        # EXPIRED with zero/negative pips is a clear loss.
+                        if _fp > 0:
+                            _st_partial += 1
+                            _win_pips_list.append(_fp)
+                        else:
+                            _st_losses += 1
+                            _loss_pips_list.append(abs(_fp))
                     if _fp > _best_pips_seen:
                         _best_pips_seen = _fp
                         _st_best_pair = str(_fr.get("pair") or "")
