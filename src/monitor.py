@@ -1737,8 +1737,28 @@ def run(log=print) -> dict:
         current_hot_keys.add(_hk)
         _hot_by_pair.setdefault(_hpair, []).append(_hr)
 
+    # Determine which pairs left HOT zone since last run (reset continuously_hot)
+    _prev_hot_pairs: set = set()
+    try:
+        if _HOT_ZONE_ALERTS.exists():
+            _hza_data = json.loads(_HOT_ZONE_ALERTS.read_text(encoding="utf-8"))
+            _prev_hot_pairs = set(_hza_data.get("pairs", {}).keys())
+    except Exception:
+        pass
+    for _exited_pair in _prev_hot_pairs - set(_hot_by_pair.keys()):
+        _mark_hot_zone_exited(_exited_pair)
+
     _alerts_sent = 0
     for _pair_str in sorted(_hot_by_pair):
+        # Check if this pair was continuously HOT (never left HOT zone since last alert)
+        _cont_hot = False
+        try:
+            if _HOT_ZONE_ALERTS.exists():
+                _hza_read = json.loads(_HOT_ZONE_ALERTS.read_text(encoding="utf-8"))
+                _cont_hot = _hza_read.get("pairs", {}).get(_pair_str, {}).get("continuously_hot", False)
+        except Exception:
+            pass
+
         _prev_ts = _check_hot_alert_sent(_pair_str)
         if _prev_ts:
             _n = len(_hot_by_pair[_pair_str])
@@ -1753,7 +1773,9 @@ def run(log=print) -> dict:
                 ))
             except Exception:
                 pass
-        _record_hot_alert_sent(_pair_str)
+        # Mark as continuously HOT if it was already HOT last run (pair stayed in HOT zone)
+        _new_cont_hot = _pair_str in _prev_hot_pairs or _cont_hot
+        _record_hot_alert_sent(_pair_str, continuously_hot=_new_cont_hot)
         _alerts_sent += 1
 
     result["approaching_alerts"] = _alerts_sent
