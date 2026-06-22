@@ -1,0 +1,11 @@
+[
+  {
+    "id": "977",
+    "pair": "CAD/AUD",
+    "status": "EXPIRED",
+    "r_multiple": -0.62,
+    "analysis": "## What Went Wrong\n\nThe trade was fundamentally compromised from the outset by a severe structural conflict: a 5/5 ALIGNED_BEAR ribbon with a death-cross SMA structure directly opposed a counter-trend long entry, yet this was treated as a manageable risk rather than a disqualifying condition. The Fundamental score of 3/10 \u2014 driven by CAD rates falling against rising AUD rates and 64% net AUD long positioning \u2014 represented a macro and institutional headwind that historically overwhelms short-term technical patterns like double-bottoms. The NEWS_WARNING about CAD CPI/employment and RBA commentary within 48 hours was explicitly flagged yet the trade was still marked TRADE_THIS: YES, meaning high-impact catalysts almost certainly accelerated the move against the position before the technical setup could develop. The 6/10 confidence threshold was too low to justify a counter-trend entry into a confirmed bear ribbon with weak fundamentals and imminent adverse news risk.\n\nPATTERN: Never enter counter-trend longs when ALIGNED_BEAR ribbon is 5/5 AND fundamental score \u22644 AND major catalyst news is due within 48h.",
+    "pattern_rule": "Never enter counter-trend longs when ALIGNED_BEAR ribbon is 5/5 AND fundamental score \u22644 AND major catalyst news is due ",
+    "analysed_at": "2026-06-22 16:07:11"
+  }
+]
