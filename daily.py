@@ -9393,6 +9393,23 @@ def run() -> int:
                     f"⚠️ <b>{scan_mode.upper()} scan complete but summary build failed</b>\n"
                     f"{type(_tg_exc).__name__}: {str(_tg_exc)[:200]}"
                 )
+        try:
+            if _discord:
+                _discord.send_full_scan_report(
+                    date=str(date),
+                    universe_size=int(universe_size or 0),
+                    pairs_analysed=len(analysed_pairs or []),
+                    new_alerts=len(_new_alerts or []),
+                    threshold=float((run_stats or {}).get("dynamic_threshold") or 0),
+                    regime=str((run_stats or {}).get("market_regime") or "n/a"),
+                    open_fund_trades=0,
+                    research_open=int((research_result or {}).get("open_count") or 0),
+                    win_rate=None,
+                    cost_usd=float((run_stats or {}).get("estimated_usd") or 0),
+                    run_minutes=float(run_duration_min or 0),
+                )
+        except Exception:
+            pass
 
     _timeout_timer.cancel()
     return 0
