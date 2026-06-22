@@ -8040,6 +8040,19 @@ def run() -> int:
 
     _telegram_test()
 
+    # FIX 4: Discord webhook diagnostic — log which webhooks are configured
+    _dsc_webhook_names = [
+        "DISCORD_WEBHOOK_FUND",
+        "DISCORD_WEBHOOK_RESEARCH",
+        "DISCORD_WEBHOOK_MONITOR",
+        "DISCORD_WEBHOOK_HEALTH",
+        "DISCORD_WEBHOOK_CRITICAL",
+    ]
+    for _dsc_wh_name in _dsc_webhook_names:
+        _dsc_wh_val = os.getenv(_dsc_wh_name)
+        _dsc_wh_status = "✅" if _dsc_wh_val else "❌ MISSING"
+        print(f"Discord {_dsc_wh_name}: {_dsc_wh_status}", file=sys.stderr)
+
     missing = config.missing_keys()
     if missing:
         print("ERROR: missing API keys in .env: " + ", ".join(missing), file=sys.stderr)
