@@ -2301,6 +2301,52 @@ def run(log=print) -> dict:
             _dash_bal      = _dash_open_bal + _dash_pnl_usd
             _dash_peak     = float(_fs_d.get("peak_balance") or _dash_bal or 10000)
             _dash_ret      = (_dash_bal - 10000.0) / 10000.0 * 100 if _dash_bal else 0.0
+
+            # Fund trade statistics from trades.csv (fund trades only: trade_this == YES)
+            _st_wins = _st_losses = _st_partial = 0
+            _st_wr = _st_avg_win = _st_avg_loss = _st_pf = _st_best_pips = _st_total_pips = 0.0
+            _st_best_pair = ""
+            _st_total = 0
+            try:
+                import csv as _csv_dash
+                _pip_col = "cascading_total_pips_weighted"
+                with open(config.DATA_DIR / "trades.csv", encoding="utf-8-sig", newline="") as _tf:
+                    _fund_rows = [r for r in _csv_dash.DictReader(_tf)
+                                  if r.get("trade_this") == "YES"]
+                _st_total = len(_fund_rows)
+                _win_pips_list, _loss_pips_list = [], []
+                _best_pips_seen = 0.0
+                for _fr in _fund_rows:
+                    _st_out = str(_fr.get("status") or "").upper()
+                    _fp = float(_fr.get(_pip_col) or _fr.get("pips") or 0)
+                    if _st_out in ("WIN", "FULL_WIN"):
+                        _st_wins += 1
+                        _win_pips_list.append(_fp)
+                    elif _st_out == "PARTIAL_WIN":
+                        _st_partial += 1
+                        _win_pips_list.append(_fp)
+                    elif _st_out == "LOSS":
+                        _st_losses += 1
+                        _loss_pips_list.append(abs(_fp))
+                    if _fp > _best_pips_seen:
+                        _best_pips_seen = _fp
+                        _st_best_pair = str(_fr.get("pair") or "")
+                _st_best_pips = _best_pips_seen
+                _st_decisive = _st_wins + _st_losses + _st_partial
+                if _st_decisive > 0:
+                    _st_wr = (_st_wins + _st_partial) / _st_decisive * 100
+                if _win_pips_list:
+                    _st_avg_win = sum(_win_pips_list) / len(_win_pips_list)
+                if _loss_pips_list:
+                    _st_avg_loss = sum(_loss_pips_list) / len(_loss_pips_list)
+                _tot_win = sum(_win_pips_list)
+                _tot_loss = sum(_loss_pips_list)
+                if _tot_loss > 0:
+                    _st_pf = _tot_win / _tot_loss
+                _st_total_pips = _tot_win - _tot_loss
+            except Exception as _st_exc:
+                log(f"  Monitor: fund stats calculation failed: {_st_exc}")
+
             _dn.update_fund_dashboard(
                 open_fund_trades=_dash_trades,
                 fund_balance=_dash_bal,
@@ -2313,6 +2359,17 @@ def run(log=print) -> dict:
                 consecutive_wins=int(_fs_d.get("consecutive_wins") or 0),
                 consecutive_losses=int(_fs_d.get("consecutive_losses") or 0),
                 ftmo_current_pct=float(_fs_d.get("daily_pnl_pct") or 0),
+                fund_total_trades=_st_total,
+                fund_wins=_st_wins,
+                fund_losses=_st_losses,
+                fund_partial_wins=_st_partial,
+                fund_win_rate=_st_wr,
+                fund_avg_win_pips=_st_avg_win,
+                fund_avg_loss_pips=_st_avg_loss,
+                fund_profit_factor=_st_pf,
+                fund_best_trade_pips=_st_best_pips,
+                fund_best_trade_pair=_st_best_pair,
+                fund_total_pips=_st_total_pips,
             )
     except Exception as _dash_exc:
         log(f"  Monitor: Discord dashboard update failed: {_dash_exc}")
