@@ -7444,7 +7444,8 @@ _RUN_GUARD_FILE       = config.DATA_DIR / "run_guard.json"
 _MOVEMENT_ALERTS_FILE = config.DATA_DIR / "movement_alerts.json"
 _HEARTBEAT_FILE       = config.DATA_DIR / "heartbeat.json"
 _SCAN_STATUS_FILE     = config.DATA_DIR / "scan_status.json"
-_COOLDOWN_SECS  = 5400  # 90 minutes — catches cron-job.org retries on long-running scans
+_COOLDOWN_SECS         = 5400  # 90 minutes — legacy constant kept for reference
+_DUPLICATE_GUARD_SECS  = 1200  # 20 minutes — only same-mode duplicates on GitHub Actions are blocked
 
 _ALERTS_FILE         = config.DATA_DIR / "last_alerts.json"
 _MORNING_RANKED_FILE = config.DATA_DIR / "morning_ranked.json"
