@@ -222,6 +222,7 @@ def _series_for(market_name: str) -> list:
                     f"[COT] Fresh fetch successful — data from week ending {week_end}",
                     file=sys.stderr,
                 )
+            _cot_consecutive_failures[0] = 0   # reset on success
             cache.set(key, rows)
             return rows
         except (NameError, TypeError, AttributeError) as _code_exc:
