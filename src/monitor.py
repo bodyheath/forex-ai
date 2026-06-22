@@ -1859,18 +1859,17 @@ def run(log=print) -> dict:
                 _pip_sz = 0.01 if "JPY" in _pair_str else 0.0001
                 if _cur_p and _entry and _tgt0:
                     _rng  = abs(_tgt0 - _entry)
-                    _prog = (abs(_cur_p - _entry) / _rng * 100) if _rng > 0 else 0.0
+                    # Signed progress: +ve = toward target, -ve = against trade, >100 = past target
+                    _prog = (
+                        (_cur_p - _entry) / _rng if _dir0 == "BUY" else (_entry - _cur_p) / _rng
+                    ) * 100 if _rng > 0 else 0.0
                     _dist = abs(_tgt0 - _cur_p) / _pip_sz
 
                     if _prog > 100:
-                        # Price has already crossed the target level — the HOT zone
-                        # cooldown may have delayed the alert past the actual crossing.
-                        # Candle-based Step 4+5 detection covers crossings within the
-                        # last 6 candles; trigger spot detection here to cover older ones.
+                        # Price already past target — skip approaching alert, trigger milestone
                         log(
-                            f"  Monitor: {_pair_str} HOT zone {_prog:.0f}% — price has "
-                            f"already crossed {_ms0} ({_tgt0}) — triggering immediate "
-                            f"spot milestone detection"
+                            f"  Monitor: {_pair_str} HOT zone {_prog:.0f}% — target already "
+                            f"crossed — triggering milestone detection instead of HOT zone alert"
                         )
                         try:
                             _spot_ms, _spot_state = _detect_spot_milestones(
@@ -1891,10 +1890,26 @@ def run(log=print) -> dict:
                                 f"  Monitor: immediate spot detection failed for "
                                 f"{_pair_str}: {_spot_exc}"
                             )
+                        # No send_fund_approaching — milestone detection sends the Discord alert
 
-                    _dn.send_fund_approaching(
-                        _pair_str, _dir0, _prog, _tgt0, _cur_p, _dist, _stop0 or 0.0, _ms0
-                    )
+                    elif _prog <= 0:
+                        # Price moved against trade — approaching stop loss
+                        log(
+                            f"  Monitor: {_pair_str} HOT zone {_prog:.0f}% "
+                            f"— price moving against trade — sending stop-approaching alert"
+                        )
+                        _stop_dist = abs(_cur_p - (_stop0 or _entry)) / _pip_sz
+                        _dn.send_fund_approaching(
+                            _pair_str, _dir0, _prog, _stop0 or 0.0, _cur_p,
+                            _stop_dist, _stop0 or 0.0, "STOP"
+                        )
+
+                    else:
+                        # 0 < _prog < 100 — price normally approaching cascade target
+                        _dn.send_fund_approaching(
+                            _pair_str, _dir0, _prog, _tgt0, _cur_p, _dist,
+                            _stop0 or 0.0, _ms0
+                        )
         except Exception:
             pass
         # Mark as continuously HOT if it was already HOT last run (pair stayed in HOT zone)
