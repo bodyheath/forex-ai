@@ -8399,6 +8399,8 @@ def run() -> int:
         def _process_batch(pairs, force_deep=False):
             nonlocal filtered_count
             for pair in pairs:
+                if _check_scan_timeout():
+                    break
                 if pair in analysed_pairs:
                     _log_line(logf, f"  {pair}: CACHE HIT (already analysed this run)")
                     continue
