@@ -784,3 +784,223 @@ def send_master_scan_report(
         color,
         fields=fields,
     )
+
+
+def _load_dashboard_state() -> dict:
+    if DASHBOARD_STATE_FILE.exists():
+        try:
+            return json.loads(DASHBOARD_STATE_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {}
+
+
+def _save_dashboard_state(state: dict) -> None:
+    try:
+        DASHBOARD_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        DASHBOARD_STATE_FILE.write_text(json.dumps(state, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+
+
+def update_fund_dashboard(
+    open_fund_trades,
+    fund_balance, fund_return_pct,
+    daily_pnl_pct, daily_pnl_dollars,
+    drawdown_pct, sizing_mode, risk_pct,
+    consecutive_wins, consecutive_losses,
+    ftmo_current_pct, ftmo_target_pct=10.0,
+    recently_closed=None,
+):
+    if not WEBHOOK_FUND:
+        return False
+
+    state = _load_dashboard_state()
+    existing_message_id = state.get("fund_dashboard_message_id")
+
+    # ── FUND HEADER ────────────────────────────────────────────────────────────
+    fund_emoji = "\U0001f4c8" if daily_pnl_pct >= 0 else "\U0001f4c9"
+    dd_emoji   = ("✅" if drawdown_pct < 3 else ("⚠️" if drawdown_pct < 7 else "\U0001f6a8"))
+    if consecutive_wins >= 2:
+        streak = f"\U0001f525 {consecutive_wins} win streak"
+    elif consecutive_losses >= 2:
+        streak = f"❄️ {consecutive_losses} loss streak"
+    else:
+        streak = "➡️ Neutral"
+
+    ftmo_pct_of_target = (ftmo_current_pct / ftmo_target_pct * 100) if ftmo_target_pct > 0 else 0
+    ftmo_bar = _progress_bar(min(max(ftmo_pct_of_target, 0), 100), width=15)
+
+    fields = []
+    fields.append({
+        "name":  "\U0001f4b0 Fund Status",
+        "value": (
+            f"Balance: **${fund_balance:,.2f}** ({fund_return_pct:+.2f}%)\n"
+            f"{fund_emoji} Today: {daily_pnl_pct:+.2f}% (${daily_pnl_dollars:+.2f})\n"
+            f"{dd_emoji} Drawdown: {drawdown_pct:.2f}% · {streak}\n"
+            f"Sizing: {sizing_mode} ({risk_pct:.2f}% per trade)"
+        ),
+        "inline": False,
+    })
+    fields.append({
+        "name":  "\U0001f3c6 FTMO Progress",
+        "value": f"`{ftmo_bar}` {ftmo_current_pct:+.2f}% / {ftmo_target_pct:.0f}% target",
+        "inline": False,
+    })
+
+    # ── OPEN TRADES ────────────────────────────────────────────────────────────
+    if open_fund_trades:
+        for t in open_fund_trades:
+            pair       = t.get("pair", "")
+            direction  = t.get("direction", "")
+            entry      = t.get("entry", 0) or 0
+            current    = t.get("current", 0) or 0
+            stop       = t.get("stop", 0) or 0
+            t1         = t.get("t1", 0) or 0
+            t2         = t.get("t2", 0) or 0
+            t3         = t.get("t3", 0) or 0
+            t1_hit     = t.get("t1_hit", False)
+            t2_hit     = t.get("t2_hit", False)
+            t3_hit     = t.get("t3_hit", False)
+            progress   = t.get("progress_pct", 0)
+            next_tgt   = t.get("next_target", "T1")
+            pips       = t.get("pips_unrealised", 0)
+            dollars    = t.get("dollars_unrealised", 0)
+            days       = t.get("days_open", 0)
+            conf       = t.get("conf", 0)
+            checklist  = t.get("checklist_score", 0)
+            trade_id   = t.get("id", "")
+
+            dir_emoji = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
+            pnl_emoji = "\U0001f7e2" if pips >= 0 else "\U0001f534"
+
+            if t3_hit:
+                protection = "\U0001f6e1️\U0001f6e1️\U0001f6e1️ Full cascade"
+            elif t2_hit:
+                protection = "\U0001f6e1️\U0001f6e1️ T2 banked (70%)"
+            elif t1_hit:
+                protection = "\U0001f6e1️ T1 banked (40%)"
+            else:
+                protection = "⚡️ Running"
+
+            bar = _progress_bar(min(max(progress, 0), 100), width=12)
+
+            active_target = (t3 if t2_hit else (t2 if t1_hit else t1))
+            price_bar = _price_position_bar(entry, current, stop, active_target, direction)
+
+            cascade_dots = (
+                f"{'🟢' if t1_hit else '⚪'} T1  "
+                f"{'🟢' if t2_hit else '⚪'} T2  "
+                f"{'🟢' if t3_hit else '⚪'} T3"
+            )
+
+            tv_url = _get_tradingview_url(pair)
+
+            trade_value = (
+                f"{dir_emoji} **{direction}** · Entry: `{entry:.5f}`\n"
+                f"Current: `{current:.5f}` · Stop: `{stop:.5f}`\n"
+                f"T1: `{t1:.5f}`  T2: `{t2:.5f}`  T3: `{t3:.5f}`\n"
+                f"\n"
+                f"{cascade_dots}\n"
+                f"{protection}\n"
+                f"\n"
+                f"Progress → {next_tgt}:\n"
+                f"`{bar}` {max(progress, 0):.0f}%\n"
+            )
+            if price_bar:
+                trade_value += f"{price_bar}\n"
+            trade_value += (
+                f"\n"
+                f"{pnl_emoji} P&L: **{pips:+.1f}p** (${dollars:+.2f})\n"
+                f"Open: {days}d · Conf: {conf}/10 · Check: {checklist}/10\n"
+                f"[\U0001f4ca TradingView]({tv_url})"
+            )
+
+            fields.append({
+                "name":  f"\U0001f4bc {pair} #{trade_id}",
+                "value": trade_value,
+                "inline": False,
+            })
+    else:
+        fields.append({
+            "name":  "\U0001f4ca Open Fund Trades",
+            "value": "No open fund trades\nWaiting for next signal...",
+            "inline": False,
+        })
+
+    # ── RECENTLY CLOSED ────────────────────────────────────────────────────────
+    if recently_closed:
+        closed_text = ""
+        for t in recently_closed[:3]:
+            outcome = t.get("outcome", "")
+            pips_c  = t.get("pips", 0)
+            usd_c   = t.get("dollars", 0)
+            days_c  = t.get("days_open", 0)
+            if "WIN" in outcome or "PARTIAL" in outcome:
+                e = "✅"
+            elif "LOSS" in outcome:
+                e = "❌"
+            elif "EXPIRED" in outcome:
+                e = "⏱️"
+            else:
+                e = "⚪"
+            closed_text += (
+                f"{e} **{t.get('pair', '')}** — {outcome}\n"
+                f"{pips_c:+.1f}p · ${usd_c:+.2f} · {days_c}d\n\n"
+            )
+        fields.append({
+            "name":  "\U0001f4cb Recently Closed",
+            "value": closed_text.strip(),
+            "inline": False,
+        })
+
+    # ── BUILD EMBED ────────────────────────────────────────────────────────────
+    color = (0x00FF88 if daily_pnl_pct >= 0.5
+             else 0x27AE60 if daily_pnl_pct >= 0
+             else 0xF39C12 if daily_pnl_pct >= -1
+             else 0xFF3333)
+
+    updated_at = datetime.now(timezone.utc).strftime("%H:%M UTC")
+    n_open = len(open_fund_trades) if open_fund_trades else 0
+    embed = {
+        "title": "\U0001f4bc Fund Trades Dashboard",
+        "description": (
+            f"**{n_open} open fund trade(s)** · Last updated: {updated_at}\n"
+            f"Auto-updates every monitor run (~30 min)"
+        ),
+        "color": color,
+        "fields": fields,
+        "footer": {
+            "text": (
+                f"Forex AI · ${fund_balance:,.2f} balance · "
+                f"Updates on every monitor run"
+            )
+        },
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+
+    # ── EDIT existing message or POST new one ──────────────────────────────────
+    if existing_message_id:
+        try:
+            _wh_tail = WEBHOOK_FUND.split("webhooks/")[1]
+            edit_url = f"https://discord.com/api/webhooks/{_wh_tail}/messages/{existing_message_id}"
+            resp = requests.patch(edit_url, json={"embeds": [embed]}, timeout=10)
+            if resp.status_code == 200:
+                return True
+        except Exception:
+            pass
+
+    # POST new message with ?wait=true to receive the message ID
+    try:
+        url  = WEBHOOK_FUND + "?wait=true"
+        resp = requests.post(url, json={"embeds": [embed]}, timeout=10)
+        if resp.status_code == 200:
+            msg_id = resp.json().get("id")
+            if msg_id:
+                state["fund_dashboard_message_id"] = msg_id
+                _save_dashboard_state(state)
+            return True
+    except Exception:
+        pass
+
+    return False
