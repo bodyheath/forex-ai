@@ -135,30 +135,49 @@ def _write_monitor_log(data: dict) -> None:
 # This prevents duplicate alerts when concurrent monitor runs both read a stale
 # monitor_log.json from git before the previous run has committed.
 
-def _check_hot_alert_sent(pair: str) -> str | None:
-    """Return human-readable elapsed string if this pair got a HOT alert within
-    the cooldown window, else None."""
+def _check_hot_alert_sent(pair: str, is_currently_hot: bool = True) -> str | None:
+    """Return human-readable elapsed string if this pair is still in cooldown, else None.
+
+    Cooldown rules:
+    - If continuously_hot (price never left HOT zone since last alert): 24-hour cooldown
+    - Otherwise: standard _HOT_ALERT_COOLDOWN_HOURS cooldown
+    """
     try:
         if not _HOT_ZONE_ALERTS.exists():
             return None
-        data    = json.loads(_HOT_ZONE_ALERTS.read_text(encoding="utf-8"))
-        ts_str  = data.get("alerts_sent", {}).get(pair)
+        data       = json.loads(_HOT_ZONE_ALERTS.read_text(encoding="utf-8"))
+        entry      = data.get("pairs", {}).get(pair) or {}
+        # Support legacy format: {"alerts_sent": {pair: ts}}
+        if not entry:
+            ts_str = data.get("alerts_sent", {}).get(pair)
+            if not ts_str:
+                return None
+            entry = {"last_alert_sent": ts_str, "continuously_hot": False}
+
+        ts_str   = entry.get("last_alert_sent", "")
         if not ts_str:
             return None
-        ts      = datetime.strptime(ts_str[:19], "%Y-%m-%dT%H:%M:%S")
-        elapsed = datetime.utcnow() - ts
-        if elapsed < timedelta(hours=_HOT_ALERT_COOLDOWN_HOURS):
+        ts       = datetime.strptime(ts_str[:19], "%Y-%m-%dT%H:%M:%S")
+        elapsed  = datetime.utcnow() - ts
+        cont_hot = entry.get("continuously_hot", False)
+        cooldown = timedelta(hours=24) if cont_hot else timedelta(hours=_HOT_ALERT_COOLDOWN_HOURS)
+
+        if elapsed < cooldown:
             mins = int(elapsed.total_seconds() / 60)
-            return f"{mins} minutes ago" if mins < 60 else f"{int(mins / 60)}h{mins % 60:02d}m ago"
+            elapsed_str = f"{mins} minutes ago" if mins < 60 else f"{int(mins / 60)}h{mins % 60:02d}m ago"
+            if cont_hot:
+                return f"{elapsed_str} (continuously HOT — 24h cooldown)"
+            return elapsed_str
     except Exception:
         pass
     return None
 
 
-def _record_hot_alert_sent(pair: str) -> None:
+def _record_hot_alert_sent(pair: str, continuously_hot: bool = False) -> None:
     """Immediately write pair + UTC timestamp to hot_zone_alerts.json.
 
     Uses a sidecar lock file to prevent interleaved writes from concurrent runs.
+    Tracks first_entered_hot and continuously_hot state.
     """
     _lock = Path(str(_HOT_ZONE_ALERTS) + ".lock")
     try:
@@ -171,14 +190,49 @@ def _record_hot_alert_sent(pair: str) -> None:
             except FileExistsError:
                 time.sleep(0.1)
 
-        data: dict = {"alerts_sent": {}}
+        data: dict = {"alerts_sent": {}, "pairs": {}}
         if _HOT_ZONE_ALERTS.exists():
             try:
                 data = json.loads(_HOT_ZONE_ALERTS.read_text(encoding="utf-8"))
             except Exception:
-                data = {"alerts_sent": {}}
-        data.setdefault("alerts_sent", {})
-        data["alerts_sent"][pair] = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+                data = {"alerts_sent": {}, "pairs": {}}
+
+        now_str = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+        data.setdefault("alerts_sent", {})[pair] = now_str   # keep legacy format
+        data.setdefault("pairs", {})
+        existing = data["pairs"].get(pair, {})
+        data["pairs"][pair] = {
+            "first_entered_hot": existing.get("first_entered_hot") or now_str,
+            "last_alert_sent":   now_str,
+            "continuously_hot":  continuously_hot,
+        }
+        _HOT_ZONE_ALERTS.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+    finally:
+        try:
+            _lock.unlink()
+        except Exception:
+            pass
+
+
+def _mark_hot_zone_exited(pair: str) -> None:
+    """Called when a pair leaves the HOT zone — resets continuously_hot flag."""
+    _lock = Path(str(_HOT_ZONE_ALERTS) + ".lock")
+    try:
+        for _ in range(30):
+            try:
+                fd = os.open(str(_lock), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+                os.close(fd)
+                break
+            except FileExistsError:
+                time.sleep(0.1)
+
+        if not _HOT_ZONE_ALERTS.exists():
+            return
+        data = json.loads(_HOT_ZONE_ALERTS.read_text(encoding="utf-8"))
+        if pair in data.get("pairs", {}):
+            data["pairs"][pair]["continuously_hot"] = False
         _HOT_ZONE_ALERTS.write_text(json.dumps(data, indent=2), encoding="utf-8")
     except Exception:
         pass
