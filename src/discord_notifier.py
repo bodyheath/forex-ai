@@ -834,6 +834,17 @@ def update_fund_dashboard(
     consecutive_wins, consecutive_losses,
     ftmo_current_pct, ftmo_target_pct=10.0,
     recently_closed=None,
+    fund_total_trades=0,
+    fund_wins=0,
+    fund_losses=0,
+    fund_partial_wins=0,
+    fund_win_rate=0.0,
+    fund_avg_win_pips=0.0,
+    fund_avg_loss_pips=0.0,
+    fund_profit_factor=0.0,
+    fund_best_trade_pips=0.0,
+    fund_best_trade_pair="",
+    fund_total_pips=0.0,
 ):
     if not WEBHOOK_FUND:
         return False
