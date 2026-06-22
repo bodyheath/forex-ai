@@ -21,6 +21,13 @@ Kelly Criterion:
 import math
 
 
+# ── FTMO challenge rule constants ─────────────────────────────────────────────
+FTMO_MAX_DAILY_LOSS_PCT   = 5.0    # % — FTMO Phase 1 & 2 daily loss limit
+FTMO_MAX_TOTAL_LOSS_PCT   = 10.0   # % — FTMO Phase 1 & 2 max total drawdown
+FTMO_PROFIT_TARGET_PCT    = 10.0   # % — FTMO Phase 1 profit target
+FTMO_PHASE2_TARGET_PCT    = 5.0    # % — FTMO Phase 2 profit target
+
+
 # ── Core calculations ─────────────────────────────────────────────────────────
 
 def risk_of_ruin(win_rate: float, avg_rr: float, risk_pct: float,
