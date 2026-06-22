@@ -975,6 +975,23 @@ def update_fund_dashboard(
 
             tv_url = _get_tradingview_url(pair)
 
+            # FIX 10: Trade health status
+            progress_pct = t.get("progress_pct", 0)
+            if progress_pct >= 100:
+                health = "\U0001f3af Target crossed"
+            elif progress_pct >= 75:
+                health = "\U0001f525 Hot zone"
+            elif progress_pct >= 50:
+                health = "✅ Good progress"
+            elif progress_pct >= 25:
+                health = "⏳ Early stage"
+            elif progress_pct >= 0:
+                health = "↔️ Watching"
+            elif progress_pct >= -30:
+                health = "⚠️ Moving against"
+            else:
+                health = "\U0001f6a8 Significant adverse move"
+
             trade_value = (
                 f"{dir_emoji} **{direction}** · Entry: `{entry:.5f}`\n"
                 f"Current: `{current:.5f}` · Stop: `{stop:.5f}`\n"
@@ -988,12 +1005,22 @@ def update_fund_dashboard(
             )
             if price_bar:
                 trade_value += f"{price_bar}\n"
+            # FIX 10: health line after cascade dots
+            trade_value += f"{health}\n"
+            # FIX 6: Show pips AND dollars on same line
             trade_value += (
                 f"\n"
-                f"{pnl_emoji} P&L: **{pips:+.1f}p** (${dollars:+.2f})\n"
+                f"{pnl_emoji} P&L: **{pips:+.1f}p** / **${dollars:+.2f}**\n"
                 f"Open: {days}d · Conf: {conf}/10 · Check: {checklist}/10\n"
-                f"[\U0001f4ca TradingView]({tv_url})"
             )
+            # FIX 9: Flag trades exceeding intended risk
+            risk_limit = float(t.get("risk_dollars", 100) or 100)
+            if abs(dollars) > risk_limit * 1.1:
+                trade_value += (
+                    f"⚠️ Loss exceeds risk limit — "
+                    f"${abs(dollars):.2f} vs ${risk_limit:.2f} max\n"
+                )
+            trade_value += f"[\U0001f4ca TradingView]({tv_url})"
 
             fields.append({
                 "name":  f"\U0001f4bc {pair} #{trade_id}",
