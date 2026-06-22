@@ -1060,6 +1060,28 @@ def update_fund_dashboard(
             "inline": False,
         })
 
+    # FIX 11: System mode field — show data collection mode status
+    if data_collection_mode:
+        if effective_threshold > dynamic_threshold:
+            _mode_value = (
+                f"⚠️ DATA COLLECTION MODE\n"
+                f"Override threshold: {effective_threshold}/10\n"
+                f"Dynamic threshold: {dynamic_threshold}/10\n"
+                f"Lower quality trades active\n"
+                f"Disable after 200 decisive trades"
+            )
+        else:
+            _mode_value = (
+                f"ℹ️ Data collection mode\n"
+                f"Threshold: {effective_threshold}/10"
+                f" (dynamic threshold respected)"
+            )
+        fields.append({
+            "name":  "⚙️ System Mode",
+            "value": _mode_value,
+            "inline": False,
+        })
+
     # ── BUILD EMBED ────────────────────────────────────────────────────────────
     color = (0x00FF88 if daily_pnl_pct >= 0.5
              else 0x27AE60 if daily_pnl_pct >= 0
