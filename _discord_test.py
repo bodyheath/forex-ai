@@ -3,6 +3,16 @@ import sys
 import time
 sys.path.insert(0, '.')
 
+# Load .env file manually so the test works locally without setting env vars by hand
+_env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+if os.path.exists(_env_path):
+    with open(_env_path, encoding="utf-8") as _f:
+        for _line in _f:
+            _line = _line.strip()
+            if _line and not _line.startswith("#") and "=" in _line:
+                _k, _v = _line.split("=", 1)
+                os.environ.setdefault(_k.strip(), _v.strip())
+
 from src.discord_notifier import (
     send_fund_trade_opened, send_fund_milestone, send_fund_stop_hit,
     send_fund_approaching, send_research_batch, send_full_scan_report,
