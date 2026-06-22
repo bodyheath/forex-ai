@@ -9471,18 +9471,29 @@ def run() -> int:
                 )
         try:
             if _discord:
+                _dsc_alerts = [
+                    {
+                        "pair":      r.get("pair", ""),
+                        "direction": (r.get("parsed") or {}).get("direction", ""),
+                        "conf":      (r.get("parsed") or {}).get("confidence", 0),
+                    }
+                    for r in (yes_trades or [])
+                ]
                 _discord.send_full_scan_report(
                     date=str(date),
+                    scan_mode=scan_mode,
                     universe_size=int(universe_size or 0),
                     pairs_analysed=len(analysed_pairs or []),
-                    new_alerts=len(_new_alerts or []),
+                    new_alerts=_dsc_alerts,
                     threshold=float((run_stats or {}).get("dynamic_threshold") or 0),
                     regime=str((run_stats or {}).get("market_regime") or "n/a"),
                     open_fund_trades=0,
                     research_open=int((research_result or {}).get("open_count") or 0),
-                    win_rate=None,
+                    win_rate=float((research_result or {}).get("win_rate_pct") or 0),
+                    profit_factor=float((research_result or {}).get("profit_factor") or 0),
                     cost_usd=float((run_stats or {}).get("estimated_usd") or 0),
                     run_minutes=float(run_duration_min or 0),
+                    api_calls_used=int(td_calls or 0),
                 )
         except Exception:
             pass
