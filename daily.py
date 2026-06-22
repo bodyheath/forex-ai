@@ -1040,14 +1040,16 @@ def _trade_quality_grade(r: dict) -> dict:
         except Exception:
             pass
 
-    if not rr:
+    if not rr and p.get("trade_this") == "YES":
+        # Only log R:R=0 for YES trades — NO_TRADE pairs without levels are expected
         _atr_dbg = float(
             (r.get("bundle", {}).get("technical", {}).get("daily") or {}).get("atr14") or 0
         )
         print(
             f"[DEBUG R:R=0] {r.get('pair','?')} "
             f"entry={p.get('entry')} stop={p.get('stop_loss')} target={p.get('target')} "
-            f"rr_field={p.get('reward_risk')} atr14={_atr_dbg:.5f}"
+            f"rr_field={p.get('reward_risk')} atr14={_atr_dbg:.5f} "
+            f"— YES trade missing price levels, will use indicative levels"
         )
 
     # MTF signals
