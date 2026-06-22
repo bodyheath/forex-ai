@@ -775,8 +775,8 @@ def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) ->
         tgt_price  = high if direction == "BUY" else low
         stop_price = low  if direction == "BUY" else high
 
-        # Greedy cascade: T1 → T2 → T3 (sequential guards enforced by _casc)
-        if _casc.t1_hit(row_state, tgt_price):
+        # Greedy cascade: T1 → T2 → T3 — skip already-hit levels
+        if not _t1_done and _casc.t1_hit(row_state, tgt_price):
             t1p = _casc.pips_at(row_state.get("entry"), row_state.get("t1_price"), pair, direction)
             row_state.update({
                 "t1_hit":       "TRUE",
@@ -784,6 +784,7 @@ def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) ->
                 "t1_hit_pips":  t1p,
                 "effective_stop": row_state.get("entry"),
             })
+            _t1_done = True
             milestones.append({"level": "T1", "price": tgt_price, "candle_dt": dt, "pips": t1p})
             side_label = "HIGH" if direction == "BUY" else "LOW"
             log(
@@ -792,13 +793,14 @@ def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) ->
                 f"even if current price is now below T1 — partial WIN locked in"
             )
 
-        if _casc.t2_hit(row_state, tgt_price):
+        if not _t2_done and _casc.t2_hit(row_state, tgt_price):
             t2p = _casc.pips_at(row_state.get("entry"), row_state.get("t2_price"), pair, direction)
             row_state.update({
                 "t2_hit":       "TRUE",
                 "t2_hit_price": tgt_price,
                 "t2_hit_pips":  t2p,
             })
+            _t2_done = True
             milestones.append({"level": "T2", "price": tgt_price, "candle_dt": dt, "pips": t2p})
             log(f"  Monitor: {pair} T2 hit at {tgt_price} (+{t2p:.1f}p) — 70% banked")
 
