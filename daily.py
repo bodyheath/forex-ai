@@ -9249,6 +9249,16 @@ def run() -> int:
                 _fs_cb_st, _cb_alert = _fs_cb.check_circuit_breaker(_fs_cb_st, _cb_bal)
                 if _cb_alert:
                     _telegram(_cb_alert)
+                    try:
+                        if _discord:
+                            _discord.send_circuit_breaker(
+                                _cb_alert,
+                                float(_cb_bal or 0),
+                                float(_fs_cb_st.get("daily_pnl_pct", 0) or 0),
+                                float(_fs_cb_st.get("daily_pnl_usd", 0) or 0),
+                            )
+                    except Exception:
+                        pass
                 # 2. Peak balance / drawdown tracking — may fire pause or resume alert
                 _fs_cb_st, _dd_pause_alert, _dd_resume_alert = _fs_cb.update_peak_and_drawdown(
                     _fs_cb_st, _cb_bal
