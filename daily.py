@@ -1792,7 +1792,8 @@ def _build_research_section(research_result=None) -> list:
     return sec
 
 
-_TG_MAX = 3500  # Telegram hard limit is 4096; use 3500 for safe margin
+_TG_MAX = 3800  # Telegram hard limit is 4096; use 3800 for safe margin
+_TG_TRUNCATE_NOTE = "\n\n[Message truncated — see full report in GitHub Actions log]"
 
 
 def _split_long_lines(lines: list, max_len: int) -> list:
