@@ -38,6 +38,7 @@ def _online_learn(updated: dict) -> None:
 
 _PRICE_URL         = "https://api.twelvedata.com/price"
 _EXPIRY_DAYS       = 7      # fallback; actual expiry is computed from R:R
+_STALE_EXIT_DAYS   = 21     # hard maximum — close without T1 hit after this many days
 _FETCH_DELAY       = 10     # seconds between calls; free tier = 8 req/min
 _POST_CLOSE_DAYS   = 5      # track for this many days after a trade closes
 
