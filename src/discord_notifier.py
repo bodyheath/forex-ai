@@ -41,10 +41,11 @@ COLOR_RESEARCH   = COLOR_RESEARCH_BATCH
 
 
 def _progress_bar(current_pct, width=20):
+    if current_pct <= 0:
+        return "░" * width
     if current_pct > 100:
-        return "█" * width  # full bar — target already crossed
-    capped = max(0, min(current_pct, 100))
-    filled = (max(1, round((capped / 100) * width)) if capped > 0 else 0)
+        return "█" * width
+    filled = max(1, round((min(current_pct, 100) / 100) * width))
     return "█" * filled + "░" * (width - filled)
 
 
