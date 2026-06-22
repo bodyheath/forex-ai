@@ -1859,20 +1859,30 @@ def _send_in_parts(sections: list, urgent_alerts: list = None) -> None:
     lower_batches    = _build_batches(lower_secs)
     total_parts      = len(critical_batches) + len(lower_batches)
 
+    def _safe_send(text: str) -> None:
+        """Send a Telegram message, hard-truncating at _TG_MAX characters."""
+        if len(text) > _TG_MAX:
+            cut = text[:_TG_MAX - len(_TG_TRUNCATE_NOTE)]
+            last_nl = cut.rfind("\n")
+            if last_nl > _TG_MAX * 0.7:
+                cut = cut[:last_nl]
+            text = cut + _TG_TRUNCATE_NOTE
+        _telegram(text)
+
     part_num = 1
     for batch in critical_batches:
         if total_parts > 1:
             label = f"🤖 FOREX AI — Part {part_num} of {total_parts} — TRADES AND ALERTS"
-            _telegram(label + "\n" + "\n".join(batch))
+            _safe_send(label + "\n" + "\n".join(batch))
         else:
-            _telegram("\n".join(batch))
+            _safe_send("\n".join(batch))
         part_num += 1
     for batch in lower_batches:
         if total_parts > 1:
             label = f"🤖 FOREX AI — Part {part_num} of {total_parts} — RESEARCH AND SYSTEM"
-            _telegram(label + "\n" + "\n".join(batch))
+            _safe_send(label + "\n" + "\n".join(batch))
         else:
-            _telegram("\n".join(batch))
+            _safe_send("\n".join(batch))
         part_num += 1
 
 
