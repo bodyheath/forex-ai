@@ -1,5 +1,18 @@
 ﻿"""Daily automation runner (intended for a 6am scheduled task).
 
+SCHEDULING: This script is triggered exclusively by cron-job.org via GitHub
+Actions workflow_dispatch.  There are no GitHub built-in schedule triggers.
+
+Schedule (all Auckland NZT, UTC+12/13 DST-aware via cron-job.org):
+  6:05am  Mon-Fri → daily.yml     SCAN_MODE=full      (6am full scan)
+  9:05am  Mon-Fri → intraday.yml  SCAN_MODE=morning   (9am morning check)
+  5:05pm  Mon-Fri → intraday.yml  SCAN_MODE=prelondon (5pm pre-London)
+  11:05pm Mon-Fri → intraday.yml  SCAN_MODE=preny     (11pm pre-New York)
+  Every 30 min    → monitor.yml   SCAN_MODE=monitor   (between-scan monitor)
+
+Run guard: local runs (GITHUB_ACTIONS != "true") never write or read the guard.
+  GitHub Actions runs are blocked only if the SAME scan mode ran within 20 min.
+
 Sequence:
   1. Refresh learning memory from any outcomes recorded since the last run.
   2. Fetch the full Twelve Data forex universe; pre-score all pairs by session
