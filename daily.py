@@ -9109,7 +9109,10 @@ def run() -> int:
                 _log_line(logf, f"✅ Research trade logger: working — {_rt_logged} new trades opened this scan")
 
             # Item 5: Research trade logging verification
-            if yes_trades and _rt_logged == 0:
+            # yes_trades is defined in _send_telegram_summary (called later); compute here from deep_results
+            _threshold_final_run = float((_threshold_data or {}).get("final_threshold", 7.0))
+            _yes_for_check = [r for r in deep_results if _eff_conf(r) >= _threshold_final_run]
+            if _yes_for_check and _rt_logged == 0:
                 try:
                     _telegram(
                         f"⚠️ RESEARCH TRADE LOGGING — {len(yes_trades)} YES trade(s) found but "
