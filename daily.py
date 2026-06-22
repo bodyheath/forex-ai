@@ -7880,57 +7880,74 @@ def run() -> int:
         return 0
 
     # ── Duplicate-run guard ────────────────────────────────────────────────────
-    # State is stored in data/run_guard.json (committed to git after every run
-    # so it persists across GitHub Actions stateless runners).  The guard blocks
-    # any run that starts within _COOLDOWN_SECS of the previous one — prevents
-    # cron-job.org retries and backup-schedule double-fires from both executing.
-    try:
-        _RUN_GUARD_FILE.parent.mkdir(parents=True, exist_ok=True)
-        _guard_state: dict = {}
-        if _RUN_GUARD_FILE.exists():
-            try:
-                _guard_state = json.loads(_RUN_GUARD_FILE.read_text(encoding="utf-8"))
-            except Exception:
-                _guard_state = {}
+    # Source-aware guard: local runs never block or write — only GitHub Actions
+    # runs are guarded.  On GitHub Actions, only block if the SAME scan mode ran
+    # within 20 minutes (catches cron-job.org double-fires; never blocks different
+    # scan modes or local developer runs from interfering).
+    if not IS_GITHUB_ACTIONS:
+        print(
+            f"[guard] Local run — skipping run_guard — proceeding",
+            file=sys.stderr,
+        )
+    else:
+        try:
+            _RUN_GUARD_FILE.parent.mkdir(parents=True, exist_ok=True)
+            _guard_state: dict = {}
+            if _RUN_GUARD_FILE.exists():
+                try:
+                    _guard_state = json.loads(_RUN_GUARD_FILE.read_text(encoding="utf-8"))
+                except Exception:
+                    _guard_state = {}
 
-        _last_ts_str = _guard_state.get("timestamp", "")
-        print(f"[guard] File: {_RUN_GUARD_FILE} · exists={_RUN_GUARD_FILE.exists()} · stored_timestamp={_last_ts_str!r} · now_utc={_now_utc.isoformat()}", file=sys.stderr)
-        if _last_ts_str:
-            _last_ts  = datetime.fromisoformat(_last_ts_str)
-            _elapsed  = (_now_utc - _last_ts).total_seconds()
-            _el_min   = int(_elapsed / 60)
-            _el_sec   = int(_elapsed % 60)
-            _cdmin    = _COOLDOWN_SECS // 60
-            if _elapsed < _COOLDOWN_SECS:
-                _rem_min = int((_COOLDOWN_SECS - _elapsed) / 60)
+            _last_mode   = _guard_state.get("mode", "")
+            _last_ts_str = _guard_state.get("timestamp_utc") or _guard_state.get("timestamp", "")
+            print(
+                f"[guard] GitHub Actions run — last={_last_mode!r} at {_last_ts_str!r}",
+                file=sys.stderr,
+            )
+            if _last_ts_str and _last_mode == scan_mode:
+                try:
+                    _last_ts = datetime.fromisoformat(_last_ts_str)
+                    _elapsed = (_now_utc - _last_ts).total_seconds()
+                    _el_min  = int(_elapsed / 60)
+                    if _elapsed < _DUPLICATE_GUARD_SECS:
+                        _rem = int((_DUPLICATE_GUARD_SECS - _elapsed) / 60)
+                        print(
+                            f"[guard] Duplicate detected — {scan_mode} ran {_el_min}m ago "
+                            f"(within {_DUPLICATE_GUARD_SECS // 60}m window) — BLOCKED "
+                            f"({_rem}m remaining). Exiting.",
+                            file=sys.stderr,
+                        )
+                        return 0
+                    print(
+                        f"[guard] Same mode {scan_mode} ran {_el_min}m ago — "
+                        f"outside {_DUPLICATE_GUARD_SECS // 60}m window — PROCEEDING",
+                        file=sys.stderr,
+                    )
+                except Exception:
+                    pass
+            elif _last_mode and _last_mode != scan_mode:
                 print(
-                    f"[guard] Last run: {_el_min}m {_el_sec}s ago "
-                    f"(mode={_guard_state.get('mode','?')}) — "
-                    f"cooldown {_cdmin} minutes — BLOCKED "
-                    f"({_rem_min}m remaining). Exiting.",
+                    f"[guard] Last run was {_last_mode!r} — different mode — PROCEEDING",
                     file=sys.stderr,
                 )
-                return 0
-            print(
-                f"[guard] Last run: {_el_min}m ago "
-                f"(mode={_guard_state.get('mode','?')}) — "
-                f"cooldown {_cdmin} minutes — PROCEEDING",
-                file=sys.stderr,
-            )
-        else:
-            print(
-                f"[guard] No previous run on record — "
-                f"cooldown {_COOLDOWN_SECS // 60} minutes — PROCEEDING",
-                file=sys.stderr,
-            )
+            else:
+                print(
+                    f"[guard] No matching prior run on record — PROCEEDING",
+                    file=sys.stderr,
+                )
 
-        # Write guard state immediately so any queued concurrent run sees it
-        _RUN_GUARD_FILE.write_text(
-            json.dumps({"timestamp": _now_utc.isoformat(), "mode": scan_mode}, indent=2),
-            encoding="utf-8",
-        )
-    except Exception as _guard_err:
-        print(f"[guard] run_guard.json check failed ({_guard_err}) — proceeding.", file=sys.stderr)
+            # Write guard state immediately so any queued concurrent run sees it
+            _RUN_GUARD_FILE.write_text(
+                json.dumps({
+                    "mode":          scan_mode,
+                    "timestamp_utc": _now_utc.isoformat(),
+                    "source":        "github_actions",
+                }, indent=2),
+                encoding="utf-8",
+            )
+        except Exception as _guard_err:
+            print(f"[guard] run_guard.json check failed ({_guard_err}) — proceeding.", file=sys.stderr)
 
     # ── 45-minute run-time guard ───────────────────────────────────────────────
     # cron-job.org treats jobs that run > ~60min as failed and queues a retry.
