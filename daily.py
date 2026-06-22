@@ -8477,7 +8477,7 @@ def run() -> int:
         meaningful = [r for r in deep_results if _conf(r) >= 5]
         next_idx   = len(pre_filtered)
 
-        while len(meaningful) < 3 and len(deep_results) < 25 and next_idx < len(ranked_all):
+        while len(meaningful) < 3 and len(deep_results) < 25 and next_idx < len(ranked_all) and not _scan_timed_out[0]:
             extra_pairs = [p for p, _ in ranked_all[next_idx:next_idx + 5]
                            if p in pre_filtered]  # only pre-filtered pairs (already cached)
             if not extra_pairs:
