@@ -139,6 +139,7 @@ jobs:
           EOF
 
       - name: Notify Discord on push failure
+        if: failure() && steps.commit_monitor.outcome == 'failure'
         env:
           DISCORD_WEBHOOK_CRITICAL: ${{ secrets.DISCORD_WEBHOOK_CRITICAL }}
           RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
