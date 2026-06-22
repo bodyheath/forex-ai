@@ -8914,8 +8914,9 @@ def run() -> int:
                     if len(_rt_kz_parts) == 2:
                         _rt_kz = _kz_rt.check(_rt_kz_parts[0], _rt_kz_parts[1])
                         _extra_rt["kill_zone_entry"] = _rt_kz.get("zone_key") or "OUTSIDE"
-                except Exception:
-                    pass
+                except Exception as _e_kz_rt:
+                    import sys as _sys_kz
+                    print(f"[rt-ml] kill_zone_entry failed for {r_result['pair']}: {_e_kz_rt}", file=_sys_kz.stderr)
 
                 # Market structure break at entry — used as ML feature
                 try:
