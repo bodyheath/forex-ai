@@ -876,8 +876,15 @@ def update_fund_dashboard(
         streak = "➡️ Neutral"
 
     # FIX 8: FTMO uses total equity not cash balance
-    ftmo_pct_of_target = (ftmo_current_pct / ftmo_target_pct * 100) if ftmo_target_pct > 0 else 0
-    ftmo_bar = _progress_bar(min(max(ftmo_pct_of_target, 0), 100), width=15)
+    if ftmo_current_pct >= 0:
+        ftmo_progress = min((ftmo_current_pct / ftmo_target_pct) * 100, 100) if ftmo_target_pct > 0 else 0
+        ftmo_bar      = _progress_bar(ftmo_progress, width=15)
+    elif ftmo_current_pct >= -5:
+        # Within 5% daily loss limit — show how much of limit is used
+        _loss_bar = _progress_bar(min(abs(ftmo_current_pct) / 5 * 100, 100), width=15)
+        ftmo_bar = _loss_bar
+    else:
+        ftmo_bar = "█" * 15
 
     # FIX 7: Show cash + unrealised + total equity
     unreal_emoji  = "\U0001f7e2" if unrealised_pnl_dollars >= 0 else "\U0001f534"
