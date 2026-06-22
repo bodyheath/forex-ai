@@ -970,7 +970,7 @@ def update_fund_dashboard(
             pnl_note   = t.get("pnl_note", "")
 
             dir_emoji = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
-            pnl_emoji = "\U0001f7e2" if pips >= 0 else "\U0001f534"
+            pnl_emoji = "🟢" if pips >= 0 else "🔴"
 
             if t3_hit:
                 protection = "\U0001f6e1️\U0001f6e1️\U0001f6e1️ Full cascade"
