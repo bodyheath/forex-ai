@@ -2366,6 +2366,12 @@ def run(log=print) -> dict:
             except Exception as _st_exc:
                 log(f"  Monitor: fund stats calculation failed: {_st_exc}")
 
+            # FIX 7 & 8: Compute unrealised P&L and true equity for dashboard
+            _total_unreal_usd  = sum(t.get("dollars_unrealised", 0) for t in _dash_trades)
+            _total_unreal_pips = sum(t.get("pips_unrealised", 0)    for t in _dash_trades)
+            _total_equity      = _dash_bal + _total_unreal_usd
+            _ftmo_pct          = (_total_equity - 10000.0) / 10000.0 * 100  # FIX 8: use equity
+
             _dn.update_fund_dashboard(
                 open_fund_trades=_dash_trades,
                 fund_balance=_dash_bal,
@@ -2377,7 +2383,7 @@ def run(log=print) -> dict:
                 risk_pct=float(_fs_d.get("current_sizing_pct") or 1.0),
                 consecutive_wins=int(_fs_d.get("consecutive_wins") or 0),
                 consecutive_losses=int(_fs_d.get("consecutive_losses") or 0),
-                ftmo_current_pct=float(_fs_d.get("daily_pnl_pct") or 0),
+                ftmo_current_pct=_ftmo_pct,
                 fund_total_trades=_st_total,
                 fund_wins=_st_wins,
                 fund_losses=_st_losses,
@@ -2389,6 +2395,9 @@ def run(log=print) -> dict:
                 fund_best_trade_pips=_st_best_pips,
                 fund_best_trade_pair=_st_best_pair,
                 fund_total_pips=_st_total_pips,
+                unrealised_pnl_dollars=round(_total_unreal_usd,  2),
+                unrealised_pnl_pips=round(_total_unreal_pips, 1),
+                total_equity=round(_total_equity, 2),
             )
     except Exception as _dash_exc:
         log(f"  Monitor: Discord dashboard update failed: {_dash_exc}")
