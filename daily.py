@@ -9115,7 +9115,7 @@ def run() -> int:
             if _yes_for_check and _rt_logged == 0:
                 try:
                     _telegram(
-                        f"⚠️ RESEARCH TRADE LOGGING — {len(yes_trades)} YES trade(s) found but "
+                        f"⚠️ RESEARCH TRADE LOGGING — {len(_yes_for_check)} YES trade(s) found but "
                         f"0 research trades were logged — ML training data gap — "
                         f"check GitHub Actions logs"
                     )
