@@ -7989,13 +7989,14 @@ def run() -> int:
         pass
 
     # ── Item 3: Scan completion marker — mark as in-progress ──────────────────
-    try:
-        _SCAN_STATUS_FILE.write_text(
-            json.dumps({"completed": False, "started": _now_utc.isoformat(), "mode": scan_mode}),
-            encoding="utf-8",
-        )
-    except Exception:
-        pass
+    if IS_GITHUB_ACTIONS:
+        try:
+            _SCAN_STATUS_FILE.write_text(
+                json.dumps({"completed": False, "started": _now_utc.isoformat(), "mode": scan_mode}),
+                encoding="utf-8",
+            )
+        except Exception:
+            pass
 
     _telegram_test()
 
