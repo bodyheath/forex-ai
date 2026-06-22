@@ -26,6 +26,11 @@ from src import cache
 _TIMEOUT = 30
 STALE_DAYS = 14
 
+# Module-level consecutive failure counter — resets each time a fetch succeeds.
+# After 3 consecutive failures across any currencies, all remaining COT fetches
+# this scan are skipped and pairs receive a neutral COT score.
+_cot_consecutive_failures: list = [0]   # mutable so _series_for can update it
+
 
 def _cache_path_for_key(key: str) -> Path:
     """Return the disk Path for a cache key (mirrors cache._path_for internals)."""
