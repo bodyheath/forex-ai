@@ -4199,6 +4199,7 @@ def _send_telegram_summary(
     _pair_stats_all: dict = {}
     try:
         from src import pair_statistics as _pstat_disp
+        _pstat_disp.update()
         _pair_stats_all = _pstat_disp.load()
     except Exception:
         pass
