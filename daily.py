@@ -8366,6 +8366,27 @@ def run() -> int:
         failed_pairs:    list = []
         deep_results          = []
         analysed_pairs: set   = set()
+        _scan_start_time      = time.time()
+        _SCAN_TIMEOUT_MIN     = 90
+        _scan_timed_out       = [False]
+
+        def _check_scan_timeout() -> bool:
+            elapsed = (time.time() - _scan_start_time) / 60
+            if elapsed > _SCAN_TIMEOUT_MIN and not _scan_timed_out[0]:
+                _scan_timed_out[0] = True
+                _log_line(logf,
+                    f"⚠️ Scan timeout — {elapsed:.0f} minutes elapsed — "
+                    f"skipping remaining pairs and sending partial report")
+                try:
+                    _telegram(
+                        f"⚠️ Scan timeout after {elapsed:.0f} minutes — "
+                        f"{len(analysed_pairs)} of {len(pre_filtered)} pairs analysed — "
+                        f"COT or other data source caused excessive delays — "
+                        f"full analysis continues next scan"
+                    )
+                except Exception:
+                    pass
+            return _scan_timed_out[0]
 
         # Load pair performance map for per-pair threshold overrides
         _pair_perf_map: dict = {}
