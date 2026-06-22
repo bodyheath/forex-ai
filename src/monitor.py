@@ -1736,6 +1736,13 @@ def run(log=print) -> dict:
                                 )
                             except Exception:
                                 pass
+                        try:
+                            if _dn:
+                                _dn.send_watch_list_movement(
+                                    _wlp, float(_wlconf), act_dir, float(pips_mon)
+                                )
+                        except Exception:
+                            pass
                         _wl_alerts_sent.add(alert_key)
                         _wl_priority_pairs.append(_wlp)
                         if _wlp not in _priority_next_scan:
