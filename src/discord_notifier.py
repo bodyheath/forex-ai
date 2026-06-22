@@ -907,10 +907,11 @@ def update_fund_dashboard(
     _decisive = fund_wins + fund_losses + fund_partial_wins
     if _decisive > 0:
         _wr_e = ("\U0001f7e2" if fund_win_rate >= 50 else ("🟡" if fund_win_rate >= 35 else "\U0001f534"))
+        _be_str = (f" · ⚖️ {fund_breakeven}BE" if fund_breakeven > 0 else "")
         _stats_val = (
             f"Trades: **{fund_total_trades}** total · {_decisive} decisive\n"
             f"{_wr_e} Win rate: **{fund_win_rate:.0f}%**\n"
-            f"✅ {fund_wins}W · \U0001f6e1️ {fund_partial_wins}P · ❌ {fund_losses}L\n"
+            f"✅ {fund_wins}W · \U0001f6e1️ {fund_partial_wins}P · ❌ {fund_losses}L{_be_str}\n"
             f"Avg win: +{fund_avg_win_pips:.1f}p · Avg loss: -{fund_avg_loss_pips:.1f}p\n"
             f"Profit factor: {fund_profit_factor:.2f}"
             + (f"\nBest: {fund_best_trade_pair} +{fund_best_trade_pips:.1f}p"
