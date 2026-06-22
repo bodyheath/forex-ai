@@ -27,6 +27,7 @@ Sequence:
   7. Send a reformatted Telegram summary with cost breakdown.
 """
 
+import os
 import sys
 import html as _html_mod
 import json
