@@ -845,6 +845,7 @@ def update_fund_dashboard(
     fund_best_trade_pips=0.0,
     fund_best_trade_pair="",
     fund_total_pips=0.0,
+    fund_breakeven=0,
     # FIX 7: Live equity parameters
     unrealised_pnl_dollars=0.0,
     unrealised_pnl_pips=0.0,
