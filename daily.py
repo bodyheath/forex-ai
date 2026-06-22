@@ -9688,6 +9688,7 @@ def run() -> int:
                 _dsc_dqpct  = float((_threshold_data or {}).get("data_quality_pct") or 0)
                 _dsc_cost   = float((run_stats or {}).get("estimated_usd") or 0)
 
+                _log_line(logf, "Sending Discord scan report...")
                 _discord.send_master_scan_report(
                     scan_mode=scan_mode,
                     date=str(date),
