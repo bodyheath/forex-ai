@@ -6089,7 +6089,11 @@ def _send_telegram_summary(
             else:
                 def _s1_sort_key(rr):
                     return float(rr.get("screen", {}).get("score") or 0)
-                combined = list(near_misses) + sorted(stage1_filtered, key=_s1_sort_key, reverse=True)
+                combined = [
+                    r for r in list(near_misses) + sorted(stage1_filtered, key=_s1_sort_key, reverse=True)
+                    if r["pair"].upper() not in _open_pair_set
+                    and not any(_is_inverse(r["pair"], op) for op in _open_pair_set)
+                ]
                 top3     = combined[:3]
 
                 def _plain_rejection(rr) -> str:
