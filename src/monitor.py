@@ -2421,6 +2421,7 @@ def run(log=print) -> dict:
                 fund_wins=_st_wins,
                 fund_losses=_st_losses,
                 fund_partial_wins=_st_partial,
+                fund_breakeven=_st_breakeven,
                 fund_win_rate=_st_wr,
                 fund_avg_win_pips=_st_avg_win,
                 fund_avg_loss_pips=_st_avg_loss,
