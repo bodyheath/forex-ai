@@ -9138,13 +9138,26 @@ def run() -> int:
                     _casc_d_rt   = (_rp.get("direction") or "").upper()
                     _casc_atr_rt = float((_daily_rt.get("atr14") or 0))
                     if _casc_e_rt and _casc_s_rt and _casc_t_rt and _casc_d_rt in ("BUY", "SELL"):
-                        _rt_pair_up = r_result["pair"].upper()
-                        _rt_pst     = _pair_stats_all.get(_rt_pair_up, {})
-                        _rt_adpt    = (_rt_pst.get("adaptive_active")
-                                       and _rt_pst.get("n_trades_with_mfe", 0) >= 10)
-                        _rt_t1m = _rt_pst.get("t1_mult") if _rt_adpt else None
-                        _rt_t2m = _rt_pst.get("t2_mult") if _rt_adpt else None
-                        _rt_t3m = _rt_pst.get("t3_mult") if _rt_adpt else None
+                        _rt_pair_up  = r_result["pair"].upper()
+                        _rt_pst      = _pair_stats_all.get(_rt_pair_up, {})
+                        _rt_adpt     = (_rt_pst.get("adaptive_active")
+                                        and _rt_pst.get("n_trades_with_mfe", 0) >= 10)
+                        _rt_t1m      = _rt_pst.get("t1_mult") if _rt_adpt else None
+                        _rt_t2m      = _rt_pst.get("t2_mult") if _rt_adpt else None
+                        _rt_t3m      = _rt_pst.get("t3_mult") if _rt_adpt else None
+                        _rt_vol_tier = "NORMAL"
+                        _rt_atr_rt   = 1.0
+                        if _rt_adpt and _rt_t1m is not None:
+                            try:
+                                from src import pair_statistics as _pstat_vol_rt
+                                _rt_atr_rt = float(_extra_rt.get("atr_percentile_6m") or 1.0)
+                                _rt_vol_tier, _rt_t1m, _rt_t2m, _rt_t3m = (
+                                    _pstat_vol_rt.apply_volatility_adjustment(
+                                        _rt_t1m, _rt_t2m, _rt_t3m, _rt_atr_rt
+                                    )
+                                )
+                            except Exception:
+                                pass
                         _ct1_rt, _ct2_rt, _ct3_rt = _casc_rt_log.compute_levels(
                             _casc_e_rt, _casc_s_rt, _casc_t_rt, _casc_d_rt,
                             atr=_casc_atr_rt or None,
@@ -9155,7 +9168,7 @@ def run() -> int:
                             _log_line(logf,
                                 f"[research] {r_result['pair']} adaptive targets from "
                                 f"{_rt_n} trades: T1 {_rt_t1m:.2f}x · T2 {_rt_t2m:.2f}x"
-                                f" · T3 {_rt_t3m:.2f}x ATR")
+                                f" · T3 {_rt_t3m:.2f}x ATR ({_rt_vol_tier})")
                         else:
                             _rt_needed = max(0, 10 - _rt_pst.get("n_trades_with_mfe", 0))
                             _log_line(logf,
@@ -9163,14 +9176,16 @@ def run() -> int:
                                 f"(need {_rt_needed} more trades before adaptive activates)")
                         if _ct1_rt is not None:
                             _extra_rt.update({
-                                "t1_price":               _ct1_rt,
-                                "t2_price":               _ct2_rt,
-                                "t3_price":               _ct3_rt,
-                                "effective_stop":         _casc_s_rt,
-                                "t1_was_adaptive":        "TRUE" if _rt_adpt else "FALSE",
-                                "t1_target_atr_multiple": _rt_t1m if _rt_t1m is not None else 0.4,
-                                "t2_target_atr_multiple": _rt_t2m if _rt_t2m is not None else 0.7,
-                                "t3_target_atr_multiple": _rt_t3m if _rt_t3m is not None else 1.0,
+                                "t1_price":                 _ct1_rt,
+                                "t2_price":                 _ct2_rt,
+                                "t3_price":                 _ct3_rt,
+                                "effective_stop":           _casc_s_rt,
+                                "t1_was_adaptive":          "TRUE" if _rt_adpt else "FALSE",
+                                "t1_target_atr_multiple":   _rt_t1m if _rt_t1m is not None else 0.4,
+                                "t2_target_atr_multiple":   _rt_t2m if _rt_t2m is not None else 0.7,
+                                "t3_target_atr_multiple":   _rt_t3m if _rt_t3m is not None else 1.0,
+                                "volatility_tier_at_entry": _rt_vol_tier,
+                                "atr_percentile_at_entry":  _rt_atr_rt,
                             })
                 except Exception:
                     pass
