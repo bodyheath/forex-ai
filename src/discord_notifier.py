@@ -3,11 +3,15 @@
 Graceful degradation: missing webhook URLs or Discord errors are logged
 and ignored.  The scan is never slowed, Telegram is never blocked.
 """
+import json
 import os
 import time as _time_mod
 from datetime import datetime, timezone
+from pathlib import Path
 
 import requests
+
+DASHBOARD_STATE_FILE = Path(__file__).resolve().parent.parent / "data" / "discord_dashboard.json"
 
 WEBHOOK_FUND     = os.getenv("DISCORD_WEBHOOK_FUND")
 WEBHOOK_RESEARCH = os.getenv("DISCORD_WEBHOOK_RESEARCH")
