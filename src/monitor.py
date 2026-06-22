@@ -2284,17 +2284,29 @@ def run(log=print) -> dict:
                                    datetime.strptime(_ts_d[:19], "%Y-%m-%d %H:%M:%S")).days, 0) if _ts_d else 0
                 except Exception:
                     _days_d = 0
+                # FIX 6: Compute dollar P&L from entry/stop distance and risk amount
+                _orig_stop_d  = float(_dr.get("stop_loss") or _stop_d or 0)
+                _stop_pips_d  = abs(_entry_d - _orig_stop_d) / _pip_d if (_entry_d and _orig_stop_d) else 0
+                _sz_pct_d     = float(_dr.get("position_size_pct_at_entry") or 1.0)
+                _risk_usd_d   = _sz_pct_d / 100 * max(float(_fs_d.get("daily_opening_balance") or 10000), 1)
+                if _stop_pips_d > 0:
+                    _dpp_d = _risk_usd_d / _stop_pips_d
+                else:
+                    _dpp_d = 1.0
+                _dollars_d = _pips_d * _dpp_d
+
                 _dash_trades.append({
                     "pair": _pair_d, "direction": _dir_d,
                     "entry": _entry_d, "current": _cur_d,
                     "stop": _stop_d, "t1": _t1_d, "t2": _t2_d, "t3": _t3_d,
                     "t1_hit": _t1h_d, "t2_hit": _t2h_d, "t3_hit": _t3h_d,
                     "progress_pct": _prog_d, "next_target": _next_d,
-                    "pips_unrealised": _pips_d, "dollars_unrealised": 0.0,
+                    "pips_unrealised": _pips_d, "dollars_unrealised": round(_dollars_d, 2),
                     "days_open": _days_d,
                     "conf": float(_dr.get("confidence") or 0),
                     "checklist_score": 0,
                     "id": str(_dr.get("id", "")),
+                    "risk_dollars": round(_risk_usd_d, 2),
                 })
             _dash_open_bal = float(_fs_d.get("daily_opening_balance") or 0)
             _dash_pnl_usd  = float(_fs_d.get("daily_pnl_dollars") or 0)
