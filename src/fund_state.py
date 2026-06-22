@@ -109,7 +109,7 @@ def reset_if_new_day(state: dict, current_balance: float | None = None) -> dict:
     return state
 
 
-def reset_if_new_week(state: dict) -> dict:
+def reset_if_new_week(state: dict, current_fund_balance: float | None = None) -> dict:
     """Reset weekly fields at Monday 6am Auckland."""
     now   = _auckland_now()
     today = now.strftime("%Y-%m-%d")
@@ -119,7 +119,14 @@ def reset_if_new_week(state: dict) -> dict:
         return state
     state = dict(state)
     state["weekly_loss_pct"]        = 0.0
-    state["weekly_opening_balance"] = float(config.ACCOUNT_BALANCE)
+    # Track the FUND balance as weekly baseline (not the broker account balance).
+    # Priority: explicit fund balance > yesterday's daily_opening_balance > config fallback.
+    fund_bal = (
+        current_fund_balance
+        or float(state.get("daily_opening_balance") or 0)
+        or float(config.ACCOUNT_BALANCE)
+    )
+    state["weekly_opening_balance"] = fund_bal
     state["weekly_start_date"]      = today
     if state.get("observation_mode"):
         obs_until = state.get("observation_mode_until")
