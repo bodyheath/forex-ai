@@ -126,7 +126,7 @@ FIELDS = [
     "cascading_total_pips_weighted",  # 0.4×t1 + 0.3×t2 + 0.3×t3
 ]
 
-OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN", "FULL_WIN"}
+OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN", "FULL_WIN", "STALE_EXIT"}
 
 
 def _now() -> str:
