@@ -245,12 +245,26 @@ def check_circuit_breaker(state: dict, current_balance: float) -> tuple:
 
     Returns (updated_state, alert_msg_or_None).
     """
+    import sys as _sys_cb
     opening = float(state.get("daily_opening_balance") or float(config.ACCOUNT_BALANCE))
     if opening <= 0:
         return state, None
 
     pnl_pct = (current_balance - opening) / opening * 100
     pnl_usd = current_balance - opening
+
+    # Sanity check: if the calculated loss exceeds 50% of the current fund balance,
+    # the P&L calculation is almost certainly wrong (e.g. pips×lot_size passed instead
+    # of dollars, or daily_opening_balance is stale/wrong).  Skip the circuit breaker
+    # rather than fire a false alarm.
+    if abs(pnl_usd) > current_balance * 0.5:
+        print(
+            f"[FUND_STATE] ERROR: Daily P&L calculation appears wrong — "
+            f"${abs(pnl_usd):,.2f} loss on ${current_balance:,.2f} fund "
+            f"(opening balance used: ${opening:,.2f}) — skipping circuit breaker",
+            file=_sys_cb.stderr,
+        )
+        return state, None
 
     state = dict(state)
     state["daily_pnl_dollars"] = round(pnl_usd, 2)
