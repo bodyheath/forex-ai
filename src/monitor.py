@@ -2230,6 +2230,78 @@ def run(log=print) -> dict:
     _append_to_monitor_history(result)
     _write_monitor_log(result)
 
+    # ── Discord fund dashboard update ─────────────────────────────────────────
+    try:
+        if _dn:
+            from src import fund_state as _fs_dash
+            _fs_d = _fs_dash.load()
+            _dash_trades = []
+            for _dr in _fund_open:
+                _pair_d  = _dr.get("pair", "")
+                _dir_d   = _dr.get("direction", "")
+                _entry_d = float(_dr.get("entry") or 0)
+                _cur_d   = prices.get(_pair_d, _entry_d)
+                _stop_d  = float(_dr.get("effective_stop") or _dr.get("stop_loss") or 0)
+                _t1_d    = float(_dr.get("t1_price") or 0)
+                _t2_d    = float(_dr.get("t2_price") or 0)
+                _t3_d    = float(_dr.get("t3_price") or _dr.get("target") or 0)
+                _t1h_d   = str(_dr.get("t1_hit", "")).upper() == "TRUE"
+                _t2h_d   = str(_dr.get("t2_hit", "")).upper() == "TRUE"
+                _t3h_d   = str(_dr.get("t3_hit", "")).upper() == "TRUE"
+                _pip_d   = 0.01 if "JPY" in _pair_d else 0.0001
+                _pips_d  = ((_cur_d - _entry_d) / _pip_d if _dir_d == "BUY"
+                            else (_entry_d - _cur_d) / _pip_d) if _entry_d else 0.0
+                if not _t1h_d:
+                    _next_d, _tgt_d = "T1", _t1_d
+                elif not _t2h_d:
+                    _next_d, _tgt_d = "T2", _t2_d
+                elif not _t3h_d:
+                    _next_d, _tgt_d = "T3", _t3_d
+                else:
+                    _next_d, _tgt_d = "Complete", _t3_d
+                _prog_d = 0.0
+                if _tgt_d and _entry_d and _tgt_d != _entry_d:
+                    _prog_d = ((_cur_d - _entry_d) / (_tgt_d - _entry_d) * 100 if _dir_d == "BUY"
+                               else (_entry_d - _cur_d) / (_entry_d - _tgt_d) * 100)
+                try:
+                    _ts_d   = str(_dr.get("timestamp", ""))
+                    _days_d = max((datetime.now(timezone.utc).replace(tzinfo=None) -
+                                   datetime.strptime(_ts_d[:19], "%Y-%m-%d %H:%M:%S")).days, 0) if _ts_d else 0
+                except Exception:
+                    _days_d = 0
+                _dash_trades.append({
+                    "pair": _pair_d, "direction": _dir_d,
+                    "entry": _entry_d, "current": _cur_d,
+                    "stop": _stop_d, "t1": _t1_d, "t2": _t2_d, "t3": _t3_d,
+                    "t1_hit": _t1h_d, "t2_hit": _t2h_d, "t3_hit": _t3h_d,
+                    "progress_pct": _prog_d, "next_target": _next_d,
+                    "pips_unrealised": _pips_d, "dollars_unrealised": 0.0,
+                    "days_open": _days_d,
+                    "conf": float(_dr.get("confidence") or 0),
+                    "checklist_score": 0,
+                    "id": str(_dr.get("id", "")),
+                })
+            _dash_open_bal = float(_fs_d.get("daily_opening_balance") or 0)
+            _dash_pnl_usd  = float(_fs_d.get("daily_pnl_dollars") or 0)
+            _dash_bal      = _dash_open_bal + _dash_pnl_usd
+            _dash_peak     = float(_fs_d.get("peak_balance") or _dash_bal or 10000)
+            _dash_ret      = (_dash_bal - 10000.0) / 10000.0 * 100 if _dash_bal else 0.0
+            _dn.update_fund_dashboard(
+                open_fund_trades=_dash_trades,
+                fund_balance=_dash_bal,
+                fund_return_pct=_dash_ret,
+                daily_pnl_pct=float(_fs_d.get("daily_pnl_pct") or 0),
+                daily_pnl_dollars=_dash_pnl_usd,
+                drawdown_pct=float(_fs_d.get("current_drawdown_pct") or 0),
+                sizing_mode=str(_fs_d.get("sizing_mode") or "normal"),
+                risk_pct=float(_fs_d.get("current_sizing_pct") or 1.0),
+                consecutive_wins=int(_fs_d.get("consecutive_wins") or 0),
+                consecutive_losses=int(_fs_d.get("consecutive_losses") or 0),
+                ftmo_current_pct=float(_fs_d.get("daily_pnl_pct") or 0),
+            )
+    except Exception as _dash_exc:
+        log(f"  Monitor: Discord dashboard update failed: {_dash_exc}")
+
     # Item 2: Write heartbeat — checked by daily.py to detect monitor downtime
     try:
         _HEARTBEAT_FILE.write_text(
