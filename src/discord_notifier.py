@@ -44,7 +44,7 @@ def _progress_bar(current_pct, width=20):
     if current_pct > 100:
         return "█" * width  # full bar — target already crossed
     capped = max(0, min(current_pct, 100))
-    filled = int((capped / 100) * width)
+    filled = (max(1, round((capped / 100) * width)) if capped > 0 else 0)
     return "█" * filled + "░" * (width - filled)
 
 
