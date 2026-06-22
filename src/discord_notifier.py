@@ -15,18 +15,100 @@ WEBHOOK_MONITOR  = os.getenv("DISCORD_WEBHOOK_MONITOR")
 WEBHOOK_HEALTH   = os.getenv("DISCORD_WEBHOOK_HEALTH")
 WEBHOOK_CRITICAL = os.getenv("DISCORD_WEBHOOK_CRITICAL")
 
-COLOR_WIN        = 0x00FF88
-COLOR_LOSS       = 0xFF3333
-COLOR_APPROACHING = 0xFF8800
-COLOR_INFO       = 0x0099FF
-COLOR_WARNING    = 0xFFFF00
-COLOR_CRITICAL   = 0xFF0000
-COLOR_HEALTH     = 0x9B59B6
-COLOR_RESEARCH   = 0x3498DB
+COLOR_FUND_WIN       = 0x00FF88
+COLOR_FUND_LOSS      = 0xFF3333
+COLOR_FUND_PROTECTED = 0x00AA44
+COLOR_FUND_NEW       = 0x0099FF
+COLOR_FUND_HOT       = 0xFF8800
+COLOR_RESEARCH_WIN   = 0x27AE60
+COLOR_RESEARCH_LOSS  = 0xC0392B
+COLOR_RESEARCH_BATCH = 0x3498DB
+COLOR_RESEARCH_HOT   = 0xE67E22
+COLOR_HEALTH         = 0x9B59B6
+COLOR_CRITICAL       = 0xFF0000
+COLOR_WARNING        = 0xF39C12
+COLOR_INFO           = 0x95A5A6
+
+# Legacy aliases so existing callers keep working
+COLOR_WIN        = COLOR_FUND_WIN
+COLOR_LOSS       = COLOR_FUND_LOSS
+COLOR_APPROACHING = COLOR_FUND_HOT
+COLOR_RESEARCH   = COLOR_RESEARCH_BATCH
 
 
-def _send_embed(webhook_url: str, title: str, description: str,
-                color: int, fields: list = None) -> bool:
+def _progress_bar(current_pct, width=20):
+    filled = int((current_pct / 100) * width)
+    filled = max(0, min(filled, width))
+    return "█" * filled + "░" * (width - filled)
+
+
+def _price_position_bar(entry, current, stop, target, direction="BUY"):
+    try:
+        if direction == "BUY":
+            total_range = target - stop
+            if total_range <= 0:
+                return ""
+            current_pos = (current - stop) / total_range
+            entry_pos   = (entry - stop)   / total_range
+        else:
+            total_range = stop - target
+            if total_range <= 0:
+                return ""
+            current_pos = (stop - current) / total_range
+            entry_pos   = (stop - entry)   / total_range
+
+        width = 24
+        bar   = list("░" * width)
+
+        entry_idx   = int(max(0, min(1, entry_pos))   * (width - 1))
+        current_idx = int(max(0, min(1, current_pos)) * (width - 1))
+
+        for i in range(min(current_idx, width)):
+            bar[i] = "█"
+
+        if 0 <= entry_idx < width:
+            bar[entry_idx] = "◆"
+        if 0 <= current_idx < width:
+            bar[current_idx] = "▲"
+
+        bar_str = "".join(bar)
+
+        if direction == "BUY":
+            return (
+                f"`SL {stop:.5f} |{bar_str}| T {target:.5f}`\n"
+                f"`{'':12}▲ Now: {current:.5f}`"
+            )
+        else:
+            return (
+                f"`T {target:.5f} |{bar_str}| SL {stop:.5f}`\n"
+                f"`{'':12}▲ Now: {current:.5f}`"
+            )
+    except Exception:
+        return ""
+
+
+def _cascade_progress_bar(t1_hit, t2_hit, t3_hit):
+    t1 = "\U0001f7e2" if t1_hit else "⬜"
+    t2 = "\U0001f7e2" if t2_hit else "⬜"
+    t3 = "\U0001f7e2" if t3_hit else "⬜"
+    t1_pct = "40%" if t1_hit else "░░"
+    t2_pct = "30%" if t2_hit else "░░"
+    t3_pct = "30%" if t3_hit else "░░"
+    return f"{t1} T1 ({t1_pct})  {t2} T2 ({t2_pct})  {t3} T3 ({t3_pct})"
+
+
+def _get_tradingview_url(pair):
+    symbol = pair.replace("/", "")
+    return f"https://www.tradingview.com/chart/?symbol=FX:{symbol}"
+
+
+def _trade_type_label(is_fund):
+    if is_fund:
+        return "\U0001f4bc **FUND TRADE** — real money position"
+    return "\U0001f52c **RESEARCH TRADE** — ML training position"
+
+
+def _send_embed(webhook_url, title, description, color, fields=None):
     if not webhook_url:
         return False
     embed = {
@@ -53,196 +135,369 @@ def _send_embed(webhook_url: str, title: str, description: str,
     return False
 
 
-def send_fund_milestone(pair: str, direction: str, milestone: str,
-                        pips: float, entry: float, current: float,
-                        stop: float) -> bool:
+def send_fund_trade_opened(pair, direction, conf, entry, stop, t1, t2, t3,
+                            risk_pct, risk_dollars, rr, checklist_score,
+                            kill_zone="", regime="", rsi=0, atr=0,
+                            monthly_trend="", hhhl="", ccy_strength="", adx=0):
+    pip_sz    = 0.01 if "JPY" in pair else 0.0001
+    stop_pips = abs(entry - stop) / pip_sz
+    t1_pips   = abs(t1 - entry)   / pip_sz
+    t2_pips   = abs(t2 - entry)   / pip_sz
+    t3_pips   = abs(t3 - entry)   / pip_sz
+    tv_url    = _get_tradingview_url(pair)
+    dir_emoji = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
+
+    fields = [
+        {"name": "Trade Type",          "value": _trade_type_label(True),             "inline": False},
+        {"name": f"{dir_emoji} Entry",  "value": f"`{entry:.5f}`",                    "inline": True},
+        {"name": "\U0001f6d1 Stop Loss","value": f"`{stop:.5f}` ({stop_pips:.1f}p)",  "inline": True},
+        {"name": "\U0001f4ca R:R Ratio","value": f"`{rr}:1`",                         "inline": True},
+        {"name": "\U0001f3af T1 (40%)", "value": f"`{t1:.5f}` +{t1_pips:.1f}p",      "inline": True},
+        {"name": "\U0001f3af T2 (30%)", "value": f"`{t2:.5f}` +{t2_pips:.1f}p",      "inline": True},
+        {"name": "\U0001f3af T3 (30%)", "value": f"`{t3:.5f}` +{t3_pips:.1f}p",      "inline": True},
+        {"name": "\U0001f4b0 Position Size", "value": f"{risk_pct}% of fund\n${risk_dollars:.2f} at risk", "inline": True},
+        {"name": "\U0001f916 Confidence",    "value": f"{conf}/10\nChecklist: {checklist_score}/10",       "inline": True},
+        {"name": "\U0001f550 Session",       "value": kill_zone or "Any",             "inline": True},
+        {"name": "\U0001f4c8 Signal Filters","value": (
+            f"{'✅' if monthly_trend else '⬜'} Monthly trend\n"
+            f"{'✅' if hhhl else '⬜'} HHHL structure\n"
+            f"{'✅' if kill_zone else '⬜'} Kill zone\n"
+            f"{'✅' if ccy_strength else '⬜'} Currency strength\n"
+            f"ADX: {adx:.0f} · RSI: {rsi:.1f}"
+        ), "inline": True},
+        {"name": "\U0001f30d Market Regime", "value": regime or "Unknown",            "inline": True},
+        {"name": "\U0001f4ca Price Position","value": _price_position_bar(entry, entry, stop, t1, direction) or "Chart below", "inline": False},
+        {"name": "\U0001f517 Chart",         "value": f"[View {pair} on TradingView]({tv_url})", "inline": False},
+    ]
     return _send_embed(
         WEBHOOK_FUND,
-        f"🎯 {pair} {milestone} HIT — +{pips:.1f}p",
-        f"{direction} trade milestone reached",
-        COLOR_WIN,
-        [
-            {"name": "Entry",   "value": str(entry),   "inline": True},
-            {"name": "Target",  "value": milestone,    "inline": True},
-            {"name": "Current", "value": str(current), "inline": True},
-            {"name": "Stop",    "value": str(stop),    "inline": True},
-            {"name": "Pips",    "value": f"+{pips:.1f}", "inline": True},
-        ],
+        f"\U0001f4bc NEW FUND TRADE — {pair} {dir_emoji} {direction}",
+        f"New position opened at {entry:.5f}",
+        COLOR_FUND_NEW,
+        fields=fields,
     )
 
 
-def send_fund_stop_hit(pair: str, direction: str, pips: float,
-                       was_cascade_protected: bool) -> bool:
+def send_fund_milestone(pair, direction, milestone, pips, entry, current, stop,
+                         t1=None, t2=None, t3=None,
+                         t1_hit=False, t2_hit=False, t3_hit=False, dollars=0):
+    tv_url        = _get_tradingview_url(pair)
+    dir_emoji     = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
+    milestone_num = int(milestone[1]) if len(milestone) > 1 and milestone[1].isdigit() else 1
+    pct_banked    = 40 if milestone_num == 1 else (70 if milestone_num == 2 else 100)
+    next_tgt_val  = t2 or t1 or current
+
+    fields = [
+        {"name": "Trade Type",              "value": _trade_type_label(True),                                      "inline": False},
+        {"name": "✅ Milestone Hit",         "value": f"**{milestone}** at `{current:.5f}`",                       "inline": True},
+        {"name": "\U0001f4b0 Pips Captured","value": f"**+{pips:.1f} pips**",                                     "inline": True},
+        {"name": "\U0001f4b5 Profit",        "value": f"**+${dollars:.2f}**" if dollars else "Calculating...",    "inline": True},
+        {"name": "\U0001f6e1️ Stop Protection", "value": f"Stop moved to BREAKEVEN\n`{entry:.5f}` — no loss possible", "inline": True},
+        {"name": "\U0001f4ca Cascade Progress","value": _cascade_progress_bar(t1_hit, t2_hit, t3_hit),            "inline": False},
+        {"name": "\U0001f4c8 Price Position","value": _price_position_bar(entry, current, stop, next_tgt_val, direction) or "", "inline": False},
+        {"name": "\U0001f4ca Total Banked",  "value": f"**{pct_banked}%** of position secured",                   "inline": True},
+        {"name": "⏭️ Next Target", "value": (f"T{milestone_num+1} at `{t2:.5f}`" if milestone_num == 1 and t2 else "Final 30% running"), "inline": True},
+        {"name": "\U0001f517 Chart",         "value": f"[View {pair} on TradingView]({tv_url})",                  "inline": False},
+    ]
+    return _send_embed(
+        WEBHOOK_FUND,
+        f"\U0001f3af {pair} {dir_emoji} — {milestone} HIT ✅",
+        "\U0001f4bc FUND TRADE — Partial profit locked in",
+        COLOR_FUND_WIN,
+        fields=fields,
+    )
+
+
+def send_fund_stop_hit(pair, direction, pips, was_cascade_protected,
+                        entry=0.0, stop=0.0, exit_price=0.0,
+                        t1_pips=0, dollars=0, consecutive_losses=0,
+                        pattern_learned=""):
+    tv_url    = _get_tradingview_url(pair)
+    dir_emoji = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
+
     if was_cascade_protected:
-        title = f"🛡️ {pair} stop — breakeven protected"
-        color = COLOR_WIN
+        fields = [
+            {"name": "Trade Type",                   "value": _trade_type_label(True),           "inline": False},
+            {"name": "\U0001f6e1️ Cascade Protected", "value": "T1 was hit — stop at breakeven", "inline": False},
+            {"name": "✅ T1 Profit (40%)",            "value": f"+{t1_pips:.1f}p",               "inline": True},
+            {"name": "\U0001f512 Remainder",          "value": "Closed at breakeven",            "inline": True},
+            {"name": "\U0001f4b5 Net Result",         "value": f"+${dollars:.2f} profit" if dollars > 0 else "Breakeven", "inline": True},
+        ]
+        return _send_embed(
+            WEBHOOK_FUND,
+            f"\U0001f6e1️ {pair} {dir_emoji} — Stop Hit — PROTECTED",
+            "\U0001f4bc FUND TRADE — Cascade protection saved this trade",
+            COLOR_FUND_PROTECTED,
+            fields=fields,
+        )
     else:
-        title = f"❌ {pair} stop hit — LOSS {pips:.1f}p"
-        color = COLOR_LOSS
-    return _send_embed(
-        WEBHOOK_FUND, title,
-        f"{direction} | {'Breakeven stop — capital protected' if was_cascade_protected else f'Loss: {pips:.1f} pips'}",
-        color,
-    )
+        fields = [
+            {"name": "Trade Type",                "value": _trade_type_label(True),                             "inline": False},
+            {"name": "\U0001f4cd Entry",           "value": f"`{entry:.5f}`" if entry else "—",            "inline": True},
+            {"name": "\U0001f6d1 Stop Hit",        "value": f"`{exit_price:.5f}`" if exit_price else "—",  "inline": True},
+            {"name": "\U0001f4c9 Loss",            "value": f"-{pips:.1f}p / -${dollars:.2f}",                 "inline": True},
+            {"name": "\U0001f522 Consecutive Losses","value": f"{consecutive_losses}/3",                        "inline": True},
+            {"name": "\U0001f9e0 Pattern Learned", "value": pattern_learned or "Logged for ML",                 "inline": False},
+        ]
+        return _send_embed(
+            WEBHOOK_FUND,
+            f"❌ {pair} {dir_emoji} — STOP HIT — LOSS",
+            "\U0001f4bc FUND TRADE — Loss recorded and logged",
+            COLOR_FUND_LOSS,
+            fields=fields,
+        )
 
 
-def send_fund_trade_opened(pair: str, direction: str, conf: float,
-                            entry: float, stop: float, t1: float,
-                            t2: float, t3: float, risk_pct: float,
-                            risk_dollars: float, rr: float,
-                            checklist_score: int) -> bool:
-    return _send_embed(
-        WEBHOOK_FUND,
-        f"💼 New fund trade: {pair} {direction}",
-        f"Confidence {conf}/10 | Checklist {checklist_score}/10",
-        COLOR_INFO,
-        [
-            {"name": "Entry",     "value": str(entry),                         "inline": True},
-            {"name": "Stop",      "value": str(stop),                          "inline": True},
-            {"name": "T1",        "value": str(t1),                            "inline": True},
-            {"name": "T2",        "value": str(t2),                            "inline": True},
-            {"name": "T3",        "value": str(t3),                            "inline": True},
-            {"name": "R:R",       "value": f"{rr:.1f}",                        "inline": True},
-            {"name": "Risk",      "value": f"{risk_pct:.2f}% (${risk_dollars:.2f})", "inline": True},
-            {"name": "Checklist", "value": f"{checklist_score}/10",            "inline": True},
-        ],
-    )
+def send_fund_approaching(pair, direction, progress_pct, target_price,
+                           current_price, distance_pips, stop_price, milestone,
+                           entry_price=0, is_fund=True):
+    tv_url    = _get_tradingview_url(pair)
+    dir_emoji = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
+    bar       = _progress_bar(min(max(progress_pct, 0), 100))
+    color     = COLOR_FUND_HOT if is_fund else COLOR_RESEARCH_HOT
 
+    fields = [
+        {"name": "Trade Type",                 "value": _trade_type_label(is_fund),             "inline": False},
+        {"name": "\U0001f4ca Progress to Target","value": f"`{bar}` {max(progress_pct, 0):.0f}%", "inline": False},
+        {"name": "\U0001f3af Target",           "value": f"`{target_price:.5f}`",               "inline": True},
+        {"name": "\U0001f4cd Current",          "value": f"`{current_price:.5f}`",              "inline": True},
+        {"name": "\U0001f4cf Distance",         "value": f"`{distance_pips:.1f} pips`",         "inline": True},
+        {"name": "\U0001f6d1 Stop Loss",        "value": f"`{stop_price:.5f}` \U0001f6e1️ Protected", "inline": True},
+    ]
 
-def send_fund_approaching(pair: str, direction: str, progress_pct: float,
-                           target_price: float, current_price: float,
-                           distance_pips: float, stop_price: float,
-                           milestone: str) -> bool:
+    if entry_price:
+        price_bar = _price_position_bar(entry_price, current_price, stop_price, target_price, direction)
+        if price_bar:
+            fields.append({"name": "\U0001f4c8 Price Position", "value": price_bar, "inline": False})
+
+    fields.append({"name": "\U0001f517 Chart", "value": f"[View {pair} on TradingView]({tv_url})", "inline": False})
+
     return _send_embed(
         WEBHOOK_MONITOR,
-        f"🔥 {pair} approaching {milestone}",
-        f"{direction} | {progress_pct:.0f}% of the way to {milestone}",
-        COLOR_APPROACHING,
-        [
-            {"name": "Progress",  "value": f"{progress_pct:.0f}%",     "inline": True},
-            {"name": "Target",    "value": str(target_price),           "inline": True},
-            {"name": "Current",   "value": str(current_price),          "inline": True},
-            {"name": "Distance",  "value": f"{distance_pips:.1f} pips", "inline": True},
-            {"name": "Stop",      "value": str(stop_price),             "inline": True},
-        ],
+        f"\U0001f525 {pair} {dir_emoji} — Approaching {milestone}",
+        f"{'💼 FUND' if is_fund else '🔬 RESEARCH'} — Monitor checking every 30 minutes ✅",
+        color,
+        fields=fields,
     )
 
 
-def send_research_batch(milestones_list: list, scan_mode: str) -> bool:
+def send_research_batch(milestones_list, scan_mode, total_open=0, win_rate=0, decisive=0):
     if not milestones_list:
         return False
+
+    wins   = [m for m in milestones_list if "WIN" in m.get("outcome", "") or "T1" in m.get("milestone", "") or "T2" in m.get("milestone", "")]
+    losses = [m for m in milestones_list if "LOSS" in m.get("outcome", "")]
+
     fields = []
     for m in milestones_list[:10]:
-        fields.append({
-            "name":   m.get("pair", "?"),
-            "value":  f"{m.get('level','?')} — +{m.get('pips', 0):.1f}p",
-            "inline": True,
-        })
-    desc = f"{len(milestones_list)} milestone(s) detected"
+        pair      = m.get("pair", "")
+        milestone = m.get("milestone", "")
+        pips      = m.get("pips", 0)
+        outcome   = m.get("outcome", "")
+
+        if "LOSS" in outcome:
+            emoji = "❌"
+            value = f"-{abs(pips):.1f}p — LOSS"
+        elif "protected" in outcome.lower() or "cascade" in outcome.lower():
+            emoji = "\U0001f6e1️"
+            value = f"+{pips:.1f}p — Protected exit"
+        elif "T3" in milestone or "FULL" in outcome:
+            emoji = "\U0001f3c6"
+            value = f"+{pips:.1f}p — FULL WIN"
+        elif "T2" in milestone:
+            emoji = "\U0001f3af"
+            value = f"+{pips:.1f}p — T2 hit (70% banked)"
+        else:
+            emoji = "✅"
+            value = f"+{pips:.1f}p — Partial WIN"
+
+        fields.append({"name": f"{emoji} {pair} — {milestone}", "value": value, "inline": True})
+
     if len(milestones_list) > 10:
-        desc += f" (and {len(milestones_list) - 10} more...)"
+        fields.append({"name": f"And {len(milestones_list) - 10} more...", "value": "See full log on GitHub", "inline": False})
+
+    fields.append({
+        "name":   "\U0001f4ca Research Stats",
+        "value":  f"Open trades: {total_open}\nWin rate: {win_rate:.0f}%\nDecisive outcomes: {decisive}",
+        "inline": True,
+    })
+    fields.append({"name": "\U0001f9e0 ML Update", "value": "Training data updated ✅", "inline": True})
+
     return _send_embed(
         WEBHOOK_RESEARCH,
-        f"🔬 Research milestones — {scan_mode}",
-        desc,
-        COLOR_RESEARCH,
-        fields,
+        f"\U0001f52c Research Milestones — {scan_mode} check · {len(milestones_list)} detected",
+        f"\U0001f52c **RESEARCH TRADES** — ML training positions\n✅ {len(wins)} wins · ❌ {len(losses)} losses",
+        COLOR_RESEARCH_BATCH,
+        fields=fields,
     )
 
 
-def send_system_health(scans_completed: int, monitor_runs: int,
-                        milestones_today: int, data_quality_pct: float,
-                        api_calls_used: int, api_calls_remaining: int,
-                        ml_status: str, cot_status: str,
-                        last_monitor_gap_min: float) -> bool:
+def send_full_scan_report(date, scan_mode, universe_size, pairs_analysed,
+                           new_alerts, threshold, regime,
+                           open_fund_trades, research_open,
+                           win_rate, profit_factor=0.0,
+                           cost_usd=0.0, run_minutes=0.0,
+                           data_quality_pct=0, cot_status="",
+                           calendar_status="", api_calls_used=0,
+                           ml_status=""):
+    scan_emoji = {"full": "\U0001f305", "morning": "☀️", "prelondon": "\U0001f306", "preny": "\U0001f303", "monitor": "\U0001f4e1"}.get(scan_mode, "\U0001f916")
+    scan_name  = {"full": "6am Full Scan", "morning": "9am Morning Scan", "prelondon": "5pm Pre-London", "preny": "11pm Pre-New York"}.get(scan_mode, scan_mode)
+
+    # Accept new_alerts as a list of dicts or a plain integer count
+    if isinstance(new_alerts, (int, float)):
+        alerts_text      = f"{int(new_alerts)} new setups" if new_alerts else "No new setups today"
+        new_alerts_count = int(new_alerts)
+    elif new_alerts:
+        new_alerts_count = len(new_alerts)
+        lines = []
+        for alert in (new_alerts if isinstance(new_alerts, list) else [])[:5]:
+            if isinstance(alert, dict):
+                p = alert.get("pair", "")
+                d = alert.get("direction", "")
+                c = alert.get("conf", "")
+                lines.append(f"\U0001f4bc {p} {d} (conf {c}/10)")
+            else:
+                lines.append(str(alert))
+        alerts_text = "\n".join(lines) if lines else "No new setups today"
+    else:
+        alerts_text      = "No new setups today"
+        new_alerts_count = 0
+
+    color = COLOR_FUND_WIN if new_alerts_count else COLOR_INFO
+
+    # Accept open_fund_trades as a list of dicts or a plain integer count
+    if isinstance(open_fund_trades, (int, float)):
+        open_trades_text = f"{int(open_fund_trades)} open fund trades" if open_fund_trades else "No open fund trades"
+    elif open_fund_trades:
+        lines = []
+        for trade in (open_fund_trades if isinstance(open_fund_trades, list) else [])[:6]:
+            if isinstance(trade, dict):
+                p  = trade.get("pair", "")
+                d  = trade.get("direction", "")
+                pg = trade.get("progress_pct", 0)
+                nt = trade.get("next_target", "T1")
+                lines.append(f"{'📈' if d == 'BUY' else '📉'} {p}: {pg:.0f}% to {nt}")
+            else:
+                lines.append(str(trade))
+        open_trades_text = "\n".join(lines) if lines else "No open fund trades"
+    else:
+        open_trades_text = "No open fund trades"
+
+    wr_str = f"{win_rate:.0f}%" if win_rate is not None else "n/a"
+    pf_str = f"{profit_factor:.2f}" if profit_factor else "n/a"
+
+    fields = [
+        {"name": "\U0001f4ca Scan Summary",    "value": f"Universe: {universe_size:,} pairs\nDeep analysed: {pairs_analysed}\nDuration: {run_minutes:.0f} minutes", "inline": True},
+        {"name": "\U0001f3af Entry Threshold", "value": f"{threshold}/10\nRegime: {regime}",     "inline": True},
+        {"name": "\U0001f4bc New Alerts",      "value": alerts_text,                             "inline": False},
+        {"name": "\U0001f4c8 Open Fund Trades","value": open_trades_text,                        "inline": False},
+        {"name": "\U0001f52c Research",        "value": f"Open: {research_open}\nWin rate: {wr_str}\nProfit factor: {pf_str}", "inline": True},
+        {"name": "\U0001f4e1 Data Quality",    "value": f"Overall: {data_quality_pct:.0f}%\nCOT: {cot_status or 'N/A'}\nCalendar: {calendar_status or 'N/A'}\nAPI: {api_calls_used}/800 calls", "inline": True},
+        {"name": "\U0001f916 ML System",       "value": ml_status or "Active",                  "inline": True},
+        {"name": "\U0001f4b0 Cost",            "value": f"${cost_usd:.4f} USD",                  "inline": True},
+    ]
     return _send_embed(
         WEBHOOK_HEALTH,
-        f"📊 Daily system health — {datetime.now(timezone.utc).strftime('%Y-%m-%d')}",
-        "End of day health summary",
+        f"{scan_emoji} Forex AI — {date} — {scan_name}",
+        f"Scan complete · {pairs_analysed} pairs analysed",
+        color,
+        fields=fields,
+    )
+
+
+def send_system_health(date, scans_completed, scans_expected, monitor_runs,
+                        monitor_expected, milestones_today, data_quality_pct,
+                        api_calls_used, api_calls_remaining, ml_status, cot_status,
+                        last_monitor_gap_min, fund_balance=0, return_pct=0,
+                        open_fund=0, open_research=0, daily_pnl=0, drawdown_pct=0,
+                        win_rate=0, decisive=0, sharpe=0, ftmo_pct=0):
+    scans_ok   = scans_completed >= scans_expected
+    monitor_ok = monitor_runs >= monitor_expected - 2
+    fields = [
+        {"name": "\U0001f4c5 Scans Today",    "value": f"{'✅' if scans_ok else '⚠️'} {scans_completed}/{scans_expected} completed",                                       "inline": True},
+        {"name": "\U0001f4e1 Monitor Runs",   "value": f"{'✅' if monitor_ok else '⚠️'} {monitor_runs}/{monitor_expected} runs\nLast: {last_monitor_gap_min:.0f}m ago",    "inline": True},
+        {"name": "\U0001f3af Milestones",     "value": f"{milestones_today} detected today",                                                                               "inline": True},
+        {"name": "\U0001f4bc Fund Performance","value": f"Balance: ${fund_balance:,.2f}\nReturn: {return_pct:+.2f}%\nDaily P&L: {daily_pnl:+.2f}%\nDrawdown: {drawdown_pct:.2f}%", "inline": True},
+        {"name": "\U0001f4ca Trade Stats",    "value": f"Open fund: {open_fund}\nOpen research: {open_research}\nWin rate: {win_rate:.0f}%\nDecisive: {decisive}",        "inline": True},
+        {"name": "\U0001f3c6 FTMO Progress",  "value": f"Target: 10% profit\nCurrent: {ftmo_pct:+.2f}%\nSharpe: {sharpe:.2f}",                                           "inline": True},
+        {"name": "\U0001f4e1 Data Sources",   "value": f"Data quality: {data_quality_pct:.0f}%\nCOT: {cot_status}\nAPI: {api_calls_used}/800 calls\nRemaining: {api_calls_remaining}", "inline": True},
+        {"name": "\U0001f916 ML System",      "value": ml_status or "Active",                                                                                             "inline": True},
+        {"name": "✅ System Status",          "value": "All systems operational" if (scans_ok and monitor_ok) else "⚠️ Check logs",                                       "inline": True},
+    ]
+    return _send_embed(
+        WEBHOOK_HEALTH,
+        f"\U0001f4ca Daily System Health — {date}",
+        "Forex AI autonomous system — end of day summary",
         COLOR_HEALTH,
-        [
-            {"name": "Scans completed",  "value": str(scans_completed),           "inline": True},
-            {"name": "Monitor runs",     "value": str(monitor_runs),              "inline": True},
-            {"name": "Milestones today", "value": str(milestones_today),          "inline": True},
-            {"name": "Data quality",     "value": f"{data_quality_pct:.0f}%",     "inline": True},
-            {"name": "API calls used",   "value": str(api_calls_used),            "inline": True},
-            {"name": "API remaining",    "value": str(api_calls_remaining),       "inline": True},
-            {"name": "ML status",        "value": ml_status,                      "inline": True},
-            {"name": "COT status",       "value": cot_status,                     "inline": True},
-            {"name": "Max monitor gap",  "value": f"{last_monitor_gap_min:.0f}m", "inline": True},
-        ],
+        fields=fields,
     )
 
 
-def send_full_scan_report(date: str, universe_size: int, pairs_analysed: int,
-                           new_alerts: int, threshold: float, regime: str,
-                           open_fund_trades: int, research_open: int,
-                           win_rate: float, cost_usd: float,
-                           run_minutes: float) -> bool:
-    wr_str = f"{win_rate*100:.0f}%" if win_rate is not None else "n/a"
-    return _send_embed(
-        WEBHOOK_HEALTH,
-        f"🤖 Forex AI — {date} scan complete",
-        f"Universe: {universe_size} pairs | Analysed: {pairs_analysed}",
-        COLOR_INFO,
-        [
-            {"name": "New alerts",    "value": str(new_alerts),       "inline": True},
-            {"name": "Threshold",     "value": str(threshold),        "inline": True},
-            {"name": "Regime",        "value": regime,                "inline": True},
-            {"name": "Fund open",     "value": str(open_fund_trades), "inline": True},
-            {"name": "Research open", "value": str(research_open),    "inline": True},
-            {"name": "Win rate",      "value": wr_str,                "inline": True},
-            {"name": "Cost",          "value": f"${cost_usd:.3f}",    "inline": True},
-            {"name": "Run time",      "value": f"{run_minutes:.1f}m", "inline": True},
-        ],
-    )
-
-
-def send_circuit_breaker(reason: str, fund_balance: float,
-                          daily_pnl_pct: float, daily_pnl_dollars: float) -> bool:
+def send_circuit_breaker(reason, fund_balance, daily_pnl_pct,
+                          daily_pnl_dollars, resets_at=""):
+    fields = [
+        {"name": "\U0001f6a8 Reason",       "value": reason,                                                        "inline": False},
+        {"name": "\U0001f4b0 Fund Balance", "value": f"${fund_balance:,.2f}",                                       "inline": True},
+        {"name": "\U0001f4c9 Daily P&L",    "value": f"{daily_pnl_pct:+.2f}% (${daily_pnl_dollars:+.2f})",         "inline": True},
+        {"name": "⏰ Resets At",            "value": resets_at or "Tomorrow 6am Auckland",                         "inline": True},
+        {"name": "ℹ️ Action Taken",         "value": "No new fund trades until reset\nExisting trades remain open and monitored", "inline": False},
+    ]
     return _send_embed(
         WEBHOOK_CRITICAL,
-        "⚠️ Circuit breaker ACTIVE",
-        reason,
+        "⚠️ Circuit Breaker ACTIVE",
+        "\U0001f4bc FUND PROTECTION — Automatic safety system triggered",
         COLOR_CRITICAL,
-        [
-            {"name": "Fund balance", "value": f"${fund_balance:,.2f}",      "inline": True},
-            {"name": "Daily P&L",    "value": f"{daily_pnl_pct:+.2f}%",     "inline": True},
-            {"name": "Daily loss $", "value": f"${daily_pnl_dollars:,.2f}", "inline": True},
-        ],
+        fields=fields,
     )
 
 
-def send_workflow_failure(workflow_name: str, run_url: str) -> bool:
+def send_workflow_failure(workflow_name, run_url, scan_mode=""):
+    fields = [
+        {"name": "\U0001f534 Workflow",      "value": workflow_name,                       "inline": True},
+        {"name": "\U0001f4cb Scan Mode",     "value": scan_mode or "Unknown",              "inline": True},
+        {"name": "\U0001f517 View Run",      "value": f"[Click to view error]({run_url})", "inline": False},
+        {"name": "ℹ️ Action Required",       "value": "Check GitHub Actions for error details\nNext scheduled run will attempt automatically", "inline": False},
+    ]
     return _send_embed(
         WEBHOOK_CRITICAL,
-        f"🚨 {workflow_name} FAILED",
-        "GitHub Actions workflow did not complete",
+        f"\U0001f6a8 SYSTEM ALERT — {workflow_name} FAILED",
+        "A scheduled workflow did not complete successfully",
         COLOR_CRITICAL,
-        [{"name": "Run URL", "value": run_url, "inline": False}],
+        fields=fields,
     )
 
 
-def send_watch_list_movement(pair: str, confidence: float,
-                              direction: str, pips_moved: float) -> bool:
+def send_monitor_gap_alert(gap_minutes, last_run_time=""):
+    fields = [
+        {"name": "⏰ Gap Duration", "value": f"{gap_minutes:.0f} minutes", "inline": True},
+        {"name": "✅ Expected",     "value": "Every 30 minutes",           "inline": True},
+        {"name": "\U0001f550 Last Run", "value": last_run_time or "Unknown", "inline": True},
+        {"name": "\U0001f527 Action",   "value": "Check cron-job.org dashboard\nVerify monitor job is active", "inline": False},
+    ]
+    return _send_embed(
+        WEBHOOK_CRITICAL,
+        "⚠️ Monitor Gap Detected",
+        "Between-scan monitor has not run as expected",
+        COLOR_WARNING,
+        fields=fields,
+    )
+
+
+def send_watch_list_movement(pair, confidence, direction, pips_moved, atr_multiple=0):
+    tv_url    = _get_tradingview_url(pair)
+    dir_emoji = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
+    mov_text  = f"{pips_moved:.1f} pips\n{atr_multiple:.2f}x ATR" if atr_multiple else f"{pips_moved:.1f} pips"
+    fields = [
+        {"name": "\U0001f4ca Confidence",      "value": f"{confidence}/10",  "inline": True},
+        {"name": f"{dir_emoji} Direction",     "value": direction,            "inline": True},
+        {"name": "\U0001f4cf Movement",        "value": mov_text,             "inline": True},
+        {"name": "⏰ Next Scan",               "value": "Added to priority queue\nWill be deep-analysed at next 6am scan", "inline": False},
+        {"name": "\U0001f517 Chart",           "value": f"[View {pair} on TradingView]({tv_url})", "inline": False},
+    ]
     return _send_embed(
         WEBHOOK_MONITOR,
-        f"🔔 Watch list movement: {pair}",
-        f"{direction} | Conf {confidence}/10",
+        f"\U0001f514 Watch List Movement — {pair} {dir_emoji}",
+        "Significant price movement detected on watch list pair",
         COLOR_WARNING,
-        [
-            {"name": "Direction",  "value": direction,           "inline": True},
-            {"name": "Confidence", "value": str(confidence),     "inline": True},
-            {"name": "Pips moved", "value": f"{pips_moved:.1f}", "inline": True},
-        ],
-    )
-
-
-def send_monitor_gap_alert(gap_minutes: float) -> bool:
-    return _send_embed(
-        WEBHOOK_CRITICAL,
-        "⚠️ Monitor gap detected",
-        f"No monitor run for {gap_minutes:.0f} minutes — check cron-job.org",
-        COLOR_WARNING,
-        [{"name": "Gap", "value": f"{gap_minutes:.0f} minutes", "inline": True}],
+        fields=fields,
     )
