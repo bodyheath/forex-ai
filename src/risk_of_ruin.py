@@ -271,10 +271,10 @@ def build_ftmo_section(fund_start: float, current_balance: float,
         lines.append("🚨 <b>CHALLENGE FAILED</b> — a rule has been breached")
 
     p_icon = "✅" if m["phase1_target_hit"] else ("🟢" if m["phase2_target_hit"] else "⏳")
+    p_progress = "✅ HIT" if m["phase1_target_hit"] else f"{m['profit_to_go_p1']:.1f}% to go"
     lines.append(
         f"{p_icon} Profit: {m['profit_pct']:+.1f}% "
-        f"(Phase 1 target: {FTMO_PROFIT_TARGET_PCT:.0f}% — "
-        f"{'✅ HIT' if m['phase1_target_hit'] else f'{m[\"profit_to_go_p1\"]:.1f}% to go'})"
+        f"(Phase 1 target: {FTMO_PROFIT_TARGET_PCT:.0f}% — {p_progress})"
     )
 
     d_icon = "✅" if m["daily_rule_ok"] else "🚨"
