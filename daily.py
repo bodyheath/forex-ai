@@ -7469,32 +7469,39 @@ _SONNET_THRESH = {"full": 6, "morning": 7, "prelondon": 7, "preny": 7}
 
 
 def _get_scan_mode() -> str:
-    """Return scan mode from SCAN_MODE env var or current Auckland hour."""
+    """Return scan mode from SCAN_MODE env var (cron-job.org input) or Auckland hour fallback."""
     import os as _os_
     mode = _os_.getenv("SCAN_MODE", "").lower().strip()
     if mode in _SCAN_MODES:
+        print(f"[scan] SCAN_MODE={mode!r} from env var (cron-job.org input)", file=sys.stderr)
         return mode
     now = _auckland_now()
     # Saturday morning lightweight gap check (weekday 5 = Saturday, hours 5–8am)
     if now.weekday() == 5 and now.hour in (5, 6, 7, 8):
+        print(f"[scan] SCAN_MODE=saturday from Auckland hour fallback (hour={now.hour})", file=sys.stderr)
         return "saturday"
     # Sunday morning gap scan (weekday 6 = Sunday, hours 5–8am)
     if now.weekday() == 6 and now.hour in (5, 6, 7, 8):
+        print(f"[scan] SCAN_MODE=gap from Auckland hour fallback (hour={now.hour})", file=sys.stderr)
         return "gap"
     hour = now.hour
     if hour in (5, 6):    # 5am–7am   → 6am full scan
+        print(f"[scan] SCAN_MODE=full from Auckland hour fallback (hour={hour})", file=sys.stderr)
         return "full"
     if hour in (8, 9):    # 8am–10am  → 9am morning check
+        print(f"[scan] SCAN_MODE=morning from Auckland hour fallback (hour={hour})", file=sys.stderr)
         return "morning"
     if hour in (16, 17):  # 4pm–6pm   → 5pm pre-London check
+        print(f"[scan] SCAN_MODE=prelondon from Auckland hour fallback (hour={hour})", file=sys.stderr)
         return "prelondon"
     if hour in (22, 23):  # 10pm–12am → 11pm pre-New York check
+        print(f"[scan] SCAN_MODE=preny from Auckland hour fallback (hour={hour})", file=sys.stderr)
         return "preny"
     # Off-hours fallback — log a warning so it is visible in GitHub Actions logs
     print(
-        f"[scan] WARNING — Auckland hour={hour} is outside all defined scan windows "
-        f"(5-6=full, 8-9=morning, 16-17=prelondon, 22-23=preny) and SCAN_MODE env var is unset. "
-        f"Defaulting to 'full'. Check GitHub Actions schedule and workflow trigger times.",
+        f"[scan] WARNING — SCAN_MODE env var unset and Auckland hour={hour} outside all scan windows "
+        f"(5-6=full, 8-9=morning, 16-17=prelondon, 22-23=preny). "
+        f"Defaulting to 'full'. Set SCAN_MODE in the workflow env: section.",
         file=sys.stderr,
     )
     return "full"
