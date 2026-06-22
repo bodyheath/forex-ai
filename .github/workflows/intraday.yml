@@ -41,14 +41,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Set scan mode
-        run: |
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            echo "SCAN_MODE=morning" >> $GITHUB_ENV
-          else
-            echo "SCAN_MODE=${{ inputs.scan_mode }}" >> $GITHUB_ENV
-          fi
-
       - name: Run intraday scan
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -68,7 +60,7 @@ jobs:
           HAIKU_MODEL: ${{ secrets.HAIKU_MODEL || 'claude-haiku-4-5-20251001' }}
           ACCOUNT_BALANCE: ${{ secrets.ACCOUNT_BALANCE || '10000' }}
           ACCOUNT_CURRENCY: ${{ secrets.ACCOUNT_CURRENCY || 'USD' }}
-          SCAN_MODE: ${{ env.SCAN_MODE }}
+          SCAN_MODE: ${{ inputs.scan_mode }}
           DISCORD_WEBHOOK_FUND: ${{ secrets.DISCORD_WEBHOOK_FUND }}
           DISCORD_WEBHOOK_RESEARCH: ${{ secrets.DISCORD_WEBHOOK_RESEARCH }}
           DISCORD_WEBHOOK_MONITOR: ${{ secrets.DISCORD_WEBHOOK_MONITOR }}
