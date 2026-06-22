@@ -9742,6 +9742,30 @@ def run() -> int:
                     scan_cost_usd=_dsc_cost,
                     monitor_sources="",
                 )
+                _log_line(logf, "Discord scan report sent ✅")
+        except Exception as _dsc_exc:
+            import traceback as _dsc_tb
+            _log_line(logf,
+                f"Discord scan report FAILED: {type(_dsc_exc).__name__}: {_dsc_exc}")
+            _log_line(logf, _dsc_tb.format_exc())
+
+    # FIX 12: Write scan completion marker AFTER all Discord/Telegram sends complete.
+    if IS_GITHUB_ACTIONS:
+        try:
+            from pathlib import Path as _ss_Path
+            _ss_file = _ss_Path(str(config.DATA_DIR) + "/scan_status.json")
+            _ss_data: dict = {}
+            if _ss_file.exists():
+                try:
+                    _ss_data = json.loads(_ss_file.read_text(encoding="utf-8"))
+                except Exception:
+                    pass
+            _ss_data.update({
+                "scan_completed": True,
+                "scan_mode": scan_mode,
+                "finished_utc": datetime.now(timezone.utc).isoformat(),
+            })
+            _ss_file.write_text(json.dumps(_ss_data, indent=2), encoding="utf-8")
         except Exception:
             pass
 
