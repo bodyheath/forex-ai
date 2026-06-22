@@ -314,6 +314,14 @@ def _for_currency(ccy: str) -> dict:
     if not market:
         return {"currency": ccy, "status": "UNAVAILABLE", "reason": "no COT market mapped"}
 
+    # Skip all remaining COT fetches after 3 consecutive failures this scan
+    if _cot_consecutive_failures[0] >= 3:
+        return {
+            "currency": ccy,
+            "status": "UNAVAILABLE",
+            "reason": "COT disabled after 3 consecutive failures — neutral score applied",
+        }
+
     rows = _series_for(market)
     if not rows:
         return {
