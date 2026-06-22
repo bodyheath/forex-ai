@@ -255,16 +255,38 @@ def send_fund_approaching(pair, direction, progress_pct, target_price,
                            entry_price=0, is_fund=True):
     tv_url    = _get_tradingview_url(pair)
     dir_emoji = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
-    bar       = _progress_bar(min(max(progress_pct, 0), 100))
     color     = COLOR_FUND_HOT if is_fund else COLOR_RESEARCH_HOT
 
+    # Target already crossed — price went past the milestone level
+    if progress_pct > 100:
+        overshoot_pips = abs(distance_pips)
+        fields = [
+            {"name": "Trade Type",               "value": _trade_type_label(is_fund),                               "inline": False},
+            {"name": "\U0001f4ca Status",        "value": f"`{'█' * 20}` 100%+ (target crossed)",                  "inline": False},
+            {"name": "\U0001f3af Target Was",    "value": f"`{target_price:.5f}`",                                  "inline": True},
+            {"name": "\U0001f4cd Current Price", "value": f"`{current_price:.5f}`",                                 "inline": True},
+            {"name": "\U0001f4cf Past Target",   "value": f"`{overshoot_pips:.1f} pips beyond {milestone}`",       "inline": True},
+            {"name": "\U0001f6e1️ Stop",          "value": f"`{stop_price:.5f}` Protected",                        "inline": True},
+            {"name": "⚡ Action",                "value": "Milestone detection triggered immediately\nWill be recorded this run", "inline": False},
+            {"name": "\U0001f517 Chart",         "value": f"[View {pair} on TradingView]({tv_url})",               "inline": False},
+        ]
+        return _send_embed(
+            WEBHOOK_MONITOR,
+            f"\U0001f3af {pair} {dir_emoji} — {milestone} ALREADY CROSSED",
+            f"{'💼 FUND' if is_fund else '🔬 RESEARCH'} — Price past target — recording milestone now",
+            color,
+            fields=fields,
+        )
+
+    bar = _progress_bar(progress_pct)
+
     fields = [
-        {"name": "Trade Type",                 "value": _trade_type_label(is_fund),             "inline": False},
-        {"name": "\U0001f4ca Progress to Target","value": f"`{bar}` {max(progress_pct, 0):.0f}%", "inline": False},
-        {"name": "\U0001f3af Target",           "value": f"`{target_price:.5f}`",               "inline": True},
-        {"name": "\U0001f4cd Current",          "value": f"`{current_price:.5f}`",              "inline": True},
-        {"name": "\U0001f4cf Distance",         "value": f"`{distance_pips:.1f} pips`",         "inline": True},
-        {"name": "\U0001f6d1 Stop Loss",        "value": f"`{stop_price:.5f}` \U0001f6e1️ Protected", "inline": True},
+        {"name": "Trade Type",                 "value": _trade_type_label(is_fund),                           "inline": False},
+        {"name": "\U0001f4ca Progress to Target","value": f"`{bar}` {max(progress_pct, 0):.0f}%",             "inline": False},
+        {"name": "\U0001f3af Target",           "value": f"`{target_price:.5f}`",                             "inline": True},
+        {"name": "\U0001f4cd Current",          "value": f"`{current_price:.5f}`",                            "inline": True},
+        {"name": "\U0001f4cf Distance",         "value": f"`{distance_pips:.1f} pips`",                       "inline": True},
+        {"name": "\U0001f6d1 Stop Loss",        "value": f"`{stop_price:.5f}` \U0001f6e1️ Protected",         "inline": True},
     ]
 
     if entry_price:
