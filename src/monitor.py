@@ -2314,33 +2314,60 @@ def run(log=print) -> dict:
             _dash_peak     = float(_fs_d.get("peak_balance") or _dash_bal or 10000)
             _dash_ret      = (_dash_bal - 10000.0) / 10000.0 * 100 if _dash_bal else 0.0
 
-            # Fund trade statistics from trades.csv (fund trades only: trade_this == YES)
-            _st_wins = _st_losses = _st_partial = 0
+            # ── Fund trade statistics — audited calculation ─────────────────────
+            # Reads status column (trades.csv has no outcome column).
+            # Pip fallback chain: cascading_total_pips_weighted → cascading_total_pips → pips
+            # EXPIRED with positive pips = protected/partial exit; negative = loss.
+            _st_wins = _st_losses = _st_partial = _st_breakeven = 0
             _st_wr = _st_avg_win = _st_avg_loss = _st_pf = _st_best_pips = _st_total_pips = 0.0
             _st_best_pair = ""
             _st_total = 0
             try:
                 import csv as _csv_dash
-                _pip_col = "cascading_total_pips_weighted"
                 with open(config.DATA_DIR / "trades.csv", encoding="utf-8-sig", newline="") as _tf:
                     _fund_rows = [r for r in _csv_dash.DictReader(_tf)
                                   if r.get("trade_this") == "YES"]
                 _st_total = len(_fund_rows)
+
+                # Determine which result column exists
+                _sample = _fund_rows[0] if _fund_rows else {}
+                _has_outcome = (
+                    "outcome" in _sample and
+                    any(str(r.get("outcome") or "").strip() for r in _fund_rows)
+                )
+                _result_col = "outcome" if _has_outcome else "status"
+                log(f"  [fund-stats] result_col={_result_col} total_fund_trades={_st_total}")
+
                 _win_pips_list, _loss_pips_list = [], []
                 _best_pips_seen = 0.0
                 for _fr in _fund_rows:
-                    _st_out = str(_fr.get("status") or "").upper()
-                    _fp = float(_fr.get(_pip_col) or _fr.get("pips") or 0)
+                    _st_out = str(_fr.get(_result_col) or "").upper()
+                    # Pip fallback: prefer cascading weighted → cascading → pips
+                    _raw_pip = (
+                        _fr.get("cascading_total_pips_weighted") or
+                        _fr.get("cascading_total_pips") or
+                        _fr.get("pips") or
+                        ""
+                    )
+                    try:
+                        _fp = float(_raw_pip) if _raw_pip != "" else 0.0
+                    except (ValueError, TypeError):
+                        _fp = 0.0
+                    import math as _math_st
+                    if _math_st.isnan(_fp):
+                        _fp = 0.0
+
                     if _st_out in ("WIN", "FULL_WIN"):
                         _st_wins += 1
                         _win_pips_list.append(_fp)
                     elif _st_out == "PARTIAL_WIN":
                         _st_partial += 1
                         _win_pips_list.append(_fp)
+                    elif _st_out == "BREAKEVEN":
+                        _st_breakeven += 1
                     elif _st_out in ("LOSS", "EXPIRED", "EXPIRED_LOSS", "STALE_EXIT"):
-                        # FIX 5: EXPIRED trades count as losses — not wins.
-                        # EXPIRED with positive pips means we exited early (partial);
-                        # EXPIRED with zero/negative pips is a clear loss.
+                        # EXPIRED with positive pips = protected exit with profit → partial win
+                        # EXPIRED with zero/negative pips = loss
                         if _fp > 0:
                             _st_partial += 1
                             _win_pips_list.append(_fp)
@@ -2350,6 +2377,7 @@ def run(log=print) -> dict:
                     if _fp > _best_pips_seen:
                         _best_pips_seen = _fp
                         _st_best_pair = str(_fr.get("pair") or "")
+
                 _st_best_pips = _best_pips_seen
                 _st_decisive = _st_wins + _st_losses + _st_partial
                 if _st_decisive > 0:
@@ -2358,11 +2386,16 @@ def run(log=print) -> dict:
                     _st_avg_win = sum(_win_pips_list) / len(_win_pips_list)
                 if _loss_pips_list:
                     _st_avg_loss = sum(_loss_pips_list) / len(_loss_pips_list)
-                _tot_win = sum(_win_pips_list)
+                _tot_win  = sum(_win_pips_list)
                 _tot_loss = sum(_loss_pips_list)
                 if _tot_loss > 0:
                     _st_pf = _tot_win / _tot_loss
                 _st_total_pips = _tot_win - _tot_loss
+                log(
+                    f"  [fund-stats] wins={_st_wins} protected={_st_partial} "
+                    f"losses={_st_losses} breakeven={_st_breakeven} "
+                    f"decisive={_st_decisive} wr={_st_wr:.1f}%"
+                )
             except Exception as _st_exc:
                 log(f"  Monitor: fund stats calculation failed: {_st_exc}")
 
