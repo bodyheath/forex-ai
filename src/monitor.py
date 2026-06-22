@@ -1894,15 +1894,54 @@ def run(log=print) -> dict:
 
                     elif _prog <= 0:
                         # Price moved against trade — approaching stop loss
-                        log(
-                            f"  Monitor: {_pair_str} HOT zone {_prog:.0f}% "
-                            f"— price moving against trade — sending stop-approaching alert"
-                        )
                         _stop_dist = abs(_cur_p - (_stop0 or _entry)) / _pip_sz
-                        _dn.send_fund_approaching(
-                            _pair_str, _dir0, _prog, _stop0 or 0.0, _cur_p,
-                            _stop_dist, _stop0 or 0.0, "STOP"
-                        )
+                        # 2-hour cooldown for stop-approaching alerts (independent of HOT zone dedup)
+                        # Always fire if within 5 pips of stop; suppress otherwise
+                        _stop_alrt_suppress = False
+                        try:
+                            _sa_file = config.DATA_DIR / "stop_approach_alerts.json"
+                            if _sa_file.exists():
+                                _sa_data = json.loads(_sa_file.read_text(encoding="utf-8"))
+                                _sa_ts   = _sa_data.get(_pair_str, {}).get("last_sent", "")
+                                if _sa_ts:
+                                    _sa_elapsed = (
+                                        datetime.now(timezone.utc).replace(tzinfo=None) -
+                                        datetime.strptime(_sa_ts[:19], "%Y-%m-%dT%H:%M:%S")
+                                    ).total_seconds() / 3600
+                                    if _stop_dist > 5 and _sa_elapsed < 2.0:
+                                        log(
+                                            f"  Monitor: stop alert suppressed for {_pair_str} "
+                                            f"— sent {_sa_elapsed:.1f}h ago "
+                                            f"({_stop_dist:.1f}p from stop)"
+                                        )
+                                        _stop_alrt_suppress = True
+                        except Exception:
+                            pass
+                        if not _stop_alrt_suppress:
+                            log(
+                                f"  Monitor: {_pair_str} HOT zone {_prog:.0f}% "
+                                f"— price moving against trade — sending stop-approaching alert"
+                            )
+                            _dn.send_fund_approaching(
+                                _pair_str, _dir0, _prog, _stop0 or 0.0, _cur_p,
+                                _stop_dist, _stop0 or 0.0, "STOP"
+                            )
+                            try:
+                                _sa_file = config.DATA_DIR / "stop_approach_alerts.json"
+                                _sa_w: dict = {}
+                                if _sa_file.exists():
+                                    try:
+                                        _sa_w = json.loads(_sa_file.read_text(encoding="utf-8"))
+                                    except Exception:
+                                        pass
+                                _sa_w[_pair_str] = {
+                                    "last_sent": datetime.now(timezone.utc).replace(
+                                        tzinfo=None).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                                    "distance_pips": round(_stop_dist, 1),
+                                }
+                                _sa_file.write_text(json.dumps(_sa_w, indent=2), encoding="utf-8")
+                            except Exception:
+                                pass
 
                     else:
                         # 0 < _prog < 100 — price normally approaching cascade target
