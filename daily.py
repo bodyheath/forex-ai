@@ -9750,22 +9750,24 @@ def run() -> int:
             _log_line(logf, _dsc_tb.format_exc())
 
     # FIX 12: Write scan completion marker AFTER all Discord/Telegram sends complete.
+    # Uses same keys as the digest reader at line 7281 (completed, finished, mode).
     if IS_GITHUB_ACTIONS:
         try:
-            from pathlib import Path as _ss_Path
-            _ss_file = _ss_Path(str(config.DATA_DIR) + "/scan_status.json")
-            _ss_data: dict = {}
-            if _ss_file.exists():
+            _ss_fin_ts = datetime.now(timezone.utc).replace(tzinfo=None).isoformat()
+            _ss_data_final: dict = {}
+            if _SCAN_STATUS_FILE.exists():
                 try:
-                    _ss_data = json.loads(_ss_file.read_text(encoding="utf-8"))
+                    _ss_data_final = json.loads(_SCAN_STATUS_FILE.read_text(encoding="utf-8"))
                 except Exception:
                     pass
-            _ss_data.update({
+            _ss_data_final.update({
+                "completed": True,
+                "finished": _ss_fin_ts,
+                "mode": scan_mode,
                 "scan_completed": True,
-                "scan_mode": scan_mode,
-                "finished_utc": datetime.now(timezone.utc).isoformat(),
+                "finished_utc": _ss_fin_ts,
             })
-            _ss_file.write_text(json.dumps(_ss_data, indent=2), encoding="utf-8")
+            _SCAN_STATUS_FILE.write_text(json.dumps(_ss_data_final, indent=2), encoding="utf-8")
         except Exception:
             pass
 
