@@ -7879,6 +7879,30 @@ def run() -> int:
 
     # ── Scan mode (needed by guard log and stored in guard state) ────────────
     scan_mode = _get_scan_mode()
+
+    # ── Day-of-week safeguard — prevents wrong mode running on wrong day ──────
+    # gap mode is Sunday-only; if cron-job.org sends the wrong body on a weekday
+    # this catches it before any analysis runs.
+    _dow_check = _startup_ak.weekday()  # 0=Mon … 6=Sun
+    _valid_weekday_modes = {
+        "full":      [0, 1, 2, 3, 4],        # Mon–Fri
+        "morning":   [0, 1, 2, 3, 4],        # Mon–Fri
+        "prelondon": [0, 1, 2, 3, 4],        # Mon–Fri
+        "preny":     [0, 1, 2, 3, 4],        # Mon–Fri
+        "gap":       [6],                     # Sunday only
+        "saturday":  [5],                     # Saturday only
+        "monitor":   [0, 1, 2, 3, 4, 5, 6],  # Every day
+    }
+    _allowed_days = _valid_weekday_modes.get(scan_mode, list(range(7)))
+    if _dow_check not in _allowed_days:
+        print(
+            f"[scan] WARNING: {scan_mode!r} mode requested but today is "
+            f"weekday {_dow_check} ({_startup_ak.strftime('%A')}) — "
+            f"valid days: {_allowed_days} — overriding to morning",
+            file=sys.stderr,
+        )
+        scan_mode = "morning"
+
     print(
         f"[scan] mode={scan_mode} ({_SCAN_MODES[scan_mode][0]})",
         file=sys.stderr,
