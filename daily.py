@@ -8842,6 +8842,31 @@ def run() -> int:
         except Exception as _thr_exc:
             _log_line(logf, f"Dynamic threshold computation failed: {_thr_exc}")
 
+        # FIX 2 Part B: Init _monthly_trends / _trend_structures in run() scope so
+        # _log_one_research closure can access them (they live in _send_telegram_summary
+        # scope which is different). Load from trend cache written by 6am scan.
+        _monthly_trends: dict = {}
+        _trend_structures: dict = {}
+        try:
+            from pathlib import Path as _Path_tc_r
+            _tc_r_file = _Path_tc_r(str(config.DATA_DIR) + "/trend_cache.json")
+            if _tc_r_file.exists():
+                _tc_r_data = json.loads(_tc_r_file.read_text(encoding="utf-8"))
+                _tc_r_age_h = (
+                    datetime.now(timezone.utc) -
+                    datetime.fromisoformat(_tc_r_data["timestamp"])
+                ).total_seconds() / 3600
+                if _tc_r_age_h < 24:
+                    _monthly_trends = _tc_r_data.get("monthly_trends", {})
+                    _trend_structures = _tc_r_data.get("trend_structures", {})
+                    _log_line(logf,
+                        f"Trend cache loaded — {_tc_r_age_h:.1f}h old — "
+                        f"{len(_monthly_trends)} pairs")
+                else:
+                    _log_line(logf, "Trend cache stale (>24h) — using neutral values")
+        except Exception as _tc_r_exc:
+            _log_line(logf, f"Trend cache load failed: {_tc_r_exc}")
+
         # Research trading mode: paper-trade conf>=4 pairs (0.01 lots)
         # conf-4 "borderline" setups are tracked separately — they build ML training
         # data and reveal where the real profitable threshold actually sits.
