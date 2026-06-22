@@ -138,6 +138,162 @@ def compute_trade_stats() -> dict:
     }
 
 
+# ── Sharpe ratio ─────────────────────────────────────────────────────────────
+
+def sharpe_ratio(r_multiples: list, trades_per_year: float = 50.0) -> float | None:
+    """Annualised Sharpe ratio from a list of R-multiple outcomes.
+
+    Uses risk-free rate = 0 (standard for leveraged trading).
+    Annualises by assuming *trades_per_year* trades (default 50 = ~1/week).
+
+    Returns None when fewer than 5 trades or std deviation is zero.
+    """
+    if len(r_multiples) < 5:
+        return None
+    n    = len(r_multiples)
+    mean = sum(r_multiples) / n
+    variance = sum((x - mean) ** 2 for x in r_multiples) / (n - 1)
+    std  = math.sqrt(variance)
+    if std == 0:
+        return None
+    per_trade_sharpe = mean / std
+    return round(per_trade_sharpe * math.sqrt(trades_per_year), 2)
+
+
+def compute_sharpe_from_history() -> dict:
+    """Load all closed trades and compute Sharpe ratio.
+
+    Returns dict with: sharpe, n_trades, mean_r, std_r, verdict.
+    """
+    try:
+        from src import tracker as _trk
+        rows     = _trk.load()
+        decisive = [r for r in rows if r.get("status") in ("WIN", "LOSS")]
+    except Exception:
+        return {"sharpe": None, "n_trades": 0, "verdict": "insufficient data"}
+
+    def _r(row):
+        try:
+            return float(row.get("r_multiple") or 0)
+        except (TypeError, ValueError):
+            return 0.0
+
+    r_multiples = [_r(r) for r in decisive]
+    n = len(r_multiples)
+
+    if n < 5:
+        return {"sharpe": None, "n_trades": n, "verdict": f"need 5+ trades (have {n})"}
+
+    mean_r = sum(r_multiples) / n
+    variance = sum((x - mean_r) ** 2 for x in r_multiples) / max(n - 1, 1)
+    std_r = math.sqrt(variance)
+
+    sr = sharpe_ratio(r_multiples)
+
+    if sr is None:
+        verdict = "cannot compute (zero variance)"
+    elif sr >= 2.0:
+        verdict = "excellent — institutional grade"
+    elif sr >= 1.0:
+        verdict = "good — above average retail"
+    elif sr >= 0.5:
+        verdict = "acceptable"
+    elif sr >= 0:
+        verdict = "marginal — monitor closely"
+    else:
+        verdict = "negative — system destroys risk-adjusted value"
+
+    return {
+        "sharpe":      sr,
+        "n_trades":    n,
+        "mean_r":      round(mean_r, 3),
+        "std_r":       round(std_r, 3),
+        "verdict":     verdict,
+    }
+
+
+# ── FTMO compliance metrics ───────────────────────────────────────────────────
+
+def compute_ftmo_metrics(fund_start: float, current_balance: float,
+                          peak_balance: float, max_daily_loss_pct: float,
+                          max_total_dd_pct: float) -> dict:
+    """Compute FTMO challenge rule compliance metrics.
+
+    Parameters
+    ----------
+    fund_start          starting balance at beginning of challenge
+    current_balance     current estimated fund balance
+    peak_balance        highest balance seen during the challenge
+    max_daily_loss_pct  worst single-day loss seen (positive = loss)
+    max_total_dd_pct    maximum drawdown from peak seen (positive = drawdown)
+
+    Returns dict with FTMO rule status for each metric.
+    """
+    profit_pct = (current_balance - fund_start) / fund_start * 100 if fund_start > 0 else 0.0
+    total_dd_pct = (peak_balance - current_balance) / peak_balance * 100 if peak_balance > 0 else 0.0
+
+    daily_ok   = max_daily_loss_pct < FTMO_MAX_DAILY_LOSS_PCT
+    total_ok   = max_total_dd_pct   < FTMO_MAX_TOTAL_LOSS_PCT
+    target_ok  = profit_pct         >= FTMO_PROFIT_TARGET_PCT
+    p2_ok      = profit_pct         >= FTMO_PHASE2_TARGET_PCT
+
+    daily_headroom  = FTMO_MAX_DAILY_LOSS_PCT  - max_daily_loss_pct
+    total_headroom  = FTMO_MAX_TOTAL_LOSS_PCT  - max_total_dd_pct
+    profit_to_go_p1 = max(0.0, FTMO_PROFIT_TARGET_PCT - profit_pct)
+    profit_to_go_p2 = max(0.0, FTMO_PHASE2_TARGET_PCT - profit_pct)
+
+    return {
+        "profit_pct":          round(profit_pct, 2),
+        "total_dd_pct":        round(total_dd_pct, 2),
+        "max_daily_loss_pct":  round(max_daily_loss_pct, 2),
+        "max_total_dd_pct":    round(max_total_dd_pct, 2),
+        "daily_rule_ok":       daily_ok,
+        "total_rule_ok":       total_ok,
+        "phase1_target_hit":   target_ok,
+        "phase2_target_hit":   p2_ok,
+        "daily_headroom_pct":  round(daily_headroom, 2),
+        "total_headroom_pct":  round(total_headroom, 2),
+        "profit_to_go_p1":     round(profit_to_go_p1, 2),
+        "profit_to_go_p2":     round(profit_to_go_p2, 2),
+        "challenge_viable":    daily_ok and total_ok,
+    }
+
+
+def build_ftmo_section(fund_start: float, current_balance: float,
+                        peak_balance: float, max_daily_loss_pct: float,
+                        max_total_dd_pct: float) -> list:
+    """Return Telegram-formatted FTMO compliance lines for the Monday report."""
+    m = compute_ftmo_metrics(fund_start, current_balance, peak_balance,
+                              max_daily_loss_pct, max_total_dd_pct)
+    lines = ["", "🎯 <b>FTMO CHALLENGE METRICS</b>"]
+
+    if not m["challenge_viable"]:
+        lines.append("🚨 <b>CHALLENGE FAILED</b> — a rule has been breached")
+
+    p_icon = "✅" if m["phase1_target_hit"] else ("🟢" if m["phase2_target_hit"] else "⏳")
+    lines.append(
+        f"{p_icon} Profit: {m['profit_pct']:+.1f}% "
+        f"(Phase 1 target: {FTMO_PROFIT_TARGET_PCT:.0f}% — "
+        f"{'✅ HIT' if m['phase1_target_hit'] else f'{m[\"profit_to_go_p1\"]:.1f}% to go'})"
+    )
+
+    d_icon = "✅" if m["daily_rule_ok"] else "🚨"
+    lines.append(
+        f"{d_icon} Max daily loss: {m['max_daily_loss_pct']:.1f}% "
+        f"(limit: {FTMO_MAX_DAILY_LOSS_PCT:.0f}% — "
+        f"{m['daily_headroom_pct']:.1f}% headroom)"
+    )
+
+    t_icon = "✅" if m["total_rule_ok"] else "🚨"
+    lines.append(
+        f"{t_icon} Max total drawdown: {m['max_total_dd_pct']:.1f}% "
+        f"(limit: {FTMO_MAX_TOTAL_LOSS_PCT:.0f}% — "
+        f"{m['total_headroom_pct']:.1f}% headroom)"
+    )
+
+    return lines
+
+
 # ── Plain-English output ──────────────────────────────────────────────────────
 
 _MIN_TRADES = 10   # minimum decisive trades before we show the calculation
