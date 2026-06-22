@@ -201,13 +201,13 @@ def _series_for(market_name: str) -> list:
                 _da = _days_old(_rd)
                 print(
                     f"[COT] '{market_name}': latest report {_rd[:10]} ({_da} days old)",
-                    file=_sys.stderr,
+                    file=sys.stderr,
                 )
                 if _da is not None and _da > STALE_DAYS:
                     print(
                         f"[COT] ❌ COT data: fetch failed — positioning scores set to neutral "
                         f"(latest report {_rd[:10]} is {_da} days old — exceeds {STALE_DAYS}-day limit)",
-                        file=_sys.stderr,
+                        file=sys.stderr,
                     )
                     # Don't cache stale data — retry on next run
                     return rows
@@ -215,16 +215,25 @@ def _series_for(market_name: str) -> list:
                 week_end = _rd[:10]
                 print(
                     f"[COT] Fresh fetch successful — data from week ending {week_end}",
-                    file=_sys.stderr,
+                    file=sys.stderr,
                 )
             cache.set(key, rows)
             return rows
+        except (NameError, TypeError, AttributeError) as _code_exc:
+            # Code bug — no point retrying, fail immediately
+            print(
+                f"[COT] Code bug in CFTC fetch for '{market_name}': {_code_exc} — not retrying",
+                file=sys.stderr,
+            )
+            _cot_consecutive_failures[0] += 1
+            return []
         except Exception as _exc:  # noqa: BLE001
             _last_exc = _exc
             print(
                 f"[COT] CFTC fetch failed (attempt {_attempt + 1} of 3): {_exc}",
                 file=sys.stderr,
             )
+    _cot_consecutive_failures[0] += 1
     print(f"[COT] ❌ COT data: fetch failed after 3 attempts for '{market_name}': {_last_exc}", file=sys.stderr)
     return []
 
