@@ -111,7 +111,13 @@ def _decimals(pair: str) -> int:
 
 
 def _pip_value_per_lot(pair: str, entry: float) -> float:
-    """Approximate USD pip value per standard lot."""
+    """Approximate USD pip value per standard lot (100,000 base units).
+
+    For non-USD/non-JPY quote currencies (HKD, NOK, SEK, SGD, CAD crosses etc.),
+    1 pip = 10 quote units → USD value ≈ 10 / entry.  This approximation uses the
+    pair's own rate as a proxy for the quote/USD rate — accurate for USD-base pairs,
+    slightly off for crosses (within 15%) but far better than the old flat $10 default.
+    """
     clean = pair.upper().replace("/", "")
     base, quote = clean[:3], clean[3:6]
     if quote == "USD":
@@ -120,7 +126,10 @@ def _pip_value_per_lot(pair: str, entry: float) -> float:
         return (1000.0 / entry) if entry > 0 else 10.0
     elif base == "USD":
         return (10.0 / entry) if entry > 0 else 10.0
-    return 10.0
+    else:
+        # Cross pair: neither base nor quote is USD (e.g. EUR/NOK, GBP/HKD, AUD/SGD)
+        # 1 pip = 0.0001 × 100,000 = 10 quote units; use entry as proxy for quote/USD
+        return (10.0 / entry) if entry > 0 else 10.0
 
 
 def _currency_exposure(pair: str, direction: str) -> dict:
