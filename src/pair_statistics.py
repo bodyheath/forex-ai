@@ -161,8 +161,58 @@ def update(research_trades: list = None) -> dict:
 
         existing[pair] = entry
 
+    # Clear a premature _retroactive_done flag written when no pairs were active
+    if existing.get("_retroactive_done"):
+        _any_active = any(
+            isinstance(v, dict) and v.get("adaptive_active")
+            for k, v in existing.items()
+            if not k.startswith("_")
+        )
+        if not _any_active:
+            existing.pop("_retroactive_done", None)
+
     _save(existing)
     return new_stats
+
+
+def get_volatility_multiplier(atr_ratio: float = 1.0):
+    """Map atr_percentile_6m ratio to a volatility tier and target scale multiplier.
+
+    atr_ratio = current 5d ATR / 120d average ATR (1.0 = at historical mean).
+    Tiers and multipliers:
+      >=1.50 VERY_VOLATILE  → 1.30x (targets pushed out for high-volatility environments)
+      >=1.20 VOLATILE       → 1.15x
+      >=0.80 NORMAL         → 1.00x (no adjustment)
+       >=0.50 QUIET         → 0.90x
+        <0.50 VERY_QUIET    → 0.80x (targets pulled in for low-volatility environments)
+    """
+    if atr_ratio >= 1.50:
+        return "VERY_VOLATILE", 1.30
+    elif atr_ratio >= 1.20:
+        return "VOLATILE", 1.15
+    elif atr_ratio >= 0.80:
+        return "NORMAL", 1.00
+    elif atr_ratio >= 0.50:
+        return "QUIET", 0.90
+    else:
+        return "VERY_QUIET", 0.80
+
+
+def apply_volatility_adjustment(t1m: float, t2m: float, t3m: float, atr_ratio: float = 1.0):
+    """Scale adaptive multipliers by volatility tier and re-clamp within hard limits.
+
+    Returns (tier_name, adj_t1m, adj_t2m, adj_t3m).
+    Pass to compute_levels() in place of the raw adaptive multipliers.
+    """
+    tier, mult = get_volatility_multiplier(atr_ratio)
+    if mult == 1.0:
+        return tier, t1m, t2m, t3m
+    return (
+        tier,
+        round(_clamp(t1m * mult, T1_MIN, T1_MAX), 3),
+        round(_clamp(t2m * mult, T2_MIN, T2_MAX), 3),
+        round(_clamp(t3m * mult, T3_MIN, T3_MAX), 3),
+    )
 
 
 def get_adaptive_targets(pair: str, stats: dict = None):
