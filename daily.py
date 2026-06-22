@@ -7447,19 +7447,26 @@ def _send_telegram_summary(
     all_sections = _clean_sections
 
     all_sections = [[ln for ln in sec if _is_ok_line(ln)] for sec in all_sections]
-    # ── Item 3: Scan completion marker — mark as completed ────────────────────
-    if os.getenv("GITHUB_ACTIONS") == "true":
+
+    # FIX 2 Part A: Write trend cache from 6am scan so intraday scans can use it.
+    # _monthly_trends and _trend_structures are lazily populated during pair formatting above.
+    if scan_mode == "full":
         try:
-            _ss_prev: dict = {}
-            if _SCAN_STATUS_FILE.exists():
-                try:
-                    _ss_prev = json.loads(_SCAN_STATUS_FILE.read_text(encoding="utf-8"))
-                except Exception:
-                    pass
-            _ss_prev.update({"completed": True, "finished": datetime.now(timezone.utc).replace(tzinfo=None).isoformat()})
-            _SCAN_STATUS_FILE.write_text(json.dumps(_ss_prev), encoding="utf-8")
-        except Exception:
-            pass
+            from pathlib import Path as _Path_tc_w
+            _tc_payload = {
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "monthly_trends": _monthly_trends,
+                "trend_structures": {
+                    k: str(v) if not isinstance(v, (str, dict, list, int, float, bool, type(None))) else v
+                    for k, v in _trend_structures.items()
+                },
+            }
+            _Path_tc_w(str(config.DATA_DIR) + "/trend_cache.json").write_text(
+                json.dumps(_tc_payload, indent=2), encoding="utf-8"
+            )
+            _log_line(None, f"Trend cache written — {len(_monthly_trends)} pairs for intraday scans")
+        except Exception as _tc_w_exc:
+            _log_line(None, f"Trend cache write failed: {_tc_w_exc}")
 
     # Build short urgent pre-alerts for each YES trade — sent as individual messages first
     _urgent_pre = [
