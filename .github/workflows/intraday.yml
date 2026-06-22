@@ -1,23 +1,20 @@
 name: Intraday Forex Scans
 
-# Scheduling architecture:
-#   9am Auckland (morning scan) — GitHub Actions built-in schedule.
-#     A 15-60 minute queue delay is acceptable for the morning scan.
-#     cron: "5 21 * * 0-4" = 21:05 UTC Sun-Thu = 9:05am Auckland Mon-Fri.
-#   5pm and 11pm scans — triggered exclusively by cron-job.org via
-#     workflow_dispatch API with scan_mode input. cron-job.org tracks
-#     NZST/NZDT DST changes correctly; GitHub built-in schedule fires
-#     in fixed UTC and would create duplicate runs for those windows.
+# Triggered exclusively by cron-job.org via workflow_dispatch.
+# No GitHub Actions built-in schedule — cron-job.org controls all timing.
+#
+# cron-job.org jobs:
+#   9:05am Mon-Fri  → scan_mode=morning   (cron: 5 21 * * 0-4 UTC)
+#   5:05pm Mon-Fri  → scan_mode=prelondon (cron: 5 5 * * 1-5 UTC)
+#   11:05pm Mon-Fri → scan_mode=preny     (cron: 5 11 * * 1-5 UTC)
 
 on:
   workflow_dispatch:
     inputs:
       scan_mode:
-        description: 'Override scan mode (morning / prelondon / preny / full / gap)'
+        description: 'Scan mode (morning / prelondon / preny / full / gap)'
         required: false
         default: ''
-  schedule:
-    - cron: "5 21 * * 0-4"   # 9:05am Auckland Mon-Fri (morning scan backup)
 
 concurrency:
   group: intraday-scan
