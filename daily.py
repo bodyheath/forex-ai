@@ -9008,8 +9008,9 @@ def run() -> int:
                         _cl_rt_mt, _cl_rt_wk, _cl_rt_hhhl, _cl_rt_fib, _cl_rt_div,
                         _cl_rt_cs, _cl_rt_cot, _cl_rt_no_news, _cl_rt_rr, _cl_rt_kz,
                     ] if c)
-                except Exception:
-                    pass
+                except Exception as _e_cl_rt:
+                    import sys as _sys_cl
+                    print(f"[rt-ml] checklist_score failed for {r_result['pair']}: {_e_cl_rt}", file=_sys_cl.stderr)
 
                 # Check for inverse pair conflict — BLOCK research trade if inverse already open
                 _rt_inv_blocked = False
