@@ -1834,6 +1834,31 @@ def run(log=print) -> dict:
                 ))
             except Exception:
                 pass
+        try:
+            if _dn and _rows_for_pair:
+                _cur_p = prices.get(_pair_str)
+                _r0    = _rows_for_pair[0]
+                _dir0  = (_r0.get("direction") or "").upper()
+                _entry = _to_float(_r0.get("entry"))
+                _stop0 = _to_float(_r0.get("effective_stop") or _r0.get("stop_loss"))
+                _t1h   = str(_r0.get("t1_hit", "")).upper() in ("TRUE", "1", "YES")
+                _t2h   = str(_r0.get("t2_hit", "")).upper() in ("TRUE", "1", "YES")
+                if not _t1h:
+                    _tgt0, _ms0 = _to_float(_r0.get("t1_price")), "T1"
+                elif not _t2h:
+                    _tgt0, _ms0 = _to_float(_r0.get("t2_price")), "T2"
+                else:
+                    _tgt0, _ms0 = _to_float(_r0.get("t3_price") or _r0.get("target")), "T3"
+                _pip_sz = 0.01 if "JPY" in _pair_str else 0.0001
+                if _cur_p and _entry and _tgt0:
+                    _rng  = abs(_tgt0 - _entry)
+                    _prog = (abs(_cur_p - _entry) / _rng * 100) if _rng > 0 else 0.0
+                    _dist = abs(_tgt0 - _cur_p) / _pip_sz
+                    _dn.send_fund_approaching(
+                        _pair_str, _dir0, _prog, _tgt0, _cur_p, _dist, _stop0 or 0.0, _ms0
+                    )
+        except Exception:
+            pass
         # Mark as continuously HOT if it was already HOT last run (pair stayed in HOT zone)
         _new_cont_hot = _pair_str in _prev_hot_pairs or _cont_hot
         _record_hot_alert_sent(_pair_str, continuously_hot=_new_cont_hot)
