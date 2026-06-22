@@ -8261,7 +8261,27 @@ def run() -> int:
 
         # 2. Smart pair selection
         from src import threshold_manager as _thresh_mgr
-        _trade_conf   = _thresh_mgr.get_confidence_threshold()
+        _data_collection_mode = _thresh_mgr.is_data_collection_mode()
+        _trade_conf_raw = _thresh_mgr.get_confidence_threshold()
+        # FIX 1: In data collection mode, use max(dynamic_threshold, floor=6)
+        # so that a ranging market's 7.0 threshold is respected, not overridden.
+        _dynamic_threshold_early = float(_trade_conf_raw)
+        if _data_collection_mode:
+            try:
+                from src import dynamic_threshold as _dth_early
+                from src import research_tracker as _rt_early_thr
+                _early_dth_data = _dth_early.compute(
+                    quality_pct=100.0,
+                    scan_mode=scan_mode,
+                    research_trades=_rt_early_thr.load(),
+                )
+                _dynamic_threshold_early = _early_dth_data.get("final_threshold", float(_trade_conf_raw))
+            except Exception:
+                pass
+            _data_collection_floor = 6.0
+            _trade_conf = int(max(_dynamic_threshold_early, _data_collection_floor))
+        else:
+            _trade_conf = _trade_conf_raw
         # Cap pair count based on daily API usage
         _at_td_limit = _twelvedata_call_limit_reached()
         if scan_mode != "full" and _td_used_start > 400:
@@ -8281,10 +8301,17 @@ def run() -> int:
         # Sonnet threshold equals trade threshold so every potential TRADE_THIS YES
         # pair gets entry/stop/target — essential when threshold is 6 (data collection).
         sonnet_thresh = _trade_conf
-        _coll_note = (
-            " [DATA COLLECTION MODE — threshold lowered from 7/1.5 for trade accumulation]"
-            if _thresh_mgr.is_data_collection_mode() else ""
-        )
+        if _data_collection_mode:
+            _coll_note = (
+                f" [DATA COLLECTION MODE — floor 6.0, dynamic {_dynamic_threshold_early:.1f}, effective {_trade_conf}]"
+            )
+        else:
+            _coll_note = ""
+        _log_line(logf,
+            f"Active threshold: {_trade_conf}/10 "
+            f"(dynamic: {_dynamic_threshold_early:.1f}"
+            f"{' · data collection floor: 6.0' if _data_collection_mode else ''}"
+            f" · effective: {_trade_conf})")
         _log_line(logf, f"Active thresholds: conf>={_trade_conf}, R:R>={_thresh_mgr.get_min_rr()}{_coll_note}")
 
         universe_size     = len(selector.UNIVERSE)
