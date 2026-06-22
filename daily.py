@@ -5924,17 +5924,18 @@ def _send_telegram_summary(
         _ps = _patience["score"]
         _pd = _patience["description"]
         ctx_lines.append(f"📊 <b>Today's trading conditions: {_ps}/10</b> — {_pd}")
-        # Confidence threshold — set by regime (single source of truth)
+        # Confidence threshold — use dynamic threshold (same value shown in Part 1 header)
+        # to avoid contradicting the threshold displayed elsewhere in the message
         try:
-            _conf_thr = float(_rd_ctx.get("conf_threshold") or 0)
+            _conf_thr = float((threshold_data or {}).get("final_threshold") or 0)
+            if not _conf_thr:
+                _conf_thr = float(_rd_ctx.get("conf_threshold") or 0)
             if not _conf_thr:
                 from src import threshold_manager as _tm_ctx
                 _conf_thr = float(_tm_ctx.get_confidence_threshold())
-            _thr_reason = (_rd_ctx.get("threshold_reason") or "")
             _thr_display = int(_conf_thr) if _conf_thr == int(_conf_thr) else _conf_thr
             ctx_lines.append(
                 f"📊 <b>Today's confidence threshold: {_thr_display}/10</b>"
-                + (f" — {_thr_reason}" if _thr_reason else "")
             )
         except Exception:
             pass
