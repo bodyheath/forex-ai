@@ -282,11 +282,34 @@ def send_fund_approaching(pair, direction, progress_pct, target_price,
             fields=fields,
         )
 
+    # Price moved against trade — approaching stop loss
+    if progress_pct <= 0:
+        _stop_dist = abs(distance_pips)
+        _fields_stop = [
+            {"name": "Trade Type",               "value": _trade_type_label(is_fund),                          "inline": False},
+            {"name": "⚠️ Risk",                  "value": "Price has moved **against** this trade",            "inline": False},
+            {"name": "\U0001f6d1 Stop Loss",     "value": f"`{stop_price:.5f}`",                               "inline": True},
+            {"name": "\U0001f4cd Current",       "value": f"`{current_price:.5f}`",                            "inline": True},
+            {"name": "\U0001f4cf Distance",      "value": f"`{_stop_dist:.1f} pips to stop`",                  "inline": True},
+        ]
+        if entry_price:
+            _pb = _price_position_bar(entry_price, current_price, stop_price, target_price, direction)
+            if _pb:
+                _fields_stop.append({"name": "\U0001f4c8 Price Position", "value": _pb, "inline": False})
+        _fields_stop.append({"name": "\U0001f517 Chart", "value": f"[View {pair} on TradingView]({tv_url})", "inline": False})
+        return _send_embed(
+            WEBHOOK_MONITOR,
+            f"⚠️ {pair} {dir_emoji} — Approaching STOP LOSS",
+            f"{'💼 FUND' if is_fund else '🔬 RESEARCH'} — Trade in danger zone — monitor watching closely",
+            0xFF3333,
+            fields=_fields_stop,
+        )
+
     bar = _progress_bar(progress_pct)
 
     fields = [
         {"name": "Trade Type",                 "value": _trade_type_label(is_fund),                           "inline": False},
-        {"name": "\U0001f4ca Progress to Target","value": f"`{bar}` {max(progress_pct, 0):.0f}%",             "inline": False},
+        {"name": "\U0001f4ca Progress to Target","value": f"`{bar}` {progress_pct:.0f}%",                     "inline": False},
         {"name": "\U0001f3af Target",           "value": f"`{target_price:.5f}`",                             "inline": True},
         {"name": "\U0001f4cd Current",          "value": f"`{current_price:.5f}`",                            "inline": True},
         {"name": "\U0001f4cf Distance",         "value": f"`{distance_pips:.1f} pips`",                       "inline": True},
