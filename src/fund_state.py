@@ -103,6 +103,9 @@ def reset_if_new_day(state: dict, current_balance: float | None = None) -> dict:
         state["circuit_breaker_reason"] = None
     bal = current_balance or float(config.ACCOUNT_BALANCE)
     state["daily_opening_balance"] = bal
+    # Recalculate sizing after clearing the circuit breaker — prevents stale
+    # "drawdown_pause" mode persisting from a previous day's false alarm.
+    state = update_sizing_state(state, bal)
     return state
 
 
