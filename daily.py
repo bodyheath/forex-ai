@@ -8083,13 +8083,19 @@ def run() -> int:
                         headers={"Authorization": f"Bearer {_gh_token}"},
                         timeout=10,
                     )
-                    if _gh_resp.status_code == 401:
+                    if _gh_resp.status_code == 200:
+                        _log_line(logf, "GitHub token valid ✅")
+                    elif _gh_resp.status_code == 401:
                         _telegram(
                             "⚠️ GITHUB TOKEN INVALID — GitHub API authentication returned 401 — "
                             "push/checkout operations may fail — check GITHUB_TOKEN secret"
                         )
+                    elif _gh_resp.status_code == 403:
+                        _log_line(logf,
+                            "⚠️ GitHub token returns 403 — token exists but may lack "
+                            "permissions — monitoring may be affected")
                     else:
-                        _log_line(logf, f"GitHub token valid (HTTP {_gh_resp.status_code})")
+                        _log_line(logf, f"GitHub token status: HTTP {_gh_resp.status_code}")
                 else:
                     _log_line(logf, "GitHub token check skipped — GITHUB_TOKEN not in environment")
             except Exception as _gh_exc:
