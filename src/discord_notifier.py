@@ -963,9 +963,11 @@ def update_fund_dashboard(
             pips       = t.get("pips_unrealised", 0)
             dollars    = t.get("dollars_unrealised", 0)
             days       = t.get("days_open", 0)
+            open_str   = t.get("open_str") or (f"{days}d" if days else "?d")
             conf       = t.get("conf", 0)
             checklist  = t.get("checklist_score", 0)
             trade_id   = t.get("id", "")
+            pnl_note   = t.get("pnl_note", "")
 
             dir_emoji = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
             pnl_emoji = "\U0001f7e2" if pips >= 0 else "\U0001f534"
