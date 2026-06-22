@@ -7805,6 +7805,9 @@ def _scan_all_pairs_movement(
 
 
 def run() -> int:
+    # ── Determine run environment first — affects guard and data-write behaviour ─
+    IS_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
+
     # ── Auckland startup log — very first line, before all guards and checks ──
     _startup_ak = _auckland_now()
     print(
@@ -7822,14 +7825,46 @@ def run() -> int:
         f"[startup] UTC time:      {_now_utc.strftime('%Y-%m-%d %H:%M:%S')} UTC",
         file=sys.stderr,
     )
+    if IS_GITHUB_ACTIONS:
+        print(
+            "[startup] GITHUB ACTIONS — scheduled run via cron-job.org",
+            file=sys.stderr,
+        )
+    else:
+        print(
+            "[startup] LOCAL RUN — data files (run_guard, scan_status) will not be modified",
+            file=sys.stderr,
+        )
 
     # ── Scan mode (needed by guard log and stored in guard state) ────────────
     scan_mode = _get_scan_mode()
     print(
-        f"[scan] mode={scan_mode} ({_SCAN_MODES[scan_mode][0]}) "
-        f"— detected from Auckland hour={_startup_ak.hour}",
+        f"[scan] mode={scan_mode} ({_SCAN_MODES[scan_mode][0]})",
         file=sys.stderr,
     )
+
+    # ── Schedule validation — flag timing mismatches immediately ─────────────
+    if IS_GITHUB_ACTIONS and scan_mode != "monitor":
+        _expected_hours = {
+            "full":      [5, 6],
+            "morning":   [8, 9, 10],
+            "prelondon": [16, 17, 18],
+            "preny":     [22, 23, 0],
+            "gap":       [5, 6, 7, 8],
+            "saturday":  [5, 6, 7, 8],
+        }
+        _exp = _expected_hours.get(scan_mode, list(range(24)))
+        if _startup_ak.hour not in _exp:
+            print(
+                f"[schedule] WARNING — {scan_mode} scan running at {_startup_ak.hour}:xx Auckland "
+                f"(expected {_exp}) — proceeding but check cron-job.org timing",
+                file=sys.stderr,
+            )
+        else:
+            print(
+                f"[schedule] OK — {scan_mode} scan at correct time ({_startup_ak.hour}:xx Auckland)",
+                file=sys.stderr,
+            )
 
     # ── MONITOR MODE: lightweight between-scan check — bypass guard + full pipeline
     if scan_mode == "monitor":
