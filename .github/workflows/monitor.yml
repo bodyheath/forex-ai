@@ -97,6 +97,17 @@ jobs:
                   print(f"Failed to send to {chat_id}: {e}")
           EOF
 
+      - name: Notify Discord on push failure
+        env:
+          DISCORD_WEBHOOK_CRITICAL: ${{ secrets.DISCORD_WEBHOOK_CRITICAL }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          [ -n "$DISCORD_WEBHOOK_CRITICAL" ] && \
+          curl -s -X POST "$DISCORD_WEBHOOK_CRITICAL" \
+            -H "Content-Type: application/json" \
+            -d "{\"embeds\":[{\"title\":\"Monitor Git Push FAILED\",\"description\":\"Trade state may not have saved\",\"color\":16711680,\"fields\":[{\"name\":\"Run URL\",\"value\":\"${RUN_URL}\",\"inline\":false}]}]}" \
+          || true
+
   notify-failure:
     needs: monitor
     if: failure()
