@@ -1026,11 +1026,14 @@ def update_fund_dashboard(
                 trade_value += f"{price_bar}\n"
             # FIX 10: health line after cascade dots
             trade_value += f"{health}\n"
-            # FIX 6: Show pips AND dollars on same line
+            # P&L includes all banked cascade levels
             trade_value += (
                 f"\n"
-                f"{pnl_emoji} P&L: **{pips:+.1f}p** / **${dollars:+.2f}**\n"
-                f"Open: {days}d · Conf: {conf}/10 · Check: {checklist}/10\n"
+                f"{pnl_emoji} P&L: **{pips:+.1f}p** / **${dollars:+.2f}**"
+                + (f"\n_{pnl_note}_" if pnl_note else "") +
+                f"\nOpen: {open_str} · Conf: {conf}/10"
+                + (f" · Check: {checklist:.0f}/10" if checklist else "") +
+                "\n"
             )
             # FIX 9: Flag trades exceeding intended risk
             risk_limit = float(t.get("risk_dollars", 100) or 100)
