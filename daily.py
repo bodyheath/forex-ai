@@ -9471,29 +9471,170 @@ def run() -> int:
                 )
         try:
             if _discord:
-                _dsc_alerts = [
+                _dsc_fs  = _fs_cb_st if isinstance(locals().get("_fs_cb_st"), dict) else {}
+                _dsc_rp  = (risk_data or {}).get("profile") or {}
+                _dsc_bal = float(_dsc_rp.get("estimated_balance") or _dsc_fs.get("daily_opening_balance") or 0)
+                _dsc_peak = float(_dsc_fs.get("peak_balance") or _dsc_bal or 0)
+                _dsc_dd   = float(_dsc_fs.get("current_drawdown_pct") or 0)
+                _dsc_dpnl_pct = float(_dsc_fs.get("daily_pnl_pct") or 0)
+                _dsc_dpnl_usd = float(_dsc_fs.get("daily_pnl_dollars") or 0)
+                _dsc_szmode   = str(_dsc_fs.get("sizing_mode") or "standard")
+                _dsc_szpct    = float(_dsc_fs.get("current_sizing_pct") or 1.0)
+                _dsc_cw  = int(_dsc_fs.get("consecutive_wins") or 0)
+                _dsc_cl  = int(_dsc_fs.get("consecutive_losses") or 0)
+
+                # Open fund trades from tracker
+                _dsc_open_fund = []
+                try:
+                    from src import tracker as _trk_dsc
+                    for _rdsc in _trk_dsc.load():
+                        if _rdsc.get("status") != "OPEN":
+                            continue
+                        if str(_rdsc.get("trade_this", "")).upper() != "YES":
+                            continue
+                        _t1h_d = str(_rdsc.get("t1_hit", "")).upper() in ("1", "TRUE", "YES")
+                        _t2h_d = str(_rdsc.get("t2_hit", "")).upper() in ("1", "TRUE", "YES")
+                        _dsc_open_fund.append({
+                            "pair":             _rdsc.get("pair", ""),
+                            "direction":        _rdsc.get("direction", ""),
+                            "t1_hit":           _t1h_d,
+                            "t2_hit":           _t2h_d,
+                            "next_target":      "T3" if _t2h_d else ("T2" if _t1h_d else "T1"),
+                            "progress_pct":     0,
+                            "pips_unrealised":  0,
+                            "dollars_unrealised": 0,
+                            "days_open":        0,
+                        })
+                except Exception:
+                    pass
+
+                # New fund alerts
+                _dsc_new_alerts = [
                     {
                         "pair":      r.get("pair", ""),
                         "direction": (r.get("parsed") or {}).get("direction", ""),
                         "conf":      (r.get("parsed") or {}).get("confidence", 0),
+                        "entry":     float((r.get("parsed") or {}).get("entry") or 0),
+                        "stop":      float((r.get("parsed") or {}).get("stop_loss") or 0),
+                        "t1":        float((r.get("parsed") or {}).get("target") or 0),
+                        "rr":        float((r.get("parsed") or {}).get("reward_risk") or 0),
+                        "checklist": int((r.get("parsed") or {}).get("checklist_score") or 0),
                     }
                     for r in (yes_trades or [])
                 ]
-                _discord.send_full_scan_report(
-                    date=str(date),
+
+                # Recently closed trades (exclude still-open)
+                _dsc_closed = [
+                    {
+                        "pair":    _ct.get("pair", ""),
+                        "outcome": str(_ct.get("status") or ""),
+                        "pips":    float(_ct.get("pips") or 0),
+                        "dollars": 0.0,
+                    }
+                    for _ct in (closed_today or [])
+                    if str(_ct.get("status") or "") not in ("OPEN", "")
+                ]
+
+                # Watch list from cache
+                _dsc_watchlist = []
+                try:
+                    _wl_path_dsc = config.DATA_DIR / "watchlist_cache.json"
+                    if _wl_path_dsc.exists():
+                        _wl_raw = json.loads(_wl_path_dsc.read_text(encoding="utf-8"))
+                        for _wp in (_wl_raw if isinstance(_wl_raw, list) else []):
+                            _dsc_watchlist.append({
+                                "pair":      _wp.get("pair", ""),
+                                "direction": _wp.get("direction", ""),
+                                "conf":      float(_wp.get("confidence") or 0),
+                                "grade":     str(_wp.get("grade") or ""),
+                                "reason":    str(_wp.get("reason") or ""),
+                            })
+                except Exception:
+                    pass
+
+                # Research stats from learning_stats
+                _dsc_ls   = learning_stats if isinstance(learning_stats, dict) else {}
+                _dsc_rwr  = float(_dsc_ls.get("win_rate") or 0) * 100
+                _dsc_rdc  = int(_dsc_ls.get("decisive") or 0)
+                _dsc_ropen  = int(_dsc_ls.get("open") or 0)
+                _dsc_rclsd  = int(_dsc_ls.get("closed") or 0)
+
+                # Recent research milestones from closed_today (non-fund trades)
+                _dsc_ms_recent = [
+                    {
+                        "pair":      _ct.get("pair", ""),
+                        "milestone": str(_ct.get("status") or ""),
+                        "pips":      float(_ct.get("pips") or 0),
+                        "outcome":   str(_ct.get("status") or ""),
+                    }
+                    for _ct in (closed_today or [])
+                    if str(_ct.get("trade_this", "")).upper() != "YES"
+                    and str(_ct.get("status") or "") not in ("OPEN", "")
+                ]
+
+                # Auckland time string
+                try:
+                    _dsc_auck = _auckland_now().strftime("%H:%M %Z")
+                except Exception:
+                    _dsc_auck = str(date)
+
+                _dsc_thr    = float((_threshold_data or {}).get("final_threshold") or 0)
+                _dsc_regime = str((_threshold_data or {}).get("regime") or "n/a")
+                _dsc_dqpct  = float((_threshold_data or {}).get("data_quality_pct") or 0)
+                _dsc_cost   = float((run_stats or {}).get("estimated_usd") or 0)
+
+                _discord.send_master_scan_report(
                     scan_mode=scan_mode,
+                    date=str(date),
+                    auckland_time=_dsc_auck,
+                    threshold=_dsc_thr,
+                    regime=_dsc_regime,
+                    vix=0,
+                    fund_balance=_dsc_bal,
+                    fund_return_pct=_dsc_dpnl_pct,
+                    fund_peak=_dsc_peak,
+                    drawdown_pct=_dsc_dd,
+                    daily_pnl_pct=_dsc_dpnl_pct,
+                    daily_pnl_dollars=_dsc_dpnl_usd,
+                    consecutive_wins=_dsc_cw,
+                    consecutive_losses=_dsc_cl,
+                    sizing_mode=_dsc_szmode,
+                    risk_pct=_dsc_szpct,
+                    open_fund_trades=_dsc_open_fund,
+                    new_fund_alerts=_dsc_new_alerts,
+                    newly_closed_trades=_dsc_closed,
+                    research_open=_dsc_ropen,
+                    research_closed=_dsc_rclsd,
+                    research_decisive=_dsc_rdc,
+                    research_win_rate=_dsc_rwr,
+                    research_profit_factor=0.0,
+                    research_avg_win_pips=0.0,
+                    research_avg_loss_pips=0.0,
+                    research_best_trade="",
+                    research_worst_trade="",
+                    recent_research_milestones=_dsc_ms_recent,
                     universe_size=int(universe_size or 0),
                     pairs_analysed=len(analysed_pairs or []),
-                    new_alerts=_dsc_alerts,
-                    threshold=float((run_stats or {}).get("dynamic_threshold") or 0),
-                    regime=str((run_stats or {}).get("market_regime") or "n/a"),
-                    open_fund_trades=0,
-                    research_open=int((research_result or {}).get("open_count") or 0),
-                    win_rate=float((research_result or {}).get("win_rate_pct") or 0),
-                    profit_factor=float((research_result or {}).get("profit_factor") or 0),
-                    cost_usd=float((run_stats or {}).get("estimated_usd") or 0),
-                    run_minutes=float(run_duration_min or 0),
-                    api_calls_used=int(td_calls or 0),
+                    watch_list_pairs=_dsc_watchlist,
+                    approaching_signals=[],
+                    data_quality_pct=_dsc_dqpct,
+                    td_calls_used=int(td_calls or 0),
+                    cot_status="",
+                    calendar_status="",
+                    fred_status="",
+                    yahoo_status="",
+                    ml_gate_status="",
+                    ml_auc=0.0,
+                    ml_decisive_count=_dsc_rdc,
+                    online_model_updates=int(_dsc_ls.get("patterns_written") or 0),
+                    ftmo_target_pct=10.0,
+                    ftmo_current_pct=_dsc_dpnl_pct,
+                    ftmo_daily_limit_pct=5.0,
+                    sharpe_ratio=0.0,
+                    last_monitor_gap_min=0.0,
+                    scan_minutes=float(run_duration_min or 0),
+                    scan_cost_usd=_dsc_cost,
+                    monitor_sources="",
                 )
         except Exception:
             pass
