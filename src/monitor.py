@@ -29,6 +29,11 @@ import requests
 import config
 from src import cascade as _casc
 
+try:
+    from src import discord_notifier as _dn
+except Exception:
+    _dn = None
+
 
 def _online_learn_closure(source_table: str, updated: dict) -> None:
     """Feed a monitor-closed trade to the online learner (best-effort)."""
