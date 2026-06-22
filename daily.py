@@ -7920,6 +7920,11 @@ def run() -> int:
                     f"⚠️ MONITOR HEARTBEAT — last between-scan check was {_hb_gap} minutes ago "
                     f"(expected every 30 min) — cron-job.org monitor trigger may be down"
                 )
+                try:
+                    if _discord:
+                        _discord.send_monitor_gap_alert(float(_hb_gap))
+                except Exception:
+                    pass
     except Exception:
         pass
 
