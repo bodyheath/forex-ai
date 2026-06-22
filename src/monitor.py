@@ -1063,13 +1063,65 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     pass
             try:
                 if _dn:
-                    _was_protected = casc_oc != "LOSS"
-                    _stop_pips = abs(
-                        (_to_float(row_state.get("entry")) or mprice) - mprice
-                    ) / (0.01 if "JPY" in pair else 0.0001)
-                    _dn.send_fund_stop_hit(pair, direction, _stop_pips, _was_protected)
+                    _was_protected  = casc_oc != "LOSS"
+                    _pip_sz_sh      = 0.01 if "JPY" in pair else 0.0001
+                    _ent_sh         = _to_float(row_state.get("entry")) or 0
+                    _orig_stop_sh   = _to_float(row_state.get("stop_loss")) or 0
+                    _stop_pips_sh   = (abs(_ent_sh - _orig_stop_sh) / _pip_sz_sh
+                                       if _ent_sh and _orig_stop_sh else 0)
+                    _t1_pips_sh = 0.0
+                    _dollars_sh = 0.0
+                    if _was_protected:
+                        _t1p_sh  = _to_float(row_state.get("t1_price")) or 0
+                        _t2p_sh  = _to_float(row_state.get("t2_price")) or 0
+                        _t2h_sh  = _is_true(row_state.get("t2_hit"))
+                        if direction == "BUY":
+                            _t1_pips_sh = max(0, (_t1p_sh - _ent_sh) / _pip_sz_sh) if _t1p_sh and _ent_sh else 0
+                            _t2_pips_sh = max(0, (_t2p_sh - _ent_sh) / _pip_sz_sh) if _t2p_sh and _ent_sh and _t2h_sh else 0
+                        else:
+                            _t1_pips_sh = max(0, (_ent_sh - _t1p_sh) / _pip_sz_sh) if _t1p_sh and _ent_sh else 0
+                            _t2_pips_sh = max(0, (_ent_sh - _t2p_sh) / _pip_sz_sh) if _t2p_sh and _ent_sh and _t2h_sh else 0
+                        _sz_pct_sh = _to_float(row_state.get("position_size_pct_at_entry")) or 1.0
+                        try:
+                            from src import fund_state as _fs_sh
+                            _bal_sh = float(_fs_sh.load().get("daily_opening_balance") or 10000)
+                        except Exception:
+                            _bal_sh = 10000.0
+                        _risk_sh = _sz_pct_sh / 100.0 * max(_bal_sh, 1)
+                        _dpp_sh  = _risk_sh / _stop_pips_sh if _stop_pips_sh > 0 else 1.0
+                        _dollars_sh = round((_t1_pips_sh * 0.40 + _t2_pips_sh * 0.30) * _dpp_sh, 2)
+                    _dn.send_fund_stop_hit(
+                        pair, direction, _stop_pips_sh, _was_protected,
+                        t1_pips=round(_t1_pips_sh, 1), dollars=_dollars_sh,
+                    )
             except Exception:
                 pass
+            # Update fund daily P&L after trade close
+            try:
+                from src import fund_state as _fs_upd
+                _fs_upd_data = _fs_upd.load()
+                _pip_sz_upd  = 0.01 if "JPY" in pair else 0.0001
+                _ent_upd     = _to_float(row_state.get("entry")) or 0
+                _stop_upd    = _to_float(row_state.get("stop_loss")) or 0
+                _stop_pips_upd = abs(_ent_upd - _stop_upd) / _pip_sz_upd if _ent_upd and _stop_upd else 0
+                _sz_pct_upd  = _to_float(row_state.get("position_size_pct_at_entry")) or 1.0
+                _bal_upd     = float(_fs_upd_data.get("daily_opening_balance") or 10000)
+                _risk_upd    = _sz_pct_upd / 100.0 * max(_bal_upd, 1)
+                if _stop_pips_upd > 0 and _wp:
+                    _dpp_upd     = _risk_upd / _stop_pips_upd
+                    _profit_upd  = round(_wp * _dpp_upd, 2)
+                    _fs_upd_data["daily_pnl_dollars"] = round(
+                        float(_fs_upd_data.get("daily_pnl_dollars") or 0) + _profit_upd, 2
+                    )
+                    if _bal_upd > 0:
+                        _fs_upd_data["daily_pnl_pct"] = round(
+                            _fs_upd_data["daily_pnl_dollars"] / _bal_upd * 100, 4
+                        )
+                    _fs_upd.save(_fs_upd_data)
+                    log(f"  Monitor fund #{rec_id} {pair}: fund_state updated +${_profit_upd:.2f} "
+                        f"(daily P&L: ${_fs_upd_data['daily_pnl_dollars']:+.2f})")
+            except Exception as _fs_exc:
+                log(f"  Monitor: fund_state update failed for {pair}: {_fs_exc}")
             closed_rows.append(updated)
             _online_learn_closure("main", updated)
             break   # trade closed
