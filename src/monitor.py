@@ -1020,6 +1020,15 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     )
                 except Exception:
                     pass
+            try:
+                if _dn and _send_telegram:
+                    _dn.send_fund_milestone(
+                        pair, direction, "T3", pips or 0.0,
+                        _to_float(row_state.get("entry")) or 0.0, mprice,
+                        _to_float(row_state.get("effective_stop") or row_state.get("stop_loss")) or 0.0,
+                    )
+            except Exception:
+                pass
             closed_rows.append(updated)
             _online_learn_closure("main", updated)
             break   # trade closed — skip further milestones
