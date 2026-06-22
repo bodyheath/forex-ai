@@ -1597,7 +1597,8 @@ def run(log=print) -> dict:
                         atr_mon   = cur_mon * 0.0080 if _wlp.upper().endswith("JPY") else cur_mon * 0.0008
                         ratio_mon = abs(move_mon) / atr_mon if atr_mon > 0 else 0.0
 
-                        if ratio_mon < 0.5 or pips_mon < 3:
+                        _pip_floor = 50 if "JPY" in _wlp.upper() else 15
+                        if ratio_mon < 1.0 or pips_mon < _pip_floor:
                             continue
 
                         exp_dir  = (_nm_dirs_mon.get(_wlp) or "").upper()
