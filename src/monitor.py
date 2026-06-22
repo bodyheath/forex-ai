@@ -754,6 +754,15 @@ def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) ->
     row_state  = dict(row)   # mutable local copy for greedy tracking
     milestones = []
 
+    _t1_done  = _is_true(row_state.get("t1_hit"))
+    _t2_done  = _is_true(row_state.get("t2_hit"))
+    _trade_id = row_state.get("id", "")
+
+    if _t1_done and _t2_done:
+        log(f"  Monitor: {pair} #{_trade_id} — T1+T2 already hit — checking T3 only")
+    elif _t1_done:
+        log(f"  Monitor: {pair} #{_trade_id} — T1 already hit — checking T2+T3")
+
     for candle in reversed(candles):   # API returns newest first → oldest first
         high = _to_float(candle.get("high"))
         low  = _to_float(candle.get("low"))
