@@ -5869,9 +5869,16 @@ def _send_telegram_summary(
             f"Environment: <b>{env_str}</b>"
             f"{' (' + vix_str + ')' if vix_str else ''}"
         )
-        sc = ctx.get("strongest_ccy")
-        wc = ctx.get("weakest_ccy")
-        scores = ctx.get("ccy_scores", {})
+        # Use _ccy_strength (same source as the strength table below) so the header
+        # and the table always agree.  Fall back to ctx-derived scores if unavailable.
+        if _ccy_strength:
+            sc     = max(_ccy_strength, key=_ccy_strength.get)
+            wc     = min(_ccy_strength, key=_ccy_strength.get)
+            scores = _ccy_strength
+        else:
+            sc     = ctx.get("strongest_ccy")
+            wc     = ctx.get("weakest_ccy")
+            scores = ctx.get("ccy_scores", {})
         _roff_ctx = "risk_off" in _regime_key_ctx or "risk-off" in env_str.lower()
         _safe_h = {"JPY", "CHF", "USD"}
         _risk_off_warn_ccys = {"AUD", "NZD", "GBP", "EUR", "NOK", "SEK", "CAD"}
