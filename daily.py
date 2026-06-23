@@ -5933,9 +5933,19 @@ def _send_telegram_summary(
         # Use _ccy_strength (same source as the strength table below) so the header
         # and the table always agree.  Fall back to ctx-derived scores if unavailable.
         if _ccy_strength:
-            sc     = max(_ccy_strength, key=_ccy_strength.get)
-            wc     = min(_ccy_strength, key=_ccy_strength.get)
-            scores = _ccy_strength
+            def _safe_cs_val(v):
+                if isinstance(v, dict):
+                    _vals = [x for x in v.values() if isinstance(x, (int, float))]
+                    return float(_vals[0]) if _vals else 0.0
+                try:
+                    f = float(v or 0)
+                    return f if f == f else 0.0
+                except (TypeError, ValueError):
+                    return 0.0
+            _cs_flat = {k: _safe_cs_val(v) for k, v in _ccy_strength.items()}
+            sc     = max(_cs_flat, key=_cs_flat.get) if _cs_flat else None
+            wc     = min(_cs_flat, key=_cs_flat.get) if _cs_flat else None
+            scores = _cs_flat
         else:
             sc     = ctx.get("strongest_ccy")
             wc     = ctx.get("weakest_ccy")
