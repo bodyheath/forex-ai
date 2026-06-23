@@ -901,8 +901,9 @@ def _save_closed_trades_state(state: dict) -> None:
     try:
         CLOSED_TRADES_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
         CLOSED_TRADES_STATE_FILE.write_text(json.dumps(state, indent=2), encoding="utf-8")
-    except Exception:
-        pass
+        print(f"[closed-trades] State saved: message_id={state.get('message_id')}")
+    except Exception as e:
+        print(f"[closed-trades] SAVE FAILED: {e}")
 
 
 def update_closed_trades_log(
@@ -1052,17 +1053,21 @@ def update_closed_trades_log(
         print(f"[closed-trades] Post request failed: {exc}", file=_sys.stdout)
         return False
 
+    print(f"[closed-trades] POST response: status={resp.status_code} body={resp.text[:300]}", file=_sys.stdout)
     if resp.status_code == 200:
         try:
-            new_id = resp.json().get("id")
-        except Exception:
+            data = resp.json()
+            new_id = data.get("id")
+            print(f"[closed-trades] Parsed id: {new_id}", file=_sys.stdout)
+        except Exception as e:
+            print(f"[closed-trades] Parse error: {e} — raw: {resp.text[:200]}", file=_sys.stdout)
             new_id = None
         if new_id:
-            state["message_id"] = new_id
+            state["message_id"] = str(new_id)
             _save_closed_trades_state(state)
             print(f"[closed-trades] Posted new message id={new_id} ✅", file=_sys.stdout)
         else:
-            print("[closed-trades] Post succeeded but no id in response", file=_sys.stdout)
+            print(f"[closed-trades] WARNING: no id in response — full response: {resp.text[:300]}", file=_sys.stdout)
         return True
 
     print(f"[closed-trades] Post failed {resp.status_code}: {resp.text[:200]}", file=_sys.stdout)

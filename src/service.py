@@ -81,7 +81,8 @@ def analyse_and_log(
                 result["pair"], parsed.get("direction") or ""
             )
             if _conc_warn:
-                log(f"[service] CONCENTRATION WARNING — {_conc_warn}")
+                log(f"[service] CONCENTRATION BLOCK — {_conc_warn}")
+                parsed["trade_this"] = "NO"
                 result["concentration_warning"] = _conc_warn
         except Exception:
             pass

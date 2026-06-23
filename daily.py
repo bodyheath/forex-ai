@@ -3987,8 +3987,28 @@ def _send_telegram_summary(
         _fund_st = _fs.load()
         _fund_st = _fs.reset_if_new_day(_fund_st, current_balance=_cur_bal_fs)
         _fund_st = _fs.reset_if_new_week(_fund_st)
+        _MAX_FUND_TRADES = 4
+        _open_fund_count = len([
+            r for r in _ot_open_trades
+            if str(r.get("trade_this", "")).strip().upper() == "YES"
+        ])
         _yt_pass: list = []
         for _yt in yes_trades:
+            # Hard capacity limit — never hold more than _MAX_FUND_TRADES open fund trades
+            if _open_fund_count >= _MAX_FUND_TRADES:
+                _blk_rsn_cap = (
+                    f"Fund at capacity — {_open_fund_count}/{_MAX_FUND_TRADES} open trades"
+                )
+                _log_line(logf, f"[BLOCKED] {_yt.get('pair','')} — {_blk_rsn_cap}")
+                _fund_st_blocked.append((_yt, _blk_rsn_cap))
+                try:
+                    from src import tracker as _trk_cap
+                    if _yt.get("id"):
+                        _trk_cap.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                notes=f"Blocked: {_blk_rsn_cap}")
+                except Exception:
+                    pass
+                continue
             _blk, _blk_rsn, _blk_tp = _fs.is_trading_blocked(_fund_st)
             if _blk:
                 _fund_st = _fs.record_missed_opportunity(
@@ -4078,6 +4098,7 @@ def _send_telegram_summary(
             except Exception:
                 pass
             _fund_st = _fs.increment_daily_trades(_fund_st)
+            _open_fund_count += 1
             _yt_pass.append(_yt)
         # Stamp ML sizing fields on matching research trades
         try:
@@ -6380,6 +6401,7 @@ def _send_telegram_summary(
                     f"📈 <b>FOREX AI FUND</b>",
                     f"Balance: <b>${fund:,.0f} ({fund_ret:+.1f}%)</b> · Peak: ${fund_pk:,.0f}",
                     f"Fund trades: {_n_total} taken · {_n_closed} closed ({_n_wins} WIN · {_n_losses} LOSS) · {_n_open} open",
+                    f"Fund capacity: {_n_open}/4 · {max(0, 4 - _n_open)} slot{'s' if max(0, 4 - _n_open) != 1 else ''} available",
                     f"Drawdown: {dd_pct:.1f}% · {icon} {dd_mode_dash.replace('_',' ').title()} · {rpct:.2f}% risk per trade",
                     f"🤖 ML model: {_ml_status_plain}",
                 ]
@@ -7152,6 +7174,7 @@ def _send_telegram_summary(
                     "📈 <b>FOREX AI FUND</b>",
                     f"Balance: ${_fund_id:,.0f} ({_ret_id:+.1f}%) · Peak: ${_pk_id:,.0f}",
                     f"Fund trades: {len(_all_ft_id)} taken · {len(_cls_ft_id)} closed ({len(_w_ft_id)} WIN · {len(_l_ft_id)} LOSS) · {len(_opn_ft_id)} open",
+                    f"Fund capacity: {len(_opn_ft_id)}/4 · {max(0, 4 - len(_opn_ft_id))} slot{'s' if max(0, 4 - len(_opn_ft_id)) != 1 else ''} available",
                     f"Drawdown: {_dd_id:.1f}% · {_icon_id} {_dd_mode_id.replace('_',' ').title()} · {_rpct_id:.2f}% risk per trade",
                     f"🤖 ML model: {_ml_stat_id}",
                 ]
@@ -9637,7 +9660,11 @@ def run() -> int:
                 except Exception:
                     pass
 
-                # New fund alerts
+                # New fund alerts — yes_trades is only defined in the full scan scope
+                try:
+                    _dsc_yes = list(yes_trades or [])
+                except NameError:
+                    _dsc_yes = []
                 _dsc_new_alerts = [
                     {
                         "pair":      r.get("pair", ""),
@@ -9649,7 +9676,7 @@ def run() -> int:
                         "rr":        float((r.get("parsed") or {}).get("reward_risk") or 0),
                         "checklist": int((r.get("parsed") or {}).get("checklist_score") or 0),
                     }
-                    for r in (yes_trades or [])
+                    for r in _dsc_yes
                 ]
 
                 # Recently closed trades (exclude still-open)
