@@ -1852,15 +1852,23 @@ def run(log=print) -> dict:
     # Uses hot_zone_alerts.json written IMMEDIATELY on send — not monitor_log.json
     # (which is only written at end-of-run and may not be committed yet when the
     # next concurrent run starts, causing duplicate alerts).
-    # Collect HOT rows keyed by trade (pair#id) for previously_hot tracking,
-    # and by pair for dedup/combined alerting — one alert per pair per 4 hours.
+    #
+    # SEPARATION: fund HOT → WEBHOOK_MONITOR (individual alerts)
+    #             research HOT → WEBHOOK_RESEARCH (one batch per 2 hours)
     current_hot_keys: set = set()
-    _hot_by_pair: dict = {}   # pair → [row, ...] for combined alert messages
+    _all_hot_by_pair: dict  = {}   # all pairs — zone-exit tracking only
+    _fund_hot_by_pair: dict = {}   # fund pairs only — Discord MONITOR sends
+    _res_hot_rows: list     = []   # research HOT rows — batch report
+
     for _hr in fund_zones["HOT"] + res_zones["HOT"]:
         _hpair = _hr.get("pair", "")
         _hk    = f"{_hpair}#{_hr.get('id', '')}"
         current_hot_keys.add(_hk)
-        _hot_by_pair.setdefault(_hpair, []).append(_hr)
+        _all_hot_by_pair.setdefault(_hpair, []).append(_hr)
+        if _hpair in fund_pairs:
+            _fund_hot_by_pair.setdefault(_hpair, []).append(_hr)
+        else:
+            _res_hot_rows.append(_hr)
 
     # Determine which pairs left HOT zone since last run (reset continuously_hot)
     _prev_hot_pairs: set = set()
@@ -1870,7 +1878,7 @@ def run(log=print) -> dict:
             _prev_hot_pairs = set(_hza_data.get("pairs", {}).keys())
     except Exception:
         pass
-    for _exited_pair in _prev_hot_pairs - set(_hot_by_pair.keys()):
+    for _exited_pair in _prev_hot_pairs - set(_all_hot_by_pair.keys()):
         _mark_hot_zone_exited(_exited_pair)
 
     _alerts_sent = 0
