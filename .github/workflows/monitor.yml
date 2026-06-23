@@ -89,10 +89,11 @@ jobs:
           for i in 1 2 3; do
             echo "Push attempt $i of 3"
 
-            # Pull latest — prefer remote changes on data files to avoid rebase conflicts
-            if ! git pull --rebase origin main 2>&1; then
+            # Pull latest — prefer OUR local changes (trade closures, fund_state updates)
+            # over remote on conflict. Remote may have an older state from a prior run.
+            if ! git pull --rebase -X ours origin main 2>&1; then
               git rebase --abort 2>/dev/null || true
-              git pull --no-rebase -X theirs origin main 2>&1 || true
+              git pull --no-rebase -X ours origin main 2>&1 || true
             fi
 
             if git push origin HEAD:main 2>&1; then
