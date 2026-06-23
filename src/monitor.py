@@ -1122,7 +1122,8 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 _ent_upd     = _to_float(row_state.get("entry")) or 0
                 _stop_upd    = _to_float(row_state.get("stop_loss")) or 0
                 _stop_pips_upd = abs(_ent_upd - _stop_upd) / _pip_sz_upd if _ent_upd and _stop_upd else 0
-                _sz_pct_upd  = _to_float(row_state.get("position_size_pct_at_entry")) or 1.0
+                _sz_pct_upd_raw = _to_float(row_state.get("position_size_pct_at_entry"))
+                _sz_pct_upd  = _sz_pct_upd_raw if (_sz_pct_upd_raw and _sz_pct_upd_raw == _sz_pct_upd_raw) else 1.0
                 _bal_upd     = float(_fs_upd_data.get("daily_opening_balance") or 10000)
                 _risk_upd    = _sz_pct_upd / 100.0 * max(_bal_upd, 1)
                 if _stop_pips_upd > 0:
