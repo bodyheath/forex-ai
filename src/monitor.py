@@ -127,6 +127,36 @@ def _is_true(val) -> bool:
     return str(val).strip().upper() in ("TRUE", "1", "YES")
 
 
+def _verify_fund_state(fund_open: list, log=print) -> None:
+    """Log a fund state integrity snapshot and flag anomalies."""
+    try:
+        from src import fund_state as _fs_int
+        fs = _fs_int.load()
+        bal = fs.get("daily_opening_balance", 0)
+        pnl = fs.get("daily_pnl_dollars", 0)
+        open_count = len(fund_open)
+        log(
+            f"[integrity] Fund state: opening_balance=${bal:,.2f} "
+            f"daily_pnl=${pnl:+.2f} open={open_count} trades"
+        )
+        if open_count > 4:
+            log(f"[integrity] WARNING {open_count} open fund trades exceeds maximum of 4")
+        # Flag trades that look closed (have exit_price) but are still OPEN
+        for row in fund_open:
+            ep = row.get("exit_price", "")
+            if ep not in ("", "nan", "None", None, 0, "0"):
+                try:
+                    if float(str(ep)) > 0:
+                        log(
+                            f"[integrity] WARNING #{row.get('id')} {row.get('pair')} "
+                            f"shows OPEN but has exit_price={ep} — may need manual close"
+                        )
+                except (ValueError, TypeError):
+                    pass
+    except Exception as exc:
+        log(f"[integrity] Check failed: {exc}")
+
+
 def _write_monitor_log(data: dict) -> None:
     try:
         _MONITOR_LOG.write_text(json.dumps(data, indent=2), encoding="utf-8")
