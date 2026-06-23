@@ -74,7 +74,8 @@ jobs:
           git add data/fund_state.json         2>/dev/null || true
           git add data/market_reopen.json      2>/dev/null || true
           git add data/run_guard.json          2>/dev/null || true
-          git add data/discord_dashboard.json  2>/dev/null || true
+          git add data/discord_dashboard.json        2>/dev/null || true
+          git add data/discord_closed_trades.json  2>/dev/null || true
 
           # Skip if nothing changed
           if git diff --staged --quiet; then
