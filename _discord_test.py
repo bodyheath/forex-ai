@@ -69,21 +69,40 @@ r = send_fund_milestone(
 print(f"  -> {ok(r)} to #fund-alerts")
 time.sleep(2)
 
-print("Test 5: Fund stop hit (cascade protected)...")
+print("Test 5: Fund stop hit (T1+T2 cascade — WIN)...")
 r = send_fund_stop_hit(
-    pair="GBP/CAD", direction="SELL", pips=11.7,
-    was_cascade_protected=True, entry=1.88259, stop=1.88259,
-    exit_price=1.87419, t1_pips=28.0, dollars=11.70, consecutive_losses=0,
+    pair="EUR/HKD", direction="BUY",
+    t1_hit=True, t2_hit=True,
+    t1_pips=161.7, t2_pips=210.3,
+    t1_dollars=19.69, t2_dollars=12.82,
+    net_pips=161.7 * 0.40 + 210.3 * 0.30,
+    net_dollars=32.51,
+    cascade_label="T1+T2",
 )
 print(f"  -> {ok(r)} to #fund-alerts")
 time.sleep(2)
 
-print("Test 6: Fund stop hit (genuine loss)...")
+print("Test 6: Fund stop hit (T1 only — PROTECTED)...")
 r = send_fund_stop_hit(
-    pair="USD/CHF", direction="SELL", pips=42.0,
-    was_cascade_protected=False, entry=0.80640, stop=0.81060,
-    exit_price=0.81060, dollars=52.10, consecutive_losses=1,
-    pattern_learned="Avoid SELL when USD momentum strong",
+    pair="GBP/CAD", direction="SELL",
+    t1_hit=True, t2_hit=False,
+    t1_pips=28.0, t2_pips=0.0,
+    t1_dollars=11.20, t2_dollars=0.0,
+    net_pips=28.0 * 0.40,
+    net_dollars=11.20,
+    cascade_label="T1",
+)
+print(f"  -> {ok(r)} to #fund-alerts")
+time.sleep(2)
+
+print("Test 6b: Fund stop hit (genuine loss)...")
+r = send_fund_stop_hit(
+    pair="USD/CHF", direction="SELL",
+    t1_hit=False, t2_hit=False,
+    t1_pips=0.0, t2_pips=0.0,
+    t1_dollars=0.0, t2_dollars=0.0,
+    net_pips=0.0, net_dollars=0.0,
+    cascade_label="",
 )
 print(f"  -> {ok(r)} to #fund-alerts")
 time.sleep(2)
