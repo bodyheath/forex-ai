@@ -2511,21 +2511,12 @@ def run(log=print) -> dict:
     if mfe_updated:
         log(f"Monitor: MFE/MAE updated for {mfe_updated} research trade(s).")
 
-    # ── Step 7: Telegram summary for research milestones ─────────────────────
-    if research_fragments and _ta:
-        now_fmt = now_ak.strftime("%-I%p").lower().replace("m", "").rstrip("0") or "12am"
-        wknd_txt = "\n📅 <i>Weekend monitor — Friday close prices.</i>" if is_wknd else ""
-        try:
-            _ta.send(
-                f"🔬 <b>Monitor update ({now_fmt} check): "
-                f"{len(research_fragments)} research trade milestone"
-                f"{'s' if len(research_fragments) != 1 else ''} hit</b>\n\n"
-                + " · ".join(research_fragments)
-                + f"\n\nML training data updated — next full scan {next_6am}"
-                + wknd_txt
-            )
-        except Exception:
-            pass
+    # ── Step 7: Research milestones — Discord #research only, never Telegram ──
+    if research_fragments:
+        log(
+            f"[monitor] {len(research_fragments)} research milestone(s) — "
+            "Discord #research only, not sending to Telegram"
+        )
 
     # ── Summary log ──────────────────────────────────────────────────────────
     n_ms = len(result["milestones_hit"])
