@@ -257,7 +257,7 @@ def send_fund_stop_hit(pair, direction, pips, was_cascade_protected,
 
 def send_fund_approaching(pair, direction, progress_pct, target_price,
                            current_price, distance_pips, stop_price, milestone,
-                           entry_price=0, is_fund=True):
+                           entry_price=0, is_fund=True, warning_pips=None):
     tv_url    = _get_tradingview_url(pair)
     dir_emoji = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
     color     = COLOR_FUND_HOT if is_fund else COLOR_RESEARCH_HOT
