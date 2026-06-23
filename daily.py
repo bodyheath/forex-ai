@@ -8067,22 +8067,32 @@ def run() -> int:
     _timeout_timer.start()
 
     # ── Item 2: Monitor heartbeat check ───────────────────────────────────────
-    # Alert if monitor hasn't run in >90 minutes (expected every 30 min).
+    # Alert only if monitor hasn't run in >120 minutes (= 4 missed runs at 30-min cadence).
     try:
         if _HEARTBEAT_FILE.exists():
             _hb = json.loads(_HEARTBEAT_FILE.read_text(encoding="utf-8"))
-            _hb_ts  = datetime.fromisoformat(_hb.get("last_run", ""))
-            _hb_gap = int((_now_utc - _hb_ts).total_seconds() / 60)
-            if _hb_gap > 90:
-                _telegram(
-                    f"⚠️ MONITOR HEARTBEAT — last between-scan check was {_hb_gap} minutes ago "
-                    f"(expected every 30 min) — cron-job.org monitor trigger may be down"
-                )
-                try:
-                    if _discord:
-                        _discord.send_monitor_gap_alert(float(_hb_gap))
-                except Exception:
-                    pass
+            _hb_raw = (
+                _hb.get("last_monitor_run") or
+                _hb.get("last_run") or
+                _hb.get("timestamp") or
+                _hb.get("updated_at") or
+                ""
+            )
+            if _hb_raw:
+                _hb_ts = datetime.fromisoformat(str(_hb_raw).replace("Z", "+00:00"))
+                if _hb_ts.tzinfo is not None:
+                    _hb_ts = _hb_ts.replace(tzinfo=None)
+                _hb_gap = int((_now_utc - _hb_ts).total_seconds() / 60)
+                if _hb_gap > 120:
+                    _telegram(
+                        f"⚠️ MONITOR HEARTBEAT — last between-scan check was {_hb_gap} minutes ago "
+                        f"(expected every 30 min) — cron-job.org monitor trigger may be down"
+                    )
+                    try:
+                        if _discord:
+                            _discord.send_monitor_gap_alert(float(_hb_gap))
+                    except Exception:
+                        pass
     except Exception:
         pass
 
