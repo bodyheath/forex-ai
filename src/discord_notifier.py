@@ -901,8 +901,9 @@ def _save_closed_trades_state(state: dict) -> None:
     try:
         CLOSED_TRADES_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
         CLOSED_TRADES_STATE_FILE.write_text(json.dumps(state, indent=2), encoding="utf-8")
-    except Exception:
-        pass
+        _log(f"[closed-trades] State saved: message_id={state.get('message_id')}")
+    except Exception as e:
+        _log(f"[closed-trades] SAVE FAILED: {e}")
 
 
 def update_closed_trades_log(
