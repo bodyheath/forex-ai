@@ -1949,8 +1949,17 @@ def run(log=print) -> dict:
                         # No send_fund_approaching — milestone detection sends the Discord alert
 
                     elif _prog <= 0:
-                        # Price moved against trade — approaching stop loss
-                        _stop_dist = abs(_cur_p - (_stop0 or _entry)) / _pip_sz
+                        # Price moved against trade — approaching stop loss.
+                        # Use actual stop_loss from CSV (not effective_stop which may be
+                        # the entry/breakeven level after T1 hit).
+                        _stop_dist = abs(_cur_p - (_actual_stop or _entry)) / _pip_sz
+                        # Warning zone size: the buffer between the HOT threshold and the
+                        # actual stop.  HOT fires at 70% of stop_range from entry, so the
+                        # remaining 30% is the "warning buffer" in pips.
+                        _stop_range_d = (
+                            abs((_entry or 0) - (_actual_stop or _entry or 0)) / _pip_sz
+                        )
+                        _warning_pips = round((1.0 - _HOT_THRESHOLD) * _stop_range_d)
                         # 2-hour cooldown for stop-approaching alerts (independent of HOT zone dedup)
                         # Always fire if within 5 pips of stop; suppress otherwise
                         _stop_alrt_suppress = False
