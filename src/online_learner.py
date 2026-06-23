@@ -159,6 +159,125 @@ def predict_proba(features: dict) -> float | None:
         return None
 
 
+def retrain_all_from_feature_store(log=None) -> dict:
+    """Bulk-retrain on all decisive closed research trades in the feature store.
+
+    Resets the model from scratch so historical trades get proper recency
+    weighting.  Trades are sorted oldest-first so the scaler sees the full
+    distribution before the classifier sees its first sample.
+
+    Returns a dict: {trained, skipped, win_rate}.
+    """
+    def _log(msg: str) -> None:
+        if log:
+            log(msg)
+
+    try:
+        from sklearn.linear_model import SGDClassifier
+        from sklearn.preprocessing import StandardScaler
+        from src.feature_extractor import FEATURE_COLS
+        from src import feature_store
+        import numpy as np
+        import csv
+    except ImportError as exc:
+        _log(f"[online_learner] Import error: {exc}")
+        return {"trained": 0, "skipped": 0, "win_rate": None}
+
+    # Build outcome lookup from research_trades.csv
+    rt_path = config.DATA_DIR / "research_trades.csv"
+    outcome_map: dict = {}  # trade_id (str) -> (status, closed_at)
+    if rt_path.exists():
+        try:
+            with rt_path.open("r", encoding="utf-8", newline="") as fh:
+                for row in csv.DictReader(fh):
+                    tid = str(row.get("id", ""))
+                    if tid:
+                        outcome_map[tid] = (
+                            row.get("status", ""),
+                            row.get("closed_at", "") or row.get("date", ""),
+                        )
+        except Exception as exc:
+            _log(f"[online_learner] Could not read research_trades.csv: {exc}")
+
+    feat_rows = feature_store.load()
+    research_rows = [r for r in feat_rows if r.get("source_table") == "research"]
+
+    # Sort oldest first so scaler partial_fit sees full range before clf trains
+    research_rows.sort(key=lambda r: r.get("captured_at", ""))
+
+    # Reset model for clean retrain
+    if ONLINE_MODEL_FILE.exists():
+        ONLINE_MODEL_FILE.unlink()
+    if ONLINE_META_FILE.exists():
+        ONLINE_META_FILE.unlink()
+
+    clf = SGDClassifier(
+        loss="log_loss",
+        alpha=0.01,
+        learning_rate="optimal",
+        random_state=42,
+    )
+    scaler = StandardScaler()
+
+    trained = 0
+    skipped = 0
+    history: list = []
+
+    for feat_row in research_rows:
+        tid = str(feat_row.get("trade_id", ""))
+        status, closed_at = outcome_map.get(tid, ("", ""))
+        status = (status or "").upper()
+
+        if status in WIN_STATUSES:
+            label = 1
+        elif status in LOSS_STATUSES:
+            label = 0
+        else:
+            skipped += 1
+            continue
+
+        try:
+            X = np.array([[float(feat_row.get(c) or 0.0) for c in FEATURE_COLS]])
+            scaler.partial_fit(X)
+            X_s = scaler.transform(X)
+            weight = _recency_weight(closed_at) if closed_at else 0.5
+            clf.partial_fit(X_s, [label], classes=[0, 1], sample_weight=[weight])
+            history.append({"label": label, "ts": (closed_at or "")[:10]})
+            trained += 1
+        except Exception as exc:
+            _log(f"[online_learner] Skipped trade {tid}: {exc}")
+            skipped += 1
+
+    if trained == 0:
+        _log("[online_learner] No decisive trades found in feature store — model not saved")
+        return {"trained": 0, "skipped": skipped, "win_rate": None}
+
+    _save_model(scaler, clf, FEATURE_COLS)
+
+    recent = history[-20:]
+    recent_wins = sum(1 for h in recent if h["label"] == 1)
+    recent_wr = round(recent_wins / len(recent), 3) if recent else None
+
+    all_wins = sum(1 for h in history if h["label"] == 1)
+    overall_wr = round(all_wins / len(history), 3) if history else None
+
+    meta = {
+        "n_decisive": trained,
+        "last_updated": datetime.now().isoformat()[:19],
+        "last_outcome": history[-1]["label"] if history else None,
+        "recent_outcomes": recent,
+        "recent_win_rate": recent_wr,
+        "overall_win_rate": overall_wr,
+        "retrain_source": "bulk_retrain",
+    }
+    _save_meta(meta)
+
+    wr_str = f"{recent_wr:.0%}" if recent_wr is not None else "?"
+    _log(f"[online_learner] Bulk retrain complete: {trained} trades trained, "
+         f"{skipped} skipped, recent win rate {wr_str}")
+    return {"trained": trained, "skipped": skipped, "win_rate": recent_wr}
+
+
 def get_n_decisive() -> int:
     return _load_meta().get("n_decisive", 0)
 

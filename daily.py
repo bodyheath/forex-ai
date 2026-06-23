@@ -1518,8 +1518,8 @@ def _build_research_section(research_result=None) -> list:
             return None
 
     open_rows    = [r for r in rows if r.get("status") in ("OPEN", "NO_PRICE_LEVELS")]
-    closed       = [r for r in rows if r.get("status") in ("WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN")]
-    wins         = [r for r in closed if r.get("status") == "WIN"]
+    closed       = [r for r in rows if r.get("status") in ("WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN", "FULL_WIN")]
+    wins         = [r for r in closed if r.get("status") in ("WIN", "FULL_WIN", "PARTIAL_WIN")]
     losses       = [r for r in closed if r.get("status") == "LOSS"]
     partial_wins = [r for r in closed if r.get("status") == "PARTIAL_WIN"]
     expired_rows = [r for r in closed if r.get("status") == "EXPIRED"]
@@ -8247,6 +8247,22 @@ def run() -> int:
                 _log_line(logf, f"ML model: {_mlp.get_model_status_line()}")
         except Exception as _ml_exc:
             _log_line(logf, f"ML model step: {_ml_exc}")
+
+        # Online learner retrain — every full scan, bulk-trains on all closed research trades
+        try:
+            from src import online_learner as _ol_rt
+            _ol_stats = _ol_rt.retrain_all_from_feature_store(
+                log=lambda m: _log_line(logf, m)
+            )
+            _ol_wr = _ol_stats.get("win_rate")
+            _ol_wr_str = f", recent win rate {_ol_wr:.0%}" if _ol_wr is not None else ""
+            _log_line(
+                logf,
+                f"Online learner retrained: {_ol_stats.get('trained', 0)} trades"
+                f"{_ol_wr_str} ({_ol_stats.get('skipped', 0)} skipped)"
+            )
+        except Exception as _ol_exc:
+            _log_line(logf, f"Online learner retrain failed: {_ol_exc}")
 
         # Item 6: GitHub token expiry warning — Monday 6am full scan only
         if scan_mode == "full" and now_ak.weekday() == 0:
