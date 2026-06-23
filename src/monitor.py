@@ -2719,6 +2719,7 @@ def run(log=print) -> dict:
             # EXPIRED with positive pips = protected/partial exit; negative = loss.
             _st_wins = _st_losses = _st_partial = _st_breakeven = 0
             _st_wr = _st_avg_win = _st_avg_loss = _st_pf = _st_best_pips = _st_total_pips = 0.0
+            _st_avg_win_d = _st_avg_loss_d = _st_dollar_pf = 0.0
             _st_best_pair = ""
             _st_total = 0
             try:
