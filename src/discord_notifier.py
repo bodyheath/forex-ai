@@ -282,18 +282,22 @@ def send_research_monitor_batch(hot: list, near_stop: list) -> bool:
 
     fields = []
     if hot:
-        lines = "\n".join(
-            f"· {t['pair']}: {t['progress_pct']:.0f}% → {t['target_label']} "
-            f"({t['distance_pips']:.1f}p away)"
-            for t in hot
-        )
-        fields.append({"name": "\U0001f3af Approaching Targets", "value": lines[:1000], "inline": False})
+        target_lines = []
+        for t in hot:
+            pair     = t.get("pair") or t.get("symbol") or "?"
+            progress = float(t.get("progress_pct") or t.get("pct") or t.get("progress") or 0)
+            label    = t.get("target_label") or t.get("label") or t.get("target") or "T?"
+            dist     = float(t.get("distance_pips") or t.get("dist") or t.get("distance") or 0)
+            target_lines.append(f"· {pair}: {progress:.0f}% → {label} ({dist:.1f}p away)")
+        fields.append({"name": "\U0001f3af Approaching Targets", "value": "\n".join(target_lines)[:1000], "inline": False})
     if near_stop:
-        lines = "\n".join(
-            f"· {t['pair']}: {t['distance_pips']:.1f}p to stop"
-            for t in near_stop
-        )
-        fields.append({"name": "⚠️ Near Stop Loss", "value": lines[:1000], "inline": False})
+        stop_lines = []
+        for t in near_stop:
+            pair = t.get("pair") or t.get("symbol") or "?"
+            dist = float(t.get("stop_distance_pips") or t.get("distance_pips") or
+                         t.get("dist") or t.get("distance") or 0)
+            stop_lines.append(f"· {pair}: {dist:.1f}p to stop")
+        fields.append({"name": "⚠️ Near Stop Loss", "value": "\n".join(stop_lines)[:1000], "inline": False})
 
     updated_at = datetime.now(timezone.utc).strftime("%H:%M")
     embed = {
