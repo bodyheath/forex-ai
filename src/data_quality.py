@@ -378,7 +378,13 @@ def update_state(quality: dict, scan_mode: str = "full") -> dict:
     ]:
         ok  = quality.get(ok_key,  n)
         tot = quality.get(tot_key, n)
-        if tot > 0 and ok < tot:
+        # Positioning uses a stricter condition: only flag as failure when
+        # fewer than half of pairs have good COT data (genuine outage vs sparse coverage).
+        if source == "positioning":
+            is_failure = tot > 0 and ok < tot * 0.5
+        else:
+            is_failure = tot > 0 and ok < tot
+        if is_failure:
             cf[source] = cf.get(source, 0) + 1
         else:
             cf[source] = 0
