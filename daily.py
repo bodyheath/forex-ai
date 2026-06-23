@@ -3987,8 +3987,28 @@ def _send_telegram_summary(
         _fund_st = _fs.load()
         _fund_st = _fs.reset_if_new_day(_fund_st, current_balance=_cur_bal_fs)
         _fund_st = _fs.reset_if_new_week(_fund_st)
+        _MAX_FUND_TRADES = 4
+        _open_fund_count = len([
+            r for r in _ot_open_trades
+            if str(r.get("trade_this", "")).strip().upper() == "YES"
+        ])
         _yt_pass: list = []
         for _yt in yes_trades:
+            # Hard capacity limit — never hold more than _MAX_FUND_TRADES open fund trades
+            if _open_fund_count >= _MAX_FUND_TRADES:
+                _blk_rsn_cap = (
+                    f"Fund at capacity — {_open_fund_count}/{_MAX_FUND_TRADES} open trades"
+                )
+                _log_line(logf, f"[BLOCKED] {_yt.get('pair','')} — {_blk_rsn_cap}")
+                _fund_st_blocked.append((_yt, _blk_rsn_cap))
+                try:
+                    from src import tracker as _trk_cap
+                    if _yt.get("id"):
+                        _trk_cap.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                notes=f"Blocked: {_blk_rsn_cap}")
+                except Exception:
+                    pass
+                continue
             _blk, _blk_rsn, _blk_tp = _fs.is_trading_blocked(_fund_st)
             if _blk:
                 _fund_st = _fs.record_missed_opportunity(
