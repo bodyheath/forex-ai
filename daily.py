@@ -9640,175 +9640,348 @@ def run() -> int:
                 )
         try:
             if _discord:
-                _dsc_fs  = _fs_cb_st if isinstance(locals().get("_fs_cb_st"), dict) else {}
-                _dsc_rp  = (risk_data or {}).get("profile") or {}
-                _dsc_bal = float(_dsc_rp.get("estimated_balance") or _dsc_fs.get("daily_opening_balance") or 0)
-                _dsc_peak = float(_dsc_fs.get("peak_balance") or _dsc_bal or 0)
-                _dsc_dd   = float(_dsc_fs.get("current_drawdown_pct") or 0)
-                _dsc_dpnl_pct = float(_dsc_fs.get("daily_pnl_pct") or 0)
-                _dsc_dpnl_usd = float(_dsc_fs.get("daily_pnl_dollars") or 0)
-                _dsc_szmode   = str(_dsc_fs.get("sizing_mode") or "standard")
-                _dsc_szpct    = float(_dsc_fs.get("current_sizing_pct") or 1.0)
-                _dsc_cw  = int(_dsc_fs.get("consecutive_wins") or 0)
-                _dsc_cl  = int(_dsc_fs.get("consecutive_losses") or 0)
+                _log_line(logf, "[discord] Preparing scan report data...")
 
-                # Open fund trades from tracker
-                _dsc_open_fund = []
+                # ── Fund state ───────────────────────────────────────────────────
                 try:
-                    from src import tracker as _trk_dsc
-                    for _rdsc in _trk_dsc.load():
-                        if _rdsc.get("status") != "OPEN":
-                            continue
-                        if str(_rdsc.get("trade_this", "")).upper() != "YES":
-                            continue
-                        _t1h_d = str(_rdsc.get("t1_hit", "")).upper() in ("1", "TRUE", "YES")
-                        _t2h_d = str(_rdsc.get("t2_hit", "")).upper() in ("1", "TRUE", "YES")
-                        _dsc_open_fund.append({
-                            "pair":             _rdsc.get("pair", ""),
-                            "direction":        _rdsc.get("direction", ""),
-                            "t1_hit":           _t1h_d,
-                            "t2_hit":           _t2h_d,
-                            "next_target":      "T3" if _t2h_d else ("T2" if _t1h_d else "T1"),
-                            "progress_pct":     0,
-                            "pips_unrealised":  0,
-                            "dollars_unrealised": 0,
-                            "days_open":        0,
-                        })
+                    with open(config.DATA_DIR / "fund_state.json", encoding="utf-8") as _dsc_fsf:
+                        _dsc_fs = json.load(_dsc_fsf)
+                except Exception as _dsc_fse:
+                    _log_line(logf, f"[discord] fund_state read error: {_dsc_fse}")
+                    _dsc_fs = _fs_cb_st if isinstance(locals().get("_fs_cb_st"), dict) else {}
+
+                def _dsc_tof(v, d=0.0):
+                    try:
+                        r = float(v)
+                        return r if r == r else d
+                    except Exception:
+                        return d
+
+                _dsc_open_bal = _dsc_tof(_dsc_fs.get("daily_opening_balance"), 10000)
+                _dsc_dpnl_d   = _dsc_tof(_dsc_fs.get("daily_pnl_dollars"), 0)
+                _dsc_bal      = _dsc_tof(_dsc_fs.get("balance"), _dsc_open_bal + _dsc_dpnl_d)
+                _dsc_peak     = _dsc_tof(_dsc_fs.get("peak_balance"), _dsc_bal)
+                _dsc_dd       = _dsc_tof(_dsc_fs.get("current_drawdown_pct"), 0)
+                _dsc_dpnl_pct = _dsc_tof(_dsc_fs.get("daily_pnl_pct"), 0)
+                _dsc_szpct    = _dsc_tof(_dsc_fs.get("current_sizing_pct"), 1.0)
+                _dsc_cw       = int(_dsc_fs.get("consecutive_wins") or 0)
+                _dsc_cl       = int(_dsc_fs.get("consecutive_losses") or 0)
+
+                # ── Fund performance from trades.csv ─────────────────────────────
+                import pandas as _dsc_pd
+                _dsc_fopen_cnt = 0
+                _dsc_fund_tot  = 0
+                _dsc_dec       = 0
+                _dsc_fwr       = 0.0
+                _dsc_fw        = _dsc_fp = _dsc_fl = 0
+                _dsc_awp = _dsc_awd = _dsc_alp = _dsc_ald = _dsc_pfd = 0.0
+                _dsc_best_pr   = ""
+                _dsc_best_pp   = 0.0
+                _dsc_total_ret = 0.0
+                _dsc_expiry_al = []
+                try:
+                    _dsc_df    = _dsc_pd.read_csv(config.DATA_DIR / "trades.csv", encoding="utf-8-sig")
+                    _dsc_fund  = _dsc_df[_dsc_df["trade_this"].astype(str) == "YES"].copy()
+                    _dsc_fo    = _dsc_fund[_dsc_fund["status"].astype(str).str.upper() == "OPEN"]
+                    _dsc_fc    = _dsc_fund[_dsc_fund["status"].astype(str).str.upper() != "OPEN"]
+                    _dsc_fopen_cnt = len(_dsc_fo)
+                    _dsc_fund_tot  = len(_dsc_fund)
+                    _dsc_pip_n = _dsc_pd.to_numeric(_dsc_fc["pips"], errors="coerce").fillna(0)
+                    _dsc_wm    = _dsc_fc["status"].str.upper().isin(["WIN", "FULL_WIN", "PARTIAL_WIN"])
+                    _dsc_pwm   = _dsc_fc["status"].str.upper() == "PARTIAL_WIN"
+                    _dsc_lm    = (
+                        _dsc_fc["status"].str.upper().isin(["LOSS"]) |
+                        (_dsc_fc["status"].str.upper().isin(["EXPIRED"]) & (_dsc_pip_n <= 0))
+                    )
+                    _dsc_fw = int(_dsc_wm.sum()) - int(_dsc_pwm.sum())
+                    _dsc_fp = int(_dsc_pwm.sum())
+                    _dsc_fl = int(_dsc_lm.sum())
+                    _dsc_dec = _dsc_fw + _dsc_fp + _dsc_fl
+                    if _dsc_dec > 0:
+                        _dsc_fwr = (_dsc_fw + _dsc_fp) / _dsc_dec * 100
+
+                    def _dsc_dollar(row):
+                        try:
+                            pair   = str(row.get("pair", ""))
+                            ps     = 0.01 if "JPY" in pair else 0.0001
+                            entry  = _dsc_tof(row.get("entry"))
+                            stop   = _dsc_tof(row.get("stop_loss"))
+                            pips   = _dsc_tof(row.get("pips"))
+                            szp    = _dsc_tof(row.get("position_size_pct_at_entry"), 0)
+                            if szp <= 0 or szp != szp:
+                                szp = _dsc_szpct
+                            sp = abs(entry - stop) / ps if entry and stop else 100
+                            return pips * (_dsc_bal * szp / 100 / sp) if sp > 0 else 0.0
+                        except Exception:
+                            return 0.0
+
+                    _dsc_wrows = _dsc_fc[_dsc_wm]
+                    _dsc_lrows = _dsc_fc[_dsc_lm]
+                    _dsc_wd = [_dsc_dollar(r) for _, r in _dsc_wrows.iterrows()]
+                    _dsc_ld = [abs(_dsc_dollar(r)) for _, r in _dsc_lrows.iterrows()]
+                    if len(_dsc_wrows):
+                        _dsc_awp = float(_dsc_pd.to_numeric(_dsc_wrows["pips"], errors="coerce").mean() or 0)
+                        _dsc_awd = sum(_dsc_wd) / len(_dsc_wd) if _dsc_wd else 0
+                    if len(_dsc_lrows):
+                        _dsc_alp = abs(float(_dsc_pd.to_numeric(_dsc_lrows["pips"], errors="coerce").mean() or 0))
+                        _dsc_ald = sum(_dsc_ld) / len(_dsc_ld) if _dsc_ld else 0
+                    _tw = sum(_dsc_wd)
+                    _tl = sum(_dsc_ld) or 0.01
+                    _dsc_pfd = _tw / _tl
+                    if len(_dsc_fc):
+                        _bi = _dsc_pd.to_numeric(_dsc_fc["pips"], errors="coerce").idxmax()
+                        _br = _dsc_fc.loc[_bi]
+                        _dsc_best_pr = str(_br.get("pair", ""))
+                        _dsc_best_pp = _dsc_tof(_br.get("pips"))
+                    _dsc_total_ret = (_dsc_bal - 10000) / 10000 * 100
+                    # Expiry alerts
+                    for _, _dsc_ot in _dsc_fo.iterrows():
+                        for _ecol in ("expiry_date", "expiry"):
+                            _ev = str(_dsc_ot.get(_ecol, "") or "")
+                            if _ev and _ev not in ("nan", "None", ""):
+                                try:
+                                    _edt = datetime.strptime(_ev[:10], "%Y-%m-%d")
+                                    _dl  = (_edt - datetime.now()).days
+                                    if _dl <= 2:
+                                        _dsc_expiry_al.append(
+                                            f"⚠️ {_dsc_ot.get('pair', '?')} expires in {_dl}d"
+                                        )
+                                except Exception:
+                                    pass
+                                break
+                except Exception as _dsc_fe:
+                    _log_line(logf, f"[discord] fund trades error: {_dsc_fe}")
+
+                # ── Research trades ──────────────────────────────────────────────
+                _dsc_rt_open = _dsc_rt_clsd = _dsc_rt_dec = 0
+                _dsc_rt_wr   = _dsc_rt_pf   = 0.0
+                _dsc_wr45 = _dsc_wr56 = _dsc_wr67 = _dsc_wr7p = 0.0
+                _dsc_n45  = _dsc_n56  = _dsc_n67  = _dsc_n7p  = 0
+                _dsc_best_pairs_s = ""
+                _dsc_adapt_cnt    = 0
+                try:
+                    _dsc_rt   = _dsc_pd.read_csv(config.DATA_DIR / "research_trades.csv", encoding="utf-8-sig")
+                    _dsc_rt_open = int((_dsc_rt["status"] == "OPEN").sum())
+                    _dsc_rtc  = _dsc_rt[_dsc_rt["status"] != "OPEN"]
+                    _dsc_rt_clsd = len(_dsc_rtc)
+                    _dsc_rtp  = _dsc_pd.to_numeric(_dsc_rtc["pips"], errors="coerce").fillna(0)
+                    _dsc_rtw  = _dsc_rtc[
+                        _dsc_rtc["status"].str.upper().isin(["WIN", "FULL_WIN", "PARTIAL_WIN"]) |
+                        (_dsc_rtc["status"].str.upper().isin(["EXPIRED"]) & (_dsc_rtp > 0))
+                    ]
+                    _dsc_rtl  = _dsc_rtc[
+                        _dsc_rtc["status"].str.upper().isin(["LOSS"]) |
+                        (_dsc_rtc["status"].str.upper().isin(["EXPIRED"]) & (_dsc_rtp <= 0))
+                    ]
+                    _dsc_rt_dec = len(_dsc_rtw) + len(_dsc_rtl)
+                    if _dsc_rt_dec > 0:
+                        _dsc_rt_wr = len(_dsc_rtw) / _dsc_rt_dec * 100
+                    _rwp = _dsc_pd.to_numeric(_dsc_rtw["pips"], errors="coerce").sum() if len(_dsc_rtw) else 0
+                    _rlp = abs(_dsc_pd.to_numeric(_dsc_rtl["pips"], errors="coerce").sum()) if len(_dsc_rtl) else 0.01
+                    _dsc_rt_pf = _rwp / _rlp
+
+                    def _dsc_wrband(lo, hi):
+                        _cn = _dsc_pd.to_numeric(_dsc_rtc["confidence"], errors="coerce").fillna(0)
+                        _s  = _dsc_rtc[(_cn >= lo) & (_cn < hi)]
+                        if not len(_s):
+                            return 0.0, 0
+                        _sw = _s[_s["status"].str.upper().isin(["WIN", "FULL_WIN", "PARTIAL_WIN"])]
+                        _sl = _s[_s["status"].str.upper().isin(["LOSS"])]
+                        _d  = len(_sw) + len(_sl)
+                        return (len(_sw) / _d * 100 if _d else 0.0), _d
+
+                    _dsc_wr45, _dsc_n45 = _dsc_wrband(4, 5)
+                    _dsc_wr56, _dsc_n56 = _dsc_wrband(5, 6)
+                    _dsc_wr67, _dsc_n67 = _dsc_wrband(6, 7)
+                    _dsc_wr7p, _dsc_n7p = _dsc_wrband(7, 10)
+
+                    _dsc_pstat = {}
+                    for _dsc_pair in _dsc_rtc["pair"].dropna().unique():
+                        _pt = _dsc_rtc[_dsc_rtc["pair"] == _dsc_pair]
+                        _pw = _pt[_pt["status"].str.upper().isin(["WIN", "FULL_WIN", "PARTIAL_WIN"])]
+                        _pl = _pt[_pt["status"].str.upper().isin(["LOSS"])]
+                        _pd = len(_pw) + len(_pl)
+                        if _pd >= 3:
+                            _dsc_pstat[_dsc_pair] = (len(_pw) / _pd * 100, _pd)
+                    _dsc_bp = sorted(_dsc_pstat.items(), key=lambda x: x[1][0], reverse=True)[:3]
+                    _dsc_best_pairs_s = " · ".join(f"{p} {v[0]:.0f}%" for p, v in _dsc_bp)
+
+                    try:
+                        with open(config.DATA_DIR / "pair_statistics.json", encoding="utf-8") as _dsc_psf:
+                            _dsc_ps = json.load(_dsc_psf)
+                        _dsc_adapt_cnt = sum(
+                            1 for v in _dsc_ps.values()
+                            if isinstance(v, dict) and v.get("total_trades", 0) >= 10
+                        )
+                    except Exception:
+                        pass
+                except Exception as _dsc_rte:
+                    _log_line(logf, f"[discord] research trades error: {_dsc_rte}")
+
+                # ── ML system ────────────────────────────────────────────────────
+                _dsc_ml_n   = 0
+                _dsc_ml_acc = _dsc_ml_rwr = _dsc_ml_owr = 0.0
+                _dsc_ml_act = False
+                _dsc_ml_lr  = "never"
+                _dsc_mta    = _dsc_hhhl = 0.0
+                try:
+                    _dsc_ml_path = config.DATA_DIR / "online_model_meta.json"
+                    if _dsc_ml_path.exists():
+                        _dsc_ml_meta = json.loads(_dsc_ml_path.read_text(encoding="utf-8"))
+                        _dsc_ml_n   = int(_dsc_ml_meta.get("n_decisive") or 0)
+                        _dsc_ml_rwr = float(_dsc_ml_meta.get("recent_win_rate") or 0) * 100
+                        _dsc_ml_owr = float(_dsc_ml_meta.get("overall_win_rate") or 0) * 100
+                        _dsc_ml_acc = _dsc_ml_owr
+                        _dsc_ml_act = _dsc_ml_n >= 30
+                        _lr_ts = str(_dsc_ml_meta.get("last_updated") or "")
+                        if _lr_ts:
+                            try:
+                                _lr_dt = datetime.fromisoformat(_lr_ts[:19])
+                                _hrs   = (datetime.now() - _lr_dt).total_seconds() / 3600
+                                _dsc_ml_lr = f"{_hrs:.0f}h ago" if _hrs < 24 else f"{_hrs/24:.0f}d ago"
+                            except Exception:
+                                _dsc_ml_lr = _lr_ts[:10]
+                    _dsc_rt_check = _dsc_pd.read_csv(config.DATA_DIR / "research_trades.csv", encoding="utf-8-sig")
+                    if "monthly_trend_aligned" in _dsc_rt_check.columns:
+                        _dsc_mta = float(_dsc_rt_check["monthly_trend_aligned"].notna().mean() * 100)
+                    if "hhhl_aligned" in _dsc_rt_check.columns:
+                        _dsc_hhhl = float(_dsc_rt_check["hhhl_aligned"].notna().mean() * 100)
+                except Exception as _dsc_mle:
+                    _log_line(logf, f"[discord] ML data error: {_dsc_mle}")
+
+                # ── Context from scan ────────────────────────────────────────────
+                _dsc_regime    = str((_threshold_data or {}).get("regime") or "")
+                _dsc_threshold = float((_threshold_data or {}).get("final_threshold") or 6.0)
+                _dsc_dqpct     = float((_threshold_data or {}).get("data_quality_pct") or 99)
+                _dsc_cost      = float((run_stats or {}).get("estimated_usd") or 0)
+                try:
+                    _dsc_dur = float(run_duration_min or 0)
                 except Exception:
-                    pass
-
-                # New fund alerts — yes_trades is only defined in the full scan scope
+                    _dsc_dur = 0.0
                 try:
-                    _dsc_yes = list(yes_trades or [])
-                except NameError:
-                    _dsc_yes = []
-                _dsc_new_alerts = [
-                    {
-                        "pair":      r.get("pair", ""),
-                        "direction": (r.get("parsed") or {}).get("direction", ""),
-                        "conf":      (r.get("parsed") or {}).get("confidence", 0),
-                        "entry":     float((r.get("parsed") or {}).get("entry") or 0),
-                        "stop":      float((r.get("parsed") or {}).get("stop_loss") or 0),
-                        "t1":        float((r.get("parsed") or {}).get("target") or 0),
-                        "rr":        float((r.get("parsed") or {}).get("reward_risk") or 0),
-                        "checklist": int((r.get("parsed") or {}).get("checklist_score") or 0),
-                    }
-                    for r in _dsc_yes
-                ]
+                    _dsc_td_n = int(td_calls or 0)
+                except Exception:
+                    _dsc_td_n = 0
+                try:
+                    _dsc_pairs_n = len(analysed_pairs or [])
+                except Exception:
+                    _dsc_pairs_n = 0
 
-                # Recently closed trades (exclude still-open)
-                _dsc_closed = [
-                    {
-                        "pair":    _ct.get("pair", ""),
-                        "outcome": str(_ct.get("status") or ""),
-                        "pips":    float(_ct.get("pips") or 0),
-                        "dollars": 0.0,
-                    }
-                    for _ct in (closed_today or [])
-                    if str(_ct.get("status") or "") not in ("OPEN", "")
-                ]
+                # New setups
+                try:
+                    _dsc_yes_raw = list(yes_trades or [])
+                except NameError:
+                    _dsc_yes_raw = []
+
+                # Blocked trades
+                try:
+                    _dsc_blk_raw = [
+                        {
+                            "pair":      _bt.get("pair", ""),
+                            "direction": (_bt.get("parsed") or {}).get("direction", ""),
+                            "conf":      float((_bt.get("parsed") or {}).get("confidence") or 0),
+                            "reason":    str(_br),
+                        }
+                        for _bt, _br in (_fund_st_blocked or [])
+                    ]
+                except NameError:
+                    _dsc_blk_raw = []
 
                 # Watch list from cache
-                _dsc_watchlist = []
+                _dsc_watch_raw = []
                 try:
                     _wl_path_dsc = config.DATA_DIR / "watchlist_cache.json"
                     if _wl_path_dsc.exists():
-                        _wl_raw = json.loads(_wl_path_dsc.read_text(encoding="utf-8"))
-                        for _wp in (_wl_raw if isinstance(_wl_raw, list) else []):
-                            _dsc_watchlist.append({
-                                "pair":      _wp.get("pair", ""),
-                                "direction": _wp.get("direction", ""),
-                                "conf":      float(_wp.get("confidence") or 0),
-                                "grade":     str(_wp.get("grade") or ""),
-                                "reason":    str(_wp.get("reason") or ""),
+                        _dsc_wl_data = json.loads(_wl_path_dsc.read_text(encoding="utf-8"))
+                        for _dsc_wp in (_dsc_wl_data if isinstance(_dsc_wl_data, list) else []):
+                            _dsc_watch_raw.append({
+                                "pair":      _dsc_wp.get("pair", ""),
+                                "direction": _dsc_wp.get("direction", ""),
+                                "conf":      float(_dsc_wp.get("confidence") or 0),
+                                "reason":    str(_dsc_wp.get("reason") or ""),
                             })
                 except Exception:
                     pass
 
-                # Research stats from learning_stats
-                _dsc_ls   = learning_stats if isinstance(learning_stats, dict) else {}
-                _dsc_rwr  = float(_dsc_ls.get("win_rate") or 0) * 100
-                _dsc_rdc  = int(_dsc_ls.get("decisive") or 0)
-                _dsc_ropen  = int(_dsc_ls.get("open") or 0)
-                _dsc_rclsd  = int(_dsc_ls.get("closed") or 0)
-
-                # Recent research milestones from closed_today (non-fund trades)
-                _dsc_ms_recent = [
-                    {
-                        "pair":      _ct.get("pair", ""),
-                        "milestone": str(_ct.get("status") or ""),
-                        "pips":      float(_ct.get("pips") or 0),
-                        "outcome":   str(_ct.get("status") or ""),
-                    }
-                    for _ct in (closed_today or [])
-                    if str(_ct.get("trade_this", "")).upper() != "YES"
-                    and str(_ct.get("status") or "") not in ("OPEN", "")
-                ]
-
-                # Auckland time string
+                # Auckland time for header
                 try:
-                    _dsc_auck = _auckland_now().strftime("%H:%M %Z")
+                    _dsc_auck = _auckland_now().strftime("%H:%M NZST")
                 except Exception:
-                    _dsc_auck = str(date)
+                    _dsc_auck = ""
+                try:
+                    _dsc_date_str = str(date)
+                except Exception:
+                    _dsc_date_str = ""
 
-                _dsc_thr    = float((_threshold_data or {}).get("final_threshold") or 0)
-                _dsc_regime = str((_threshold_data or {}).get("regime") or "n/a")
-                _dsc_dqpct  = float((_threshold_data or {}).get("data_quality_pct") or 0)
-                _dsc_cost   = float((run_stats or {}).get("estimated_usd") or 0)
+                _log_line(logf, (
+                    f"[discord] Data ready: bal=${_dsc_bal:,.0f} "
+                    f"open={_dsc_fopen_cnt} rt_open={_dsc_rt_open} "
+                    f"rt_wr={_dsc_rt_wr:.0f}% ml_trained={_dsc_ml_n} "
+                    f"ml_active={_dsc_ml_act}"
+                ))
 
                 _log_line(logf, "Sending Discord scan report...")
                 _discord.send_master_scan_report(
                     scan_mode=scan_mode,
-                    date=str(date),
                     auckland_time=_dsc_auck,
-                    threshold=_dsc_thr,
-                    regime=_dsc_regime,
-                    vix=0,
+                    scan_date=_dsc_date_str,
+                    yes_trades=_dsc_yes_raw,
+                    blocked_trades=_dsc_blk_raw,
+                    watch_list=_dsc_watch_raw,
                     fund_balance=_dsc_bal,
-                    fund_return_pct=_dsc_dpnl_pct,
-                    fund_peak=_dsc_peak,
-                    drawdown_pct=_dsc_dd,
+                    daily_pnl_dollars=_dsc_dpnl_d,
                     daily_pnl_pct=_dsc_dpnl_pct,
-                    daily_pnl_dollars=_dsc_dpnl_usd,
+                    drawdown_pct=_dsc_dd,
+                    peak_balance=_dsc_peak,
+                    open_count=_dsc_fopen_cnt,
                     consecutive_wins=_dsc_cw,
                     consecutive_losses=_dsc_cl,
-                    sizing_mode=_dsc_szmode,
                     risk_pct=_dsc_szpct,
-                    open_fund_trades=_dsc_open_fund,
-                    new_fund_alerts=_dsc_new_alerts,
-                    newly_closed_trades=_dsc_closed,
-                    research_open=_dsc_ropen,
-                    research_closed=_dsc_rclsd,
-                    research_decisive=_dsc_rdc,
-                    research_win_rate=_dsc_rwr,
-                    research_profit_factor=0.0,
-                    research_avg_win_pips=0.0,
-                    research_avg_loss_pips=0.0,
-                    research_best_trade="",
-                    research_worst_trade="",
-                    recent_research_milestones=_dsc_ms_recent,
-                    universe_size=int(universe_size or 0),
-                    pairs_analysed=len(analysed_pairs or []),
-                    watch_list_pairs=_dsc_watchlist,
-                    approaching_signals=[],
-                    data_quality_pct=_dsc_dqpct,
-                    td_calls_used=int(td_calls or 0),
-                    cot_status="",
-                    calendar_status="",
-                    fred_status="",
-                    yahoo_status="",
-                    ml_gate_status="",
-                    ml_auc=0.0,
-                    ml_decisive_count=_dsc_rdc,
-                    online_model_updates=int(_dsc_ls.get("patterns_written") or 0),
-                    ftmo_target_pct=10.0,
-                    ftmo_current_pct=_dsc_dpnl_pct,
-                    ftmo_daily_limit_pct=5.0,
-                    sharpe_ratio=0.0,
-                    last_monitor_gap_min=0.0,
-                    scan_minutes=float(run_duration_min or 0),
-                    scan_cost_usd=_dsc_cost,
-                    monitor_sources="",
+                    fund_total=_dsc_fund_tot,
+                    fund_decisive=_dsc_dec,
+                    fund_win_rate=_dsc_fwr,
+                    fund_wins=_dsc_fw,
+                    fund_protected=_dsc_fp,
+                    fund_losses=_dsc_fl,
+                    avg_win_pips=_dsc_awp,
+                    avg_win_dollars=_dsc_awd,
+                    avg_loss_pips=_dsc_alp,
+                    avg_loss_dollars=_dsc_ald,
+                    profit_factor_dollars=_dsc_pfd,
+                    best_pair=_dsc_best_pr,
+                    best_pips=_dsc_best_pp,
+                    total_return_pct=_dsc_total_ret,
+                    research_open=_dsc_rt_open,
+                    research_closed=_dsc_rt_clsd,
+                    research_win_rate=_dsc_rt_wr,
+                    research_decisive=_dsc_rt_dec,
+                    research_pf=_dsc_rt_pf,
+                    wr_band_45=_dsc_wr45,
+                    wr_band_56=_dsc_wr56,
+                    wr_band_67=_dsc_wr67,
+                    wr_band_7p=_dsc_wr7p,
+                    n_band_45=_dsc_n45,
+                    n_band_56=_dsc_n56,
+                    n_band_67=_dsc_n67,
+                    n_band_7p=_dsc_n7p,
+                    best_pairs_str=_dsc_best_pairs_s,
+                    adaptive_count=_dsc_adapt_cnt,
+                    ml_trained=_dsc_ml_n,
+                    ml_accuracy=_dsc_ml_acc,
+                    ml_recent_wr=_dsc_ml_rwr,
+                    ml_overall_wr=_dsc_ml_owr,
+                    ml_active=_dsc_ml_act,
+                    ml_last_retrain=_dsc_ml_lr,
+                    mta_pct=_dsc_mta,
+                    hhhl_pct=_dsc_hhhl,
+                    regime=_dsc_regime,
+                    threshold=_dsc_threshold,
+                    dq_pct=_dsc_dqpct,
+                    td_calls=_dsc_td_n,
+                    scan_cost=_dsc_cost,
+                    scan_duration=_dsc_dur,
+                    pairs_analysed=_dsc_pairs_n,
+                    expiry_alerts=_dsc_expiry_al,
                 )
                 _log_line(logf, "Discord scan report sent ✅")
         except Exception as _dsc_exc:
