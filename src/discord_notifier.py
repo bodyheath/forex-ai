@@ -810,6 +810,174 @@ def send_master_scan_report(
     )
 
 
+CLOSED_TRADES_STATE_FILE = Path(__file__).resolve().parent.parent / "data" / "discord_closed_trades.json"
+
+
+def _load_closed_trades_state() -> dict:
+    if CLOSED_TRADES_STATE_FILE.exists():
+        try:
+            return json.loads(CLOSED_TRADES_STATE_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"message_id": None}
+
+
+def _save_closed_trades_state(state: dict) -> None:
+    try:
+        CLOSED_TRADES_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        CLOSED_TRADES_STATE_FILE.write_text(json.dumps(state, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+
+
+def update_closed_trades_log(
+    closed_trades: list,
+    fund_balance: float,
+    total_realised_pips: float,
+    total_realised_dollars: float,
+    win_streak: int,
+    loss_streak: int,
+) -> bool:
+    if not WEBHOOK_FUND:
+        return False
+
+    state = _load_closed_trades_state()
+    existing_message_id = state.get("message_id")
+
+    n = len(closed_trades)
+
+    # Color
+    if n == 0:
+        color = 0x95A5A6
+    elif total_realised_pips >= 0:
+        color = 0x2ECC71
+    else:
+        color = 0xE74C3C
+
+    # Streak text
+    if win_streak >= 2:
+        streak_text = f"\U0001f525 {win_streak} wins in a row"
+    elif loss_streak >= 2:
+        streak_text = f"⚠️ {loss_streak} losses in a row"
+    else:
+        streak_text = "—"
+
+    fields = []
+
+    # Section 1 — Realised Summary
+    fields.append({
+        "name": "Realised Performance",
+        "value": (
+            f"Total closed: {n} trades\n"
+            f"Realised P&L: {total_realised_pips:+.1f}p / ${total_realised_dollars:+.2f}\n"
+            f"Current streak: {streak_text}"
+        ),
+        "inline": False,
+    })
+
+    # Section 2 — One field per closed trade (most recent first)
+    for t in closed_trades:
+        outcome = t.get("outcome", "")
+        status  = t.get("status", "")
+        pips    = t.get("pips", 0.0)
+
+        # Outcome emoji
+        if outcome in ("WIN", "FULL_WIN") or outcome == "WIN (expired)":
+            emoji = "✅"
+        elif outcome == "PARTIAL_WIN":
+            emoji = "\U0001f6e1️"
+        elif outcome == "LOSS" or outcome == "LOSS (expired)":
+            emoji = "❌"
+        elif status == "EXPIRED":
+            emoji = "✅" if pips > 0 else "❌"
+        else:
+            emoji = "⚪"
+
+        # Outcome label
+        label_map = {
+            "WIN":           "WIN",
+            "FULL_WIN":      "FULL WIN",
+            "PARTIAL_WIN":   "PROTECTED",
+            "LOSS":          "LOSS",
+            "WIN (expired)": "WIN (expired)",
+            "LOSS (expired)":"LOSS (expired)",
+        }
+        outcome_label = label_map.get(outcome, outcome)
+
+        pair      = t.get("pair", "")
+        trade_id  = t.get("id", "")
+        direction = t.get("direction", "")
+        conf      = t.get("conf", 0.0)
+        entry     = t.get("entry", 0.0)
+        exit_p    = t.get("exit_price", 0.0)
+        dollars   = t.get("dollars", 0.0)
+        cascade   = t.get("cascade")
+        closed_at = t.get("closed_at", "")
+        hold_time = t.get("hold_time", "?")
+
+        field_name = f"{emoji} {pair} #{trade_id} · {outcome_label}"
+
+        field_lines = [
+            f"{direction} · Conf: {conf:.1f}/10",
+            f"Entry: {entry} → Exit: {exit_p}",
+            f"Result: {pips:+.1f}p / ${dollars:+.2f}",
+        ]
+        if cascade:
+            field_lines.append(cascade)
+        field_lines.append(f"Closed: {closed_at} · Hold: {hold_time}")
+
+        fields.append({
+            "name":   field_name,
+            "value":  "\n".join(field_lines),
+            "inline": False,
+        })
+
+    updated_at = datetime.now(timezone.utc).strftime("%H:%M")
+    embed = {
+        "title":  "📋 Closed Fund Trades",
+        "color":  color,
+        "fields": fields,
+        "footer": {
+            "text": (
+                f"Forex AI · {n} closed · "
+                f"Net: {total_realised_pips:+.1f}p / ${total_realised_dollars:+.2f} · "
+                f"Updated {updated_at} UTC"
+            )
+        },
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+
+    # Edit existing message
+    if existing_message_id:
+        try:
+            _wh_tail = WEBHOOK_FUND.split("webhooks/")[1]
+            edit_url = f"https://discord.com/api/webhooks/{_wh_tail}/messages/{existing_message_id}"
+            resp = requests.patch(edit_url, json={"embeds": [embed]}, timeout=10)
+            if resp.status_code == 200:
+                import sys as _sys
+                print(f"Closed trades log: edited message {existing_message_id}", file=_sys.stdout)
+                return True
+        except Exception:
+            pass
+
+    # Post new message
+    try:
+        url  = WEBHOOK_FUND + "?wait=true"
+        resp = requests.post(url, json={"embeds": [embed]}, timeout=10)
+        if resp.status_code == 200:
+            msg_id = resp.json().get("id")
+            if msg_id:
+                state["message_id"] = msg_id
+                _save_closed_trades_state(state)
+                import sys as _sys
+                print("Closed trades log: first post — message_id saved", file=_sys.stdout)
+            return True
+    except Exception:
+        pass
+
+    return False
+
+
 def _load_dashboard_state() -> dict:
     if DASHBOARD_STATE_FILE.exists():
         try:
