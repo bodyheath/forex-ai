@@ -1120,7 +1120,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                         _sz_pct_sh = _sz_pct_sh_raw if (_sz_pct_sh_raw and _sz_pct_sh_raw == _sz_pct_sh_raw) else 1.0
                         try:
                             from src import fund_state as _fs_sh
-                            _bal_sh = float(_fs_sh.load().get("daily_opening_balance") or 10000)
+                            _bal_sh = float(_fs_sh.load().get("balance") or _fs_sh.load().get("daily_opening_balance") or 10000)
                         except Exception:
                             _bal_sh = 10000.0
                         _risk_sh     = _sz_pct_sh / 100.0 * max(_bal_sh, 1)
@@ -1129,6 +1129,19 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                         _t2_dol_sh   = round(_t2_pips_sh * 0.30 * _dpp_sh, 2)
                         _net_pips_sh = round(_t1_pips_sh * 0.40 + _t2_pips_sh * 0.30, 1)
                         _net_dol_sh  = round(_t1_dol_sh + _t2_dol_sh, 2)
+                    else:
+                        # Pure loss — full risk amount lost
+                        _sz_pct_sl_raw = _to_float(row_state.get("position_size_pct_at_entry"))
+                        _sz_pct_sl = _sz_pct_sl_raw if (_sz_pct_sl_raw and _sz_pct_sl_raw == _sz_pct_sl_raw and _sz_pct_sl_raw > 0) else 1.0
+                        try:
+                            from src import fund_state as _fs_sl
+                            _fs_sl_data = _fs_sl.load()
+                            _bal_sl = float(_fs_sl_data.get("balance") or _fs_sl_data.get("daily_opening_balance") or 10000)
+                        except Exception:
+                            _bal_sl = 10000.0
+                        _risk_sl  = _sz_pct_sl / 100.0 * max(_bal_sl, 1)
+                        _net_pips_sh = -(_stop_pips_sh) if _stop_pips_sh > 0 else -100.0
+                        _net_dol_sh  = -(_risk_sl)
                     _casc_lbl_sh = "T1+T2" if _t2h_sh else ("T1" if _was_protected else "")
                     _dn.send_fund_stop_hit(
                         pair, direction,
