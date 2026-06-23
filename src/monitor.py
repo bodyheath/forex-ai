@@ -1985,11 +1985,15 @@ def run(log=print) -> dict:
                         if not _stop_alrt_suppress:
                             log(
                                 f"  Monitor: {_pair_str} HOT zone {_prog:.0f}% "
-                                f"— price moving against trade — sending stop-approaching alert"
+                                f"— price moving against trade — sending stop-approaching alert "
+                                f"(stop={_actual_stop} dist={_stop_dist:.1f}p warn={_warning_pips}p)"
                             )
                             _dn.send_fund_approaching(
-                                _pair_str, _dir0, _prog, _stop0 or 0.0, _cur_p,
-                                _stop_dist, _stop0 or 0.0, "STOP"
+                                _pair_str, _dir0, _prog,
+                                _actual_stop or 0.0, _cur_p,
+                                _stop_dist, _actual_stop or 0.0, "STOP",
+                                entry_price=_entry or 0.0,
+                                warning_pips=_warning_pips,
                             )
                             try:
                                 _sa_file = config.DATA_DIR / "stop_approach_alerts.json"
