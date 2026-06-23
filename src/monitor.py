@@ -1882,7 +1882,11 @@ def run(log=print) -> dict:
         _mark_hot_zone_exited(_exited_pair)
 
     _alerts_sent = 0
-    for _pair_str in sorted(_hot_by_pair):
+    for _pair_str in sorted(_fund_hot_by_pair):
+        # Hard filter: only fund pairs go to WEBHOOK_MONITOR
+        if _pair_str not in fund_pairs:
+            log(f"[monitor] BLOCKED: {_pair_str} reached fund HOT loop but is not a fund pair — skipping")
+            continue
         # Check if this pair was continuously HOT (never left HOT zone since last alert)
         _cont_hot = False
         try:
@@ -1894,10 +1898,10 @@ def run(log=print) -> dict:
 
         _prev_ts = _check_hot_alert_sent(_pair_str)
         if _prev_ts:
-            _n = len(_hot_by_pair[_pair_str])
+            _n = len(_fund_hot_by_pair[_pair_str])
             log(f"  Monitor: HOT zone alert suppressed for {_pair_str} ({_n} trade(s)) — already sent {_prev_ts}")
             continue
-        _rows_for_pair = _hot_by_pair[_pair_str]
+        _rows_for_pair = _fund_hot_by_pair[_pair_str]
         log(f"  Monitor: {_pair_str} HOT zone ({len(_rows_for_pair)} trade(s)) — sending approaching target alert")
         if _ta:
             try:
