@@ -4100,6 +4100,7 @@ def _send_telegram_summary(
             _fund_st = _fs.increment_daily_trades(_fund_st)
             _open_fund_count += 1
             _yt_pass.append(_yt)
+            _ot_open_trades.append(_yt)  # live update so next trade in same scan sees this currency
         # Stamp ML sizing fields on matching research trades
         try:
             from src import research_tracker as _rtrk_szg
