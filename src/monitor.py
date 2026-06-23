@@ -1120,7 +1120,8 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                         _sz_pct_sh = _sz_pct_sh_raw if (_sz_pct_sh_raw and _sz_pct_sh_raw == _sz_pct_sh_raw) else 1.0
                         try:
                             from src import fund_state as _fs_sh
-                            _bal_sh = float(_fs_sh.load().get("balance") or _fs_sh.load().get("daily_opening_balance") or 10000)
+                            _fs_sh_data = _fs_sh.load()
+                            _bal_sh = float(_fs_sh_data.get("balance") or _fs_sh_data.get("daily_opening_balance") or 10000)
                         except Exception:
                             _bal_sh = 10000.0
                         _risk_sh     = _sz_pct_sh / 100.0 * max(_bal_sh, 1)
