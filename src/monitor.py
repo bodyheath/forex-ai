@@ -1086,7 +1086,8 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                         else:
                             _t1_pips_sh = max(0, (_ent_sh - _t1p_sh) / _pip_sz_sh) if _t1p_sh and _ent_sh else 0.0
                             _t2_pips_sh = max(0, (_ent_sh - _t2p_sh) / _pip_sz_sh) if _t2p_sh and _ent_sh and _t2h_sh else 0.0
-                        _sz_pct_sh = _to_float(row_state.get("position_size_pct_at_entry")) or 1.0
+                        _sz_pct_sh_raw = _to_float(row_state.get("position_size_pct_at_entry"))
+                        _sz_pct_sh = _sz_pct_sh_raw if (_sz_pct_sh_raw and _sz_pct_sh_raw == _sz_pct_sh_raw) else 1.0
                         try:
                             from src import fund_state as _fs_sh
                             _bal_sh = float(_fs_sh.load().get("daily_opening_balance") or 10000)
