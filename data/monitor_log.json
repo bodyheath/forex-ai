@@ -1,230 +1,77 @@
 {
-  "timestamp": "2026-06-23T10:01:41Z",
+  "timestamp": "2026-06-23T21:01:33Z",
   "trades_checked_fund": 5,
-  "trades_checked_research": 82,
-  "hot_zone_count": 4,
-  "warm_zone_count": 24,
-  "cold_zone_count": 59,
+  "trades_checked_research": 74,
+  "hot_zone_count": 14,
+  "warm_zone_count": 29,
+  "cold_zone_count": 36,
   "api_calls_used": 0,
-  "yf_price_pairs": 46,
-  "yf_ohlcv_pairs": 46,
+  "yf_price_pairs": 36,
+  "yf_ohlcv_pairs": 36,
   "approaching_alerts": 0,
-  "milestones_hit": [
-    {
-      "type": "research",
-      "pair": "GBP/JPY",
-      "level": "STOP",
-      "price": 213.84399,
-      "pips": null,
-      "candle_dt": "2026-06-23 05:00"
-    },
-    {
-      "type": "research",
-      "pair": "JPY/HKD",
-      "level": "STOP",
-      "price": 0.0483,
-      "pips": null,
-      "candle_dt": "2026-06-23 05:00"
-    },
-    {
-      "type": "research",
-      "pair": "USD/SEK",
-      "level": "T1",
-      "price": 9.62655,
-      "pips": 390.7,
-      "candle_dt": "2026-06-23 05:00"
-    },
-    {
-      "type": "research",
-      "pair": "USD/SEK",
-      "level": "STOP",
-      "price": 9.6751,
-      "pips": null,
-      "candle_dt": "2026-06-23 09:00"
-    },
-    {
-      "type": "research",
-      "pair": "USD/NOK",
-      "level": "T1",
-      "price": 9.70535,
-      "pips": 394.1,
-      "candle_dt": "2026-06-23 05:00"
-    },
-    {
-      "type": "research",
-      "pair": "USD/NOK",
-      "level": "STOP",
-      "price": 9.7488,
-      "pips": null,
-      "candle_dt": "2026-06-23 07:00"
-    },
-    {
-      "type": "research",
-      "pair": "AUD/USD",
-      "level": "T1",
-      "price": 0.698032,
-      "pips": 20.8,
-      "candle_dt": "2026-06-23 05:00"
-    },
-    {
-      "type": "research",
-      "pair": "AUD/USD",
-      "level": "STOP",
-      "price": 0.69546,
-      "pips": null,
-      "candle_dt": "2026-06-23 07:00"
-    },
-    {
-      "type": "research",
-      "pair": "EUR/CHF",
-      "level": "STOP",
-      "price": 0.92416,
-      "pips": null,
-      "candle_dt": "2026-06-23 08:00"
-    },
-    {
-      "type": "research",
-      "pair": "USD/CHF",
-      "level": "T1",
-      "price": 0.80776,
-      "pips": 21.9,
-      "candle_dt": "2026-06-23 08:00"
-    },
-    {
-      "type": "research",
-      "pair": "USD/CHF",
-      "level": "STOP",
-      "price": 0.8101,
-      "pips": null,
-      "candle_dt": "2026-06-23 10:00"
-    },
-    {
-      "type": "research",
-      "pair": "GBP/SEK",
-      "level": "STOP",
-      "price": 12.7918,
-      "pips": null,
-      "candle_dt": "2026-06-23 09:00"
-    },
-    {
-      "type": "research",
-      "pair": "CHF/SEK",
-      "level": "T1",
-      "price": 11.90218,
-      "pips": 299.1,
-      "candle_dt": "2026-06-23 05:00"
-    },
-    {
-      "type": "research",
-      "pair": "CHF/SEK",
-      "level": "STOP",
-      "price": 11.94141,
-      "pips": null,
-      "candle_dt": "2026-06-23 08:00"
-    },
-    {
-      "type": "research",
-      "pair": "NOK/SEK",
-      "level": "STOP",
-      "price": 0.99255,
-      "pips": null,
-      "candle_dt": "2026-06-23 10:00"
-    },
-    {
-      "type": "research",
-      "pair": "EUR/USD",
-      "level": "T1",
-      "price": 1.144165,
-      "pips": 25.5,
-      "candle_dt": "2026-06-23 08:00"
-    },
-    {
-      "type": "research",
-      "pair": "EUR/USD",
-      "level": "STOP",
-      "price": 1.1413,
-      "pips": null,
-      "candle_dt": "2026-06-23 08:00"
-    },
-    {
-      "type": "research",
-      "pair": "EUR/SEK",
-      "level": "T1",
-      "price": 11.00279,
-      "pips": 271.1,
-      "candle_dt": "2026-06-23 05:00"
-    },
-    {
-      "type": "research",
-      "pair": "EUR/SEK",
-      "level": "STOP",
-      "price": 11.0328,
-      "pips": null,
-      "candle_dt": "2026-06-23 09:00"
-    }
-  ],
-  "mfe_mae_updated": 82,
+  "milestones_hit": [],
+  "mfe_mae_updated": 74,
   "last_prices": {
-    "AUD/CAD": 0.9865900278091431,
-    "AUD/NZD": 1.2219699621200562,
-    "AUD/SEK": 6.722700119018555,
-    "AUD/USD": 0.6960880160331726,
-    "CAD/CHF": 0.5710800290107727,
-    "CAD/HKD": 5.527200222015381,
-    "CAD/JPY": 113.83000183105469,
-    "CAD/NOK": 6.856800079345703,
-    "CAD/NZD": 1.2373000383377075,
-    "CHF/CAD": 1.7503000497817993,
-    "CHF/HKD": 9.68220043182373,
-    "CHF/NOK": 12.013790130615234,
-    "CHF/SEK": 11.93727970123291,
-    "EUR/AUD": 1.6398199796676636,
-    "EUR/CAD": 1.6179699897766113,
-    "EUR/CHF": 0.924019992351532,
-    "EUR/GBP": 0.8624799847602844,
-    "EUR/HKD": 8.946029663085938,
-    "EUR/JPY": 184.1739959716797,
-    "EUR/NOK": 11.103599548339844,
-    "EUR/SEK": 11.032440185546875,
-    "EUR/USD": 1.1415525674819946,
-    "GBP/AUD": 1.9011600017547607,
-    "GBP/CAD": 1.8758399486541748,
-    "GBP/CHF": 1.0712300539016724,
-    "GBP/JPY": 213.53700256347656,
-    "GBP/NOK": 12.873029708862305,
-    "GBP/SEK": 12.790160179138184,
-    "GBP/SGD": 1.7121800184249878,
-    "GBP/USD": 1.323118805885315,
-    "HKD/NZD": 0.22378000617027283,
-    "JPY/HKD": 0.048330001533031464,
-    "NOK/JPY": 16.58009910583496,
-    "NOK/SEK": 0.9927099943161011,
-    "NZD/CAD": 0.8071699738502502,
-    "NZD/HKD": 4.462200164794922,
-    "NZD/JPY": 91.89399719238281,
-    "NZD/USD": 0.5695084929466248,
-    "SGD/HKD": 6.053699970245361,
-    "USD/CAD": 1.417889952659607,
-    "USD/CHF": 0.8097299933433533,
-    "USD/HKD": 7.839200019836426,
-    "USD/JPY": 161.39100646972656,
-    "USD/NOK": 9.72974967956543,
-    "USD/SEK": 9.667920112609863,
-    "USD/SGD": 1.2946799993515015
+    "AUD/CAD": 0.981660008430481,
+    "AUD/NZD": 1.218690037727356,
+    "CAD/CHF": 0.5694100260734558,
+    "CAD/HKD": 5.517199993133545,
+    "CAD/JPY": 113.66200256347656,
+    "CAD/NOK": 6.882400035858154,
+    "CHF/CAD": 1.7529000043869019,
+    "CHF/HKD": 9.678899765014648,
+    "CHF/NOK": 12.079500198364258,
+    "EUR/AUD": 1.6447800397872925,
+    "EUR/CAD": 1.6166499853134155,
+    "EUR/GBP": 0.8617500066757202,
+    "EUR/HKD": 8.92300033569336,
+    "EUR/JPY": 183.822998046875,
+    "EUR/NOK": 11.136079788208008,
+    "EUR/SGD": 1.4747600555419922,
+    "EUR/USD": 1.1383039951324463,
+    "GBP/AUD": 1.9068900346755981,
+    "GBP/CAD": 1.8741400241851807,
+    "GBP/CHF": 1.0678000450134277,
+    "GBP/JPY": 213.07400512695312,
+    "GBP/NOK": 12.917900085449219,
+    "GBP/SEK": 12.854000091552734,
+    "GBP/USD": 1.3206549882888794,
+    "HKD/NZD": 0.22468000650405884,
+    "NOK/JPY": 16.476200103759766,
+    "NZD/CAD": 0.8044400215148926,
+    "NZD/JPY": 91.58200073242188,
+    "NZD/USD": 0.5671827793121338,
+    "SGD/HKD": 6.047299861907959,
+    "USD/CAD": 1.4205399751663208,
+    "USD/CHF": 0.8093500137329102,
+    "USD/HKD": 7.840199947357178,
+    "USD/JPY": 161.4810028076172,
+    "USD/NOK": 9.772170066833496,
+    "USD/SGD": 1.295799970626831
   },
   "previously_hot": [
-    "CHF/CAD#85",
-    "GBP/AUD#255",
-    "NZD/HKD#1032",
-    "NZD/USD#167"
+    "AUD/CAD#276",
+    "AUD/NZD#256",
+    "AUD/NZD#268",
+    "CAD/HKD#186",
+    "EUR/AUD#266",
+    "EUR/JPY#261",
+    "EUR/USD#229",
+    "EUR/USD#252",
+    "GBP/NOK#211",
+    "NOK/JPY#262",
+    "NZD/CAD#94",
+    "NZD/USD#233",
+    "USD/CAD#228",
+    "USD/CAD#250"
   ],
   "skipped_reason": "",
   "watchlist_prices": {
-    "GBP/AUD": 1.9011600017547607,
-    "NZD/USD": 0.5695084929466248,
-    "AUD/USD": 0.6960880160331726,
-    "USD/CAD": 1.4178999662399292,
-    "EUR/JPY": 184.16400146484375
+    "EUR/NOK": 11.136079788208008,
+    "GBP/AUD": 1.9068900346755981,
+    "CAD/JPY": 113.66200256347656,
+    "NZD/USD": 0.5671827793121338,
+    "NZD/CAD": 0.8044400215148926
   },
   "watchlist_alerts_sent": [
     "AUD/CAD:2026-06-22",
@@ -232,13 +79,15 @@
     "AUD/HKD:2026-06-23",
     "AUD/SEK:2026-06-23",
     "CHF/HKD:2026-06-23",
+    "CHF/HKD:2026-06-24",
+    "GBP/AUD:2026-06-24",
     "GBP/CAD:2026-06-23",
     "GBP/USD:2026-06-23",
     "USD/CAD:2026-06-22",
     "USD/SEK:2026-06-22"
   ],
   "data_tiers_used": {
-    "t1_yf_ohlcv": 46,
+    "t1_yf_ohlcv": 36,
     "t1_td_backup": 0,
     "t1_sq_backup": 0,
     "t2_synthetic": 0,
@@ -247,7 +96,7 @@
     "t0_no_data": 0
   },
   "source_stats": {
-    "yahoo_finance": 46,
+    "yahoo_finance": 36,
     "twelve_data": 0,
     "stooq": 0,
     "synthetic": 0,
@@ -256,11 +105,6 @@
   },
   "price_history": {
     "AUD/CAD": [
-      {
-        "price": 0.9914399981498718,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
       {
         "price": 0.9914399981498718,
         "timestamp": "2026-06-21T11:01:30Z",
@@ -634,6 +478,111 @@
       {
         "price": 0.9865900278091431,
         "timestamp": "2026-06-23T10:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9859700202941895,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9852700233459473,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9848200082778931,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9839000105857849,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9840400218963623,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9838500022888184,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9835299849510193,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9835900068283081,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9839100241661072,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9832599759101868,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9831100106239319,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9826200008392334,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9826099872589111,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9826200008392334,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9823600053787231,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9820899963378906,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9823600053787231,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9826200008392334,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.982200026512146,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9823799729347229,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.981660008430481,
+        "timestamp": "2026-06-23T21:01:33Z",
         "source": "yahoo"
       }
     ],
@@ -1061,6 +1010,11 @@
       {
         "price": 0.5632799863815308,
         "timestamp": "2026-06-23T06:01:35Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5598999857902527,
+        "timestamp": "2026-06-23T19:01:41Z",
         "source": "yahoo"
       }
     ],
@@ -1524,99 +1478,14 @@
         "price": 112.19999694824219,
         "timestamp": "2026-06-23T09:31:24Z",
         "source": "yahoo"
+      },
+      {
+        "price": 111.6760025024414,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
       }
     ],
     "AUD/NZD": [
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T18:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T18:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.2211699485778809,
-        "timestamp": "2026-06-21T19:01:30Z",
-        "source": "yahoo"
-      },
       {
         "price": 1.2211699485778809,
         "timestamp": "2026-06-21T19:31:22Z",
@@ -1990,6 +1859,111 @@
       {
         "price": 1.2219699621200562,
         "timestamp": "2026-06-23T10:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2216999530792236,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2214699983596802,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.221750020980835,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2215700149536133,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2219300270080566,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2226300239562988,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2217600345611572,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2217299938201904,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2211799621582031,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.220229983329773,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2209500074386597,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2204699516296387,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2203199863433838,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2198799848556519,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2198899984359741,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2200700044631958,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2196799516677856,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.220020055770874,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.21983003616333,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.220080018043518,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.218690037727356,
+        "timestamp": "2026-06-23T21:01:33Z",
         "source": "yahoo"
       }
     ],
@@ -2377,6 +2351,36 @@
       {
         "price": 6.722700119018555,
         "timestamp": "2026-06-23T10:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.72599983215332,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.723100185394287,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.728300094604492,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.728600025177002,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.733099937438965,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.729700088500977,
+        "timestamp": "2026-06-23T13:01:38Z",
         "source": "yahoo"
       }
     ],
@@ -2820,6 +2824,11 @@
         "price": 0.6960880160331726,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 0.6912761330604553,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
       }
     ],
     "CAD/AUD": [
@@ -3075,96 +3084,6 @@
       }
     ],
     "CAD/HKD": [
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T18:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T18:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 5.536399841308594,
-        "timestamp": "2026-06-21T19:01:30Z",
-        "source": "yahoo"
-      },
       {
         "price": 5.536399841308594,
         "timestamp": "2026-06-21T19:31:22Z",
@@ -3539,44 +3458,114 @@
         "price": 5.527200222015381,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 5.526000022888184,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.524499893188477,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.525300025939941,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.523399829864502,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.5233001708984375,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.524600028991699,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.525400161743164,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.527599811553955,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.520899772644043,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.521200180053711,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.5208001136779785,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.520100116729736,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.517499923706055,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.516300201416016,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.516900062561035,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.515500068664551,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.514999866485596,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.516600131988525,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.516499996185303,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.517499923706055,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 5.517199993133545,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "CAD/JPY": [
-      {
-        "price": 113.95899963378906,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 113.95899963378906,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 113.95899963378906,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 113.95899963378906,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 113.95899963378906,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 113.95899963378906,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 113.95899963378906,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
       {
         "price": 113.95899963378906,
         "timestamp": "2026-06-21T14:01:29Z",
@@ -3951,84 +3940,114 @@
         "price": 113.83000183105469,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 113.76899719238281,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.802001953125,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.84700012207031,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.88500213623047,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.7969970703125,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.85700225830078,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.81400299072266,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.8949966430664,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.802001953125,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.7699966430664,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.78500366210938,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.78700256347656,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.74199676513672,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.7239990234375,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.6989974975586,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.68599700927734,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.6709976196289,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.6719970703125,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.71199798583984,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.70899963378906,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 113.66200256347656,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "CAD/NOK": [
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 6.844900131225586,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
       {
         "price": 6.844900131225586,
         "timestamp": "2026-06-21T18:01:29Z",
@@ -4403,6 +4422,111 @@
         "price": 6.856800079345703,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 6.860300064086914,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.868100166320801,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.877099990844727,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.8902997970581055,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.893899917602539,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.8902997970581055,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.895599842071533,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.89109992980957,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.882900238037109,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.882999897003174,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.88700008392334,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.889699935913086,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.888500213623047,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.888199806213379,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.889200210571289,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.887800216674805,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.887599945068359,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.887800216674805,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.889999866485596,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.8892998695373535,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.882400035858154,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "CAD/NZD": [
@@ -4775,99 +4899,89 @@
         "price": 1.2373000383377075,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.2378000020980835,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2384999990463257,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.239300012588501,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2407000064849854,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2407000064849854,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2414000034332275,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2409000396728516,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2410000562667847,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.23989999294281,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2396999597549438,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2405999898910522,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2405999898910522,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2405999898910522,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2402000427246094,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2404999732971191,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2405999898910522,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
       }
     ],
     "CHF/CAD": [
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T18:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T18:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.7523000240325928,
-        "timestamp": "2026-06-21T19:01:30Z",
-        "source": "yahoo"
-      },
       {
         "price": 1.7523000240325928,
         "timestamp": "2026-06-21T19:31:22Z",
@@ -5242,94 +5356,114 @@
         "price": 1.7503000497817993,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.75,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.750599980354309,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7510000467300415,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7506999969482422,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.751099944114685,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7520999908447266,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7526999711990356,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7526999711990356,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7519999742507935,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7529000043869019,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7523000240325928,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7522000074386597,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7524000406265259,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7525999546051025,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7527999877929688,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7526999711990356,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7539000511169434,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.753999948501587,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7532999515533447,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7532999515533447,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7529000043869019,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "EUR/AUD": [
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T18:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.6348899602890015,
-        "timestamp": "2026-06-21T18:31:19Z",
-        "source": "yahoo"
-      },
       {
         "price": 1.6348899602890015,
         "timestamp": "2026-06-21T19:01:30Z",
@@ -5704,14 +5838,114 @@
         "price": 1.6398199796676636,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.640529990196228,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6415499448776245,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6409300565719604,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6422799825668335,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6418299674987793,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6424000263214111,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6430699825286865,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6418999433517456,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6417399644851685,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6432600021362305,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6435400247573853,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6442699432373047,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6449400186538696,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.645419955253601,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6458300352096558,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6464099884033203,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6461700201034546,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6456999778747559,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6461999416351318,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6457300186157227,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6447800397872925,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "EUR/CAD": [
-      {
-        "price": 1.62253999710083,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
       {
         "price": 1.62253999710083,
         "timestamp": "2026-06-21T11:01:30Z",
@@ -6121,34 +6355,79 @@
         "price": 1.6179699897766113,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.6175600290298462,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6175899505615234,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6161500215530396,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6159800291061401,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.615839958190918,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.615820050239563,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.616170048713684,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6150699853897095,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6153700351715088,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.617210030555725,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.617169976234436,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6169400215148926,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6167900562286377,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6166499853134155,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "EUR/HKD": [
-      {
-        "price": 8.987799644470215,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 8.987799644470215,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 8.987799644470215,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 8.987799644470215,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 8.987799644470215,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
       {
         "price": 8.987799644470215,
         "timestamp": "2026-06-21T13:01:32Z",
@@ -6523,99 +6802,114 @@
         "price": 8.946029663085938,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 8.941300392150879,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.938030242919922,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.93136978149414,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.929089546203613,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.928810119628906,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.927760124206543,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.931449890136719,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.928930282592773,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.921110153198242,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.924469947814941,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.923110008239746,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.921879768371582,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.920980453491211,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.921689987182617,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.922260284423828,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.92158031463623,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.92240047454834,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.923640251159668,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.921159744262695,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.922030448913574,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 8.92300033569336,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "EUR/JPY": [
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T18:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T18:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 184.9980010986328,
-        "timestamp": "2026-06-21T19:01:30Z",
-        "source": "yahoo"
-      },
       {
         "price": 184.9980010986328,
         "timestamp": "2026-06-21T19:31:22Z",
@@ -6990,99 +7284,114 @@
         "price": 184.1739959716797,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 184.04100036621094,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 184.08399963378906,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 184.00399780273438,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 184.0449981689453,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.88900756835938,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.99200439453125,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.96099853515625,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.9600067138672,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.8470001220703,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.85000610351562,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.8820037841797,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.86099243164062,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.8699951171875,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.89300537109375,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.8520050048828,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.86000061035156,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.843994140625,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.83799743652344,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.8820037841797,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.86300659179688,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 183.822998046875,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "EUR/USD": [
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T18:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T18:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.1469204425811768,
-        "timestamp": "2026-06-21T19:01:30Z",
-        "source": "yahoo"
-      },
       {
         "price": 1.1469204425811768,
         "timestamp": "2026-06-21T19:31:22Z",
@@ -7457,19 +7766,114 @@
         "price": 1.1415525674819946,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.1409013271331787,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1405109167099,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1398608684539795,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.139211654663086,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.139211654663086,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.139211654663086,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1393414735794067,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.139211654663086,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1381744146347046,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1386927366256714,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1384334564208984,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1381744146347046,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1381744146347046,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1381744146347046,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1383039951324463,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1381744146347046,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1383039951324463,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1384334564208984,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1381744146347046,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1383039951324463,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.1383039951324463,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "GBP/AUD": [
-      {
-        "price": 1.8869500160217285,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8869500160217285,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
       {
         "price": 1.8869500160217285,
         "timestamp": "2026-06-21T11:31:36Z",
@@ -7844,99 +8248,114 @@
         "price": 1.9011600017547607,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.9009000062942505,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9037100076675415,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.903190016746521,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9053000211715698,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9053200483322144,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9047800302505493,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9047800302505493,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9047399759292603,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9047900438308716,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9050999879837036,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9047000408172607,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.905769944190979,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.906290054321289,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9067699909210205,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9073400497436523,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9076499938964844,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.908229947090149,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.908560037612915,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9091099500656128,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9091999530792236,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.9068900346755981,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "GBP/CAD": [
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T18:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T18:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 1.8724900484085083,
-        "timestamp": "2026-06-21T19:01:30Z",
-        "source": "yahoo"
-      },
       {
         "price": 1.8724900484085083,
         "timestamp": "2026-06-21T19:31:22Z",
@@ -8311,44 +8730,114 @@
         "price": 1.8758399486541748,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.8744299411773682,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8759700059890747,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8742300271987915,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8748300075531006,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8753000497817993,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.873960018157959,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8734999895095825,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8736599683761597,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.874250054359436,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8732800483703613,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.872730016708374,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8728100061416626,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.873289942741394,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.873610019683838,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8736900091171265,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8735599517822266,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8745900392532349,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8754500150680542,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8751300573349,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8755600452423096,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8741400241851807,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "GBP/JPY": [
-      {
-        "price": 213.45799255371094,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 213.45799255371094,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 213.45799255371094,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 213.45799255371094,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 213.45799255371094,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 213.45799255371094,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 213.45799255371094,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
       {
         "price": 213.45799255371094,
         "timestamp": "2026-06-21T14:01:29Z",
@@ -8722,6 +9211,111 @@
       {
         "price": 213.53700256347656,
         "timestamp": "2026-06-23T10:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.26300048828125,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.4949951171875,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.41099548339844,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.5240020751953,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.40899658203125,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.39199829101562,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.2729949951172,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.406005859375,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.2989959716797,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.14700317382812,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.09800720214844,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.1060028076172,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.08599853515625,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.09800720214844,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.05799865722656,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.0290069580078,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.10899353027344,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.2030029296875,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.2480010986328,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.30299377441406,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 213.07400512695312,
+        "timestamp": "2026-06-23T21:01:33Z",
         "source": "yahoo"
       }
     ],
@@ -9262,96 +9856,6 @@
     "NZD/CAD": [
       {
         "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T18:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T18:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
-        "timestamp": "2026-06-21T19:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8121200203895569,
         "timestamp": "2026-06-21T19:31:22Z",
         "source": "yahoo"
       },
@@ -9724,6 +10228,111 @@
         "price": 0.8071699738502502,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 0.8069499731063843,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8065800070762634,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8059200048446655,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8053699731826782,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8052600026130676,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8045099973678589,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8049399852752686,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8049700260162354,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8055800199508667,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8057000041007996,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8051400184631348,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8050000071525574,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8050900101661682,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8053900003433228,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8052300214767456,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8049100041389465,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8052399754524231,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8052999973297119,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8050000071525574,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8050199747085571,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8044400215148926,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "NZD/CHF": [
@@ -10089,11 +10698,6 @@
       }
     ],
     "NZD/HKD": [
-      {
-        "price": 4.497300148010254,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
       {
         "price": 4.497300148010254,
         "timestamp": "2026-06-21T11:01:30Z",
@@ -10553,99 +11157,29 @@
         "price": 4.462200164794922,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 4.45959997177124,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 4.455699920654297,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 4.45359992980957,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 4.447299957275391,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
       }
     ],
     "NZD/JPY": [
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T18:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T18:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 92.59200286865234,
-        "timestamp": "2026-06-21T19:01:30Z",
-        "source": "yahoo"
-      },
       {
         "price": 92.59200286865234,
         "timestamp": "2026-06-21T19:31:22Z",
@@ -11020,99 +11554,114 @@
         "price": 91.89399719238281,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 91.80899810791016,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.79100036621094,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.75499725341797,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.7239990234375,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.63899993896484,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.61199951171875,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.62699890136719,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.68399810791016,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.68299865722656,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.6719970703125,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.62000274658203,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.60800170898438,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.58300018310547,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.59600067138672,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.55799865722656,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.51499938964844,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.54100036621094,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.53399658203125,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.54399871826172,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.54399871826172,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 91.58200073242188,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "NZD/USD": [
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T18:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T18:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.5742176175117493,
-        "timestamp": "2026-06-21T19:01:30Z",
-        "source": "yahoo"
-      },
       {
         "price": 0.5742176175117493,
         "timestamp": "2026-06-21T19:31:22Z",
@@ -11486,6 +12035,111 @@
       {
         "price": 0.5695084929466248,
         "timestamp": "2026-06-23T10:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5691519975662231,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5686664581298828,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5684078931808472,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5676013231277466,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5676013231277466,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.567375898361206,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5676335096359253,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5678591728210449,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5676657557487488,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5677624344825745,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5672793388366699,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5672149658203125,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5669255256652832,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5670220255851746,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5668933987617493,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5667327642440796,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5667327642440796,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5670220255851746,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5667648911476135,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5668291449546814,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5671827793121338,
+        "timestamp": "2026-06-23T21:01:33Z",
         "source": "yahoo"
       }
     ],
@@ -12291,96 +12945,6 @@
     "USD/CHF": [
       {
         "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T18:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T18:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
-        "timestamp": "2026-06-21T19:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 0.8064000010490417,
         "timestamp": "2026-06-21T19:31:22Z",
         "source": "yahoo"
       },
@@ -12753,34 +13317,114 @@
         "price": 0.8097299933433533,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 0.8100100159645081,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8100299835205078,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8097900152206421,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8097800016403198,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8095700144767761,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8094199895858765,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8085299730300903,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8087900280952454,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8097500205039978,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.809440016746521,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8098400235176086,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8099600076675415,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8102999925613403,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8103299736976624,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8101999759674072,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8103899955749512,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8099600076675415,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8096699714660645,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8098800182342529,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8098099827766418,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8093500137329102,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "USD/HKD": [
-      {
-        "price": 7.83650016784668,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 7.83650016784668,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 7.83650016784668,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 7.83650016784668,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 7.83650016784668,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
       {
         "price": 7.83650016784668,
         "timestamp": "2026-06-21T13:01:32Z",
@@ -13155,99 +13799,114 @@
         "price": 7.839200019836426,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 7.839900016784668,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.839900016784668,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.839759826660156,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.839990139007568,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.839789867401123,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.839900016784668,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.840199947357178,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.840099811553955,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.840280055999756,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.840400218963623,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.84060001373291,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.840400218963623,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.840670108795166,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.84060001373291,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.840700149536133,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.840819835662842,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.840400218963623,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.840799808502197,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.840000152587891,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.840400218963623,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 7.840199947357178,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "USD/JPY": [
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T18:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T18:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 161.27999877929688,
-        "timestamp": "2026-06-21T19:01:30Z",
-        "source": "yahoo"
-      },
       {
         "price": 161.27999877929688,
         "timestamp": "2026-06-21T19:31:22Z",
@@ -13622,94 +14281,114 @@
         "price": 161.39100646972656,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 161.3719940185547,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.468994140625,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.51400756835938,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.58900451660156,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.45199584960938,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.57699584960938,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.47500610351562,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.52000427246094,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.56900024414062,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.51400756835938,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.5780029296875,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.57200622558594,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.6020050048828,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.60800170898438,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.56500244140625,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.58599853515625,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.56199645996094,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.5240020751953,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.60699462890625,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.57000732421875,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 161.4810028076172,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "USD/NOK": [
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T11:31:36Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T12:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T12:31:23Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T13:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T13:31:22Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T14:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T14:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T15:01:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T15:31:18Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T16:01:37Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T16:31:25Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T17:01:32Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T17:31:26Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T18:01:29Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.681180000305176,
-        "timestamp": "2026-06-21T18:31:19Z",
-        "source": "yahoo"
-      },
       {
         "price": 9.681180000305176,
         "timestamp": "2026-06-21T19:01:30Z",
@@ -14089,19 +14768,109 @@
         "price": 9.72974967956543,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 9.741350173950195,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.749279975891113,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.763449668884277,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.779239654541016,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.783379554748535,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.783760070800781,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.78754997253418,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.780349731445312,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.777409553527832,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.776880264282227,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.785750389099121,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.789549827575684,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.793000221252441,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.793350219726562,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.794719696044922,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.794949531555176,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.792679786682129,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.795849800109863,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.793180465698242,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.772170066833496,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "USD/SEK": [
-      {
-        "price": 9.574080467224121,
-        "timestamp": "2026-06-21T10:31:19Z",
-        "source": "yahoo"
-      },
-      {
-        "price": 9.574080467224121,
-        "timestamp": "2026-06-21T11:01:30Z",
-        "source": "yahoo"
-      },
       {
         "price": 9.574080467224121,
         "timestamp": "2026-06-21T11:31:36Z",
@@ -14556,6 +15325,31 @@
         "price": 9.667920112609863,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 9.681550025939941,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.685500144958496,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.698949813842773,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.708749771118164,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.742250442504883,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
       }
     ],
     "CAD/CHF": [
@@ -14913,6 +15707,111 @@
         "price": 0.5710800290107727,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 0.5709999799728394,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.570900022983551,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5707700252532959,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5707200169563293,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5705199837684631,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.570330023765564,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.569920003414154,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5702800154685974,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.570389986038208,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5701599717140198,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5703099966049194,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.570360004901886,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.570330023765564,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5702099800109863,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5701599717140198,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.570169985294342,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5698500275611877,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5697900056838989,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5698400139808655,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5699399709701538,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.5694100260734558,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "GBP/USD": [
@@ -15214,6 +16113,111 @@
       {
         "price": 1.323118805885315,
         "timestamp": "2026-06-23T10:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.321719765663147,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3223665952682495,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3216325044631958,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3213706016540527,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3218421936035156,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3209515810012817,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3210039138793945,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.321283221244812,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3202539682388306,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3197312355041504,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3189306259155273,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3189828395843506,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3186696767807007,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3186001777648926,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.318878412246704,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.31851327419281,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3190349340438843,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3199751377105713,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.319713830947876,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3202366828918457,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.3206549882888794,
+        "timestamp": "2026-06-23T21:01:33Z",
         "source": "yahoo"
       }
     ],
@@ -15572,6 +16576,111 @@
         "price": 1.417889952659607,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.4184499979019165,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4188499450683594,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4185600280761719,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4188499450683594,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4188400506973267,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.419029951095581,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4186300039291382,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4180899858474731,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4196799993515015,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4196200370788574,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.419950008392334,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4199600219726562,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.420740008354187,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4210000038146973,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4206000566482544,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4212000370025635,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.421239972114563,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4210100173950195,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4211900234222412,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4208799600601196,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4205399751663208,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "USD/SGD": [
@@ -15914,6 +17023,111 @@
         "price": 1.2946799993515015,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.2953100204467773,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2954299449920654,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2955800294876099,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2959799766540527,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.295680046081543,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2961100339889526,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.295930027961731,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2961299419403076,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2967100143432617,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.29653000831604,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2968599796295166,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2969499826431274,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2971899509429932,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2971099615097046,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2971500158309937,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2972300052642822,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2970600128173828,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.296779990196228,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.2970000505447388,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.296720027923584,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.295799970626831,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "CHF/HKD": [
@@ -16130,6 +17344,111 @@
       {
         "price": 9.68220043182373,
         "timestamp": "2026-06-23T10:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.678099632263184,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.67870044708252,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.68239974975586,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.677599906921387,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.679400444030762,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.687199592590332,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.692099571228027,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.695799827575684,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.6806001663208,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.68589973449707,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.68179988861084,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.679699897766113,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.676300048828125,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.675700187683105,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.677399635314941,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.674400329589844,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.680399894714355,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.683600425720215,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.679699897766113,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.681400299072266,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 9.678899765014648,
+        "timestamp": "2026-06-23T21:01:33Z",
         "source": "yahoo"
       }
     ],
@@ -16348,6 +17667,111 @@
         "price": 12.013790130615234,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 12.024080276489258,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.033320426940918,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.054309844970703,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.074199676513672,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.083100318908691,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.085519790649414,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.102720260620117,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.090020179748535,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.072409629821777,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.077150344848633,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.080349922180176,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.083430290222168,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.082039833068848,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.087599754333496,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.090200424194336,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.087300300598145,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.095199584960938,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.09630012512207,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.095399856567383,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.094300270080566,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.079500198364258,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "EUR/CHF": [
@@ -16394,6 +17818,11 @@
       {
         "price": 0.924019992351532,
         "timestamp": "2026-06-23T10:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.9216399788856506,
+        "timestamp": "2026-06-23T19:01:41Z",
         "source": "yahoo"
       }
     ],
@@ -16546,6 +17975,111 @@
       {
         "price": 0.8624799847602844,
         "timestamp": "2026-06-23T10:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8629500269889832,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8622199892997742,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8621699810028076,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8618900179862976,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8615900278091431,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8621799945831299,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8624699711799622,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8619599938392639,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8618800044059753,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8625100255012512,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8628699779510498,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8627200126647949,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8628600239753723,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8629099726676941,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8628699779510498,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8630399703979492,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8626599907875061,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8622199892997742,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8622499704360962,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8619300127029419,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8617500066757202,
+        "timestamp": "2026-06-23T21:01:33Z",
         "source": "yahoo"
       }
     ],
@@ -16764,6 +18298,111 @@
         "price": 11.103599548339844,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 11.109910011291504,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.115400314331055,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.123499870300293,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.138569831848145,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.1427001953125,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.141400337219238,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.150699615478516,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.138999938964844,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.126199722290039,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.129739761352539,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.137200355529785,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.140399932861328,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.14330005645752,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.143810272216797,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.146499633789062,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.146100044250488,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.146100044250488,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.146349906921387,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.145660400390625,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.144309997558594,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.136079788208008,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "EUR/SEK": [
@@ -16981,6 +18620,66 @@
         "price": 11.032440185546875,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 11.041600227355957,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.042940139770508,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.050359725952148,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.057820320129395,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.06054973602295,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.058819770812988,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.060370445251465,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.051259994506836,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.051580429077148,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.060709953308105,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.07470989227295,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 11.088199615478516,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
       }
     ],
     "GBP/CHF": [
@@ -17133,6 +18832,111 @@
         "price": 1.0712300539016724,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.0703500509262085,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.070989966392517,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.0699299573898315,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.0699700117111206,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.0700299739837646,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.069000005722046,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.0678399801254272,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.06850004196167,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.0690300464630127,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.068120002746582,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.0680500268936157,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.0683000087738037,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.0684599876403809,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.0684200525283813,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.06836998462677,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.0684599876403809,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.06836998462677,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.068660020828247,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.0686700344085693,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.0690900087356567,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.0678000450134277,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "GBP/SEK": [
@@ -17284,6 +19088,51 @@
       {
         "price": 12.790160179138184,
         "timestamp": "2026-06-23T10:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.794599533081055,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.806070327758789,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.815549850463867,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.82898998260498,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.851420402526855,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.855170249938965,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.856249809265137,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.859399795532227,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.854000091552734,
+        "timestamp": "2026-06-23T21:01:33Z",
         "source": "yahoo"
       }
     ],
@@ -17469,6 +19318,31 @@
         "price": 1.4773900508880615,
         "timestamp": "2026-06-22T19:01:35Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.4757000207901,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.475890040397644,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4756300449371338,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4756900072097778,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.4747600555419922,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "GBP/NOK": [
@@ -17615,6 +19489,111 @@
       {
         "price": 12.873029708862305,
         "timestamp": "2026-06-23T10:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.873640060424805,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.89111042022705,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.900699615478516,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.921870231628418,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.931989669799805,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.921469688415527,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.925250053405762,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.92138957977295,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.907210350036621,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.903129577636719,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.906450271606445,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.91217041015625,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.912590026855469,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.913700103759766,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.91646957397461,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.913960456848145,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.918689727783203,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.927109718322754,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.925310134887695,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.928569793701172,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 12.917900085449219,
+        "timestamp": "2026-06-23T21:01:33Z",
         "source": "yahoo"
       }
     ],
@@ -17763,6 +19742,56 @@
         "price": 1.7121800184249878,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.7117199897766113,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.71219003200531,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7112200260162354,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7124600410461426,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7118699550628662,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7111599445343018,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7109099626541138,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7124500274658203,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.711150050163269,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.7108700275421143,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
       }
     ],
     "AUD/HKD": [
@@ -17816,6 +19845,111 @@
       {
         "price": 0.22378000617027283,
         "timestamp": "2026-06-23T10:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22391000390052795,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22411000728607178,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.2242099940776825,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22452999651432037,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22453999519348145,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.2246199995279312,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22450000047683716,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.2244199961423874,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22450000047683716,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22443999350070953,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22463999688625336,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.2246599942445755,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22476999461650848,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.2247299998998642,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22477999329566956,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22484000027179718,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22484999895095825,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.2247299998998642,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22484000027179718,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22481000423431396,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.22468000650405884,
+        "timestamp": "2026-06-23T21:01:33Z",
         "source": "yahoo"
       }
     ],
@@ -17911,6 +20045,111 @@
         "price": 16.58009910583496,
         "timestamp": "2026-06-23T10:01:41Z",
         "source": "yahoo"
+      },
+      {
+        "price": 16.558799743652344,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.55459976196289,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.53569984436035,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.51650047302246,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.496200561523438,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.50779914855957,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.490800857543945,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.508699417114258,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.516700744628906,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.510900497436523,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.502399444580078,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.4955997467041,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.493000030517578,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.492799758911133,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.484800338745117,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.486600875854492,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.485700607299805,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.482799530029297,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.481199264526367,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.482500076293945,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 16.476200103759766,
+        "timestamp": "2026-06-23T21:01:33Z",
+        "source": "yahoo"
       }
     ],
     "SGD/HKD": [
@@ -17957,6 +20196,111 @@
       {
         "price": 6.053699970245361,
         "timestamp": "2026-06-23T10:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.051000118255615,
+        "timestamp": "2026-06-23T10:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.050099849700928,
+        "timestamp": "2026-06-23T11:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.049699783325195,
+        "timestamp": "2026-06-23T11:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.046999931335449,
+        "timestamp": "2026-06-23T12:01:39Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.047500133514404,
+        "timestamp": "2026-06-23T12:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.047599792480469,
+        "timestamp": "2026-06-23T13:01:38Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.047900199890137,
+        "timestamp": "2026-06-23T13:31:28Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.047800064086914,
+        "timestamp": "2026-06-23T14:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.0447001457214355,
+        "timestamp": "2026-06-23T14:31:31Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.045599937438965,
+        "timestamp": "2026-06-23T15:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.044400215148926,
+        "timestamp": "2026-06-23T16:01:46Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.043700218200684,
+        "timestamp": "2026-06-23T16:31:33Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.042900085449219,
+        "timestamp": "2026-06-23T17:01:42Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.042799949645996,
+        "timestamp": "2026-06-23T17:31:24Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.043099880218506,
+        "timestamp": "2026-06-23T18:01:48Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.042500019073486,
+        "timestamp": "2026-06-23T18:31:34Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.043000221252441,
+        "timestamp": "2026-06-23T19:01:41Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.0447001457214355,
+        "timestamp": "2026-06-23T19:31:30Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.043900012969971,
+        "timestamp": "2026-06-23T20:01:47Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.044600009918213,
+        "timestamp": "2026-06-23T20:31:19Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 6.047299861907959,
+        "timestamp": "2026-06-23T21:01:33Z",
         "source": "yahoo"
       }
     ],
