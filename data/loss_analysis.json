@@ -7,5 +7,14 @@
     "analysis": "## What Went Wrong\n\nThe trade was fundamentally compromised from the outset by a severe structural conflict: a 5/5 ALIGNED_BEAR ribbon with a death-cross SMA structure directly opposed a counter-trend long entry, yet this was treated as a manageable risk rather than a disqualifying condition. The Fundamental score of 3/10 \u2014 driven by CAD rates falling against rising AUD rates and 64% net AUD long positioning \u2014 represented a macro and institutional headwind that historically overwhelms short-term technical patterns like double-bottoms. The NEWS_WARNING about CAD CPI/employment and RBA commentary within 48 hours was explicitly flagged yet the trade was still marked TRADE_THIS: YES, meaning high-impact catalysts almost certainly accelerated the move against the position before the technical setup could develop. The 6/10 confidence threshold was too low to justify a counter-trend entry into a confirmed bear ribbon with weak fundamentals and imminent adverse news risk.\n\nPATTERN: Never enter counter-trend longs when ALIGNED_BEAR ribbon is 5/5 AND fundamental score \u22644 AND major catalyst news is due within 48h.",
     "pattern_rule": "Never enter counter-trend longs when ALIGNED_BEAR ribbon is 5/5 AND fundamental score \u22644 AND major catalyst news is due ",
     "analysed_at": "2026-06-22 16:07:11"
+  },
+  {
+    "id": "1032",
+    "pair": "NZD/HKD",
+    "status": "LOSS",
+    "r_multiple": -1.0,
+    "analysis": "## What Went Wrong\n\nThe bearish EMA ribbon (fully aligned and fanning 5/5) was the dominant structural signal but was critically underweighted against short-term oscillator readings \u2014 a fully fanned bearish ribbon on higher timeframes nearly always overrides oversold bounces, as price continues to find new lows before any meaningful reversal. The triple oscillator confluence (RSI oversold + pin bar) was a classic **bear market oversold trap**: in entrenched downtrends, oscillators can remain oversold or reset lower without price recovering, making mean-reversion longs extremely low-probability. The 4H death-cross structure was explicitly flagged as overhead resistance, meaning the trade was entering against two compounding technical headwinds with only 351 pips of stop room in a pair showing sustained directional momentum. The warning sign that should have prevented this trade was the internal contradiction: a TECHNICAL_SCORE of 7 was inflated by oscillator signals while ignoring that the trend-following components (ribbon, death cross, SMA structure) were unanimously bearish \u2014 a divided technical picture should never score 7 or justify execution.\n\nPATTERN: Never BUY into a fully fanned bearish EMA ribbon (5/5); oversold oscillators in strong downtrends are traps, not reversals.",
+    "pattern_rule": "Never BUY into a fully fanned bearish EMA ribbon (5/5); oversold oscillators in strong downtrends are traps, not reversa",
+    "analysed_at": "2026-06-24 09:22:44"
   }
 ]

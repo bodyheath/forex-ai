@@ -2709,7 +2709,7 @@ def run(log=print) -> dict:
                 })
             _dash_open_bal = float(_fs_d.get("daily_opening_balance") or 0)
             _dash_pnl_usd  = float(_fs_d.get("daily_pnl_dollars") or 0)
-            _dash_bal      = _dash_open_bal + _dash_pnl_usd
+            _dash_bal      = float(_fs_d.get("balance") or 0) or (_dash_open_bal + _dash_pnl_usd)
             _dash_peak     = float(_fs_d.get("peak_balance") or _dash_bal or 10000)
             _dash_ret      = (_dash_bal - 10000.0) / 10000.0 * 100 if _dash_bal else 0.0
 
