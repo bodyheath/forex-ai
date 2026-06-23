@@ -697,226 +697,284 @@ def send_master_scan_report(
     expiry_alerts: list = None,
     monitor_gap_mins: int = 0,
 ):
-    scan_emoji = {
+    if not WEBHOOK_HEALTH:
+        return False
+
+    yes_trades     = yes_trades or []
+    blocked_trades = blocked_trades or []
+    watch_list     = watch_list or []
+    expiry_alerts  = expiry_alerts or []
+
+    # ── Color: green=new trade, red=issue, orange=watchlist, blue=clean ──────────
+    has_issues = bool(expiry_alerts or monitor_gap_mins > 120 or td_calls > 600)
+    if yes_trades:
+        color = 0x2ECC71
+    elif has_issues:
+        color = 0xE74C3C
+    elif watch_list:
+        color = 0xE67E22
+    else:
+        color = 0x3498DB
+
+    # ── Title ────────────────────────────────────────────────────────────────────
+    _mode_emoji = {
         "full": "\U0001f305", "morning": "☀️",
         "prelondon": "\U0001f306", "preny": "\U0001f303",
     }.get(scan_mode, "\U0001f916")
-    scan_name = {
+    _mode_name = {
         "full": "6am Full Scan", "morning": "9am Morning Scan",
         "prelondon": "5pm Pre-London", "preny": "11pm Pre-New York",
-    }.get(scan_mode, scan_mode)
+    }.get(scan_mode, scan_mode.title())
+    if not auckland_time:
+        try:
+            import zoneinfo as _zi
+            auckland_time = datetime.now(_zi.ZoneInfo("Pacific/Auckland")).strftime("%H:%M NZST")
+        except Exception:
+            auckland_time = datetime.now(timezone.utc).strftime("%H:%M UTC")
+    if not scan_date:
+        scan_date = datetime.now(timezone.utc).strftime("%d %b %Y")
+    _title = f"{_mode_emoji} {_mode_name} · {auckland_time} · {scan_date}"
 
-    # Color driven by fund daily P&L
-    if daily_pnl_pct > 1.0:
-        color = 0x00FF88
-    elif daily_pnl_pct >= 0:
-        color = 0x27AE60
-    elif daily_pnl_pct > -1.0:
-        color = 0xF39C12
+    # ── Description (one-liner summary) ─────────────────────────────────────────
+    if yes_trades:
+        _desc_lead = f"\U0001f7e2 {len(yes_trades)} new fund trade(s) opened"
+    elif blocked_trades:
+        _desc_lead = f"⛔ {len(blocked_trades)} trade(s) blocked"
+    elif watch_list:
+        _desc_lead = f"\U0001f440 {len(watch_list)} pair(s) on watch list"
     else:
-        color = 0xFF3333
+        _desc_lead = "No new setups — waiting for cleaner opportunities"
+    _description = (
+        f"{_desc_lead}\n"
+        f"Fund: **${fund_balance:,.2f}** ({daily_pnl_pct:+.2f}% today) · "
+        f"{open_count}/4 slots used"
+    )
 
     fields = []
 
-    # ── SECTION 1: FUND PERFORMANCE ─────────────────────────────────────────────
-    fund_emoji   = "\U0001f4c8" if daily_pnl_pct >= 0 else "\U0001f4c9"
-    dd_emoji     = "✅" if drawdown_pct < 3 else ("⚠️" if drawdown_pct < 7 else "\U0001f6a8")
+    # ── SECTION 1: NEW SETUPS ─────────────────────────────────────────────────────
+    _setup_lines = []
+    for _t in yes_trades:
+        _p   = _t.get("pair", "")
+        _d   = ((_t.get("parsed") or {}).get("direction") or _t.get("direction", ""))
+        _c   = float((_t.get("parsed") or {}).get("confidence") or _t.get("conf") or 0)
+        _en  = float((_t.get("parsed") or {}).get("entry") or _t.get("entry") or 0)
+        _sl  = float((_t.get("parsed") or {}).get("stop_loss") or _t.get("stop") or 0)
+        _t1  = float((_t.get("parsed") or {}).get("target") or _t.get("t1") or 0)
+        _t2  = float((_t.get("parsed") or {}).get("t2_price") or _t.get("t2") or 0)
+        _rr  = float((_t.get("parsed") or {}).get("reward_risk") or _t.get("rr") or 0)
+        _szp = float((_t.get("_fs_sizing") or {}).get("pct") or risk_pct)
+        _rd  = round(fund_balance * _szp / 100)
+        _de  = "\U0001f4c8" if str(_d).upper() == "BUY" else "\U0001f4c9"
+        _t2s = f" · T2: `{_t2:.5f}`" if _t2 else ""
+        _setup_lines.append(
+            f"✅ {_de} **{_p} {_d}** · conf {_c:.1f}/10\n"
+            f"   Entry: `{_en:.5f}` · Stop: `{_sl:.5f}`\n"
+            f"   T1: `{_t1:.5f}`{_t2s} · R:R {_rr:.1f} · Risk: ${_rd}"
+        )
+    for _b in blocked_trades:
+        _bp  = _b.get("pair", "")
+        _bd  = _b.get("direction", "")
+        _bc  = float(_b.get("conf") or 0)
+        _br  = str(_b.get("reason") or "blocked")[:80]
+        _setup_lines.append(
+            f"⛔ **{_bp} {_bd}** · conf {_bc:.1f}/10\n"
+            f"   {_br}"
+        )
+    if not _setup_lines:
+        _setup_lines.append(
+            "No new setups this scan\n"
+            "Waiting for cleaner opportunities"
+        )
     fields.append({
-        "name":  "\U0001f4b0 Fund Performance",
-        "value": (
-            f"Balance: **${fund_balance:,.2f}** ({fund_return_pct:+.2f}% today)\n"
-            f"{fund_emoji} Daily P&L: {daily_pnl_pct:+.2f}% (${daily_pnl_dollars:+.2f})\n"
-            f"{dd_emoji} Drawdown: {drawdown_pct:.2f}% from peak (${fund_peak:,.2f})\n"
-            f"Sizing: {sizing_mode} ({risk_pct:.2f}% per trade)"
-        ),
+        "name": "\U0001f3af New Fund Trades",
+        "value": "\n\n".join(_setup_lines)[:1024],
         "inline": False,
     })
 
-    # ── SECTION 2: FTMO PROGRESS ────────────────────────────────────────────────
-    _ftmo_pct_of_target = (ftmo_current_pct / ftmo_target_pct * 100) if ftmo_target_pct > 0 else 0
-    ftmo_bar = _progress_bar(_ftmo_pct_of_target, width=15)
-    streak_txt = (
-        f"\U0001f525 {consecutive_wins} wins" if consecutive_wins > 0
-        else f"❄️ {consecutive_losses} losses"
-    )
-    fields.append({
-        "name":  "\U0001f3c6 FTMO Progress",
-        "value": (
-            f"`{ftmo_bar}` {ftmo_current_pct:+.2f}% / {ftmo_target_pct}%\n"
-            f"Daily limit: {ftmo_daily_limit_pct}% | Sharpe: {sharpe_ratio:.2f}\n"
-            f"Streak: {streak_txt}"
-        ),
-        "inline": False,
-    })
-
-    # ── SECTION 3: OPEN FUND TRADES ─────────────────────────────────────────────
-    if open_fund_trades:
-        trades_text = ""
-        for t in open_fund_trades:
-            _pair_t    = t.get("pair", "")
-            _dir_t     = t.get("direction", "")
-            _de_t      = "\U0001f4c8" if _dir_t == "BUY" else "\U0001f4c9"
-            _prog_t    = t.get("progress_pct", 0)
-            _next_t    = t.get("next_target", "T1")
-            _pips_t    = t.get("pips_unrealised", 0)
-            _usd_t     = t.get("dollars_unrealised", 0)
-            _days_t    = t.get("days_open", 0)
-            _t1h_t     = t.get("t1_hit", False)
-            _t2h_t     = t.get("t2_hit", False)
-            _casc_t    = ("\U0001f6e1️\U0001f6e1️" if _t2h_t
-                          else ("\U0001f6e1️" if _t1h_t else ""))
-            _bar_t     = _progress_bar(min(max(_prog_t, 0), 100), width=10)
-            _pnl_e_t   = "\U0001f7e2" if _pips_t >= 0 else "\U0001f534"
-            trades_text += (
-                f"{_de_t} **{_pair_t}** {_casc_t}\n"
-                f"`{_bar_t}` {max(_prog_t, 0):.0f}% → {_next_t}\n"
-                f"{_pnl_e_t} {_pips_t:+.1f}p (${_usd_t:+.2f}) · {_days_t}d open\n\n"
-            )
+    # ── SECTION 2: WATCH LIST (only if populated) ─────────────────────────────────
+    if watch_list:
+        _wl_lines = []
+        for _w in watch_list[:5]:
+            _wp  = _w.get("pair", "")
+            _wd  = _w.get("direction", "")
+            _wc  = float(_w.get("conf") or _w.get("confidence") or 0)
+            _wr  = str(_w.get("reason") or "")[:55]
+            _wde = "\U0001f4c8" if str(_wd).upper() == "BUY" else "\U0001f4c9"
+            _wl_lines.append(f"· {_wde} **{_wp}** conf {_wc:.1f}/10 — {_wr}")
+        if len(watch_list) > 5:
+            _wl_lines.append(f"_…and {len(watch_list) - 5} more_")
         fields.append({
-            "name":  f"\U0001f4ca Open Fund Trades ({len(open_fund_trades)})",
-            "value": trades_text.strip() or "None",
+            "name": f"\U0001f440 Watch List ({len(watch_list)} pairs)",
+            "value": "\n".join(_wl_lines)[:1024],
             "inline": False,
         })
+
+    # ── SECTION 3: FUND HEALTH ────────────────────────────────────────────────────
+    _slots_free  = max(0, 4 - open_count)
+    _risk_d      = round(fund_balance * risk_pct / 100)
+    _ftmo_used   = abs(daily_pnl_pct)
+    _dd_e        = "✅" if drawdown_pct < 3 else ("⚠️" if drawdown_pct < 7 else "\U0001f6a8")
+    if consecutive_wins >= 2:
+        _streak = f"\U0001f525 {consecutive_wins} wins in a row"
+    elif consecutive_losses >= 2:
+        _streak = f"⚠️ {consecutive_losses} losses in a row"
     else:
-        fields.append({
-            "name": "\U0001f4ca Open Fund Trades", "value": "No open fund trades", "inline": False,
-        })
-
-    # ── SECTION 4: NEW FUND ALERTS ──────────────────────────────────────────────
-    if new_fund_alerts:
-        alerts_text = ""
-        for a in new_fund_alerts:
-            _pair_a  = a.get("pair", "")
-            _dir_a   = a.get("direction", "")
-            _conf_a  = a.get("conf", 0)
-            _entry_a = a.get("entry", 0)
-            _stop_a  = a.get("stop", 0)
-            _t1_a    = a.get("t1", 0)
-            _rr_a    = a.get("rr", 0)
-            _chk_a   = a.get("checklist", 0)
-            _de_a    = "\U0001f4c8" if _dir_a == "BUY" else "\U0001f4c9"
-            _tv_a    = _get_tradingview_url(_pair_a)
-            alerts_text += (
-                f"{_de_a} **{_pair_a} {_dir_a}**\n"
-                f"Entry: `{_entry_a:.5f}` · Stop: `{_stop_a:.5f}`\n"
-                f"T1: `{_t1_a:.5f}` · R:R {_rr_a}:1\n"
-                f"Conf: {_conf_a}/10 · Checklist: {_chk_a}/10\n"
-                f"[\U0001f4ca Chart]({_tv_a})\n\n"
-            )
-        fields.append({
-            "name":  f"\U0001f6a8 NEW TRADE ALERTS ({len(new_fund_alerts)})",
-            "value": alerts_text.strip(),
-            "inline": False,
-        })
-
-    # ── SECTION 5: RECENTLY CLOSED TRADES ───────────────────────────────────────
-    if newly_closed_trades:
-        closed_text = ""
-        for t in newly_closed_trades[:5]:
-            _pair_c    = t.get("pair", "")
-            _out_c     = t.get("outcome", "")
-            _pips_c    = t.get("pips", 0)
-            _usd_c     = t.get("dollars", 0)
-            _e_c = ("✅" if ("WIN" in _out_c or "PARTIAL" in _out_c)
-                    else ("❌" if "LOSS" in _out_c else "⏱️"))
-            closed_text += (
-                f"{_e_c} **{_pair_c}** — {_out_c}\n"
-                f"{_pips_c:+.1f}p · ${_usd_c:+.2f}\n"
-            )
-        fields.append({
-            "name": "\U0001f4cb Recently Closed", "value": closed_text.strip(), "inline": False,
-        })
-
-    # ── SECTION 6: WATCH LIST ────────────────────────────────────────────────────
-    if watch_list_pairs:
-        watch_text = ""
-        for w in watch_list_pairs[:5]:
-            _pair_w  = w.get("pair", "")
-            _dir_w   = w.get("direction", "")
-            _conf_w  = w.get("conf", 0)
-            _grade_w = w.get("grade", "")
-            _rsn_w   = w.get("reason", "")
-            _de_w    = "\U0001f4c8" if _dir_w == "BUY" else "\U0001f4c9"
-            _tv_w    = _get_tradingview_url(_pair_w)
-            watch_text += (
-                f"{_de_w} **{_pair_w}** Grade {_grade_w} · {_conf_w}/10\n"
-                f"{_rsn_w[:55] if _rsn_w else ''}\n"
-                f"[\U0001f4ca Chart]({_tv_w})\n\n"
-            )
-        fields.append({
-            "name":  f"\U0001f440 Watch List ({len(watch_list_pairs)} pairs)",
-            "value": watch_text.strip() or "Nothing approaching",
-            "inline": False,
-        })
-
-    # ── SECTION 7: RESEARCH SUMMARY ─────────────────────────────────────────────
-    _wr_e = ("\U0001f4c8" if research_win_rate > 45
-             else ("⚠️" if research_win_rate > 30 else "\U0001f534"))
-    _recent_ms_txt = ""
-    for m in (recent_research_milestones or [])[:5]:
-        _pair_m = m.get("pair", "")
-        _ms_m   = m.get("milestone", "")
-        _pips_m = m.get("pips", 0)
-        _out_m  = m.get("outcome", "")
-        _e_m = ("✅" if ("WIN" in _out_m or "T" in _ms_m)
-                else ("\U0001f6e1️" if "cascade" in _out_m.lower() else "❌"))
-        _recent_ms_txt += f"{_e_m} {_pair_m} {_ms_m}: {_pips_m:+.1f}p\n"
+        _streak = "➡️ Neutral"
     fields.append({
-        "name": "\U0001f52c Research Trades",
+        "name": "\U0001f4b0 Fund Health",
         "value": (
-            f"Open: **{research_open}** · Closed: **{research_closed}**\n"
-            f"{_wr_e} Win rate: **{research_win_rate:.0f}%** ({research_decisive} decisive)\n"
-            f"Avg win: +{research_avg_win_pips:.0f}p · Avg loss: -{research_avg_loss_pips:.0f}p\n"
-            f"Profit factor: {research_profit_factor:.2f}"
-            + (f"\n\n**Recent milestones:**\n{_recent_ms_txt}" if _recent_ms_txt else "")
+            f"Balance: **${fund_balance:,.2f}** ({daily_pnl_pct:+.2f}% today)\n"
+            f"Peak: ${peak_balance:,.2f} · {_dd_e} Drawdown: {drawdown_pct:.2f}%\n"
+            f"Capacity: {open_count}/4 open · {_slots_free} slot(s) free\n"
+            f"Sizing: {risk_pct:.1f}% per trade (${_risk_d} risk)\n"
+            f"FTMO: {_ftmo_used:.2f}% of 5% daily limit\n"
+            f"Streak: {_streak}\n"
+            f"Full details → #fund-alerts ↑"
         ),
         "inline": False,
     })
 
-    # ── SECTIONS 8-10: INLINE CONTEXT TRIO ──────────────────────────────────────
+    # ── SECTION 4: FUND PERFORMANCE ───────────────────────────────────────────────
+    if fund_decisive > 0:
+        _wr_e = "🟢" if fund_win_rate >= 50 else ("🟡" if fund_win_rate >= 35 else "🔴")
+        _perf_val = (
+            f"Trades: **{fund_total}** total · {fund_decisive} decisive\n"
+            f"{_wr_e} Win rate: **{fund_win_rate:.0f}%** "
+            f"({fund_wins}W {fund_protected}P {fund_losses}L)\n"
+            f"Avg win: +{avg_win_pips:.1f}p / +${avg_win_dollars:.0f}\n"
+            f"Avg loss: -{avg_loss_pips:.1f}p / -${avg_loss_dollars:.0f}\n"
+            f"Profit factor: **{profit_factor_dollars:.2f}** (dollar basis)"
+            + (f"\nBest: {best_pair} +{best_pips:.1f}p" if best_pips > 0 else "")
+            + f"\nReturn: {total_return_pct:+.2f}% since inception"
+        )
+    else:
+        _perf_val = (
+            f"Trades taken: {fund_total}\n"
+            "Insufficient data — need decisive outcomes"
+        )
     fields.append({
-        "name": "\U0001f30d Market Context",
-        "value": (
-            f"Regime: **{regime}**\n"
-            f"VIX: {vix} · Threshold: **{threshold}/10**\n"
-            f"Analysed: {pairs_analysed} of {universe_size:,}"
-        ),
-        "inline": True,
+        "name": "\U0001f4c8 Fund Performance",
+        "value": _perf_val[:1024],
+        "inline": False,
     })
+
+    # ── SECTION 5: ML SYSTEM ──────────────────────────────────────────────────────
+    _ML_THRESHOLD = 30
+    if ml_trained == 0:
+        _ml_status = "❌ UNTRAINED — no model yet"
+        _ml_detail = "Needs first training run"
+    elif ml_active or ml_trained >= _ML_THRESHOLD:
+        _ml_status = "✅ ACTIVE — influencing scores"
+        _ml_detail = (
+            f"Win rate: {ml_accuracy:.0f}% · Trained on: {ml_trained} trades\n"
+            f"Last retrain: {ml_last_retrain}"
+        )
+    else:
+        _n_more = _ML_THRESHOLD - ml_trained
+        _ml_status = "⏳ LEARNING — not yet active"
+        _ml_detail = (
+            f"Win rate: {ml_recent_wr:.0f}% on {ml_trained} trades\n"
+            f"Need {_n_more} more decisive trades to activate"
+        )
+    _feat_avg  = (mta_pct + hhhl_pct) / 2 if (mta_pct or hhhl_pct) else 0
+    _feat_note = (
+        "⚠️ Features low — ML training on incomplete data"
+        if _feat_avg < 50 and _feat_avg > 0
+        else ("✅ Features good — ML has clean data" if _feat_avg >= 80 else "")
+    )
+    if ml_recent_wr > 0 and ml_overall_wr > 0:
+        _wr_diff = ml_recent_wr - ml_overall_wr
+        _trend   = "📈 improving" if _wr_diff > 5 else ("📉 declining" if _wr_diff < -5 else "➡️ stable")
+        _trend_l = f"\nRecent WR: {ml_recent_wr:.0f}% ({_trend} vs {ml_overall_wr:.0f}% overall)"
+    elif ml_recent_wr > 0:
+        _trend_l = f"\nRecent WR: {ml_recent_wr:.0f}%"
+    else:
+        _trend_l = ""
+    _ml_val = (
+        f"{_ml_status}\n{_ml_detail}\n"
+        f"\nFeatures: monthly_trend {mta_pct:.0f}% · hhhl {hhhl_pct:.0f}%"
+        + (f"\n{_feat_note}" if _feat_note else "")
+        + _trend_l
+    )
     fields.append({
         "name": "\U0001f916 ML System",
-        "value": (
-            f"AUC: {ml_auc:.3f}\n"
-            f"Gate: {ml_gate_status or 'n/a'}\n"
-            f"Decisive: {ml_decisive_count}\n"
-            f"Updates: {online_model_updates}"
-        ),
-        "inline": True,
-    })
-    fields.append({
-        "name": "\U0001f4e1 System Health",
-        "value": (
-            f"Data quality: {data_quality_pct:.0f}%\n"
-            f"API: {td_calls_used}/800 calls\n"
-            f"COT: {cot_status or 'n/a'}\n"
-            f"Monitor gap: {last_monitor_gap_min:.0f}m\n"
-            f"Scan: {scan_minutes:.0f}m · ${scan_cost_usd:.4f}"
-        ),
-        "inline": True,
+        "value": _ml_val.strip()[:1024],
+        "inline": False,
     })
 
-    alert_summary  = f"\U0001f6a8 {len(new_fund_alerts)} new alert(s) — " if new_fund_alerts else "No new alerts — "
-    closed_summary = f"{len(newly_closed_trades)} trade(s) closed" if newly_closed_trades else "no trades closed"
-    description    = (
-        f"{alert_summary}{closed_summary}\n"
-        f"Fund: **${fund_balance:,.2f}** ({daily_pnl_pct:+.2f}% today) · "
-        f"{len(open_fund_trades) if open_fund_trades else 0} open trades"
+    # ── SECTION 6: RESEARCH TRADES ───────────────────────────────────────────────
+    _rt_wr_e = "🟢" if research_win_rate >= 50 else ("🟡" if research_win_rate >= 35 else "🔴")
+    _conf_tbl = (
+        f"`conf 4-5` {wr_band_45:.0f}% ({n_band_45} trades)\n"
+        f"`conf 5-6` {wr_band_56:.0f}% ({n_band_56} trades)\n"
+        f"`conf 6-7` {wr_band_67:.0f}% ({n_band_67} trades)\n"
+        f"`conf 7+ ` {wr_band_7p:.0f}% ({n_band_7p} trades)"
     )
+    _rt_val = (
+        f"Open: **{research_open}** · Closed: **{research_closed}**\n"
+        f"{_rt_wr_e} Win rate: **{research_win_rate:.0f}%** ({research_decisive} decisive)\n"
+        f"Profit factor: {research_pf:.2f}\n"
+        f"\n**Win rate by confidence:**\n{_conf_tbl}"
+        + (f"\n\n**Best pairs:** {best_pairs_str}" if best_pairs_str else "")
+        + (f"\nAdaptive targets: {adaptive_count} pairs" if adaptive_count > 0 else "")
+    )
+    fields.append({
+        "name": "\U0001f52c Research Trades",
+        "value": _rt_val[:1024],
+        "inline": False,
+    })
+
+    # ── SECTION 7: MARKET CONTEXT ────────────────────────────────────────────────
+    _regime_e = {
+        "trending": "\U0001f4c8", "ranging": "↔️", "volatile": "⚡",
+        "risk-on": "\U0001f7e2", "risk-off": "\U0001f534",
+    }.get((regime or "").lower(), "\U0001f30d")
+    _ctx_parts = [
+        f"Regime: {_regime_e} **{regime or 'Unknown'}**",
+        f"Threshold: **{threshold:.1f}/10**" + (f" · VIX: {vix:.1f}" if vix > 0 else ""),
+    ]
+    if strongest_ccy:
+        _ctx_parts.append(f"Strongest: **{strongest_ccy}**")
+    if weakest_ccy:
+        _ctx_parts.append(f"Weakest: **{weakest_ccy}**")
+    _next_scan = {
+        "full": "9am morning scan", "morning": "5pm pre-London",
+        "prelondon": "11pm pre-New York", "preny": "6am full scan",
+    }.get(scan_mode, "next scheduled scan")
+    _ctx_parts.append(f"Next scan: {_next_scan} NZST")
+    fields.append({
+        "name": "\U0001f30d Market Context",
+        "value": "\n".join(_ctx_parts)[:1024],
+        "inline": False,
+    })
+
+    # ── SECTION 8: SYSTEM HEALTH ─────────────────────────────────────────────────
+    _sys_alerts = list(expiry_alerts)
+    if abs(daily_pnl_pct) > 4:
+        _sys_alerts.append(f"\U0001f6a8 Fund near FTMO daily limit ({abs(daily_pnl_pct):.2f}%/5%)")
+    if monitor_gap_mins > 120:
+        _sys_alerts.append(f"⚠️ Monitor gap {monitor_gap_mins:.0f}m — check cron-job.org")
+    if td_calls > 600:
+        _sys_alerts.append(f"⚠️ API calls {td_calls}/{td_limit} — approaching limit")
+    _alert_str   = "\n".join(_sys_alerts) if _sys_alerts else "✅ All systems normal"
+    _cost_nzd    = scan_cost * 2.2
+    fields.append({
+        "name": "⚙️ System Health",
+        "value": (
+            f"Data quality: {dq_pct:.0f}% · Pairs analysed: {pairs_analysed}\n"
+            f"API: {td_calls}/{td_limit} calls\n"
+            f"Cost: ${scan_cost:.4f} (~${_cost_nzd:.3f} NZD)\n"
+            f"Scan duration: {scan_duration:.0f}m\n"
+            + _alert_str
+        )[:1024],
+        "inline": False,
+    })
 
     return _send_embed(
         WEBHOOK_HEALTH,
-        f"{scan_emoji} Forex AI — {scan_name} · {auckland_time}",
-        description,
+        _title,
+        _description,
         color,
         fields=fields,
     )
