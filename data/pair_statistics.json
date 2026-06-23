@@ -3,7 +3,7 @@
     "n_trades_with_mfe": 5
   },
   "USD/CHF": {
-    "n_trades_with_mfe": 4
+    "n_trades_with_mfe": 5
   },
   "GBP/CHF": {
     "n_trades_with_mfe": 2
@@ -31,25 +31,33 @@
     "n_trades_with_mfe": 1
   },
   "EUR/CHF": {
-    "n_trades_with_mfe": 2
+    "n_trades_with_mfe": 3
   },
   "AUD/CAD": {
     "n_trades_with_mfe": 4
   },
   "CAD/JPY": {
-    "n_trades_with_mfe": 5
+    "n_trades_with_mfe": 6
   },
   "JPY/USD": {
     "n_trades_with_mfe": 0
   },
   "AUD/JPY": {
-    "n_trades_with_mfe": 9
+    "n_trades_with_mfe": 10,
+    "average_mfe_atr": 1.048,
+    "mfe_percentile_25": 0.871,
+    "mfe_percentile_50": 0.943,
+    "mfe_percentile_75": 1.288,
+    "t1_mult": 0.6,
+    "t2_mult": 0.755,
+    "t3_mult": 1.03,
+    "adaptive_active": true
   },
   "USD/CAD": {
-    "n_trades_with_mfe": 0
+    "n_trades_with_mfe": 2
   },
   "AUD/USD": {
-    "n_trades_with_mfe": 7
+    "n_trades_with_mfe": 8
   },
   "CHF/CAD": {
     "n_trades_with_mfe": 0
@@ -64,7 +72,7 @@
     "n_trades_with_mfe": 3
   },
   "GBP/AUD": {
-    "n_trades_with_mfe": 4
+    "n_trades_with_mfe": 5
   },
   "GBP/NZD": {
     "n_trades_with_mfe": 1
@@ -76,7 +84,7 @@
     "n_trades_with_mfe": 0
   },
   "EUR/AUD": {
-    "n_trades_with_mfe": 8
+    "n_trades_with_mfe": 9
   },
   "NZD/CAD": {
     "n_trades_with_mfe": 3
@@ -94,13 +102,13 @@
     "n_trades_with_mfe": 0
   },
   "CAD/HKD": {
-    "n_trades_with_mfe": 1
+    "n_trades_with_mfe": 2
   },
   "HKD/CAD": {
     "n_trades_with_mfe": 0
   },
   "AUD/CHF": {
-    "n_trades_with_mfe": 8
+    "n_trades_with_mfe": 9
   },
   "USD/HKD": {
     "n_trades_with_mfe": 3
@@ -184,7 +192,7 @@
     "n_trades_with_mfe": 2
   },
   "USD/SEK": {
-    "n_trades_with_mfe": 5
+    "n_trades_with_mfe": 6
   },
   "USD/SGD": {
     "n_trades_with_mfe": 1
@@ -196,12 +204,12 @@
     "n_trades_with_mfe": 1
   },
   "EUR/SEK": {
-    "n_trades_with_mfe": 2
+    "n_trades_with_mfe": 3
   },
   "CHF/NOK": {
     "n_trades_with_mfe": 1
   },
   "GBP/SGD": {
-    "n_trades_with_mfe": 1
+    "n_trades_with_mfe": 2
   }
 }
