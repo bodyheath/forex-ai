@@ -885,25 +885,27 @@ def send_master_scan_report(
     )
 
 
-CLOSED_TRADES_STATE_FILE = Path(__file__).resolve().parent.parent / "data" / "discord_closed_trades.json"
-
-
 def _load_closed_trades_state() -> dict:
-    if CLOSED_TRADES_STATE_FILE.exists():
-        try:
-            return json.loads(CLOSED_TRADES_STATE_FILE.read_text(encoding="utf-8"))
-        except Exception:
-            pass
-    return {"message_id": None}
+    try:
+        data = json.loads(DASHBOARD_STATE_FILE.read_text(encoding="utf-8"))
+        mid = data.get("closed_trades_message_id")
+        return {"message_id": mid}
+    except Exception:
+        return {"message_id": None}
 
 
 def _save_closed_trades_state(state: dict) -> None:
     try:
-        CLOSED_TRADES_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-        CLOSED_TRADES_STATE_FILE.write_text(json.dumps(state, indent=2), encoding="utf-8")
-        print(f"[closed-trades] State saved: message_id={state.get('message_id')}")
+        try:
+            data = json.loads(DASHBOARD_STATE_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            data = {}
+        data["closed_trades_message_id"] = state.get("message_id")
+        DASHBOARD_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        DASHBOARD_STATE_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        _log(f"[closed-trades] State saved to discord_dashboard.json: message_id={state.get('message_id')}")
     except Exception as e:
-        print(f"[closed-trades] SAVE FAILED: {e}")
+        _log(f"[closed-trades] SAVE FAILED: {e}")
 
 
 def update_closed_trades_log(
