@@ -6401,6 +6401,7 @@ def _send_telegram_summary(
                     f"📈 <b>FOREX AI FUND</b>",
                     f"Balance: <b>${fund:,.0f} ({fund_ret:+.1f}%)</b> · Peak: ${fund_pk:,.0f}",
                     f"Fund trades: {_n_total} taken · {_n_closed} closed ({_n_wins} WIN · {_n_losses} LOSS) · {_n_open} open",
+                    f"Fund capacity: {_n_open}/4 · {max(0, 4 - _n_open)} slot{'s' if max(0, 4 - _n_open) != 1 else ''} available",
                     f"Drawdown: {dd_pct:.1f}% · {icon} {dd_mode_dash.replace('_',' ').title()} · {rpct:.2f}% risk per trade",
                     f"🤖 ML model: {_ml_status_plain}",
                 ]
