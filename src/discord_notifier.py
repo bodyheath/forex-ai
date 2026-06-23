@@ -1022,34 +1022,50 @@ def update_closed_trades_log(
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
-    # Edit existing message
+    import sys as _sys
+
+    payload = {"embeds": [embed]}
+
     if existing_message_id:
+        edit_url = f"{WEBHOOK_FUND}/messages/{existing_message_id}?wait=true"
         try:
-            _wh_tail = WEBHOOK_FUND.split("webhooks/")[1]
-            edit_url = f"https://discord.com/api/webhooks/{_wh_tail}/messages/{existing_message_id}"
-            resp = requests.patch(edit_url, json={"embeds": [embed]}, timeout=10)
-            if resp.status_code == 200:
-                import sys as _sys
-                print(f"Closed trades log: edited message {existing_message_id}", file=_sys.stdout)
-                return True
-        except Exception:
-            pass
+            resp = requests.patch(edit_url, json=payload, timeout=10)
+        except Exception as exc:
+            print(f"[closed-trades] Edit request failed: {exc}", file=_sys.stdout)
+            return False
 
-    # Post new message
-    try:
-        url  = WEBHOOK_FUND + "?wait=true"
-        resp = requests.post(url, json={"embeds": [embed]}, timeout=10)
         if resp.status_code == 200:
-            msg_id = resp.json().get("id")
-            if msg_id:
-                state["message_id"] = msg_id
-                _save_closed_trades_state(state)
-                import sys as _sys
-                print("Closed trades log: first post — message_id saved", file=_sys.stdout)
+            print(f"[closed-trades] Edited message {existing_message_id} ✅", file=_sys.stdout)
             return True
-    except Exception:
-        pass
+        elif resp.status_code == 404:
+            print(f"[closed-trades] Message {existing_message_id} not found — posting new", file=_sys.stdout)
+            existing_message_id = None
+        else:
+            print(f"[closed-trades] Edit failed {resp.status_code}: {resp.text[:200]}", file=_sys.stdout)
+            return False
 
+    # POST new message — ?wait=true required to get message id back
+    post_url = f"{WEBHOOK_FUND}?wait=true"
+    try:
+        resp = requests.post(post_url, json=payload, timeout=10)
+    except Exception as exc:
+        print(f"[closed-trades] Post request failed: {exc}", file=_sys.stdout)
+        return False
+
+    if resp.status_code == 200:
+        try:
+            new_id = resp.json().get("id")
+        except Exception:
+            new_id = None
+        if new_id:
+            state["message_id"] = new_id
+            _save_closed_trades_state(state)
+            print(f"[closed-trades] Posted new message id={new_id} ✅", file=_sys.stdout)
+        else:
+            print("[closed-trades] Post succeeded but no id in response", file=_sys.stdout)
+        return True
+
+    print(f"[closed-trades] Post failed {resp.status_code}: {resp.text[:200]}", file=_sys.stdout)
     return False
 
 
