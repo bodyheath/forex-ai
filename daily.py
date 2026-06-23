@@ -8248,6 +8248,22 @@ def run() -> int:
         except Exception as _ml_exc:
             _log_line(logf, f"ML model step: {_ml_exc}")
 
+        # Online learner retrain — every full scan, bulk-trains on all closed research trades
+        try:
+            from src import online_learner as _ol_rt
+            _ol_stats = _ol_rt.retrain_all_from_feature_store(
+                log=lambda m: _log_line(logf, m)
+            )
+            _ol_wr = _ol_stats.get("win_rate")
+            _ol_wr_str = f", recent win rate {_ol_wr:.0%}" if _ol_wr is not None else ""
+            _log_line(
+                logf,
+                f"Online learner retrained: {_ol_stats.get('trained', 0)} trades"
+                f"{_ol_wr_str} ({_ol_stats.get('skipped', 0)} skipped)"
+            )
+        except Exception as _ol_exc:
+            _log_line(logf, f"Online learner retrain failed: {_ol_exc}")
+
         # Item 6: GitHub token expiry warning — Monday 6am full scan only
         if scan_mode == "full" and now_ak.weekday() == 0:
             try:
