@@ -4098,6 +4098,7 @@ def _send_telegram_summary(
             except Exception:
                 pass
             _fund_st = _fs.increment_daily_trades(_fund_st)
+            _open_fund_count += 1
             _yt_pass.append(_yt)
         # Stamp ML sizing fields on matching research trades
         try:
