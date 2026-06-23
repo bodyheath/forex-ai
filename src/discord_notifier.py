@@ -903,9 +903,9 @@ def _save_closed_trades_state(state: dict) -> None:
         data["closed_trades_message_id"] = state.get("message_id")
         DASHBOARD_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
         DASHBOARD_STATE_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
-        _log(f"[closed-trades] State saved to discord_dashboard.json: message_id={state.get('message_id')}")
+        print(f"[closed-trades] State saved to discord_dashboard.json: message_id={state.get('message_id')}")
     except Exception as e:
-        _log(f"[closed-trades] SAVE FAILED: {e}")
+        print(f"[closed-trades] SAVE FAILED: {e}")
 
 
 def update_closed_trades_log(
