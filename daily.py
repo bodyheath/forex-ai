@@ -9637,7 +9637,11 @@ def run() -> int:
                 except Exception:
                     pass
 
-                # New fund alerts
+                # New fund alerts — yes_trades is only defined in the full scan scope
+                try:
+                    _dsc_yes = list(yes_trades or [])
+                except NameError:
+                    _dsc_yes = []
                 _dsc_new_alerts = [
                     {
                         "pair":      r.get("pair", ""),
@@ -9649,7 +9653,7 @@ def run() -> int:
                         "rr":        float((r.get("parsed") or {}).get("reward_risk") or 0),
                         "checklist": int((r.get("parsed") or {}).get("checklist_score") or 0),
                     }
-                    for r in (yes_trades or [])
+                    for r in _dsc_yes
                 ]
 
                 # Recently closed trades (exclude still-open)
