@@ -1628,6 +1628,11 @@ def run(log=print) -> dict:
         _release_lock()
         return result
 
+    # Definitive fund trade sets — used to hard-filter all monitor channel sends.
+    fund_pairs = {str(r.get("pair", "")) for r in _fund_open}
+    fund_ids   = {str(r.get("id",   "")) for r in _fund_open}
+    log(f"[monitor] Fund pairs: {fund_pairs}")
+
     if not _fund_open and not _res_open:
         result["skipped_reason"] = "no_open_trades"
         log("Monitor: no open trades — skipping — zero API calls used.")
