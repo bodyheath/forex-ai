@@ -7174,6 +7174,7 @@ def _send_telegram_summary(
                     "📈 <b>FOREX AI FUND</b>",
                     f"Balance: ${_fund_id:,.0f} ({_ret_id:+.1f}%) · Peak: ${_pk_id:,.0f}",
                     f"Fund trades: {len(_all_ft_id)} taken · {len(_cls_ft_id)} closed ({len(_w_ft_id)} WIN · {len(_l_ft_id)} LOSS) · {len(_opn_ft_id)} open",
+                    f"Fund capacity: {len(_opn_ft_id)}/4 · {max(0, 4 - len(_opn_ft_id))} slot{'s' if max(0, 4 - len(_opn_ft_id)) != 1 else ''} available",
                     f"Drawdown: {_dd_id:.1f}% · {_icon_id} {_dd_mode_id.replace('_',' ').title()} · {_rpct_id:.2f}% risk per trade",
                     f"🤖 ML model: {_ml_stat_id}",
                 ]
