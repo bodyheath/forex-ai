@@ -2085,15 +2085,17 @@ def run(log=print) -> dict:
                     if _rr_rng > 0 else 0.0)
         if _rr_prog <= 0 and _rr_stop:
             _res_near_stop_rows.append({
-                "pair": _rr_pair,
-                "dist": round(abs(_rr_cur - _rr_stop) / _rr_pip, 1),
+                "pair":               _rr_pair,
+                "stop_distance_pips": round(abs(_rr_cur - _rr_stop) / _rr_pip, 1),
+                "is_near_stop":       True,
             })
         else:
             _res_hot_target_rows.append({
-                "pair":  _rr_pair,
-                "pct":   round(_rr_prog),
-                "label": _rr_ms,
-                "dist":  round(abs(_rr_tgt - _rr_cur) / _rr_pip, 1) if _rr_tgt else 0,
+                "pair":         _rr_pair,
+                "progress_pct": round(_rr_prog),
+                "target_label": _rr_ms,
+                "distance_pips": round(abs(_rr_tgt - _rr_cur) / _rr_pip, 1) if _rr_tgt else 0,
+                "is_near_stop": False,
             })
 
     # 2-hour cooldown; override if any near-stop row is < 20 pips away
