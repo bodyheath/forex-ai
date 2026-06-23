@@ -1113,7 +1113,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     )
             except Exception:
                 pass
-            # Update fund daily P&L after trade close
+            # Update fund daily P&L after trade close (covers LOSS and cascading wins)
             try:
                 from src import fund_state as _fs_upd
                 _fs_upd_data = _fs_upd.load()
@@ -1124,9 +1124,14 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 _sz_pct_upd  = _to_float(row_state.get("position_size_pct_at_entry")) or 1.0
                 _bal_upd     = float(_fs_upd_data.get("daily_opening_balance") or 10000)
                 _risk_upd    = _sz_pct_upd / 100.0 * max(_bal_upd, 1)
-                if _stop_pips_upd > 0 and _wp:
-                    _dpp_upd     = _risk_upd / _stop_pips_upd
-                    _profit_upd  = round(_wp * _dpp_upd, 2)
+                if _stop_pips_upd > 0:
+                    _dpp_upd = _risk_upd / _stop_pips_upd
+                    if _wp:
+                        # Cascading partial win — use weighted pip P&L
+                        _profit_upd = round(_wp * _dpp_upd, 2)
+                    else:
+                        # Plain stop-loss — full risk amount lost
+                        _profit_upd = round(-_risk_upd, 2)
                     _fs_upd_data["daily_pnl_dollars"] = round(
                         float(_fs_upd_data.get("daily_pnl_dollars") or 0) + _profit_upd, 2
                     )
@@ -1135,10 +1140,39 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                             _fs_upd_data["daily_pnl_dollars"] / _bal_upd * 100, 4
                         )
                     _fs_upd.save(_fs_upd_data)
-                    log(f"  Monitor fund #{rec_id} {pair}: fund_state updated +${_profit_upd:.2f} "
+                    log(f"  Monitor fund #{rec_id} {pair}: fund_state updated {_profit_upd:+.2f} "
                         f"(daily P&L: ${_fs_upd_data['daily_pnl_dollars']:+.2f})")
             except Exception as _fs_exc:
                 log(f"  Monitor: fund_state update failed for {pair}: {_fs_exc}")
+            # Safety-net: verify trades.csv reflects the closure (guards against git conflict overwrites)
+            try:
+                import csv as _csv_sn
+                _sn_rows = []
+                _sn_written = False
+                with config.TRADES_CSV.open("r", encoding="utf-8-sig", newline="") as _sn_fh:
+                    _sn_reader = _csv_sn.DictReader(_sn_fh)
+                    _sn_fields = _sn_reader.fieldnames or []
+                    for _sn_r in _sn_reader:
+                        _sn_rows.append(_sn_r)
+                _sn_target = next(
+                    (r for r in _sn_rows if str(r.get("id", "")) == str(rec_id)), None
+                )
+                if _sn_target and _sn_target.get("status") == "OPEN":
+                    _sn_target["status"]     = updated.get("status", casc_oc)
+                    _sn_target["exit_price"] = updated.get("exit_price", mprice)
+                    _sn_target["pips"]       = updated.get("pips", "")
+                    _sn_target["closed_at"]  = updated.get("closed_at", "")
+                    with config.TRADES_CSV.open("w", encoding="utf-8", newline="") as _sn_wh:
+                        _sn_writer = _csv_sn.DictWriter(_sn_wh, fieldnames=_sn_fields)
+                        _sn_writer.writeheader()
+                        for _sn_r in _sn_rows:
+                            _sn_writer.writerow({k: _sn_r.get(k, "") for k in _sn_fields})
+                    _sn_written = True
+                    log(f"  Monitor: safety-net rewrite confirmed #{rec_id} closed in trades.csv ✅")
+                elif _sn_target:
+                    log(f"  Monitor: #{rec_id} trades.csv already shows {_sn_target.get('status')} ✅")
+            except Exception as _sn_exc:
+                log(f"  Monitor: safety-net check failed for #{rec_id}: {_sn_exc}")
             closed_rows.append(updated)
             _online_learn_closure("main", updated)
             break   # trade closed
