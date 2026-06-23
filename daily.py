@@ -9893,10 +9893,38 @@ def run() -> int:
                 except Exception:
                     _dsc_pairs_n = 0
 
-                # New setups
+                # New setups — read directly from CSV (yes_trades is a local var of _send_telegram_summary and is not in scope here)
                 try:
-                    _dsc_yes_raw = list(yes_trades or [])
-                except NameError:
+                    import pandas as _dsc_pd2
+                    from datetime import timezone as _tz2, timedelta as _td2
+                    _df_new = _dsc_pd2.read_csv(config.DATA_DIR / "trades.csv", encoding="utf-8-sig")
+                    _cutoff = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=2)
+                    _fund_new = _df_new[_df_new["trade_this"].astype(str) == "YES"]
+                    _dsc_yes_raw = []
+                    for _, _nt in _fund_new.iterrows():
+                        _ts_nt = str(_nt.get("timestamp", "") or "")
+                        try:
+                            _dt_nt = datetime.strptime(_ts_nt[:19], "%Y-%m-%d %H:%M:%S")
+                            if _dt_nt > _cutoff:
+                                _dsc_yes_raw.append({
+                                    "pair":      str(_nt.get("pair", "")),
+                                    "direction": str(_nt.get("direction", "")),
+                                    "conf":      float(_nt.get("confidence", 0) or 0),
+                                    "entry":     float(_nt.get("entry", 0) or 0),
+                                    "stop":      float(_nt.get("stop_loss", 0) or 0),
+                                    "t1":        float(_nt.get("t1_price") or _nt.get("target", 0) or 0),
+                                    "t2":        float(_nt.get("t2_price", 0) or 0),
+                                    "rr":        float(_nt.get("reward_risk", 0) or 0),
+                                    "status":    str(_nt.get("status", "")),
+                                })
+                        except Exception:
+                            pass
+                    _log_line(logf, (
+                        f"[discord] New trades from CSV: {len(_dsc_yes_raw)} — "
+                        f"{[t['pair'] for t in _dsc_yes_raw]}"
+                    ))
+                except Exception as _e_yes:
+                    _log_line(logf, f"[discord] New trade read failed: {_e_yes}")
                     _dsc_yes_raw = []
 
                 # Blocked trades
