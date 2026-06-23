@@ -1900,6 +1900,10 @@ def run(log=print) -> dict:
                 _dir0  = (_r0.get("direction") or "").upper()
                 _entry = _to_float(_r0.get("entry"))
                 _stop0 = _to_float(_r0.get("effective_stop") or _r0.get("stop_loss"))
+                # For stop-approaching alerts, always use the actual stop_loss column —
+                # effective_stop may be set to entry (breakeven) after T1 hit, which would
+                # show the wrong level and compute incorrect distance to stop.
+                _actual_stop = _to_float(_r0.get("stop_loss") or _r0.get("effective_stop"))
                 _t1h   = str(_r0.get("t1_hit", "")).upper() in ("TRUE", "1", "YES")
                 _t2h   = str(_r0.get("t2_hit", "")).upper() in ("TRUE", "1", "YES")
                 if not _t1h:
