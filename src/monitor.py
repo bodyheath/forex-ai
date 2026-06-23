@@ -3027,8 +3027,13 @@ def run(log=print) -> dict:
 
     # Item 2: Write heartbeat — checked by daily.py to detect monitor downtime
     try:
+        _hb_ts = datetime.now(timezone.utc).isoformat()
         _HEARTBEAT_FILE.write_text(
-            json.dumps({"last_run": datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}),
+            json.dumps({
+                "last_run":          _hb_ts,
+                "last_monitor_run":  _hb_ts,
+                "monitor_interval_mins": 30,
+            }),
             encoding="utf-8",
         )
     except Exception:
