@@ -2110,7 +2110,7 @@ def run(log=print) -> dict:
                     datetime.now(timezone.utc).replace(tzinfo=None) -
                     datetime.strptime(_rb_ts[:19], "%Y-%m-%dT%H:%M:%S")
                 ).total_seconds() / 3600
-                _urgent = any(r.get("dist", 999) < 20 for r in _res_near_stop_rows)
+                _urgent = any(r.get("stop_distance_pips", 999) < 20 for r in _res_near_stop_rows)
                 if _rb_elapsed < 2.0 and not _urgent:
                     log(f"  Monitor: research batch alert suppressed — sent {_rb_elapsed:.1f}h ago")
                     _res_batch_suppress = True
