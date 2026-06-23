@@ -2639,6 +2639,146 @@ def run(log=print) -> dict:
     except Exception as _dash_exc:
         log(f"  Monitor: Discord dashboard update failed: {_dash_exc}")
 
+    # ── Closed trades log ─────────────────────────────────────────────────────
+    try:
+        if _dn:
+            import csv as _csv_ct
+            import pandas as _pd_ct
+
+            _ct_rows = []
+            try:
+                with open(config.DATA_DIR / "trades.csv", encoding="utf-8-sig", newline="") as _ctf:
+                    _all_ct = [r for r in _csv_ct.DictReader(_ctf)
+                               if r.get("trade_this") == "YES"]
+                _closed_ct = [r for r in _all_ct
+                               if str(r.get("status", "")).upper() not in ("OPEN", "")]
+                # Sort most recent first by closed_at
+                def _ct_sort_key(r):
+                    return str(r.get("closed_at") or r.get("timestamp") or "")
+                _closed_ct.sort(key=_ct_sort_key, reverse=True)
+            except Exception:
+                _closed_ct = []
+
+            def _ct_float(val, default=0.0):
+                try:
+                    return float(str(val))
+                except Exception:
+                    return default
+
+            def _ct_bool(val):
+                return str(val).strip().upper() in ("TRUE", "YES", "1", "T")
+
+            try:
+                _ct_fund_bal = float(_fs_d.get("daily_opening_balance") or 10000)
+            except Exception:
+                _ct_fund_bal = 10000.0
+
+            for _cr in _closed_ct:
+                _ct_pair    = str(_cr.get("pair", ""))
+                _ct_pip     = 0.01 if "JPY" in _ct_pair else 0.0001
+                _ct_entry   = _ct_float(_cr.get("entry"))
+                _ct_stop    = _ct_float(_cr.get("stop_loss"))
+                _ct_exitp   = _ct_float(_cr.get("exit_price"))
+                _ct_pips    = _ct_float(_cr.get("pips"))
+                _ct_wpips   = _ct_float(
+                    _cr.get("cascading_total_pips_weighted") or _cr.get("pips"))
+
+                _ct_risk_pct  = _ct_float(_cr.get("position_size_pct_at_entry"), 1.0)
+                _ct_risk_usd  = _ct_fund_bal * _ct_risk_pct / 100
+                _ct_stop_pips = (abs(_ct_entry - _ct_stop) / _ct_pip
+                                  if _ct_stop and _ct_entry else 0)
+                _ct_dpp       = (_ct_risk_usd / _ct_stop_pips
+                                  if _ct_stop_pips > 0 else 0)
+
+                _ct_t1h = _ct_bool(_cr.get("t1_hit"))
+                _ct_t2h = _ct_bool(_cr.get("t2_hit"))
+
+                if _ct_t2h:
+                    _ct_cascade = "T1+T2 banked · 30% ran"
+                elif _ct_t1h:
+                    _ct_cascade = "T1 banked · 60% ran"
+                else:
+                    _ct_cascade = None
+
+                _ct_dollars = round(_ct_wpips * _ct_dpp, 2) if _ct_dpp > 0 else 0.0
+
+                # Hold time
+                _ct_opened   = str(_cr.get("timestamp", ""))
+                _ct_closedat = str(_cr.get("closed_at", ""))
+                _ct_hold     = "?"
+                _ct_fmt_opts = ["%Y-%m-%d %H:%M:%S", "%Y-%m-%d", "%Y-%m-%dT%H:%M:%S"]
+                try:
+                    _dto, _dtc = None, None
+                    for _fmt in _ct_fmt_opts:
+                        try:
+                            _dto = datetime.strptime(_ct_opened[:19], _fmt); break
+                        except Exception:
+                            pass
+                    for _fmt in _ct_fmt_opts:
+                        try:
+                            _dtc = datetime.strptime(_ct_closedat[:19], _fmt); break
+                        except Exception:
+                            pass
+                    if _dto and _dtc:
+                        _ct_delta = _dtc - _dto
+                        _ct_total_h = _ct_delta.total_seconds() / 3600
+                        if _ct_total_h < 24:
+                            _ct_hold = f"{int(_ct_total_h)}h {int((_ct_total_h % 1) * 60)}m"
+                        else:
+                            _ct_hold = f"{int(_ct_total_h // 24)}d {int(_ct_total_h % 24)}h"
+                except Exception:
+                    pass
+
+                _ct_status  = str(_cr.get("status", ""))
+                _ct_outcome = _ct_status
+                if _ct_status.upper() == "EXPIRED":
+                    _ct_outcome = "WIN (expired)" if _ct_pips > 0 else "LOSS (expired)"
+
+                _ct_rows.append({
+                    "id":         _cr.get("id", ""),
+                    "pair":       _ct_pair,
+                    "direction":  str(_cr.get("direction", "")),
+                    "conf":       _ct_float(_cr.get("confidence")),
+                    "entry":      _ct_entry,
+                    "exit_price": _ct_exitp,
+                    "stop_loss":  _ct_stop,
+                    "pips":       _ct_wpips,
+                    "dollars":    _ct_dollars,
+                    "status":     _ct_status,
+                    "outcome":    _ct_outcome,
+                    "cascade":    _ct_cascade,
+                    "closed_at":  _ct_closedat[:10] if _ct_closedat else "",
+                    "hold_time":  _ct_hold,
+                    "t1_hit":     _ct_t1h,
+                    "t2_hit":     _ct_t2h,
+                })
+
+            _ct_total_pips    = sum(t["pips"]    for t in _ct_rows)
+            _ct_total_dollars = sum(t["dollars"] for t in _ct_rows)
+
+            _ct_wins_row = 0
+            _ct_loss_row = 0
+            for _ct_t in _ct_rows:
+                _oc = _ct_t["outcome"]
+                if "WIN" in _oc:
+                    _ct_wins_row += 1; _ct_loss_row = 0
+                elif "LOSS" in _oc:
+                    _ct_loss_row += 1; _ct_wins_row = 0
+                else:
+                    break
+
+            _dn.update_closed_trades_log(
+                closed_trades=_ct_rows,
+                fund_balance=_ct_fund_bal,
+                total_realised_pips=_ct_total_pips,
+                total_realised_dollars=_ct_total_dollars,
+                win_streak=_ct_wins_row,
+                loss_streak=_ct_loss_row,
+            )
+            log("Closed trades log updated ✅")
+    except Exception as _ct_exc:
+        log(f"Closed trades log failed: {_ct_exc}")
+
     # Item 2: Write heartbeat — checked by daily.py to detect monitor downtime
     try:
         _HEARTBEAT_FILE.write_text(
