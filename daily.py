@@ -9699,6 +9699,17 @@ def run() -> int:
                     _dsc_dec = _dsc_fw + _dsc_fp + _dsc_fl
                     if _dsc_dec > 0:
                         _dsc_fwr = (_dsc_fw + _dsc_fp) / _dsc_dec * 100
+                    _log_line(logf, (
+                        f"[discord] Fund trades: "
+                        f"total={_dsc_fund_tot} "
+                        f"open={_dsc_fopen_cnt} "
+                        f"closed={len(_dsc_fc)} "
+                        f"wins={_dsc_fw} "
+                        f"protected={_dsc_fp} "
+                        f"losses={_dsc_fl} "
+                        f"decisive={_dsc_dec} "
+                        f"win_rate={_dsc_fwr:.0f}%"
+                    ))
 
                     def _dsc_dollar(row):
                         try:
