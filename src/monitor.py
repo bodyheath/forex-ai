@@ -1069,30 +1069,47 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     _orig_stop_sh   = _to_float(row_state.get("stop_loss")) or 0
                     _stop_pips_sh   = (abs(_ent_sh - _orig_stop_sh) / _pip_sz_sh
                                        if _ent_sh and _orig_stop_sh else 0)
-                    _t1_pips_sh = 0.0
-                    _dollars_sh = 0.0
+                    _t1_pips_sh  = 0.0
+                    _t2_pips_sh  = 0.0
+                    _t2h_sh      = False
+                    _t1_dol_sh   = 0.0
+                    _t2_dol_sh   = 0.0
+                    _net_pips_sh = 0.0
+                    _net_dol_sh  = 0.0
                     if _was_protected:
-                        _t1p_sh  = _to_float(row_state.get("t1_price")) or 0
-                        _t2p_sh  = _to_float(row_state.get("t2_price")) or 0
-                        _t2h_sh  = _is_true(row_state.get("t2_hit"))
+                        _t1p_sh = _to_float(row_state.get("t1_price")) or 0
+                        _t2p_sh = _to_float(row_state.get("t2_price")) or 0
+                        _t2h_sh = _is_true(row_state.get("t2_hit"))
                         if direction == "BUY":
-                            _t1_pips_sh = max(0, (_t1p_sh - _ent_sh) / _pip_sz_sh) if _t1p_sh and _ent_sh else 0
-                            _t2_pips_sh = max(0, (_t2p_sh - _ent_sh) / _pip_sz_sh) if _t2p_sh and _ent_sh and _t2h_sh else 0
+                            _t1_pips_sh = max(0, (_t1p_sh - _ent_sh) / _pip_sz_sh) if _t1p_sh and _ent_sh else 0.0
+                            _t2_pips_sh = max(0, (_t2p_sh - _ent_sh) / _pip_sz_sh) if _t2p_sh and _ent_sh and _t2h_sh else 0.0
                         else:
-                            _t1_pips_sh = max(0, (_ent_sh - _t1p_sh) / _pip_sz_sh) if _t1p_sh and _ent_sh else 0
-                            _t2_pips_sh = max(0, (_ent_sh - _t2p_sh) / _pip_sz_sh) if _t2p_sh and _ent_sh and _t2h_sh else 0
+                            _t1_pips_sh = max(0, (_ent_sh - _t1p_sh) / _pip_sz_sh) if _t1p_sh and _ent_sh else 0.0
+                            _t2_pips_sh = max(0, (_ent_sh - _t2p_sh) / _pip_sz_sh) if _t2p_sh and _ent_sh and _t2h_sh else 0.0
                         _sz_pct_sh = _to_float(row_state.get("position_size_pct_at_entry")) or 1.0
                         try:
                             from src import fund_state as _fs_sh
                             _bal_sh = float(_fs_sh.load().get("daily_opening_balance") or 10000)
                         except Exception:
                             _bal_sh = 10000.0
-                        _risk_sh = _sz_pct_sh / 100.0 * max(_bal_sh, 1)
-                        _dpp_sh  = _risk_sh / _stop_pips_sh if _stop_pips_sh > 0 else 1.0
-                        _dollars_sh = round((_t1_pips_sh * 0.40 + _t2_pips_sh * 0.30) * _dpp_sh, 2)
+                        _risk_sh     = _sz_pct_sh / 100.0 * max(_bal_sh, 1)
+                        _dpp_sh      = _risk_sh / _stop_pips_sh if _stop_pips_sh > 0 else 1.0
+                        _t1_dol_sh   = round(_t1_pips_sh * 0.40 * _dpp_sh, 2)
+                        _t2_dol_sh   = round(_t2_pips_sh * 0.30 * _dpp_sh, 2)
+                        _net_pips_sh = round(_t1_pips_sh * 0.40 + _t2_pips_sh * 0.30, 1)
+                        _net_dol_sh  = round(_t1_dol_sh + _t2_dol_sh, 2)
+                    _casc_lbl_sh = "T1+T2" if _t2h_sh else ("T1" if _was_protected else "")
                     _dn.send_fund_stop_hit(
-                        pair, direction, _stop_pips_sh, _was_protected,
-                        t1_pips=round(_t1_pips_sh, 1), dollars=_dollars_sh,
+                        pair, direction,
+                        t1_hit=_was_protected,
+                        t2_hit=_t2h_sh,
+                        t1_pips=round(_t1_pips_sh, 1),
+                        t2_pips=round(_t2_pips_sh, 1),
+                        t1_dollars=_t1_dol_sh,
+                        t2_dollars=_t2_dol_sh,
+                        net_pips=_net_pips_sh,
+                        net_dollars=_net_dol_sh,
+                        cascade_label=_casc_lbl_sh,
                     )
             except Exception:
                 pass
