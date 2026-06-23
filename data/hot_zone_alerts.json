@@ -4,16 +4,16 @@
     "EUR/AUD": "2026-06-22T21:01:50Z",
     "GBP/CAD": "2026-06-22T07:01:53Z",
     "NZD/CAD": "2026-06-22T08:01:47Z",
-    "AUD/JPY": "2026-06-21T23:01:35Z",
+    "AUD/JPY": "2026-06-23T00:31:36Z",
     "CAD/AUD": "2026-06-22T03:01:40Z",
     "USD/AUD": "2026-06-22T22:31:38Z",
     "HKD/JPY": "2026-06-22T04:31:30Z",
-    "AUD/USD": "2026-06-22T20:31:33Z",
+    "AUD/USD": "2026-06-23T00:31:38Z",
     "CAD/JPY": "2026-06-22T12:01:36Z",
     "USD/HKD": "2026-06-22T08:01:48Z",
     "CAD/NZD": "2026-06-22T08:31:33Z",
     "USD/JPY": "2026-06-22T12:31:39Z",
-    "GBP/AUD": "2026-06-22T09:31:31Z",
+    "GBP/AUD": "2026-06-23T00:31:40Z",
     "GBP/JPY": "2026-06-22T09:31:32Z",
     "CAD/NOK": "2026-06-22T11:01:41Z",
     "CHF/CAD": "2026-06-22T16:01:45Z",
@@ -28,7 +28,11 @@
     "AUD/NZD": "2026-06-22T22:01:48Z",
     "EUR/HKD": "2026-06-22T19:31:42Z",
     "NZD/CHF": "2026-06-22T21:01:52Z",
-    "NZD/HKD": "2026-06-23T00:01:48Z"
+    "NZD/HKD": "2026-06-23T00:01:48Z",
+    "AUD/CAD": "2026-06-23T00:31:32Z",
+    "NZD/JPY": "2026-06-23T00:31:42Z",
+    "NZD/USD": "2026-06-23T00:31:44Z",
+    "SGD/AUD": "2026-06-23T00:31:46Z"
   },
   "pairs": {
     "HKD/JPY": {
@@ -43,8 +47,8 @@
     },
     "AUD/USD": {
       "first_entered_hot": "2026-06-22T06:31:34Z",
-      "last_alert_sent": "2026-06-22T20:31:33Z",
-      "continuously_hot": false
+      "last_alert_sent": "2026-06-23T00:31:38Z",
+      "continuously_hot": true
     },
     "CAD/JPY": {
       "first_entered_hot": "2026-06-22T07:01:51Z",
@@ -78,8 +82,8 @@
     },
     "GBP/AUD": {
       "first_entered_hot": "2026-06-22T09:31:31Z",
-      "last_alert_sent": "2026-06-22T09:31:31Z",
-      "continuously_hot": false
+      "last_alert_sent": "2026-06-23T00:31:40Z",
+      "continuously_hot": true
     },
     "GBP/JPY": {
       "first_entered_hot": "2026-06-22T09:31:32Z",
@@ -164,6 +168,31 @@
     "NZD/HKD": {
       "first_entered_hot": "2026-06-23T00:01:48Z",
       "last_alert_sent": "2026-06-23T00:01:48Z",
+      "continuously_hot": false
+    },
+    "AUD/CAD": {
+      "first_entered_hot": "2026-06-23T00:31:32Z",
+      "last_alert_sent": "2026-06-23T00:31:32Z",
+      "continuously_hot": false
+    },
+    "AUD/JPY": {
+      "first_entered_hot": "2026-06-23T00:31:36Z",
+      "last_alert_sent": "2026-06-23T00:31:36Z",
+      "continuously_hot": false
+    },
+    "NZD/JPY": {
+      "first_entered_hot": "2026-06-23T00:31:42Z",
+      "last_alert_sent": "2026-06-23T00:31:42Z",
+      "continuously_hot": false
+    },
+    "NZD/USD": {
+      "first_entered_hot": "2026-06-23T00:31:44Z",
+      "last_alert_sent": "2026-06-23T00:31:44Z",
+      "continuously_hot": false
+    },
+    "SGD/AUD": {
+      "first_entered_hot": "2026-06-23T00:31:46Z",
+      "last_alert_sent": "2026-06-23T00:31:46Z",
       "continuously_hot": false
     }
   }
