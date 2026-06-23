@@ -1711,6 +1711,8 @@ def run(log=print) -> dict:
         _release_lock()
         return result
 
+    _verify_fund_state(_fund_open, log=log)
+
     # Definitive fund trade sets — used to hard-filter all monitor channel sends.
     fund_pairs = {str(r.get("pair", "")) for r in _fund_open}
     fund_ids   = {str(r.get("id",   "")) for r in _fund_open}
