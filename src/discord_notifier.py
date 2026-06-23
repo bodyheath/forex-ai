@@ -215,40 +215,54 @@ def send_fund_milestone(pair, direction, milestone, pips, entry, current, stop,
     )
 
 
-def send_fund_stop_hit(pair, direction, pips, was_cascade_protected,
-                        entry=0.0, stop=0.0, exit_price=0.0,
-                        t1_pips=0, dollars=0, consecutive_losses=0,
-                        pattern_learned=""):
-    tv_url    = _get_tradingview_url(pair)
+def send_fund_stop_hit(pair, direction,
+                        t1_hit=False, t2_hit=False,
+                        t1_pips=0.0, t2_pips=0.0,
+                        t1_dollars=0.0, t2_dollars=0.0,
+                        net_pips=0.0, net_dollars=0.0,
+                        cascade_label=""):
     dir_emoji = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
 
-    if was_cascade_protected:
+    if t2_hit:
         fields = [
-            {"name": "Trade Type",                   "value": _trade_type_label(True),           "inline": False},
-            {"name": "\U0001f6e1️ Cascade Protected", "value": "T1 was hit — stop at breakeven", "inline": False},
-            {"name": "✅ T1 Profit (40%)",            "value": f"+{t1_pips:.1f}p",               "inline": True},
-            {"name": "\U0001f512 Remainder",          "value": "Closed at breakeven",            "inline": True},
-            {"name": "\U0001f4b5 Net Result",         "value": f"+${dollars:.2f} profit" if dollars > 0 else "Breakeven", "inline": True},
+            {"name": "Trade Type",              "value": _trade_type_label(True),                             "inline": False},
+            {"name": "\U0001f3c6 Cascade",      "value": cascade_label or "T1 + T2 both banked",             "inline": False},
+            {"name": "✅ T1 banked (40%)",      "value": f"+{t1_pips:.1f}p / +${t1_dollars:.2f}",            "inline": True},
+            {"name": "✅ T2 banked (30%)",      "value": f"+{t2_pips:.1f}p / +${t2_dollars:.2f}",            "inline": True},
+            {"name": "\U0001f512 Remainder (30%)", "value": "Stopped at breakeven",                          "inline": True},
+            {"name": "\U0001f4b0 Net Result",   "value": f"**+{net_pips:.1f}p / +${net_dollars:.2f}**",      "inline": False},
+        ]
+        return _send_embed(
+            WEBHOOK_FUND,
+            f"\U0001f3c6 {pair} {dir_emoji} — Stop Hit — WIN",
+            "\U0001f4bc FUND TRADE — T1 + T2 banked before stop",
+            0x2ECC71,
+            fields=fields,
+        )
+    elif t1_hit:
+        fields = [
+            {"name": "Trade Type",              "value": _trade_type_label(True),                             "inline": False},
+            {"name": "\U0001f6e1️ Cascade",      "value": cascade_label or "T1 banked · 60% breakeven",      "inline": False},
+            {"name": "✅ T1 banked (40%)",      "value": f"+{t1_pips:.1f}p / +${t1_dollars:.2f}",            "inline": True},
+            {"name": "\U0001f512 Remainder (60%)", "value": "Stopped at breakeven",                          "inline": True},
+            {"name": "\U0001f4b0 Net Result",   "value": f"**+{net_pips:.1f}p / +${net_dollars:.2f}**",      "inline": False},
         ]
         return _send_embed(
             WEBHOOK_FUND,
             f"\U0001f6e1️ {pair} {dir_emoji} — Stop Hit — PROTECTED",
             "\U0001f4bc FUND TRADE — Cascade protection saved this trade",
-            COLOR_FUND_PROTECTED,
+            0xF39C12,
             fields=fields,
         )
     else:
         fields = [
-            {"name": "Trade Type",                "value": _trade_type_label(True),                             "inline": False},
-            {"name": "\U0001f4cd Entry",           "value": f"`{entry:.5f}`" if entry else "—",            "inline": True},
-            {"name": "\U0001f6d1 Stop Hit",        "value": f"`{exit_price:.5f}`" if exit_price else "—",  "inline": True},
-            {"name": "\U0001f4c9 Loss",            "value": f"-{pips:.1f}p / -${dollars:.2f}",                 "inline": True},
-            {"name": "\U0001f522 Consecutive Losses","value": f"{consecutive_losses}/3",                        "inline": True},
-            {"name": "\U0001f9e0 Pattern Learned", "value": pattern_learned or "Logged for ML",                 "inline": False},
+            {"name": "Trade Type",              "value": _trade_type_label(True),                             "inline": False},
+            {"name": "❌ Result",               "value": f"{net_pips:.1f}p / -${abs(net_dollars):.2f}",      "inline": True},
+            {"name": "ℹ️ Note",                "value": cascade_label or "No cascade protection",            "inline": True},
         ]
         return _send_embed(
             WEBHOOK_FUND,
-            f"❌ {pair} {dir_emoji} — STOP HIT — LOSS",
+            f"❌ {pair} {dir_emoji} — Stop Hit — LOSS",
             "\U0001f4bc FUND TRADE — Loss recorded and logged",
             COLOR_FUND_LOSS,
             fields=fields,
