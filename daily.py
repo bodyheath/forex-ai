@@ -1518,8 +1518,8 @@ def _build_research_section(research_result=None) -> list:
             return None
 
     open_rows    = [r for r in rows if r.get("status") in ("OPEN", "NO_PRICE_LEVELS")]
-    closed       = [r for r in rows if r.get("status") in ("WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN")]
-    wins         = [r for r in closed if r.get("status") == "WIN"]
+    closed       = [r for r in rows if r.get("status") in ("WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN", "FULL_WIN")]
+    wins         = [r for r in closed if r.get("status") in ("WIN", "FULL_WIN", "PARTIAL_WIN")]
     losses       = [r for r in closed if r.get("status") == "LOSS"]
     partial_wins = [r for r in closed if r.get("status") == "PARTIAL_WIN"]
     expired_rows = [r for r in closed if r.get("status") == "EXPIRED"]
