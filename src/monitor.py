@@ -2044,6 +2044,81 @@ def run(log=print) -> dict:
 
     result["approaching_alerts"] = _alerts_sent
 
+    # ── Research HOT batch alert → WEBHOOK_RESEARCH (2-hour cooldown) ────────
+    # Split _res_hot_rows into target-approaching vs stop-approaching buckets,
+    # then send one combined message to #research (never to #monitor).
+    _res_hot_target_rows: list = []
+    _res_near_stop_rows:  list = []
+    for _rr in _res_hot_rows:
+        _rr_pair  = _rr.get("pair", "")
+        _rr_dir   = (_rr.get("direction") or "").upper()
+        _rr_entry = _to_float(_rr.get("entry")) or 0
+        _rr_stop  = _to_float(_rr.get("stop_loss") or _rr.get("effective_stop")) or 0
+        _rr_cur   = prices.get(_rr_pair)
+        _rr_pip   = 0.01 if "JPY" in _rr_pair else 0.0001
+        if not (_rr_cur and _rr_entry):
+            continue
+        _rr_ms = "T1" if not _is_true(_rr.get("t1_hit")) else (
+                 "T2" if not _is_true(_rr.get("t2_hit")) else "T3")
+        _rr_tgt_key = {"T1": "t1_price", "T2": "t2_price", "T3": "t3_price"}.get(_rr_ms, "t1_price")
+        _rr_tgt  = _to_float(_rr.get(_rr_tgt_key)) or 0
+        _rr_rng  = abs(_rr_tgt - _rr_entry) if _rr_tgt else 0
+        _rr_prog = (((_rr_cur - _rr_entry) / _rr_rng if _rr_dir == "BUY"
+                     else (_rr_entry - _rr_cur) / _rr_rng) * 100
+                    if _rr_rng > 0 else 0.0)
+        if _rr_prog <= 0 and _rr_stop:
+            _res_near_stop_rows.append({
+                "pair": _rr_pair,
+                "dist": round(abs(_rr_cur - _rr_stop) / _rr_pip, 1),
+            })
+        else:
+            _res_hot_target_rows.append({
+                "pair":  _rr_pair,
+                "pct":   round(_rr_prog),
+                "label": _rr_ms,
+                "dist":  round(abs(_rr_tgt - _rr_cur) / _rr_pip, 1) if _rr_tgt else 0,
+            })
+
+    # 2-hour cooldown; override if any near-stop row is < 20 pips away
+    _res_batch_suppress = False
+    try:
+        _rb_file = config.DATA_DIR / "research_batch_alert.json"
+        if _rb_file.exists():
+            _rb_data = json.loads(_rb_file.read_text(encoding="utf-8"))
+            _rb_ts   = _rb_data.get("last_sent", "")
+            if _rb_ts:
+                _rb_elapsed = (
+                    datetime.now(timezone.utc).replace(tzinfo=None) -
+                    datetime.strptime(_rb_ts[:19], "%Y-%m-%dT%H:%M:%S")
+                ).total_seconds() / 3600
+                _urgent = any(r.get("dist", 999) < 20 for r in _res_near_stop_rows)
+                if _rb_elapsed < 2.0 and not _urgent:
+                    log(f"  Monitor: research batch alert suppressed — sent {_rb_elapsed:.1f}h ago")
+                    _res_batch_suppress = True
+    except Exception:
+        pass
+    if not _res_batch_suppress and (_res_hot_target_rows or _res_near_stop_rows):
+        log(
+            f"  Monitor: research batch alert "
+            f"({len(_res_hot_target_rows)} HOT target, {len(_res_near_stop_rows)} near stop)"
+        )
+        if _dn:
+            _dn.send_research_monitor_batch(
+                hot=_res_hot_target_rows,
+                near_stop=_res_near_stop_rows,
+            )
+        try:
+            _rb_file = config.DATA_DIR / "research_batch_alert.json"
+            _rb_file.write_text(
+                json.dumps({
+                    "last_sent": datetime.now(timezone.utc).replace(tzinfo=None)
+                                  .strftime("%Y-%m-%dT%H:%M:%SZ")
+                }),
+                encoding="utf-8",
+            )
+        except Exception:
+            pass
+
     # ── Step 3: Yahoo Finance 1H OHLCV for ALL open trades (no age cutoff) ───
     # All candles are used regardless of age — old data is better than no data.
     # Weekend: Friday closing candles are valid and checked for milestone crosses.
