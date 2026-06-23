@@ -1196,8 +1196,13 @@ def update_fund_dashboard(
             f"Trades: **{fund_total_trades}** total · {_decisive} decisive\n"
             f"{_wr_e} Win rate: **{fund_win_rate:.0f}%**\n"
             f"Wins: {fund_wins} · Protected: {fund_partial_wins} · Losses: {fund_losses}{_be_str}\n"
-            f"Avg win: +{fund_avg_win_pips:.1f}p · Avg loss: -{fund_avg_loss_pips:.1f}p\n"
-            f"Profit factor: {fund_profit_factor:.2f}"
+            f"Avg win: +{fund_avg_win_pips:.1f}p"
+            + (f" / +${fund_avg_win_dollars:.0f}" if fund_avg_win_dollars > 0 else "")
+            + f" · Avg loss: -{fund_avg_loss_pips:.1f}p"
+            + (f" / -${fund_avg_loss_dollars:.0f}" if fund_avg_loss_dollars > 0 else "")
+            + "\n"
+            f"Profit factor: {fund_profit_factor:.2f} (pips)"
+            + (f" · **{fund_dollar_profit_factor:.2f}** (dollars)" if fund_dollar_profit_factor > 0 else "")
             + (f"\nBest: {fund_best_trade_pair} +{fund_best_trade_pips:.1f}p"
                if fund_best_trade_pips > 0 else "")
         )
