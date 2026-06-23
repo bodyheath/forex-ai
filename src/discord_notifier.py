@@ -269,6 +269,57 @@ def send_fund_stop_hit(pair, direction,
         )
 
 
+def send_research_monitor_batch(hot: list, near_stop: list) -> bool:
+    """Send a single batch report for research HOT-zone trades to #research.
+
+    hot       — list of dicts: pair, direction, progress_pct, target_label, distance_pips
+    near_stop — list of dicts: pair, direction, distance_pips
+    """
+    if not WEBHOOK_RESEARCH:
+        return False
+    if not hot and not near_stop:
+        return False
+
+    fields = []
+    if hot:
+        lines = "\n".join(
+            f"· {t['pair']}: {t['progress_pct']:.0f}% → {t['target_label']} "
+            f"({t['distance_pips']:.1f}p away)"
+            for t in hot
+        )
+        fields.append({"name": "\U0001f3af Approaching Targets", "value": lines[:1000], "inline": False})
+    if near_stop:
+        lines = "\n".join(
+            f"· {t['pair']}: {t['distance_pips']:.1f}p to stop"
+            for t in near_stop
+        )
+        fields.append({"name": "⚠️ Near Stop Loss", "value": lines[:1000], "inline": False})
+
+    updated_at = datetime.now(timezone.utc).strftime("%H:%M")
+    embed = {
+        "title":     "📊 Research — Active Alerts",
+        "color":     0x3498DB,
+        "fields":    fields,
+        "footer":    {
+            "text": (
+                f"Research only — not real money · "
+                f"{len(hot)} HOT · {len(near_stop)} near stop · {updated_at} UTC"
+            )
+        },
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+    for attempt in range(3):
+        try:
+            r = requests.post(WEBHOOK_RESEARCH, json={"embeds": [embed]}, timeout=10)
+            if r.status_code == 204:
+                return True
+            if r.status_code == 429:
+                _time_mod.sleep(5)
+        except Exception:
+            _time_mod.sleep(2)
+    return False
+
+
 def send_fund_approaching(pair, direction, progress_pct, target_price,
                            current_price, distance_pips, stop_price, milestone,
                            entry_price=0, is_fund=True, warning_pips=None):
