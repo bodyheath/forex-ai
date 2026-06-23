@@ -1959,15 +1959,19 @@ def run(log=print) -> dict:
     _fund_hot_by_pair: dict = {}   # fund pairs only — Discord MONITOR sends
     _res_hot_rows: list     = []   # research HOT rows — batch report
 
-    for _hr in fund_zones["HOT"] + res_zones["HOT"]:
+    for _hr in fund_zones["HOT"]:
         _hpair = _hr.get("pair", "")
         _hk    = f"{_hpair}#{_hr.get('id', '')}"
         current_hot_keys.add(_hk)
         _all_hot_by_pair.setdefault(_hpair, []).append(_hr)
-        if _hpair in fund_pairs:
-            _fund_hot_by_pair.setdefault(_hpair, []).append(_hr)
-        else:
-            _res_hot_rows.append(_hr)
+        _fund_hot_by_pair.setdefault(_hpair, []).append(_hr)
+
+    for _hr in res_zones["HOT"]:
+        _hpair = _hr.get("pair", "")
+        _hk    = f"{_hpair}#{_hr.get('id', '')}"
+        current_hot_keys.add(_hk)
+        _all_hot_by_pair.setdefault(_hpair, []).append(_hr)
+        _res_hot_rows.append(_hr)
 
     # Determine which pairs left HOT zone since last run (reset continuously_hot)
     _prev_hot_pairs: set = set()
