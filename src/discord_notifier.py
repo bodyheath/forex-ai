@@ -293,6 +293,12 @@ def send_fund_approaching(pair, direction, progress_pct, target_price,
             {"name": "\U0001f4cd Current",       "value": f"`{current_price:.5f}`",                            "inline": True},
             {"name": "\U0001f4cf Distance",      "value": f"`{_stop_dist:.1f} pips to stop`",                  "inline": True},
         ]
+        if warning_pips is not None:
+            _fields_stop.append({
+                "name":   "⚠️ Warning",
+                "value":  f"`{warning_pips:.0f}p warning zone triggered`",
+                "inline": True,
+            })
         if entry_price:
             _pb = _price_position_bar(entry_price, current_price, stop_price, target_price, direction)
             if _pb:
