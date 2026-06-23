@@ -2738,7 +2738,12 @@ def run(log=print) -> dict:
                 log(f"  [fund-stats] result_col={_result_col} total_fund_trades={_st_total}")
 
                 _win_pips_list, _loss_pips_list = [], []
+                _win_dollars_list, _loss_dollars_list = [], []
                 _best_pips_seen = 0.0
+                import math as _math_st
+                # 1R dollar risk — use position_size_pct_at_entry if valid, else fund_state sizing
+                _fs_sizing_pct = float(_fs_d.get("current_sizing_pct") or 1.0)
+                _risk_usd_base = _dash_open_bal * _fs_sizing_pct / 100.0
                 for _fr in _fund_rows:
                     _st_out = str(_fr.get(_result_col) or "").upper()
                     # Pip fallback: prefer cascading weighted → cascading → pips
@@ -2752,16 +2757,38 @@ def run(log=print) -> dict:
                         _fp = float(_raw_pip) if _raw_pip != "" else 0.0
                     except (ValueError, TypeError):
                         _fp = 0.0
-                    import math as _math_st
                     if _math_st.isnan(_fp):
                         _fp = 0.0
+
+                    # Dollar P&L: compute DPP from entry/stop_loss so exotic pairs
+                    # (e.g. USD/SEK at 847 pips = $100) show correct dollar values.
+                    _pair_d = str(_fr.get("pair") or "")
+                    _pip_sz = 0.01 if _pair_d.upper().endswith("JPY") else 0.0001
+                    try:
+                        _sz_pct_raw = _fr.get("position_size_pct_at_entry")
+                        _sz_pct = float(_sz_pct_raw) if (_sz_pct_raw and str(_sz_pct_raw).strip() not in ("", "nan")) else _fs_sizing_pct
+                        _risk_usd = _dash_open_bal * _sz_pct / 100.0
+                        _entry_v   = float(_fr.get("entry") or 0)
+                        _stop_v    = float(_fr.get("stop_loss") or 0)
+                        _stop_pips_trade = abs(_entry_v - _stop_v) / _pip_sz if _stop_v and _entry_v else 0.0
+                        if _stop_pips_trade > 0:
+                            _dpp = _risk_usd / _stop_pips_trade
+                            _dollar_pnl = _fp * _dpp
+                        else:
+                            _dollar_pnl = 0.0
+                    except (ValueError, TypeError):
+                        _dollar_pnl = 0.0
 
                     if _st_out in ("WIN", "FULL_WIN"):
                         _st_wins += 1
                         _win_pips_list.append(_fp)
+                        if _dollar_pnl > 0:
+                            _win_dollars_list.append(_dollar_pnl)
                     elif _st_out == "PARTIAL_WIN":
                         _st_partial += 1
                         _win_pips_list.append(_fp)
+                        if _dollar_pnl > 0:
+                            _win_dollars_list.append(_dollar_pnl)
                     elif _st_out == "BREAKEVEN":
                         _st_breakeven += 1
                     elif _st_out in ("LOSS", "EXPIRED", "EXPIRED_LOSS", "STALE_EXIT"):
@@ -2770,9 +2797,13 @@ def run(log=print) -> dict:
                         if _fp > 0:
                             _st_partial += 1
                             _win_pips_list.append(_fp)
+                            if _dollar_pnl > 0:
+                                _win_dollars_list.append(_dollar_pnl)
                         else:
                             _st_losses += 1
                             _loss_pips_list.append(abs(_fp))
+                            if _dollar_pnl < 0:
+                                _loss_dollars_list.append(abs(_dollar_pnl))
                     if _fp > _best_pips_seen:
                         _best_pips_seen = _fp
                         _st_best_pair = str(_fr.get("pair") or "")
@@ -2790,6 +2821,12 @@ def run(log=print) -> dict:
                 if _tot_loss > 0:
                     _st_pf = _tot_win / _tot_loss
                 _st_total_pips = _tot_win - _tot_loss
+                # Dollar-based averages and profit factor
+                _st_avg_win_d  = sum(_win_dollars_list)  / len(_win_dollars_list)  if _win_dollars_list  else 0.0
+                _st_avg_loss_d = sum(_loss_dollars_list) / len(_loss_dollars_list) if _loss_dollars_list else 0.0
+                _tot_win_d  = sum(_win_dollars_list)
+                _tot_loss_d = sum(_loss_dollars_list)
+                _st_dollar_pf = _tot_win_d / _tot_loss_d if _tot_loss_d > 0 else 0.0
                 log(
                     f"  [fund-stats] wins={_st_wins} protected={_st_partial} "
                     f"losses={_st_losses} breakeven={_st_breakeven} "
