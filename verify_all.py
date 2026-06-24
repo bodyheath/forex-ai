@@ -75,7 +75,7 @@ print('4 — ALL FEATURE CHECKS')
 print('=' * 50)
 checks = [
     ('_safe_id crash fix',       r'_safe_id|_safe_int_id',           'src/monitor.py',               True),
-    ('_log_line None fixed',     r'_log_line(None',                   'daily.py',                     False),
+    ('_log_line None fixed',     r'_log_line\(None',                  'daily.py',                     False),
     ('100000 removed',           r'\b100000\b',                       'src/trading/financials.py',    False),
     ('logf removed',             r'\blogf\b',                         'daily.py',                     False),
     ('Tiered capacity',          r'OVERRIDE_MIN_CONF',                'daily.py',                     True),
