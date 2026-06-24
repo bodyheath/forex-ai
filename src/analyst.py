@@ -373,7 +373,7 @@ def analyse_haiku_full(pair: str, bundle: dict,
     def _call(client):
         return client.messages.create(
             model=config.HAIKU_MODEL,
-            max_tokens=250,
+            max_tokens=400,
             system=_haiku_system_prompt(threshold_override=threshold_override),
             messages=[{"role": "user", "content": user_msg}],
         )
