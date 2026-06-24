@@ -9778,26 +9778,26 @@ def run() -> int:
                     _dsc_pip_n = _dsc_pd.to_numeric(_dsc_fc["pips"], errors="coerce").fillna(0)
                     _dsc_wm    = _dsc_fc["status"].str.upper().isin(["WIN", "FULL_WIN", "PARTIAL_WIN"])
                     _dsc_pwm   = _dsc_fc["status"].str.upper() == "PARTIAL_WIN"
+                    _dsc_ewm   = (_dsc_fc["status"].str.upper() == "EXPIRED") & (_dsc_pip_n > 0)
                     _dsc_lm    = (
                         _dsc_fc["status"].str.upper().isin(["LOSS"]) |
                         (_dsc_fc["status"].str.upper().isin(["EXPIRED"]) & (_dsc_pip_n <= 0))
                     )
-                    _dsc_fw = int(_dsc_wm.sum()) - int(_dsc_pwm.sum())
+                    _dsc_fw = int((_dsc_wm & ~_dsc_pwm).sum())
                     _dsc_fp = int(_dsc_pwm.sum())
+                    _dsc_ew = int(_dsc_ewm.sum())
                     _dsc_fl = int(_dsc_lm.sum())
-                    _dsc_dec = _dsc_fw + _dsc_fp + _dsc_fl
+                    _dsc_dec = _dsc_fw + _dsc_fp + _dsc_ew + _dsc_fl
                     if _dsc_dec > 0:
-                        _dsc_fwr = (_dsc_fw + _dsc_fp) / _dsc_dec * 100
+                        _dsc_fwr = (_dsc_fw + _dsc_fp + _dsc_ew) / _dsc_dec * 100
                     _log_line(logf, (
-                        f"[discord] Fund trades: "
-                        f"total={_dsc_fund_tot} "
-                        f"open={_dsc_fopen_cnt} "
-                        f"closed={len(_dsc_fc)} "
+                        f"[discord] Fund perf: "
                         f"wins={_dsc_fw} "
                         f"protected={_dsc_fp} "
+                        f"exp_wins={_dsc_ew} "
                         f"losses={_dsc_fl} "
                         f"decisive={_dsc_dec} "
-                        f"win_rate={_dsc_fwr:.0f}%"
+                        f"wr={_dsc_fwr:.0f}%"
                     ))
 
                     def _dsc_dollar(row):
