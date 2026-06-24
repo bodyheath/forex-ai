@@ -754,6 +754,20 @@ def send_master_scan_report(
 
     # ── SECTION 1: NEW SETUPS ─────────────────────────────────────────────────────
     _setup_lines = []
+    # Status banners: regime pause and loss streak pause
+    _RANGING_REGIMES_DSC = ["RANGING_LOW_VOL", "RANGING_LOW_VOLATILITY", "RISK_OFF"]
+    _regime_upper_dsc = str(regime or "").upper()
+    if any(r in _regime_upper_dsc for r in _RANGING_REGIMES_DSC):
+        _setup_lines.append(
+            "⏸️ **Fund paused — Ranging market**\n"
+            "   Threshold raised to 7.5/10\n"
+            "   Waiting for trending conditions"
+        )
+    if consecutive_losses >= 3:
+        _setup_lines.append(
+            f"⚠️ **LOSS STREAK PAUSE — {consecutive_losses} consecutive losses**\n"
+            "   No new trades until existing positions recover"
+        )
     for _t in yes_trades:
         _p   = _t.get("pair", "")
         _d   = ((_t.get("parsed") or {}).get("direction") or _t.get("direction", ""))
