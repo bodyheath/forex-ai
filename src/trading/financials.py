@@ -621,8 +621,13 @@ def _open_trade_summary(row, prices: dict, running_balance: float = STARTING_BAL
         return {"id": int(safe_float(row.get("id", 0))), "pair": str(row.get("pair", ""))}
 
 
-def sync_fund_state_json(state: dict) -> bool:
-    """Write calculated fund state to fund_state.json atomically. Returns True on success."""
+def sync_fund_state_json(state: dict = None) -> bool:
+    """Write calculated fund state to fund_state.json atomically. Returns True on success.
+
+    If state is omitted, calculates it from trades.csv + cached prices first.
+    """
+    if state is None:
+        state = calculate_fund_state()
     clean = {k: v for k, v in state.items() if k != "open_trades"}
     return atomic_write_json(FUND_STATE_JSON, clean)
 
