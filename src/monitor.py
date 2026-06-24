@@ -1110,7 +1110,12 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                            log=print, ta=None, is_weekend: bool = False) -> list:
     """Apply detected milestones to trades.csv. Return list of closed row dicts."""
     from src import tracker as _trk
-    rec_id    = int(row.get("id", 0))
+    _raw_id   = row.get("id", "")
+    rec_id    = _safe_int_id(_raw_id)
+    if rec_id == 0:
+        log(f"[monitor] SKIP _apply_fund_milestones — invalid trade ID: "
+            f"{repr(_raw_id)} pair={row.get('pair')}")
+        return []
     pair      = row.get("pair", "")
     direction = (row.get("direction") or "").upper()
 
