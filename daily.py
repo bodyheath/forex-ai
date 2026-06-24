@@ -10881,27 +10881,23 @@ def run() -> int:
                     _dsc_fopen_cnt = len(_dsc_fo)
                     _dsc_fund_tot  = len(_dsc_fund)
                     _dsc_pip_n = _dsc_pd.to_numeric(_dsc_fc["pips"], errors="coerce").fillna(0)
-                    _dsc_wm    = _dsc_fc["status"].str.upper().isin(["WIN", "FULL_WIN", "PARTIAL_WIN"])
-                    _dsc_pwm   = _dsc_fc["status"].str.upper() == "PARTIAL_WIN"
-                    _dsc_ewm   = (_dsc_fc["status"].str.upper() == "EXPIRED") & (_dsc_pip_n > 0)
-                    _dsc_loss_only = _dsc_fc["status"].str.upper().isin(["LOSS"])
-                    _dsc_exp_neg   = (_dsc_fc["status"].str.upper().isin(["EXPIRED"]) & (_dsc_pip_n <= 0))
-                    _dsc_lm        = _dsc_loss_only | _dsc_exp_neg
-                    _dsc_fw    = int((_dsc_wm & ~_dsc_pwm).sum())
-                    _dsc_fp    = int(_dsc_pwm.sum())
-                    _dsc_ew    = int(_dsc_ewm.sum())
-                    _dsc_fl    = int(_dsc_loss_only.sum())    # display: actual LOSS only
-                    _dsc_exp_l = int(_dsc_exp_neg.sum())      # expired negatives count in decisive but not shown as L
-                    _dsc_dec   = _dsc_fw + _dsc_fp + _dsc_ew + _dsc_fl + _dsc_exp_l
-                    if _dsc_dec > 0:
-                        _dsc_fwr = (_dsc_fw + _dsc_fp + _dsc_ew) / _dsc_dec * 100
+                    # Win/loss determined purely by pips — status labels are display only
+                    _dsc_wins_m   = _dsc_pip_n > 0
+                    _dsc_losses_m = _dsc_pip_n < 0
+                    _dsc_fw_tot   = int(_dsc_wins_m.sum())    # all positive-pip trades
+                    _dsc_fl_tot   = int(_dsc_losses_m.sum())  # all negative-pip trades
+                    _dsc_dec      = _dsc_fw_tot + _dsc_fl_tot
+                    _dsc_fwr      = _dsc_fw_tot / _dsc_dec * 100 if _dsc_dec > 0 else 0.0
+                    # Cascade breakdown (subset of wins) for display transparency
+                    _dsc_status_u = _dsc_fc["status"].str.upper()
+                    _dsc_fp  = int((_dsc_wins_m & _dsc_status_u.isin(["PARTIAL_WIN", "PROTECTED"])).sum())
+                    _dsc_fw  = _dsc_fw_tot - _dsc_fp   # full wins
+                    _dsc_fl  = _dsc_fl_tot             # = all losses
                     _log_line(log, (
                         f"[discord] Fund perf: "
-                        f"wins={_dsc_fw} "
-                        f"protected={_dsc_fp} "
-                        f"exp_wins={_dsc_ew} "
+                        f"wins={_dsc_fw_tot} "
+                        f"(full={_dsc_fw} protected={_dsc_fp}) "
                         f"losses={_dsc_fl} "
-                        f"exp_neg={_dsc_exp_l} "
                         f"decisive={_dsc_dec} "
                         f"wr={_dsc_fwr:.0f}%"
                     ))
