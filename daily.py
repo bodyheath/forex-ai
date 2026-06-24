@@ -4397,6 +4397,56 @@ def _send_telegram_summary(
                 except Exception:
                     pass
                 continue
+            # ── Correlation filter ────────────────────────────────────────────
+            _yt_dir_corr = (_yt_parsed.get("direction") or "").upper()
+            _corr = _check_correlation(
+                new_pair=_yt_pair,
+                new_direction=_yt_dir_corr,
+                open_trades=_ot_open_trades,
+                log_fn=lambda m: _log_line(logf, m),
+            )
+            if _corr["blocked"]:
+                _blk_rsn_corr = f"Correlation: {_corr['reason']}"
+                _fund_st_blocked.append((_yt, _blk_rsn_corr))
+                try:
+                    from src import tracker as _trk_corr
+                    if _yt.get("id"):
+                        _trk_corr.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                  notes=f"Blocked: {_blk_rsn_corr}")
+                except Exception:
+                    pass
+                continue
+            # ── Session filter (advisory; hard block in RANGING) ──────────────
+            _session_res = _check_session_filter(
+                _yt_pair, log_fn=lambda m: _log_line(logf, m))
+            _yt["_session_optimal"] = _session_res["allowed"]
+            if not _session_res["allowed"] and "RANGING" in _regime_str:
+                _blk_rsn_sess = f"Ranging + wrong session: {_session_res['reason']}"
+                _log_line(logf, f"[session] BLOCKING {_yt_pair} — {_blk_rsn_sess}")
+                _fund_st_blocked.append((_yt, _blk_rsn_sess))
+                try:
+                    from src import tracker as _trk_sess
+                    if _yt.get("id"):
+                        _trk_sess.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                  notes=f"Blocked: {_blk_rsn_sess}")
+                except Exception:
+                    pass
+                continue
+            # ── News blackout window ──────────────────────────────────────────
+            _news_res = _has_upcoming_news(
+                _yt_pair, log_fn=lambda m: _log_line(logf, m))
+            if _news_res["blocked"]:
+                _blk_rsn_news = _news_res["reason"]
+                _log_line(logf, f"[news] BLOCKING {_yt_pair} — {_blk_rsn_news}")
+                _fund_st_blocked.append((_yt, _blk_rsn_news))
+                try:
+                    from src import tracker as _trk_news
+                    if _yt.get("id"):
+                        _trk_news.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                  notes=f"Blocked: {_blk_rsn_news}")
+                except Exception:
+                    pass
+                continue
             # ── Adaptive sizing ───────────────────────────────────────────────
             _szg_pct, _szg_mode, _szg_reason = _fs.compute_sizing(
                 _fund_st,
@@ -4421,6 +4471,20 @@ def _send_telegram_summary(
                 except Exception:
                     pass
                 continue
+            # ── Volatility-adjusted position sizing ───────────────────────────
+            _add_sizing = _calculate_position_size(
+                regime=_regime_str,
+                consecutive_losses=_consec_losses_fs,
+                drawdown_pct=float(_fund_st.get("current_drawdown_pct") or 0),
+                base_pct=float(_szg_pct) if _szg_pct else BASE_RISK_PCT,
+                log_fn=lambda m: _log_line(logf, m),
+            )
+            if _add_sizing["risk_pct"] < float(_szg_pct or BASE_RISK_PCT):
+                _szg_pct   = _add_sizing["risk_pct"]
+                _szg_mode  = _add_sizing["sizing_mode"]
+                _szg_reason = _add_sizing["reason"]
+                _log_line(logf, f"[sizing] {_yt_pair}: volatility-adjusted → "
+                          f"{_szg_pct}% ({_szg_mode})")
             _yt["_fs_sizing"] = {
                 "pct":      _szg_pct,
                 "mode":     _szg_mode,
@@ -4429,7 +4493,7 @@ def _send_telegram_summary(
                 "wins":     int(_fund_st.get("consecutive_wins") or 0),
                 "drawdown": float(_fund_st.get("current_drawdown_pct") or 0.0),
             }
-            # Stamp ML sizing fields on the fund trade row
+            # Stamp ML sizing + trend + session fields on the fund trade row
             try:
                 from src import tracker as _trk_szg
                 if _yt.get("id"):
@@ -4443,6 +4507,15 @@ def _send_telegram_summary(
                         regime_base_at_entry=threshold_data.get("regime_base", "") if threshold_data else "",
                         win_rate_adjustment_at_entry=threshold_data.get("win_rate_adjustment", "") if threshold_data else "",
                         data_quality_adjustment_at_entry=threshold_data.get("data_quality_adjustment", "") if threshold_data else "",
+                        weekly_trend_aligned=_trend_align.get("weekly_aligned"),
+                        monthly_trend_aligned=_trend_align.get("monthly_aligned"),
+                        trend_alignment_score=_trend_align.get("alignment_score", 0),
+                        weekly_trend_at_entry=_trend_align.get("weekly_trend", ""),
+                        monthly_trend_at_entry=_trend_align.get("monthly_trend", ""),
+                        risk_pct_at_entry=_szg_pct,
+                        sizing_mode_at_entry=_szg_mode,
+                        session_at_entry=",".join(_get_current_session()),
+                        session_optimal=_yt.get("_session_optimal", True),
                     )
             except Exception:
                 pass
