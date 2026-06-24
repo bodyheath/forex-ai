@@ -10311,6 +10311,7 @@ def run() -> int:
                     all_ohlcv_failed=_all_ohlcv_failed,
                     movement_alert_data=_movement_alert_data,
                     threshold_data=_threshold_data,
+                    log=log,
                 )
             except Exception as _tg_exc:
                 print(f"[telegram] _send_telegram_summary CRASHED: {_tg_exc}", file=sys.stderr)
