@@ -10958,10 +10958,10 @@ def run() -> int:
                         _pw = _pt[_pt["status"].str.upper().isin(["WIN", "FULL_WIN", "PARTIAL_WIN"])]
                         _pl = _pt[_pt["status"].str.upper().isin(["LOSS"])]
                         _pd = len(_pw) + len(_pl)
-                        if _pd >= 3:
+                        if _pd >= 5:
                             _dsc_pstat[_dsc_pair] = (len(_pw) / _pd * 100, _pd)
                     _dsc_bp = sorted(_dsc_pstat.items(), key=lambda x: x[1][0], reverse=True)[:3]
-                    _dsc_best_pairs_s = " · ".join(f"{p} {v[0]:.0f}%" for p, v in _dsc_bp)
+                    _dsc_best_pairs_s = " · ".join(f"{p} {v[0]:.0f}% ({v[1]})" for p, v in _dsc_bp)
 
                     try:
                         with open(config.DATA_DIR / "pair_statistics.json", encoding="utf-8") as _dsc_psf:
