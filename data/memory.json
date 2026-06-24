@@ -26,7 +26,17 @@
   },
   {
     "source": "auto",
-    "pattern": "Overall track record to date (n=5)",
-    "outcome": "Win rate 20%, expectancy -0.66R."
+    "pattern": "Overall track record to date (n=6)",
+    "outcome": "Win rate 17%, expectancy -0.66R."
+  },
+  {
+    "source": "auto",
+    "pattern": "Setups taken at confidence >= 7 (n=4 closed trades)",
+    "outcome": "Win rate 0%, expectancy -0.99R. This segment has underperformed - reduce confidence here."
+  },
+  {
+    "source": "auto",
+    "pattern": "BUY setups (n=4 closed trades)",
+    "outcome": "Win rate 25%, expectancy -0.33R. This segment has underperformed - reduce confidence here."
   }
 ]

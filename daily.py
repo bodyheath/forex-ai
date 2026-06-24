@@ -534,8 +534,13 @@ def _log_line(handle, msg: str) -> None:
     stamp = _auckland_now().strftime("%H:%M:%S")
     line  = f"[{stamp}] {msg}"
     print(line)
-    handle.write(line + "\n")
-    handle.flush()
+    if handle is None:
+        return
+    try:
+        handle.write(line + "\n")
+        handle.flush()
+    except Exception:
+        pass
 
 
 def _telegram_test() -> None:
