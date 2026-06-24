@@ -4714,7 +4714,8 @@ def _send_telegram_summary(
                 _log_line(log, f"[sizing] ERROR stamping metadata fields "
                           f"for #{_yt.get('id')}: {_szg_meta_err}")
             _fund_st = _fs.increment_daily_trades(_fund_st)
-            _open_fund_count += 1
+            _open_fund_count = _get_open_fund_count()  # re-read after write
+            _log_line(log, f"[capacity] {_yt_pair} opened → now {_open_fund_count}/{MAX_FUND_TRADES}")
             _yt_pass.append(_yt)
             _ot_open_trades.append(_yt)  # live update so next trade in same scan sees this currency
         # Stamp ML sizing fields on matching research trades
