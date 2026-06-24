@@ -1615,6 +1615,246 @@ def update_fund_dashboard(
     return False
 
 
+def build_fund_dashboard_embed(state: dict) -> dict:
+    """Build a Discord embed dict from calculate_fund_state() output.
+
+    Reads directly from `state` — never re-calculates, never reads files.
+    All prices/P&L come from the state's open_trades which were built by
+    _open_trade_summary() with live prices.
+    """
+    balance     = float(state.get("balance") or 0)
+    unrealised  = float(state.get("unrealised_dollars") or 0)
+    total_eq    = float(state.get("total_equity") or balance)
+    daily_d     = float(state.get("daily_pnl_dollars") or 0)
+    daily_pct   = float(state.get("daily_pnl_pct") or 0)
+    drawdown    = float(state.get("current_drawdown_pct") or state.get("drawdown_pct") or 0)
+    peak        = float(state.get("peak_balance") or 10000)
+    open_trades = state.get("open_trades") or []
+    cons_l      = int(state.get("consecutive_losses") or 0)
+    cons_w      = int(state.get("consecutive_wins") or 0)
+    sizing_mode = str(state.get("sizing_mode") or "normal")
+    risk_pct    = float(state.get("current_sizing_pct") or 1.0)
+    unreal_pips = float(state.get("unrealised_pips") or 0)
+
+    # Statistics (added by monitor before passing state)
+    st_wins    = int(state.get("win_count") or 0)
+    st_partial = int(state.get("protected_count") or 0)
+    st_losses  = int(state.get("loss_count") or 0)
+    st_be      = int(state.get("breakeven_count") or 0)
+    st_total   = int(state.get("fund_total_trades") or 0)
+    st_decisive = st_wins + st_losses + st_partial
+    st_wr      = float(state.get("win_rate") or 0)
+    st_pf      = float(state.get("profit_factor") or 0)
+    st_avg_win_p = float(state.get("avg_win_pips") or 0)
+    st_avg_win_d = float(state.get("avg_win_dollars") or 0)
+    st_avg_loss_p = float(state.get("avg_loss_pips") or 0)
+    st_avg_loss_d = float(state.get("avg_loss_dollars") or 0)
+    st_best_pair = str(state.get("best_pair") or "")
+    st_best_pips = float(state.get("best_pips") or 0)
+    st_dollar_pf = float(state.get("fund_dollar_pf") or 0)
+
+    now_str = datetime.now(timezone.utc).strftime("%H:%M UTC")
+
+    # ── Fund Status ──────────────────────────────────────────────────────────
+    start_bal = 10000.0
+    cash_pct  = (balance - start_bal) / start_bal * 100 if start_bal > 0 else 0
+    eq_pct    = (total_eq - start_bal) / start_bal * 100 if start_bal > 0 else 0
+
+    fund_emoji   = "\U0001f4c8" if daily_pct >= 0 else "\U0001f4c9"
+    unreal_emoji = "\U0001f7e2" if unrealised >= 0 else "\U0001f534"
+    eq_emoji     = "\U0001f4c8" if total_eq >= balance else "\U0001f4c9"
+    dd_emoji     = ("✅" if drawdown < 3 else ("⚠️" if drawdown < 7 else "\U0001f6a8"))
+    if cons_l >= 2:
+        streak = f"❄️ {cons_l} loss streak"
+    elif cons_w >= 2:
+        streak = f"\U0001f525 {cons_w} win streak"
+    else:
+        streak = "➡️ Neutral"
+
+    fund_status_val = (
+        f"\U0001f4b5 Cash: **${balance:,.2f}** ({cash_pct:+.2f}%)\n"
+        f"{unreal_emoji} Unrealised: **${unrealised:+.2f}** ({unreal_pips:+.1f}p)\n"
+        f"{'─' * 20}\n"
+        f"{eq_emoji} **Total equity: ${total_eq:,.2f}** ({eq_pct:+.2f}%)\n"
+        f"{fund_emoji} Today: {daily_pct:+.2f}% (${daily_d:+.2f})\n"
+        f"{dd_emoji} Drawdown: {drawdown:.2f}% · {streak}\n"
+        f"Sizing: {sizing_mode} ({risk_pct:.2f}% per trade)"
+    )
+
+    # ── FTMO bar (daily P&L vs 5% daily limit) ──────────────────────────────
+    _daily_used = abs(daily_pct)
+    _total_dd   = abs(drawdown)
+    _bar_n      = min(15, int(_daily_used / 5.0 * 15))
+    _ftmo_bar   = "█" * _bar_n + "░" * (15 - _bar_n)
+
+    if _daily_used >= 5.0:
+        _ftmo_note = " · \U0001f6a8 DAILY LIMIT HIT"
+    elif _daily_used > 3.5:
+        _ftmo_note = " · ⚠️ Approaching limit"
+    else:
+        _ftmo_note = ""
+    _ftmo_val = f"`{_ftmo_bar}` {_daily_used:.2f}% of 5% daily limit used{_ftmo_note}"
+    if _total_dd > 7.0:
+        _ftmo_val += f"\n⚠️ Total drawdown: {_total_dd:.2f}% of 10%"
+    elif _total_dd > 5.0:
+        _ftmo_val += f"\nTotal drawdown: {_total_dd:.2f}% of 10%"
+
+    # ── Statistics ──────────────────────────────────────────────────────────
+    if st_decisive > 0:
+        _wr_e   = ("🟢" if st_wr >= 50 else ("🟡" if st_wr >= 35 else "🔴"))
+        _be_str = (f" · {st_be} Breakeven" if st_be > 0 else "")
+        _stats_val = (
+            f"Trades: **{st_total}** total · {st_decisive} decisive\n"
+            f"{_wr_e} Win rate: **{st_wr:.0f}%**\n"
+            f"Wins: {st_wins} · Protected: {st_partial} · Losses: {st_losses}{_be_str}\n"
+            f"Avg win: +{st_avg_win_p:.1f}p"
+            + (f" / +${st_avg_win_d:.0f}" if st_avg_win_d > 0 else "")
+            + f" · Avg loss: -{st_avg_loss_p:.1f}p"
+            + (f" / -${st_avg_loss_d:.0f}" if st_avg_loss_d > 0 else "")
+            + f"\nProfit factor: {st_pf:.2f} (pips)"
+            + (f" · **{st_dollar_pf:.2f}** (dollars)" if st_dollar_pf > 0 else "")
+            + (f"\nBest: {st_best_pair} +{st_best_pips:.1f}p" if st_best_pips > 0 else "")
+        )
+    else:
+        _stats_val = (
+            f"Trades taken: {st_total}\n"
+            f"Insufficient data for win rate\n"
+            f"Need decisive outcomes to calculate"
+        )
+
+    fields = [
+        {"name": "\U0001f4b0 Fund Status",          "value": fund_status_val, "inline": False},
+        {"name": "\U0001f3c6 FTMO Daily Limit",      "value": _ftmo_val,       "inline": False},
+        {"name": "\U0001f4ca Fund Trade Statistics", "value": _stats_val,      "inline": False},
+    ]
+
+    # ── Open trade blocks ────────────────────────────────────────────────────
+    if open_trades:
+        for _t in open_trades:
+            _pair  = str(_t.get("pair", ""))
+            _dir   = str(_t.get("direction", "")).upper()
+            _entry = float(_t.get("entry") or 0)
+            _cur   = float(_t.get("current") or _entry)
+            _stop  = float(_t.get("stop") or _t.get("stop_loss") or 0)
+            _t1    = float(_t.get("t1") or _t.get("t1_price") or 0)
+            _t2    = float(_t.get("t2") or _t.get("t2_price") or 0)
+            _t3    = float(_t.get("t3") or _t.get("t3_price") or 0)
+            _t1h   = bool(_t.get("t1_hit"))
+            _t2h   = bool(_t.get("t2_hit"))
+            _t3h   = bool(_t.get("t3_hit"))
+            _pips  = float(_t.get("pips") or _t.get("pips_unrealised") or 0)
+            _usd   = float(_t.get("dollars") or _t.get("dollars_unrealised") or 0)
+            _prog  = float(_t.get("progress_pct") or 0)
+            _next  = str(_t.get("next_target") or "T1")
+            _days  = int(_t.get("days_open") or 0)
+            _ostr  = str(_t.get("open_str") or "") or (f"{_days}d" if _days else "?d")
+            _conf  = float(_t.get("conf") or _t.get("confidence") or 0)
+            _risk  = float(_t.get("risk_dollars") or 0)
+            _tid   = str(_t.get("id") or "")
+            _note  = str(_t.get("pnl_note") or "")
+
+            _dir_emoji = "\U0001f4c8" if _dir == "BUY" else "\U0001f4c9"
+            _pnl_emoji = "🟢" if _pips >= 0 else "🔴"
+
+            if _t3h:
+                _protection = "\U0001f6e1️\U0001f6e1️\U0001f6e1️ Full cascade"
+            elif _t2h:
+                _protection = "\U0001f6e1️\U0001f6e1️ T2 banked (70%)"
+            elif _t1h:
+                _protection = "\U0001f6e1️ T1 banked (40%)"
+            else:
+                _protection = "⚡️ Running"
+
+            _cascade_dots = (
+                f"{'🟢' if _t1h else '⚪'} T1  "
+                f"{'🟢' if _t2h else '⚪'} T2  "
+                f"{'🟢' if _t3h else '⚪'} T3"
+            )
+
+            # Progress bar (0-100% toward next cascade target)
+            _bar     = _progress_bar(min(max(_prog, 0), 100), width=12)
+            _active  = (_t3 if _t2h else (_t2 if _t1h else _t1))
+            _pbar    = _price_position_bar(_entry, _cur, _stop, _active, _dir)
+
+            # Health label
+            if _prog >= 100:
+                _health = "\U0001f3af Target crossed"
+            elif _prog >= 75:
+                _health = "\U0001f525 Hot zone"
+            elif _prog >= 50:
+                _health = "✅ Good progress"
+            elif _prog >= 25:
+                _health = "⏳ Early stage"
+            elif _prog >= 0:
+                _health = "↔️ Watching"
+            elif _prog >= -30:
+                _health = "⚠️ Moving against"
+            else:
+                _health = "\U0001f6a8 Significant adverse move"
+
+            # TV url
+            _tv_url = _get_tradingview_url(_pair)
+
+            _trade_val = (
+                f"{_dir_emoji} **{_dir}** · Entry: `{_entry:.5f}`\n"
+                f"Current: `{_cur:.5f}` · Stop: `{_stop:.5f}`\n"
+                f"T1: `{_t1:.5f}`  T2: `{_t2:.5f}`  T3: `{_t3:.5f}`\n\n"
+                f"{_cascade_dots}\n"
+                f"{_protection}\n\n"
+                f"Progress → {_next}:\n"
+                f"`{_bar}` {max(_prog, 0):.0f}%\n"
+            )
+            if _pbar:
+                _trade_val += f"{_pbar}\n"
+            _trade_val += f"{_health}\n"
+            _trade_val += (
+                f"\n{_pnl_emoji} P&L: **{_pips:+.1f}p** / **${_usd:+.2f}**"
+                + (f"\n_{_note}_" if _note else "")
+                + f"\nOpen: {_ostr} · Conf: {_conf}/10\n"
+            )
+            if _risk > 0 and abs(_usd) > _risk * 1.1:
+                _trade_val += (
+                    f"⚠️ Loss exceeds risk limit — "
+                    f"${abs(_usd):.2f} vs ${_risk:.2f} max\n"
+                )
+            _trade_val += f"[\U0001f4ca TradingView]({_tv_url})"
+
+            fields.append({
+                "name":  f"\U0001f4bc {_pair} #{_tid}",
+                "value": _trade_val,
+                "inline": False,
+            })
+    else:
+        fields.append({
+            "name":  "\U0001f4ca Open Fund Trades",
+            "value": "No open fund trades\nWaiting for next signal...",
+            "inline": False,
+        })
+
+    # ── Color: green = profitable day, orange = small loss, red = large loss ─
+    color = (0x00FF88 if daily_pct >= 0.5
+             else 0x27AE60 if daily_pct >= 0
+             else 0xF39C12 if daily_pct >= -1
+             else 0xFF3333)
+
+    return {
+        "title": "\U0001f4bc Fund Trades Dashboard",
+        "description": (
+            f"**{len(open_trades)} open fund trade(s)** · Last updated: {now_str}\n"
+            f"Auto-updates every monitor run (~30 min)"
+        ),
+        "color": color,
+        "fields": fields,
+        "footer": {
+            "text": (
+                f"Forex AI · ${balance:,.2f} balance · "
+                f"Updates on every monitor run"
+            )
+        },
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+
+
 def send_pending_trade_alert(
     trade_id: int,
     pair: str,
