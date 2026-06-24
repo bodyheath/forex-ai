@@ -680,6 +680,7 @@ def send_master_scan_report(
     ml_recent_wr: float = 0,
     ml_overall_wr: float = 0,
     ml_active: bool = False,
+    ml_reliable_retrains: int = 0,
     ml_last_retrain: str = "never",
     mta_pct: float = 0,
     hhhl_pct: float = 0,
