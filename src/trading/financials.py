@@ -355,11 +355,19 @@ def close_fund_trade(
 
 # ─── Fund state calculation ───────────────────────────────────────────────────
 
-def calculate_fund_state(df: pd.DataFrame, prices: dict) -> dict:
+def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
     """Compute fund_state from trades.csv. fund_state.json is OUTPUT, not input.
 
+    df and prices are optional — if omitted, loads from disk automatically.
     Returns a dict with all fund_state.json fields — never NaN, never raises.
     """
+    if df is None:
+        try:
+            df = pd.read_csv(str(TRADES_CSV), encoding="utf-8-sig")
+        except Exception as _e:
+            return {"error": f"Could not load trades.csv: {_e}"}
+    if prices is None:
+        prices = load_prices()
     try:
         fund = df[df["trade_this"].astype(str) == "YES"].copy()
         today_auckland = _auckland_today()
