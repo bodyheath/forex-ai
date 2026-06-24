@@ -2179,6 +2179,31 @@ def run(log=print) -> dict:
     except Exception as _wl_mon_exc:
         log(f"Monitor: watchlist movement check failed — {_wl_mon_exc}")
 
+    # ── Check pending entry triggers ───────────────────────────────────────────
+    try:
+        _newly_activated = _check_pending_trades(prices=prices, log_fn=log)
+        if _newly_activated:
+            log(f"[pending] {len(_newly_activated)} trades activated this run")
+            # Sync fund state after activations
+            try:
+                import pandas as _pd_pend_sync
+                from src.trading import financials as _fin_pend_sync
+                _df_pend_sync   = _pd_pend_sync.read_csv(str(config.TRADES_CSV), encoding="utf-8-sig")
+                _prices_pend    = _fin_pend_sync.load_prices()
+                _state_pend     = _fin_pend_sync.calculate_fund_state(_df_pend_sync, _prices_pend)
+                _fin_pend_sync.sync_fund_state_json(_state_pend)
+            except Exception:
+                pass
+            # Reload open trades to include newly activated ones
+            try:
+                _fund_open = [r for r in _trk.load()
+                              if r.get("status") == "OPEN"
+                              and r.get("trade_this") == "YES"]
+            except Exception:
+                pass
+    except Exception as _pend_exc:
+        log(f"[pending] Pending check failed: {_pend_exc}")
+
     # ── Step 2: Ensure cascade levels + zone classification ──────────────────
     for i, row in enumerate(_fund_open):
         _fund_open[i] = _ensure_cascade_levels(row, _trk, log=log)
