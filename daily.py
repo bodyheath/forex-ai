@@ -4286,13 +4286,40 @@ def _send_telegram_summary(
                 _log_line(logf, f"[fund] BLOCKING {_yt_pair} — {_blk_conf}")
                 _fund_st_blocked.append((_yt, _blk_conf))
                 continue
-            # Improvement 4: Monthly trend alignment
+            # Improvement 4: Weekly + Monthly trend alignment
+            _yt_dir_ta = (_yt_parsed.get("direction") or "").upper()
+            _trend_align = _get_trend_alignment(
+                _yt_pair, _yt_dir_ta,
+                log_fn=lambda m: _log_line(logf, m),
+            )
+            # Hard block: BOTH weekly AND monthly oppose direction
+            if (_trend_align.get("weekly_aligned") is False and
+                    _trend_align.get("monthly_aligned") is False):
+                _blk_trend = (
+                    f"Trend opposed: weekly={_trend_align['weekly_trend']} "
+                    f"monthly={_trend_align['monthly_trend']}"
+                )
+                _log_line(logf, f"[trend] BLOCKING {_yt_pair} {_yt_dir_ta} — "
+                          f"BOTH weekly ({_trend_align['weekly_trend']}) AND monthly "
+                          f"({_trend_align['monthly_trend']}) oppose direction")
+                _fund_st_blocked.append((_yt, _blk_trend))
+                continue
+            # Soft block: in RANGING regime with any misaligned trend
+            elif ("RANGING" in _regime_str and (
+                    _trend_align.get("weekly_aligned") is False or
+                    _trend_align.get("monthly_aligned") is False)):
+                _blk_trend = "Ranging market + trend misaligned"
+                _log_line(logf, f"[trend] BLOCKING {_yt_pair} in RANGING — "
+                          f"single trend misaligned")
+                _fund_st_blocked.append((_yt, _blk_trend))
+                continue
+            # Fallback: legacy monthly_trend_aligned from parsed analysis
             _mta_val = _yt_parsed.get("monthly_trend_aligned")
             if _mta_val is not None:
                 _mta_bool = str(_mta_val).upper() in ("TRUE", "YES", "1", "T")
-                if not _mta_bool:
-                    _blk_mta = "Monthly trend misaligned"
-                    _log_line(logf, f"[trend] BLOCKING {_yt_pair} — monthly trend NOT aligned with trade direction")
+                if not _mta_bool and _trend_align.get("weekly_aligned") is False:
+                    _blk_mta = "Monthly trend misaligned (both timeframes confirmed)"
+                    _log_line(logf, f"[trend] BLOCKING {_yt_pair} — monthly trend NOT aligned")
                     _fund_st_blocked.append((_yt, _blk_mta))
                     continue
             else:
