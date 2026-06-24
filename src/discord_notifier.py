@@ -785,8 +785,15 @@ def send_master_scan_report(
         _rd  = round(fund_balance * _szp / 100)
         _de  = "\U0001f4c8" if str(_d).upper() == "BUY" else "\U0001f4c9"
         _t2s = f" · T2: `{_t2:.5f}`" if _t2 else ""
+        _ovr = _t.get("override_tier")
+        if _ovr:
+            _ovr_label = f" · ⚡ 5th slot ({_ovr})"
+            _trade_icon = "⚡"
+        else:
+            _ovr_label = ""
+            _trade_icon = "✅"
         _setup_lines.append(
-            f"✅ {_de} **{_p} {_d}** · conf {_c:.1f}/10\n"
+            f"{_trade_icon} {_de} **{_p} {_d}** · conf {_c:.1f}/10{_ovr_label}\n"
             f"   Entry: `{_en:.5f}` · Stop: `{_sl:.5f}`\n"
             f"   T1: `{_t1:.5f}`{_t2s} · R:R {_rr:.1f} · Risk: ${_rd}"
         )
