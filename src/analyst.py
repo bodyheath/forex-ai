@@ -348,7 +348,13 @@ def _haiku_system_prompt(threshold_override: "float | None" = None) -> str:
         "POSITIONING_SCORE: [n/10]\nMACRO_SCORE: [n/10]\n"
         "DIVERGENCE: [CONFIRMED|NONE|CONFLICT]\n"
         "OSCILLATOR_CONFLUENCE: [TRIPLE_BUY|TRIPLE_SELL|PARTIAL_BUY|PARTIAL_SELL|NONE]\n"
-        "KEY_THESIS: [1 sentence]\nRISK_FACTORS: [2 risks]\nTRADE_THIS: [YES|NO]"
+        "KEY_THESIS: [1 sentence]\nRISK_FACTORS: [2 risks]\nTRADE_THIS: [YES|NO]\n"
+        "ENTRY_TYPE: [IMMEDIATE|BREAKOUT_BUY|BREAKOUT_SELL|LIMIT_BUY|LIMIT_SELL|PULLBACK] "
+        "(IMMEDIATE=enter now at market; BREAKOUT=wait for price to cross a level; "
+        "LIMIT=wait for price to reach a better level; PULLBACK=wait for retracement)\n"
+        "ENTRY_TRIGGER_PRICE: [float or IMMEDIATE]\n"
+        "ENTRY_TRIGGER_REASON: [1 sentence e.g. 'Break above neckline at 1.1510']\n"
+        "ENTRY_TRIGGER_EXPIRY_HOURS: [int 0-72, 0 for IMMEDIATE]"
     )
 
 
