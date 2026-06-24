@@ -850,13 +850,16 @@ def send_master_scan_report(
         _streak = f"⚠️ {consecutive_losses} losses in a row"
     else:
         _streak = "➡️ Neutral"
+    _szm_lower = str(sizing_mode or "normal").lower()
+    _szm_icons = {"normal": "✅", "conservative": "⚠️", "minimal": "\U0001f534", "pause": "\U0001f6d1"}
+    _szm_icon  = _szm_icons.get(_szm_lower, "\U0001f4b2")
     fields.append({
         "name": "\U0001f4b0 Fund Health",
         "value": (
             f"Balance: **${fund_balance:,.2f}** ({daily_pnl_pct:+.2f}% today)\n"
             f"Peak: ${peak_balance:,.2f} · {_dd_e} Drawdown: {drawdown_pct:.2f}%\n"
             f"Capacity: {open_count}/4 open · {_slots_free} slot(s) free\n"
-            f"Sizing: {risk_pct:.1f}% per trade (${_risk_d} risk)\n"
+            f"Sizing: {risk_pct:.1f}% per trade (${_risk_d} risk) · {_szm_icon} Mode: **{sizing_mode or 'normal'}**\n"
             f"FTMO: {_ftmo_used:.2f}% of 5% daily limit\n"
             f"Streak: {_streak}\n"
             f"Full details → #fund-alerts ↑"
