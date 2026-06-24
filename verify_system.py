@@ -391,7 +391,7 @@ checks = [
      r'pips.*> 0',
      'src/trading/financials.py', True),
     ('ML learning gates',
-     'reliable_retrains.*>=.*3',
+     'retrain_if_stale',
      'daily.py', True),
     # Git workflows
     ('-X ours monitor',
