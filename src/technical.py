@@ -1391,6 +1391,58 @@ def get_monthly_trend(pair: str) -> dict:
         return {"trend": "NEUTRAL", "strength": "weak", "n_months": n_check}
 
 
+def get_weekly_trend(pair: str) -> dict:
+    """Return the dominant weekly trend direction for a forex pair.
+
+    Reads from already-cached TD:{pair}:1week:20 data — zero API calls.
+    Falls back to NEUTRAL when the cache is cold or data is insufficient.
+
+    Returns:
+        {"trend": "BUY" | "SELL" | "NEUTRAL",
+         "strength": "strong" | "moderate" | "weak",
+         "n_weeks": int}
+    """
+    cached = cache.get(f"TD:{pair}:1week:20", ttl_hours=48.0)
+    if not isinstance(cached, dict) or not cached.get("values"):
+        return {"trend": "NEUTRAL", "strength": "weak", "n_weeks": 0}
+
+    closes, opens, highs, lows = [], [], [], []
+    for v in cached["values"]:
+        try:
+            closes.append(float(v["close"]))
+            opens.append(float(v["open"]))
+            highs.append(float(v["high"]))
+            lows.append(float(v["low"]))
+        except (KeyError, TypeError, ValueError):
+            pass
+        if len(closes) >= 10:
+            break
+
+    if len(closes) < 3:
+        return {"trend": "NEUTRAL", "strength": "weak", "n_weeks": len(closes)}
+
+    n = min(5, len(closes))
+    weekly_atr = sum(highs[i] - lows[i] for i in range(n)) / n if n > 0 else 0
+
+    n_back = min(3, len(closes) - 1)
+    move_3w = closes[0] - closes[n_back]
+
+    n_check = min(4, len(closes))
+    n_bull = sum(1 for i in range(n_check) if closes[i] > opens[i])
+    n_bear = sum(1 for i in range(n_check) if closes[i] < opens[i])
+
+    sig = weekly_atr * 0.20 if weekly_atr > 0 else 0
+
+    if move_3w > sig and n_bull >= 2:
+        strength = "strong" if (move_3w > weekly_atr * 0.7 or n_bull >= 3) else "moderate"
+        return {"trend": "BUY", "strength": strength, "n_weeks": n_check}
+    elif move_3w < -sig and n_bear >= 2:
+        strength = "strong" if (move_3w < -weekly_atr * 0.7 or n_bear >= 3) else "moderate"
+        return {"trend": "SELL", "strength": strength, "n_weeks": n_check}
+    else:
+        return {"trend": "NEUTRAL", "strength": "weak", "n_weeks": n_check}
+
+
 def get_trend_structure(pair: str) -> dict:
     """Identify swing-based HH/HL (uptrend) or LH/LL (downtrend) structure.
 
