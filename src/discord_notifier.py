@@ -773,7 +773,7 @@ def send_master_scan_report(
 
     # ── SECTION 1: NEW SETUPS ─────────────────────────────────────────────────────
     _setup_lines = []
-    # Status banners: regime pause and loss streak pause
+    # Status banner: regime pause
     _RANGING_REGIMES_DSC = ["RANGING_LOW_VOL", "RANGING_LOW_VOLATILITY", "RISK_OFF"]
     _regime_upper_dsc = str(regime or "").upper()
     if any(r in _regime_upper_dsc for r in _RANGING_REGIMES_DSC):
@@ -782,11 +782,23 @@ def send_master_scan_report(
             "   Threshold raised to 7.5/10\n"
             "   Waiting for trending conditions"
         )
-    if consecutive_losses >= 3:
-        _setup_lines.append(
-            f"⚠️ **LOSS STREAK PAUSE — {consecutive_losses} consecutive losses**\n"
-            "   No new trades until existing positions recover"
-        )
+    # ── 1. Swaps FIRST — shown prominently ───────────────────────────────────────
+    if swapped_setups:
+        _setup_lines.append("\U0001f504 **PORTFOLIO SWAP EXECUTED**")
+        for _sw in swapped_setups:
+            _sw_cp  = _sw.get("closed_pair", "")
+            _sw_pp  = float(_sw.get("closed_pips", 0))
+            _sw_pd  = float(_sw.get("closed_dollars", 0))
+            _sw_np  = _sw.get("new_pair", "")
+            _sw_nc  = float(_sw.get("new_conf", 0))
+            _sw_rsn = str(_sw.get("reason", ""))[:120]
+            _sw_emo = "✅" if _sw_pp >= 0 else "❌"
+            _setup_lines.append(
+                f"   Closed: **{_sw_cp}** {_sw_emo} {_sw_pp:+.1f}p\n"
+                f"   Opened: **{_sw_np}** conf {_sw_nc:.1f}/10\n"
+                f"   _{_sw_rsn}_"
+            )
+    # ── 2. Trades opened this scan ────────────────────────────────────────────────
     for _t in yes_trades:
         _p   = _t.get("pair", "")
         _d   = ((_t.get("parsed") or {}).get("direction") or _t.get("direction", ""))
@@ -812,57 +824,64 @@ def send_master_scan_report(
             f"   Entry: `{_en:.5f}` · Stop: `{_sl:.5f}`\n"
             f"   T1: `{_t1:.5f}`{_t2s} · R:R {_rr:.1f} · Risk: ${_rd}"
         )
+    # ── 3. Standard blocked (confidence / trend / correlation / session) ──────────
     for _b in blocked_trades:
-        _bp  = _b.get("pair", "")
-        _bd  = _b.get("direction", "")
-        _bc  = float(_b.get("conf") or 0)
-        _br  = str(_b.get("reason") or "blocked")
+        _bp   = _b.get("pair", "")
+        _bd   = _b.get("direction", "")
+        _bc   = float(_b.get("conf") or 0)
+        _br   = str(_b.get("reason") or "blocked")
         _br_lo = _br.lower()
         if any(x in _br_lo for x in ("correlation", "correlated", "exposure")):
-            _b_icon = "\U0001f517"  # 🔗 correlation
+            _b_icon = "\U0001f517"
         elif any(x in _br_lo for x in ("trend", "weekly", "monthly", "aligned", "opposing")):
-            _b_icon = "\U0001f4ca"  # 📊 trend
+            _b_icon = "\U0001f4ca"
         elif any(x in _br_lo for x in ("session", "tokyo", "london", "new_york", "new york")):
-            _b_icon = "\U0001f551"  # 🕑 session
+            _b_icon = "\U0001f551"
         elif any(x in _br_lo for x in ("news", "blackout", "impact", "calendar")):
-            _b_icon = "\U0001f4f0"  # 📰 news
+            _b_icon = "\U0001f4f0"
         else:
             _b_icon = "⛔"
         _setup_lines.append(
             f"{_b_icon} **{_bp} {_bd}** · conf {_bc:.1f}/10\n"
             f"   {_br[:90]}"
         )
-    # ── Swap section ─────────────────────────────────────────────────────────────
-    for _sw in swapped_setups:
-        _sw_cp   = _sw.get("closed_pair", "")
-        _sw_pp   = float(_sw.get("closed_pips", 0))
-        _sw_pd   = float(_sw.get("closed_dollars", 0))
-        _sw_np   = _sw.get("new_pair", "")
-        _sw_nc   = float(_sw.get("new_conf", 0))
-        _sw_rsn  = str(_sw.get("reason", ""))[:120]
-        _sw_emo  = "✅" if _sw_pp >= 0 else "❌"
-        _setup_lines.append(
-            f"\U0001f504 **Portfolio swap** — {_sw_cp} → {_sw_np}\n"
-            f"   Closed {_sw_cp}: {_sw_emo} {_sw_pp:+.1f}p / ${_sw_pd:+.2f}\n"
-            f"   Opened {_sw_np}: conf **{_sw_nc:.1f}**/10\n"
-            f"   _{_sw_rsn}_"
-        )
-    # ── High-conf blocked section (conf ≥ 7) ────────────────────────────────────
-    if _high_blocked:
-        _setup_lines.append("**\U0001f6ab Blocked high-confidence setups:**")
-        for _hb in _high_blocked[:4]:
+    # ── 4. No new trades — circuit breaker + blocked setups (conf ≥ 6) ───────────
+    if not yes_trades and not swapped_setups:
+        if consecutive_losses >= 3:
+            _cb_open = ", ".join(
+                t.get("pair", "") for t in (open_trades or []) if t.get("pair")
+            ) or "open positions"
+            _setup_lines.append(
+                f"⚠️ **Circuit breaker: {consecutive_losses} consecutive losses**\n"
+                f"   No new trades until a win\n"
+                f"   Waiting for: {_cb_open} to hit T1"
+            )
+        if _any_blocked:
+            _setup_lines.append("**⛔ NO NEW FUND TRADES\n\nBlocked setups (would have opened):**")
+            for _hb in _any_blocked[:5]:
+                _hbp = _hb.get("pair", "")
+                _hbd = _hb.get("direction", "")
+                _hbc = float(_hb.get("conf", 0))
+                _hbr = str(_hb.get("reason", ""))[:90]
+                _setup_lines.append(
+                    f"⛔ **{_hbp} {_hbd}** · conf {_hbc:.1f}/10\n"
+                    f"   {_hbr}"
+                )
+            if len(_any_blocked) > 5:
+                _setup_lines.append(f"_…and {len(_any_blocked) - 5} more blocked_")
+        if not _setup_lines:
+            _setup_lines.append("No actionable setups this scan")
+    elif _any_blocked:
+        # Trades/swaps opened but some setups also blocked — compact mention
+        _setup_lines.append(f"**⛔ Also blocked — {len(_any_blocked)} setup(s) (conf ≥ 6):**")
+        for _hb in _any_blocked[:3]:
             _hbp = _hb.get("pair", "")
             _hbd = _hb.get("direction", "")
             _hbc = float(_hb.get("conf", 0))
-            _hbr = str(_hb.get("reason", ""))[:80]
-            _setup_lines.append(
-                f"⛔ **{_hbp} {_hbd}** · conf {_hbc:.1f}/10\n"
-                f"   {_hbr}"
-            )
-        if len(_high_blocked) > 4:
-            _setup_lines.append(f"_…and {len(_high_blocked) - 4} more blocked_")
-    if not _setup_lines:
-        _setup_lines.append("No actionable setups this scan")
+            _hbr = str(_hb.get("reason", ""))[:90]
+            _setup_lines.append(f"⛔ **{_hbp} {_hbd}** · conf {_hbc:.1f}/10  {_hbr}")
+        if len(_any_blocked) > 3:
+            _setup_lines.append(f"_…and {len(_any_blocked) - 3} more_")
     fields.append({
         "name": "\U0001f3af New Fund Trades",
         "value": "\n\n".join(_setup_lines)[:1024],
