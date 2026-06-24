@@ -1346,15 +1346,21 @@ def update_fund_dashboard(
         ),
         "inline": False,
     })
-    if ftmo_current_pct >= 0:
-        _ftmo_val = f"`{ftmo_bar}` {ftmo_current_pct:+.2f}% / {ftmo_target_pct:.0f}% target"
-    elif ftmo_current_pct >= -5:
-        _ftmo_val = (f"`{ftmo_bar}` {ftmo_current_pct:+.2f}% "
-                     f"(⚠️ {abs(ftmo_current_pct):.2f}% of 5% daily limit used)")
+    if _daily_used >= 5.0:
+        _daily_status = " · \U0001f6a8 DAILY LIMIT HIT"
+    elif _daily_used > 3.5:
+        _daily_status = " · ⚠️ Approaching limit"
     else:
-        _ftmo_val = f"`{ftmo_bar}` {ftmo_current_pct:+.2f}% 🚨 Daily loss limit approaching"
+        _daily_status = ""
+    _ftmo_val = (
+        f"`{ftmo_bar}` {_daily_used:.2f}% of 5% daily limit used{_daily_status}"
+    )
+    if _total_dd > 7.0:
+        _ftmo_val += f"\n⚠️ Total drawdown: {_total_dd:.2f}% of 10%"
+    elif _total_dd > 5.0:
+        _ftmo_val += f"\nTotal drawdown: {_total_dd:.2f}% of 10%"
     fields.append({
-        "name":  "\U0001f3c6 FTMO Progress",
+        "name":  "\U0001f3c6 FTMO Daily Limit",
         "value": _ftmo_val,
         "inline": False,
     })
