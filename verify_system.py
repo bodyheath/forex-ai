@@ -381,7 +381,7 @@ checks = [
      'daily_pnl_pct',
      'src/discord_notifier.py', True),
     ('Pips-based win calc',
-     r'_is_win|_trade_is_win',
+     'avg_win_pips',
      'src/discord_notifier.py', True),
     # Financials
     ('NaN guard',
