@@ -1607,6 +1607,105 @@ def update_fund_dashboard(
     return False
 
 
+def send_pending_trade_alert(
+    trade_id: int,
+    pair: str,
+    direction: str,
+    confidence: float,
+    entry_type: str,
+    trigger_price: float,
+    trigger_reason: str,
+    expiry_hours: int,
+    stop: float,
+    target: float,
+    rr: float,
+) -> bool:
+    """Send alert when a trade is set to PENDING — waiting for entry trigger."""
+    webhook = WEBHOOK_FUND
+    if not webhook:
+        return False
+
+    type_emojis = {
+        "BREAKOUT_BUY":  "⬆️ Breakout",
+        "BREAKOUT_SELL": "⬇️ Breakout",
+        "LIMIT_BUY":     "📉 Limit",
+        "LIMIT_SELL":    "📈 Limit",
+        "PULLBACK":      "🔄 Pullback",
+        "IMMEDIATE":     "⚡ Immediate",
+    }
+    type_label = type_emojis.get(entry_type, entry_type)
+    dir_emoji  = "🟢" if direction == "BUY" else "🔴"
+    decimals   = 3 if "JPY" in pair else 5
+    fmt        = f"{{:.{decimals}f}}"
+
+    embed = {
+        "title":       f"⏳ {pair} — Pending Entry",
+        "description": (
+            f"{dir_emoji} **{direction}** · Conf: {confidence:.1f}/10\n"
+            f"Entry type: {type_label}"
+        ),
+        "color":  COLOR_WARNING,
+        "fields": [
+            {"name": "⏳ Waiting For",  "value": trigger_reason,              "inline": False},
+            {"name": "🎯 Trigger Price", "value": fmt.format(trigger_price),   "inline": True},
+            {"name": "🛑 Stop Loss",     "value": fmt.format(stop),            "inline": True},
+            {"name": "🎯 Target",        "value": f"{fmt.format(target)} (R:R {rr:.1f})", "inline": True},
+            {"name": "⏰ Expires",       "value": f"In {expiry_hours}h if not triggered", "inline": True},
+        ],
+        "footer":    {"text": "Forex AI — Conditional Entry System"},
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+    try:
+        r = requests.post(webhook, json={"embeds": [embed]}, timeout=10)
+        return r.status_code == 204
+    except Exception:
+        return False
+
+
+def _send_entry_confirmed_alert(activation: dict, log_fn=None) -> bool:
+    """Send alert when a pending trade trigger is hit and the trade activates."""
+    webhook = WEBHOOK_FUND
+    if not webhook:
+        return False
+
+    pair       = activation.get("pair", "")
+    direction  = activation.get("direction", "")
+    entry      = activation.get("entry", 0)
+    orig       = activation.get("orig_signal_price", 0)
+    reason     = activation.get("trigger_reason", "")
+    entry_type = activation.get("entry_type", "")
+    pip_size   = 0.01 if "JPY" in pair else 0.0001
+    decimals   = 3 if "JPY" in pair else 5
+    fmt        = f"{{:.{decimals}f}}"
+
+    improvement = 0.0
+    if orig and entry:
+        raw = (orig - entry) if direction == "BUY" else (entry - orig)
+        improvement = raw / pip_size
+
+    impr_str = ""
+    if abs(improvement) > 1:
+        impr_str = f" ({improvement:+.1f}p vs signal price)"
+
+    embed = {
+        "title":       f"✅ {pair} — Entry Confirmed",
+        "description": f"**{direction}** trade activated\nTrigger: {reason}",
+        "color":       COLOR_FUND_WIN,
+        "fields": [
+            {"name": "📍 Entry Price",  "value": fmt.format(entry) + impr_str, "inline": True},
+            {"name": "🔍 Signal Price", "value": fmt.format(orig) if orig else "?", "inline": True},
+            {"name": "📋 Entry Type",   "value": entry_type,                    "inline": True},
+        ],
+        "footer":    {"text": "Forex AI — Trade Activated"},
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+    try:
+        r = requests.post(webhook, json={"embeds": [embed]}, timeout=10)
+        return r.status_code == 204
+    except Exception:
+        return False
+
+
 def send_trailing_stop_update(trade_id: int, pair: str, direction: str,
                                old_stop: float, new_stop: float,
                                reason: str) -> bool:
