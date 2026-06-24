@@ -176,11 +176,7 @@ stored_cw = int(fs.get('consecutive_wins',0))
 stored_wr = float(fs.get('win_rate',0))
 stored_dd = float(fs.get('drawdown_pct',0))
 
-# Section 2 uses net_dollars column (0 if missing); financials.py uses DPP.
-# So balance_calc here will be ~10000 (no net_dollars). Compare stored vs DPP instead.
-from src.trading.financials import calculate_fund_state, load_prices
-live_state = calculate_fund_state(prices=load_prices())
-live_bal = float(live_state.get('balance', 0))
+live_bal = balance  # already from _live_state
 
 print()
 print('Fund state consistency:')
