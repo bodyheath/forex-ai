@@ -2535,6 +2535,62 @@ def run(log=print) -> dict:
         _, candles_t, resolved_p = pair_data.get(pair, ("t0_no_data", None, None))
         _process_trade(row, candles_t, resolved_p, is_fund=False)
 
+    # ── Step 4b: Trailing stop updates for all open fund trades ──────────────
+    # Runs after milestone detection so cascade state is fresh.
+    _trailing_updates = 0
+    try:
+        from src import tracker as _trk_trail
+        import pandas as _pd_trail
+        _df_trail = _pd_trail.read_csv(str(config.TRADES_CSV), encoding="utf-8-sig")
+        for _tr_row in _fund_open:
+            _tr_pair = _tr_row.get("pair", "")
+            _tr_id   = int(_tr_row.get("id", 0) or 0)
+            _tr_price = prices.get(_tr_pair)
+            if _tr_price is None:
+                continue
+            # Re-read the latest row state (cascade may have updated it this run)
+            _tr_idx_list = _df_trail.index[
+                _df_trail["id"].astype(str) == str(_tr_id)
+            ].tolist()
+            if not _tr_idx_list:
+                continue
+            _tr_idx = _tr_idx_list[0]
+            _tr_latest = _df_trail.iloc[_tr_idx].to_dict()
+            if str(_tr_latest.get("status", "")).upper() != "OPEN":
+                continue
+            _trail = _update_trailing_stop(
+                trade_row=_tr_latest,
+                current_price=_tr_price,
+                log_fn=log,
+            )
+            if _trail["stop_moved"]:
+                _old_stop = float(_tr_latest.get("effective_stop") or
+                                  _tr_latest.get("stop_loss") or 0)
+                _df_trail.at[_tr_idx, "effective_stop"] = _trail["new_effective_stop"]
+                from src.trading.financials import atomic_write_csv as _awc_trail
+                _awc_trail(config.TRADES_CSV, _df_trail)
+                _trailing_updates += 1
+                log(f"[trailing] #{_tr_id} {_tr_pair}: stop trailed to "
+                    f"{_trail['new_effective_stop']:.5f} — {_trail['reason']}")
+                try:
+                    if _dn:
+                        _dn.send_trailing_stop_update(
+                            trade_id=_tr_id,
+                            pair=_tr_pair,
+                            direction=str(_tr_latest.get("direction", "")).upper(),
+                            old_stop=_old_stop,
+                            new_stop=_trail["new_effective_stop"],
+                            reason=_trail["reason"],
+                        )
+                except Exception as _trail_dn_exc:
+                    log(f"[trailing] Discord alert error: {_trail_dn_exc}")
+        if not _trailing_updates:
+            log("[trailing] No stops trailed this run")
+        else:
+            log(f"[trailing] {_trailing_updates} stop(s) trailed")
+    except Exception as _trail_exc:
+        log(f"[trailing] Trailing stop update failed: {_trail_exc}")
+
     # Data tier + source summary
     _tc = _tier_counts
     _yf  = _tc.get("t1_yf_ohlcv", 0)
