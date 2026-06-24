@@ -9940,7 +9940,7 @@ def run() -> int:
                         if _lr_ts:
                             try:
                                 _lr_dt = datetime.fromisoformat(_lr_ts[:19])
-                                _hrs   = (datetime.now() - _lr_dt).total_seconds() / 3600
+                                _hrs   = (datetime.now(timezone.utc).replace(tzinfo=None) - _lr_dt).total_seconds() / 3600
                                 _dsc_ml_lr = f"{_hrs:.0f}h ago" if _hrs < 24 else f"{_hrs/24:.0f}d ago"
                             except Exception:
                                 _dsc_ml_lr = _lr_ts[:10]
