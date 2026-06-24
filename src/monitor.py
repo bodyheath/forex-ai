@@ -1684,6 +1684,204 @@ def build_monitor_data_quality_report() -> list:
     return lines
 
 
+def _check_pending_trades(prices: dict, log_fn=None) -> list:
+    """Check all PENDING fund trades to see if their entry triggers have been hit.
+
+    Returns list of trade dicts that were activated this run.
+    """
+    import pandas as _pd_pend
+    from src.trading.financials import (
+        get_price as _gp_pend,
+        atomic_write_csv as _awc_pend,
+        utc_now_str as _uns_pend,
+    )
+    _log = log_fn or print
+
+    try:
+        df = _pd_pend.read_csv("data/trades.csv", encoding="utf-8-sig")
+    except Exception as exc:
+        _log(f"[pending] CSV load failed: {exc}")
+        return []
+
+    try:
+        fund = df[df["trade_this"].astype(str).str.strip().str.upper() == "YES"]
+        pending = fund[fund["status"] == "PENDING"].copy()
+    except Exception as exc:
+        _log(f"[pending] Filter failed: {exc}")
+        return []
+
+    if len(pending) == 0:
+        return []
+
+    _log(f"[pending] Checking {len(pending)} pending trades")
+
+    activated: list = []
+    cancelled: list = []
+    now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
+
+    for idx, t in pending.iterrows():
+        trade_id    = t.get("id")
+        pair        = str(t.get("pair", ""))
+        direction   = str(t.get("direction", "")).upper()
+        entry_type  = str(t.get("entry_type", "")).upper()
+        try:
+            trigger_price = float(t.get("entry_trigger_price") or 0)
+        except (TypeError, ValueError):
+            trigger_price = 0.0
+        expiry    = str(t.get("entry_trigger_expiry", ""))
+        try:
+            stop = float(t.get("stop_loss") or 0)
+        except (TypeError, ValueError):
+            stop = 0.0
+
+        # Check expiry
+        if expiry not in ("", "nan", "None"):
+            try:
+                exp_dt = datetime.strptime(expiry[:19], "%Y-%m-%d %H:%M:%S")
+                if exp_dt < now_utc:
+                    _log(f"[pending] #{trade_id} {pair} EXPIRED — trigger never hit")
+                    df.loc[idx, "status"]    = "EXPIRED"
+                    df.loc[idx, "outcome"]   = "EXPIRED" if "outcome" in df.columns else ""
+                    df.loc[idx, "closed_at"] = _uns_pend()
+                    cancelled.append(trade_id)
+                    continue
+            except (ValueError, TypeError):
+                pass
+
+        # Get current price
+        current = _gp_pend(prices, pair)
+        if not current:
+            _log(f"[pending] #{trade_id} {pair} — no price found")
+            continue
+
+        # Check if stop has been breached — cancel the setup
+        if stop > 0:
+            if direction == "BUY" and current <= stop:
+                _log(f"[pending] #{trade_id} {pair} CANCELLED — price {current} below stop {stop}")
+                df.loc[idx, "status"]    = "CANCELLED"
+                df.loc[idx, "closed_at"] = _uns_pend()
+                cancelled.append(trade_id)
+                continue
+            if direction == "SELL" and current >= stop:
+                _log(f"[pending] #{trade_id} {pair} CANCELLED — price {current} above stop {stop}")
+                df.loc[idx, "status"]    = "CANCELLED"
+                df.loc[idx, "closed_at"] = _uns_pend()
+                cancelled.append(trade_id)
+                continue
+
+        # Check trigger
+        triggered      = False
+        trigger_reason = ""
+
+        if entry_type == "IMMEDIATE":
+            triggered      = True
+            trigger_reason = "Immediate entry corrected"
+        elif entry_type == "BREAKOUT_BUY":
+            if trigger_price > 0 and current >= trigger_price:
+                triggered      = True
+                trigger_reason = f"Broke above {trigger_price:.5f}"
+        elif entry_type == "BREAKOUT_SELL":
+            if trigger_price > 0 and current <= trigger_price:
+                triggered      = True
+                trigger_reason = f"Broke below {trigger_price:.5f}"
+        elif entry_type == "LIMIT_BUY":
+            if trigger_price > 0 and current <= trigger_price:
+                triggered      = True
+                trigger_reason = f"Price reached {trigger_price:.5f}"
+        elif entry_type == "LIMIT_SELL":
+            if trigger_price > 0 and current >= trigger_price:
+                triggered      = True
+                trigger_reason = f"Price reached {trigger_price:.5f}"
+        elif entry_type == "PULLBACK":
+            if direction == "BUY" and trigger_price > 0 and current <= trigger_price:
+                triggered      = True
+                trigger_reason = f"Pullback to {trigger_price:.5f}"
+            elif direction == "SELL" and trigger_price > 0 and current >= trigger_price:
+                triggered      = True
+                trigger_reason = f"Rally to {trigger_price:.5f}"
+
+        if not triggered:
+            continue
+
+        # Check fund capacity (max 4 open trades)
+        currently_open = len(df[
+            (df["trade_this"].astype(str).str.strip().str.upper() == "YES") &
+            (df["status"] == "OPEN")
+        ])
+        if currently_open >= 4:
+            _log(f"[pending] #{trade_id} {pair} trigger hit but fund at capacity {currently_open}/4 — extending expiry 24h")
+            try:
+                new_expiry = datetime.now(timezone.utc) + timedelta(hours=24)
+                df.loc[idx, "entry_trigger_expiry"] = new_expiry.strftime("%Y-%m-%d %H:%M:%S")
+            except Exception:
+                pass
+            continue
+
+        # Activate the trade — recalculate stop and targets from actual entry
+        now_str      = _uns_pend()
+        actual_entry = current
+        ps_size      = 0.01 if "JPY" in pair else 0.0001
+
+        try:
+            orig_entry = float(t.get("entry") or 0)
+            orig_stop  = float(t.get("stop_loss") or 0)
+            if orig_entry > 0 and orig_stop > 0:
+                orig_stop_pips = abs(orig_entry - orig_stop) / ps_size
+                new_stop = (
+                    actual_entry - orig_stop_pips * ps_size
+                    if direction == "BUY"
+                    else actual_entry + orig_stop_pips * ps_size
+                )
+                df.loc[idx, "stop_loss"] = round(new_stop, 5)
+                for t_col in ("target", "t2_price", "t3_price"):
+                    try:
+                        orig_t = float(t.get(t_col) or 0)
+                        if orig_t > 0:
+                            t_pips = abs(orig_t - orig_entry) / ps_size
+                            new_t  = (
+                                actual_entry + t_pips * ps_size
+                                if direction == "BUY"
+                                else actual_entry - t_pips * ps_size
+                            )
+                            df.loc[idx, t_col] = round(new_t, 5)
+                    except (TypeError, ValueError):
+                        pass
+        except Exception:
+            pass
+
+        df.loc[idx, "status"]             = "OPEN"
+        df.loc[idx, "entry"]              = actual_entry
+        df.loc[idx, "entry_confirmed_at"] = now_str
+        df.loc[idx, "timestamp"]          = now_str
+
+        _log(f"[pending] #{trade_id} {pair} ACTIVATED — {trigger_reason} — entry at {actual_entry}")
+        activated.append({
+            "trade_id":          trade_id,
+            "pair":              pair,
+            "direction":         direction,
+            "entry":             actual_entry,
+            "trigger_reason":    trigger_reason,
+            "orig_signal_price": float(t.get("entry") or 0),
+            "entry_type":        entry_type,
+        })
+
+    if activated or cancelled:
+        if _awc_pend(df, "data/trades.csv"):
+            _log(f"[pending] Saved: {len(activated)} activated {len(cancelled)} cancelled/expired")
+        for act in activated:
+            _log(
+                f"[pending] #{act['trade_id']} {act['pair']} {act['direction']} "
+                f"ACTIVATED at {act['entry']} ({act['trigger_reason']})"
+            )
+            try:
+                from src import discord_notifier as _dn_pend
+                _dn_pend._send_entry_confirmed_alert(act, log_fn=_log)
+            except Exception as _ale:
+                _log(f"[pending] Alert error: {_ale}")
+
+    return activated
+
+
 def run(log=print) -> dict:
     """Run the between-scan monitor. Returns the monitor_log dict written to disk."""
     now_ak   = _auckland_now()
