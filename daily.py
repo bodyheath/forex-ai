@@ -11013,6 +11013,31 @@ def run() -> int:
                     _dsc_bp = sorted(_dsc_pstat.items(), key=lambda x: x[1][0], reverse=True)[:3]
                     _dsc_best_pairs_s = " · ".join(f"{p} {v[0]:.0f}% ({v[1]})" for p, v in _dsc_bp)
 
+                    # Hot zone: open research trades that have hit T1
+                    _dsc_rt_hot = _dsc_rt[
+                        (_dsc_rt["status"] == "OPEN") &
+                        (_dsc_rt["t1_hit"].astype(str).str.upper().isin(["TRUE", "1"]))
+                    ]
+                    if len(_dsc_rt_hot) > 0:
+                        _dsc_hot_lines = []
+                        for _, _hr in _dsc_rt_hot.head(5).iterrows():
+                            _hr_pair = str(_hr.get("pair", ""))
+                            _hr_dir  = str(_hr.get("direction", "")).upper()
+                            _hr_t1p  = float(_hr.get("t1_hit_pips") or 0)
+                            _hr_t2h  = str(_hr.get("t2_hit", "")).upper() in ("TRUE", "1")
+                            _hr_icon = "\U0001f525\U0001f525" if _hr_t2h else "\U0001f525"
+                            _dsc_hot_lines.append(
+                                f"{_hr_icon} {_hr_pair} {_hr_dir} "
+                                f"+{_hr_t1p:.0f}p "
+                                f"{'(T2 hit)' if _hr_t2h else '(T1 hit)'}"
+                            )
+                        _remaining = len(_dsc_rt_hot) - min(5, len(_dsc_rt_hot))
+                        _dsc_hot_str = (
+                            f"Hot zone ({len(_dsc_rt_hot)} at T1+):\n"
+                            + "\n".join(_dsc_hot_lines)
+                            + (f"\n_…and {_remaining} more_" if _remaining > 0 else "")
+                        )
+
                     try:
                         with open(config.DATA_DIR / "pair_statistics.json", encoding="utf-8") as _dsc_psf:
                             _dsc_ps = json.load(_dsc_psf)
