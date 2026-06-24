@@ -565,6 +565,24 @@ def verify_trade_integrity(df: pd.DataFrame) -> list:
         if status == "OPEN" and ep > 0:
             issues.append(f"#{tid} {pair}: OPEN but has exit_price={ep}")
 
+        # PENDING trade checks
+        if status == "PENDING":
+            trigger_price = str(row.get("entry_trigger_price", ""))
+            if trigger_price in ("", "nan", "None", "0", "0.0"):
+                issues.append(f"#{tid} {pair}: PENDING but no entry_trigger_price set")
+            expiry = str(row.get("entry_trigger_expiry", ""))
+            if expiry not in ("", "nan", "None"):
+                try:
+                    exp_dt = datetime.strptime(expiry[:19], "%Y-%m-%d %H:%M:%S")
+                    now_naive = datetime.now(timezone.utc).replace(tzinfo=None)
+                    if exp_dt < now_naive:
+                        issues.append(
+                            f"#{tid} {pair}: PENDING but past expiry {expiry} "
+                            f"— should be EXPIRED"
+                        )
+                except (ValueError, TypeError):
+                    pass
+
     return issues
 
 
