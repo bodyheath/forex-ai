@@ -2847,7 +2847,7 @@ def run(log=print) -> dict:
                 _prev = _check_milestone_sent(pair, _chk_lvl)
                 if not _prev:
                     _record_milestone_sent(
-                        pair, _chk_lvl, int(row.get("id", 0)),
+                        pair, _chk_lvl, _safe_int_id(row.get("id", 0)),
                         trade_type="fund" if is_fund else "research",
                     )
 
