@@ -8302,9 +8302,9 @@ def _send_telegram_summary(
             _Path_tc_w(str(config.DATA_DIR) + "/trend_cache.json").write_text(
                 json.dumps(_tc_payload, indent=2), encoding="utf-8"
             )
-            _log_line(None, f"Trend cache written — {len(_monthly_trends)} pairs for intraday scans")
+            _log_line(log, f"Trend cache written — {len(_monthly_trends)} pairs for intraday scans")
         except Exception as _tc_w_exc:
-            _log_line(None, f"Trend cache write failed: {_tc_w_exc}")
+            _log_line(log, f"Trend cache write failed: {_tc_w_exc}")
 
     # Build short urgent pre-alerts for each YES trade — sent as individual messages first
     _urgent_pre = [
