@@ -2020,3 +2020,51 @@ def send_trailing_stop_update(trade_id: int, pair: str, direction: str,
         return r.status_code == 204
     except Exception:
         return False
+
+
+def send_swap_alert(
+    closed_pair: str,
+    closed_pips: float,
+    closed_dollars: float,
+    new_pair: str,
+    new_conf: float,
+    swap_reason: str,
+) -> bool:
+    """Post a purple 'Portfolio Swap' embed to DISCORD_WEBHOOK_FUND."""
+    webhook = os.getenv("DISCORD_WEBHOOK_FUND")
+    if not webhook:
+        return False
+    outcome_emoji = "✅" if closed_pips >= 0 else "❌"
+    embed = {
+        "title":       "\U0001f504 Portfolio Swap",
+        "description": "Weaker trade replaced by a higher-confidence setup",
+        "color":       0x9B59B6,
+        "fields": [
+            {
+                "name":   "❌ Closed",
+                "value":  (
+                    f"**{closed_pair}**\n"
+                    f"{outcome_emoji} {closed_pips:+.1f}p / ${closed_dollars:+.2f}"
+                ),
+                "inline": True,
+            },
+            {
+                "name":   "✅ Opened",
+                "value":  f"**{new_pair}**\nConf: {new_conf:.1f}/10",
+                "inline": True,
+            },
+            {
+                "name":   "\U0001f4ca Reason",
+                "value":  swap_reason[:200],
+                "inline": False,
+            },
+        ],
+        "footer": {"text": "Forex AI — Portfolio Optimisation"},
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+    try:
+        r = requests.post(webhook, json={"embeds": [embed]}, timeout=10)
+        return r.status_code in (200, 204)
+    except Exception as _e:
+        print(f"[swap] Discord alert error: {_e}")
+        return False
