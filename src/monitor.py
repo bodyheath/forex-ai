@@ -541,7 +541,7 @@ def _release_lock() -> None:
 
 # ── Dashboard sender ──────────────────────────────────────────────────────────
 
-_DASHBOARD_MSG_FILE = pathlib.Path("data/discord_dashboard.json")
+_DASHBOARD_MSG_FILE = Path("data/discord_dashboard.json")
 
 def _send_dashboard(state: dict, log_fn=None) -> None:
     """Build and post (or edit) the Discord fund dashboard from a pre-computed state dict."""
