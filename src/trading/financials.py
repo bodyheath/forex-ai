@@ -465,11 +465,28 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         unrealised_pips = sum(safe_float(t.get("pips_unrealised"))    for t in _ot_summaries)
 
         # Win rate: pips > 0 = win, pips < 0 = loss, pips == 0 = neutral (not counted)
-        _all_pips   = pd.to_numeric(closed["pips"], errors="coerce").fillna(0)
-        _win_count  = int((_all_pips > 0).sum())
-        _loss_count = int((_all_pips < 0).sum())
-        _decisive   = _win_count + _loss_count
-        win_rate    = round(_win_count / _decisive * 100.0, 1) if _decisive > 0 else 0.0
+        _all_pips     = pd.to_numeric(closed["pips"], errors="coerce").fillna(0)
+        _total_wins   = int((_all_pips > 0).sum())
+        _loss_count   = int((_all_pips < 0).sum())
+        _decisive     = _total_wins + _loss_count
+        win_rate      = round(_total_wins / _decisive * 100.0, 1) if _decisive > 0 else 0.0
+
+        # Split wins: full vs cascade-protected (PARTIAL_WIN / PROTECTED status)
+        _status_upper    = closed["status"].str.upper()
+        _cascade_mask    = _status_upper.isin(["PARTIAL_WIN", "PROTECTED"])
+        _protected_count = int(((_all_pips > 0) & _cascade_mask).sum())
+        _win_count       = _total_wins - _protected_count  # full wins (non-cascade)
+
+        # Averages and profit factor from tracking lists populated in the loop
+        _avg_win_pips     = round(sum(_win_pips_list) / len(_win_pips_list), 1) if _win_pips_list else 0.0
+        _avg_loss_pips    = round(sum(_loss_pips_list) / len(_loss_pips_list), 1) if _loss_pips_list else 0.0
+        _avg_win_dollars  = round(sum(_win_dollars_list) / len(_win_dollars_list), 2) if _win_dollars_list else 0.0
+        _avg_loss_dollars = round(sum(_loss_dollars_list) / len(_loss_dollars_list), 2) if _loss_dollars_list else 0.0
+        _total_win_d      = sum(_win_dollars_list)
+        _total_loss_d     = sum(_loss_dollars_list)
+        _fund_dollar_pf   = round(_total_win_d / _total_loss_d, 3) if _total_loss_d > 0 else 0.0
+        _sum_loss_pips    = sum(_loss_pips_list)
+        _profit_factor    = round(sum(_win_pips_list) / _sum_loss_pips, 3) if _sum_loss_pips > 0 else 0.0
 
         return {
             "balance":               round(running_bal, 2),
@@ -481,11 +498,22 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             "current_drawdown_pct":  round(drawdown_pct, 4),
             "drawdown_pct":          round(drawdown_pct, 4),
             "consecutive_losses":    int(cons_losses),
+            "consecutive_wins":      int(cons_wins),
             "open_count":            len(open_trades),
             "win_rate":              win_rate,
             "win_count":             _win_count,
+            "protected_count":       _protected_count,
             "loss_count":            _loss_count,
             "decisive_count":        _decisive,
+            "avg_win_pips":          _avg_win_pips,
+            "avg_loss_pips":         _avg_loss_pips,
+            "avg_win_dollars":       _avg_win_dollars,
+            "avg_loss_dollars":      _avg_loss_dollars,
+            "profit_factor":         _profit_factor,
+            "fund_dollar_pf":        _fund_dollar_pf,
+            "best_pair":             _best_pair,
+            "best_pips":             round(_best_pips, 1),
+            "fund_total_trades":     int(len(fund)),
             "current_sizing_pct":    1.0,
             "sizing_mode":           "normal",
             "daily_trades_date":     today_auckland,
