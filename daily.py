@@ -3391,7 +3391,7 @@ def _build_system_learning_report(date: str) -> list:
     # ── LEARNING VELOCITY ─────────────────────────────────────────────────────
     try:
         from datetime import timedelta as _lv_td
-        _lv_cutoff = (datetime.now() - _lv_td(days=7)).strftime("%Y-%m-%d")
+        _lv_cutoff = (datetime.now(timezone.utc) - _lv_td(days=7)).strftime("%Y-%m-%d")
         _lv_new = [
             r for r in rows
             if r.get("status") in ("WIN", "LOSS", "PARTIAL_WIN")
