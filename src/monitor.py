@@ -539,6 +539,75 @@ def _release_lock() -> None:
         pass
 
 
+# ── Dashboard sender ──────────────────────────────────────────────────────────
+
+_DASHBOARD_MSG_FILE = pathlib.Path("data/discord_dashboard.json")
+
+def _send_dashboard(state: dict, log_fn=None) -> None:
+    """Build and post (or edit) the Discord fund dashboard from a pre-computed state dict."""
+    _log = log_fn or print
+    try:
+        from src import discord_notifier as _dn_dash
+        embed = _dn_dash.build_fund_dashboard_embed(state)
+
+        # Load saved message ID if it exists
+        _msg_id = None
+        try:
+            if _DASHBOARD_MSG_FILE.exists():
+                import json as _json_dash
+                _saved = _json_dash.loads(_DASHBOARD_MSG_FILE.read_text(encoding="utf-8"))
+                _msg_id = _saved.get("message_id")
+        except Exception:
+            pass
+
+        import requests as _req_dash
+        _webhook = getattr(_dn_dash, "_FUND_WEBHOOK", None) or getattr(_dn_dash, "FUND_WEBHOOK", None)
+        if not _webhook:
+            try:
+                import os as _os_dash
+                _webhook = _os_dash.environ.get("DISCORD_FUND_WEBHOOK") or _os_dash.environ.get("DISCORD_WEBHOOK")
+            except Exception:
+                pass
+
+        if not _webhook:
+            _log("  [dashboard] No webhook URL — skipping Discord post")
+            return
+
+        payload = {"embeds": [embed]}
+
+        if _msg_id:
+            # Edit existing message (webhook message edit endpoint)
+            _edit_url = f"{_webhook.rstrip('/')}/messages/{_msg_id}?wait=true"
+            resp = _req_dash.patch(_edit_url, json=payload, timeout=15)
+            if resp.status_code in (200, 204):
+                _log(f"  [dashboard] Edited Discord dashboard (msg {_msg_id})")
+                return
+            else:
+                _log(f"  [dashboard] Edit failed ({resp.status_code}) — reposting")
+
+        # Post new message
+        _post_url = _webhook.rstrip("/") + "?wait=true"
+        resp = _req_dash.post(_post_url, json=payload, timeout=15)
+        if resp.status_code in (200, 204):
+            try:
+                _new_id = resp.json().get("id")
+                if _new_id:
+                    import json as _json2
+                    _DASHBOARD_MSG_FILE.parent.mkdir(parents=True, exist_ok=True)
+                    _DASHBOARD_MSG_FILE.write_text(
+                        _json2.dumps({"message_id": _new_id}, indent=2), encoding="utf-8"
+                    )
+                    _log(f"  [dashboard] Posted Discord dashboard (msg {_new_id})")
+            except Exception as _e:
+                _log(f"  [dashboard] Posted but couldn't save msg ID: {_e}")
+        else:
+            _log(f"  [dashboard] Post failed ({resp.status_code}): {resp.text[:200]}")
+
+    except Exception as _exc:
+        import traceback as _tb
+        _log(f"  [dashboard] ERROR: {_exc}\n{_tb.format_exc()}")
+
+
 # ── Write-back verification ───────────────────────────────────────────────────
 
 def _verify_milestone_write(rec_id: int, level: str, tracker_mod,
