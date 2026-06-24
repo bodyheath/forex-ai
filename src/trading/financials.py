@@ -438,11 +438,12 @@ def calculate_fund_state(df: pd.DataFrame, prices: dict) -> dict:
                 "entry_trigger_expiry":    str(pt.get("entry_trigger_expiry", "")),
             })
 
-        unrealised_d = sum(
-            safe_float(t.get("dollars_unrealised"))
-            for t in [_open_trade_summary(row, prices, running_bal)
-                      for _, row in open_trades.iterrows()]
-        )
+        _ot_summaries = [
+            _open_trade_summary(row, prices, running_bal)
+            for _, row in open_trades.iterrows()
+        ]
+        unrealised_d    = sum(safe_float(t.get("dollars_unrealised")) for t in _ot_summaries)
+        unrealised_pips = sum(safe_float(t.get("pips_unrealised"))    for t in _ot_summaries)
 
         return {
             "balance":               round(running_bal, 2),
@@ -457,11 +458,9 @@ def calculate_fund_state(df: pd.DataFrame, prices: dict) -> dict:
             "sizing_mode":           "normal",
             "daily_trades_date":     today_auckland,
             "unrealised_dollars":    round(unrealised_d, 2),
+            "unrealised_pips":       round(unrealised_pips, 1),
             "total_equity":          round(running_bal + unrealised_d, 2),
-            "open_trades":           [
-                _open_trade_summary(row, prices, running_bal)
-                for _, row in open_trades.iterrows()
-            ],
+            "open_trades":           _ot_summaries,
             "pending_count":         len(pending_trades),
             "pending_trades":        pending_list,
         }
