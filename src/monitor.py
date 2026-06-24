@@ -637,7 +637,7 @@ def _verify_milestone_write(rec_id: int, level: str, tracker_mod,
     try:
         rows = tracker_mod.load()
         for row in rows:
-            if int(row.get("id", -1)) == rec_id:
+            if _safe_int_id(row.get("id", -1), default=-1) == rec_id:
                 if _is_true(row.get(field)):
                     return True
                 log(
