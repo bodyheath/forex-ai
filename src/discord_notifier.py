@@ -696,6 +696,10 @@ def send_master_scan_report(
     pairs_analysed: int = 0,
     expiry_alerts: list = None,
     monitor_gap_mins: int = 0,
+    sizing_mode: str = "normal",
+    active_sessions: list = None,
+    news_blackout_pairs: list = None,
+    open_trades: list = None,
 ):
     if not WEBHOOK_HEALTH:
         return False
