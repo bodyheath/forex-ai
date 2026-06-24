@@ -4743,6 +4743,8 @@ def _send_telegram_summary(
     # Applies ONLY to fund trades (trades.csv). Research trades are never affected.
     _fund_st: dict = {}
     _fund_st_blocked: list = []   # [(trade_dict, reason_str), ...]
+    _blocked_setups:  list = []   # high-conf setups blocked by capacity
+    _swapped_setups:  list = []   # trades closed to free a slot
     _override_pairs: dict = {}    # pair → tier for 5th-slot overrides; used in Discord report
     try:
         from src import fund_state as _fs
