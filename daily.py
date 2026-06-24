@@ -4835,8 +4835,12 @@ def _send_telegram_summary(
                           f"for #{_yt.get('id')}: {_szg_meta_err}")
             _fund_st = _fs.increment_daily_trades(_fund_st)
             _open_fund_count = _get_open_fund_count()  # re-read after write
-            _log_line(log, f"[capacity] {_yt_pair} opened → now {_open_fund_count}/{MAX_FUND_TRADES}")
+            _cap_max = MAX_FUND_TRADES_OVERRIDE if _cap.get("is_override") else MAX_FUND_TRADES_NORMAL
+            _log_line(log, f"[capacity] {_yt_pair} opened → now {_open_fund_count}/{_cap_max}"
+                      + (" ⚡ OVERRIDE" if _cap.get("is_override") else ""))
             _yt_pass.append(_yt)
+            if _cap.get("is_override"):
+                _override_pairs[_yt_pair] = _cap["tier"]
             _ot_open_trades.append(_yt)  # live update so next trade in same scan sees this currency
         # Stamp ML sizing fields on matching research trades
         try:
