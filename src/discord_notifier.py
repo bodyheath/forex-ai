@@ -871,7 +871,7 @@ def send_master_scan_report(
     _open_trades = open_trades or []
     if _open_trades:
         _pos_lines = []
-        for _ot in _open_trades[:4]:
+        for _ot in _open_trades:
             _ot_pair = _ot.get("pair", "")
             _ot_dir  = _ot.get("direction", "")
             _ot_ent  = float(_ot.get("entry") or 0)
