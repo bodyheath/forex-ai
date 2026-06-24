@@ -634,9 +634,19 @@ def sync_fund_state_json(state: dict = None) -> bool:
 
 # ─── Integrity verification ───────────────────────────────────────────────────
 
-def verify_trade_integrity(df: pd.DataFrame) -> list:
-    """Check all fund trades for data integrity issues. Returns list of issue strings."""
-    issues = []
+def verify_trade_integrity(df: pd.DataFrame = None) -> dict:
+    """Check all fund trades for data integrity issues.
+
+    Returns dict: {issue_count, trade_count, issues: [{trade_id, pair, issue}]}
+    df is optional — loads from trades.csv if omitted.
+    """
+    if df is None:
+        try:
+            df = pd.read_csv(str(TRADES_CSV), encoding="utf-8-sig")
+        except Exception as _e:
+            return {"issue_count": 1, "trade_count": 0,
+                    "issues": [{"trade_id": 0, "pair": "", "issue": f"Could not load trades.csv: {_e}"}]}
+    raw_issues = []
     fund = df[df["trade_this"].astype(str) == "YES"]
     now_utc = datetime.now(timezone.utc)
 
