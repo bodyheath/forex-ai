@@ -15,7 +15,7 @@ Saved to data/online_model.pkl  +  data/online_model_meta.json.
 """
 import json
 import pickle
-from datetime import datetime
+from datetime import datetime, timezone
 
 import config
 
