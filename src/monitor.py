@@ -3085,37 +3085,31 @@ def run(log=print) -> dict:
             from src import fund_state as _fs_dash
             _fs_d = _fs_dash.load()
 
-            _dn.update_fund_dashboard(
-                open_fund_trades=_dash_trades,
-                fund_balance=_dash_bal,
-                fund_return_pct=_dash_ret,
-                daily_pnl_pct=_dash_pnl_d,
-                daily_pnl_dollars=_dash_pnl_usd,
-                drawdown_pct=float(_state_dash.get("current_drawdown_pct") or 0),
-                sizing_mode=str(_fs_d.get("sizing_mode") or "normal"),
-                risk_pct=float(_fs_d.get("current_sizing_pct") or 1.0),
-                consecutive_wins=int(_fs_d.get("consecutive_wins") or 0),
-                consecutive_losses=int(_state_dash.get("consecutive_losses") or 0),
-                ftmo_current_pct=_ftmo_pct,
-                fund_total_trades=_st_total,
-                fund_wins=_st_wins,
-                fund_losses=_st_losses,
-                fund_partial_wins=_st_partial,
-                fund_breakeven=_st_breakeven,
-                fund_win_rate=_st_wr,
-                fund_avg_win_pips=_st_avg_win,
-                fund_avg_loss_pips=_st_avg_loss,
-                fund_profit_factor=_st_pf,
-                fund_avg_win_dollars=_st_avg_win_d,
-                fund_avg_loss_dollars=_st_avg_loss_d,
-                fund_dollar_profit_factor=_st_dollar_pf,
-                fund_best_trade_pips=_st_best_pips,
-                fund_best_trade_pair=_st_best_pair,
-                fund_total_pips=_st_total_pips,
-                unrealised_pnl_dollars=round(_total_unreal_usd, 2),
-                unrealised_pnl_pips=round(_total_unreal_pips, 1),
-                total_equity=round(_total_equity, 2),
-            )
+            # Build full state dict — single source of truth for the dashboard
+            _full_state = {
+                **_state_dash,
+                # Statistics (computed above)
+                "win_count":           _st_wins,
+                "protected_count":     _st_partial,
+                "loss_count":          _st_losses,
+                "breakeven_count":     _st_breakeven,
+                "decisive_count":      _st_decisive if "_st_decisive" in dir() else _st_wins + _st_losses + _st_partial,
+                "win_rate":            _st_wr,
+                "profit_factor":       _st_pf,
+                "avg_win_pips":        _st_avg_win,
+                "avg_win_dollars":     _st_avg_win_d,
+                "avg_loss_pips":       _st_avg_loss,
+                "avg_loss_dollars":    _st_avg_loss_d,
+                "fund_total_trades":   _st_total,
+                "best_pair":           _st_best_pair,
+                "best_pips":           _st_best_pips,
+                "fund_dollar_pf":      _st_dollar_pf,
+                # Metadata from fund_state.json (sizing, win streak — not in CSV)
+                "sizing_mode":         str(_fs_d.get("sizing_mode") or "normal"),
+                "current_sizing_pct":  float(_fs_d.get("current_sizing_pct") or 1.0),
+                "consecutive_wins":    int(_fs_d.get("consecutive_wins") or 0),
+            }
+            _send_dashboard(state=_full_state, log_fn=log)
     except Exception as _dash_exc:
         import traceback as _tb_dash
         log(f"  Monitor: Discord dashboard update failed: {_dash_exc}")
