@@ -419,10 +419,24 @@ def calculate_fund_state(df: pd.DataFrame, prices: dict) -> dict:
             daily_open_bal = running_bal
 
         # Add unrealised open trade P&L (for balance display purposes only)
-        open_trades = fund[fund["status"] == "OPEN"]
+        open_trades    = fund[fund["status"] == "OPEN"]
+        pending_trades = fund[fund["status"] == "PENDING"]
 
         drawdown_pct = round((peak_bal - running_bal) / peak_bal * 100, 4) if peak_bal > 0 else 0.0
         daily_pnl_pct = round(daily_pnl_d / daily_open_bal * 100, 4) if daily_open_bal > 0 else 0.0
+
+        # Build pending trades summary list
+        pending_list = []
+        for _, pt in pending_trades.iterrows():
+            pending_list.append({
+                "id":                      int(pt.get("id", 0)),
+                "pair":                    str(pt.get("pair", "")),
+                "direction":               str(pt.get("direction", "")),
+                "entry_type":              str(pt.get("entry_type", "IMMEDIATE")),
+                "entry_trigger_price":     safe_float(pt.get("entry_trigger_price")),
+                "entry_trigger_reason":    str(pt.get("entry_trigger_reason", "")),
+                "entry_trigger_expiry":    str(pt.get("entry_trigger_expiry", "")),
+            })
 
         return {
             "balance":               round(running_bal, 2),
@@ -439,6 +453,8 @@ def calculate_fund_state(df: pd.DataFrame, prices: dict) -> dict:
             "open_trades":           [
                 _open_trade_summary(row, prices) for _, row in open_trades.iterrows()
             ],
+            "pending_count":         len(pending_trades),
+            "pending_trades":        pending_list,
         }
     except Exception:
         return {
