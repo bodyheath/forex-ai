@@ -9932,12 +9932,10 @@ def run() -> int:
                         _dsc_ml_rwr = float(_dsc_ml_meta.get("recent_win_rate") or 0) * 100
                         _dsc_ml_owr = float(_dsc_ml_meta.get("overall_win_rate") or 0) * 100
                         _dsc_ml_acc = _dsc_ml_owr
-                        # Use the same gate that actually controls ML influence on scores
-                        try:
-                            from src import ml_predictor as _mlp_dsc
-                            _dsc_ml_act = _mlp_dsc.is_model_active()
-                        except Exception:
-                            _dsc_ml_act = False
+                        # Model is ACTIVE only when model_ready AND n_consecutive_reliable >= 3
+                        _n_reliable = int(_dsc_ml_meta.get("n_consecutive_reliable", 0) or 0)
+                        _model_ready = bool(_dsc_ml_meta.get("model_ready", False))
+                        _dsc_ml_act = _model_ready and _n_reliable >= 3
                         _lr_ts = str(_dsc_ml_meta.get("last_updated") or "")
                         if _lr_ts:
                             try:
