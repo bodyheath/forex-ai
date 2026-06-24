@@ -4772,6 +4772,30 @@ def _send_telegram_summary(
             f"regime={_regime_str!r} "
             f"consecutive_losses={_consec_losses_fs}"
         ))
+        # Per-pair win-rate lookup from research history (computed once, used inside loop)
+        _pair_wr_lkp: dict = {}
+        try:
+            import pandas as _prwlkp_pd
+            _prwlkp_rt = _prwlkp_pd.read_csv(
+                "data/research_trades.csv", encoding="utf-8-sig"
+            )
+            _prwlkp_cl = _prwlkp_rt[_prwlkp_rt["status"] != "OPEN"]
+            for _prwlkp_pair in _prwlkp_cl["pair"].dropna().unique():
+                _prwlkp_s = _prwlkp_cl[_prwlkp_cl["pair"] == _prwlkp_pair]
+                _prwlkp_w = _prwlkp_s[
+                    _prwlkp_s["status"].str.upper().isin(["WIN", "FULL_WIN", "PARTIAL_WIN"])
+                ]
+                _prwlkp_l = _prwlkp_s[
+                    _prwlkp_s["status"].str.upper().isin(["LOSS"])
+                ]
+                _prwlkp_d = len(_prwlkp_w) + len(_prwlkp_l)
+                if _prwlkp_d > 0:
+                    _pair_wr_lkp[str(_prwlkp_pair).upper()] = {
+                        "win_rate": len(_prwlkp_w) / _prwlkp_d,
+                        "decisive": _prwlkp_d,
+                    }
+        except Exception:
+            pass
         for _yt in yes_trades:
             _yt_pair   = _yt.get("pair", "")
             _yt_parsed = (_yt.get("parsed") or {})
