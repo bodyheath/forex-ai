@@ -834,6 +834,179 @@ def _fmt_pips_between(pair: str, price_a, price_b) -> str:
         return "—"
 
 
+def _parse_entry_type(
+    analysis_text: str,
+    current_price: float,
+    direction: str,
+    log_fn=None,
+) -> dict:
+    """Extract entry type and trigger from AI analysis output.
+
+    Returns dict with entry_type, trigger_price, trigger_direction,
+    trigger_reason, expiry_hours.
+    """
+    import re as _re_et
+    _log = log_fn or print
+
+    result = {
+        "entry_type":        "IMMEDIATE",
+        "trigger_price":     current_price,
+        "trigger_direction": None,
+        "trigger_reason":    "Immediate entry at current price",
+        "expiry_hours":      0,
+    }
+
+    text = str(analysis_text)
+    text_lower = text.lower()
+
+    # Structured field extraction (from AI output)
+    et_match = _re_et.search(r"ENTRY_TYPE\s*:\s*(\w+)", text, _re_et.I)
+    if et_match:
+        result["entry_type"] = et_match.group(1).upper()
+
+    tp_match = _re_et.search(
+        r"ENTRY_TRIGGER_PRICE\s*:\s*([0-9]+\.?[0-9]*)", text, _re_et.I
+    )
+    if tp_match:
+        try:
+            result["trigger_price"] = float(tp_match.group(1))
+        except (ValueError, TypeError):
+            pass
+
+    tr_match = _re_et.search(
+        r"ENTRY_TRIGGER_REASON\s*:\s*(.+?)(?:\n|$)", text, _re_et.I
+    )
+    if tr_match:
+        result["trigger_reason"] = tr_match.group(1).strip()
+
+    exp_match = _re_et.search(
+        r"ENTRY_TRIGGER_EXPIRY_HOURS\s*:\s*([0-9]+)", text, _re_et.I
+    )
+    if exp_match:
+        try:
+            result["expiry_hours"] = int(exp_match.group(1))
+        except (ValueError, TypeError):
+            pass
+
+    # Keyword detection fallback if ENTRY_TYPE not structured
+    if result["entry_type"] == "IMMEDIATE":
+        if any(x in text_lower for x in [
+            "break above", "breaks above", "breakout above",
+            "neckline", "resistance break",
+        ]):
+            if direction == "BUY":
+                result["entry_type"] = "BREAKOUT_BUY"
+                result["expiry_hours"] = result["expiry_hours"] or 48
+
+        if any(x in text_lower for x in [
+            "break below", "breaks below", "breakout below", "support break",
+        ]):
+            if direction == "SELL":
+                result["entry_type"] = "BREAKOUT_SELL"
+                result["expiry_hours"] = result["expiry_hours"] or 48
+
+        if any(x in text_lower for x in [
+            "pullback", "pull back", "retest", "wait for",
+            "on a dip", "better entry",
+        ]):
+            result["entry_type"] = "PULLBACK"
+            result["expiry_hours"] = result["expiry_hours"] or 48
+
+    # Set trigger direction from entry type
+    et = result["entry_type"]
+    if et in ("BREAKOUT_BUY", "LIMIT_BUY") and direction == "BUY":
+        result["trigger_direction"] = "ABOVE"
+    elif et in ("BREAKOUT_SELL", "LIMIT_SELL") and direction == "SELL":
+        result["trigger_direction"] = "BELOW"
+    elif et == "PULLBACK":
+        result["trigger_direction"] = "BELOW" if direction == "BUY" else "ABOVE"
+
+    _log(
+        f"[entry] {direction} entry_type={result['entry_type']} "
+        f"trigger={result['trigger_price']} expiry={result['expiry_hours']}h"
+    )
+    return result
+
+
+def _validate_entry_prices(
+    yes_trades: list,
+    current_prices: dict,
+    max_adverse_pips: float = 30.0,
+    log_fn=None,
+) -> list:
+    """Re-check prices after the full scan and validate IMMEDIATE entries.
+
+    PENDING entries skip validation — they wait for their trigger.
+    Returns filtered list of validated trades.
+    """
+    from src.trading.financials import get_price as _get_price_vep
+    _log = log_fn or print
+    validated = []
+
+    for trade in yes_trades:
+        pair       = str(trade.get("pair", ""))
+        direction  = str(trade.get("direction") or
+                         (trade.get("parsed") or {}).get("direction") or "").upper()
+        parsed     = trade.get("parsed") or {}
+        signal_price = float(parsed.get("entry") or trade.get("entry") or 0)
+        entry_type = str(
+            parsed.get("entry_type") or trade.get("entry_type") or "IMMEDIATE"
+        ).upper()
+        stop = float(parsed.get("stop_loss") or trade.get("stop_loss") or 0)
+
+        if entry_type != "IMMEDIATE":
+            validated.append(trade)
+            _log(f"[validate] {pair} PENDING ({entry_type}) — no price check needed")
+            continue
+
+        current = _get_price_vep(current_prices, pair)
+        if not current:
+            validated.append(trade)
+            _log(f"[validate] {pair} no current price — allowing")
+            continue
+
+        ps = 0.01 if "JPY" in pair else 0.0001
+
+        if stop > 0:
+            if direction == "BUY" and current <= stop:
+                _log(f"[validate] {pair} BUY CANCELLED — price {current} at/below stop {stop}")
+                continue
+            if direction == "SELL" and current >= stop:
+                _log(f"[validate] {pair} SELL CANCELLED — price {current} at/above stop {stop}")
+                continue
+
+        if signal_price > 0:
+            if direction == "BUY":
+                pips_moved = (current - signal_price) / ps
+            else:
+                pips_moved = (signal_price - current) / ps
+
+            if pips_moved < -max_adverse_pips:
+                _log(
+                    f"[validate] {pair} CANCELLED — price moved "
+                    f"{pips_moved:.1f}p against trade since signal"
+                )
+                continue
+
+            if pips_moved > 50:
+                _log(f"[validate] {pair} — moved {pips_moved:.1f}p with trade — converting to PULLBACK")
+                from datetime import datetime, timezone, timedelta
+                trade = dict(trade)
+                trade["entry_type"] = "PULLBACK"
+                trade.setdefault("parsed", {})["entry_type"] = "PULLBACK"
+                expiry = (datetime.now(timezone.utc) + timedelta(hours=24)).strftime("%Y-%m-%d %H:%M:%S")
+                trade["entry_trigger_expiry"] = expiry
+                validated.append(trade)
+                continue
+            else:
+                _log(f"[validate] {pair} CONFIRMED — signal {signal_price:.5f} current {current:.5f} ({pips_moved:+.1f}p)")
+
+        validated.append(trade)
+
+    _log(f"[validate] {len(validated)}/{len(yes_trades)} trades validated")
+    return validated
+
+
 def _analyse_pair(pair: str, logf, force_deep: bool = False,
                   shared_fundamental=None, shared_macro=None,
                   sonnet_threshold: int = 6,
