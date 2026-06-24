@@ -9841,7 +9841,7 @@ def run() -> int:
                             if _ev and _ev not in ("nan", "None", ""):
                                 try:
                                     _edt = datetime.strptime(_ev[:10], "%Y-%m-%d")
-                                    _dl  = (_edt - datetime.now()).days
+                                    _dl  = (_edt - datetime.now(timezone.utc).replace(tzinfo=None)).days
                                     if _dl <= 2:
                                         _dsc_expiry_al.append(
                                             f"⚠️ {_dsc_ot.get('pair', '?')} expires in {_dl}d"
