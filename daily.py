@@ -797,6 +797,22 @@ def _conf_bar(conf) -> str:
     return "█" * n + "░" * (10 - n)
 
 
+def _get_open_fund_count() -> int:
+    """Fresh CSV read for fund capacity. Counts OPEN + PENDING (pending will consume a slot)."""
+    try:
+        import pandas as _pd_cap
+        _df_cap = _pd_cap.read_csv("data/trades.csv")
+        return int(len(_df_cap[
+            (_df_cap["trade_this"].astype(str) == "YES") &
+            (_df_cap["status"].isin(["OPEN", "PENDING"]))
+        ]))
+    except Exception:
+        return 0
+
+
+MAX_FUND_TRADES = 4
+
+
 def _pip_size(pair: str) -> float:
     """Return the pip size for any forex pair based on the QUOTE currency.
 
