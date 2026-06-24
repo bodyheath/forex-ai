@@ -473,41 +473,136 @@ def calculate_fund_state(df: pd.DataFrame, prices: dict) -> dict:
         }
 
 
-def _open_trade_summary(row, prices: dict) -> dict:
-    """Build unrealised P&L summary for one open trade."""
+def _open_trade_summary(row, prices: dict, running_balance: float = STARTING_BALANCE) -> dict:
+    """Build full per-trade dict for the Discord dashboard and unrealised P&L.
+
+    Returns every field the dashboard needs — never requires the caller to re-derive anything.
+    current price comes from `prices`; all prices/hit-flags/targets come from `row`.
+    """
     try:
-        pair = str(row.get("pair", ""))
-        cp   = get_price(prices, pair)
-        pnl  = calculate_pnl(
-            pair       = pair,
-            direction  = str(row.get("direction", "")),
-            entry      = row.get("entry"),
-            stop_loss  = row.get("stop_loss"),
-            pos_pct    = row.get("position_size_pct_at_entry"),
-            balance    = STARTING_BALANCE,  # caller may override with actual balance
-            t1_price   = row.get("t1_price"),
-            t2_price   = row.get("t2_price"),
-            t3_price   = row.get("t3_price"),
-            t1_hit     = row.get("t1_hit"),
-            t2_hit     = row.get("t2_hit"),
-            t3_hit     = row.get("t3_hit"),
-            status     = "OPEN",
-            exit_price = None,
+        pair  = str(row.get("pair", ""))
+        dirn  = str(row.get("direction", "")).upper()
+        cp    = get_price(prices, pair)
+        ps    = pip_size(pair)
+        entry = safe_float(row.get("entry"))
+        sl    = safe_float(row.get("stop_loss"))
+        eff_stop = safe_float(row.get("effective_stop") or row.get("stop_loss"))
+        t1p   = safe_float(row.get("t1_price") or row.get("target"))
+        t2p   = safe_float(row.get("t2_price"))
+        t3p   = safe_float(row.get("t3_price"))
+        t1h   = safe_bool(row.get("t1_hit"))
+        t2h   = safe_bool(row.get("t2_hit"))
+        t3h   = safe_bool(row.get("t3_hit"))
+        pct   = safe_pos_pct(row.get("position_size_pct_at_entry"))
+        bal   = safe_float(running_balance, STARTING_BALANCE)
+        cur   = safe_float(cp) if cp else entry
+
+        # Canonical P&L (cascade-aware, breakeven-protected)
+        pnl = calculate_pnl(
+            pair          = pair,
+            direction     = dirn,
+            entry         = entry,
+            stop_loss     = sl,
+            pos_pct       = pct,
+            balance       = bal,
+            t1_price      = t1p or None,
+            t2_price      = t2p or None,
+            t3_price      = t3p or None,
+            t1_hit        = t1h,
+            t2_hit        = t2h,
+            t3_hit        = t3h,
+            status        = "OPEN",
+            exit_price    = None,
             current_price = cp,
         )
+
+        # Cascade-relative progress (entry → next target), shown in the progress bar
+        if t3h:
+            _next = "Complete"
+            _base, _tgt = entry, t3p
+        elif t2h:
+            _next = "T3"
+            _base = safe_float(eff_stop or entry)
+            _tgt  = t3p
+        elif t1h:
+            _next = "T2"
+            _base, _tgt = entry, t2p
+        else:
+            _next = "T1"
+            _base, _tgt = entry, t1p
+
+        if _tgt and _base and _tgt != _base:
+            _rng = _tgt - _base if dirn == "BUY" else _base - _tgt
+            _mv  = cur  - _base if dirn == "BUY" else _base - cur
+            cascade_progress = round(_mv / _rng * 100.0, 1) if _rng > 0 else 0.0
+        else:
+            cascade_progress = pnl["progress_pct"]  # fallback: R-multiple progress
+
+        # Days open (UTC-only — treats stored timestamp as UTC to sidestep NZT bug)
+        days_open = 0
+        open_str  = "?d"
+        ts_raw    = str(row.get("timestamp", "") or "")
+        dt        = parse_utc_dt(ts_raw)
+        if dt:
+            delta     = datetime.now(timezone.utc) - dt
+            hours     = delta.total_seconds() / 3600
+            days_open = delta.days
+            open_str  = (f"{hours:.0f}h" if days_open == 0 and hours < 24
+                         else f"{days_open}d")
+
+        # P&L note for cascade status
+        if t2h:
+            pnl_note = "T1+T2 banked · 30% running"
+        elif t1h:
+            pnl_note = "T1 banked · 60% running"
+        else:
+            pnl_note = "Full position running"
+
+        stop_pips = pnl["stop_pips"]
+        risk_d    = bal * pct / 100.0
+
         return {
-            "id":               int(row.get("id", 0)),
-            "pair":             pair,
-            "direction":        str(row.get("direction", "")),
-            "entry":            safe_float(row.get("entry")),
-            "stop_loss":        safe_float(row.get("stop_loss")),
-            "pips_unrealised":  pnl["pips_unrealised"],
-            "dollars_unrealised": pnl["dollars"],
-            "progress_pct":     pnl["progress_pct"],
-            "is_protected":     pnl["is_protected"],
+            # Identity
+            "id":                  int(safe_float(row.get("id", 0))),
+            "pair":                pair,
+            "direction":           dirn,
+            # Prices (all in one place — no re-lookup needed)
+            "entry":               entry,
+            "current":             cur,
+            "stop":                eff_stop,
+            "stop_loss":           sl,
+            # Cascade targets
+            "t1":                  t1p,
+            "t2":                  t2p,
+            "t3":                  t3p,
+            "t1_price":            t1p,
+            "t2_price":            t2p,
+            "t3_price":            t3p,
+            "t1_hit":              t1h,
+            "t2_hit":              t2h,
+            "t3_hit":              t3h,
+            "next_target":         _next,
+            # P&L (correct cascade + breakeven formula from calculate_pnl)
+            "pips_unrealised":     pnl["pips_unrealised"],
+            "pips":                pnl["pips_unrealised"],
+            "dollars_unrealised":  pnl["dollars"],
+            "dollars":             pnl["dollars"],
+            "dpp":                 pnl["dpp"],
+            "stop_pips":           stop_pips,
+            # Progress
+            "progress_pct":        cascade_progress,   # toward next cascade target
+            "r_progress_pct":      pnl["progress_pct"],  # in R multiples
+            "is_protected":        pnl["is_protected"],
+            # Trade metadata
+            "days_open":           days_open,
+            "open_str":            open_str,
+            "conf":                safe_float(row.get("confidence")),
+            "confidence":          safe_float(row.get("confidence")),
+            "risk_dollars":        round(risk_d, 2),
+            "pnl_note":            pnl_note,
         }
     except Exception:
-        return {"id": int(row.get("id", 0)), "pair": str(row.get("pair", ""))}
+        return {"id": int(safe_float(row.get("id", 0))), "pair": str(row.get("pair", ""))}
 
 
 def sync_fund_state_json(state: dict) -> bool:
