@@ -35,7 +35,7 @@ FUND_STATE_JSON = Path("data/fund_state.json")
 PRICE_CACHE     = Path("data/price_cache.json")
 
 CLOSED_STATUSES = ("WIN", "LOSS", "PARTIAL_WIN", "FULL_WIN", "EXPIRED",
-                   "STOPPED", "CLOSED")
+                   "STOPPED", "CLOSED", "CANCELLED")
 
 # ─── Type helpers ─────────────────────────────────────────────────────────────
 
