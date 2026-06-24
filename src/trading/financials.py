@@ -453,8 +453,16 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         unrealised_d    = sum(safe_float(t.get("dollars_unrealised")) for t in _ot_summaries)
         unrealised_pips = sum(safe_float(t.get("pips_unrealised"))    for t in _ot_summaries)
 
+        # Win rate: wins / (wins + losses), ignoring EXPIRED/CANCELLED
+        _win_statuses  = ("WIN", "PARTIAL_WIN", "FULL_WIN")
+        _countable     = closed[closed["status"].isin(_win_statuses + ("LOSS",))]
+        _wins          = int((_countable["status"].isin(_win_statuses)).sum())
+        _total_counted = len(_countable)
+        win_rate       = round(_wins / _total_counted * 100.0, 1) if _total_counted > 0 else 0.0
+
         return {
             "balance":               round(running_bal, 2),
+            "opening_balance":       round(daily_open_bal, 2),
             "daily_opening_balance": round(daily_open_bal, 2),
             "daily_pnl_dollars":     round(daily_pnl_d, 2),
             "daily_pnl_pct":         round(daily_pnl_pct, 4),
@@ -462,6 +470,8 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             "current_drawdown_pct":  round(drawdown_pct, 4),
             "drawdown_pct":          round(drawdown_pct, 4),
             "consecutive_losses":    int(cons_losses),
+            "open_count":            len(open_trades),
+            "win_rate":              win_rate,
             "current_sizing_pct":    1.0,
             "sizing_mode":           "normal",
             "daily_trades_date":     today_auckland,
