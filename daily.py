@@ -10964,6 +10964,7 @@ def run() -> int:
                 _dsc_wr45 = _dsc_wr56 = _dsc_wr67 = _dsc_wr7p = 0.0
                 _dsc_n45  = _dsc_n56  = _dsc_n67  = _dsc_n7p  = 0
                 _dsc_best_pairs_s = ""
+                _dsc_hot_str      = ""
                 _dsc_adapt_cnt    = 0
                 try:
                     _dsc_rt   = _dsc_pd.read_csv(config.DATA_DIR / "research_trades.csv", encoding="utf-8-sig")
