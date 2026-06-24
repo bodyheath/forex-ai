@@ -3993,7 +3993,76 @@ def _send_telegram_summary(
             if str(r.get("trade_this", "")).strip().upper() == "YES"
         ])
         _yt_pass: list = []
+        # Pre-compute regime and loss-streak filters for this scan
+        _regime_str = str((threshold_data or {}).get("regime", "") or "").upper()
+        _REGIME_BLOCK = ["RANGING_LOW_VOL", "RANGING_LOW_VOLATILITY", "RISK_OFF"]
+        _consec_losses_fs = int(_fund_st.get("consecutive_losses", 0) or 0)
+        MAX_CONSECUTIVE_LOSSES = 3
+        if "TRENDING" in _regime_str:
+            FUND_TRADE_MIN_CONF = 6.0
+        elif "RANGING" in _regime_str:
+            FUND_TRADE_MIN_CONF = 7.5
+        else:
+            FUND_TRADE_MIN_CONF = 7.0
+        FUND_MIN_RR = 1.5
+        _log_line(logf, (
+            f"[fund] Filters: min_conf={FUND_TRADE_MIN_CONF} "
+            f"min_rr={FUND_MIN_RR} "
+            f"regime={_regime_str!r} "
+            f"consecutive_losses={_consec_losses_fs}"
+        ))
         for _yt in yes_trades:
+            _yt_pair   = _yt.get("pair", "")
+            _yt_parsed = (_yt.get("parsed") or {})
+            # Improvement 1: Regime filter — no fund trades in ranging/risk-off
+            if any(r in _regime_str for r in _REGIME_BLOCK):
+                _blk_rgm = f"Regime: {_regime_str} — waiting for trending market"
+                _log_line(logf, f"[regime] BLOCKING fund trade {_yt_pair} — regime is {_regime_str}")
+                _fund_st_blocked.append((_yt, _blk_rgm))
+                continue
+            # Improvement 3: Consecutive loss pause
+            if _consec_losses_fs >= MAX_CONSECUTIVE_LOSSES:
+                _blk_streak = f"Loss streak: {_consec_losses_fs} consecutive — system paused"
+                _log_line(logf, f"[risk] BLOCKING fund trade {_yt_pair} — {_consec_losses_fs} consecutive losses")
+                _fund_st_blocked.append((_yt, _blk_streak))
+                continue
+            # Improvement 2: Dynamic confidence threshold by regime
+            _yt_conf_val = _eff_conf(_yt)
+            if _yt_conf_val < FUND_TRADE_MIN_CONF:
+                _blk_conf = f"Confidence {_yt_conf_val:.1f} < {FUND_TRADE_MIN_CONF:.1f} min (regime: {_regime_str})"
+                _log_line(logf, f"[fund] BLOCKING {_yt_pair} — {_blk_conf}")
+                _fund_st_blocked.append((_yt, _blk_conf))
+                continue
+            # Improvement 4: Monthly trend alignment
+            _mta_val = _yt_parsed.get("monthly_trend_aligned")
+            if _mta_val is not None:
+                _mta_bool = str(_mta_val).upper() in ("TRUE", "YES", "1", "T")
+                if not _mta_bool:
+                    _blk_mta = "Monthly trend misaligned"
+                    _log_line(logf, f"[trend] BLOCKING {_yt_pair} — monthly trend NOT aligned with trade direction")
+                    _fund_st_blocked.append((_yt, _blk_mta))
+                    continue
+            else:
+                _log_line(logf, f"[trend] WARNING {_yt_pair} — monthly_trend_aligned not available — allowing trade")
+            # Improvement 5: Minimum R:R for fund trades
+            _yt_rr_val = float(_yt_parsed.get("reward_risk") or 0)
+            if _yt_rr_val > 0 and _yt_rr_val < FUND_MIN_RR:
+                _blk_rr = f"R:R {_yt_rr_val:.2f} < {FUND_MIN_RR} minimum"
+                _log_line(logf, f"[rr] BLOCKING {_yt_pair} — R:R {_yt_rr_val:.2f} below fund minimum {FUND_MIN_RR}")
+                _fund_st_blocked.append((_yt, _blk_rr))
+                continue
+            # Improvement 6: ATR-based stop distance check (block if stop > 4x ATR)
+            _yt_bndl  = (_yt.get("bundle") or {})
+            _yt_atr14 = float(((_yt_bndl.get("technical") or {}).get("daily", {}).get("atr14") or 0))
+            _yt_entry_v = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
+            _yt_stop_v  = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
+            if _yt_atr14 > 0 and _yt_entry_v and _yt_stop_v:
+                _yt_stop_dist = abs(_yt_entry_v - _yt_stop_v)
+                if _yt_stop_dist > _yt_atr14 * 4.0:
+                    _blk_atr = f"Stop too wide ({_yt_stop_dist:.5f}) vs 4xATR ({_yt_atr14 * 4.0:.5f})"
+                    _log_line(logf, f"[stop] BLOCKING {_yt_pair} — stop too wide")
+                    _fund_st_blocked.append((_yt, _blk_atr))
+                    continue
             # Hard capacity limit — never hold more than _MAX_FUND_TRADES open fund trades
             if _open_fund_count >= _MAX_FUND_TRADES:
                 _blk_rsn_cap = (
