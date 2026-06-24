@@ -3162,7 +3162,7 @@ def run(log=print) -> dict:
                 "protected_count":     _st_partial,
                 "loss_count":          _st_losses,
                 "breakeven_count":     _st_breakeven,
-                "decisive_count":      _st_decisive if "_st_decisive" in dir() else _st_wins + _st_losses + _st_partial,
+                "decisive_count":      _st_decisive,
                 "win_rate":            _st_wr,
                 "profit_factor":       _st_pf,
                 "avg_win_pips":        _st_avg_win,
