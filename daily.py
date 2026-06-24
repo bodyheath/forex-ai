@@ -4775,17 +4775,39 @@ def _send_telegram_summary(
         for _yt in yes_trades:
             _yt_pair   = _yt.get("pair", "")
             _yt_parsed = (_yt.get("parsed") or {})
-            # Improvement 1: Regime filter — no fund trades in ranging/risk-off
+            # ── CIRCUIT BREAKER — FIRST check, reads fresh from disk every trade ──
+            try:
+                with open("data/fund_state.json", encoding="utf-8") as _cb_f:
+                    _cb_st   = json.load(_cb_f)
+                _cb_losses = int(_cb_st.get("consecutive_losses", 0) or 0)
+            except Exception:
+                _cb_losses = 0
+            if _cb_losses >= 3:
+                _cb_reason = (
+                    f"Circuit breaker active: {_cb_losses} consecutive losses"
+                )
+                _log_line(
+                    log,
+                    f"[circuit] BLOCKED {_yt_pair} — {_cb_losses} consecutive "
+                    f"losses — no new trades until a win",
+                )
+                _yt_parsed["trade_this"] = "NO"
+                _yt_parsed["block_reason"] = _cb_reason
+                _fund_st_blocked.append((_yt, _cb_reason))
+                _yt_conf_cb = _eff_conf(_yt)
+                if _yt_conf_cb >= 6.0:
+                    _blocked_setups.append({
+                        "pair":      _yt_pair,
+                        "direction": (_yt_parsed.get("direction") or "").upper(),
+                        "conf":      _yt_conf_cb,
+                        "reason":    f"Circuit breaker ({_cb_losses} losses)",
+                    })
+                continue
+            # Regime filter — no fund trades in ranging/risk-off
             if any(r in _regime_str for r in _REGIME_BLOCK):
                 _blk_rgm = f"Regime: {_regime_str} — waiting for trending market"
                 _log_line(log, f"[regime] BLOCKING fund trade {_yt_pair} — regime is {_regime_str}")
                 _fund_st_blocked.append((_yt, _blk_rgm))
-                continue
-            # Improvement 3: Consecutive loss pause
-            if _consec_losses_fs >= MAX_CONSECUTIVE_LOSSES:
-                _blk_streak = f"Loss streak: {_consec_losses_fs} consecutive — system paused"
-                _log_line(log, f"[risk] BLOCKING fund trade {_yt_pair} — {_consec_losses_fs} consecutive losses")
-                _fund_st_blocked.append((_yt, _blk_streak))
                 continue
             # Improvement 2: Dynamic confidence threshold by regime
             _yt_conf_val = _eff_conf(_yt)
