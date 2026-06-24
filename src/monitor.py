@@ -1806,6 +1806,23 @@ def run(log=print) -> dict:
             log(f"  API quota critical — external backup disabled for {len(_missing)} pairs")
 
     _unavailable = [p for p in all_pairs if p not in prices]
+    # Last-resort: fill still-missing prices from price_cache (populated by daily scan)
+    if _unavailable:
+        try:
+            from src.price_fetcher import _load_price_cache as _lpc_mon
+            _cached_p_mon, _cache_age_mon = _lpc_mon()
+            _filled_mon = 0
+            for _pm in _unavailable:
+                if _pm in _cached_p_mon:
+                    prices[_pm] = _cached_p_mon[_pm]
+                    price_sources[_pm] = "price_cache"
+                    _filled_mon += 1
+            if _filled_mon:
+                _age_str = f"{_cache_age_mon:.1f}h old" if _cache_age_mon is not None else "age unknown"
+                log(f"Monitor: {_filled_mon} pair(s) filled from price cache ({_age_str})")
+                _unavailable = [p for p in _unavailable if p not in prices]
+        except Exception:
+            pass
     result["yf_price_pairs"] = len(prices)
     _send_fallback_alerts(_ta, _td_backup_pairs, _sq_backup_pairs, _unavailable, log=log)
 
