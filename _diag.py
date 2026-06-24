@@ -23,6 +23,33 @@ print('2 — LIVE FUND STATE')
 print('=' * 50)
 sync_fund_state_json()
 prices = load_prices()
+
+# Enrich cache with live prices for open pairs missing from it (e.g. GBP/SEK)
+try:
+    import pathlib as _pl
+    _df_open = pd.read_csv('data/trades.csv', encoding='utf-8-sig')
+    _open_pairs = _df_open[
+        (_df_open['trade_this'].astype(str) == 'YES') & (_df_open['status'] == 'OPEN')
+    ]['pair'].tolist()
+    _missing = [p for p in _open_pairs if not any(
+        prices.get(k) for k in (p, p.replace('/', ''), p.upper(), p.upper().replace('/', ''))
+    )]
+    if _missing:
+        try:
+            import yfinance as yf
+            for p in _missing:
+                ticker = p.replace('/', '') + '=X'
+                d = yf.download(ticker, period='1d', interval='5m', progress=False, auto_adjust=True)
+                if not d.empty:
+                    prices[p] = float(d['Close'].iloc[-1])
+                    print(f'  (fetched live {p}: {prices[p]:.5f})')
+                else:
+                    print(f'  (no data from yfinance for {ticker})')
+        except Exception as _fe:
+            print(f'  (live fetch failed: {_fe})')
+except Exception as _ee:
+    print(f'  (price enrichment failed: {_ee})')
+
 state = calculate_fund_state(prices=prices)
 if 'error' in state:
     print(f'❌ ERROR: {state["error"]}')
