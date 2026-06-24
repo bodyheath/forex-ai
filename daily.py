@@ -4787,6 +4787,14 @@ def _send_telegram_summary(
                 _szg_reason = _add_sizing["reason"]
                 _log_line(log, f"[sizing] {_yt_pair}: volatility-adjusted → "
                           f"{_szg_pct}% ({_szg_mode})")
+            # 5th-slot override: cap risk to the override level
+            if _cap.get("is_override") and _cap.get("risk_pct") is not None:
+                if _szg_pct is None or float(_szg_pct) > float(_cap["risk_pct"]):
+                    _szg_pct    = _cap["risk_pct"]
+                    _szg_mode   = f"OVERRIDE_{_cap['tier']}"
+                    _szg_reason = _cap["reason"]
+                    _log_line(log, f"[capacity] {_yt_pair}: 5th-slot override → "
+                              f"{_szg_pct}% ({_szg_mode})")
             _yt["_fs_sizing"] = {
                 "pct":      _szg_pct,
                 "mode":     _szg_mode,
