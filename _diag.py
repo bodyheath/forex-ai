@@ -41,7 +41,10 @@ try:
                 ticker = p.replace('/', '') + '=X'
                 d = yf.download(ticker, period='1d', interval='5m', progress=False, auto_adjust=True)
                 if not d.empty:
-                    prices[p] = float(d['Close'].iloc[-1])
+                    _val = d['Close'].iloc[-1]
+                    if hasattr(_val, 'item'):
+                        _val = _val.item()
+                    prices[p] = float(_val)
                     print(f'  (fetched live {p}: {prices[p]:.5f})')
                 else:
                     print(f'  (no data from yfinance for {ticker})')
