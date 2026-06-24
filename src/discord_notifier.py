@@ -700,13 +700,17 @@ def send_master_scan_report(
     active_sessions: list = None,
     news_blackout_pairs: list = None,
     open_trades: list = None,
+    blocked_setups: list = None,
+    swapped_setups: list = None,
 ):
     if not WEBHOOK_HEALTH:
         return False
 
-    yes_trades     = yes_trades or []
-    blocked_trades = blocked_trades or []
-    watch_list     = watch_list or []
+    yes_trades      = yes_trades      or []
+    blocked_trades  = blocked_trades  or []
+    watch_list      = watch_list      or []
+    blocked_setups  = blocked_setups  or []
+    swapped_setups  = swapped_setups  or []
     expiry_alerts  = expiry_alerts or []
 
     # ── Color: green=new trade, red=issue, orange=watchlist, blue=clean ──────────
