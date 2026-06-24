@@ -1279,6 +1279,8 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                         net_dollars=_net_dol_sh,
                         cascade_label=_casc_lbl_sh,
                     )
+                    # Record that we sent the STOP alert — prevents duplicate on next monitor run
+                    _record_milestone_sent(pair, "STOP", rec_id, "fund")
             except Exception:
                 pass
             # Sync fund_state.json from trades.csv — single source of truth
