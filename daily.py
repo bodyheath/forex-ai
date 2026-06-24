@@ -3493,7 +3493,7 @@ def _build_system_learning_report(date: str) -> list:
                 pass
 
         # Weekly milestone stats from closed trades in last 7 days
-        _mon_cutoff   = (datetime.now() - __import__("datetime").timedelta(days=7)).strftime("%Y-%m-%d")
+        _mon_cutoff   = (datetime.now(timezone.utc) - __import__("datetime").timedelta(days=7)).strftime("%Y-%m-%d")
         _mon_week_rows = [
             r for r in rows
             if r.get("closed_at", "")[:10] >= _mon_cutoff
