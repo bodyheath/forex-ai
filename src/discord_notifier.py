@@ -745,7 +745,7 @@ def send_master_scan_report(
     _title = f"{_mode_emoji} {_mode_name} · {auckland_time} · {scan_date}"
 
     # ── Description (one-liner summary) ─────────────────────────────────────────
-    _high_blocked = [b for b in blocked_setups if float(b.get("conf", 0)) >= 7.0]
+    _any_blocked = [b for b in blocked_setups if float(b.get("conf", 0)) >= 6.0]
     if swapped_setups:
         _desc_lead = (
             f"\U0001f504 {len(swapped_setups)} swap(s) · "
@@ -753,8 +753,10 @@ def send_master_scan_report(
         )
     elif yes_trades:
         _desc_lead = f"\U0001f7e2 {len(yes_trades)} new fund trade(s) opened"
-    elif _high_blocked:
-        _desc_lead = f"\U0001f6ab {len(_high_blocked)} high-conf setup(s) blocked by capacity"
+    elif consecutive_losses >= 3:
+        _desc_lead = f"\U0001f6a8 Circuit breaker active — {consecutive_losses} consecutive losses"
+    elif _any_blocked:
+        _desc_lead = f"\U0001f6ab {len(_any_blocked)} setup(s) blocked (conf ≥ 6)"
     elif blocked_trades:
         _desc_lead = f"⛔ {len(blocked_trades)} trade(s) blocked"
     elif watch_list:
