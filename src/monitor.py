@@ -973,6 +973,55 @@ def _detect_spot_milestones(row: dict, price: float, pair: str) -> tuple:
     return milestones, row_state
 
 
+# ── Stop alert dedup helpers ─────────────────────────────────────────────────
+
+def _already_sent_stop_alert(trade_id: int, log_fn=None) -> bool:
+    """Return True if this trade is already CLOSED in trades.csv.
+
+    Guards against git-conflict reverts: if the auto-commit system reverted our
+    closure the trade shows OPEN again, but the milestone log still records the
+    sent alert so the cooldown blocks a second one.
+    """
+    _log = log_fn or print
+    try:
+        import pandas as _pd_sa
+        _df_sa = _pd_sa.read_csv(str(config.TRADES_CSV), encoding="utf-8-sig")
+        _matches = _df_sa[_df_sa["id"].astype(str) == str(trade_id)]
+        if _matches.empty:
+            return False
+        _status = str(_matches.iloc[0].get("status", ""))
+        if _status not in ("OPEN", "PENDING"):
+            _log(f"  Monitor: #{trade_id} already {_status} — skipping duplicate stop alert")
+            return True
+        return False
+    except Exception:
+        return False
+
+
+def _emergency_close_trade(trade_id: int, exit_price: float, log_fn=None) -> bool:
+    """Last-resort closure via pandas atomic write when tracker.update_outcome() fails."""
+    _log = log_fn or print
+    try:
+        import pandas as _pd_ec
+        from src.trading.financials import atomic_write_csv, utc_now_str, TRADES_CSV as _ec_csv
+        _df_ec = _pd_ec.read_csv(str(_ec_csv), encoding="utf-8-sig")
+        _matches_ec = _df_ec[_df_ec["id"].astype(str) == str(trade_id)]
+        if _matches_ec.empty:
+            _log(f"  Monitor: [emergency] #{trade_id} not found in trades.csv")
+            return False
+        _i_ec = _matches_ec.index[0]
+        _df_ec.at[_i_ec, "status"]     = "LOSS"
+        _df_ec.at[_i_ec, "exit_price"] = float(exit_price)
+        _df_ec.at[_i_ec, "closed_at"]  = utc_now_str()
+        if atomic_write_csv(_ec_csv, _df_ec):
+            _log(f"  Monitor: [emergency] #{trade_id} force-closed at {exit_price} via fallback")
+            return True
+        return False
+    except Exception as _ec_err:
+        _log(f"  Monitor: [emergency] #{trade_id} fallback failed: {_ec_err}")
+        return False
+
+
 # ── Cascade application ───────────────────────────────────────────────────────
 
 def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
