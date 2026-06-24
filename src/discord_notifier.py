@@ -794,10 +794,21 @@ def send_master_scan_report(
         _bp  = _b.get("pair", "")
         _bd  = _b.get("direction", "")
         _bc  = float(_b.get("conf") or 0)
-        _br  = str(_b.get("reason") or "blocked")[:80]
+        _br  = str(_b.get("reason") or "blocked")
+        _br_lo = _br.lower()
+        if any(x in _br_lo for x in ("correlation", "correlated", "exposure")):
+            _b_icon = "\U0001f517"  # 🔗 correlation
+        elif any(x in _br_lo for x in ("trend", "weekly", "monthly", "aligned", "opposing")):
+            _b_icon = "\U0001f4ca"  # 📊 trend
+        elif any(x in _br_lo for x in ("session", "tokyo", "london", "new_york", "new york")):
+            _b_icon = "\U0001f551"  # 🕑 session
+        elif any(x in _br_lo for x in ("news", "blackout", "impact", "calendar")):
+            _b_icon = "\U0001f4f0"  # 📰 news
+        else:
+            _b_icon = "⛔"
         _setup_lines.append(
-            f"⛔ **{_bp} {_bd}** · conf {_bc:.1f}/10\n"
-            f"   {_br}"
+            f"{_b_icon} **{_bp} {_bd}** · conf {_bc:.1f}/10\n"
+            f"   {_br[:90]}"
         )
     if not _setup_lines:
         _setup_lines.append(
