@@ -10917,8 +10917,8 @@ def run() -> int:
                         except Exception:
                             return 0.0
 
-                    _dsc_wrows = _dsc_fc[_dsc_wm | _dsc_ewm]
-                    _dsc_lrows = _dsc_fc[_dsc_lm]
+                    _dsc_wrows = _dsc_fc[_dsc_wins_m]
+                    _dsc_lrows = _dsc_fc[_dsc_losses_m]
                     _dsc_wd = [_dsc_dollar(r) for _, r in _dsc_wrows.iterrows()]
                     _dsc_ld = [abs(_dsc_dollar(r)) for _, r in _dsc_lrows.iterrows()]
                     if len(_dsc_wrows):
