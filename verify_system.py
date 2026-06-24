@@ -93,10 +93,16 @@ closed_sorted = closed_f.sort_values(
     'closed_at', ascending=True,
     na_position='first')
 
-# Balance trace
-balance = 10000.0
-for _, t in closed_sorted.iterrows():
-    balance += float(t._nd)
+from src.trading.financials import (
+    calculate_fund_state, load_prices)
+_live_state = calculate_fund_state(
+    prices=load_prices())
+drawdown = float(
+    _live_state.get('drawdown_pct', 0))
+peak = float(
+    _live_state.get('peak_balance', 10000))
+balance = float(
+    _live_state.get('balance', 0))
 
 # Win/loss by pips
 wins = closed_f[closed_f._pips > 0]
@@ -111,36 +117,17 @@ full_wins = wins[wins.status.isin(
 cascade_wins = wins[~wins.status.isin(
     ['WIN','FULL_WIN','EXPIRED'])]
 
-# Avg pips
+# Avg pips (from pips column; dollars from financials)
 avg_win_p = (wins._pips.mean()
              if len(wins) > 0 else 0)
 avg_loss_p = (abs(losses._pips.mean())
               if len(losses) > 0 else 0)
+avg_win_d  = float(_live_state.get('avg_win_dollars', 0))
+avg_loss_d = float(_live_state.get('avg_loss_dollars', 0))
+pf         = float(_live_state.get('profit_factor', 0))
 
-# Avg dollars
-avg_win_d = (wins._nd.mean()
-             if len(wins) > 0 else 0)
-avg_loss_d = (abs(losses._nd.mean())
-              if len(losses) > 0 else 0)
-
-# Profit factor
-total_win_d = wins._nd.sum()
-total_loss_d = abs(losses._nd.sum())
-pf = (total_win_d / total_loss_d
-      if total_loss_d > 0 else 0)
-
-# Net pips and dollars
+# Net pips
 net_pips = closed_f._pips.sum()
-net_dollars = closed_f._nd.sum()
-
-# Drawdown
-all_bals = [10000.0]
-b = 10000.0
-for _, t in closed_sorted.iterrows():
-    b += float(t._nd)
-    all_bals.append(b)
-peak = max(all_bals)
-drawdown = (peak - b) / peak * 100
 
 # Consecutive streak
 cons_l = 0
