@@ -4868,6 +4868,19 @@ def _send_telegram_summary(
         key=_eff_conf, reverse=True,
     )[:3]
 
+    # ── End-of-scan price validation for IMMEDIATE entries ──────────────────
+    try:
+        from src.trading.financials import load_prices as _load_prices_vep
+        _final_prices_vep = _load_prices_vep()
+        yes_trades = _validate_entry_prices(
+            yes_trades=yes_trades,
+            current_prices=_final_prices_vep,
+            max_adverse_pips=30.0,
+            log_fn=lambda m: _log_line(logf, m),
+        )
+    except Exception as _vep_exc:
+        _log_line(logf, f"[validate] price validation failed: {_vep_exc}")
+
     _sizes, _exposure, _risk_state = {}, {}, {}
     if risk_data:
         for s in (risk_data.get("sized_trades") or []):
