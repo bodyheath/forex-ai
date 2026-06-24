@@ -4861,15 +4861,95 @@ def _send_telegram_summary(
             )
             if not _cap["allowed"]:
                 _blk_rsn_cap = _cap["reason"]
-                _fund_st_blocked.append((_yt, _blk_rsn_cap))
-                try:
-                    from src import tracker as _trk_cap
-                    if _yt.get("id"):
-                        _trk_cap.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                notes=f"Blocked: {_blk_rsn_cap}")
-                except Exception:
-                    pass
-                continue
+                _swap_executed = False
+
+                if _yt_conf_val >= SWAP_MIN_NEW_CONF:
+                    _log_line(log, f"[swap] {_yt_pair} conf {_yt_conf_val:.1f} "
+                              f">= {SWAP_MIN_NEW_CONF} — evaluating swap...")
+                    _swap_res = _find_swap_target(
+                        new_pair=_yt_pair,
+                        new_direction=_yt_parsed.get("direction", ""),
+                        new_conf=_yt_conf_val,
+                        open_trades=_ot_open_trades,
+                        log_fn=lambda m: _log_line(log, m),
+                    )
+                    if _swap_res["should_swap"]:
+                        try:
+                            from src.trading.financials import (
+                                close_fund_trade as _cft_sw,
+                                sync_fund_state_json as _sfsj_sw,
+                                load_prices as _lp_sw,
+                                get_price as _gp_sw,
+                                pip_size as _pips_sw,
+                            )
+                            import pandas as _sw_pd
+                            _sw_prices  = _lp_sw()
+                            _sw_tid     = int(float(str(_swap_res["target_id"])))
+                            _sw_tpair   = _swap_res["target_pair"]
+                            _sw_exit    = _gp_sw(_sw_prices, _sw_tpair)
+                            _sw_df      = _sw_pd.read_csv("data/trades.csv")
+                            _sw_df_row  = _sw_df[_sw_df["id"].astype(str) == str(_sw_tid)]
+                            if _sw_exit and not _sw_df_row.empty:
+                                _sw_r     = _sw_df_row.iloc[0]
+                                _sw_entry = float(_sw_r.get("entry", 0) or 0)
+                                _sw_dir   = str(_sw_r.get("direction", "")).upper()
+                                _sw_t1h   = str(_sw_r.get("t1_hit", "")).upper() in ("TRUE", "YES", "1", "T")
+                                _sw_ps    = _pips_sw(_sw_tpair)
+                                _sw_pips  = ((_sw_exit - _sw_entry) / _sw_ps if _sw_dir == "BUY"
+                                             else (_sw_entry - _sw_exit) / _sw_ps)
+                                _sw_status = ("PARTIAL_WIN" if _sw_t1h and _sw_pips > 0
+                                              else "WIN" if _sw_pips > 0 else "LOSS")
+                                _cft_sw(
+                                    df=_sw_df,
+                                    trade_id=_sw_tid,
+                                    status=_sw_status,
+                                    exit_price=float(_sw_exit),
+                                    pips=float(_sw_pips),
+                                )
+                                _sfsj_sw()
+                                # Remove swapped trade from in-memory list so slot count is correct
+                                _ot_open_trades = [
+                                    r for r in _ot_open_trades
+                                    if str(r.get("id", "")) != str(_sw_tid)
+                                ]
+                                # Reset _cap to reflect freed slot
+                                _cap = {"allowed": True, "is_override": False,
+                                        "risk_pct": None, "tier": "normal",
+                                        "reason": "slot freed by swap"}
+                                _swapped_setups.append({
+                                    "closed_pair":    _sw_tpair,
+                                    "closed_pips":    round(_sw_pips, 1),
+                                    "closed_dollars": 0.0,
+                                    "new_pair":       _yt_pair,
+                                    "new_conf":       _yt_conf_val,
+                                    "reason":         _swap_res["reason"],
+                                })
+                                _log_line(log, f"[swap] Slot freed — {_yt_pair} can open")
+                                _swap_executed = True
+                            else:
+                                _log_line(log, f"[swap] No price for {_sw_tpair} — swap aborted")
+                        except Exception as _sw_exc:
+                            _log_line(log, f"[swap] Execution error: {_sw_exc}")
+                    else:
+                        _log_line(log, f"[swap] No swap: {_swap_res['reason']}")
+
+                if not _swap_executed:
+                    _fund_st_blocked.append((_yt, _blk_rsn_cap))
+                    if _yt_conf_val >= 6.0:
+                        _blocked_setups.append({
+                            "pair":      _yt_pair,
+                            "direction": (_yt_parsed.get("direction") or "").upper(),
+                            "conf":      _yt_conf_val,
+                            "reason":    _blk_rsn_cap,
+                        })
+                    try:
+                        from src import tracker as _trk_cap
+                        if _yt.get("id"):
+                            _trk_cap.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                    notes=f"Blocked: {_blk_rsn_cap}")
+                    except Exception:
+                        pass
+                    continue
             _blk, _blk_rsn, _blk_tp = _fs.is_trading_blocked(_fund_st)
             if _blk:
                 _fund_st = _fs.record_missed_opportunity(
