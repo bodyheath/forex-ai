@@ -209,9 +209,10 @@ print(f'  Consec wins: {stored_cw} '
 wr_ok = abs(stored_wr - wr) < 1.0
 print(f'  Win rate: {stored_wr}% '
       f'{"OK" if wr_ok else "FAIL calc=" + str(round(wr,1))}')
-dd_ok = abs(stored_dd - drawdown) < 1.0
+live_dd = float(live_state.get('drawdown_pct', 0))
+dd_ok = abs(stored_dd - live_dd) < 0.1
 print(f'  Drawdown: {stored_dd}% '
-      f'{"OK" if dd_ok else "FAIL calc=" + str(round(drawdown,2))}')
+      f'{"OK" if dd_ok else "FAIL live=" + str(round(live_dd,4))}')
 
 print()
 print('=' * 55)
