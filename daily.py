@@ -4667,6 +4667,19 @@ def _send_telegram_summary(
                 "drawdown": float(_fund_st.get("current_drawdown_pct") or 0.0),
             }
             # Stamp ML sizing + trend + session fields on the fund trade row
+            # CRITICAL: position_size_pct_at_entry written first in its own isolated call
+            # so it cannot be swallowed by a failure in the optional metadata fields.
+            if _yt.get("id") and _szg_pct is not None:
+                try:
+                    from src import tracker as _trk_szg_pct
+                    _trk_szg_pct.update_fields(
+                        int(_yt["id"]),
+                        position_size_pct_at_entry=float(_szg_pct),
+                    )
+                except Exception as _szg_pct_err:
+                    _log_line(logf, f"[sizing] ERROR stamping position_size_pct_at_entry "
+                              f"for #{_yt['id']}: {_szg_pct_err}")
+            # Stamp optional metadata fields (non-critical — failures are logged, not fatal)
             try:
                 from src import tracker as _trk_szg
                 if _yt.get("id"):
@@ -4675,23 +4688,14 @@ def _send_telegram_summary(
                         sizing_mode=_szg_mode,
                         consecutive_wins_at_entry=int(_fund_st.get("consecutive_wins") or 0),
                         drawdown_pct_at_entry=float(_fund_st.get("current_drawdown_pct") or 0.0),
-                        position_size_pct_at_entry=_szg_pct,
                         threshold_at_entry=threshold_data.get("final_threshold", "") if threshold_data else "",
                         regime_base_at_entry=threshold_data.get("regime_base", "") if threshold_data else "",
                         win_rate_adjustment_at_entry=threshold_data.get("win_rate_adjustment", "") if threshold_data else "",
                         data_quality_adjustment_at_entry=threshold_data.get("data_quality_adjustment", "") if threshold_data else "",
-                        weekly_trend_aligned=_trend_align.get("weekly_aligned"),
-                        monthly_trend_aligned=_trend_align.get("monthly_aligned"),
-                        trend_alignment_score=_trend_align.get("alignment_score", 0),
-                        weekly_trend_at_entry=_trend_align.get("weekly_trend", ""),
-                        monthly_trend_at_entry=_trend_align.get("monthly_trend", ""),
-                        risk_pct_at_entry=_szg_pct,
-                        sizing_mode_at_entry=_szg_mode,
-                        session_at_entry=",".join(_get_current_session()),
-                        session_optimal=_yt.get("_session_optimal", True),
                     )
-            except Exception:
-                pass
+            except Exception as _szg_meta_err:
+                _log_line(logf, f"[sizing] ERROR stamping metadata fields "
+                          f"for #{_yt.get('id')}: {_szg_meta_err}")
             _fund_st = _fs.increment_daily_trades(_fund_st)
             _open_fund_count += 1
             _yt_pass.append(_yt)
