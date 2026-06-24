@@ -1007,14 +1007,14 @@ def _validate_entry_prices(
     return validated
 
 
-def _analyse_pair(pair: str, logf, force_deep: bool = False,
+def _analyse_pair(pair: str, log, force_deep: bool = False,
                   shared_fundamental=None, shared_macro=None,
                   sonnet_threshold: int = 6,
                   pair_threshold_override=None) -> dict | None:
     try:
         return service.analyse_and_log(
             pair,
-            log=lambda m: _log_line(logf, m),
+            log=lambda m: _log_line(log, m),
             force_deep=force_deep,
             shared_fundamental=shared_fundamental,
             shared_macro=shared_macro,
@@ -1022,8 +1022,8 @@ def _analyse_pair(pair: str, logf, force_deep: bool = False,
             pair_threshold_override=pair_threshold_override,
         )
     except Exception as exc:
-        _log_line(logf, f"FAILED {pair}: {exc}")
-        traceback.print_exc(file=logf)
+        _log_line(log, f"FAILED {pair}: {exc}")
+        traceback.print_exc(file=log)
         return None
 
 
@@ -4243,8 +4243,12 @@ def _send_telegram_summary(
     all_ohlcv_failed: bool = False,
     movement_alert_data: dict = None,
     threshold_data: dict = None,
+    log=None,
 ) -> None:
     """Build and send Telegram notifications with format tailored to each scan mode."""
+    if log is None:
+        import sys as _sys_log
+        log = _sys_log.stdout
     closed_today    = closed_today    or []
     new_patterns    = new_patterns    or []
     stage1_filtered = stage1_filtered or []
@@ -4431,7 +4435,7 @@ def _send_telegram_summary(
         else:
             FUND_TRADE_MIN_CONF = 7.0
         FUND_MIN_RR = 1.5
-        _log_line(logf, (
+        _log_line(log, (
             f"[fund] Filters: min_conf={FUND_TRADE_MIN_CONF} "
             f"min_rr={FUND_MIN_RR} "
             f"regime={_regime_str!r} "
@@ -4443,27 +4447,27 @@ def _send_telegram_summary(
             # Improvement 1: Regime filter — no fund trades in ranging/risk-off
             if any(r in _regime_str for r in _REGIME_BLOCK):
                 _blk_rgm = f"Regime: {_regime_str} — waiting for trending market"
-                _log_line(logf, f"[regime] BLOCKING fund trade {_yt_pair} — regime is {_regime_str}")
+                _log_line(log, f"[regime] BLOCKING fund trade {_yt_pair} — regime is {_regime_str}")
                 _fund_st_blocked.append((_yt, _blk_rgm))
                 continue
             # Improvement 3: Consecutive loss pause
             if _consec_losses_fs >= MAX_CONSECUTIVE_LOSSES:
                 _blk_streak = f"Loss streak: {_consec_losses_fs} consecutive — system paused"
-                _log_line(logf, f"[risk] BLOCKING fund trade {_yt_pair} — {_consec_losses_fs} consecutive losses")
+                _log_line(log, f"[risk] BLOCKING fund trade {_yt_pair} — {_consec_losses_fs} consecutive losses")
                 _fund_st_blocked.append((_yt, _blk_streak))
                 continue
             # Improvement 2: Dynamic confidence threshold by regime
             _yt_conf_val = _eff_conf(_yt)
             if _yt_conf_val < FUND_TRADE_MIN_CONF:
                 _blk_conf = f"Confidence {_yt_conf_val:.1f} < {FUND_TRADE_MIN_CONF:.1f} min (regime: {_regime_str})"
-                _log_line(logf, f"[fund] BLOCKING {_yt_pair} — {_blk_conf}")
+                _log_line(log, f"[fund] BLOCKING {_yt_pair} — {_blk_conf}")
                 _fund_st_blocked.append((_yt, _blk_conf))
                 continue
             # Improvement 4: Weekly + Monthly trend alignment
             _yt_dir_ta = (_yt_parsed.get("direction") or "").upper()
             _trend_align = _get_trend_alignment(
                 _yt_pair, _yt_dir_ta,
-                log_fn=lambda m: _log_line(logf, m),
+                log_fn=lambda m: _log_line(log, m),
             )
             # Hard block: BOTH weekly AND monthly oppose direction
             if (_trend_align.get("weekly_aligned") is False and
@@ -4472,7 +4476,7 @@ def _send_telegram_summary(
                     f"Trend opposed: weekly={_trend_align['weekly_trend']} "
                     f"monthly={_trend_align['monthly_trend']}"
                 )
-                _log_line(logf, f"[trend] BLOCKING {_yt_pair} {_yt_dir_ta} — "
+                _log_line(log, f"[trend] BLOCKING {_yt_pair} {_yt_dir_ta} — "
                           f"BOTH weekly ({_trend_align['weekly_trend']}) AND monthly "
                           f"({_trend_align['monthly_trend']}) oppose direction")
                 _fund_st_blocked.append((_yt, _blk_trend))
@@ -4482,7 +4486,7 @@ def _send_telegram_summary(
                     _trend_align.get("weekly_aligned") is False or
                     _trend_align.get("monthly_aligned") is False)):
                 _blk_trend = "Ranging market + trend misaligned"
-                _log_line(logf, f"[trend] BLOCKING {_yt_pair} in RANGING — "
+                _log_line(log, f"[trend] BLOCKING {_yt_pair} in RANGING — "
                           f"single trend misaligned")
                 _fund_st_blocked.append((_yt, _blk_trend))
                 continue
@@ -4492,16 +4496,16 @@ def _send_telegram_summary(
                 _mta_bool = str(_mta_val).upper() in ("TRUE", "YES", "1", "T")
                 if not _mta_bool and _trend_align.get("weekly_aligned") is False:
                     _blk_mta = "Monthly trend misaligned (both timeframes confirmed)"
-                    _log_line(logf, f"[trend] BLOCKING {_yt_pair} — monthly trend NOT aligned")
+                    _log_line(log, f"[trend] BLOCKING {_yt_pair} — monthly trend NOT aligned")
                     _fund_st_blocked.append((_yt, _blk_mta))
                     continue
             else:
-                _log_line(logf, f"[trend] WARNING {_yt_pair} — monthly_trend_aligned not available — allowing trade")
+                _log_line(log, f"[trend] WARNING {_yt_pair} — monthly_trend_aligned not available — allowing trade")
             # Improvement 5: Minimum R:R for fund trades
             _yt_rr_val = float(_yt_parsed.get("reward_risk") or 0)
             if _yt_rr_val > 0 and _yt_rr_val < FUND_MIN_RR:
                 _blk_rr = f"R:R {_yt_rr_val:.2f} < {FUND_MIN_RR} minimum"
-                _log_line(logf, f"[rr] BLOCKING {_yt_pair} — R:R {_yt_rr_val:.2f} below fund minimum {FUND_MIN_RR}")
+                _log_line(log, f"[rr] BLOCKING {_yt_pair} — R:R {_yt_rr_val:.2f} below fund minimum {FUND_MIN_RR}")
                 _fund_st_blocked.append((_yt, _blk_rr))
                 continue
             # Improvement 6: ATR-based stop distance check (block if stop > 4x ATR)
@@ -4513,7 +4517,7 @@ def _send_telegram_summary(
                 _yt_stop_dist = abs(_yt_entry_v - _yt_stop_v)
                 if _yt_stop_dist > _yt_atr14 * 4.0:
                     _blk_atr = f"Stop too wide ({_yt_stop_dist:.5f}) vs 4xATR ({_yt_atr14 * 4.0:.5f})"
-                    _log_line(logf, f"[stop] BLOCKING {_yt_pair} — stop too wide")
+                    _log_line(log, f"[stop] BLOCKING {_yt_pair} — stop too wide")
                     _fund_st_blocked.append((_yt, _blk_atr))
                     continue
             # Hard capacity limit — never hold more than _MAX_FUND_TRADES open fund trades
@@ -4521,7 +4525,7 @@ def _send_telegram_summary(
                 _blk_rsn_cap = (
                     f"Fund at capacity — {_open_fund_count}/{_MAX_FUND_TRADES} open trades"
                 )
-                _log_line(logf, f"[BLOCKED] {_yt.get('pair','')} — {_blk_rsn_cap}")
+                _log_line(log, f"[BLOCKED] {_yt.get('pair','')} — {_blk_rsn_cap}")
                 _fund_st_blocked.append((_yt, _blk_rsn_cap))
                 try:
                     from src import tracker as _trk_cap
@@ -4576,7 +4580,7 @@ def _send_telegram_summary(
                 new_pair=_yt_pair,
                 new_direction=_yt_dir_corr,
                 open_trades=_ot_open_trades,
-                log_fn=lambda m: _log_line(logf, m),
+                log_fn=lambda m: _log_line(log, m),
             )
             if _corr["blocked"]:
                 _blk_rsn_corr = f"Correlation: {_corr['reason']}"
@@ -4591,11 +4595,11 @@ def _send_telegram_summary(
                 continue
             # ── Session filter (advisory; hard block in RANGING) ──────────────
             _session_res = _check_session_filter(
-                _yt_pair, log_fn=lambda m: _log_line(logf, m))
+                _yt_pair, log_fn=lambda m: _log_line(log, m))
             _yt["_session_optimal"] = _session_res["allowed"]
             if not _session_res["allowed"] and "RANGING" in _regime_str:
                 _blk_rsn_sess = f"Ranging + wrong session: {_session_res['reason']}"
-                _log_line(logf, f"[session] BLOCKING {_yt_pair} — {_blk_rsn_sess}")
+                _log_line(log, f"[session] BLOCKING {_yt_pair} — {_blk_rsn_sess}")
                 _fund_st_blocked.append((_yt, _blk_rsn_sess))
                 try:
                     from src import tracker as _trk_sess
@@ -4607,10 +4611,10 @@ def _send_telegram_summary(
                 continue
             # ── News blackout window ──────────────────────────────────────────
             _news_res = _has_upcoming_news(
-                _yt_pair, log_fn=lambda m: _log_line(logf, m))
+                _yt_pair, log_fn=lambda m: _log_line(log, m))
             if _news_res["blocked"]:
                 _blk_rsn_news = _news_res["reason"]
-                _log_line(logf, f"[news] BLOCKING {_yt_pair} — {_blk_rsn_news}")
+                _log_line(log, f"[news] BLOCKING {_yt_pair} — {_blk_rsn_news}")
                 _fund_st_blocked.append((_yt, _blk_rsn_news))
                 try:
                     from src import tracker as _trk_news
@@ -4650,13 +4654,13 @@ def _send_telegram_summary(
                 consecutive_losses=_consec_losses_fs,
                 drawdown_pct=float(_fund_st.get("current_drawdown_pct") or 0),
                 base_pct=float(_szg_pct) if _szg_pct else BASE_RISK_PCT,
-                log_fn=lambda m: _log_line(logf, m),
+                log_fn=lambda m: _log_line(log, m),
             )
             if _add_sizing["risk_pct"] < float(_szg_pct or BASE_RISK_PCT):
                 _szg_pct   = _add_sizing["risk_pct"]
                 _szg_mode  = _add_sizing["sizing_mode"]
                 _szg_reason = _add_sizing["reason"]
-                _log_line(logf, f"[sizing] {_yt_pair}: volatility-adjusted → "
+                _log_line(log, f"[sizing] {_yt_pair}: volatility-adjusted → "
                           f"{_szg_pct}% ({_szg_mode})")
             _yt["_fs_sizing"] = {
                 "pct":      _szg_pct,
@@ -4677,7 +4681,7 @@ def _send_telegram_summary(
                         position_size_pct_at_entry=float(_szg_pct),
                     )
                 except Exception as _szg_pct_err:
-                    _log_line(logf, f"[sizing] ERROR stamping position_size_pct_at_entry "
+                    _log_line(log, f"[sizing] ERROR stamping position_size_pct_at_entry "
                               f"for #{_yt['id']}: {_szg_pct_err}")
             # Stamp optional metadata fields (non-critical — failures are logged, not fatal)
             try:
@@ -4694,7 +4698,7 @@ def _send_telegram_summary(
                         data_quality_adjustment_at_entry=threshold_data.get("data_quality_adjustment", "") if threshold_data else "",
                     )
             except Exception as _szg_meta_err:
-                _log_line(logf, f"[sizing] ERROR stamping metadata fields "
+                _log_line(log, f"[sizing] ERROR stamping metadata fields "
                           f"for #{_yt.get('id')}: {_szg_meta_err}")
             _fund_st = _fs.increment_daily_trades(_fund_st)
             _open_fund_count += 1
@@ -4802,7 +4806,7 @@ def _send_telegram_summary(
                 analysis_text=_yt_report,
                 current_price=_yt_entry,
                 direction=_yt_dir,
-                log_fn=lambda m: _log_line(logf, m),
+                log_fn=lambda m: _log_line(log, m),
             )
             _entry_kwargs = {
                 "entry_type":          _entry_info["entry_type"],
@@ -4817,7 +4821,7 @@ def _send_telegram_summary(
                     "entry_trigger_reason":    _entry_info["trigger_reason"] or "",
                     "entry_trigger_expiry":    _expiry_dt.strftime("%Y-%m-%d %H:%M:%S"),
                 })
-                _log_line(logf, (
+                _log_line(log, (
                     f"[entry] #{_yt_id} {_yt_pair} -> PENDING "
                     f"({_entry_info['entry_type']} at {_entry_info['trigger_price']} "
                     f"expires {_expiry_h}h)"
@@ -4825,7 +4829,7 @@ def _send_telegram_summary(
             _trk_et.update_fields(int(_yt_id), **_entry_kwargs)
     except Exception as _et_exc:
         import traceback as _et_tb
-        _log_line(logf, f"[entry] entry type detection failed: {_et_exc}")
+        _log_line(log, f"[entry] entry type detection failed: {_et_exc}")
         _et_tb.print_exc()
 
     # C-grade demoted to watchlist only in normal mode; restricted tiers skip C entirely
@@ -4880,10 +4884,10 @@ def _send_telegram_summary(
             yes_trades=yes_trades,
             current_prices=_final_prices_vep,
             max_adverse_pips=30.0,
-            log_fn=lambda m: _log_line(logf, m),
+            log_fn=lambda m: _log_line(log, m),
         )
     except Exception as _vep_exc:
-        _log_line(logf, f"[validate] price validation failed: {_vep_exc}")
+        _log_line(log, f"[validate] price validation failed: {_vep_exc}")
 
     _sizes, _exposure, _risk_state = {}, {}, {}
     if risk_data:
@@ -8625,14 +8629,14 @@ def run() -> int:
     # ── MONITOR MODE: lightweight between-scan check — bypass guard + full pipeline
     if scan_mode == "monitor":
         _mon_log = config.REPORTS_DIR / f"daily_{_startup_ak.strftime('%Y-%m-%d')}.log"
-        with _mon_log.open("a", encoding="utf-8") as logf:
+        with _mon_log.open("a", encoding="utf-8") as log:
             try:
                 from src import monitor as _mon
-                _mon.run(log=lambda m: _log_line(logf, m))
+                _mon.run(log=lambda m: _log_line(log, m))
             except Exception as _mon_exc:
                 import traceback as _mon_tb
-                _log_line(logf, f"Monitor run failed: {_mon_exc}")
-                _log_line(logf, _mon_tb.format_exc())
+                _log_line(log, f"Monitor run failed: {_mon_exc}")
+                _log_line(log, _mon_tb.format_exc())
         return 0
 
     # ── Duplicate-run guard ────────────────────────────────────────────────────
@@ -8820,7 +8824,7 @@ def run() -> int:
     except Exception:
         pass
 
-    with log_path.open("a", encoding="utf-8") as logf:
+    with log_path.open("a", encoding="utf-8") as log:
 
         # 0a. Pre-fetch prices for all open trades before outcome checking.
         #     Uses /time_series?interval=1day&outputsize=2 — more reliable on
@@ -8832,12 +8836,12 @@ def run() -> int:
         try:
             from src import price_fetcher as _pf
             _open_trade_prices = _pf.fetch_prices_for_open_trades(
-                log=lambda m: _log_line(logf, m),
+                log=lambda m: _log_line(log, m),
                 scan_mode=scan_mode,
             )
         except Exception as _pf_exc:
             _log_line(
-                logf,
+                log,
                 f"Price pre-fetch failed ({_pf_exc}) — outcome checkers will use direct API.",
             )
 
@@ -8847,15 +8851,15 @@ def run() -> int:
         try:
             from src import outcome_checker, outcome_analyst
             closed_today = outcome_checker.check_open_trades(
-                log=lambda m: _log_line(logf, m),
+                log=lambda m: _log_line(log, m),
                 price_cache=_open_trade_prices,
             )
             if closed_today:
                 new_patterns = outcome_analyst.run_outcome_analysis(
-                    closed_today, log=lambda m: _log_line(logf, m)
+                    closed_today, log=lambda m: _log_line(log, m)
                 )
         except Exception as exc:
-            _log_line(logf, f"Outcome step failed: {exc}")
+            _log_line(log, f"Outcome step failed: {exc}")
 
         # Update fund state: consecutive losses after trade closures
         if closed_today:
@@ -8869,38 +8873,38 @@ def run() -> int:
                         if _fs_oc_alert:
                             _telegram(_fs_oc_alert)
                 _fs_oc.save(_fs_oc_st)
-                _log_line(logf, (
+                _log_line(log, (
                     f"Fund state updated: {len(closed_today)} trade(s) closed — "
                     f"consecutive_losses={_fs_oc_st.get('consecutive_losses', 0)}"
                 ))
             except Exception as _fs_oc_exc:
-                _log_line(logf, f"Fund state trade-close update failed: {_fs_oc_exc}")
+                _log_line(log, f"Fund state trade-close update failed: {_fs_oc_exc}")
 
         try:
             from src import research_outcome_checker
             research_outcome_checker.check_open_research_trades(
-                log=lambda m: _log_line(logf, m),
+                log=lambda m: _log_line(log, m),
                 price_cache=_open_trade_prices,
             )
             research_outcome_checker.check_post_close_trades(
-                log=lambda m: _log_line(logf, m),
+                log=lambda m: _log_line(log, m),
                 price_cache=_open_trade_prices,
             )
         except Exception as exc:
-            _log_line(logf, f"Research outcome check failed: {exc}")
+            _log_line(log, f"Research outcome check failed: {exc}")
 
         # 1. Learn from prior outcomes
         learning_stats = None
         try:
             learning_stats = learning.update_memory()
             _log_line(
-                logf,
+                log,
                 f"Learning refreshed: {learning_stats['closed']} closed trades, "
                 f"win rate {('%.0f%%' % (learning_stats['win_rate']*100)) if learning_stats['win_rate'] is not None else 'n/a'}, "
                 f"{learning_stats['patterns_written']} auto-patterns written.",
             )
         except Exception as exc:
-            _log_line(logf, f"Learning step failed: {exc}")
+            _log_line(log, f"Learning step failed: {exc}")
 
         # Retrain ML win-probability model if > 7 days old (weekly cadence)
         try:
@@ -8909,7 +8913,7 @@ def run() -> int:
             if _ml_meta:
                 _hold_pct = round((_ml_meta.get("temporal_holdout_auc") or 0) * 100)
                 _n_consec = _ml_meta.get("n_consecutive_reliable", 0)
-                _log_line(logf, f"ML model retrained: {_ml_meta.get('n_trades',0)} trades, "
+                _log_line(log, f"ML model retrained: {_ml_meta.get('n_trades',0)} trades, "
                                  f"holdout accuracy {_hold_pct}% on new trades "
                                  f"(reliable retrains: {_n_consec}/3)")
                 # Item 7: ML retraining failure alert
@@ -8922,25 +8926,25 @@ def run() -> int:
                     except Exception:
                         pass
             else:
-                _log_line(logf, f"ML model: {_mlp.get_model_status_line()}")
+                _log_line(log, f"ML model: {_mlp.get_model_status_line()}")
         except Exception as _ml_exc:
-            _log_line(logf, f"ML model step: {_ml_exc}")
+            _log_line(log, f"ML model step: {_ml_exc}")
 
         # Online learner retrain — every full scan, bulk-trains on all closed research trades
         try:
             from src import online_learner as _ol_rt
             _ol_stats = _ol_rt.retrain_all_from_feature_store(
-                log=lambda m: _log_line(logf, m)
+                log=lambda m: _log_line(log, m)
             )
             _ol_wr = _ol_stats.get("win_rate")
             _ol_wr_str = f", recent win rate {_ol_wr:.0%}" if _ol_wr is not None else ""
             _log_line(
-                logf,
+                log,
                 f"Online learner retrained: {_ol_stats.get('trained', 0)} trades"
                 f"{_ol_wr_str} ({_ol_stats.get('skipped', 0)} skipped)"
             )
         except Exception as _ol_exc:
-            _log_line(logf, f"Online learner retrain failed: {_ol_exc}")
+            _log_line(log, f"Online learner retrain failed: {_ol_exc}")
 
         # Item 6: GitHub token expiry warning — Monday 6am full scan only
         if scan_mode == "full" and now_ak.weekday() == 0:
@@ -8955,45 +8959,45 @@ def run() -> int:
                         timeout=10,
                     )
                     if _gh_resp.status_code == 200:
-                        _log_line(logf, "GitHub token valid ✅")
+                        _log_line(log, "GitHub token valid ✅")
                     elif _gh_resp.status_code == 401:
                         _telegram(
                             "⚠️ GITHUB TOKEN INVALID — GitHub API authentication returned 401 — "
                             "push/checkout operations may fail — check GITHUB_TOKEN secret"
                         )
                     elif _gh_resp.status_code == 403:
-                        _log_line(logf,
+                        _log_line(log,
                             "⚠️ GitHub token returns 403 — token exists but may lack "
                             "permissions — monitoring may be affected")
                     else:
-                        _log_line(logf, f"GitHub token status: HTTP {_gh_resp.status_code}")
+                        _log_line(log, f"GitHub token status: HTTP {_gh_resp.status_code}")
                 else:
-                    _log_line(logf, "GitHub token check skipped — GITHUB_TOKEN not in environment")
+                    _log_line(log, "GitHub token check skipped — GITHUB_TOKEN not in environment")
             except Exception as _gh_exc:
-                _log_line(logf, f"GitHub token check failed: {_gh_exc}")
+                _log_line(log, f"GitHub token check failed: {_gh_exc}")
 
         # COT cache diagnostics — log status for all tracked markets, delete stale entries
         try:
             from src import positioning as _pos_cot
             _cot_summary = _pos_cot.log_and_clean_cot_status(
-                log_fn=lambda m: _log_line(logf, m)
+                log_fn=lambda m: _log_line(log, m)
             )
             if _cot_summary.get("deleted_stale", 0):
                 _log_line(
-                    logf,
+                    log,
                     f"[COT] Deleted {_cot_summary['deleted_stale']} stale cache "
                     f"entries — fresh data will be fetched during pair analysis"
                 )
         except Exception as _cot_diag_exc:
-            _log_line(logf, f"[COT] Cache diagnostics failed: {_cot_diag_exc}")
+            _log_line(log, f"[COT] Cache diagnostics failed: {_cot_diag_exc}")
 
         # Threshold auto-adjust: revert conf 6→7 / R:R 1.3→1.5 if win rate < 45% after 50 trades
         threshold_revert_msg = None
         try:
             from src import threshold_manager as _thresh_check
-            threshold_revert_msg = _thresh_check.check_and_adjust(log=lambda m: _log_line(logf, m))
+            threshold_revert_msg = _thresh_check.check_and_adjust(log=lambda m: _log_line(log, m))
         except Exception as exc:
-            _log_line(logf, f"Threshold check failed: {exc}")
+            _log_line(log, f"Threshold check failed: {exc}")
 
         # Load previous scan price snapshot BEFORE select_pairs() overwrites it
         # Used by both opportunity gap detection and the dynamic boosts in selector
@@ -9002,12 +9006,12 @@ def run() -> int:
             from src.selector import _load_scan_snapshot as _lss
             _prev_scan_prices = _lss()
             if _prev_scan_prices:
-                _log_line(logf, f"Previous scan price snapshot loaded: {len(_prev_scan_prices)} pairs")
+                _log_line(log, f"Previous scan price snapshot loaded: {len(_prev_scan_prices)} pairs")
         except Exception as _psp_exc:
-            _log_line(logf, f"Prev price snapshot unavailable ({_psp_exc}) — gap detection inactive this scan")
+            _log_line(log, f"Prev price snapshot unavailable ({_psp_exc}) — gap detection inactive this scan")
 
         # Twelve Data health check — single test request before any analysis
-        _td_healthy = _check_twelvedata_health(log=lambda m: _log_line(logf, m))
+        _td_healthy = _check_twelvedata_health(log=lambda m: _log_line(log, m))
 
         # Log Twelve Data daily call status at scan start
         _td_used_start = 0  # safe default — updated in try block below
@@ -9016,7 +9020,7 @@ def run() -> int:
             from datetime import date as _date_start
             _td_used_start = int(_au_start.get("calls", 0)) if _au_start.get("date") == str(_date_start.today()) else 0
             _td_remaining  = max(0, 800 - _td_used_start)
-            _log_line(logf, f"Twelve Data calls today: {_td_used_start}/800 — {_td_remaining} remaining")
+            _log_line(log, f"Twelve Data calls today: {_td_used_start}/800 — {_td_remaining} remaining")
         except Exception:
             pass
 
@@ -9049,7 +9053,7 @@ def run() -> int:
             # Afternoon scan with >400 calls: preserve the daily limit
             _top_n  = 10
             _td_cap = 15
-            _log_line(logf,
+            _log_line(log,
                 f"⚠️ Afternoon scan with {_td_used_start} TD calls used — "
                 f"reducing pair count to 10 to preserve daily limit")
         elif _at_td_limit:
@@ -9068,32 +9072,32 @@ def run() -> int:
             )
         else:
             _coll_note = ""
-        _log_line(logf,
+        _log_line(log,
             f"Active threshold: {_trade_conf}/10 "
             f"(dynamic: {_dynamic_threshold_early:.1f}"
             f"{' · data collection floor: 6.0' if _data_collection_mode else ''}"
             f" · effective: {_trade_conf})")
-        _log_line(logf, f"Active thresholds: conf>={_trade_conf}, R:R>={_thresh_mgr.get_min_rr()}{_coll_note}")
+        _log_line(log, f"Active thresholds: conf>={_trade_conf}, R:R>={_thresh_mgr.get_min_rr()}{_coll_note}")
 
         universe_size     = len(selector.UNIVERSE)
         ranked_all        = []
         pairs_today       = []
         _all_ohlcv_failed = False
         try:
-            selection     = selector.select_pairs(top_n=_top_n, log=lambda m: _log_line(logf, m), scan_mode=scan_mode)
+            selection     = selector.select_pairs(top_n=_top_n, log=lambda m: _log_line(log, m), scan_mode=scan_mode)
             pairs_today   = selection["selected"]
             ranked_all    = selection["ranked"]
             universe_size = selection["universe_size"]
             _all_ohlcv_failed = selection.get("all_ohlcv_failed", False)
             if _all_ohlcv_failed:
-                _log_line(logf, "⚠️ All OHLCV snapshots failed — pair ranking based on fundamental factors only — selection quality reduced this scan")
+                _log_line(log, "⚠️ All OHLCV snapshots failed — pair ranking based on fundamental factors only — selection quality reduced this scan")
             _log_line(
-                logf,
+                log,
                 f"Scanning full universe of {universe_size} pairs — selecting top pairs by merit score. "
                 f"Top {len(pairs_today)}: {', '.join(pairs_today)}",
             )
         except Exception as exc:
-            _log_line(logf, f"Smart selection failed ({exc}) — falling back to watchlist.")
+            _log_line(log, f"Smart selection failed ({exc}) — falling back to watchlist.")
             pairs_today = list(config.WATCHLIST)
 
         # Inject pairs flagged by watchlist movement alerts in monitor.py
@@ -9108,12 +9112,12 @@ def run() -> int:
                         pairs_today.append(_pns_p)
                         _priority_from_wl.append(_pns_p)
                 if _priority_from_wl:
-                    _log_line(logf, f"Watchlist priority: {len(_priority_from_wl)} pair(s) from movement alert injected — {', '.join(_priority_from_wl)}")
+                    _log_line(log, f"Watchlist priority: {len(_priority_from_wl)} pair(s) from movement alert injected — {', '.join(_priority_from_wl)}")
                     # Clear the flag — consumed this scan
                     _pns_data["priority_for_next_scan"] = []
                     _wl_cache_path_pns.write_text(json.dumps(_pns_data, indent=2), encoding="utf-8")
         except Exception as _pns_exc:
-            _log_line(logf, f"Watchlist priority injection failed ({_pns_exc}) — continuing")
+            _log_line(log, f"Watchlist priority injection failed ({_pns_exc}) — continuing")
 
         # Filter unsuitable pairs (spread > 33% of ATR — e.g. EUR/HKD, NZD/HKD)
         try:
@@ -9126,27 +9130,27 @@ def run() -> int:
                     _suit_kept.append(_sp)
                 else:
                     _suit_excluded.append(_sp)
-                    _log_line(logf, f"[SUIT] Excluding {_sp}: {_reason}")
+                    _log_line(log, f"[SUIT] Excluding {_sp}: {_reason}")
             if _suit_excluded:
                 pairs_today = _suit_kept
-                _log_line(logf, f"Suitability filter: {len(_suit_excluded)} pair(s) excluded — {', '.join(_suit_excluded)}")
+                _log_line(log, f"Suitability filter: {len(_suit_excluded)} pair(s) excluded — {', '.join(_suit_excluded)}")
         except Exception as _suit_exc:
-            _log_line(logf, f"Suitability filter skipped ({_suit_exc})")
+            _log_line(log, f"Suitability filter skipped ({_suit_exc})")
 
         # 2b-i. Opportunity gap detection — compare ranked pairs to last scan prices
         _opportunity_data: dict = {}
         try:
             _forced_gap_pairs, _opportunity_data = _detect_opportunity_gaps(
                 ranked_all, _prev_scan_prices, scan_mode,
-                log=lambda m: _log_line(logf, m),
+                log=lambda m: _log_line(log, m),
             )
             if _forced_gap_pairs:
-                _log_line(logf, f"Gap detection: {len(_forced_gap_pairs)} pair(s) forced into analysis: {', '.join(_forced_gap_pairs)}")
+                _log_line(log, f"Gap detection: {len(_forced_gap_pairs)} pair(s) forced into analysis: {', '.join(_forced_gap_pairs)}")
                 for _gp in _forced_gap_pairs:
                     if _gp not in pairs_today:
                         pairs_today.append(_gp)
         except Exception as _gap_exc:
-            _log_line(logf, f"Gap detection failed ({_gap_exc}) — continuing without it")
+            _log_line(log, f"Gap detection failed ({_gap_exc}) — continuing without it")
 
         # 2b-ii. Full-universe movement scan (6am only) — Yahoo Finance, free, all 130 pairs
         _movement_alert_data: dict = {}
@@ -9159,25 +9163,25 @@ def run() -> int:
                 _mvt_universe = list(_mvt_universe) + [p for p in _ranked_norm if p not in _mvt_universe]
                 _mvt_pairs, _movement_alert_data = _scan_all_pairs_movement(
                     _mvt_universe, ranked_all, pairs_today, scan_mode,
-                    log=lambda m: _log_line(logf, m),
+                    log=lambda m: _log_line(log, m),
                 )
                 for _mp in _mvt_pairs:
                     if _mp not in pairs_today:
                         pairs_today.append(_mp)
                     _movement_priority_set.add(_mp)
                 if _mvt_pairs:
-                    _log_line(logf, f"Movement scan: {len(_mvt_pairs)} pair(s) outside batch added to priority sweep: {', '.join(_mvt_pairs)}")
+                    _log_line(log, f"Movement scan: {len(_mvt_pairs)} pair(s) outside batch added to priority sweep: {', '.join(_mvt_pairs)}")
                 else:
                     _alerts_det = (_movement_alert_data.get("weekly") or {}).get("movement_alerts_detected", 0)
-                    _log_line(logf, f"Movement scan: {_alerts_det} alert(s) detected, all already in analysis batch")
+                    _log_line(log, f"Movement scan: {_alerts_det} alert(s) detected, all already in analysis batch")
             except Exception as _mvt_exc:
-                _log_line(logf, f"Full-universe movement scan failed ({_mvt_exc}) — continuing")
+                _log_line(log, f"Full-universe movement scan failed ({_mvt_exc}) — continuing")
 
         # 2b. COST OPTIMISATION — Pre-filter using free data before Twelve Data fetch
         try:
             if ranked_all:
                 pre_filtered = _pre_filter_pairs(
-                    ranked_all, top_n=_td_cap, log=lambda m: _log_line(logf, m)
+                    ranked_all, top_n=_td_cap, log=lambda m: _log_line(log, m)
                 )
                 for p in pairs_today:
                     if p not in pre_filtered:
@@ -9185,9 +9189,9 @@ def run() -> int:
                 pre_filtered = pre_filtered[:_td_cap]
             else:
                 pre_filtered = pairs_today
-            _log_line(logf, f"Pre-filtered pool: {len(pre_filtered)} pairs for Twelve Data (cap={_td_cap})")
+            _log_line(log, f"Pre-filtered pool: {len(pre_filtered)} pairs for Twelve Data (cap={_td_cap})")
         except Exception as exc:
-            _log_line(logf, f"Pre-filter failed ({exc}) — using selector output.")
+            _log_line(log, f"Pre-filter failed ({exc}) — using selector output.")
             pre_filtered = pairs_today
 
         # Dedup inverse pairs BEFORE analysis to avoid wasting API credits.
@@ -9219,14 +9223,14 @@ def run() -> int:
                         _pf_deduped.append(_pp)
                         _pf_seen.discard(_pi)
                         _pf_seen.add(_pc)
-                        _log_line(logf, f"Analysis dedup: {_existing} replaced by {_pp} — more standard direction")
+                        _log_line(log, f"Analysis dedup: {_existing} replaced by {_pp} — more standard direction")
                     else:
-                        _log_line(logf, f"Analysis dedup: {_pp} removed — {_existing or _pc} is more standard direction and already queued")
+                        _log_line(log, f"Analysis dedup: {_pp} removed — {_existing or _pc} is more standard direction and already queued")
                 continue
             _pf_seen.add(_pc)
             _pf_deduped.append(_pp)
         if len(_pf_deduped) < len(pre_filtered):
-            _log_line(logf, f"Analysis dedup: {len(pre_filtered)} → {len(_pf_deduped)} pairs after removing inverse duplicates")
+            _log_line(log, f"Analysis dedup: {len(pre_filtered)} → {len(_pf_deduped)} pairs after removing inverse duplicates")
         pre_filtered = _pf_deduped
 
         # 3. Batch pre-fetch shared data (FRED, COT, macro) once — all cached 12h
@@ -9234,22 +9238,22 @@ def run() -> int:
         _shared_macro      = None
         try:
             _shared_fund, _shared_macro = _pre_fetch_shared_data(
-                pre_filtered, log=lambda m: _log_line(logf, m)
+                pre_filtered, log=lambda m: _log_line(log, m)
             )
         except Exception as exc:
-            _log_line(logf, f"Shared data pre-fetch failed ({exc}) — each pair will fetch independently.")
+            _log_line(log, f"Shared data pre-fetch failed ({exc}) — each pair will fetch independently.")
 
         # 4. Pre-fetch Twelve Data candles — 20 pairs for 6am, 15 for afternoon scans
         # Reducing from 25×4TF=100 to 15×4TF=60 calls on afternoon scans saves ~6-7 min.
         _warm_cap = 25 if scan_mode == "full" else 15
         try:
             from src import technical as _tech
-            _tech.warm_cache(pre_filtered[:_warm_cap], log=lambda m: _log_line(logf, m))
+            _tech.warm_cache(pre_filtered[:_warm_cap], log=lambda m: _log_line(log, m))
         except Exception as exc:
-            _log_line(logf, f"Technical pre-fetch failed (analysis will still run): {exc}")
+            _log_line(log, f"Technical pre-fetch failed (analysis will still run): {exc}")
 
         # Diagnostic: log indicator snapshot — all AUD crosses + one per currency group
-        _log_line(logf, "[DIAG] Technical indicator snapshot (from cache):")
+        _log_line(log, "[DIAG] Technical indicator snapshot (from cache):")
         _DIAG_PAIRS = [
             # AUD crosses — full set for debugging AUD-specific issues
             "AUD/CHF", "AUD/JPY", "AUD/USD", "AUD/NZD", "AUD/CAD",
@@ -9266,7 +9270,7 @@ def run() -> int:
                 _ind = _tech.read_cached_indicators(_diag_pair)
                 if _ind:
                     _ts = _ind.get("tech_signal", {})
-                    _log_line(logf, (
+                    _log_line(log, (
                         f"  {_diag_pair}: RSI={_ind['rsi14']}  "
                         f"MACDh={_ind['macd_hist']}  "
                         f"SMA50={_ind.get('sma50','?')}  "
@@ -9274,14 +9278,14 @@ def run() -> int:
                         f"→ T_sig={_ts.get('direction','?')} {_ts.get('score','?')}/10"
                     ))
                 else:
-                    _log_line(logf, f"  {_diag_pair}: NOT IN CACHE (candles not fetched this run)")
+                    _log_line(log, f"  {_diag_pair}: NOT IN CACHE (candles not fetched this run)")
             except Exception as _de:
-                _log_line(logf, f"  {_diag_pair}: DIAG ERROR — {_de}")
+                _log_line(log, f"  {_diag_pair}: DIAG ERROR — {_de}")
 
-        _log_line(logf, f"=== {scan_mode.upper()} run {date} | universe: {universe_size} pairs | Sonnet threshold: {sonnet_thresh}/10 ===")
-        _log_line(logf, f"[DIAG] CLAUDE_MODEL={repr(config.CLAUDE_MODEL)}")
-        _log_line(logf, f"[DIAG] HAIKU_MODEL={repr(config.HAIKU_MODEL)}")
-        _log_line(logf, f"[DIAG] pairs_today ({len(pairs_today)}): {pairs_today}")
+        _log_line(log, f"=== {scan_mode.upper()} run {date} | universe: {universe_size} pairs | Sonnet threshold: {sonnet_thresh}/10 ===")
+        _log_line(log, f"[DIAG] CLAUDE_MODEL={repr(config.CLAUDE_MODEL)}")
+        _log_line(log, f"[DIAG] HAIKU_MODEL={repr(config.HAIKU_MODEL)}")
+        _log_line(log, f"[DIAG] pairs_today ({len(pairs_today)}): {pairs_today}")
 
         # 5. Analyse pairs
         filtered_count  = 0
@@ -9297,7 +9301,7 @@ def run() -> int:
             elapsed = (time.time() - _scan_start_time) / 60
             if elapsed > _SCAN_TIMEOUT_MIN and not _scan_timed_out[0]:
                 _scan_timed_out[0] = True
-                _log_line(logf,
+                _log_line(log,
                     f"⚠️ Scan timeout — {elapsed:.0f} minutes elapsed — "
                     f"skipping remaining pairs and sending partial report")
                 try:
@@ -9325,7 +9329,7 @@ def run() -> int:
                 if _check_scan_timeout():
                     break
                 if pair in analysed_pairs:
-                    _log_line(logf, f"  {pair}: CACHE HIT (already analysed this run)")
+                    _log_line(log, f"  {pair}: CACHE HIT (already analysed this run)")
                     continue
                 analysed_pairs.add(pair)
                 # Per-pair threshold: 70%+ win rate from 10+ trades → lower threshold to 5.5
@@ -9333,9 +9337,9 @@ def run() -> int:
                 _pp = _pair_perf_map.get(pair, {})
                 if isinstance(_pp, dict) and _pp.get("wr", 0) >= 0.70 and _pp.get("n", 0) >= 10:
                     _pth_override = 5.5
-                    _log_line(logf, f"  {pair}: proven edge (wr={_pp['wr']:.0%}, n={_pp['n']}) — threshold lowered to 5.5")
+                    _log_line(log, f"  {pair}: proven edge (wr={_pp['wr']:.0%}, n={_pp['n']}) — threshold lowered to 5.5")
                 result = _analyse_pair(
-                    pair, logf,
+                    pair, log,
                     force_deep=force_deep,
                     shared_fundamental=_shared_fund.get(pair),
                     shared_macro=_shared_macro,
@@ -9350,7 +9354,7 @@ def run() -> int:
                     s = result["screen"]
                     stage1_filtered.append(result)
                     _log_line(
-                        logf,
+                        log,
                         f"  {result['pair']}: FILTERED stage-1 "
                         f"(score {s['score']}/5 — {s['reason']})",
                     )
@@ -9367,10 +9371,10 @@ def run() -> int:
                         )
                     except Exception:
                         pass
-                    _log_line(logf, f"  {pair}: INVERSE BLOCKED — {result['inverse_blocked']}")
+                    _log_line(log, f"  {pair}: INVERSE BLOCKED — {result['inverse_blocked']}")
                 # Log and alert on currency concentration warning
                 if result.get("concentration_warning"):
-                    _log_line(logf, f"  {pair}: {result['concentration_warning']}")
+                    _log_line(log, f"  {pair}: {result['concentration_warning']}")
                     try:
                         _telegram(
                             f"⚠️ Currency concentration — <b>{pair}</b>\n"
@@ -9381,7 +9385,7 @@ def run() -> int:
                 pp = result["parsed"]
                 skipped = "SKIP-UNCHANGED " if result.get("skipped_unchanged") else ""
                 verdict = f"{pp['trade_this']} | conf {pp['confidence']} | {pp['direction']}"
-                _log_line(logf, f"#{result['id']} {result['pair']}: {skipped}{verdict}")
+                _log_line(log, f"#{result['id']} {result['pair']}: {skipped}{verdict}")
                 deep_results.append(result)
                 # Capture ML feature snapshot for future win-probability training
                 try:
@@ -9393,7 +9397,7 @@ def run() -> int:
 
         # Haiku analyses all pairs; Sonnet only called for conf >= sonnet_thresh
         # Uses pre_filtered (deduped) not pairs_today to avoid analysing inverse pairs twice
-        _log_line(logf, f"Analysing {len(pre_filtered)} pairs (Haiku all, Sonnet if conf>={sonnet_thresh}): {', '.join(pre_filtered)}")
+        _log_line(log, f"Analysing {len(pre_filtered)} pairs (Haiku all, Sonnet if conf>={sonnet_thresh}): {', '.join(pre_filtered)}")
         _process_batch(pre_filtered, force_deep=True)
 
         # Auto-expand if fewer than 3 meaningful results
@@ -9408,19 +9412,19 @@ def run() -> int:
                 extra_pairs = [p for p, _ in ranked_all[next_idx:next_idx + 5]]
             next_idx += 5
             if extra_pairs:
-                _log_line(logf, f"Expanding: {len(deep_results)} results, {len(meaningful)} conf>=5. Adding {len(extra_pairs)} more.")
+                _log_line(log, f"Expanding: {len(deep_results)} results, {len(meaningful)} conf>=5. Adding {len(extra_pairs)} more.")
                 _process_batch(extra_pairs)
                 meaningful = [r for r in deep_results if _conf(r) >= 5]
 
         # Minimum guarantee
         if len(deep_results) == 0:
-            _log_line(logf, "WARNING: deep_results=0. Activating minimum guarantee.")
+            _log_line(log, "WARNING: deep_results=0. Activating minimum guarantee.")
             fallback_pairs = [p for p, _ in ranked_all[:5]] if ranked_all else list(config.WATCHLIST[:5])
             _process_batch(fallback_pairs, force_deep=True)
 
         passed = len(deep_results)
         _log_line(
-            logf,
+            log,
             f"Analysis complete: universe={universe_size} · "
             f"stage-1 filtered={filtered_count} · deep-analysed={passed} · "
             f"meaningful(conf>=5)={len(meaningful)} · failed={len(failed_pairs)}",
@@ -9535,19 +9539,19 @@ def run() -> int:
                 )
                 for _mp, _mc in _momentum_gains:
                     _log_line(
-                        logf,
+                        log,
                         f"[momentum] {_mp} appeared in watch list for {_mc} consecutive "
                         f"scans — momentum accumulation boost +{min(_mc * 3, 12)} merit "
                         f"points will apply next scan.",
                     )
             _log_line(
-                logf,
+                log,
                 f"Scan state saved for dynamic boosters: "
                 f"{len(_wl_pairs)} watchlist pairs, {len(_nm_pairs)} near-miss pairs, "
                 f"{len(_new_momentum)} momentum-tracked pairs → watchlist_cache.json{_mom_log}",
             )
         except Exception as _wc_exc:
-            _log_line(logf, f"Watchlist cache save failed: {_wc_exc}")
+            _log_line(log, f"Watchlist cache save failed: {_wc_exc}")
 
         # Save morning-ranked state so intraday scans can pick the closest-to-trigger pairs
         if scan_mode == "full":
@@ -9559,9 +9563,9 @@ def run() -> int:
                 _MORNING_RANKED_FILE.write_text(
                     json.dumps(morning_confs), encoding="utf-8"
                 )
-                _log_line(logf, f"Morning ranked state saved ({len(morning_confs)} pairs).")
+                _log_line(log, f"Morning ranked state saved ({len(morning_confs)} pairs).")
             except Exception as _mr_exc:
-                _log_line(logf, f"Morning ranked save failed: {_mr_exc}")
+                _log_line(log, f"Morning ranked save failed: {_mr_exc}")
 
         # Pair statistics for adaptive cascade targets (read once; used by research trade logging)
         _pair_stats_all: dict = {}
@@ -9586,7 +9590,7 @@ def run() -> int:
             )
             _dth.append_history(_threshold_data)
             _log_line(
-                logf,
+                log,
                 f"Dynamic threshold: {_threshold_data['final_threshold']:.1f} "
                 f"(regime {_threshold_data.get('regime','?')} base "
                 f"{_threshold_data.get('regime_base','?')}, "
@@ -9594,7 +9598,7 @@ def run() -> int:
                 f"dq_adj {_threshold_data.get('data_quality_adjustment', 0):+.1f})",
             )
         except Exception as _thr_exc:
-            _log_line(logf, f"Dynamic threshold computation failed: {_thr_exc}")
+            _log_line(log, f"Dynamic threshold computation failed: {_thr_exc}")
 
         # FIX 2 Part B: Init _monthly_trends / _trend_structures in run() scope so
         # _log_one_research closure can access them (they live in _send_telegram_summary
@@ -9613,13 +9617,13 @@ def run() -> int:
                 if _tc_r_age_h < 24:
                     _monthly_trends = _tc_r_data.get("monthly_trends", {})
                     _trend_structures = _tc_r_data.get("trend_structures", {})
-                    _log_line(logf,
+                    _log_line(log,
                         f"Trend cache loaded — {_tc_r_age_h:.1f}h old — "
                         f"{len(_monthly_trends)} pairs")
                 else:
-                    _log_line(logf, "Trend cache stale (>24h) — using neutral values")
+                    _log_line(log, "Trend cache stale (>24h) — using neutral values")
         except Exception as _tc_r_exc:
-            _log_line(logf, f"Trend cache load failed: {_tc_r_exc}")
+            _log_line(log, f"Trend cache load failed: {_tc_r_exc}")
 
         # Research trading mode: paper-trade conf>=4 pairs (0.01 lots)
         # conf-4 "borderline" setups are tracked separately — they build ML training
@@ -9679,7 +9683,7 @@ def run() -> int:
 
                 # Hard gate: never open research trade when ATR=0 — stop/target cannot be set
                 if _qg_rt.get("atr_zero"):
-                    _log_line(logf,
+                    _log_line(log,
                         f"[research] {r_result['pair']} skipped — ATR=0 — cannot set safe stop distance")
                     return False
 
@@ -9934,7 +9938,7 @@ def run() -> int:
                 try:
                     _inv_warn_rt = _rt.check_inverse_open_research(r_result["pair"], _rdir)
                     if _inv_warn_rt:
-                        _log_line(logf, f"[research_tracker] BLOCKING — {_inv_warn_rt}")
+                        _log_line(log, f"[research_tracker] BLOCKING — {_inv_warn_rt}")
                         _rt_inv_blocked = True
                 except Exception:
                     pass
@@ -9978,13 +9982,13 @@ def run() -> int:
                         )
                         if _rt_adpt:
                             _rt_n = _rt_pst.get("n_trades_with_mfe", 0)
-                            _log_line(logf,
+                            _log_line(log,
                                 f"[research] {r_result['pair']} adaptive targets from "
                                 f"{_rt_n} trades: T1 {_rt_t1m:.2f}x · T2 {_rt_t2m:.2f}x"
                                 f" · T3 {_rt_t3m:.2f}x ATR ({_rt_vol_tier})")
                         else:
                             _rt_needed = max(0, 10 - _rt_pst.get("n_trades_with_mfe", 0))
-                            _log_line(logf,
+                            _log_line(log,
                                 f"[research] {r_result['pair']} standard targets "
                                 f"(need {_rt_needed} more trades before adaptive activates)")
                         if _ct1_rt is not None:
@@ -10026,7 +10030,7 @@ def run() -> int:
             for _r in deep_results:
                 _log_one_research(_r)
             if _rt_logged:
-                _log_line(logf, f"Research mode: {_rt_logged} trade(s) from deep analysis (conf>=4).")
+                _log_line(log, f"Research mode: {_rt_logged} trade(s) from deep analysis (conf>=4).")
 
             # Pass 2: research sweep — Haiku-only on all pre-filtered pairs not yet analysed.
             # Uses Twelve Data data already cached by warm_cache (no extra API calls).
@@ -10036,14 +10040,14 @@ def run() -> int:
             _sweep_limit = 15 if scan_mode == "full" else 5
             _sweep_candidates = [p for p in pre_filtered if p not in _already_in_deep][:_sweep_limit]
             if _sweep_candidates:
-                _log_line(logf,
+                _log_line(log,
                     f"Research sweep: Haiku-only scan of {len(_sweep_candidates)} additional "
                     f"pre-warmed pairs (limit={_sweep_limit} for {scan_mode})...")
                 _sweep_new = 0
                 for _sp in _sweep_candidates:
                     try:
                         _sr = _analyse_pair(
-                            _sp, logf,
+                            _sp, log,
                             force_deep=False,
                             shared_fundamental=_shared_fund.get(_sp),
                             shared_macro=_shared_macro,
@@ -10056,10 +10060,10 @@ def run() -> int:
                     except Exception:
                         pass
                 if _sweep_new:
-                    _log_line(logf, f"Research sweep: {_sweep_new} additional trade(s) logged.")
+                    _log_line(log, f"Research sweep: {_sweep_new} additional trade(s) logged.")
                 if scan_mode == "full":
                     _total_cov = len(deep_results) + len(_sweep_candidates)
-                    _log_line(logf,
+                    _log_line(log,
                         f"Morning scan analysed top {len(deep_results)} pairs in depth — "
                         f"{len(_sweep_candidates)} additional pairs screened by research sweep — "
                         f"{_total_cov} pairs total coverage"
@@ -10069,11 +10073,11 @@ def run() -> int:
             try:
                 _rt_all  = _rt.load()
                 _rt_open = sum(1 for r in _rt_all if r.get("status") == "OPEN")
-                _log_line(logf,
+                _log_line(log,
                     f"✅ Research trade logger: working — {_rt_logged} new trades opened this scan "
                     f"(total: {len(_rt_all)} | open: {_rt_open})")
             except Exception:
-                _log_line(logf, f"✅ Research trade logger: working — {_rt_logged} new trades opened this scan")
+                _log_line(log, f"✅ Research trade logger: working — {_rt_logged} new trades opened this scan")
 
             # Item 5: Research trade logging verification
             # yes_trades is defined in _send_telegram_summary (called later); compute here from deep_results
@@ -10090,7 +10094,7 @@ def run() -> int:
                     pass
 
         except Exception as exc:
-            _log_line(logf, f"Research trade logging failed: {exc}")
+            _log_line(log, f"Research trade logging failed: {exc}")
             try:
                 _telegram(
                     "🚨 Research trade logging failed — ML training data not being collected "
@@ -10103,19 +10107,19 @@ def run() -> int:
         # 6. Rebuild dashboard
         try:
             path = dashboard.generate()
-            _log_line(logf, f"Dashboard updated: {path}")
+            _log_line(log, f"Dashboard updated: {path}")
         except Exception as exc:
-            _log_line(logf, f"Dashboard step failed: {exc}")
+            _log_line(log, f"Dashboard step failed: {exc}")
 
         actionable = [
             f"{r['pair']} {r['parsed']['direction']} (conf {r['parsed']['confidence']})"
             for r in deep_results if r["parsed"].get("trade_this") == "YES"
         ]
         if actionable:
-            _log_line(logf, "ACTIONABLE TODAY: " + "; ".join(actionable))
+            _log_line(log, "ACTIONABLE TODAY: " + "; ".join(actionable))
         else:
-            _log_line(logf, "No actionable setups today.")
-        _log_line(logf, "=== Daily run complete ===")
+            _log_line(log, "No actionable setups today.")
+        _log_line(log, "=== Daily run complete ===")
 
         # 7. Risk management
         risk_data = {}
@@ -10156,10 +10160,10 @@ def run() -> int:
                 _dd_tier_alert_lines = risk_manager.drawdown_tier_alert_lines(
                     _old_dd_mode, _new_dd_mode, risk_state, _fund_bal, _fund_peak
                 )
-                _log_line(logf, f"[DRAWDOWN] Tier transition: {_old_dd_mode} → {_new_dd_mode} "
+                _log_line(log, f"[DRAWDOWN] Tier transition: {_old_dd_mode} → {_new_dd_mode} "
                           f"(dd={risk_state.get('drawdown_pct',0)*100:.1f}%)")
         except Exception as exc:
-            _log_line(logf, f"Risk management step failed: {exc}")
+            _log_line(log, f"Risk management step failed: {exc}")
 
         # Fund state: circuit breaker, peak/drawdown, sizing state, weekend alert
         try:
@@ -10210,7 +10214,7 @@ def run() -> int:
                     pass
                 _fs_cb.save(_fs_cb_st)
         except Exception as _fs_cb_exc:
-            _log_line(logf, f"Fund state circuit breaker check failed: {_fs_cb_exc}")
+            _log_line(log, f"Fund state circuit breaker check failed: {_fs_cb_exc}")
 
         # 8. Fetch API credit balances
         credit_data = {}
@@ -10220,7 +10224,7 @@ def run() -> int:
             backup_bal  = _bill.fetch_balance(config.ANTHROPIC_API_KEY_2)
             credit_data = {"primary_balance": primary_bal, "backup_balance": backup_bal}
         except Exception as exc:
-            _log_line(logf, f"Credit balance check failed: {exc}")
+            _log_line(log, f"Credit balance check failed: {exc}")
 
         # 9. Cost summary
         run_duration_min = (time.time() - _run_start) / 60.0
@@ -10238,7 +10242,7 @@ def run() -> int:
         except Exception:
             td_calls = _tech_td
 
-        _log_line(logf, (
+        _log_line(log, (
             f"[COST] Haiku in={run_stats.get('haiku_input',0)} out={run_stats.get('haiku_output',0)} · "
             f"Sonnet in={run_stats.get('sonnet_input',0)} out={run_stats.get('sonnet_output',0)} · "
             f"TD calls={td_calls} · est=${run_stats.get('estimated_usd',0):.4f} · "
@@ -10255,15 +10259,15 @@ def run() -> int:
                 _auckland_now(),
             )
         except Exception as _ct_exc:
-            _log_line(logf, f"Cost tracking failed: {_ct_exc}")
+            _log_line(log, f"Cost tracking failed: {_ct_exc}")
 
         # Research threshold analysis (only meaningful after 30 days of paper trades)
         research_result = None
         try:
             from src import research_analyst as _ra
-            research_result = _ra.analyse(log=lambda m: _log_line(logf, m))
+            research_result = _ra.analyse(log=lambda m: _log_line(log, m))
         except Exception as exc:
-            _log_line(logf, f"Research analysis failed: {exc}")
+            _log_line(log, f"Research analysis failed: {exc}")
 
         # Alert deduplication: intraday scans only notify when new trade alerts appear
         _last_alerts    = _load_last_alerts()
@@ -10271,14 +10275,14 @@ def run() -> int:
         _new_alerts     = _current_alerts - _last_alerts
         _save_alerts(_current_alerts)
         _should_notify = True
-        _log_line(logf, f"[{scan_mode}] Sending Telegram. New alerts: {sorted(_new_alerts) if _new_alerts else 'none'}")
+        _log_line(log, f"[{scan_mode}] Sending Telegram. New alerts: {sorted(_new_alerts) if _new_alerts else 'none'}")
 
         # 10. Send drawdown tier transition alert (separate message, sent before main summary)
         if _dd_tier_alert_lines:
             try:
                 _telegram("\n".join(_dd_tier_alert_lines))
             except Exception as _dda_exc:
-                _log_line(logf, f"Drawdown tier alert send failed: {_dda_exc}")
+                _log_line(log, f"Drawdown tier alert send failed: {_dda_exc}")
 
         # 11. Send Telegram summary
         if _should_notify:
@@ -10317,14 +10321,14 @@ def run() -> int:
                 )
         try:
             if _discord:
-                _log_line(logf, "[discord] Preparing scan report data...")
+                _log_line(log, "[discord] Preparing scan report data...")
 
                 # ── Fund state ───────────────────────────────────────────────────
                 try:
                     with open(config.DATA_DIR / "fund_state.json", encoding="utf-8") as _dsc_fsf:
                         _dsc_fs = json.load(_dsc_fsf)
                 except Exception as _dsc_fse:
-                    _log_line(logf, f"[discord] fund_state read error: {_dsc_fse}")
+                    _log_line(log, f"[discord] fund_state read error: {_dsc_fse}")
                     _dsc_fs = _fs_cb_st if isinstance(locals().get("_fs_cb_st"), dict) else {}
 
                 def _dsc_tof(v, d=0.0):
@@ -10378,7 +10382,7 @@ def run() -> int:
                     _dsc_dec = _dsc_fw + _dsc_fp + _dsc_ew + _dsc_fl
                     if _dsc_dec > 0:
                         _dsc_fwr = (_dsc_fw + _dsc_fp + _dsc_ew) / _dsc_dec * 100
-                    _log_line(logf, (
+                    _log_line(log, (
                         f"[discord] Fund perf: "
                         f"wins={_dsc_fw} "
                         f"protected={_dsc_fp} "
@@ -10438,7 +10442,7 @@ def run() -> int:
                                     pass
                                 break
                 except Exception as _dsc_fe:
-                    _log_line(logf, f"[discord] fund trades error: {_dsc_fe}")
+                    _log_line(log, f"[discord] fund trades error: {_dsc_fe}")
 
                 # ── Research trades ──────────────────────────────────────────────
                 _dsc_rt_open = _dsc_rt_clsd = _dsc_rt_dec = 0
@@ -10504,7 +10508,7 @@ def run() -> int:
                     except Exception:
                         pass
                 except Exception as _dsc_rte:
-                    _log_line(logf, f"[discord] research trades error: {_dsc_rte}")
+                    _log_line(log, f"[discord] research trades error: {_dsc_rte}")
 
                 # ── ML system ────────────────────────────────────────────────────
                 _dsc_ml_n   = 0
@@ -10538,7 +10542,7 @@ def run() -> int:
                     if "hhhl_aligned" in _dsc_rt_check.columns:
                         _dsc_hhhl = float(_dsc_rt_check["hhhl_aligned"].notna().mean() * 100)
                 except Exception as _dsc_mle:
-                    _log_line(logf, f"[discord] ML data error: {_dsc_mle}")
+                    _log_line(log, f"[discord] ML data error: {_dsc_mle}")
 
                 # ── Context from scan ────────────────────────────────────────────
                 _dsc_regime    = str((_threshold_data or {}).get("regime") or "")
@@ -10584,12 +10588,12 @@ def run() -> int:
                                 })
                         except Exception:
                             pass
-                    _log_line(logf, (
+                    _log_line(log, (
                         f"[discord] New trades from CSV: {len(_dsc_yes_raw)} — "
                         f"{[t['pair'] for t in _dsc_yes_raw]}"
                     ))
                 except Exception as _e_yes:
-                    _log_line(logf, f"[discord] New trade read failed: {_e_yes}")
+                    _log_line(log, f"[discord] New trade read failed: {_e_yes}")
                     _dsc_yes_raw = []
 
                 # Blocked trades
@@ -10676,14 +10680,14 @@ def run() -> int:
                 except Exception:
                     _dsc_date_str = ""
 
-                _log_line(logf, (
+                _log_line(log, (
                     f"[discord] Data ready: bal=${_dsc_bal:,.0f} "
                     f"open={_dsc_fopen_cnt} rt_open={_dsc_rt_open} "
                     f"rt_wr={_dsc_rt_wr:.0f}% ml_trained={_dsc_ml_n} "
                     f"ml_active={_dsc_ml_act}"
                 ))
 
-                _log_line(logf, "Sending Discord scan report...")
+                _log_line(log, "Sending Discord scan report...")
                 _discord.send_master_scan_report(
                     scan_mode=scan_mode,
                     auckland_time=_dsc_auck,
@@ -10750,12 +10754,12 @@ def run() -> int:
                     news_blackout_pairs=_dsc_news_blk,
                     open_trades=_dsc_open_trades,
                 )
-                _log_line(logf, "Discord scan report sent ✅")
+                _log_line(log, "Discord scan report sent ✅")
         except Exception as _dsc_exc:
             import traceback as _dsc_tb
-            _log_line(logf,
+            _log_line(log,
                 f"Discord scan report FAILED: {type(_dsc_exc).__name__}: {_dsc_exc}")
-            _log_line(logf, _dsc_tb.format_exc())
+            _log_line(log, _dsc_tb.format_exc())
 
     # FIX 12: Write scan completion marker AFTER all Discord/Telegram sends complete.
     # Uses same keys as the digest reader at line 7281 (completed, finished, mode).
