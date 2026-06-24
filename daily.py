@@ -4833,6 +4833,31 @@ def _send_telegram_summary(
                 _log_line(log, f"[regime] BLOCKING fund trade {_yt_pair} — regime is {_regime_str}")
                 _fund_st_blocked.append((_yt, _blk_rgm))
                 continue
+            # Pair history confidence adjustment (based on research win rate for this pair)
+            try:
+                _ps_data = _pair_wr_lkp.get(_yt_pair.upper(), {})
+                _ps_dec  = int(_ps_data.get("decisive", 0))
+                _ps_wr   = float(_ps_data.get("win_rate", 0))
+                if _ps_dec >= 10:
+                    if _ps_wr >= 0.65:
+                        _ps_boost = 0.3
+                    elif _ps_wr <= 0.35:
+                        _ps_boost = -0.3
+                    else:
+                        _ps_boost = 0.0
+                    if _ps_boost != 0 and isinstance(_yt.get("parsed"), dict):
+                        _ps_orig = float(_yt["parsed"].get("confidence") or 0)
+                        _yt["parsed"]["confidence"] = round(
+                            min(10.0, max(0.0, _ps_orig + _ps_boost)), 1
+                        )
+                        _yt["parsed"]["_pair_wr_boost"]  = _ps_boost
+                        _yt["parsed"]["_pair_wr_sample"] = _ps_dec
+                        _log_line(log, (
+                            f"[pair] {_yt_pair} {_ps_wr*100:.0f}% WR ({_ps_dec} trades) "
+                            f"→ conf {_ps_boost:+.1f} ({_ps_orig:.1f}→{_yt['parsed']['confidence']:.1f})"
+                        ))
+            except Exception as _ps_exc:
+                _log_line(log, f"[pair] stats error: {_ps_exc}")
             # Improvement 2: Dynamic confidence threshold by regime
             _yt_conf_val = _eff_conf(_yt)
             if _yt_conf_val < FUND_TRADE_MIN_CONF:
