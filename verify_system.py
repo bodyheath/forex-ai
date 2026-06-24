@@ -239,7 +239,7 @@ print()
 print('FTMO limits:')
 daily_pct = abs(float(
     fs.get('daily_pnl_pct',0)))
-total_dd = abs(drawdown)
+total_dd = abs(live_dd)
 print(f'  Daily:  {daily_pct:.2f}% / 5.0% '
       f'{"BREACH" if daily_pct>=5 else "WARN" if daily_pct>3.5 else "OK"}')
 print(f'  Total:  {total_dd:.2f}% / 10.0% '
