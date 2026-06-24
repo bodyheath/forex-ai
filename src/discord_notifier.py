@@ -867,6 +867,42 @@ def send_master_scan_report(
         "inline": False,
     })
 
+    # ── SECTION 3b: OPEN POSITIONS (trailing stop status) ────────────────────────
+    _open_trades = open_trades or []
+    if _open_trades:
+        _pos_lines = []
+        for _ot in _open_trades[:4]:
+            _ot_pair = _ot.get("pair", "")
+            _ot_dir  = _ot.get("direction", "")
+            _ot_ent  = float(_ot.get("entry") or 0)
+            _ot_t1h  = str(_ot.get("t1_hit", "")).upper() in ("TRUE", "1", "YES")
+            _ot_t2h  = str(_ot.get("t2_hit", "")).upper() in ("TRUE", "1", "YES")
+            _ot_t3h  = str(_ot.get("t3_hit", "")).upper() in ("TRUE", "1", "YES")
+            _ot_eff  = float(_ot.get("effective_stop") or _ot.get("stop_loss") or 0)
+            _ot_orig = float(_ot.get("stop_loss") or 0)
+            _ot_de   = "\U0001f4c8" if str(_ot_dir).upper() == "BUY" else "\U0001f4c9"
+            _ot_milestones = []
+            if _ot_t3h: _ot_milestones.append("T3✔")
+            elif _ot_t2h: _ot_milestones.append("T2✔")
+            elif _ot_t1h: _ot_milestones.append("T1✔")
+            _ot_ms_str = " · ".join(_ot_milestones) if _ot_milestones else "awaiting T1"
+            _ot_trailed = _ot_eff and _ot_orig and abs(_ot_eff - _ot_orig) > 1e-8
+            if _ot_trailed:
+                _ot_stop_str = f"\U0001f512 Stop trailed → `{_ot_eff:.5f}`"
+            elif _ot_t1h:
+                _ot_stop_str = f"\U0001f512 Breakeven stop `{_ot_eff:.5f}`"
+            else:
+                _ot_stop_str = f"Stop: `{_ot_eff:.5f}`"
+            _pos_lines.append(
+                f"{_ot_de} **{_ot_pair} {_ot_dir}** · {_ot_ms_str}\n"
+                f"   Entry: `{_ot_ent:.5f}` · {_ot_stop_str}"
+            )
+        fields.append({
+            "name": "\U0001f4bc Open Positions",
+            "value": "\n\n".join(_pos_lines)[:1024],
+            "inline": False,
+        })
+
     # ── SECTION 4: FUND PERFORMANCE ───────────────────────────────────────────────
     if fund_decisive > 0:
         _wr_e = "🟢" if fund_win_rate >= 50 else ("🟡" if fund_win_rate >= 35 else "🔴")
