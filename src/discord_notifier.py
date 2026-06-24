@@ -1006,6 +1006,20 @@ def send_master_scan_report(
         _ctx_parts.append(f"Strongest: **{strongest_ccy}**")
     if weakest_ccy:
         _ctx_parts.append(f"Weakest: **{weakest_ccy}**")
+    _act_sess = active_sessions or []
+    if _act_sess:
+        _sess_icon_map = {"tokyo": "\U0001f1ef\U0001f1f5", "london": "\U0001f1ec\U0001f1e7", "new_york": "\U0001f1fa\U0001f1f8"}
+        _sess_str = " · ".join(
+            f"{_sess_icon_map.get(s.lower(), '')} {s.replace('_', ' ').title()}" for s in _act_sess
+        )
+        _ctx_parts.append(f"Active session: {_sess_str}")
+    else:
+        _ctx_parts.append("Session: Off-peak hours")
+    _nb_pairs = news_blackout_pairs or []
+    if _nb_pairs:
+        _ctx_parts.append(f"\U0001f4f0 News blackout: {', '.join(_nb_pairs[:6])}")
+    else:
+        _ctx_parts.append("\U0001f4f0 News: Clear")
     _next_scan = {
         "full": "9am morning scan", "morning": "5pm pre-London",
         "prelondon": "11pm pre-New York", "preny": "6am full scan",
