@@ -974,22 +974,22 @@ def send_master_scan_report(
     })
 
     # ── SECTION 5: ML SYSTEM ──────────────────────────────────────────────────────
-    _ML_THRESHOLD = 30
     if ml_trained == 0:
         _ml_status = "❌ UNTRAINED — no model yet"
         _ml_detail = "Needs first training run"
-    elif ml_active or ml_trained >= _ML_THRESHOLD:
+    elif ml_active:
         _ml_status = "✅ ACTIVE — influencing scores"
         _ml_detail = (
-            f"Win rate: {ml_accuracy:.0f}% · Trained on: {ml_trained} trades\n"
+            f"Win rate: {ml_recent_wr:.0f}% on {ml_trained} trades\n"
             f"Last retrain: {ml_last_retrain}"
         )
     else:
-        _n_more = _ML_THRESHOLD - ml_trained
-        _ml_status = "⏳ LEARNING — not yet active"
+        _ml_status = "🔄 LEARNING — not yet influencing scores"
         _ml_detail = (
-            f"Win rate: {ml_recent_wr:.0f}% on {ml_trained} trades\n"
-            f"Need {_n_more} more decisive trades to activate"
+            f"{ml_reliable_retrains}/3 reliable retrains · "
+            f"{ml_trained} trades · "
+            f"WR {ml_recent_wr:.0f}%\n"
+            f"Need: 3+ retrains, 50+ trades, 50%+ WR"
         )
     _feat_avg  = (mta_pct + hhhl_pct) / 2 if (mta_pct or hhhl_pct) else 0
     _feat_note = (
