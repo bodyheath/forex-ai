@@ -59,7 +59,7 @@ ghosts = fund[(fund.pair.isin(ghost_pairs)) & (fund.status.isin(['OPEN', 'PENDIN
 print(f'Ghost trades: {len(ghosts)} {"✅" if len(ghosts)==0 else "❌"}')
 
 open_f = fund[fund.status == 'OPEN']
-print(f'Open count: {len(open_f)} (should be 1 — GBP/SEK)')
+print(f'Open count: {len(open_f)} (GBP/SEK + 3 from today\'s scan)')
 
 bad_ids = 0
 for _, t in fund.iterrows():
