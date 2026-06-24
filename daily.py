@@ -11278,6 +11278,7 @@ def run() -> int:
                     n_band_67=_dsc_n67,
                     n_band_7p=_dsc_n7p,
                     best_pairs_str=_dsc_best_pairs_s,
+                    hot_research_str=_dsc_hot_str,
                     adaptive_count=_dsc_adapt_cnt,
                     ml_trained=_dsc_ml_n,
                     ml_accuracy=_dsc_ml_acc,
