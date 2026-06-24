@@ -27,5 +27,9 @@ Thumbs.db
 # API response cache — recreated on every run, never commit
 data/cache/
 
+# Auto-generated state files — written every monitor run
+data/fund_state.json
+data/price_cache.json
+
 # Claude Code artifacts
 .claude/
