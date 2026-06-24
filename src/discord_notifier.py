@@ -744,14 +744,22 @@ def send_master_scan_report(
     _title = f"{_mode_emoji} {_mode_name} · {auckland_time} · {scan_date}"
 
     # ── Description (one-liner summary) ─────────────────────────────────────────
-    if yes_trades:
+    _high_blocked = [b for b in blocked_setups if float(b.get("conf", 0)) >= 7.0]
+    if swapped_setups:
+        _desc_lead = (
+            f"\U0001f504 {len(swapped_setups)} swap(s) · "
+            f"\U0001f7e2 {len(yes_trades)} trade(s) opened"
+        )
+    elif yes_trades:
         _desc_lead = f"\U0001f7e2 {len(yes_trades)} new fund trade(s) opened"
+    elif _high_blocked:
+        _desc_lead = f"\U0001f6ab {len(_high_blocked)} high-conf setup(s) blocked by capacity"
     elif blocked_trades:
         _desc_lead = f"⛔ {len(blocked_trades)} trade(s) blocked"
     elif watch_list:
         _desc_lead = f"\U0001f440 {len(watch_list)} pair(s) on watch list"
     else:
-        _desc_lead = "No new setups — waiting for cleaner opportunities"
+        _desc_lead = "No actionable setups this scan"
     _description = (
         f"{_desc_lead}\n"
         f"Fund: **${fund_balance:,.2f}** ({daily_pnl_pct:+.2f}% today) · "
