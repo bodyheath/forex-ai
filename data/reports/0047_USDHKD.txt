@@ -1,0 +1,23 @@
+```
+PAIR: USD/HKD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought (63.7) + Stochastic+CCI partial SELL confluence + T_sig SELL_3 offset by strong bullish ribbon alignment and MTF disagreement (weekly/daily neutral vs. monthly SELL).
+RISK_FACTORS: [1. MTF CRITICAL FAIL — weekly and daily both NEUTRAL (not SELL); monthly alone insufficient to meet 2/3 MTF rule. TRADE_THIS blocked.] [2. ALIGNED_BULL ribbon (5/5 EMAs stacked) + price > SMA50 > SMA200 (golden cross) contradicts SELL thesis; trend continuation risk overrides overbought RSI.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on SELL direction (conf=1/3, threshold=2/3). Weekly and daily are NEUTRAL; only monthly is SELL. Insufficient confluence for directional trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS SUMMARY:**
+
+1. **MTF BLOCKER (HARD RULE):** Weekly=SELL, Daily=NEUTRAL,

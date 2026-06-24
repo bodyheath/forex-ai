@@ -1,0 +1,26 @@
+```
+PAIR: AUD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with RSI 30.3 (oversold 4H) + aligned bullish ribbon + positive AUD rate differential supports BUY, but weekly sell conflates MTF and COT AUD reversal reduces conviction.
+RISK_FACTORS: [1] MTF conflict: weekly sells while daily/4H buy — only 2/3 MTF agreement fails confidence threshold; [2] COT AUD reversing from long conviction into short — institutional positioning flip contradicts bullish bias, reduces POSITIONING_SCORE by 2.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.5604
+ENTRY_TRIGGER_REASON: Fibonacci 23.6% resistance confluence (0.56044) + RSI 4H bounce confirmation; wait for price hold above this level with volume.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**DETAILED SCORING BREAKDOWN:**
+
+**TECHNICAL_SCORE: 6/10**
+- D1 RSI=44.4 (neutral zone, no tier bonus) → baseline=5
+- 4H RSI=30.3 (oversold 7-8 BUY tier) → +1 bonus (second

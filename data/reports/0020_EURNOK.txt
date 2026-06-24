@@ -1,0 +1,24 @@
+PAIR: EUR/NOK
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: D1 pin bar at key level with RSI>70 and triple oscillator SELL confluence signal reversal, but 4H uptrend and weekly neutrality create directional conflict that prevents high-confidence trade.
+RISK_FACTORS: [1) MTF discord — weekly neutral + 4H uptrend (golden-cross structure) contradict D1 SELL signal; confidence capped at <6. 2) EUR fundamental headwind weak (diff=-2.31% rate rising but modest), NOK weak (rate falling), insufficient fundamental support for directional conviction.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 11.1650
+ENTRY_TRIGGER_REASON: Sell limit at nearest Fib support (SL=10.69652 midpoint projection ~11.16) awaiting D1 pin bar confirmation if price rebounds into 11.18–11.20 resistance.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**RATIONALE:**
+
+**Technical (6/10):**
+- D1 T_sig=SELL_8 is primary baseline. RSI=68.6 (upper tier 65–70) = 7–8 SELL weighting, confirmed by

@@ -1,0 +1,22 @@
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level with RSI 60.2 (neutral-to-overbought) and T_sig=SELL_6 suggests downside, but 4H uptrend structure and weekly/monthly bullish bias create conflicting MTF signals that reduce conviction.
+RISK_FACTORS: [1] MTF conflict: Weekly and Monthly are BUY while Daily and 4H are SELL — only 2/3 agree, failing MTF rule threshold; this reduces edge significantly. [2] AUD COT REVERSING from short to long while position is suggested short — institutional positioning flipping against trade direction increases unwind risk.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement is 2/3 (60% confidence), failing the strict requirement that both weekly AND daily must agree on direction. Weekly/Monthly are bullish; Daily/4H are bearish. No clean consensus; reversal risk from COT AUD flip negates edge.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**RATIONALE:**
+
+1. **Technical Score (5/10):** 
+   - D1 RSI=60.2 (upper-neutral, −1
