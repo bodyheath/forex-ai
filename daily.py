@@ -4532,12 +4532,13 @@ def _send_telegram_summary(
                     _log_line(log, f"[stop] BLOCKING {_yt_pair} — stop too wide")
                     _fund_st_blocked.append((_yt, _blk_atr))
                     continue
-            # Hard capacity limit — never hold more than _MAX_FUND_TRADES open fund trades
-            if _open_fund_count >= _MAX_FUND_TRADES:
+            # Hard capacity limit — re-read CSV every time so same-scan opens are counted
+            _open_fund_count = _get_open_fund_count()
+            if _open_fund_count >= MAX_FUND_TRADES:
                 _blk_rsn_cap = (
-                    f"Fund at capacity — {_open_fund_count}/{_MAX_FUND_TRADES} open trades"
+                    f"Fund at capacity — {_open_fund_count}/{MAX_FUND_TRADES} open trades (fresh CSV)"
                 )
-                _log_line(log, f"[BLOCKED] {_yt.get('pair','')} — {_blk_rsn_cap}")
+                _log_line(log, f"[capacity] BLOCKED {_yt.get('pair','')} — {_blk_rsn_cap}")
                 _fund_st_blocked.append((_yt, _blk_rsn_cap))
                 try:
                     from src import tracker as _trk_cap
