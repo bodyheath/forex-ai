@@ -1591,7 +1591,7 @@ def _ensure_cascade_levels(row: dict, tracker_mod, log=print) -> dict:
         )
         if ct1 is not None:
             tracker_mod.update_fields(
-                int(row.get("id", 0)),
+                _safe_int_id(row.get("id", 0)),
                 t1_price=ct1, t2_price=ct2, t3_price=ct3,
                 effective_stop=row.get("stop_loss"),
             )
