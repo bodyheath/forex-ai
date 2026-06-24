@@ -10387,6 +10387,50 @@ def run() -> int:
                 except Exception:
                     pass
 
+                # Sizing mode from fund state
+                _dsc_sizing_mode = str(_dsc_fs.get("sizing_mode") or "normal")
+
+                # Active sessions
+                try:
+                    _dsc_active_sess = _get_current_session()
+                except Exception:
+                    _dsc_active_sess = []
+
+                # News blackout pairs (pairs with upcoming HIGH-impact news)
+                _dsc_news_blk = []
+                try:
+                    for _, _dsc_ot2 in _dsc_fo.iterrows():
+                        _dsc_np = str(_dsc_ot2.get("pair", ""))
+                        if _dsc_np:
+                            _dsc_nr = _has_upcoming_news(_dsc_np, log_fn=None)
+                            if _dsc_nr.get("blocked"):
+                                _dsc_news_blk.append(_dsc_np)
+                    # Also check freshly blocked trades
+                    for _bt2, _br2 in (_fund_st_blocked or []):
+                        if "news" in str(_br2).lower() or "blackout" in str(_br2).lower():
+                            _dsc_np2 = _bt2.get("pair", "")
+                            if _dsc_np2 and _dsc_np2 not in _dsc_news_blk:
+                                _dsc_news_blk.append(_dsc_np2)
+                except Exception:
+                    pass
+
+                # Open trades for trailing stop display
+                _dsc_open_trades = []
+                try:
+                    for _, _dsc_ot3 in _dsc_fo.iterrows():
+                        _dsc_open_trades.append({
+                            "pair":           str(_dsc_ot3.get("pair", "")),
+                            "direction":      str(_dsc_ot3.get("direction", "")),
+                            "entry":          float(_dsc_ot3.get("entry") or 0),
+                            "stop_loss":      float(_dsc_ot3.get("stop_loss") or 0),
+                            "effective_stop": float(_dsc_ot3.get("effective_stop") or _dsc_ot3.get("stop_loss") or 0),
+                            "t1_hit":         str(_dsc_ot3.get("t1_hit", "")).upper() in ("TRUE", "1", "YES"),
+                            "t2_hit":         str(_dsc_ot3.get("t2_hit", "")).upper() in ("TRUE", "1", "YES"),
+                            "t3_hit":         str(_dsc_ot3.get("t3_hit", "")).upper() in ("TRUE", "1", "YES"),
+                        })
+                except Exception:
+                    pass
+
                 # Auckland time for header
                 try:
                     _dsc_auck = _auckland_now().strftime("%H:%M NZST")
