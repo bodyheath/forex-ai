@@ -1060,8 +1060,9 @@ def send_master_scan_report(
         f"{_rt_wr_e} Win rate: **{research_win_rate:.0f}%** ({research_decisive} decisive)\n"
         f"Profit factor: {research_pf:.2f}\n"
         f"\n**Win rate by confidence:**\n{_conf_tbl}"
-        + (f"\n\n**Best pairs:** {best_pairs_str}" if best_pairs_str else "")
+        + (f"\n\n**Best pairs (5+ trades):** {best_pairs_str}" if best_pairs_str else "")
         + (f"\nAdaptive targets: {adaptive_count} pairs" if adaptive_count > 0 else "")
+        + (f"\n\n{hot_research_str}" if hot_research_str else "")
     )
     fields.append({
         "name": "\U0001f52c Research Trades",
