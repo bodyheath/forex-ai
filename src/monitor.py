@@ -2994,7 +2994,7 @@ def run(log=print) -> dict:
     for row in _res_open:
         pair      = row.get("pair", "")
         direction = (row.get("direction") or "").upper()
-        rec_id    = int(row.get("id", 0) or 0)
+        rec_id    = _safe_int_id(row.get("id", 0))
         try:
             _, candles_mfe, resolved_p_mfe = pair_data.get(pair, ("t0_no_data", None, None))
             if candles_mfe:
