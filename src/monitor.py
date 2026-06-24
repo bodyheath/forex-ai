@@ -2947,188 +2947,38 @@ def run(log=print) -> dict:
     # ── Discord fund dashboard update ─────────────────────────────────────────
     try:
         if _dn:
-            from src import fund_state as _fs_dash
-            _fs_d = _fs_dash.load()
-            # ── Helper functions for trade dict building ──────────────────────────
-            def _parse_bool_d(val):
-                if isinstance(val, bool):
-                    return val
-                if isinstance(val, (int, float)):
-                    import math as _mb; return bool(val) if not _mb.isnan(val) else False
-                return str(val).strip().upper() in ("TRUE", "YES", "1", "T")
+            import pandas as _pd_dash
+            from src.trading import financials as _fin_dash
 
-            def _safe_float_d(val, default=0.0):
-                try:
-                    r = float(val); return r if r == r else default
-                except (ValueError, TypeError):
-                    return default
+            # Fresh CSV read + live prices → every number reflects reality NOW
+            _df_dash    = _pd_dash.read_csv(str(config.TRADES_CSV), encoding="utf-8-sig")
+            _state_dash = _fin_dash.calculate_fund_state(_df_dash, prices)
 
-            def _parse_trade_dt_d(val):
-                if not val:
-                    return None
-                s = str(val).strip()
-                if s in ("", "nan", "None", "NaT", "0"):
-                    return None
-                s = s.replace("Z", "+00:00")
-                for _fmt in ("%Y-%m-%dT%H:%M:%S.%f%z", "%Y-%m-%dT%H:%M:%S%z",
-                             "%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S",
-                             "%Y-%m-%d %H:%M:%S.%f", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
-                    try:
-                        _dt = datetime.strptime(s, _fmt)
-                        return _dt.replace(tzinfo=timezone.utc) if _dt.tzinfo is None else _dt
-                    except ValueError:
-                        continue
-                try:
-                    _dt = datetime.fromisoformat(s)
-                    return _dt.replace(tzinfo=timezone.utc) if _dt.tzinfo is None else _dt
-                except Exception:
-                    return None
+            # _state_dash["open_trades"] is now fully populated by _open_trade_summary()
+            _dash_trades = _state_dash["open_trades"]
+            _dash_bal    = float(_state_dash.get("balance") or 0)
+            _dash_pnl_d  = float(_state_dash.get("daily_pnl_pct") or 0)
+            _dash_pnl_usd = float(_state_dash.get("daily_pnl_dollars") or 0)
+            _dash_open_bal = float(_state_dash.get("daily_opening_balance") or 10000)
+            _dash_ret    = (_dash_bal - 10000.0) / 10000.0 * 100 if _dash_bal else 0.0
+            _total_unreal_usd  = float(_state_dash.get("unrealised_dollars") or 0)
+            _total_unreal_pips = float(_state_dash.get("unrealised_pips") or 0)
+            _total_equity      = float(_state_dash.get("total_equity") or _dash_bal)
+            _ftmo_pct = (_total_equity - 10000.0) / 10000.0 * 100
 
-            def _calc_true_pnl_d(direction, entry, current, t1, t2, t3,
-                                  t1_hit, t2_hit, t3_hit, pip_size, risk_usd, stop_pips):
-                """True P&L including already-banked cascade levels."""
-                if stop_pips <= 0 or risk_usd <= 0 or not entry:
-                    return 0.0, 0.0
-                dpp = risk_usd / stop_pips
-                if direction == "BUY":
-                    p1 = (t1 - entry) / pip_size if t1 else 0.0
-                    p2 = (t2 - entry) / pip_size if t2 else 0.0
-                    p3 = (t3 - entry) / pip_size if t3 else 0.0
-                    pc = (current - entry) / pip_size if current else 0.0
-                else:
-                    p1 = (entry - t1) / pip_size if t1 else 0.0
-                    p2 = (entry - t2) / pip_size if t2 else 0.0
-                    p3 = (entry - t3) / pip_size if t3 else 0.0
-                    pc = (entry - current) / pip_size if current else 0.0
-                if t3_hit:
-                    total = p1 * 0.40 + p2 * 0.30 + p3 * 0.30
-                elif t2_hit:
-                    # T1 (40%) and T2 (30%) locked; remaining 30% still running
-                    total = p1 * 0.40 + p2 * 0.30 + pc * 0.30
-                elif t1_hit:
-                    # T1 (40%) locked; remaining 60% still running
-                    total = p1 * 0.40 + pc * 0.60
-                else:
-                    total = pc
-                return total, total * dpp
+            # Log per-trade progress for debugging
+            for _dt in _dash_trades:
+                log(
+                    f"[progress] {_dt.get('pair','')} {_dt.get('direction','')}: "
+                    f"entry={_dt.get('entry',0):.5f} cur={_dt.get('current',0):.5f} "
+                    f"target={_dt.get('t1',0):.5f} ({_dt.get('next_target','T1')}) "
+                    f"progress={_dt.get('progress_pct',0):.1f}% "
+                    f"P&L={_dt.get('pips_unrealised',0):+.1f}p/${_dt.get('dollars_unrealised',0):+.2f} "
+                    f"t1h={_dt.get('t1_hit',False)} t2h={_dt.get('t2_hit',False)} "
+                    f"days={_dt.get('days_open',0)}"
+                )
 
-            _dash_trades = []
-            for _dr in _fund_open:
-                _pair_d  = str(_dr.get("pair", ""))
-                _dir_d   = str(_dr.get("direction", ""))
-                _entry_d = _safe_float_d(_dr.get("entry"))
-                # Try pair with and without slash for price lookup
-                _cur_d   = _safe_float_d(
-                    prices.get(_pair_d) or prices.get(_pair_d.replace("/", "")),
-                    _entry_d)
-                _stop_d  = _safe_float_d(_dr.get("effective_stop") or _dr.get("stop_loss"))
-                _t1_d    = _safe_float_d(_dr.get("t1_price"))
-                _t2_d    = _safe_float_d(_dr.get("t2_price"))
-                _t3_d    = _safe_float_d(_dr.get("t3_price") or _dr.get("target"))
-                _t1h_d   = _parse_bool_d(_dr.get("t1_hit"))
-                _t2h_d   = _parse_bool_d(_dr.get("t2_hit"))
-                _t3h_d   = _parse_bool_d(_dr.get("t3_hit"))
-                _pip_d   = 0.01 if "JPY" in _pair_d else 0.0001
-
-                # Progress: when T2 hit, base from effective_stop toward T3
-                if _t2h_d:
-                    _next_d, _tgt_d = "T3", _t3_d
-                    _base_d = _safe_float_d(_dr.get("effective_stop") or _dr.get("stop_loss"), _entry_d)
-                elif _t1h_d:
-                    _next_d, _tgt_d = "T2", _t2_d
-                    _base_d = _entry_d
-                else:
-                    _next_d, _tgt_d = "T1", _t1_d
-                    _base_d = _entry_d
-                if _t3h_d:
-                    _next_d = "Complete"
-
-                _prog_d = 0.0
-                if _tgt_d and _base_d and _tgt_d != _base_d:
-                    _rng_d  = _tgt_d - _base_d if _dir_d == "BUY" else _base_d - _tgt_d
-                    _mv_d   = _cur_d - _base_d  if _dir_d == "BUY" else _base_d - _cur_d
-                    _prog_d = (_mv_d / _rng_d * 100) if _rng_d > 0 else 0.0
-
-                # True P&L including all banked cascade levels
-                _orig_stop_d = _safe_float_d(_dr.get("stop_loss") or _stop_d)
-                _stop_pips_d = (abs(_entry_d - _orig_stop_d) / _pip_d
-                                if _entry_d and _orig_stop_d else 0)
-                _sz_pct_d    = _safe_float_d(_dr.get("position_size_pct_at_entry"), 1.0)
-                if not _sz_pct_d:
-                    _sz_pct_d = 1.0
-                _risk_usd_d  = _sz_pct_d / 100 * max(
-                    _safe_float_d(_fs_d.get("daily_opening_balance"), 10000.0), 1.0)
-                _true_pips_d, _true_usd_d = _calc_true_pnl_d(
-                    _dir_d, _entry_d, _cur_d,
-                    _t1_d, _t2_d, _t3_d,
-                    _t1h_d, _t2h_d, _t3h_d,
-                    _pip_d, _risk_usd_d, _stop_pips_d)
-
-                # Open duration: show hours if < 1 day
-                _entry_dt_d = _parse_trade_dt_d(_dr.get("timestamp"))
-                if _entry_dt_d:
-                    _tdelta_d   = datetime.now(timezone.utc) - _entry_dt_d
-                    _days_d     = _tdelta_d.days
-                    _hours_d    = _tdelta_d.total_seconds() / 3600
-                    _open_str_d = f"{_hours_d:.0f}h" if _days_d == 0 and _hours_d < 24 else f"{_days_d}d"
-                else:
-                    _days_d, _open_str_d = 0, "?d"
-
-                # Checklist: search known column names
-                _ckl_d = 0.0
-                for _ckl_col in ("checklist_score", "pre_trade_checklist", "checklist",
-                                  "quality_score", "setup_quality", "trade_quality", "checklist_total"):
-                    _ckl_v = _dr.get(_ckl_col)
-                    if _ckl_v is not None:
-                        _ckl_s = str(_ckl_v).strip()
-                        if _ckl_s not in ("", "nan", "None", "0.0"):
-                            try:
-                                _cv = float(_ckl_s)
-                                if _cv > 0:
-                                    _ckl_d = _cv; break
-                            except ValueError:
-                                continue
-
-                if _t2h_d:
-                    _pnl_note_d = "T1+T2 banked · 30% running"
-                elif _t1h_d:
-                    _pnl_note_d = "T1 banked · 60% running"
-                else:
-                    _pnl_note_d = "Full position running"
-
-                log(f"[progress] {_pair_d} {_dir_d}: "
-                    f"base={_base_d:.5f} cur={_cur_d:.5f} "
-                    f"target={_tgt_d:.5f} ({_next_d}) "
-                    f"progress={_prog_d:.1f}% "
-                    f"truePL={_true_pips_d:+.1f}p/${_true_usd_d:+.2f} "
-                    f"t1h={_t1h_d} t2h={_t2h_d}")
-
-                _dash_trades.append({
-                    "pair": _pair_d, "direction": _dir_d,
-                    "entry": _entry_d, "current": _cur_d,
-                    "stop": _stop_d, "t1": _t1_d, "t2": _t2_d, "t3": _t3_d,
-                    "t1_hit": _t1h_d, "t2_hit": _t2h_d, "t3_hit": _t3h_d,
-                    "progress_pct": _prog_d, "next_target": _next_d,
-                    "pips_unrealised": _true_pips_d,
-                    "dollars_unrealised": round(_true_usd_d, 2),
-                    "days_open": _days_d,
-                    "open_str": _open_str_d,
-                    "conf": _safe_float_d(_dr.get("confidence")),
-                    "checklist_score": _ckl_d,
-                    "id": str(_dr.get("id", "")),
-                    "risk_dollars": round(_risk_usd_d, 2),
-                    "pnl_note": _pnl_note_d,
-                })
-            _dash_open_bal = float(_fs_d.get("daily_opening_balance") or 0)
-            _dash_pnl_usd  = float(_fs_d.get("daily_pnl_dollars") or 0)
-            _dash_bal      = float(_fs_d.get("balance") or 0) or (_dash_open_bal + _dash_pnl_usd)
-            _dash_peak     = float(_fs_d.get("peak_balance") or _dash_bal or 10000)
-            _dash_ret      = (_dash_bal - 10000.0) / 10000.0 * 100 if _dash_bal else 0.0
-
-            # ── Fund trade statistics — audited calculation ─────────────────────
-            # Reads status column (trades.csv has no outcome column).
-            # Pip fallback chain: cascading_total_pips_weighted → cascading_total_pips → pips
-            # EXPIRED with positive pips = protected/partial exit; negative = loss.
+            # ── Fund trade statistics ──────────────────────────────────────────
             _st_wins = _st_losses = _st_partial = _st_breakeven = 0
             _st_wr = _st_avg_win = _st_avg_loss = _st_pf = _st_best_pips = _st_total_pips = 0.0
             _st_avg_win_d = _st_avg_loss_d = _st_dollar_pf = 0.0
@@ -3136,59 +2986,50 @@ def run(log=print) -> dict:
             _st_total = 0
             try:
                 import csv as _csv_dash
+                import math as _math_st
                 with open(config.DATA_DIR / "trades.csv", encoding="utf-8-sig", newline="") as _tf:
                     _fund_rows = [r for r in _csv_dash.DictReader(_tf)
                                   if r.get("trade_this") == "YES"]
                 _st_total = len(_fund_rows)
-
-                # Determine which result column exists
-                _sample = _fund_rows[0] if _fund_rows else {}
+                _sample   = _fund_rows[0] if _fund_rows else {}
                 _has_outcome = (
                     "outcome" in _sample and
                     any(str(r.get("outcome") or "").strip() for r in _fund_rows)
                 )
                 _result_col = "outcome" if _has_outcome else "status"
-                log(f"  [fund-stats] result_col={_result_col} total_fund_trades={_st_total}")
+                log(f"  [fund-stats] result_col={_result_col} total={_st_total}")
 
                 _win_pips_list, _loss_pips_list = [], []
                 _win_dollars_list, _loss_dollars_list = [], []
                 _best_pips_seen = 0.0
-                import math as _math_st
-                # 1R dollar risk — use position_size_pct_at_entry if valid, else fund_state sizing
-                _fs_sizing_pct = float(_fs_d.get("current_sizing_pct") or 1.0)
-                _risk_usd_base = _dash_open_bal * _fs_sizing_pct / 100.0
+                _fs_sizing_pct = 1.0
+
                 for _fr in _fund_rows:
                     _st_out = str(_fr.get(_result_col) or "").upper()
-                    # Pip fallback: prefer cascading weighted → cascading → pips
                     _raw_pip = (
                         _fr.get("cascading_total_pips_weighted") or
                         _fr.get("cascading_total_pips") or
-                        _fr.get("pips") or
-                        ""
+                        _fr.get("pips") or ""
                     )
                     try:
                         _fp = float(_raw_pip) if _raw_pip != "" else 0.0
+                        if _math_st.isnan(_fp):
+                            _fp = 0.0
                     except (ValueError, TypeError):
                         _fp = 0.0
-                    if _math_st.isnan(_fp):
-                        _fp = 0.0
 
-                    # Dollar P&L: compute DPP from entry/stop_loss so exotic pairs
-                    # (e.g. USD/SEK at 847 pips = $100) show correct dollar values.
-                    _pair_d = str(_fr.get("pair") or "")
-                    _pip_sz = 0.01 if _pair_d.upper().endswith("JPY") else 0.0001
+                    _pair_d_st = str(_fr.get("pair") or "")
+                    _pip_sz_st = 0.01 if "JPY" in _pair_d_st.upper() else 0.0001
                     try:
                         _sz_pct_raw = _fr.get("position_size_pct_at_entry")
-                        _sz_pct = float(_sz_pct_raw) if (_sz_pct_raw and str(_sz_pct_raw).strip() not in ("", "nan")) else _fs_sizing_pct
-                        _risk_usd = _dash_open_bal * _sz_pct / 100.0
-                        _entry_v   = float(_fr.get("entry") or 0)
-                        _stop_v    = float(_fr.get("stop_loss") or 0)
-                        _stop_pips_trade = abs(_entry_v - _stop_v) / _pip_sz if _stop_v and _entry_v else 0.0
-                        if _stop_pips_trade > 0:
-                            _dpp = _risk_usd / _stop_pips_trade
-                            _dollar_pnl = _fp * _dpp
-                        else:
-                            _dollar_pnl = 0.0
+                        _sz_pct_st = float(_sz_pct_raw) if (
+                            _sz_pct_raw and str(_sz_pct_raw).strip() not in ("", "nan")
+                        ) else _fs_sizing_pct
+                        _risk_usd_st = _dash_open_bal * _sz_pct_st / 100.0
+                        _entry_v = float(_fr.get("entry") or 0)
+                        _stop_v  = float(_fr.get("stop_loss") or 0)
+                        _sp_st   = abs(_entry_v - _stop_v) / _pip_sz_st if _entry_v and _stop_v else 0.0
+                        _dollar_pnl = _fp * (_risk_usd_st / _sp_st) if _sp_st > 0 else 0.0
                     except (ValueError, TypeError):
                         _dollar_pnl = 0.0
 
@@ -3205,8 +3046,6 @@ def run(log=print) -> dict:
                     elif _st_out == "BREAKEVEN":
                         _st_breakeven += 1
                     elif _st_out in ("LOSS", "EXPIRED", "EXPIRED_LOSS", "STALE_EXIT"):
-                        # EXPIRED with positive pips = protected exit with profit → partial win
-                        # EXPIRED with zero/negative pips = loss
                         if _fp > 0:
                             _st_partial += 1
                             _win_pips_list.append(_fp)
@@ -3219,52 +3058,44 @@ def run(log=print) -> dict:
                                 _loss_dollars_list.append(abs(_dollar_pnl))
                     if _fp > _best_pips_seen:
                         _best_pips_seen = _fp
-                        _st_best_pair = str(_fr.get("pair") or "")
+                        _st_best_pair = _pair_d_st
 
                 _st_best_pips = _best_pips_seen
-                _st_decisive = _st_wins + _st_losses + _st_partial
+                _st_decisive  = _st_wins + _st_losses + _st_partial
                 if _st_decisive > 0:
                     _st_wr = (_st_wins + _st_partial) / _st_decisive * 100
-                if _win_pips_list:
-                    _st_avg_win = sum(_win_pips_list) / len(_win_pips_list)
-                if _loss_pips_list:
-                    _st_avg_loss = sum(_loss_pips_list) / len(_loss_pips_list)
                 _tot_win  = sum(_win_pips_list)
                 _tot_loss = sum(_loss_pips_list)
-                if _tot_loss > 0:
-                    _st_pf = _tot_win / _tot_loss
+                _st_avg_win  = _tot_win  / len(_win_pips_list)  if _win_pips_list  else 0.0
+                _st_avg_loss = _tot_loss / len(_loss_pips_list) if _loss_pips_list else 0.0
+                _st_pf       = _tot_win / _tot_loss             if _tot_loss > 0   else 0.0
                 _st_total_pips = _tot_win - _tot_loss
-                # Dollar-based averages and profit factor
-                _st_avg_win_d  = sum(_win_dollars_list)  / len(_win_dollars_list)  if _win_dollars_list  else 0.0
-                _st_avg_loss_d = sum(_loss_dollars_list) / len(_loss_dollars_list) if _loss_dollars_list else 0.0
-                _tot_win_d  = sum(_win_dollars_list)
-                _tot_loss_d = sum(_loss_dollars_list)
-                _st_dollar_pf = _tot_win_d / _tot_loss_d if _tot_loss_d > 0 else 0.0
+                _tot_win_d   = sum(_win_dollars_list)
+                _tot_loss_d  = sum(_loss_dollars_list)
+                _st_avg_win_d  = _tot_win_d  / len(_win_dollars_list)  if _win_dollars_list  else 0.0
+                _st_avg_loss_d = _tot_loss_d / len(_loss_dollars_list) if _loss_dollars_list else 0.0
+                _st_dollar_pf  = _tot_win_d / _tot_loss_d if _tot_loss_d > 0 else 0.0
                 log(
                     f"  [fund-stats] wins={_st_wins} protected={_st_partial} "
-                    f"losses={_st_losses} breakeven={_st_breakeven} "
-                    f"decisive={_st_decisive} wr={_st_wr:.1f}%"
+                    f"losses={_st_losses} decisive={_st_decisive} wr={_st_wr:.1f}%"
                 )
             except Exception as _st_exc:
                 log(f"  Monitor: fund stats calculation failed: {_st_exc}")
 
-            # FIX 7 & 8: Compute unrealised P&L and true equity for dashboard
-            _total_unreal_usd  = sum(t.get("dollars_unrealised", 0) for t in _dash_trades)
-            _total_unreal_pips = sum(t.get("pips_unrealised", 0)    for t in _dash_trades)
-            _total_equity      = _dash_bal + _total_unreal_usd
-            _ftmo_pct          = (_total_equity - 10000.0) / 10000.0 * 100  # FIX 8: use equity
+            from src import fund_state as _fs_dash
+            _fs_d = _fs_dash.load()
 
             _dn.update_fund_dashboard(
                 open_fund_trades=_dash_trades,
                 fund_balance=_dash_bal,
                 fund_return_pct=_dash_ret,
-                daily_pnl_pct=float(_fs_d.get("daily_pnl_pct") or 0),
+                daily_pnl_pct=_dash_pnl_d,
                 daily_pnl_dollars=_dash_pnl_usd,
-                drawdown_pct=float(_fs_d.get("current_drawdown_pct") or 0),
+                drawdown_pct=float(_state_dash.get("current_drawdown_pct") or 0),
                 sizing_mode=str(_fs_d.get("sizing_mode") or "normal"),
                 risk_pct=float(_fs_d.get("current_sizing_pct") or 1.0),
                 consecutive_wins=int(_fs_d.get("consecutive_wins") or 0),
-                consecutive_losses=int(_fs_d.get("consecutive_losses") or 0),
+                consecutive_losses=int(_state_dash.get("consecutive_losses") or 0),
                 ftmo_current_pct=_ftmo_pct,
                 fund_total_trades=_st_total,
                 fund_wins=_st_wins,
@@ -3281,12 +3112,14 @@ def run(log=print) -> dict:
                 fund_best_trade_pips=_st_best_pips,
                 fund_best_trade_pair=_st_best_pair,
                 fund_total_pips=_st_total_pips,
-                unrealised_pnl_dollars=round(_total_unreal_usd,  2),
+                unrealised_pnl_dollars=round(_total_unreal_usd, 2),
                 unrealised_pnl_pips=round(_total_unreal_pips, 1),
                 total_equity=round(_total_equity, 2),
             )
     except Exception as _dash_exc:
+        import traceback as _tb_dash
         log(f"  Monitor: Discord dashboard update failed: {_dash_exc}")
+        log(_tb_dash.format_exc())
 
     # ── Closed trades log ─────────────────────────────────────────────────────
     try:
