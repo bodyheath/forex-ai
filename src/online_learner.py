@@ -30,7 +30,7 @@ _RECENCY_TABLE = [(1, 1.0), (7, 0.8), (14, 0.6), (30, 0.4)]
 
 def _recency_weight(closed_at: str) -> float:
     try:
-        age = (datetime.now() - datetime.fromisoformat(closed_at[:19])).days
+        age = (datetime.now(timezone.utc).replace(tzinfo=None) - datetime.fromisoformat(closed_at[:19])).days
     except Exception:
         return 0.7
     for days, w in _RECENCY_TABLE:
