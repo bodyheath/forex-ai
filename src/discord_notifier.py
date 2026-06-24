@@ -829,11 +829,37 @@ def send_master_scan_report(
             f"{_b_icon} **{_bp} {_bd}** · conf {_bc:.1f}/10\n"
             f"   {_br[:90]}"
         )
-    if not _setup_lines:
+    # ── Swap section ─────────────────────────────────────────────────────────────
+    for _sw in swapped_setups:
+        _sw_cp   = _sw.get("closed_pair", "")
+        _sw_pp   = float(_sw.get("closed_pips", 0))
+        _sw_pd   = float(_sw.get("closed_dollars", 0))
+        _sw_np   = _sw.get("new_pair", "")
+        _sw_nc   = float(_sw.get("new_conf", 0))
+        _sw_rsn  = str(_sw.get("reason", ""))[:120]
+        _sw_emo  = "✅" if _sw_pp >= 0 else "❌"
         _setup_lines.append(
-            "No new setups this scan\n"
-            "Waiting for cleaner opportunities"
+            f"\U0001f504 **Portfolio swap** — {_sw_cp} → {_sw_np}\n"
+            f"   Closed {_sw_cp}: {_sw_emo} {_sw_pp:+.1f}p / ${_sw_pd:+.2f}\n"
+            f"   Opened {_sw_np}: conf **{_sw_nc:.1f}**/10\n"
+            f"   _{_sw_rsn}_"
         )
+    # ── High-conf blocked section (conf ≥ 7) ────────────────────────────────────
+    if _high_blocked:
+        _setup_lines.append("**\U0001f6ab Blocked high-confidence setups:**")
+        for _hb in _high_blocked[:4]:
+            _hbp = _hb.get("pair", "")
+            _hbd = _hb.get("direction", "")
+            _hbc = float(_hb.get("conf", 0))
+            _hbr = str(_hb.get("reason", ""))[:80]
+            _setup_lines.append(
+                f"⛔ **{_hbp} {_hbd}** · conf {_hbc:.1f}/10\n"
+                f"   {_hbr}"
+            )
+        if len(_high_blocked) > 4:
+            _setup_lines.append(f"_…and {len(_high_blocked) - 4} more blocked_")
+    if not _setup_lines:
+        _setup_lines.append("No actionable setups this scan")
     fields.append({
         "name": "\U0001f3af New Fund Trades",
         "value": "\n\n".join(_setup_lines)[:1024],
