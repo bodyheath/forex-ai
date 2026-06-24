@@ -1158,38 +1158,20 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     )
             except Exception:
                 pass
-            # Update fund daily P&L after trade close (covers LOSS and cascading wins)
+            # Sync fund_state.json from trades.csv — single source of truth
             try:
-                from src import fund_state as _fs_upd
-                _fs_upd_data = _fs_upd.load()
-                _pip_sz_upd  = 0.01 if "JPY" in pair else 0.0001
-                _ent_upd     = _to_float(row_state.get("entry")) or 0
-                _stop_upd    = _to_float(row_state.get("stop_loss")) or 0
-                _stop_pips_upd = abs(_ent_upd - _stop_upd) / _pip_sz_upd if _ent_upd and _stop_upd else 0
-                _sz_pct_upd_raw = _to_float(row_state.get("position_size_pct_at_entry"))
-                _sz_pct_upd  = _sz_pct_upd_raw if (_sz_pct_upd_raw and _sz_pct_upd_raw == _sz_pct_upd_raw) else 1.0
-                _bal_upd     = float(_fs_upd_data.get("daily_opening_balance") or 10000)
-                _risk_upd    = _sz_pct_upd / 100.0 * max(_bal_upd, 1)
-                if _stop_pips_upd > 0:
-                    _dpp_upd = _risk_upd / _stop_pips_upd
-                    if _wp:
-                        # Cascading partial win — use weighted pip P&L
-                        _profit_upd = round(_wp * _dpp_upd, 2)
-                    else:
-                        # Plain stop-loss — full risk amount lost
-                        _profit_upd = round(-_risk_upd, 2)
-                    _fs_upd_data["daily_pnl_dollars"] = round(
-                        float(_fs_upd_data.get("daily_pnl_dollars") or 0) + _profit_upd, 2
-                    )
-                    if _bal_upd > 0:
-                        _fs_upd_data["daily_pnl_pct"] = round(
-                            _fs_upd_data["daily_pnl_dollars"] / _bal_upd * 100, 4
-                        )
-                    _fs_upd.save(_fs_upd_data)
-                    log(f"  Monitor fund #{rec_id} {pair}: fund_state updated {_profit_upd:+.2f} "
-                        f"(daily P&L: ${_fs_upd_data['daily_pnl_dollars']:+.2f})")
+                import pandas as _pd_fin
+                from src.trading import financials as _fin
+                _df_fin = _pd_fin.read_csv(str(config.TRADES_CSV), encoding="utf-8-sig")
+                _prices_fin = _fin.load_prices()
+                _state_fin = _fin.calculate_fund_state(_df_fin, _prices_fin)
+                _ok_fin = _fin.sync_fund_state_json(_state_fin)
+                log(f"  Monitor fund #{rec_id} {pair}: fund_state synced — "
+                    f"bal=${_state_fin['balance']:,.2f} "
+                    f"daily={_state_fin['daily_pnl_dollars']:+.2f} "
+                    f"({'ok' if _ok_fin else 'write failed'})")
             except Exception as _fs_exc:
-                log(f"  Monitor: fund_state update failed for {pair}: {_fs_exc}")
+                log(f"  Monitor: fund_state sync failed for {pair}: {_fs_exc}")
             # Safety-net: verify trades.csv reflects the closure (guards against git conflict overwrites)
             try:
                 import csv as _csv_sn
