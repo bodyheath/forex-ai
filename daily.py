@@ -178,6 +178,259 @@ def _fmt_time_exact(h: int, m: int = 0) -> str:
     return f"{h12}:{m:02d}{ampm}"
 
 
+# ── Trading filter constants ───────────────────────────────────────────────────
+
+MAX_CORRELATED_EXPOSURE = 2
+BASE_RISK_PCT           = 1.0
+
+SIZING_RULES = {
+    "RANGING_LOW_VOL":    0.5,
+    "RANGING_HIGH_VOL":   0.5,
+    "RISK_OFF":           0.5,
+    "TRENDING_RISK_ON":   1.0,
+    "TRENDING_RISK_OFF":  0.7,
+}
+
+LOSS_STREAK_SIZING = {
+    0: 1.0,
+    1: 1.0,
+    2: 0.75,
+    3: 0.5,
+    4: 0.25,
+}
+
+DRAWDOWN_SIZING = {
+    2.0:  1.0,
+    4.0:  0.75,
+    6.0:  0.5,
+    8.0:  0.25,
+    10.0: 0.0,
+}
+
+PAIR_BEST_SESSIONS = {
+    "JPY": ["tokyo", "london"],
+    "AUD": ["tokyo", "london"],
+    "NZD": ["tokyo", "london"],
+    "SGD": ["tokyo", "london"],
+    "HKD": ["tokyo", "london"],
+    "EUR": ["london", "new_york"],
+    "GBP": ["london", "new_york"],
+    "CHF": ["london", "new_york"],
+    "NOK": ["london"],
+    "SEK": ["london"],
+    "USD": ["london", "new_york"],
+    "CAD": ["new_york"],
+}
+
+_FX_SESSIONS = {
+    "tokyo":    (23, 8),
+    "london":   (7, 16),
+    "new_york": (12, 21),
+}
+
+
+def _get_current_session() -> list:
+    """Return list of active forex sessions (UTC hours)."""
+    hour = datetime.now(timezone.utc).hour
+    active = []
+    for session, (start, end) in _FX_SESSIONS.items():
+        if start > end:
+            if hour >= start or hour < end:
+                active.append(session)
+        else:
+            if start <= hour < end:
+                active.append(session)
+    return active
+
+
+def _check_session_filter(pair: str, log_fn=None) -> dict:
+    """Check if current session is appropriate for this pair."""
+    _log = log_fn or print
+    active = _get_current_session() or ["new_york"]
+    ccy1, ccy2 = (pair.split("/") if "/" in pair else (pair[:3], pair[3:]))
+    best = list(set(PAIR_BEST_SESSIONS.get(ccy1, []) + PAIR_BEST_SESSIONS.get(ccy2, [])))
+    if not best:
+        return {"allowed": True, "reason": "no session preference",
+                "active_sessions": active, "best_sessions": best}
+    overlap = [s for s in active if s in best]
+    if overlap:
+        return {"allowed": True, "reason": f"in best session: {overlap}",
+                "active_sessions": active, "best_sessions": best}
+    _log(f"[session] {pair}: active={active} best={best} — wrong session")
+    return {"allowed": False,
+            "reason": f"best sessions {best} not active (current: {active})",
+            "active_sessions": active, "best_sessions": best}
+
+
+def _has_upcoming_news(pair: str, minutes_before: int = 45,
+                       minutes_after: int = 30, log_fn=None) -> dict:
+    """Check if high-impact news is within the blackout window for this pair."""
+    _log = log_fn or print
+    try:
+        from src import economic_calendar as _ec_news
+        ccys = pair.split("/") if "/" in pair else [pair[:3], pair[3:]]
+        events = _ec_news.events_for_pair(pair, hours=2)
+        if not events:
+            return {"blocked": False, "reason": ""}
+        for event in events:
+            impact = str(event.get("impact", "")).upper()
+            if "HIGH" not in impact:
+                continue
+            event_ccy = str(event.get("currency", "")).upper()
+            if event_ccy not in ccys:
+                continue
+            try:
+                mins_until = float(event.get("hours_away", 999)) * 60
+                if -minutes_after <= mins_until <= minutes_before:
+                    title = event.get("title", "")
+                    _log(f"[news] BLOCKING {pair} — {event_ccy} {title} in {mins_until:.0f}m")
+                    return {"blocked": True,
+                            "reason": f"News blackout: {event_ccy} {title} in {mins_until:.0f}m",
+                            "event": event}
+            except Exception:
+                continue
+        return {"blocked": False, "reason": ""}
+    except Exception:
+        return {"blocked": False, "reason": ""}
+
+
+def _get_trend_alignment(pair: str, direction: str, log_fn=None) -> dict:
+    """Check if trade direction aligns with weekly and monthly trends."""
+    _log = log_fn or print
+    result = {
+        "weekly_aligned": None, "monthly_aligned": None,
+        "weekly_trend": "NEUTRAL", "monthly_trend": "NEUTRAL",
+        "both_aligned": False, "alignment_score": 0,
+    }
+    score = 0
+    dirn = str(direction).upper()
+    try:
+        from src import technical as _tech_ta
+        wt = _tech_ta.get_weekly_trend(pair)
+        weekly_trend = wt.get("trend", "NEUTRAL")
+        result["weekly_trend"] = weekly_trend
+        if dirn == "BUY":
+            aligned = weekly_trend in ("BUY", "NEUTRAL")
+            score += 2 if weekly_trend == "BUY" else (1 if weekly_trend == "NEUTRAL" else 0)
+        else:
+            aligned = weekly_trend in ("SELL", "NEUTRAL")
+            score += 2 if weekly_trend == "SELL" else (1 if weekly_trend == "NEUTRAL" else 0)
+        result["weekly_aligned"] = aligned
+        _log(f"[trend] {pair} weekly: {weekly_trend} aligned={aligned}")
+    except Exception as e:
+        _log(f"[trend] {pair} weekly error: {e}")
+    try:
+        from src import technical as _tech_ta2
+        mt = _tech_ta2.get_monthly_trend(pair)
+        monthly_trend = mt.get("trend", "NEUTRAL")
+        result["monthly_trend"] = monthly_trend
+        if dirn == "BUY":
+            aligned = monthly_trend in ("BUY", "NEUTRAL")
+            score += 2 if monthly_trend == "BUY" else (1 if monthly_trend == "NEUTRAL" else 0)
+        else:
+            aligned = monthly_trend in ("SELL", "NEUTRAL")
+            score += 2 if monthly_trend == "SELL" else (1 if monthly_trend == "NEUTRAL" else 0)
+        result["monthly_aligned"] = aligned
+        _log(f"[trend] {pair} monthly: {monthly_trend} aligned={aligned}")
+    except Exception as e:
+        _log(f"[trend] {pair} monthly error: {e}")
+    result["alignment_score"] = score
+    result["both_aligned"] = (result.get("weekly_aligned") is not False and
+                               result.get("monthly_aligned") is not False)
+    return result
+
+
+def _check_correlation(new_pair: str, new_direction: str,
+                       open_trades: list, log_fn=None) -> dict:
+    """Check if new trade adds too much correlated exposure to open trades."""
+    _log = log_fn or print
+
+    def _get_groups(pair, direction):
+        groups = []
+        p, d = str(pair), str(direction).upper()
+        if p.startswith("USD/"):
+            groups.append("USD_STRENGTH" if d == "BUY" else "USD_WEAKNESS")
+        elif "/USD" in p:
+            groups.append("USD_WEAKNESS" if d == "BUY" else "USD_STRENGTH")
+        if "EUR" in p:
+            if (p.startswith("EUR/") and d == "BUY") or (not p.startswith("EUR/") and d == "SELL"):
+                groups.append("EUR_STRENGTH")
+        if "JPY" in p:
+            if (p.endswith("/JPY") and d == "SELL") or (p.startswith("JPY/") and d == "BUY"):
+                groups.append("JPY_STRENGTH")
+        if p in ("AUD/USD", "NZD/USD", "AUD/JPY", "NZD/JPY", "GBP/JPY"):
+            groups.append("RISK_ON" if d == "BUY" else "RISK_OFF")
+        return groups
+
+    new_groups = _get_groups(new_pair, new_direction)
+    for group in new_groups:
+        correlated = []
+        for ot in open_trades:
+            ot_pair = str(ot.get("pair", ""))
+            ot_dir  = str(
+                ot.get("direction") or
+                (ot.get("parsed") or {}).get("direction") or ""
+            ).upper()
+            if group in _get_groups(ot_pair, ot_dir):
+                correlated.append(ot_pair)
+        if len(correlated) >= MAX_CORRELATED_EXPOSURE:
+            reason = f"{group} exposure already at {len(correlated)}: {correlated}"
+            _log(f"[correlation] BLOCKING {new_pair} {new_direction} — {reason}")
+            return {"blocked": True, "reason": reason,
+                    "correlated_trades": correlated, "group": group}
+    return {"blocked": False, "reason": "", "correlated_trades": [], "group": ""}
+
+
+def _calculate_position_size(regime: str, consecutive_losses: int,
+                              drawdown_pct: float, base_pct: float = None,
+                              log_fn=None) -> dict:
+    """Calculate position size based on regime, loss streak, and drawdown."""
+    _log = log_fn or print
+    if base_pct is None:
+        base_pct = BASE_RISK_PCT
+    multipliers = {}
+    regime_clean = str(regime).upper()
+    regime_mult = 1.0
+    for key, mult in SIZING_RULES.items():
+        if key in regime_clean:
+            regime_mult = mult
+            break
+    multipliers["regime"] = regime_mult
+    streak_mult = 1.0
+    for streak, mult in sorted(LOSS_STREAK_SIZING.items(), reverse=True):
+        if consecutive_losses >= streak:
+            streak_mult = mult
+            break
+    multipliers["loss_streak"] = streak_mult
+    dd_mult = 1.0
+    for dd_level, mult in sorted(DRAWDOWN_SIZING.items()):
+        if drawdown_pct <= dd_level:
+            dd_mult = mult
+            break
+    multipliers["drawdown"] = dd_mult
+    final_mult = min(regime_mult, streak_mult, dd_mult)
+    risk_pct = max(0.25, min(2.0, round(base_pct * final_mult, 2)))
+    if final_mult >= 1.0:
+        mode = "NORMAL"
+    elif final_mult >= 0.75:
+        mode = "REDUCED"
+    elif final_mult >= 0.5:
+        mode = "DEFENSIVE"
+    else:
+        mode = "MINIMAL"
+    reason_parts = []
+    if regime_mult < 1.0:
+        reason_parts.append(f"regime={regime_clean}")
+    if streak_mult < 1.0:
+        reason_parts.append(f"losses={consecutive_losses}")
+    if dd_mult < 1.0:
+        reason_parts.append(f"drawdown={drawdown_pct:.1f}%")
+    reason = ", ".join(reason_parts) if reason_parts else "normal"
+    _log(f"[sizing] {mode}: {base_pct}% × {final_mult:.2f} = {risk_pct}% ({reason})")
+    return {"risk_pct": risk_pct, "sizing_mode": mode, "reason": reason,
+            "multipliers": multipliers, "final_multiplier": final_mult}
+
+
 def _entry_window_for_pair(pair: str) -> tuple:
     """Return (start_h, start_m, end_h, end_m, window_str, cutoff_str, sess_name).
 
