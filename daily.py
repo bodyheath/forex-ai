@@ -10988,10 +10988,15 @@ def run() -> int:
                         _dsc_ml_rwr = float(_dsc_ml_meta.get("recent_win_rate") or 0) * 100
                         _dsc_ml_owr = float(_dsc_ml_meta.get("overall_win_rate") or 0) * 100
                         _dsc_ml_acc = _dsc_ml_owr
-                        # Model is ACTIVE only when model_ready AND n_consecutive_reliable >= 3
-                        _n_reliable = int(_dsc_ml_meta.get("n_consecutive_reliable", 0) or 0)
+                        # Model is ACTIVE only when all three gates pass
+                        _n_reliable  = int(_dsc_ml_meta.get("n_consecutive_reliable", 0) or 0)
                         _model_ready = bool(_dsc_ml_meta.get("model_ready", False))
-                        _dsc_ml_act = _model_ready and _n_reliable >= 3
+                        _dsc_ml_act  = (
+                            _model_ready
+                            and _n_reliable  >= 3      # 3+ consecutive reliable retrains
+                            and _dsc_ml_rwr  > 50.0    # recent win rate > 50%
+                            and _dsc_ml_n    >= 50     # at least 50 decisive trades
+                        )
                         _lr_ts = str(_dsc_ml_meta.get("last_updated") or "")
                         if _lr_ts:
                             try:
