@@ -1,0 +1,17 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 78.6% Fib (0.9217) signals potential rejection of recent strength, but weak oscillator confluence and MTF misalignment (only 4H bullish, D1 neutral, weekly neutral) severely limit conviction.
+RISK_FACTORS: [1] MTF disagreement: D1 and weekly both neutral while only 4H is bullish — fails MTF rule (must be 2/3 agreement minimum for valid trade). [2] RSI 55.7 on D1 is mid-neutral (45–55 band) with no oversold bounce setup; pin bar is bullish-biased despite SELL signal, creating conflicting pattern-to-signal risk.
+TRADE_THIS: NO
+
+**Rationale:**
+- **MTF Failure (Critical):** D1 NEUTRAL, Weekly NEUTRAL, 4H BUY = only 1/3 agreement. Hard MTF rule requires both D1 AND weekly to align; they do not. Confidence capped at <6 automatically.
+- **Technical Score 4:** T_sig=SELL_3 (baseline) is supported by SMA200 above price (0.9226 > 0.9220), but RSI 55.7 is neutral-to-rising (not oversold), and MACD

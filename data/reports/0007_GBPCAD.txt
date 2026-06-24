@@ -1,0 +1,30 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 uptrend structure conflicts with T_sig=SELL_3 and 4H bearish engulfing; MTF alignment fails (W/D neutral vs M sell) — reversal setup incomplete; converging ribbon signals trend weakness but insufficient confluence for high-confidence trade.
+
+RISK_FACTORS: (1) MTF rejection: Weekly + Daily both NEUTRAL (0/3 agreement threshold) — violates MTF rule; (2) D1 remains in golden-cross uptrend (price > SMA50 > SMA200) — contradicts sell signal; price must break SMA50 (1.8563) to confirm reversal.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.8563
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (1.8563) with 4H bearish engulfing confirmation would invalidate golden cross and align MTF.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical Rejection:**
+- D1 RSI=56.1 (neutral zone, no strong directional bias) + T_sig=SELL_3 conflicts with price structure: price 1.8
