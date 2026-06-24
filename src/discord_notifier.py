@@ -674,6 +674,7 @@ def send_master_scan_report(
     n_band_67: int = 0,
     n_band_7p: int = 0,
     best_pairs_str: str = "",
+    hot_research_str: str = "",
     adaptive_count: int = 0,
     ml_trained: int = 0,
     ml_accuracy: float = 0,
