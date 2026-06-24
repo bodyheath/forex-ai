@@ -109,12 +109,12 @@ def log_recommendation(pair: str, parsed: dict, data_sources, report: str) -> in
     """
     rows = load()
 
-    # Guard: if this is a YES trade, check for an existing OPEN row for the same pair
+    # Guard: if this is a YES trade, check for an existing OPEN or PENDING row for the same pair
     if parsed.get("trade_this") == "YES":
         existing = next(
             (r for r in rows
              if r.get("pair", "").upper() == pair.upper()
-             and r.get("status") == "OPEN"),
+             and r.get("status") in ("OPEN", "PENDING")),
             None,
         )
         if existing:
