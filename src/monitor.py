@@ -1175,6 +1175,9 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
             break   # trade closed — skip further milestones
 
         elif level == "STOP":
+            # Guard: if already CLOSED in CSV, skip entirely (git conflict revert protection)
+            if _already_sent_stop_alert(rec_id, log_fn=log):
+                break
             casc_oc = _casc.cascade_outcome(row_state)
             _wp     = _casc.weighted_pips(row_state) if casc_oc != "LOSS" else None
             _tp     = _casc.total_pips(row_state)    if casc_oc != "LOSS" else None
@@ -1191,19 +1194,28 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 cascading_pips=_wp,
             )
             log(f"  Monitor fund #{rec_id} {pair}: {casc_oc} at {mprice}")
-            if ta:
-                try:
-                    _r_txt = f"R={updated.get('r_multiple')}"
-                    ta.send(
-                        f"📊 <b>{pair} stop loss triggered — trade closed</b>\n\n"
-                        f"Outcome: {casc_oc}  |  Exit: {mprice}  |  {_r_txt}\n"
-                        f"Outcome recorded — ML training data updated."
-                        + wknd_note
-                    )
-                except Exception:
-                    pass
+            # Emergency fallback: if tracker write failed and trade is still OPEN, force-close
+            if updated.get("status") in ("OPEN", "PENDING", None, ""):
+                log(f"  Monitor: [warning] #{rec_id} still OPEN after update_outcome — running emergency close")
+                _emergency_close_trade(rec_id, mprice, log_fn=log)
+            # Cooldown: suppress duplicate alerts even if git reverted the closure
+            _prev_stop_alert = _check_milestone_sent(pair, "STOP")
+            if _prev_stop_alert:
+                log(f"  Monitor: STOP alert cooldown active for {pair} (last sent {_prev_stop_alert}) — alerts suppressed")
+            else:
+                if ta:
+                    try:
+                        _r_txt = f"R={updated.get('r_multiple')}"
+                        ta.send(
+                            f"📊 <b>{pair} stop loss triggered — trade closed</b>\n\n"
+                            f"Outcome: {casc_oc}  |  Exit: {mprice}  |  {_r_txt}\n"
+                            f"Outcome recorded — ML training data updated."
+                            + wknd_note
+                        )
+                    except Exception:
+                        pass
             try:
-                if _dn:
+                if _dn and not _prev_stop_alert:
                     _was_protected  = casc_oc != "LOSS"
                     _pip_sz_sh      = 0.01 if "JPY" in pair else 0.0001
                     _ent_sh         = _to_float(row_state.get("entry")) or 0
