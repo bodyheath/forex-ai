@@ -10715,15 +10715,16 @@ def run() -> int:
                             _dt_nt = datetime.strptime(_ts_nt[:19], "%Y-%m-%d %H:%M:%S")
                             if _dt_nt > _cutoff:
                                 _dsc_yes_raw.append({
-                                    "pair":      str(_nt.get("pair", "")),
-                                    "direction": str(_nt.get("direction", "")),
-                                    "conf":      float(_nt.get("confidence", 0) or 0),
-                                    "entry":     float(_nt.get("entry", 0) or 0),
-                                    "stop":      float(_nt.get("stop_loss", 0) or 0),
-                                    "t1":        float(_nt.get("t1_price") or _nt.get("target", 0) or 0),
-                                    "t2":        float(_nt.get("t2_price", 0) or 0),
-                                    "rr":        float(_nt.get("reward_risk", 0) or 0),
-                                    "status":    str(_nt.get("status", "")),
+                                    "pair":         str(_nt.get("pair", "")),
+                                    "direction":    str(_nt.get("direction", "")),
+                                    "conf":         float(_nt.get("confidence", 0) or 0),
+                                    "entry":        float(_nt.get("entry", 0) or 0),
+                                    "stop":         float(_nt.get("stop_loss", 0) or 0),
+                                    "t1":           float(_nt.get("t1_price") or _nt.get("target", 0) or 0),
+                                    "t2":           float(_nt.get("t2_price", 0) or 0),
+                                    "rr":           float(_nt.get("reward_risk", 0) or 0),
+                                    "status":       str(_nt.get("status", "")),
+                                    "override_tier": _override_pairs.get(str(_nt.get("pair", "")), None),
                                 })
                         except Exception:
                             pass
