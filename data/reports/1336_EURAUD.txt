@@ -1,0 +1,17 @@
+```
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Daily SELL signal conflicts with 4H uptrend and weekly BUY; MTF alignment is only 2/3, failing the mandatory confluence requirement.
+RISK_FACTORS: [1. MTF disagreement: Weekly+Daily both agree (BUY+SELL conflict) — only 60% confidence, below 2/3 threshold; 4H uptrend structure (price > SMA50 > SMA200) contradicts D1 pin bar bearish intent. 2. AUD COT REVERSING: institutional positioning flipped from long to short mid-range — reduces conviction and conflicts with net SHORT positioning already at 52% (potential crowding into AUD weakness).] 
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly (BUY) and Daily (SELL) do NOT both agree on direction. Only 2/3 timeframes align (W+M upside bias vs D+4H conflict). Confidence 4/10 < 6/10 threshold. D1 T_sig=SELL_5 contradicted by 4H golden cross (uptrend) and weekly bullish context. OSC shows no confluence (Stoch 73.

@@ -824,6 +824,209 @@ OVERRIDE_MAX_UNREALISED  = -3.0
 OVERRIDE_RISK_STRONG     = 0.75
 OVERRIDE_RISK_ELITE      = 0.50
 
+# ── Portfolio swap constants ──────────────────────────────────────────────────
+SWAP_MIN_NEW_CONF         = 8.0   # new trade must be ≥ this to trigger evaluation
+SWAP_MIN_CONF_GAP         = 2.0   # new conf must beat existing by at least this
+SWAP_MAX_EXISTING_CONF    = 7.0   # existing trade conf ≤ this is swap-eligible
+SWAP_MIN_LOSS_PCT         = 0.40  # ≥ 40% of stop consumed → swap candidate
+SWAP_MAX_STOP_PIPS        = 30.0  # ≤ 30 pips from stop → swap candidate
+SWAP_MAX_DAYS_NO_PROG     = 4     # days without progress → swap candidate
+SWAP_KEEP_SCORE_THRESHOLD = 12.0  # score ≤ this (out of 30) → swap candidate
+
+
+def _calculate_keep_score(
+    trade: dict,
+    current_price: float,
+    log_fn=None,
+) -> dict:
+    """Score an open trade 0-30 on how worth keeping it is.
+
+    Components:
+      Confidence at entry : 0-10
+      Progress toward T1  : 0-10
+      Time freshness      : 0-5  (decays over 5 days)
+      P&L health          : 0-5  (0 = near stop, 5 = in profit)
+      Cascade bonus       : +5 T1 hit, +8 T2 hit
+
+    Returns dict: {score, swap_candidate, reasons, progress_pct, days_open}
+    """
+    from datetime import datetime, timezone as _tz
+    _log = log_fn or print
+
+    pair      = str(trade.get("pair", ""))
+    direction = str(trade.get("direction", "")).upper()
+    entry     = float(trade.get("entry", 0) or 0)
+    stop      = float(trade.get("stop_loss", 0) or 0)
+    eff_stop  = float(trade.get("effective_stop", 0) or stop)
+    t1        = float(trade.get("t1_price", 0) or trade.get("target", 0) or 0)
+    conf      = float(trade.get("confidence", 0) or 0)
+    t1_hit    = str(trade.get("t1_hit", "")).upper() in ("TRUE", "YES", "1", "T")
+    t2_hit    = str(trade.get("t2_hit", "")).upper() in ("TRUE", "YES", "1", "T")
+    ps        = 0.01 if "JPY" in pair else 0.0001
+
+    # Component 1: Confidence (0-10)
+    conf_score = min(10.0, max(0.0, float(conf)))
+
+    # Component 2: Progress toward T1 (-100 to +100 → maps to 0-10)
+    if entry > 0 and t1 > 0 and current_price > 0:
+        total_range = abs(t1 - entry)
+        if total_range > 0:
+            raw_prog = ((current_price - entry) / total_range * 100.0
+                        if direction == "BUY"
+                        else (entry - current_price) / total_range * 100.0)
+        else:
+            raw_prog = 0.0
+        progress = max(-100.0, min(100.0, raw_prog))
+        prog_score = max(0.0, min(10.0, (progress + 100.0) / 20.0))
+    else:
+        progress  = 0.0
+        prog_score = 5.0
+
+    # Component 3: Freshness (5 → 0 over 5 days)
+    try:
+        ts_raw = str(trade.get("timestamp", "") or "")
+        if ts_raw and ts_raw not in ("nan", "None", ""):
+            ts = datetime.fromisoformat(ts_raw.replace("Z", "+00:00"))
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=_tz.utc)
+            days_open = (datetime.now(_tz.utc) - ts).total_seconds() / 86400.0
+        else:
+            days_open = 0.0
+    except Exception:
+        days_open = 0.0
+    time_score = max(0.0, min(5.0, 5.0 - days_open))
+
+    # Component 4: P&L health (0 = at stop, 5 = in profit)
+    if entry > 0 and eff_stop > 0:
+        stop_dist = abs(entry - eff_stop)
+        if direction == "BUY":
+            current_loss = entry - current_price
+        else:
+            current_loss = current_price - entry
+        if current_loss <= 0:
+            pnl_score = 5.0
+        else:
+            loss_ratio = current_loss / stop_dist if stop_dist > 0 else 1.0
+            pnl_score  = max(0.0, 5.0 * (1.0 - loss_ratio))
+    else:
+        pnl_score = 2.5
+
+    # Cascade bonus
+    cascade_bonus = 8.0 if t2_hit else (5.0 if t1_hit else 0.0)
+
+    score = conf_score + prog_score + time_score + pnl_score + cascade_bonus
+
+    # Swap candidate reasons
+    reasons = []
+    if eff_stop > 0 and current_price > 0:
+        stop_pips = abs(current_price - eff_stop) / ps
+        if stop_pips <= SWAP_MAX_STOP_PIPS:
+            reasons.append(f"{stop_pips:.0f}p from stop")
+    if entry > 0 and eff_stop > 0 and current_price > 0:
+        stop_dist = abs(entry - eff_stop)
+        cur_loss  = (entry - current_price if direction == "BUY" else current_price - entry)
+        if cur_loss > 0 and stop_dist > 0:
+            loss_pct = cur_loss / stop_dist
+            if loss_pct >= SWAP_MIN_LOSS_PCT:
+                reasons.append(f"{loss_pct * 100:.0f}% risk consumed")
+    if conf <= SWAP_MAX_EXISTING_CONF:
+        reasons.append(f"conf {conf:.1f} low")
+    if days_open >= SWAP_MAX_DAYS_NO_PROG and progress < 20 and not t1_hit:
+        reasons.append(f"{days_open:.1f}d no progress")
+
+    swap_candidate = (score <= SWAP_KEEP_SCORE_THRESHOLD and not t1_hit and not t2_hit)
+
+    _log(f"[swap] {pair} keep={score:.1f}/30 candidate={swap_candidate}"
+         f" ({', '.join(reasons) if reasons else 'solid'})")
+
+    return {
+        "score":          score,
+        "swap_candidate": swap_candidate,
+        "reasons":        reasons,
+        "progress_pct":   progress,
+        "days_open":      days_open,
+    }
+
+
+def _find_swap_target(
+    new_pair: str,
+    new_direction: str,
+    new_conf: float,
+    open_trades: list,
+    log_fn=None,
+) -> dict:
+    """Check if a new high-confidence setup justifies replacing an open trade.
+
+    Returns dict: {should_swap, target_id, target_pair, target_score, reason, ...}
+    """
+    _log = log_fn or print
+
+    if new_conf < SWAP_MIN_NEW_CONF:
+        return {"should_swap": False, "reason": f"conf {new_conf:.1f} < {SWAP_MIN_NEW_CONF}"}
+    if not open_trades:
+        return {"should_swap": False, "reason": "no open trades to evaluate"}
+
+    try:
+        from src.trading.financials import load_prices as _lp_fst, get_price as _gp_fst
+        _prices = _lp_fst()
+    except Exception as _pe:
+        _log(f"[swap] price load error: {_pe}")
+        _prices = {}
+
+    scored = []
+    for t in open_trades:
+        pair    = str(t.get("pair", ""))
+        cp      = _gp_fst(_prices, pair) if _prices else None
+        cp_val  = float(cp) if cp else float(t.get("entry", 0) or 0)
+        result  = _calculate_keep_score(trade=t, current_price=cp_val, log_fn=_log)
+        scored.append({
+            "id":            t.get("id"),
+            "pair":          pair,
+            "conf":          float(t.get("confidence", 0) or 0),
+            "score":         result["score"],
+            "swap_candidate": result["swap_candidate"],
+            "reasons":       result["reasons"],
+            "t1_hit":        str(t.get("t1_hit", "")).upper() in ("TRUE", "YES", "1", "T"),
+        })
+
+    scored.sort(key=lambda x: x["score"])
+    weakest = scored[0]
+
+    _log(f"[swap] Weakest: {weakest['pair']} score={weakest['score']:.1f} candidate={weakest['swap_candidate']}")
+
+    if not weakest["swap_candidate"]:
+        return {
+            "should_swap": False,
+            "reason": f"{weakest['pair']} score {weakest['score']:.1f} above threshold — no swap",
+        }
+    if weakest["t1_hit"]:
+        return {"should_swap": False, "reason": f"{weakest['pair']} T1 hit — protected"}
+
+    conf_gap = new_conf - weakest["conf"]
+    if conf_gap < SWAP_MIN_CONF_GAP:
+        return {
+            "should_swap": False,
+            "reason": f"conf gap {conf_gap:.1f} < {SWAP_MIN_CONF_GAP} required",
+        }
+
+    reason_str = (
+        f"Replacing {weakest['pair']} (score {weakest['score']:.1f}, conf {weakest['conf']:.1f}"
+        + (f", {', '.join(weakest['reasons'])}" if weakest["reasons"] else "")
+        + f") with {new_pair} (conf {new_conf:.1f})"
+    )
+    _log(f"[swap] APPROVED: {reason_str}")
+
+    return {
+        "should_swap":    True,
+        "target_id":      weakest["id"],
+        "target_pair":    weakest["pair"],
+        "target_conf":    weakest["conf"],
+        "target_score":   weakest["score"],
+        "target_reasons": weakest["reasons"],
+        "conf_gap":       conf_gap,
+        "reason":         reason_str,
+    }
+
 
 def _check_capacity_tiered(
     pair: str,
