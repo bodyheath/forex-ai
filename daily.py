@@ -10835,15 +10835,15 @@ def run() -> int:
                     _dsc_wm    = _dsc_fc["status"].str.upper().isin(["WIN", "FULL_WIN", "PARTIAL_WIN"])
                     _dsc_pwm   = _dsc_fc["status"].str.upper() == "PARTIAL_WIN"
                     _dsc_ewm   = (_dsc_fc["status"].str.upper() == "EXPIRED") & (_dsc_pip_n > 0)
-                    _dsc_lm    = (
-                        _dsc_fc["status"].str.upper().isin(["LOSS"]) |
-                        (_dsc_fc["status"].str.upper().isin(["EXPIRED"]) & (_dsc_pip_n <= 0))
-                    )
-                    _dsc_fw = int((_dsc_wm & ~_dsc_pwm).sum())
-                    _dsc_fp = int(_dsc_pwm.sum())
-                    _dsc_ew = int(_dsc_ewm.sum())
-                    _dsc_fl = int(_dsc_lm.sum())
-                    _dsc_dec = _dsc_fw + _dsc_fp + _dsc_ew + _dsc_fl
+                    _dsc_loss_only = _dsc_fc["status"].str.upper().isin(["LOSS"])
+                    _dsc_exp_neg   = (_dsc_fc["status"].str.upper().isin(["EXPIRED"]) & (_dsc_pip_n <= 0))
+                    _dsc_lm        = _dsc_loss_only | _dsc_exp_neg
+                    _dsc_fw    = int((_dsc_wm & ~_dsc_pwm).sum())
+                    _dsc_fp    = int(_dsc_pwm.sum())
+                    _dsc_ew    = int(_dsc_ewm.sum())
+                    _dsc_fl    = int(_dsc_loss_only.sum())    # display: actual LOSS only
+                    _dsc_exp_l = int(_dsc_exp_neg.sum())      # expired negatives count in decisive but not shown as L
+                    _dsc_dec   = _dsc_fw + _dsc_fp + _dsc_ew + _dsc_fl + _dsc_exp_l
                     if _dsc_dec > 0:
                         _dsc_fwr = (_dsc_fw + _dsc_fp + _dsc_ew) / _dsc_dec * 100
                     _log_line(log, (
@@ -10852,6 +10852,7 @@ def run() -> int:
                         f"protected={_dsc_fp} "
                         f"exp_wins={_dsc_ew} "
                         f"losses={_dsc_fl} "
+                        f"exp_neg={_dsc_exp_l} "
                         f"decisive={_dsc_dec} "
                         f"wr={_dsc_fwr:.0f}%"
                     ))
