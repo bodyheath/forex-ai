@@ -377,6 +377,13 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         daily_open_bal = STARTING_BALANCE
         daily_pnl_d   = 0.0
         cons_losses   = 0
+        cons_wins     = 0
+        _win_pips_list:    list = []
+        _loss_pips_list:   list = []
+        _win_dollars_list:  list = []
+        _loss_dollars_list: list = []
+        _best_pair = ""
+        _best_pips = 0.0
 
         closed = fund[fund["status"].isin(list(CLOSED_STATUSES))]
         try:
@@ -386,24 +393,18 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
 
         prev_in_today = False
         for _, row in closed.iterrows():
-            pct   = safe_pos_pct(row.get("position_size_pct_at_entry"))
-            entry = safe_float(row.get("entry"))
-            sl    = safe_float(row.get("stop_loss"))
-            pair  = str(row.get("pair", ""))
-            ps    = pip_size(pair)
-            status = str(row.get("status", ""))
+            pct    = safe_pos_pct(row.get("position_size_pct_at_entry"))
+            entry  = safe_float(row.get("entry"))
+            sl     = safe_float(row.get("stop_loss"))
+            pair   = str(row.get("pair", ""))
+            ps     = pip_size(pair)
             pips_v = safe_float(row.get("pips"))
 
             stop_pips = abs(entry - sl) / ps if entry > 0 and sl > 0 else 100.0
             dpp = calculate_dpp(running_bal, pct, stop_pips)
-            risk_d = running_bal * pct / 100.0
 
-            if status == "LOSS":
-                dollars = -risk_d
-            elif pips_v != 0.0:
-                dollars = pips_v * dpp
-            else:
-                dollars = 0.0
+            # Dollar P&L always from pips — status label is display only
+            dollars = pips_v * dpp if pips_v != 0.0 else 0.0
 
             # Track when we cross into "today" for daily_opening_balance
             closed_ts = str(row.get("closed_at", ""))
@@ -418,10 +419,19 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             running_bal = running_bal + dollars
             peak_bal    = max(peak_bal, running_bal)
 
-            if pips_v < 0:
+            if pips_v > 0:
+                _win_pips_list.append(pips_v)
+                _win_dollars_list.append(dollars)
+                if pips_v > _best_pips:
+                    _best_pips = pips_v
+                    _best_pair = pair
+                cons_wins   += 1
+                cons_losses  = 0
+            elif pips_v < 0:
+                _loss_pips_list.append(abs(pips_v))
+                _loss_dollars_list.append(abs(dollars))
                 cons_losses += 1
-            elif pips_v > 0:
-                cons_losses = 0
+                cons_wins    = 0
             # pips_v == 0 → neutral outcome, streak unchanged
 
         if not prev_in_today:
