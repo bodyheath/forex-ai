@@ -4924,6 +4924,19 @@ def _send_telegram_summary(
                                     "new_conf":       _yt_conf_val,
                                     "reason":         _swap_res["reason"],
                                 })
+                                # Immediate Discord alert for the swap
+                                try:
+                                    from src import discord_notifier as _dn_sw
+                                    _dn_sw.send_swap_alert(
+                                        closed_pair=_sw_tpair,
+                                        closed_pips=round(_sw_pips, 1),
+                                        closed_dollars=0.0,
+                                        new_pair=_yt_pair,
+                                        new_conf=_yt_conf_val,
+                                        swap_reason=_swap_res["reason"],
+                                    )
+                                except Exception as _dn_sw_exc:
+                                    _log_line(log, f"[swap] Discord alert failed: {_dn_sw_exc}")
                                 _log_line(log, f"[swap] Slot freed — {_yt_pair} can open")
                                 _swap_executed = True
                             else:
