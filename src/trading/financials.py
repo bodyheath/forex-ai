@@ -418,10 +418,11 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             running_bal = running_bal + dollars
             peak_bal    = max(peak_bal, running_bal)
 
-            if status == "LOSS":
+            if pips_v < 0:
                 cons_losses += 1
-            elif status in ("WIN", "PARTIAL_WIN", "FULL_WIN"):
+            elif pips_v > 0:
                 cons_losses = 0
+            # pips_v == 0 → neutral outcome, streak unchanged
 
         if not prev_in_today:
             daily_open_bal = running_bal
