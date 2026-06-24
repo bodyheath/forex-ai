@@ -126,7 +126,7 @@ def partial_fit_trade(source_table: str, trade_id, outcome: str,
 
     meta = _load_meta()
     meta["n_decisive"] = meta.get("n_decisive", 0) + 1
-    meta["last_updated"] = datetime.now().isoformat()[:19]
+    meta["last_updated"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
     meta["last_outcome"] = outcome
 
     # Track rolling win rate (last 20 decisive)
