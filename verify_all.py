@@ -106,11 +106,13 @@ checks = [
 
 all_pass = True
 for name, pattern, fname, expect in checks:
-    r = subprocess.run(
-        ['grep', '-rn', pattern, fname],
-        capture_output=True, text=True
-    )
-    found = len(r.stdout.strip()) > 0
+    import re as _re
+    try:
+        with open(fname, encoding='utf-8', errors='replace') as _fh:
+            content = _fh.read()
+        found = bool(_re.search(pattern, content))
+    except FileNotFoundError:
+        found = False
     ok = found == expect
     if not ok:
         all_pass = False
