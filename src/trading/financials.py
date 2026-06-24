@@ -662,54 +662,58 @@ def verify_trade_integrity(df: pd.DataFrame = None) -> dict:
         ts_raw  = str(row.get("timestamp", ""))
         ca_raw  = str(row.get("closed_at", ""))
 
+        def _add(msg):
+            raw_issues.append({"trade_id": tid, "pair": pair, "issue": msg})
+
         # NaN position size
         pct = safe_float(pct_raw, -1.0)
         if pct <= 0:
-            issues.append(f"#{tid} {pair}: position_size_pct_at_entry=NaN (will use {DEFAULT_RISK_PCT}%)")
+            _add(f"position_size_pct_at_entry=NaN (will use {DEFAULT_RISK_PCT}%)")
 
         # Stop direction
         if entry > 0 and sl > 0:
             if dirn == "BUY" and sl >= entry:
-                issues.append(f"#{tid} {pair}: BUY but stop {sl} >= entry {entry}")
+                _add(f"BUY but stop {sl} >= entry {entry}")
             if dirn == "SELL" and sl <= entry:
-                issues.append(f"#{tid} {pair}: SELL but stop {sl} <= entry {entry}")
+                _add(f"SELL but stop {sl} <= entry {entry}")
 
         # Timestamp in future (NZT bug)
         ts_dt = parse_utc_dt(ts_raw)
         if ts_dt and (ts_dt - now_utc).total_seconds() > 3600:
             hours_ahead = (ts_dt - now_utc).total_seconds() / 3600
-            issues.append(f"#{tid} {pair}: timestamp {hours_ahead:.1f}h in future — NZT stored instead of UTC")
+            _add(f"timestamp {hours_ahead:.1f}h in future — NZT stored instead of UTC")
 
         # Closed trade checks
         if status in CLOSED_STATUSES:
             if ep <= 0:
-                issues.append(f"#{tid} {pair}: {status} but no exit_price")
+                _add(f"{status} but no exit_price")
             if ca_raw in ("", "nan", "None"):
-                issues.append(f"#{tid} {pair}: {status} but no closed_at")
+                _add(f"{status} but no closed_at")
 
         # Open trade with exit price
         if status == "OPEN" and ep > 0:
-            issues.append(f"#{tid} {pair}: OPEN but has exit_price={ep}")
+            _add(f"OPEN but has exit_price={ep}")
 
         # PENDING trade checks
         if status == "PENDING":
             trigger_price = str(row.get("entry_trigger_price", ""))
             if trigger_price in ("", "nan", "None", "0", "0.0"):
-                issues.append(f"#{tid} {pair}: PENDING but no entry_trigger_price set")
+                _add("PENDING but no entry_trigger_price set")
             expiry = str(row.get("entry_trigger_expiry", ""))
             if expiry not in ("", "nan", "None"):
                 try:
                     exp_dt = datetime.strptime(expiry[:19], "%Y-%m-%d %H:%M:%S")
                     now_naive = datetime.now(timezone.utc).replace(tzinfo=None)
                     if exp_dt < now_naive:
-                        issues.append(
-                            f"#{tid} {pair}: PENDING but past expiry {expiry} "
-                            f"— should be EXPIRED"
-                        )
+                        _add(f"PENDING but past expiry {expiry} — should be EXPIRED")
                 except (ValueError, TypeError):
                     pass
 
-    return issues
+    return {
+        "issue_count": len(raw_issues),
+        "trade_count": len(fund),
+        "issues":      raw_issues,
+    }
 
 
 # ─── Daily reset ──────────────────────────────────────────────────────────────
