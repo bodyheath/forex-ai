@@ -1,0 +1,23 @@
+PAIR: EUR/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: D1 RSI oversold (34.4) near Fib 23.6% with EUR rate rising supports BUY, but MTF monthly conflict and 4H bearish engulfing create reversal ambiguity.
+RISK_FACTORS: [1) MTF monthly in SELL while D1+4H BUY creates 2/3 agreement (below 66% threshold) — reversal risk if monthly assertion strengthens], [2) 4H bearish_engulfing + price below 4H SMA50 contradicts D1 upside bias — intraday rejection risk]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 183.449
+ENTRY_TRIGGER_REASON: Price bounce from Fib 23.6% confluent with RSI oversold (34.4=BUY tier 7-8) and PARTIAL_BUY OSC signal (2/3 oscillators aligned).
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**REJECTION RATIONALE:**
+
+MTF rule violation: **Weekly (NEUTRAL) + Daily (BUY) ≠ strong agreement**. Monthly is in SELL. Aggregate MTF confidence =

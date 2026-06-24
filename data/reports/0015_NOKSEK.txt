@@ -1,0 +1,26 @@
+```
+PAIR: NOK/SEK
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bullish divergence + pin bar at key level + D1 RSI oversold (49.2) suggest short-term reversal, but MTF weekly SELL and ribbon neutral (3/5) severely limit conviction.
+RISK_FACTORS: [1] MTF confidence only 1/3 (weekly actively bearish vs. daily neutral) — violates MTF rule; [2] 4H RSI overbought (65.0) contradicts D1 oversold setup — technical confluence weak.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule failure: weekly and daily do NOT both agree. Weekly=SELL, Daily=NEUTRAL (conf 1/3 < 2/3 threshold). Trade rejected per system rules.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Rationale:**
+
+**MTF Disqualification (Hard Rule):**  
+Weekly = **SELL**, Daily = **NEUTRAL**, 4H = **NEUTRAL**, Monthly = **NEUTRAL**. Confluence = 1/3 directional agreement. System requires **≥2/3 (both weekly AND daily agree)** on direction.

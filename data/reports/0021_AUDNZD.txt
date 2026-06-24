@@ -1,0 +1,24 @@
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD rate differential favors shorts despite aligned bullish ribbon; COT reversal in AUD positioning undermines conviction and conflicts with bullish technicals.
+RISK_FACTORS: [1] MTF agreement critical failure — Monthly SELL + Weekly SELL but Daily NEUTRAL + 4H NEUTRAL = only 2/4 timeframes aligned; MTF confidence 1/3 blocks trade. [2] COT REVERSING in AUD (net SHORT @ 52%, institutions flipping from long) directly contradicts fundamental rate advantage (+1.80% diff, AUD rate rising) — positioning risk creates conflict signal.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.2195
+ENTRY_TRIGGER_REASON: Break below Fib 78.6% level at 1.22167 with confluence of pin bar rejection + COT reversal confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL (4/10):**
+- D1 RSI 57.3 = mid-range NEUTRAL (45–55 zone scores 3–4); applied base SELL_3 T_sig slightly up to 4 for SMA50 price proximity (+
