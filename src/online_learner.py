@@ -263,7 +263,7 @@ def retrain_all_from_feature_store(log=None) -> dict:
 
     meta = {
         "n_decisive": trained,
-        "last_updated": datetime.now().isoformat()[:19],
+        "last_updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S"),
         "last_outcome": history[-1]["label"] if history else None,
         "recent_outcomes": recent,
         "recent_win_rate": recent_wr,
