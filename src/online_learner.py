@@ -131,7 +131,7 @@ def partial_fit_trade(source_table: str, trade_id, outcome: str,
 
     # Track rolling win rate (last 20 decisive)
     history = meta.get("recent_outcomes", [])
-    history.append({"label": label, "ts": (closed_at or datetime.now().isoformat()[:10])})
+    history.append({"label": label, "ts": (closed_at or datetime.now(timezone.utc).strftime("%Y-%m-%d"))})
     meta["recent_outcomes"] = history[-20:]
     recent_wins = sum(1 for h in meta["recent_outcomes"] if h["label"] == 1)
     meta["recent_win_rate"] = round(recent_wins / len(meta["recent_outcomes"]), 3)
