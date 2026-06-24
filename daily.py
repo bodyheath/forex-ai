@@ -4779,6 +4779,51 @@ def _send_telegram_summary(
     except Exception:
         pass
 
+    # ── Entry type detection for YES fund trades ──────────────────────────────
+    try:
+        from src import tracker as _trk_et
+        from datetime import datetime as _dt_et, timezone as _tz_et, timedelta as _td_et
+        for _yt in yes_trades:
+            _yt_id     = _yt.get("id")
+            if not _yt_id:
+                continue
+            _yt_parsed = _yt.get("parsed") or {}
+            _yt_report = _yt.get("report") or _yt_parsed.get("key_thesis") or ""
+            _yt_dir    = (_yt_parsed.get("direction") or "").upper()
+            _yt_entry  = float(_yt_parsed.get("entry") or 0)
+            _yt_pair   = _yt.get("pair", "")
+            if not _yt_dir or not _yt_entry:
+                continue
+            _entry_info = _parse_entry_type(
+                analysis_text=_yt_report,
+                current_price=_yt_entry,
+                direction=_yt_dir,
+                log_fn=lambda m: _log_line(logf, m),
+            )
+            _entry_kwargs = {
+                "entry_type":          _entry_info["entry_type"],
+                "entry_trigger_price": _entry_info["trigger_price"],
+            }
+            if _entry_info["entry_type"] != "IMMEDIATE":
+                _expiry_h  = _entry_info["expiry_hours"] or 48
+                _expiry_dt = _dt_et.now(_tz_et.utc) + _td_et(hours=_expiry_h)
+                _entry_kwargs.update({
+                    "status":                "PENDING",
+                    "entry_trigger_direction": _entry_info["trigger_direction"] or "",
+                    "entry_trigger_reason":    _entry_info["trigger_reason"] or "",
+                    "entry_trigger_expiry":    _expiry_dt.strftime("%Y-%m-%d %H:%M:%S"),
+                })
+                _log_line(logf, (
+                    f"[entry] #{_yt_id} {_yt_pair} -> PENDING "
+                    f"({_entry_info['entry_type']} at {_entry_info['trigger_price']} "
+                    f"expires {_expiry_h}h)"
+                ))
+            _trk_et.update_fields(int(_yt_id), **_entry_kwargs)
+    except Exception as _et_exc:
+        import traceback as _et_tb
+        _log_line(logf, f"[entry] entry type detection failed: {_et_exc}")
+        _et_tb.print_exc()
+
     # C-grade demoted to watchlist only in normal mode; restricted tiers skip C entirely
     _c_grade_yes = (
         [r for r in _yes_raw if _quality_grades.get(r["pair"], {}).get("grade") == "C"
