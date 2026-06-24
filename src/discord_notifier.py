@@ -1537,3 +1537,33 @@ def update_fund_dashboard(
         pass
 
     return False
+
+
+def send_trailing_stop_update(trade_id: int, pair: str, direction: str,
+                               old_stop: float, new_stop: float,
+                               reason: str) -> bool:
+    """Send trailing stop update to #monitor channel."""
+    webhook = WEBHOOK_MONITOR
+    if not webhook:
+        return False
+    pip_size    = 0.01 if "JPY" in pair else 0.0001
+    pips_locked = abs(new_stop - old_stop) / pip_size
+    embed = {
+        "title": f"\U0001f512 {pair} — Stop Trailed",
+        "color": 0x2ECC71,
+        "fields": [
+            {"name": "Trade",       "value": f"#{trade_id} {direction}", "inline": True},
+            {"name": "Old Stop",    "value": f"{old_stop:.5f}",          "inline": True},
+            {"name": "New Stop",    "value": f"{new_stop:.5f}",          "inline": True},
+            {"name": "Profit Locked", "value": f"+{pips_locked:.1f}p secured", "inline": True},
+            {"name": "Reason",      "value": reason,                     "inline": False},
+        ],
+        "footer": {"text": "Forex AI — Trailing Stop System"},
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+    try:
+        import requests as _req
+        r = _req.post(webhook, json={"embeds": [embed]}, timeout=10)
+        return r.status_code == 204
+    except Exception:
+        return False
