@@ -561,11 +561,11 @@ def _send_dashboard(state: dict, log_fn=None) -> None:
             pass
 
         import requests as _req_dash
-        _webhook = getattr(_dn_dash, "_FUND_WEBHOOK", None) or getattr(_dn_dash, "FUND_WEBHOOK", None)
+        _webhook = getattr(_dn_dash, "WEBHOOK_FUND", None)
         if not _webhook:
             try:
                 import os as _os_dash
-                _webhook = _os_dash.environ.get("DISCORD_FUND_WEBHOOK") or _os_dash.environ.get("DISCORD_WEBHOOK")
+                _webhook = _os_dash.environ.get("DISCORD_WEBHOOK_FUND") or _os_dash.environ.get("DISCORD_WEBHOOK")
             except Exception:
                 pass
 
