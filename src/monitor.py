@@ -1428,7 +1428,12 @@ def _apply_research_milestones(row: dict, milestones: list, row_state: dict,
     summary_fragment_str is appended to the batch Telegram message.
     """
     from src import research_tracker as _rt
-    rec_id    = int(row.get("id", 0))
+    _raw_id   = row.get("id", "")
+    rec_id    = _safe_int_id(_raw_id)
+    if rec_id == 0:
+        log(f"[monitor] SKIP _apply_research_milestones — invalid trade ID: "
+            f"{repr(_raw_id)} pair={row.get('pair')}")
+        return None, ""
     pair      = row.get("pair", "")
     direction = (row.get("direction") or "").upper()
     _cs       = _to_float(row.get("checklist_score") or 0)
