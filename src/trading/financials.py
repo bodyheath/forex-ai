@@ -454,12 +454,12 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         unrealised_d    = sum(safe_float(t.get("dollars_unrealised")) for t in _ot_summaries)
         unrealised_pips = sum(safe_float(t.get("pips_unrealised"))    for t in _ot_summaries)
 
-        # Win rate: wins / (wins + losses), ignoring EXPIRED/CANCELLED
-        _win_statuses  = ("WIN", "PARTIAL_WIN", "FULL_WIN")
-        _countable     = closed[closed["status"].isin(_win_statuses + ("LOSS",))]
-        _wins          = int((_countable["status"].isin(_win_statuses)).sum())
-        _total_counted = len(_countable)
-        win_rate       = round(_wins / _total_counted * 100.0, 1) if _total_counted > 0 else 0.0
+        # Win rate: pips > 0 = win, pips < 0 = loss, pips == 0 = neutral (not counted)
+        _all_pips   = pd.to_numeric(closed["pips"], errors="coerce").fillna(0)
+        _win_count  = int((_all_pips > 0).sum())
+        _loss_count = int((_all_pips < 0).sum())
+        _decisive   = _win_count + _loss_count
+        win_rate    = round(_win_count / _decisive * 100.0, 1) if _decisive > 0 else 0.0
 
         return {
             "balance":               round(running_bal, 2),
