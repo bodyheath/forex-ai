@@ -810,7 +810,115 @@ def _get_open_fund_count() -> int:
         return 0
 
 
-MAX_FUND_TRADES = 4
+MAX_FUND_TRADES         = 4   # kept for legacy log lines
+MAX_FUND_TRADES_NORMAL   = 4
+MAX_FUND_TRADES_OVERRIDE = 5
+OVERRIDE_MIN_CONF        = 7.5
+OVERRIDE_MAX_DAILY_LOSS  = -2.0
+OVERRIDE_MAX_UNREALISED  = -3.0
+OVERRIDE_RISK_STRONG     = 0.75
+OVERRIDE_RISK_ELITE      = 0.50
+
+
+def _check_capacity_tiered(
+    pair: str,
+    confidence: float,
+    regime: str,
+    fund_state: dict,
+    log_fn=None,
+) -> dict:
+    """Tiered capacity check. Returns {allowed, is_override, risk_pct, open_count, reason, tier}.
+
+    Normal (open < 4)   : allowed, risk_pct=None (sizing computed elsewhere).
+    Override (open == 4): conf≥7.5, daily>-2%, unrealised>-3%, not RANGING
+                          → allowed at STRONG=0.75% or ELITE=0.50% (conf≥8.5).
+    Blocked (open ≥ 5)  : never open a 6th slot.
+    """
+    _log = log_fn or print
+    _oc  = _get_open_fund_count()
+
+    if _oc < MAX_FUND_TRADES_NORMAL:
+        return {
+            "allowed":     True,
+            "is_override": False,
+            "risk_pct":    None,
+            "open_count":  _oc,
+            "reason":      f"{_oc}/{MAX_FUND_TRADES_NORMAL} slots used",
+            "tier":        "NORMAL",
+        }
+
+    if _oc >= MAX_FUND_TRADES_OVERRIDE:
+        _rsn = f"Fund at hard cap — {_oc}/{MAX_FUND_TRADES_OVERRIDE} open trades"
+        _log(f"[capacity] BLOCKED {pair} — {_rsn}")
+        return {
+            "allowed":     False,
+            "is_override": False,
+            "risk_pct":    None,
+            "open_count":  _oc,
+            "reason":      _rsn,
+            "tier":        "BLOCKED",
+        }
+
+    # open_count == MAX_FUND_TRADES_NORMAL → evaluate 5th-slot override eligibility
+    _daily_pnl  = float(fund_state.get("daily_pnl_pct") or 0.0)
+    _unrealised = float(fund_state.get("unrealised_pnl_pct") or 0.0)
+    _is_ranging = "RANGING" in str(regime or "").upper()
+
+    _blocked_reasons = []
+    if confidence < OVERRIDE_MIN_CONF:
+        _blocked_reasons.append(
+            f"conf {confidence:.1f} < {OVERRIDE_MIN_CONF} override min"
+        )
+    if _daily_pnl <= OVERRIDE_MAX_DAILY_LOSS:
+        _blocked_reasons.append(
+            f"daily P&L {_daily_pnl:.2f}% ≤ {OVERRIDE_MAX_DAILY_LOSS}% limit"
+        )
+    if _unrealised <= OVERRIDE_MAX_UNREALISED:
+        _blocked_reasons.append(
+            f"unrealised {_unrealised:.2f}% ≤ {OVERRIDE_MAX_UNREALISED}% limit"
+        )
+    if _is_ranging:
+        _blocked_reasons.append(f"regime {regime!r} is RANGING — no override")
+
+    if _blocked_reasons:
+        _rsn = (
+            f"Fund at {_oc}/{MAX_FUND_TRADES_NORMAL} + override blocked: "
+            + "; ".join(_blocked_reasons)
+        )
+        _log(f"[capacity] BLOCKED {pair} (override) — " + "; ".join(_blocked_reasons))
+        return {
+            "allowed":     False,
+            "is_override": False,
+            "risk_pct":    None,
+            "open_count":  _oc,
+            "reason":      _rsn,
+            "tier":        "BLOCKED",
+        }
+
+    # Override approved
+    if confidence >= 8.5:
+        _tier = "ELITE"
+        _risk = OVERRIDE_RISK_ELITE
+    else:
+        _tier = "STRONG"
+        _risk = OVERRIDE_RISK_STRONG
+
+    _rsn = (
+        f"5th-slot override: conf={confidence:.1f} tier={_tier} "
+        f"risk={_risk}% daily={_daily_pnl:.2f}%"
+    )
+    _log(
+        f"[capacity] ⚡ OVERRIDE APPROVED {pair} — {_tier} "
+        f"conf={confidence:.1f} → {_risk}% risk"
+    )
+    return {
+        "allowed":     True,
+        "is_override": True,
+        "risk_pct":    _risk,
+        "open_count":  _oc,
+        "reason":      _rsn,
+        "tier":        _tier,
+    }
 
 
 def _pip_size(pair: str) -> float:
