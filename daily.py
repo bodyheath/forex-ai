@@ -11183,6 +11183,8 @@ def run() -> int:
                     active_sessions=_dsc_active_sess,
                     news_blackout_pairs=_dsc_news_blk,
                     open_trades=_dsc_open_trades,
+                    blocked_setups=_blocked_setups,
+                    swapped_setups=_swapped_setups,
                 )
                 _log_line(log, "Discord scan report sent ✅")
         except Exception as _dsc_exc:
