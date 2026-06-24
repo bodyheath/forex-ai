@@ -911,12 +911,20 @@ def send_master_scan_report(
     _risk_d      = round(fund_balance * risk_pct / 100)
     _ftmo_used   = abs(daily_pnl_pct)
     _dd_e        = "✅" if drawdown_pct < 3 else ("⚠️" if drawdown_pct < 7 else "\U0001f6a8")
-    if consecutive_wins >= 2:
+    if consecutive_losses >= 3:
+        _cb_wait_pairs = ", ".join(
+            t.get("pair", "") for t in (open_trades or []) if t.get("pair")
+        ) or "open positions"
+        _streak = (
+            f"\U0001f6a8 **Circuit breaker: {consecutive_losses} consecutive losses**\n"
+            f"   No new trades until a win · Waiting for: {_cb_wait_pairs}"
+        )
+    elif consecutive_losses == 2:
+        _streak = f"⚠️ Caution: {consecutive_losses} consecutive losses — one more triggers circuit breaker"
+    elif consecutive_wins >= 2:
         _streak = f"\U0001f525 {consecutive_wins} wins in a row"
-    elif consecutive_losses >= 2:
-        _streak = f"⚠️ {consecutive_losses} losses in a row"
     else:
-        _streak = "➡️ Neutral"
+        _streak = f"✅ Streak: clear ({consecutive_losses} L)"
     _szm_lower = str(sizing_mode or "normal").lower()
     _szm_icons = {"normal": "✅", "conservative": "⚠️", "minimal": "\U0001f534", "pause": "\U0001f6d1"}
     _szm_icon  = _szm_icons.get(_szm_lower, "\U0001f4b2")
