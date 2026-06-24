@@ -78,6 +78,68 @@ def _to_float(val):
         return None
 
 
+def _update_trailing_stop(trade_row: dict, current_price: float,
+                          log_fn=None) -> dict:
+    """Update effective_stop based on cascade levels hit.
+
+    T1 hit → stop to breakeven (entry)
+    T2 hit → stop to T1 price  (locks 40% profit)
+    T3 hit → stop to T2 price  (locks 40%+30% profit)
+    Price > 50% of T2→T3 range → trail stop to T2
+
+    Returns dict with new_effective_stop, stop_moved, reason.
+    """
+    _log = log_fn or print
+    pair      = str(trade_row.get("pair", ""))
+    direction = str(trade_row.get("direction", "")).upper()
+    entry     = _to_float(trade_row.get("entry")) or 0
+    t1_price  = _to_float(trade_row.get("t1_price")) or 0
+    t2_price  = _to_float(trade_row.get("t2_price")) or 0
+    t3_price  = _to_float(trade_row.get("t3_price") or trade_row.get("target")) or 0
+    t1_hit    = _is_true(trade_row.get("t1_hit"))
+    t2_hit    = _is_true(trade_row.get("t2_hit"))
+    t3_hit    = _is_true(trade_row.get("t3_hit"))
+    current_eff = _to_float(trade_row.get("effective_stop")) or 0
+    new_stop    = current_eff or (_to_float(trade_row.get("stop_loss")) or 0)
+    reason      = "no change"
+    moved       = False
+
+    if not t1_hit:
+        return {"new_effective_stop": new_stop, "stop_moved": False, "reason": "T1 not hit"}
+
+    def _better(candidate):
+        if direction == "BUY":
+            return candidate > new_stop
+        return candidate < new_stop
+
+    if t3_hit and t2_price > 0:
+        if _better(t2_price):
+            new_stop, moved, reason = t2_price, True, "T3 hit — trailing to T2"
+    elif t2_hit and t1_price > 0:
+        if _better(t1_price):
+            new_stop, moved, reason = t1_price, True, "T2 hit — trailing to T1"
+    elif t1_hit and entry > 0:
+        if _better(entry):
+            new_stop, moved, reason = entry, True, "T1 hit — trailing to BE"
+
+    # Mid-zone: price > 50% from T2 toward T3 → trail stop to T2
+    if t2_hit and not t3_hit and t2_price and t3_price:
+        if direction == "BUY":
+            halfway = t2_price + (t3_price - t2_price) * 0.5
+            if current_price >= halfway and _better(t2_price):
+                new_stop, moved, reason = t2_price, True, "> 50% to T3 — trailing to T2"
+        else:
+            halfway = t2_price - (t2_price - t3_price) * 0.5
+            if current_price <= halfway and _better(t2_price):
+                new_stop, moved, reason = t2_price, True, "> 50% to T3 — trailing to T2"
+
+    if moved:
+        _log(f"[trailing] {pair} {direction}: stop moved "
+             f"{current_eff:.5f} → {new_stop:.5f} ({reason})")
+
+    return {"new_effective_stop": new_stop, "stop_moved": moved, "reason": reason}
+
+
 def _get_td_calls_today() -> int:
     try:
         usage = json.loads(_API_USAGE.read_text(encoding="utf-8")) if _API_USAGE.exists() else {}
