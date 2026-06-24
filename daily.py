@@ -4433,11 +4433,7 @@ def _send_telegram_summary(
         _fund_st = _fs.load()
         _fund_st = _fs.reset_if_new_day(_fund_st, current_balance=_cur_bal_fs)
         _fund_st = _fs.reset_if_new_week(_fund_st)
-        _MAX_FUND_TRADES = 4
-        _open_fund_count = len([
-            r for r in _ot_open_trades
-            if str(r.get("trade_this", "")).strip().upper() == "YES"
-        ])
+        _open_fund_count = _get_open_fund_count()  # always fresh from CSV
         _yt_pass: list = []
         # Pre-compute regime and loss-streak filters for this scan
         _regime_str = str((threshold_data or {}).get("regime", "") or "").upper()
