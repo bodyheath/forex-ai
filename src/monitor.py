@@ -608,6 +608,19 @@ def _send_dashboard(state: dict, log_fn=None) -> None:
         _log(f"  [dashboard] ERROR: {_exc}\n{_tb.format_exc()}")
 
 
+# ── Safe ID helper ───────────────────────────────────────────────────────────
+
+def _safe_int_id(val, default: int = 0) -> int:
+    """Convert a trade ID value to int, tolerating empty strings and NaN."""
+    try:
+        v = str(val).strip()
+        if not v or v in ("nan", "None", ""):
+            return default
+        return int(float(v))
+    except (ValueError, TypeError):
+        return default
+
+
 # ── Write-back verification ───────────────────────────────────────────────────
 
 def _verify_milestone_write(rec_id: int, level: str, tracker_mod,
