@@ -11208,6 +11208,7 @@ def run() -> int:
                     ml_recent_wr=_dsc_ml_rwr,
                     ml_overall_wr=_dsc_ml_owr,
                     ml_active=_dsc_ml_act,
+                    ml_reliable_retrains=_n_reliable,
                     ml_last_retrain=_dsc_ml_lr,
                     mta_pct=_dsc_mta,
                     hhhl_pct=_dsc_hhhl,
