@@ -2249,6 +2249,15 @@ def _check_pending_trades(prices: dict, log_fn=None) -> list:
                             df.loc[idx, t_col] = round(new_t, 5)
                     except (TypeError, ValueError):
                         pass
+                # Recalculate reward_risk from actual entry
+                try:
+                    new_target = float(df.loc[idx, "target"])
+                    stop_dist  = abs(actual_entry - new_stop)
+                    target_dist = abs(actual_entry - new_target)
+                    if stop_dist > 0:
+                        df.loc[idx, "reward_risk"] = round(target_dist / stop_dist, 2)
+                except (TypeError, ValueError, ZeroDivisionError):
+                    pass
         except Exception:
             pass
 
