@@ -387,9 +387,15 @@ def _check_loss_journal(
     regime: str,
     session: str,
     weekly_trend: str,
+    rsi: float = 0.0,
+    stop_pips: float = 0.0,
+    confidence: float = 0.0,
     log_fn=None,
 ) -> dict:
     """Check if this trade setup matches patterns that caused past losses.
+
+    Evaluates extracted IF/THEN rules by testing specific field conditions
+    rather than keyword matching. Updates times_triggered counters.
 
     Returns {blocked, warnings, matching_rules, risk_score}.
     """
@@ -402,52 +408,130 @@ def _check_loss_journal(
     except Exception:
         return {"blocked": False, "warnings": [], "matching_rules": [], "risk_score": 0.0}
 
-    warnings       = []
-    matching_rules = []
-    risk_score     = 0.0
-    regime_l       = str(regime).lower()
-    pair_l         = str(pair).lower()
-    dir_l          = str(direction).lower()
+    warnings            = []
+    matching_rules      = []
+    risk_score          = 0.0
+    any_rule_triggered  = False
+
+    regime_l = str(regime).lower()
+    pair_l   = str(pair).lower()
+    dir_l    = str(direction).lower()
+    wt_l     = str(weekly_trend).lower()
+    rsi_f    = float(rsi or 0)
+    stop_f   = float(stop_pips or 0)
+    conf_f   = float(confidence or 0)
+
+    import re as _re_jrnl
 
     for rule_entry in journal.get("extracted_rules", []):
-        rule       = str(rule_entry.get("rule", ""))
-        rule_lower = rule.lower()
-        if not rule:
+        rule_text  = str(rule_entry.get("rule", ""))
+        rule_lower = rule_text.lower()
+        if not rule_lower:
             continue
 
-        # Check whether the IF conditions in the rule match this trade
-        match = True
-        if "ranging" in rule_lower and "ranging" not in regime_l:
-            match = False
-        if "trending" in rule_lower and "trending" not in regime_l:
-            match = False
-        # Pair-specific rules
-        if pair_l in rule_lower or dir_l in rule_lower:
-            pass  # extra specificity — still consider it a match if regime matched
+        rule_matched = False
 
-        if match:
-            warnings.append(f"Loss journal: {rule[:100]}")
-            matching_rules.append(rule)
-            risk_score = min(1.0, risk_score + 0.2)
+        # ── Detect what conditions the rule mentions ──────────────────────────
 
-    # High-frequency pattern warnings
+        _zero_stop = any(kw in rule_lower for kw in (
+            "stop_distance = 0", "stop_distance=0",
+            "stop distance equals 0", "stop = 0",
+            "stop_pips = 0",
+        ))
+        _rsi_zero = any(kw in rule_lower for kw in (
+            "rsi = 0", "rsi=0", "rsi reading = 0",
+            "rsi reading incomplete",
+        ))
+        _rsi_low = (
+            ("rsi" in rule_lower and "below 15" in rule_lower) or
+            ("rsi" in rule_lower and "< 15" in rule_lower) or
+            ("rsi" in rule_lower and "< 10" in rule_lower)
+        )
+        _conf_m = _re_jrnl.search(
+            r"confidence[_a-z]*\s*[<>]=?\s*([0-9.]+)", rule_lower
+        )
+        _regime_missing = any(kw in rule_lower for kw in (
+            "regime = undefined", "regime = null",
+            "regime = missing", "market_regime = null",
+            "market_regime = missing", "market_regime = undefined",
+            "regime.*undefined",
+        ))
+        _regime_ranging = "ranging" in rule_lower and "regime" in rule_lower
+        _wt_missing = (
+            "weekly_trend" in rule_lower and
+            any(kw in rule_lower for kw in ("null", "missing", "none"))
+        )
+        _wt_bullish_only = (
+            "weekly_trend is not confirmed as bullish" in rule_lower or
+            ("weekly_trend" in rule_lower and "bullish" in rule_lower)
+        )
+        _exotic_pair = any(kw in rule_lower for kw in ("exotic", "hkd", "sek", "nok"))
+
+        # ── Test conditions against current trade context ─────────────────────
+
+        if _zero_stop and stop_f == 0:
+            rule_matched = True
+        elif _rsi_zero and rsi_f == 0:
+            rule_matched = True
+        elif _rsi_low and (rsi_f == 0 or rsi_f < 15):
+            rule_matched = True
+        elif _conf_m and conf_f > 0:
+            _thresh  = float(_conf_m.group(1))
+            _op_seg  = rule_lower[_conf_m.start():_conf_m.end()]
+            if "<" in _op_seg and conf_f < _thresh:
+                rule_matched = True
+            elif ">" in _op_seg and conf_f > _thresh:
+                rule_matched = True
+        elif _regime_missing and regime_l in ("", "undefined", "null", "unknown", "none"):
+            rule_matched = True
+        elif _regime_ranging and "ranging" in regime_l:
+            rule_matched = True
+        elif _wt_missing and wt_l in ("", "null", "none", "unknown", "neutral"):
+            rule_matched = True
+        elif _wt_bullish_only and dir_l == "buy" and wt_l not in ("buy", "bullish", "up"):
+            rule_matched = True
+        elif _exotic_pair and any(c in pair_l for c in ("hkd", "sek", "nok")):
+            rule_matched = True
+
+        if rule_matched:
+            warnings.append(f"Loss journal: {rule_text[:100]}")
+            matching_rules.append(rule_text)
+            risk_score = min(1.0, risk_score + 0.25)
+            any_rule_triggered = True
+            try:
+                rule_entry["times_triggered"] = int(rule_entry.get("times_triggered", 0)) + 1
+            except Exception:
+                pass
+
+    # Pattern frequency checks
     patterns = journal.get("pattern_counts", {})
     if patterns.get("ranging", 0) >= 3 and "ranging" in regime_l:
         warnings.append(f"Ranging regime caused {patterns['ranging']} past losses")
         risk_score = min(1.0, risk_score + 0.15)
-    if patterns.get("correlation", 0) >= 2:
-        warnings.append(f"Correlation issue in {patterns['correlation']} past losses")
-        risk_score = min(1.0, risk_score + 0.10)
+    if patterns.get("stop", 0) >= 2 and stop_f == 0:
+        warnings.append("Zero stop contributed to multiple past losses")
+        risk_score = min(1.0, risk_score + 0.20)
+
+    # Persist updated trigger counters
+    if any_rule_triggered:
+        try:
+            import shutil as _sh_jrnl
+            _tmp_j = _journal_path + ".tmp"
+            with open(_tmp_j, "w", encoding="utf-8") as _wf:
+                _jj.dump(journal, _wf, indent=2)
+            _sh_jrnl.move(_tmp_j, _journal_path)
+        except Exception:
+            pass
 
     blocked = risk_score >= 0.6
     if warnings:
         _log(f"[loss-journal] {pair} risk_score={risk_score:.2f} warnings={len(warnings)}")
 
     return {
-        "blocked":       blocked,
-        "warnings":      warnings,
+        "blocked":        blocked,
+        "warnings":       warnings,
         "matching_rules": matching_rules,
-        "risk_score":    risk_score,
+        "risk_score":     risk_score,
     }
 
 
