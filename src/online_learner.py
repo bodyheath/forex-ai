@@ -299,3 +299,144 @@ def build_status_line() -> str:
     last = meta.get("last_updated", "")[:10]
     wr_str = f", recent win rate {wr:.0%}" if wr is not None else ""
     return f"Online learner: {n} trades{wr_str} (last update {last})"
+
+
+# ── Fund-trade online learning ─────────────────────────────────────────────────
+
+_FUND_MODEL_FILE = config.DATA_DIR / "fund_online_model.pkl"
+_FUND_META_FILE  = config.DATA_DIR / "fund_online_model_meta.json"
+_FUND_STORE_FILE = config.DATA_DIR / "fund_feature_store.json"
+
+# Numeric features extracted from each fund trade at open
+_FUND_NUMERIC_FEATURES = [
+    "confidence", "rsi", "stop_pips", "rr",
+    "consecutive_losses", "drawdown", "trend_score",
+]
+
+
+class OnlineLearner:
+    """Fund-trade online learner.
+
+    Stores entry-context features when a fund trade opens.
+    Trains the SGDClassifier when the trade closes and outcome is known.
+    Uses a separate model file from the research-trained model so the two
+    datasets don't contaminate each other.
+    """
+
+    def __init__(self):
+        self._clf    = None
+        self._scaler = None
+        self._load()
+
+    def _load(self) -> None:
+        if not _FUND_MODEL_FILE.exists():
+            return
+        try:
+            payload      = pickle.loads(_FUND_MODEL_FILE.read_bytes())
+            self._scaler = payload.get("scaler")
+            self._clf    = payload.get("clf")
+        except Exception:
+            pass
+
+    def _save(self) -> None:
+        _FUND_MODEL_FILE.write_bytes(pickle.dumps({
+            "scaler": self._scaler,
+            "clf":    self._clf,
+        }))
+
+    @property
+    def model(self):
+        if self._clf is None:
+            try:
+                from sklearn.linear_model import SGDClassifier
+                self._clf = SGDClassifier(
+                    loss="log_loss", alpha=0.01,
+                    learning_rate="optimal", random_state=42,
+                )
+            except ImportError:
+                pass
+        return self._clf
+
+    def _dict_to_vector(self, features: dict):
+        try:
+            import numpy as np
+            x = [float(features.get(k) or 0.0) for k in _FUND_NUMERIC_FEATURES]
+            return np.array([x])
+        except Exception:
+            return None
+
+    def store_fund_features(self, trade_id: str, features: dict) -> None:
+        """Persist entry-context features so they can be used to train on closure."""
+        try:
+            import shutil as _sh_fs
+            store: dict = {}
+            if _FUND_STORE_FILE.exists():
+                try:
+                    store = json.loads(_FUND_STORE_FILE.read_text(encoding="utf-8"))
+                except Exception:
+                    store = {}
+            store[str(trade_id)] = {
+                "features":  features,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            }
+            _tmp_fs = str(_FUND_STORE_FILE) + ".tmp"
+            with open(_tmp_fs, "w", encoding="utf-8") as _fh:
+                json.dump(store, _fh, indent=2)
+            _sh_fs.move(_tmp_fs, str(_FUND_STORE_FILE))
+        except Exception as e:
+            print(f"[ML] store error: {e}")
+
+    def train_fund_outcome(self, trade_id: str, outcome: int, pips: float) -> bool:
+        """Train the fund model on a closed trade's outcome.
+
+        Returns True if the model was updated, False if features not found.
+        """
+        try:
+            if not _FUND_STORE_FILE.exists():
+                return False
+            store = json.loads(_FUND_STORE_FILE.read_text(encoding="utf-8"))
+            entry = store.get(str(trade_id))
+            if not entry:
+                return False
+            features = entry.get("features", {})
+            X = self._dict_to_vector(features)
+            if X is None or self.model is None:
+                return False
+
+            try:
+                from sklearn.preprocessing import StandardScaler
+                if self._scaler is None:
+                    self._scaler = StandardScaler()
+                self._scaler.partial_fit(X)
+                X_s = self._scaler.transform(X)
+            except ImportError:
+                X_s = X
+
+            self.model.partial_fit(X_s, [outcome], classes=[0, 1])
+            self._save()
+
+            # Update meta (non-critical)
+            try:
+                meta: dict = {}
+                if _FUND_META_FILE.exists():
+                    try:
+                        meta = json.loads(_FUND_META_FILE.read_text(encoding="utf-8"))
+                    except Exception:
+                        meta = {}
+                meta["n_fund_trades"] = meta.get("n_fund_trades", 0) + 1
+                meta["last_updated"]  = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
+                meta["last_outcome"]  = outcome
+                history = meta.get("recent_outcomes", [])
+                history.append({"label": outcome, "pips": round(float(pips), 1)})
+                meta["recent_outcomes"] = history[-20:]
+                recent_wins = sum(1 for h in meta["recent_outcomes"] if h["label"] == 1)
+                meta["recent_win_rate"] = round(recent_wins / len(meta["recent_outcomes"]), 3)
+                _FUND_META_FILE.write_text(json.dumps(meta, indent=2), encoding="utf-8")
+            except Exception:
+                pass
+
+            print(f"[ML] Trained fund #{trade_id} outcome={outcome} pips={pips:+.1f}")
+            return True
+        except Exception as e:
+            print(f"[ML] train error: {e}")
+            return False
