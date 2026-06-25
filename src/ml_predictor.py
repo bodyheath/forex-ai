@@ -154,7 +154,7 @@ def _count_decisive_trades() -> tuple:
         with research_csv.open("r", encoding="utf-8", newline="") as fh:
             for r in csv.DictReader(fh):
                 s = r.get("status", "").upper()
-                if s in ("WIN", "PARTIAL_WIN"):
+                if s in ("WIN", "PARTIAL_WIN", "FULL_WIN"):
                     n_wins += 1
                 elif s == "LOSS":
                     n_losses += 1
@@ -162,7 +162,7 @@ def _count_decisive_trades() -> tuple:
         with config.TRADES_CSV.open("r", encoding="utf-8", newline="") as fh:
             for r in csv.DictReader(fh):
                 s = r.get("status", "").upper()
-                if s in ("WIN", "PARTIAL_WIN"):
+                if s in ("WIN", "PARTIAL_WIN", "FULL_WIN"):
                     n_wins += 1
                 elif s == "LOSS":
                     n_losses += 1
