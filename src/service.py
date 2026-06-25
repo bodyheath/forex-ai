@@ -57,7 +57,7 @@ def analyse_and_log(
     if _mtf_penalty > 0 and parsed.get("trade_this") == "YES":
         try:
             _raw_conf = float(parsed.get("confidence") or 5)
-            parsed["confidence"] = str(max(1, round(_raw_conf - _mtf_penalty)))
+            parsed["confidence"] = max(1, min(10, int(round(_raw_conf - _mtf_penalty))))
         except (TypeError, ValueError):
             pass
 
