@@ -2234,7 +2234,8 @@ def _check_pending_trades(prices: dict, log_fn=None) -> list:
                     if direction == "BUY"
                     else actual_entry + orig_stop_pips * ps_size
                 )
-                df.loc[idx, "stop_loss"] = round(new_stop, 5)
+                df.loc[idx, "stop_loss"]    = round(new_stop, 5)
+                df.loc[idx, "effective_stop"] = round(new_stop, 5)
                 for t_col in ("target", "t1_price", "t2_price", "t3_price"):
                     try:
                         orig_t = float(t.get(t_col) or 0)
