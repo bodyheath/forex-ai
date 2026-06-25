@@ -27,6 +27,10 @@ LOSS_STATUSES = {"LOSS"}
 
 _RECENCY_TABLE = [(1, 1.0), (7, 0.8), (14, 0.6), (30, 0.4)]
 
+# R-magnitude sample weights — proportional to expected R earned
+# FULL_WIN≈+1.95R, WIN≈+1.35R, PARTIAL_WIN≈+0.35R, LOSS=-1R
+_R_WEIGHTS = {"FULL_WIN": 1.00, "WIN": 0.85, "PARTIAL_WIN": 0.55, "LOSS": 1.00}
+
 
 def _recency_weight(closed_at: str) -> float:
     try:
