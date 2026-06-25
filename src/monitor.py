@@ -1283,7 +1283,8 @@ def _emergency_close_trade(trade_id: int, exit_price: float, log_fn=None) -> boo
 # ── Cascade application ───────────────────────────────────────────────────────
 
 def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
-                           log=print, ta=None, is_weekend: bool = False) -> list:
+                           log=print, ta=None, is_weekend: bool = False,
+                           prices: dict = None) -> list:
     """Apply detected milestones to trades.csv. Return list of closed row dicts."""
     from src import tracker as _trk
     _raw_id   = row.get("id", "")
