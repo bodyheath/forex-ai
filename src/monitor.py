@@ -1579,13 +1579,17 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     _sn_target["exit_price"] = updated.get("exit_price", mprice)
                     _sn_target["pips"]       = updated.get("pips", "")
                     _sn_target["closed_at"]  = updated.get("closed_at", "")
-                    with config.TRADES_CSV.open("w", encoding="utf-8", newline="") as _sn_wh:
+                    # Atomic write — never truncate the live file directly
+                    import shutil as _sn_sh
+                    _sn_tmp = str(config.TRADES_CSV) + ".tmp"
+                    with open(_sn_tmp, "w", encoding="utf-8", newline="") as _sn_wh:
                         _sn_writer = _csv_sn.DictWriter(_sn_wh, fieldnames=_sn_fields)
                         _sn_writer.writeheader()
                         for _sn_r in _sn_rows:
                             _sn_writer.writerow({k: _sn_r.get(k, "") for k in _sn_fields})
+                    _sn_sh.move(_sn_tmp, str(config.TRADES_CSV))
                     _sn_written = True
-                    log(f"  Monitor: safety-net rewrite confirmed #{rec_id} closed in trades.csv ✅")
+                    log(f"  Monitor: safety-net rewrite confirmed #{rec_id} closed in trades.csv")
                 elif _sn_target:
                     log(f"  Monitor: #{rec_id} trades.csv already shows {_sn_target.get('status')} ✅")
             except Exception as _sn_exc:
