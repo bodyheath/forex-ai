@@ -10673,7 +10673,7 @@ def run() -> int:
 
         # Cross-pair currency consensus adjustment (±1 confidence based on directional agreement)
         try:
-            _apply_currency_consensus(deep_results, sonnet_thresh, log)
+            _apply_currency_consensus(deep_results, log)
             # Recompute meaningful after consensus adjustments may have shifted confidences
             meaningful = [r for r in deep_results if _conf(r) >= 5]
         except Exception as _cons_exc:
