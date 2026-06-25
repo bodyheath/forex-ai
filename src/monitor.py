@@ -3105,6 +3105,7 @@ def run(log=print) -> dict:
             closed = _apply_fund_milestones(
                 row, milestones, row_state, log=log,
                 ta=_ta, is_weekend=is_wknd,
+                prices=prices,
             )
             fund_closed.extend(closed)
         else:
