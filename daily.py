@@ -10671,6 +10671,14 @@ def run() -> int:
             fallback_pairs = [p for p, _ in ranked_all[:5]] if ranked_all else list(config.WATCHLIST[:5])
             _process_batch(fallback_pairs, force_deep=True)
 
+        # Cross-pair currency consensus adjustment (±1 confidence based on directional agreement)
+        try:
+            _apply_currency_consensus(deep_results, sonnet_thresh, log)
+            # Recompute meaningful after consensus adjustments may have shifted confidences
+            meaningful = [r for r in deep_results if _conf(r) >= 5]
+        except Exception as _cons_exc:
+            _log_line(log, f"[CONSENSUS] Skipped: {_cons_exc}")
+
         passed = len(deep_results)
         _log_line(
             log,
