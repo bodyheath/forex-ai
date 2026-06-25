@@ -4,11 +4,12 @@ Values are persisted to data/threshold_config.json and read by analyst.py
 at call time, so a reversion takes effect on the very next scan without a
 redeploy.
 
-Current state: threshold lowered 7→6, R:R 1.5→1.3 on 2026-06-09 for data
-collection — more TRADE_THIS YES signals accelerate the learning cycle.
+Current state: confidence 7, min_rr 2.5 — standard quality mode.
+R:R floor raised to 2.5 so the analyst TARGET (T3) always clears T2 (2.0R),
+ensuring the cascade is mathematically sound on every trade.
 
 After 50 closed YES-trades, check_and_adjust() evaluates the overall win rate.
-If it is below 45% the thresholds are automatically reverted to 7 / 1.5 and
+If it is below 45% the thresholds are automatically reverted to 7 / 2.5 and
 a Telegram-ready message is returned so the user is notified immediately.
 """
 
