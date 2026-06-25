@@ -392,7 +392,8 @@ class OnlineLearner:
         except Exception as e:
             print(f"[ML] store error: {e}")
 
-    def train_fund_outcome(self, trade_id: str, outcome: int, pips: float) -> bool:
+    def train_fund_outcome(self, trade_id: str, outcome: int, pips: float,
+                           r_weight: float = 1.0) -> bool:
         """Train the fund model on a closed trade's outcome.
 
         Returns True if the model was updated, False if features not found.
