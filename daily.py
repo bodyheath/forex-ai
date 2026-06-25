@@ -2313,23 +2313,23 @@ def _trade_quality_grade(r: dict) -> dict:
         }
 
     # ── Grade F — never trade ─────────────────────────────────────────────
-    if rib_strongly_against or w_d_conflict or rr < 1.3:
+    if rib_strongly_against or w_d_conflict or rr < 1.5:
         grade = "F"
         # Issue 3 floor: 3/3 fundamental tailwind + conf>=6 cannot be Grade F
         if _has_fund_tailwind and conf >= 6:
             grade = "C"
     # ── Grade D — avoid ──────────────────────────────────────────────────
-    elif rib_against or rr < 1.5 or (not w_d_agree and conf <= 6):
+    elif rib_against or rr < 2.0 or (not w_d_agree and conf <= 6):
         grade = "D"
     # ── Grade A — take immediately ────────────────────────────────────────
     elif (conf >= 8 and rr > 2.5 and all3_agree and
           atr_cal and fib_near and no_news and rib_aligned and div_confirmed):
         grade = "A"
     # ── Grade B — take if no A ────────────────────────────────────────────
-    elif conf >= 7 and rr >= 2.0 and w_d_agree:
+    elif conf >= 7 and rr >= 2.5 and w_d_agree:
         grade = "B"
     # ── Grade C — watch only ──────────────────────────────────────────────
-    elif conf >= 6 and rr >= 1.5:
+    elif conf >= 6 and rr >= 2.0:
         grade = "C"
     # ── Default D ─────────────────────────────────────────────────────────
     else:
