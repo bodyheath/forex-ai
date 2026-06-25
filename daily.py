@@ -5442,6 +5442,18 @@ def _send_telegram_summary(
                                              else (_sw_entry - _sw_exit) / _sw_ps)
                                 _sw_status = ("PARTIAL_WIN" if _sw_t1h and _sw_pips > 0
                                               else "WIN" if _sw_pips > 0 else "LOSS")
+                                # Guard: if closing this trade as a LOSS would push
+                                # consecutive_losses to 3 the CB would fire and block
+                                # the replacement — cancel swap instead of leaving
+                                # the fund with no position and a CB-triggered state.
+                                _pre_cl = int(_fund_st.get("consecutive_losses") or 0)
+                                if _sw_pips < 0 and _pre_cl >= 2:
+                                    _log_line(log, (
+                                        f"[swap] CANCELLED — closing {_sw_tpair} as LOSS "
+                                        f"would trigger circuit breaker "
+                                        f"({_pre_cl}→3 losses) with no replacement possible"
+                                    ))
+                                    continue
                                 _cft_sw(
                                     df=_sw_df,
                                     trade_id=_sw_tid,
