@@ -95,7 +95,7 @@ def _determine_outcome(direction: str, price: float,
     expiry = expiry_days if expiry_days is not None else _EXPIRY_DAYS
     try:
         opened = datetime.strptime(opened_at[:19], "%Y-%m-%d %H:%M:%S")
-        if (datetime.now() - opened).days >= expiry:
+        if (datetime.now(timezone.utc).replace(tzinfo=None) - opened).days >= expiry:
             return "EXPIRED"
     except (ValueError, TypeError):
         pass
