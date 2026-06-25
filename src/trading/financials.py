@@ -488,6 +488,33 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         _sum_loss_pips    = sum(_loss_pips_list)
         _profit_factor    = round(sum(_win_pips_list) / _sum_loss_pips, 3) if _sum_loss_pips > 0 else 0.0
 
+        # Dynamic sizing multiplier derived from actual streak / drawdown state
+        if int(cons_losses) >= 4:
+            _sz_streak = 0.25
+        elif int(cons_losses) >= 3:
+            _sz_streak = 0.50
+        elif int(cons_losses) >= 2:
+            _sz_streak = 0.75
+        else:
+            _sz_streak = 1.0
+        if drawdown_pct >= 8.0:
+            _sz_dd = 0.25
+        elif drawdown_pct >= 6.0:
+            _sz_dd = 0.50
+        elif drawdown_pct >= 4.0:
+            _sz_dd = 0.75
+        else:
+            _sz_dd = 1.0
+        _sz_mult = min(_sz_streak, _sz_dd)
+        if _sz_mult >= 1.0:
+            _sz_mode = "NORMAL"
+        elif _sz_mult >= 0.75:
+            _sz_mode = "REDUCED"
+        elif _sz_mult >= 0.50:
+            _sz_mode = "DEFENSIVE"
+        else:
+            _sz_mode = "MINIMAL"
+
         return {
             "balance":               round(running_bal, 2),
             "opening_balance":       round(daily_open_bal, 2),
