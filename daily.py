@@ -1751,7 +1751,7 @@ def _analyse_pair(pair: str, log, force_deep: bool = False,
 
 # ── Currency consensus post-processing ────────────────────────────────────────
 
-def _apply_currency_consensus(deep_results: list, threshold: int, log) -> int:
+def _apply_currency_consensus(deep_results: list, log) -> int:
     """Adjust each result's confidence by ±1 based on cross-pair currency consensus.
 
     After all pairs are analysed, we aggregate directional signals across results
