@@ -18,7 +18,7 @@ State is persisted in data/partial_profit_state.json between runs.
 """
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 import config
 from src import telegram_alert
