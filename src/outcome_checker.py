@@ -364,8 +364,15 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                         f"(+{_partial_pips:.1f}p), 50% at {price} "
                         f"(blended {_final_exit:.5f})"
                     )
+            else:
+                # Use the canonical level (target/stop) not the live price to
+                # avoid recording pips that include overshoot past the level.
+                if outcome == "WIN":
+                    _final_exit = _to_float(row.get("target")) or price
+                elif outcome in ("LOSS", "BREAKEVEN"):
+                    _final_exit = _to_float(row.get("effective_stop") or row.get("stop_loss")) or price
 
-            _notes = f"Auto-closed: {outcome} at {price}{_partial_note}"
+            _notes = f"Auto-closed: {outcome} at {_final_exit}{_partial_note}"
             updated = tracker.update_outcome(
                 rec_id, outcome,
                 exit_price=_final_exit,
