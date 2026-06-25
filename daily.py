@@ -3424,7 +3424,7 @@ def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict,
                 meta["target_atr_mult"] = round(td / atr_actual, 1)
                 rr = td / sd if sd > 0 else 0
                 meta["expiry_days"]  = _compute_expiry_days_from_rr(rr)
-                meta["quality_flag"] = "LOW QUALITY SETUP" if rr < 1.5 else ""
+                meta["quality_flag"] = "LOW QUALITY SETUP" if rr < 2.5 else ""
             except (TypeError, ValueError, ZeroDivisionError):
                 pass
         else:
@@ -3433,7 +3433,7 @@ def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict,
                 td = abs(entry - target)
                 rr = td / sd if sd > 0 else 0
                 meta["expiry_days"]  = _compute_expiry_days_from_rr(rr)
-                meta["quality_flag"] = "LOW QUALITY SETUP" if rr < 1.5 else ""
+                meta["quality_flag"] = "LOW QUALITY SETUP" if rr < 2.5 else ""
             except (TypeError, ValueError, ZeroDivisionError):
                 pass
         return entry, stop, target, meta
