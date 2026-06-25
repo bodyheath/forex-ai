@@ -228,10 +228,10 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                     try:
                         _ta_casc.send(
                             f"✅ <b>{pair} — T1 target hit (+{_t1p:.1f} pips)</b>\n\n"
-                            f"First target reached — 40% of position banked.\n"
+                            f"First target reached — 35% of position banked.\n"
                             f"Stop loss moved to breakeven — no loss possible now.\n\n"
                             f"Direction: {direction}  |  Price: {price}\n"
-                            f"Remaining 60% running toward T2 and T3."
+                            f"Remaining 65% running toward T2 and T3."
                         )
                     except Exception:
                         pass
