@@ -192,7 +192,6 @@ def weighted_pips(row: dict) -> float:
     t2p = _to_float(row.get("t2_hit_pips")) or 0.0
     t3p = _to_float(row.get("t3_hit_pips")) or 0.0
     return round(T1_SIZE * t1p + T2_SIZE * t2p + T3_SIZE * t3p, 1)
-    # Note: T1_SIZE=0.35, T2_SIZE=0.35, T3_SIZE=0.30 — reflects 1R/2R/3R+ cascade
 
 
 def total_pips(row: dict) -> float:
