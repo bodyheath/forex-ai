@@ -4,28 +4,31 @@ Shared by research_outcome_checker.py (research trades) and
 outcome_checker.py (fund trades).
 
 Design:
-  T1 = entry ± 0.4 × ATR  — close 40%, move stop to breakeven
-  T2 = entry ± 0.7 × ATR  — close 30% more (70% total banked)
-  T3 = existing target     — close final 30% → FULL_WIN
+  T1 = entry ± 1.0 × ATR  — close 35%, move stop to breakeven (1:1 R:R)
+  T2 = entry ± 2.0 × ATR  — close 35% more (70% total banked, 2:1 R:R)
+  T3 = existing target     — close final 30% → FULL_WIN (must be ≥ 2.5R)
 
 ATR is estimated as abs(entry - stop_loss) since the stop is placed at 1× ATR.
 An explicit atr= override can be passed when ATR14 is available from the bundle.
 
 Outcome statuses:
   FULL_WIN    — all three targets hit
-  WIN         — T1 + T2 hit, then stopped or expired (70% banked)
-  PARTIAL_WIN — T1 hit, then stopped or expired (40% banked)
-  LOSS        — stopped before T1 (original stop_loss)
+  WIN         — T1 + T2 hit, then stopped or expired (70% banked; stop at T1
+                  locks +1R on remaining 30% → total ≥ 1.35R)
+  PARTIAL_WIN — T1 hit, then stopped or expired (35% banked; stop moves to
+                  entry → 0R on rest → net +0.35R)
+  LOSS        — stopped before T1 (original stop_loss, −1R)
 
 Position-weighted pips (cascading_total_pips_weighted):
-  0.40 × t1_pips  +  0.30 × t2_pips  +  0.30 × t3_pips
+  0.35 × t1_pips  +  0.35 × t2_pips  +  0.30 × t3_pips
 """
 
-T1_MULT = 0.4
-T2_MULT = 0.7
+T1_MULT = 1.0
+T2_MULT = 2.0
+T3_MIN_MULT = 2.5  # T3 floor — analyst target overridden upward if below this
 
-T1_SIZE = 0.40
-T2_SIZE = 0.30
+T1_SIZE = 0.35
+T2_SIZE = 0.35
 T3_SIZE = 0.30
 
 
