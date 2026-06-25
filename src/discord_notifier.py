@@ -2099,4 +2099,63 @@ def send_swap_alert(
         return r.status_code in (200, 204)
     except Exception as _e:
         print(f"[swap] Discord alert error: {_e}")
+
+
+def send_loss_analysis_alert(
+    trade_id: int,
+    pair: str,
+    direction: str,
+    pips: float,
+    dollars: float,
+    analysis: dict,
+) -> None:
+    """Post a red loss-autopsy embed to DISCORD_WEBHOOK_FUND."""
+    webhook = os.getenv("DISCORD_WEBHOOK_FUND")
+    if not webhook:
+        return
+
+    root_cause = analysis.get("root_cause", "Unknown")
+    what_avoid = analysis.get("what_to_avoid", "")
+    rule       = analysis.get("rule_to_add", "")
+    warnings   = analysis.get("warning_signs", [])
+    conf       = analysis.get("confidence_in_analysis", 0)
+
+    embed = {
+        "title":       f"\U0001f50d Loss Analysis — {pair} {direction}",
+        "description": f"#{trade_id} · {pips:.1f}p · ${dollars:.2f}",
+        "color":       0xE74C3C,
+        "fields": [
+            {
+                "name":   "\U0001f4cb Root Cause",
+                "value":  root_cause[:200] or "Unknown",
+                "inline": False,
+            },
+            {
+                "name":   "⚠️ Warning Signs",
+                "value":  ("\n".join(f"• {w}" for w in warnings[:3]) or "None identified"),
+                "inline": False,
+            },
+            {
+                "name":   "\U0001f6ab What To Avoid",
+                "value":  what_avoid[:200] or "—",
+                "inline": False,
+            },
+            {
+                "name":   "\U0001f4cf New Rule Added",
+                "value":  rule[:200] or "—",
+                "inline": False,
+            },
+            {
+                "name":   "\U0001f3af Analysis Confidence",
+                "value":  f"{conf * 100:.0f}%",
+                "inline": True,
+            },
+        ],
+        "footer":    {"text": "Forex AI — Learning from every loss"},
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+    try:
+        requests.post(webhook, json={"embeds": [embed]}, timeout=10)
+    except Exception as exc:
+        print(f"[loss-alert] Discord error: {exc}")
         return False
