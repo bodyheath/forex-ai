@@ -246,9 +246,9 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                         _ta_casc.send(
                             f"💰 <b>{pair} — T2 target hit (+{_t2p:.1f} pips)</b>\n\n"
                             f"Second target reached — 70% of position banked.\n"
-                            f"Final 30% running to full target with stop at breakeven.\n\n"
+                            f"Final 30% running to full target with stop trailed to T1.\n\n"
                             f"Direction: {direction}  |  Price: {price}\n"
-                            f"Worst case: final tranche closes at entry (breakeven)."
+                            f"Worst case: final tranche closes at T1 (+1R locked)."
                         )
                     except Exception:
                         pass
