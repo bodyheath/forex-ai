@@ -9569,6 +9569,11 @@ def run() -> int:
             "🤖 FOREX AI — Sunday gap scan starting — checking for weekend price gaps — "
             "brief report in a few minutes"
         )
+        # Sunday: send weekly learning summary
+        try:
+            _send_weekly_learning_summary(log_fn=lambda m: print(m, file=sys.stderr))
+        except Exception:
+            pass
 
     # Reset per-run state
     try:
