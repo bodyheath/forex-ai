@@ -476,7 +476,7 @@ def check_post_close_trades(log=print, price_cache: dict | None = None) -> int:
     rows = research_tracker.load()
 
     # Find closed trades within the last _POST_CLOSE_DAYS days
-    cutoff = datetime.now() - timedelta(days=_POST_CLOSE_DAYS)
+    cutoff = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(days=_POST_CLOSE_DAYS)
     post_close = [
         r for r in rows
         if r.get("status") in research_tracker.OUTCOME_STATUSES
