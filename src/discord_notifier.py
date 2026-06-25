@@ -87,7 +87,7 @@ def _price_position_bar(entry, current, stop, target, direction="BUY"):
             )
         else:
             return (
-                f"`T {target:.5f} |{bar_str}| SL {stop:.5f}`\n"
+                f"`SL {stop:.5f} |{bar_str}| T {target:.5f}`\n"
                 f"`{'':12}▲ Now: {current:.5f}`"
             )
     except Exception:
