@@ -419,7 +419,7 @@ class OnlineLearner:
             except ImportError:
                 X_s = X
 
-            self.model.partial_fit(X_s, [outcome], classes=[0, 1])
+            self.model.partial_fit(X_s, [outcome], classes=[0, 1], sample_weight=[r_weight])
             self._save()
 
             # Update meta (non-critical)
