@@ -1,0 +1,21 @@
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 head-and-shoulders bearish pattern + RSI 59.6 (neutral) conflicts with 4H uptrend structure; MTF consensus fails (only 2/3 agreement, 60% threshold breached).
+RISK_FACTORS: [1] MTF contradiction: Weekly+Monthly BUY vs Daily+4H SELL = no clear directional consensus; TRADE_THIS triggers on MTF rule requiring both W+D agreement — this setup violates it. [2] AUD COT REVERSING from short to long (52% positioning momentum flip) contradicts SELL thesis; institutions reducing conviction in EUR strength.
+TRADE_THIS: NO
+ENTRY_TYPE: REJECTED
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly (BUY) and Daily (SELL) do not both agree on direction. Confidence 2/3 (60%) is below the 67% consensus threshold. Additionally, AUD COT reversing (unwinding shorts) undermines the SELL case. No valid setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**RATIONALE:**
+
+1. **MTF Failure (Hard Block):** Weekly=BUY, Daily=SELL, 4H=SELL, Monthly

@@ -1,0 +1,24 @@
+PAIR: AUD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD rate rising + CHF falling creates carry tailwind, but D1 double-top bearish pattern conflicts with T_sig=BUY_7; MTF weekly-daily disagreement (2/3 conf) breaches trade rule.
+RISK_FACTORS: [1] MTF conflict: Weekly=SELL vs Daily=BUY (60% confidence only, <2/3 threshold) violates MTF rule — no trade if both timeframes don't agree. [2] COT reversal in AUD positioning (long→short flip mid-week) reduces conviction despite fundamental tailwind; double-top candle pattern contradicts buy setup.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule breach: weekly and daily do not both agree on direction (W:SELL, D:BUY, conf 2/3 < 2/3 threshold). Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**Technical Score (6/10):**
+- RSI D1=44.5 (35–45 BUY zone) = +7, reduced to +6 because D1 pattern is **double_top

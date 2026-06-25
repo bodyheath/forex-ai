@@ -1,8 +1,16 @@
 {
-  "n_decisive": 90,
-  "last_updated": "2026-06-24T22:31:30",
-  "last_outcome": "PARTIAL_WIN",
+  "n_decisive": 88,
+  "last_updated": "2026-06-25T05:19:53",
+  "last_outcome": 0,
   "recent_outcomes": [
+    {
+      "label": 1,
+      "ts": "2026-06-23"
+    },
+    {
+      "label": 0,
+      "ts": "2026-06-22"
+    },
     {
       "label": 0,
       "ts": "2026-06-18"
@@ -74,17 +82,9 @@
     {
       "label": 0,
       "ts": "2026-06-19"
-    },
-    {
-      "label": 1,
-      "ts": "2026-06-24 22:01:50"
-    },
-    {
-      "label": 1,
-      "ts": "2026-06-24 22:31:27"
     }
   ],
-  "recent_win_rate": 0.3,
+  "recent_win_rate": 0.25,
   "overall_win_rate": 0.386,
   "retrain_source": "bulk_retrain"
 }

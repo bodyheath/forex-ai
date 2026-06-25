@@ -1,0 +1,20 @@
+PAIR: JPY/SGD
+DIRECTION: SELL
+CONFIDENCE: 3/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: SMD -5 (institutions bearish vs retail bullish) + JPY positioning building into shorts suggests weak contrarian SELL setup, but 4H inside bar neutrality and D1 data gaps severely limit conviction.
+RISK_FACTORS: [1. D1 data unavailable — no price/RSI/MACD baseline, reducing technical reliability to 4H only. 2. MTF alignment 0/3 (all timeframes neutral) — no directional confluence; inside bar on 4H signals consolidation, not breakout conviction.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF confidence 0/3 fails minimum 2/3 threshold; D1 data missing prevents TECHNICAL_SCORE validation; inside bar (neutral pattern) + 4H RSI 51 (midpoint neutral) + all timeframes neutral = no valid entry signal. Await D1 data and directional alignment on weekly+daily before trading.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**RATIONALE:**
+- **D1 unavailable** → TECHNICAL_SCORE capped at 3 (hard rule: minimum 3 when data gaps, but no upside without baseline
