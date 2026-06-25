@@ -1418,7 +1418,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     ta.send(
                         f"🎯 <b>{pair} has hit its full profit target</b>\n\n"
                         f"Final 30% of position closed — trade complete.\n"
-                        f"T1 +{t1p_str}p (40%)  T2 +{t2p_str}p (30%)  T3 +{pips:.1f}p (30%)\n"
+                        f"T1 +{t1p_str}p (35%)  T2 +{t2p_str}p (35%)  T3 +{pips:.1f}p (30%)\n"
                         f"Weighted total: +{_wp:.1f} pips\n\n"
                         f"Direction: {direction}  |  Final price: {mprice}"
                         + wknd_note
