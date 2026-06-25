@@ -15,7 +15,7 @@ run win/loss analysis on them.
 """
 
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 import requests
 
