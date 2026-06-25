@@ -5539,6 +5539,13 @@ def _send_telegram_summary(
                     f"risk={_journal_check['risk_score']:.2f}"
                 ))
                 _fund_st_blocked.append((_yt, _blk_journal))
+                try:
+                    from src import tracker as _trk_jrn
+                    if _yt.get("id"):
+                        _trk_jrn.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                notes=f"Blocked: {_blk_journal}")
+                except Exception:
+                    pass
                 continue
             elif _journal_check["risk_score"] > 0.2:
                 _jrnl_penalty = round(_journal_check["risk_score"] * 0.5, 1)
