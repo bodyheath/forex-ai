@@ -5466,6 +5466,13 @@ def _send_telegram_summary(
                           f"BOTH weekly ({_trend_align['weekly_trend']}) AND monthly "
                           f"({_trend_align['monthly_trend']}) oppose direction")
                 _fund_st_blocked.append((_yt, _blk_trend))
+                try:
+                    from src import tracker as _trk_trnd
+                    if _yt.get("id"):
+                        _trk_trnd.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                 notes=f"Blocked: {_blk_trend}")
+                except Exception:
+                    pass
                 continue
             # Soft block: in RANGING regime with any misaligned trend
             elif ("RANGING" in _regime_str and (
@@ -5475,6 +5482,13 @@ def _send_telegram_summary(
                 _log_line(log, f"[trend] BLOCKING {_yt_pair} in RANGING — "
                           f"single trend misaligned")
                 _fund_st_blocked.append((_yt, _blk_trend))
+                try:
+                    from src import tracker as _trk_trnd
+                    if _yt.get("id"):
+                        _trk_trnd.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                 notes=f"Blocked: {_blk_trend}")
+                except Exception:
+                    pass
                 continue
             # Fallback: legacy monthly_trend_aligned from parsed analysis
             _mta_val = _yt_parsed.get("monthly_trend_aligned")
