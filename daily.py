@@ -5609,7 +5609,15 @@ def _send_telegram_summary(
                 if _swap_cb_l >= 3:
                     _log_line(log, f"[swap] BLOCKED — circuit breaker active "
                               f"({_swap_cb_l} losses)")
-                    _fund_st_blocked.append((_yt, f"Circuit breaker ({_swap_cb_l} losses)"))
+                    _blk_sw_cb = f"Circuit breaker ({_swap_cb_l} losses)"
+                    _fund_st_blocked.append((_yt, _blk_sw_cb))
+                    try:
+                        from src import tracker as _trk_sw_cb
+                        if _yt.get("id"):
+                            _trk_sw_cb.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                      notes=f"Blocked: {_blk_sw_cb}")
+                    except Exception:
+                        pass
                     continue
 
                 if _yt_conf_val >= SWAP_MIN_NEW_CONF:
