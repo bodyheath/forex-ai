@@ -5345,6 +5345,13 @@ def _send_telegram_summary(
                         "conf":      _yt_conf_cb,
                         "reason":    f"Circuit breaker ({_cb_losses} losses)",
                     })
+                try:
+                    from src import tracker as _trk_cb
+                    if _yt.get("id"):
+                        _trk_cb.update_outcome(int(_yt["id"]), "SKIPPED",
+                                               notes=f"Blocked: {_cb_reason}")
+                except Exception:
+                    pass
                 continue
             # ── PAIR FILTER — block banned exotic pairs ────────────────────────
             _pair_upper = _yt_pair.upper()

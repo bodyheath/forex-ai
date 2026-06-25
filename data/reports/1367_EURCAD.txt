@@ -1,0 +1,26 @@
+```
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with 4H BUY alignment offers tactical long entry, but MTF weakness (M:SELL, W/D:NEUTRAL, conf=0/3) and converging ribbon signal trend exhaustion — hold for breakout confirmation above 1.6165 before committing capital.
+RISK_FACTORS: [1] MTF disagreement (Monthly selling, Weekly/Daily neutral) creates directional ambiguity — 0/3 MTF agreement fails TRADE_THIS threshold; [2] Converging EMA ribbon (5/5 tightening) indicates trend weakening and reversal risk within 24–48h.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 1.6165
+ENTRY_TRIGGER_REASON: Break above pin bar high and Daily SMA50 (1.6071 + 10p buffer) with 4H RSI >50 to confirm uptrend resumption against Monthly bearish backdrop.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **Rationale:**
+
+**Technical (4/10):**
+- **D1 T_sig = NEUTRAL_3** baseline confirmed by price (1.6144) stuck between

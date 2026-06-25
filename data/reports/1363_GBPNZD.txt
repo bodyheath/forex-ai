@@ -1,0 +1,21 @@
+I need to carefully evaluate this setup, particularly the MTF requirement and the ribbon conflict.
+
+**MTF Check:** W:NEUTRAL, D:SELL, 4H:SELL → conf=2/3. The rules state "Weekly AND daily must both agree on direction for TRADE_THIS YES." Weekly is NEUTRAL, not SELL. This is a hard rule — TRADE_THIS should be NO regardless of other scores.
+
+**Technical:** T_sig=SELL_8 anchor. RSI=67.9 in mixed/range context → standard tiers apply → 65-70=7-8 SELL. TRIPLE_SELL OSC → +2 confidence. Head and shoulders bearish pattern confirmed. However, RIB=ALIGNED_BULL fan 5/5 is a major contradiction — this is a strongly bullish ribbon structure fighting the SELL thesis.
+
+**Uptrend context on ribbon:** The ribbon being ALIGNED_BULL with fan acceleration means RSI overbought is more normal in an uptrend context, which would shift sell zones higher. But D1 trend is mixed/range, not confirmed uptrend — so standard tiers hold.
+
+**Confidence:** Base 7 (Haiku). TRIPLE_SELL +2 = 9. But ribbon ALIGNED_BULL conflict, W:NEUTRAL MTF failure, and 4H uptrend structure are significant negatives. Pulling back to 7. Weekly not confirming = hard NO on TRADE_THIS.
+
+---
+
+PAIR: GBP/NZD
+DIRECTION: SELL
+CONFIDENCE: 7/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING
+KEY_THESIS: Head-and-shoulders bearish pattern + RSI 67.9 overbought in mixed D1 trend + triple oscillator agreement (RSI/Stoch/CCI all SELL) + GBP COT building SHORT conviction creates high-probability reversal setup, but ribbon alignment (5/5 bull) and 4H uptrend present structural conflict.
+RISK_FACTORS:
