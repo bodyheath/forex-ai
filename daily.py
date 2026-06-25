@@ -5742,6 +5742,34 @@ def _send_telegram_summary(
                 pair=_yt_pair,
                 log_fn=lambda m: _log_line(log, m),
             )
+            # ML — store fund trade features for training on closure
+            try:
+                from src.online_learner import OnlineLearner as _OL_cls
+                _ol_inst  = _OL_cls()
+                _ol_bndl  = (_yt.get("bundle") or {}).get("technical", {}).get("daily") or {}
+                _ol_entry = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
+                _ol_stop  = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
+                _ol_ps    = 0.01 if "JPY" in _yt_pair else 0.0001
+                _ol_sp    = abs(_ol_entry - _ol_stop) / _ol_ps if _ol_entry and _ol_stop else 0.0
+                _ol_feats = {
+                    "confidence":         float(_yt_parsed.get("confidence") or 0),
+                    "rsi":                float(_ol_bndl.get("rsi14") or 0),
+                    "regime":             str(_regime_str),
+                    "session":            ",".join(_get_current_session()),
+                    "weekly_trend":       str(_trend_align.get("weekly_trend", "")),
+                    "monthly_trend":      str(_trend_align.get("monthly_trend", "")),
+                    "stop_pips":          round(_ol_sp, 1),
+                    "rr":                 float(_yt_parsed.get("reward_risk") or 0),
+                    "consecutive_losses": int(_consec_losses_fs or 0),
+                    "drawdown":           float(_fund_st.get("current_drawdown_pct") or 0.0),
+                    "trend_score":        float(_trend_align.get("alignment_score") or 0),
+                }
+                _ol_tid = str(_yt.get("id", ""))
+                if _ol_tid:
+                    _ol_inst.store_fund_features(trade_id=_ol_tid, features=_ol_feats)
+                    _log_line(log, f"[ML] Fund trade #{_ol_tid} features stored")
+            except Exception as _ol_err:
+                _log_line(log, f"[ML] Feature store error: {_ol_err}")
             _yt_pass.append(_yt)
             if _cap.get("is_override"):
                 _override_pairs[_yt_pair] = _cap["tier"]
