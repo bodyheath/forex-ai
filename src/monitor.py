@@ -35,7 +35,7 @@ except Exception:
     _dn = None
 
 
-def _online_learn_closure(source_table: str, updated: dict) -> None:
+def _online_learn_closure(source_table: str, updated: dict, log=print) -> None:
     """Feed a monitor-closed trade to the online learner (best-effort)."""
     try:
         from src import online_learner as _ol
@@ -47,6 +47,20 @@ def _online_learn_closure(source_table: str, updated: dict) -> None:
         )
     except Exception:
         pass
+    # Fund trades: train the fund-specific ML model (features stored at trade open)
+    if source_table == "main":
+        try:
+            from src.online_learner import OnlineLearner as _OL_mon
+            _fund_ol = _OL_mon()
+            _pips    = float(updated.get("pips") or 0)
+            outcome  = 1 if _pips > 0 else 0
+            _fund_ol.train_fund_outcome(
+                trade_id=str(updated.get("id", "")),
+                outcome=outcome,
+                pips=_pips,
+            )
+        except Exception as _e:
+            log(f"[ML] train error: {_e}")
 
 
 def _analyse_loss(trade: dict, prices: dict, log_fn=None) -> dict:
