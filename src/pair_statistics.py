@@ -12,14 +12,14 @@ import config
 
 _PAIR_STATS_FILE = config.DATA_DIR / "pair_statistics.json"
 
-T1_MIN, T1_MAX = 0.3, 0.6
-T2_MIN, T2_MAX = 0.5, 1.0
-T3_MIN, T3_MAX = 0.7, 1.5
+T1_MIN, T1_MAX = 0.8, 1.5
+T2_MIN, T2_MAX = 1.5, 3.0
+T3_MIN, T3_MAX = 2.5, 5.0
 MIN_TRADES = 10
 
-T1_STD = 0.4
-T2_STD = 0.7
-T3_STD = 1.0
+T1_STD = 1.0
+T2_STD = 2.0
+T3_STD = 3.0
 
 
 def _pip_size(pair: str) -> float:
