@@ -235,7 +235,7 @@ def _load_training_data():
     rows_X, rows_y, rows_w = [], [], []
 
     def _add(trade_id, source_table: str, trade_row: dict, outcome: str):
-        if outcome in ("WIN", "PARTIAL_WIN"):
+        if outcome in ("WIN", "PARTIAL_WIN", "FULL_WIN"):
             y = 1
         elif outcome in ("LOSS", "EXPIRED", "BREAKEVEN"):
             y = 0
