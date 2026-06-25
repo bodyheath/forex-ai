@@ -5581,6 +5581,13 @@ def _send_telegram_summary(
                     _blk_atr = f"Stop too wide ({_yt_stop_dist:.5f}) vs 4xATR ({_yt_atr14 * 4.0:.5f})"
                     _log_line(log, f"[stop] BLOCKING {_yt_pair} — stop too wide")
                     _fund_st_blocked.append((_yt, _blk_atr))
+                    try:
+                        from src import tracker as _trk_atr
+                        if _yt.get("id"):
+                            _trk_atr.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                    notes=f"Blocked: {_blk_atr}")
+                    except Exception:
+                        pass
                     continue
             # Tiered capacity check — supports 5th slot for conf ≥ 7.5
             _cap = _check_capacity_tiered(
