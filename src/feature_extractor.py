@@ -722,6 +722,18 @@ def extract(pair: str, parsed: dict, bundle: dict,
     above_200ma = 1.0 if pv200 == "above" else (-1.0 if pv200 == "below" else 0.0)
 
     dxy_direction_num  = _encode_dxy(extra_data.get("dxy_direction", ""))
+    if dxy_direction_num == 0.0:
+        # Fallback: derive USD direction from macro bundle signals
+        try:
+            _mac = bundle.get("macro", {}) if isinstance(bundle, dict) else {}
+            _mac_sigs = _mac.get("signals", {}) if isinstance(_mac, dict) else {}
+            for _dxy_key in ("DXY", "DXY (US Dollar Index)", "US Dollar Index"):
+                _dxy_sig = _mac_sigs.get(_dxy_key) or {}
+                if isinstance(_dxy_sig, dict) and _dxy_sig.get("trend"):
+                    dxy_direction_num = _encode_dxy(_dxy_sig["trend"])
+                    break
+        except Exception:
+            pass
     market_regime_num  = _encode_market_regime(extra_data.get("market_regime", ""))
     patience_score     = _safe(extra_data.get("patience_score_at_entry"), 0.0)
 
