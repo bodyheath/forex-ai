@@ -207,19 +207,18 @@ DRAWDOWN_SIZING = {
     10.0: 0.0,
 }
 
-# ── Fund pair universe — explicit allowlist / banlist ─────────────────────────
-# Banned: thin liquidity, wide spreads, no real edge in fund account
+# ── Fund pair universe — explicit banlist ─────────────────────────────────────
+# The selector now uses a curated 28-pair G8-only universe so most exotic bans
+# are redundant. This frozenset is kept as a safety net for any stale cache data.
 FUND_BANNED_PAIRS: frozenset = frozenset({
-    "EUR/HKD", "CAD/HKD", "NZD/HKD", "GBP/HKD", "AUD/HKD", "CHF/HKD",
-    "USD/HKD",
+    # Non-G8 currencies — should never appear from curated universe
+    "EUR/HKD", "CAD/HKD", "NZD/HKD", "GBP/HKD", "AUD/HKD", "CHF/HKD", "USD/HKD",
     "USD/NOK", "EUR/NOK", "GBP/NOK", "AUD/NOK", "NZD/NOK", "CAD/NOK",
-    "USD/DKK", "EUR/DKK", "GBP/DKK",
+    "USD/SEK", "EUR/SEK", "GBP/SEK",
     "USD/SGD", "EUR/SGD", "GBP/SGD", "AUD/SGD", "NZD/SGD",
+    "USD/DKK", "EUR/DKK", "GBP/DKK",
     "USD/ZAR", "EUR/ZAR", "GBP/ZAR",
     "USD/MXN", "EUR/MXN",
-    "USD/HUF", "EUR/HUF",
-    "USD/CZK", "EUR/CZK",
-    "USD/PLN", "EUR/PLN",
     "USD/TRY", "EUR/TRY", "GBP/TRY",
 })
 
