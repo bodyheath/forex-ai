@@ -46,9 +46,9 @@ FIELDS = [
     "data_quality_adjustment_at_entry", # data quality component
     # ── Adaptive cascade targets ──────────────────────────────────────────────
     "t1_was_adaptive",            # TRUE when pair-specific MFE data was used
-    "t1_target_atr_multiple",     # actual T1 multiplier applied (0.4 standard)
-    "t2_target_atr_multiple",     # actual T2 multiplier applied (0.7 standard)
-    "t3_target_atr_multiple",     # actual T3 multiplier applied (1.0 standard)
+    "t1_target_atr_multiple",     # actual T1 multiplier applied (1.0 standard)
+    "t2_target_atr_multiple",     # actual T2 multiplier applied (2.0 standard)
+    "t3_target_atr_multiple",     # actual T3 multiplier applied (3.0 standard)
     "volatility_tier_at_entry",  # VERY_QUIET | QUIET | NORMAL | VOLATILE | VERY_VOLATILE
     "atr_percentile_at_entry",   # atr_percentile_6m ratio used for tier (1.0 = normal)
     # ── Conditional entry system ──────────────────────────────────────────────
