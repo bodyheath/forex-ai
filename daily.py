@@ -5201,6 +5201,15 @@ def _send_telegram_summary(
                         "reason":    f"Circuit breaker ({_cb_losses} losses)",
                     })
                 continue
+            # ── PAIR FILTER — block banned exotic pairs ────────────────────────
+            _pair_upper = _yt_pair.upper()
+            if _pair_upper in FUND_BANNED_PAIRS:
+                _blk_pair = f"Pair banned: {_yt_pair} is an illiquid exotic"
+                _log_line(log, f"[pair-filter] BLOCKING {_yt_pair} — banned exotic pair")
+                _yt_parsed["trade_this"] = "NO"
+                _yt_parsed["block_reason"] = _blk_pair
+                _fund_st_blocked.append((_yt, _blk_pair))
+                continue
             # ── DATA VALIDATION GATE — runs before any other market filter ────
             _yt_dir_dv = (_yt_parsed.get("direction") or "").upper()
             _data_val = _validate_trade_data(
