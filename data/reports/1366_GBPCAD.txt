@@ -1,0 +1,22 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with uptrend structure; MTF shows 0/3 agreement (Monthly SELL vs Weekly/Daily NEUTRAL), breaking MTF rule; ribbon CONVERGING signals trend weakening.
+RISK_FACTORS: [1] MTF agreement 0/3 (Monthly SELL isolated; Weekly and Daily both NEUTRAL) — violates core rule requiring ≥2/3 MTF agreement before trade. [2] RSI 58.2 (neutral zone 45–55 = score 3–4) + MACD flat + OSC conf=NONE = no oscillator confluence; price above SMA50 but ribbon converging indicates weakening conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily both NEUTRAL; Monthly SELL isolated. Requires ≥2/3 MTF agreement (both weekly AND daily) to qualify. Confidence 4/10 < 6/10 threshold. Ribbon converging = trend strength fading.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SUMMARY:**
+GBP/CAD fails the MTF gateway rule

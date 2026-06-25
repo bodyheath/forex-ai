@@ -1,0 +1,25 @@
+PAIR: CHF/SEK
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought (63.7-64.1) at upper Bollinger Band with partial oscillator confluence (Stoch+CCI bearish), but MTF alignment failure (1/3 conf) and aligned bullish ribbon create conflicting signals—reversal risk capped by fundamental headwinds (CHF rate falling, -2% diff).
+RISK_FACTORS: MTF critical failure—weekly NEUTRAL conflicts with daily SELL, reducing trade conviction to 45%; bullish ribbon (5/5 aligned EMA fan) and inverse H&S pattern on 4H suggest continuation risk, not reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: AVOID
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation—weekly and daily do not both agree on direction (W:NEUTRAL vs D:SELL); confidence 1/3 < 2/3 threshold. Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **TECHNICAL_SCORE = 5 (NEUTRAL):**
+   - RSI 63.7–64.1 = upper 65–70 range = 7–8 SELL baseline
+   - MACD:

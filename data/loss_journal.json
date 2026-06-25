@@ -149,7 +149,7 @@
       "rule": "IF stop_distance=0 OR RSI=extreme_reading_without_confirming_confluence OR market_regime=undocumented OR confidence<8.0 THEN block trade until all criteria are properly established",
       "pair": "CAD/HKD",
       "added": "2026-06-25T01:23:05.264565+00:00",
-      "times_triggered": 1,
+      "times_triggered": 2,
       "times_prevented_loss": 0
     },
     {
