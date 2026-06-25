@@ -539,6 +539,23 @@ def _check_loss_journal(
         except Exception:
             pass
 
+    # Safety valve: conf 9+ with clean validated data bypasses journal block.
+    # Prevents a journal bug from permanently suppressing elite validated setups.
+    if (risk_score >= 0.6 and
+            conf_f >= 9.0 and
+            stop_f > 10 and
+            rsi_f > 10):
+        _log(f"[loss-journal] {pair} HIGH CONF BYPASS: "
+             f"conf={conf_f:.1f} stop={stop_f:.0f}p rsi={rsi_f:.0f} — "
+             f"overrides risk_score={risk_score:.2f}")
+        return {
+            "blocked":        False,
+            "warnings":       warnings,
+            "matching_rules": matching_rules,
+            "risk_score":     risk_score,
+            "bypassed":       True,
+        }
+
     blocked = risk_score >= 0.6
     if warnings:
         _log(f"[loss-journal] {pair} risk_score={risk_score:.2f} warnings={len(warnings)}")
