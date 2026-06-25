@@ -1856,7 +1856,7 @@ def _apply_currency_consensus(deep_results: list, log) -> int:
         else:
             continue
 
-        old_conf = pp.get("confidence") or 5
+        old_conf = _conf(r) or 5           # _conf() always returns int; handles str/None safely
         new_conf = max(1, min(10, old_conf + adj))
         if new_conf == old_conf:
             continue
