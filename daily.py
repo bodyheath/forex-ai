@@ -5562,6 +5562,13 @@ def _send_telegram_summary(
                 _blk_rr = f"R:R {_yt_rr_val:.2f} < {FUND_MIN_RR} minimum"
                 _log_line(log, f"[rr] BLOCKING {_yt_pair} — R:R {_yt_rr_val:.2f} below fund minimum {FUND_MIN_RR}")
                 _fund_st_blocked.append((_yt, _blk_rr))
+                try:
+                    from src import tracker as _trk_rr
+                    if _yt.get("id"):
+                        _trk_rr.update_outcome(int(_yt["id"]), "SKIPPED",
+                                               notes=f"Blocked: {_blk_rr}")
+                except Exception:
+                    pass
                 continue
             # Improvement 6: ATR-based stop distance check (block if stop > 4x ATR)
             _yt_bndl  = (_yt.get("bundle") or {})
