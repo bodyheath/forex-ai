@@ -347,6 +347,12 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
             if outcome is None:
                 continue  # still open
 
+            # If expiring but cascade T1/T2 already banked, honour cascade state
+            if outcome == "EXPIRED":
+                _casc_oc = _casc.cascade_outcome(row)
+                if _casc_oc != "LOSS":
+                    outcome = _casc_oc
+
             # Stage 2 + breakeven stop hit → partial profit already locked, WIN
             if outcome == "BREAKEVEN" and _pp_stage >= 2:
                 outcome = "WIN"
