@@ -526,7 +526,7 @@ def _parse_dt(s: str):
     """Parse datetime string; return None on failure."""
     for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
         try:
-            return datetime.strptime(s[:len(fmt) + 3], fmt)
+            return datetime.strptime(s[:len(fmt)], fmt)
         except (ValueError, TypeError):
             continue
     return None
