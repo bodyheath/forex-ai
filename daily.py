@@ -6588,7 +6588,13 @@ def _send_telegram_summary(
         _cl_score = sum(1 for c in _cl_criteria if c)
 
         if _cl_score < 7:
-            return []
+            # Trade is already OPEN in CSV — cannot un-open it.
+            # Log prominently so user knows about it; do NOT silently drop it.
+            _log_line(log, (
+                f"[checklist] WARNING {pair} opened with low checklist score "
+                f"{_cl_score}/10 — trade is OPEN, monitoring closely"
+            ))
+            # Fall through so the trade appears in the Telegram report with its score.
 
         _cl_news_label = (
             f"No high impact news within 24h"
