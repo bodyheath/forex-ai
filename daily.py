@@ -451,6 +451,148 @@ def _check_loss_journal(
     }
 
 
+def _validate_trade_data(
+    parsed: dict,
+    pair: str,
+    direction: str,
+    bundle: dict = None,
+    log_fn=None,
+) -> dict:
+    """Hard validation gate — blocks trades with missing or corrupt critical data.
+
+    Prevents trading blind, which caused 6 of 7 losses in the loss autopsy.
+    Returns {valid, failures, critical_failure}.
+    """
+    _log = log_fn or print
+    failures = []
+    critical = False
+    bundle = bundle or {}
+
+    # ── CRITICAL: Stop loss ──────────────────────────────────────────────────
+    stop  = float(parsed.get("stop_loss")  or parsed.get("stop")         or 0)
+    entry = float(parsed.get("entry")      or parsed.get("entry_price")   or 0)
+
+    if stop == 0 or stop != stop:
+        failures.append("stop_loss = 0 or NaN")
+        critical = True
+
+    if entry == 0 or entry != entry:
+        failures.append("entry price = 0 or NaN")
+        critical = True
+
+    if entry > 0 and stop > 0:
+        ps = 0.01 if "JPY" in pair else 0.0001
+        stop_pips = abs(entry - stop) / ps
+        if stop_pips < 5:
+            failures.append(f"stop too close: {stop_pips:.1f}p (minimum 5p)")
+            critical = True
+        if stop_pips > 2000:
+            failures.append(f"stop too wide: {stop_pips:.0f}p (maximum 2000p)")
+            critical = True
+
+    # ── CRITICAL: Direction ──────────────────────────────────────────────────
+    if direction not in ("BUY", "SELL"):
+        failures.append(f"invalid direction: {direction!r}")
+        critical = True
+
+    if entry > 0 and stop > 0:
+        if direction == "BUY" and stop >= entry:
+            failures.append(f"BUY stop {stop:.5f} >= entry {entry:.5f}")
+            critical = True
+        if direction == "SELL" and stop <= entry:
+            failures.append(f"SELL stop {stop:.5f} <= entry {entry:.5f}")
+            critical = True
+
+    # ── CRITICAL: Target ─────────────────────────────────────────────────────
+    t1 = float(
+        parsed.get("t1_price") or parsed.get("target") or
+        parsed.get("target_price") or 0
+    )
+    if t1 == 0 or t1 != t1:
+        failures.append("t1_price = 0 — no target set")
+        critical = True
+
+    if t1 > 0 and entry > 0:
+        if direction == "BUY" and t1 <= entry:
+            failures.append(f"BUY target {t1:.5f} <= entry {entry:.5f}")
+            critical = True
+        if direction == "SELL" and t1 >= entry:
+            failures.append(f"SELL target {t1:.5f} >= entry {entry:.5f}")
+            critical = True
+
+    # ── CRITICAL: Confidence ─────────────────────────────────────────────────
+    conf = float(parsed.get("confidence") or 0)
+    if conf <= 0 or conf != conf:
+        failures.append(f"confidence = {conf}")
+        critical = True
+
+    # ── IMPORTANT: RSI (from technical bundle) ───────────────────────────────
+    rsi = float(
+        (bundle.get("technical") or {}).get("daily", {}).get("rsi14") or
+        parsed.get("rsi_at_entry") or 0
+    )
+    if rsi == 0 or rsi != rsi:
+        failures.append("RSI = 0 — technical data missing or pipeline error")
+    elif rsi < 1 or rsi > 99:
+        failures.append(f"RSI = {rsi:.1f} — invalid range (must be 1–99)")
+
+    # ── IMPORTANT: R:R check ─────────────────────────────────────────────────
+    if entry > 0 and stop > 0 and t1 > 0:
+        ps = 0.01 if "JPY" in pair else 0.0001
+        stop_pips = abs(entry - stop) / ps
+        t1_pips   = abs(t1 - entry) / ps
+        rr = t1_pips / stop_pips if stop_pips > 0 else 0
+        if rr < 1.0:
+            failures.append(f"R:R = {rr:.2f} < 1.0 (stop wider than target)")
+
+    valid = not critical and len(failures) == 0
+
+    if failures:
+        _log(
+            f"[validate-data] {pair} {direction}: "
+            f"{len(failures)} failure(s) — critical={critical}"
+        )
+        for _f in failures:
+            _log(f"[validate-data]   FAIL {_f}")
+    else:
+        _log(f"[validate-data] {pair} {direction}: all valid")
+
+    return {"valid": valid, "failures": failures, "critical_failure": critical}
+
+
+def _ensure_trade_data_complete(
+    trade_row: dict,
+    pair: str,
+    log_fn=None,
+) -> dict:
+    """Fill any computable fields that are zero/missing after a trade is accepted."""
+    _log = log_fn or print
+    ps    = 0.01 if "JPY" in pair else 0.0001
+    entry = float(trade_row.get("entry") or trade_row.get("entry_price") or 0)
+    stop  = float(trade_row.get("stop_loss") or trade_row.get("stop") or 0)
+    t1    = float(trade_row.get("t1_price") or trade_row.get("target") or 0)
+
+    if entry > 0 and stop > 0:
+        stop_pips = abs(entry - stop) / ps
+        if not float(trade_row.get("stop_pips_at_entry") or 0):
+            trade_row["stop_pips_at_entry"] = round(stop_pips, 1)
+        if t1 > 0 and not float(trade_row.get("rr_at_entry") or 0):
+            t1_pips = abs(t1 - entry) / ps
+            rr = t1_pips / stop_pips if stop_pips > 0 else 0
+            trade_row["rr_at_entry"] = round(rr, 2)
+
+    for _field in ("stop_loss", "entry", "confidence", "t1_price"):
+        _val = trade_row.get(_field)
+        try:
+            _f = float(_val or 0)
+            if _f == 0 or _f != _f:
+                _log(f"[trade-data] WARNING {pair}: {_field} = {_val!r} at write time")
+        except Exception:
+            pass
+
+    return trade_row
+
+
 def _send_weekly_learning_summary(log_fn=None) -> None:
     """Send a Discord summary of what the loss-journal learned this week."""
     _log = log_fn or print
