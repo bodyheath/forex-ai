@@ -115,12 +115,12 @@ def check_and_adjust(log=print):
     })
     save(cfg)
     log(
-        f"Threshold auto-reverted: confidence 6→7, R:R 1.3→1.5 "
+        f"Threshold auto-reverted: confidence→{_ORIGINAL_THRESHOLD}, R:R→{_ORIGINAL_MIN_RR} "
         f"(win rate {win_rate*100:.0f}% after {total} trades)"
     )
     return (
         f"⚠️ <b>Threshold auto-reverted to standard settings</b>\n"
-        f"Confidence: 6 → 7  |  R:R: 1.3 → 1.5\n"
+        f"Confidence: → {_ORIGINAL_THRESHOLD}  |  R:R: → {_ORIGINAL_MIN_RR}\n"
         f"Reason: win rate {win_rate*100:.0f}% after {total} closed trades "
         f"was below the {min_wr*100:.0f}% minimum.\n"
         f"Standard thresholds active from next scan."
