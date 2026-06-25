@@ -58,6 +58,28 @@ FIELDS = [
     "entry_trigger_reason",       # human-readable description of the trigger
     "entry_trigger_expiry",       # UTC datetime when the pending setup expires
     "entry_confirmed_at",         # UTC datetime when the trigger was actually hit
+    # ── Rich entry-context features (ML fuel — Part 1) ───────────────────────
+    "rsi_at_entry",               # RSI(14) value at time of entry
+    "macd_at_entry",              # MACD histogram value at entry
+    "bb_position_at_entry",       # Bollinger Band position at entry
+    "atr_at_entry",               # ATR(14) value at entry
+    "regime_at_entry",            # market regime string at entry
+    "session_at_entry",           # active forex session(s) at entry
+    "weekly_trend_at_entry",      # weekly trend direction at entry
+    "monthly_trend_at_entry",     # monthly trend direction at entry
+    "trend_score_at_entry",       # trend alignment score 0-4 at entry
+    "technical_score",            # technical score from AI analysis
+    "fundamental_score",          # fundamental score from AI analysis
+    "sentiment_score",            # sentiment score from AI analysis
+    "cot_score",                  # COT score from AI analysis
+    "momentum_score",             # momentum score from AI analysis
+    "stop_pips_at_entry",         # stop distance in pips at entry
+    "rr_at_entry",                # R:R ratio at entry
+    "atr_multiple_at_entry",      # stop distance as multiple of ATR
+    "consecutive_losses_at_entry", # consecutive fund losses at entry
+    "drawdown_at_entry",          # fund drawdown % at entry
+    "open_trades_at_entry",       # number of open fund trades at entry
+    "ml_win_probability",         # online learner P(win) at entry
 ]
 
 # status values: NO_TRADE | PENDING | OPEN | WIN | LOSS | BREAKEVEN | SKIPPED | EXPIRED | CANCELLED | PARTIAL_WIN | FULL_WIN
