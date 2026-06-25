@@ -906,4 +906,14 @@ def extract(pair: str, parsed: dict, bundle: dict,
             and str(extra_data.get("t2_hit", "")).upper() != "TRUE"
             and str(parsed.get("status") or extra_data.get("status", "")).upper() == "PARTIAL_WIN"
         ) else 0.0),
+        # fund stress at entry
+        "fund_consecutive_losses": _safe(extra_data.get("fund_consecutive_losses"), 0.0),
+        "fund_drawdown_pct":       round(_safe(extra_data.get("fund_drawdown_pct"), 0.0), 3),
+        "fund_sizing_mode_num":    _encode_sizing_mode(str(extra_data.get("fund_sizing_mode", "") or "")),
+        "open_trades_count":       _safe(extra_data.get("open_trades_count"), 0.0),
+        # regime-pair alignment
+        "regime_pair_bonus":       _safe(extra_data.get("regime_pair_bonus"), 0.0),
+        # per-pair historical performance
+        "pair_win_rate":           round(_safe(extra_data.get("pair_win_rate"), 0.5), 3),
+        "pair_n_samples":          _safe(extra_data.get("pair_n_samples"), 0.0),
     }
