@@ -90,19 +90,16 @@ _TIER_SCORES = {
     "CAD/CHF": 3.5,
 }
 
-# Expanded eligible universe: G8 + G10 Scandinavian + liquid Asian crosses.
-# All combinations of these 12 currencies pass the liquidity filter.
+# Only the 8 major currencies — every combination is in the curated universe.
 _LIQUID_CURRENCIES = {
-    "EUR", "GBP", "USD", "JPY", "CHF", "AUD", "NZD", "CAD",  # G8 majors
-    "NOK", "SEK",                                               # G10 Scandinavian
-    "SGD", "HKD",                                               # Liquid Asian
+    "EUR", "GBP", "USD", "JPY", "CHF", "AUD", "NZD", "CAD",
 }
 
-# Currencies with excessive spread / thin liquidity — any pair containing one
-# of these is excluded before scoring regardless of the other currency.
+# Any pair containing these currencies is excluded (safety net for stale cache data).
 _ILLIQUID_CURRENCIES = {
     "TRY", "ZAR", "MXN", "BRL", "IDR", "INR", "RUB", "THB",
     "PHP", "CZK", "HUF", "PLN", "RON",
+    "NOK", "SEK", "SGD", "HKD", "DKK",
 }
 
 # Approximate current central-bank policy rates (% p.a.).
