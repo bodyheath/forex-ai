@@ -10659,7 +10659,44 @@ def run() -> int:
                 # Capture ML feature snapshot for future win-probability training
                 try:
                     from src import feature_extractor as _fe, feature_store as _fs
-                    _feat = _fe.extract(result["pair"], pp, result.get("bundle", {}))
+                    _mb_fe   = result.get("bundle", {})
+                    _mbd_fe  = (_mb_fe.get("technical", {}) or {}).get("daily", {}) or {}
+                    _extra_main = {
+                        "grade":                   (pp.get("grade") or ""),
+                        "cot_momentum":            result.get("_cot_signal", ""),
+                        "market_regime":           _ml_regime,
+                        "ribbon_state":            (_mbd_fe.get("ribbon") or {}).get("status", ""),
+                        "bb_position":             _mbd_fe.get("bb_position", ""),
+                        "price_vs_200ma":          _mbd_fe.get("price_vs_200ma", ""),
+                        "vix_at_entry":            _fe.extra_vix_from_bundle(_mb_fe),
+                        "fund_consecutive_losses": _ml_fund_state.get("consecutive_losses", 0),
+                        "fund_drawdown_pct":       _ml_fund_state.get("current_drawdown_pct", 0.0),
+                        "fund_sizing_mode":        _ml_fund_state.get("sizing_mode", "normal"),
+                        "open_trades_count":       _ml_open_count,
+                    }
+                    try:
+                        _mp_fe = _pair_perf_map.get(result["pair"], {})
+                        if isinstance(_mp_fe, dict):
+                            _extra_main["pair_win_rate"]  = _mp_fe.get("wr", 0.5)
+                            _extra_main["pair_n_samples"] = _mp_fe.get("n", 0)
+                    except Exception:
+                        pass
+                    try:
+                        from src import market_regime as _mr_fe
+                        _fe_parts = result["pair"].split("/")
+                        if len(_fe_parts) == 2:
+                            _extra_main["regime_pair_bonus"] = _mr_fe.regime_currency_bonus(
+                                _ml_regime, _fe_parts[0].upper(), _fe_parts[1].upper()
+                            )
+                    except Exception:
+                        pass
+                    try:
+                        _extra_main.update(_fe.compute_entry_context(
+                            result["pair"], _mb_fe, pp.get("direction", "BUY")
+                        ))
+                    except Exception:
+                        pass
+                    _feat = _fe.extract(result["pair"], pp, _mb_fe, extra_data=_extra_main)
                     _fs.save("main", result["id"], _feat)
                 except Exception:
                     pass
