@@ -5383,11 +5383,19 @@ def _send_telegram_summary(
                     f"[validate-data] BLOCKED {_yt_pair} "
                     f"— data quality failures: {_data_val['failures']}"
                 ))
-                _yt_parsed["trade_this"] = "NO"
-                _yt_parsed["block_reason"] = (
+                _blk_dv = (
                     f"Data validation: {_data_val['failures'][0]}"
                     if _data_val["failures"] else "Data validation failed"
                 )
+                _yt_parsed["trade_this"] = "NO"
+                _yt_parsed["block_reason"] = _blk_dv
+                try:
+                    from src import tracker as _trk_dv
+                    if _yt.get("id"):
+                        _trk_dv.update_outcome(int(_yt["id"]), "SKIPPED",
+                                               notes=f"Blocked: {_blk_dv}")
+                except Exception:
+                    pass
                 continue
             # Regime filter — no fund trades in ranging/risk-off
             if any(r in _regime_str for r in _REGIME_BLOCK):
