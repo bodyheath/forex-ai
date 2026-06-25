@@ -381,6 +381,138 @@ def _check_correlation(new_pair: str, new_direction: str,
     return {"blocked": False, "reason": "", "correlated_trades": [], "group": ""}
 
 
+def _check_loss_journal(
+    pair: str,
+    direction: str,
+    regime: str,
+    session: str,
+    weekly_trend: str,
+    log_fn=None,
+) -> dict:
+    """Check if this trade setup matches patterns that caused past losses.
+
+    Returns {blocked, warnings, matching_rules, risk_score}.
+    """
+    _log = log_fn or print
+    _journal_path = "data/loss_journal.json"
+    try:
+        import json as _jj
+        with open(_journal_path, encoding="utf-8") as _f:
+            journal = _jj.load(_f)
+    except Exception:
+        return {"blocked": False, "warnings": [], "matching_rules": [], "risk_score": 0.0}
+
+    warnings       = []
+    matching_rules = []
+    risk_score     = 0.0
+    regime_l       = str(regime).lower()
+    pair_l         = str(pair).lower()
+    dir_l          = str(direction).lower()
+
+    for rule_entry in journal.get("extracted_rules", []):
+        rule       = str(rule_entry.get("rule", ""))
+        rule_lower = rule.lower()
+        if not rule:
+            continue
+
+        # Check whether the IF conditions in the rule match this trade
+        match = True
+        if "ranging" in rule_lower and "ranging" not in regime_l:
+            match = False
+        if "trending" in rule_lower and "trending" not in regime_l:
+            match = False
+        # Pair-specific rules
+        if pair_l in rule_lower or dir_l in rule_lower:
+            pass  # extra specificity — still consider it a match if regime matched
+
+        if match:
+            warnings.append(f"Loss journal: {rule[:100]}")
+            matching_rules.append(rule)
+            risk_score = min(1.0, risk_score + 0.2)
+
+    # High-frequency pattern warnings
+    patterns = journal.get("pattern_counts", {})
+    if patterns.get("ranging", 0) >= 3 and "ranging" in regime_l:
+        warnings.append(f"Ranging regime caused {patterns['ranging']} past losses")
+        risk_score = min(1.0, risk_score + 0.15)
+    if patterns.get("correlation", 0) >= 2:
+        warnings.append(f"Correlation issue in {patterns['correlation']} past losses")
+        risk_score = min(1.0, risk_score + 0.10)
+
+    blocked = risk_score >= 0.6
+    if warnings:
+        _log(f"[loss-journal] {pair} risk_score={risk_score:.2f} warnings={len(warnings)}")
+
+    return {
+        "blocked":       blocked,
+        "warnings":      warnings,
+        "matching_rules": matching_rules,
+        "risk_score":    risk_score,
+    }
+
+
+def _send_weekly_learning_summary(log_fn=None) -> None:
+    """Send a Discord summary of what the loss-journal learned this week."""
+    _log = log_fn or print
+    import json as _jj
+    try:
+        with open("data/loss_journal.json", encoding="utf-8") as _f:
+            journal = _jj.load(_f)
+    except Exception:
+        return
+
+    from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+    week_ago = (_dt.now(_tz.utc) - _td(days=7)).isoformat()
+    recent   = [a for a in journal.get("analyses", []) if a.get("timestamp", "") >= week_ago]
+    patterns = journal.get("pattern_counts", {})
+    rules    = journal.get("extracted_rules", [])
+
+    if not recent and not rules:
+        return
+
+    import os as _os
+    import requests as _req
+    webhook = _os.getenv("DISCORD_WEBHOOK_HEALTH") or _os.getenv("DISCORD_WEBHOOK_FUND")
+    if not webhook:
+        return
+
+    top_patterns = sorted(patterns.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    embed = {
+        "title":       "\U0001f9e0 Weekly Learning Summary",
+        "description": "What the system learned this week",
+        "color":       0x3498DB,
+        "fields": [
+            {
+                "name":   "\U0001f4ca Losses analysed this week",
+                "value":  str(len(recent)),
+                "inline": True,
+            },
+            {
+                "name":   "Rules extracted (total)",
+                "value":  str(len(rules)),
+                "inline": True,
+            },
+            {
+                "name":   "\U0001f501 Top loss patterns",
+                "value":  "\n".join(f"• {p}: {c} losses" for p, c in top_patterns) or "None yet",
+                "inline": False,
+            },
+            {
+                "name":   "\U0001f4cf Active rules",
+                "value":  "\n".join(f"• {r['rule'][:80]}" for r in rules[-3:]) or "None yet",
+                "inline": False,
+            },
+        ],
+        "footer": {"text": "Forex AI — Learning System"},
+    }
+    try:
+        _req.post(webhook, json={"embeds": [embed]}, timeout=10)
+        _log("[learning] Weekly learning summary sent to Discord")
+    except Exception as exc:
+        _log(f"[learning] Weekly summary error: {exc}")
+
+
 def _calculate_position_size(regime: str, consecutive_losses: int,
                               drawdown_pct: float, base_pct: float = None,
                               log_fn=None) -> dict:
