@@ -1600,7 +1600,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     _loss_trade_data["exit_price"] = mprice
                     _analysis = _analyse_loss(
                         trade=_loss_trade_data,
-                        prices=prices,
+                        prices=prices or {},
                         log_fn=log,
                     )
                     if _analysis:
