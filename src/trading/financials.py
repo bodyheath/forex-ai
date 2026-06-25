@@ -23,9 +23,9 @@ import pandas as pd
 # ─── Constants ────────────────────────────────────────────────────────────────
 
 STARTING_BALANCE = 10_000.0
-T1_SIZE          = 0.40   # 40% of position closed at T1
-T2_SIZE          = 0.30   # 30% at T2
-T3_SIZE          = 0.30   # 30% at T3
+T1_SIZE          = 0.35   # 35% of position closed at T1 (1:1 R:R)
+T2_SIZE          = 0.35   # 35% at T2 (2:1 R:R)
+T3_SIZE          = 0.30   # 30% at T3 (≥2.5:1 R:R)
 DEFAULT_RISK_PCT = 1.0    # fallback when position_size_pct_at_entry is NaN
 FTMO_DAILY_LIMIT = 5.0    # 5% max daily drawdown
 FTMO_TOTAL_LIMIT = 10.0   # 10% max total drawdown
