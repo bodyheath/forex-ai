@@ -207,6 +207,22 @@ DRAWDOWN_SIZING = {
     10.0: 0.0,
 }
 
+# ── Fund pair universe — explicit allowlist / banlist ─────────────────────────
+# Banned: thin liquidity, wide spreads, no real edge in fund account
+FUND_BANNED_PAIRS: frozenset = frozenset({
+    "EUR/HKD", "CAD/HKD", "NZD/HKD", "GBP/HKD", "AUD/HKD", "CHF/HKD",
+    "USD/HKD",
+    "USD/NOK", "EUR/NOK", "GBP/NOK", "AUD/NOK", "NZD/NOK", "CAD/NOK",
+    "USD/DKK", "EUR/DKK", "GBP/DKK",
+    "USD/SGD", "EUR/SGD", "GBP/SGD", "AUD/SGD", "NZD/SGD",
+    "USD/ZAR", "EUR/ZAR", "GBP/ZAR",
+    "USD/MXN", "EUR/MXN",
+    "USD/HUF", "EUR/HUF",
+    "USD/CZK", "EUR/CZK",
+    "USD/PLN", "EUR/PLN",
+    "USD/TRY", "EUR/TRY", "GBP/TRY",
+})
+
 PAIR_BEST_SESSIONS = {
     "JPY": ["tokyo", "london"],
     "AUD": ["tokyo", "london"],
