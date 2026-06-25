@@ -10572,6 +10572,26 @@ def run() -> int:
         except Exception:
             pass
 
+        # Pre-load once per scan for ML feature enrichment (avoids repeated file reads)
+        _ml_fund_state: dict = {}
+        _ml_open_count: int  = 0
+        _ml_regime:     str  = "ranging_low_vol"
+        try:
+            from src import fund_state as _fs_ml
+            _ml_fund_state = _fs_ml.load()
+        except Exception:
+            pass
+        try:
+            from src import tracker as _trk_ml
+            _ml_open_count = sum(1 for _r in _trk_ml.load() if _r.get("status") == "OPEN")
+        except Exception:
+            pass
+        try:
+            from src import market_regime as _mr_ml
+            _ml_regime = _mr_ml.detect().get("regime", "ranging_low_vol")
+        except Exception:
+            pass
+
         def _process_batch(pairs, force_deep=False):
             nonlocal filtered_count
             for pair in pairs:
