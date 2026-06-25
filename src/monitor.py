@@ -1372,8 +1372,8 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 try:
                     ta.send(
                         f"💰 <b>{pair} has reached its second profit target</b>\n\n"
-                        f"Another 30% of position banked at +{pips:.1f} pips (70% total).\n"
-                        f"Final 30% running toward full target with stop at breakeven.\n\n"
+                        f"Another 35% of position banked at +{pips:.1f} pips (70% total).\n"
+                        f"Final 30% running toward full target — stop trailed to T1 (+1R locked).\n\n"
                         f"Direction: {direction}  |  T2 price: {mprice}"
                         f"{f'  |  Candle: {cdt}' if cdt else ''}"
                         + wknd_note
