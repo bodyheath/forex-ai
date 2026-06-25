@@ -5410,6 +5410,45 @@ def _send_telegram_summary(
             except Exception as _rich_err:
                 _log_line(log, f"[rich-features] ERROR stamping entry features "
                           f"for #{_yt.get('id')}: {_rich_err}")
+            # ML win-probability display (PART 6)
+            try:
+                from src import online_learner as _ol_fund
+                from src.feature_extractor import FEATURE_COLS as _ol_fund_cols
+                _ol_feats = {c: 0.0 for c in _ol_fund_cols}
+                _ol_feats["confidence"]     = float(_yt_parsed.get("confidence") or 0)
+                _ol_feats["reward_risk"]    = float(_yt_parsed.get("reward_risk") or 0)
+                _ol_feats["direction_buy"]  = 1.0 if _yt_dir_ta == "BUY" else 0.0
+                _ol_feats["rsi14"]          = float((_yt.get("bundle") or {}).get("technical", {}).get("daily", {}).get("rsi14") or 50)
+                _ol_prob = _ol_fund.predict_proba(_ol_feats)
+                if _ol_prob is not None:
+                    _ml_emoji = "\U0001f7e2" if _ol_prob >= 0.6 else ("\U0001f534" if _ol_prob <= 0.4 else "\U0001f7e1")
+                    _log_line(log, (
+                        f"[ML] {_yt_pair} {_yt_dir_ta}: "
+                        f"P(win)={_ol_prob:.1%} {_ml_emoji} "
+                        f"(conf={float(_yt_parsed.get('confidence', 0)):.1f})"
+                    ))
+                    # Stamp on trade row
+                    if isinstance(_yt.get("parsed"), dict):
+                        _yt["parsed"]["ml_win_probability"] = round(_ol_prob, 3)
+                    try:
+                        from src import tracker as _trk_mlp
+                        if _yt.get("id"):
+                            _trk_mlp.update_fields(int(_yt["id"]), ml_win_probability=round(_ol_prob, 3))
+                    except Exception:
+                        pass
+                    # If AI says good but ML says bad — penalise confidence
+                    if float(_yt_parsed.get("confidence") or 0) >= 7.0 and _ol_prob <= 0.35:
+                        _ml_penalty = 0.5
+                        if isinstance(_yt.get("parsed"), dict):
+                            _yt["parsed"]["confidence"] = max(
+                                0.0, float(_yt["parsed"].get("confidence", 0)) - _ml_penalty
+                            )
+                        _log_line(log, (
+                            f"[ML] {_yt_pair} ML disagrees with AI — "
+                            f"conf -{_ml_penalty} → {_yt_parsed.get('confidence', 0):.1f}"
+                        ))
+            except Exception as _ml_err:
+                _log_line(log, f"[ML] prediction error for {_yt_pair}: {_ml_err}")
             _fund_st = _fs.increment_daily_trades(_fund_st)
             _open_fund_count = _get_open_fund_count()  # re-read after write
             _cap_max = MAX_FUND_TRADES_OVERRIDE if _cap.get("is_override") else MAX_FUND_TRADES_NORMAL
