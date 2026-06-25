@@ -5361,6 +5361,13 @@ def _send_telegram_summary(
                 _yt_parsed["trade_this"] = "NO"
                 _yt_parsed["block_reason"] = _blk_pair
                 _fund_st_blocked.append((_yt, _blk_pair))
+                try:
+                    from src import tracker as _trk_pf
+                    if _yt.get("id"):
+                        _trk_pf.update_outcome(int(_yt["id"]), "SKIPPED",
+                                               notes=f"Blocked: {_blk_pair}")
+                except Exception:
+                    pass
                 continue
             # ── DATA VALIDATION GATE — runs before any other market filter ────
             _yt_dir_dv = (_yt_parsed.get("direction") or "").upper()
