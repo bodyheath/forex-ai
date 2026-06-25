@@ -164,39 +164,8 @@ _SESSION_BOOST_CCYS: dict = {
 # ── Universe, calendar, rates, performance ───────────────────────────────────
 
 def _fetch_universe() -> list:
-    """Fetch the complete forex pair list from Twelve Data. Cached 12h."""
-    cache_key = "SEL:universe"
-    cached = cache.get(cache_key, ttl_hours=12.0)
-    if cached is not None:
-        return cached
-
-    if not config.TWELVE_DATA_KEY:
-        return list(UNIVERSE)
-
-    try:
-        r = requests.get(
-            "https://api.twelvedata.com/forex_pairs",
-            params={"apikey": config.TWELVE_DATA_KEY},
-            timeout=20,
-        )
-        data = r.json()
-    except Exception:
-        return list(UNIVERSE)
-
-    raw = data.get("data", [])
-    if not isinstance(raw, list) or not raw:
-        return list(UNIVERSE)
-
-    pairs = [
-        item.get("symbol", "").upper()
-        for item in raw
-        if "/" in item.get("symbol", "") and len(item.get("symbol", "")) == 7
-    ]
-    if not pairs:
-        return list(UNIVERSE)
-
-    cache.set(cache_key, pairs)
-    return pairs
+    """Return the curated 28-pair G8 universe. No API call needed."""
+    return list(UNIVERSE)
 
 
 def _fetch_calendar(hours_ahead: int = 48) -> list:
