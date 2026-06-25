@@ -2201,6 +2201,24 @@ def _check_pending_trades(prices: dict, log_fn=None) -> list:
                 pass
             continue
 
+        # Re-check circuit breaker — CB may have fired since trade was originally approved
+        try:
+            import json as _json_pend
+            with open("data/fund_state.json", encoding="utf-8") as _fs_pend_fh:
+                _fs_pend = _json_pend.load(_fs_pend_fh)
+            _pend_cl = int(_fs_pend.get("consecutive_losses", 0))
+        except Exception:
+            _pend_cl = 0
+        if _pend_cl >= 3:
+            _log(f"[pending] #{trade_id} {pair} trigger hit but circuit breaker active "
+                 f"({_pend_cl} losses) — extending expiry 24h")
+            try:
+                new_expiry = datetime.now(timezone.utc) + timedelta(hours=24)
+                df.loc[idx, "entry_trigger_expiry"] = new_expiry.strftime("%Y-%m-%d %H:%M:%S")
+            except Exception:
+                pass
+            continue
+
         # Activate the trade — recalculate stop and targets from actual entry
         now_str      = _uns_pend()
         actual_entry = current
