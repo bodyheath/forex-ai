@@ -5616,6 +5616,11 @@ def _send_telegram_summary(
             _cap_max = MAX_FUND_TRADES_OVERRIDE if _cap.get("is_override") else MAX_FUND_TRADES_NORMAL
             _log_line(log, f"[capacity] {_yt_pair} opened → now {_open_fund_count}/{_cap_max}"
                       + (" ⚡ OVERRIDE" if _cap.get("is_override") else ""))
+            _ensure_trade_data_complete(
+                trade_row=_yt_parsed,
+                pair=_yt_pair,
+                log_fn=lambda m: _log_line(log, m),
+            )
             _yt_pass.append(_yt)
             if _cap.get("is_override"):
                 _override_pairs[_yt_pair] = _cap["tier"]
