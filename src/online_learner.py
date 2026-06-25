@@ -123,7 +123,8 @@ def partial_fit_trade(source_table: str, trade_id, outcome: str,
     scaler.partial_fit(X)
     X_s = scaler.transform(X)
 
-    weight = _recency_weight(closed_at) if closed_at else 0.7
+    r_mult = _R_WEIGHTS.get(status, 0.70)
+    weight = (_recency_weight(closed_at) * r_mult) if closed_at else (0.7 * r_mult)
     clf.partial_fit(X_s, [label], classes=[0, 1], sample_weight=[weight])
 
     _save_model(scaler, clf, f_cols)
