@@ -1,7 +1,7 @@
 ﻿"""Smart daily pair selection — 9-factor merit scoring.
 
-Scores the complete Twelve Data forex universe on nine axes before deciding
-which 15 pairs go to deep analysis:
+Scores the curated G8 universe on nine axes before deciding which pairs
+go to deep analysis:
 
   1. Momentum Quality     — magnitude, directional consistency, ATR-relative size.
   2. Technical Setup      — RSI at extremes, price near key support/resistance.
@@ -16,20 +16,18 @@ which 15 pairs go to deep analysis:
 Factors 1–8 sum to 100; Factor 9 adds up to 8 bonus points.
 No pair is guaranteed a spot — the 15 highest scorers win each day.
 
-Eligible universe (expanded from G8 to G10 + SGD/HKD):
-  G8  majors : EUR GBP USD JPY CHF AUD NZD CAD
-  G10 add    : NOK SEK
-  Liquid Asia: SGD HKD
-  Blacklisted: TRY ZAR MXN BRL IDR INR RUB THB PHP CZK HUF PLN RON
-               (known illiquid / spread-too-wide currencies)
+Universe: 28 G8 pairs only (7 majors + 21 crosses).
+  G8 currencies: EUR GBP USD JPY CHF AUD NZD CAD
+  All other currencies excluded — tight spreads, high liquidity, clean trends.
+  No exotics, no Scandinavian (NOK/SEK), no Asian (SGD/HKD).
 
 Flow:
-  a) Fetch complete pair universe from Twelve Data /forex_pairs (cached 12h).
+  a) Use curated 28-pair G8 universe (static — no API universe fetch needed).
   b) Fetch economic calendar (cached).
   c) Fetch policy rates for all core currencies from FRED (cached 24h).
   d) Load per-pair win rates from trades.csv.
-  e) Pre-score ALL liquid pairs on events + session + rate divergence + tier.
-  f) Fetch OHLCV snapshots for the top PRICE_FETCH_LIMIT pre-scored pairs.
+  e) Pre-score all 28 pairs on events + session + rate divergence + tier.
+  f) Fetch OHLCV snapshots for all pre-scored pairs.
   g) Compute full 8-factor score; log the breakdown; return top 15.
 """
 
