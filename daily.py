@@ -11041,7 +11041,7 @@ def run() -> int:
                         _rt_s_cl = float(_rp.get("stop_loss") or 0)
                         _rt_t_cl = float(_rp.get("target") or 0)
                         if _rt_e_cl and _rt_s_cl and abs(_rt_e_cl - _rt_s_cl) > 0:
-                            _cl_rt_rr = (abs(_rt_t_cl - _rt_e_cl) / abs(_rt_e_cl - _rt_s_cl) >= 2.0)
+                            _cl_rt_rr = (abs(_rt_t_cl - _rt_e_cl) / abs(_rt_e_cl - _rt_s_cl) >= 2.5)
                     except (TypeError, ValueError, ZeroDivisionError):
                         pass
                     # 10. Kill zone
