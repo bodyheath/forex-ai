@@ -50,14 +50,18 @@ def _online_learn_closure(source_table: str, updated: dict, log=print) -> None:
     # Fund trades: train the fund-specific ML model (features stored at trade open)
     if source_table == "main":
         try:
-            from src.online_learner import OnlineLearner as _OL_mon
+            from src.online_learner import OnlineLearner as _OL_mon, _R_WEIGHTS as _RW
             _fund_ol = _OL_mon()
             _pips    = float(updated.get("pips") or 0)
-            outcome  = 1 if _pips > 0 else 0
+            _status  = (updated.get("status") or "").upper()
+            _win_set = {"WIN", "FULL_WIN", "PARTIAL_WIN"}
+            outcome  = 1 if _status in _win_set else 0
+            r_weight = _RW.get(_status, 0.70)
             _fund_ol.train_fund_outcome(
                 trade_id=str(updated.get("id", "")),
                 outcome=outcome,
                 pips=_pips,
+                r_weight=r_weight,
             )
         except Exception as _e:
             log(f"[ML] train error: {_e}")
