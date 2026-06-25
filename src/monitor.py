@@ -660,26 +660,38 @@ def _record_milestone_sent(pair: str, level: str, trade_id: int,
 
 def _try_acquire_lock(log=print) -> bool:
     """Atomically create monitor.lock. Returns True if lock was acquired."""
-    try:
-        fd = os.open(str(_LOCK_FILE), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-        os.write(fd, str(os.getpid()).encode())
-        os.close(fd)
-        return True
-    except FileExistsError:
+    def _create_lock() -> bool | None:
+        """Try once to create the lock file. Returns True on success,
+        None if file already exists, True if non-FileExistsError (proceed anyway)."""
         try:
-            age = time.time() - _LOCK_FILE.stat().st_mtime
-            if age > _LOCK_TIMEOUT:
-                try:
-                    _LOCK_FILE.unlink()
-                except Exception:
-                    pass
-                log(f"Monitor: stale lock ({age:.0f}s old) removed — re-acquiring")
-                return _try_acquire_lock(log)
+            fd = os.open(str(_LOCK_FILE), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            os.write(fd, str(os.getpid()).encode())
+            os.close(fd)
+            return True
+        except FileExistsError:
+            return None
         except Exception:
-            pass
-        return False
+            return True  # if we can't create the lock, proceed without it
+
+    result = _create_lock()
+    if result is True:
+        return True
+
+    # Lock file exists — check age
+    try:
+        age = time.time() - _LOCK_FILE.stat().st_mtime
+        if age > _LOCK_TIMEOUT:
+            try:
+                _LOCK_FILE.unlink()
+            except OSError as _unlink_err:
+                log(f"Monitor: stale lock ({age:.0f}s) removal failed: {_unlink_err} — skipping run")
+                return False
+            log(f"Monitor: stale lock ({age:.0f}s old) removed — re-acquiring")
+            # Single direct retry; no recursion
+            return _create_lock() is True
     except Exception:
-        return True   # if we can't create the lock, proceed without it
+        pass
+    return False
 
 
 def _release_lock() -> None:
