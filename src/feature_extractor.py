@@ -112,6 +112,15 @@ FEATURE_COLS = [
 ]
 
 
+def _encode_sizing_mode(mode: str) -> float:
+    return {
+        "normal":              0.0,
+        "drawdown_caution":    1.0,
+        "drawdown_protection": 2.0,
+        "drawdown_pause":      3.0,
+    }.get((mode or "").lower(), 0.0)
+
+
 def _safe(v, default: float = 0.0) -> float:
     try:
         f = float(v)
