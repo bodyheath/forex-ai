@@ -174,7 +174,7 @@ def run(open_trades: list, price_cache: dict, log=print) -> None:
             ts.update({
                 "stage": 1,
                 "breakeven_stop": round(be_stop, 6),
-                "stage1_reached_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "stage1_reached_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
                 "stage1_price": round(price, 6),
             })
             state_changed = True
