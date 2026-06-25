@@ -6627,7 +6627,7 @@ def _send_telegram_summary(
         _cl_rr_label = (
             f"R:R {rr_str}"
             if _cl_rr_ok
-            else f"R:R {rr_str} (below 2.0:1 target)"
+            else f"R:R {rr_str} (below 2.5:1 target)"
         )
         _cl_item_labels = [
             "Monthly trend aligned",
