@@ -5368,6 +5368,48 @@ def _send_telegram_summary(
             except Exception as _szg_meta_err:
                 _log_line(log, f"[sizing] ERROR stamping metadata fields "
                           f"for #{_yt.get('id')}: {_szg_meta_err}")
+            # Stamp rich entry-context features (PART 1 — ML fuel)
+            try:
+                from src import tracker as _trk_rich
+                if _yt.get("id"):
+                    _rich_bndl  = (_yt.get("bundle") or {})
+                    _rich_daily = (_rich_bndl.get("technical") or {}).get("daily") or {}
+                    _rich_entry = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
+                    _rich_stop  = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
+                    _rich_atr   = float(_rich_daily.get("atr14") or 0)
+                    _pip_sz     = 0.01 if "JPY" in _yt_pair else 0.0001
+                    _rich_stop_pips = abs(_rich_entry - _rich_stop) / _pip_sz if _rich_entry and _rich_stop else 0
+                    _rich_atr_mult  = abs(_rich_entry - _rich_stop) / _rich_atr if _rich_atr and _rich_stop and _rich_entry else 0
+                    _rich_rsi    = float(_rich_daily.get("rsi14") or 0)
+                    _rich_macd   = float(_rich_daily.get("macd_histogram") or 0)
+                    _rich_bb_pos = str(_rich_daily.get("bb_position") or "")
+                    _rich_rr     = float(_yt_parsed.get("reward_risk") or 0)
+                    _trk_rich.update_fields(
+                        int(_yt["id"]),
+                        rsi_at_entry=_rich_rsi or "",
+                        macd_at_entry=_rich_macd or "",
+                        bb_position_at_entry=_rich_bb_pos,
+                        atr_at_entry=_rich_atr or "",
+                        regime_at_entry=_regime_str,
+                        session_at_entry=",".join(_get_current_session()),
+                        weekly_trend_at_entry=_trend_align.get("weekly_trend", ""),
+                        monthly_trend_at_entry=_trend_align.get("monthly_trend", ""),
+                        trend_score_at_entry=int(_trend_align.get("alignment_score") or 0),
+                        technical_score=float(_yt_parsed.get("technical_score") or 0) or "",
+                        fundamental_score=float(_yt_parsed.get("fundamental_score") or 0) or "",
+                        sentiment_score=float(_yt_parsed.get("sentiment_score") or 0) or "",
+                        cot_score=float(_yt_parsed.get("cot_score") or 0) or "",
+                        momentum_score=float(_yt_parsed.get("momentum_score") or 0) or "",
+                        stop_pips_at_entry=round(_rich_stop_pips, 1) or "",
+                        rr_at_entry=_rich_rr or "",
+                        atr_multiple_at_entry=round(_rich_atr_mult, 2) or "",
+                        consecutive_losses_at_entry=_consec_losses_fs,
+                        drawdown_at_entry=float(_fund_st.get("current_drawdown_pct") or 0.0),
+                        open_trades_at_entry=_open_fund_count,
+                    )
+            except Exception as _rich_err:
+                _log_line(log, f"[rich-features] ERROR stamping entry features "
+                          f"for #{_yt.get('id')}: {_rich_err}")
             _fund_st = _fs.increment_daily_trades(_fund_st)
             _open_fund_count = _get_open_fund_count()  # re-read after write
             _cap_max = MAX_FUND_TRADES_OVERRIDE if _cap.get("is_override") else MAX_FUND_TRADES_NORMAL
