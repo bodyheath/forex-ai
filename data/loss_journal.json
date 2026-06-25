@@ -1,0 +1,198 @@
+{
+  "analyses": [
+    {
+      "trade_id": 977,
+      "pair": "CAD/AUD",
+      "direction": "BUY",
+      "pips": -25.0,
+      "timestamp": "2026-06-25T01:22:34.017958+00:00",
+      "raw_analysis": "ROOT_CAUSE: Entry was made with incomplete market context and a technical indicator (RSI: 0.0) signaling extreme oversold conditions that typically precede reversals rather than continuations, combined with critically missing session and regime data that prevented proper directional bias confirmation.\n\nWARNING_SIGNS: RSI at extreme 0.0 level (oversold), low entry confidence of 6.0/10, zero stop loss distance (unprotected position), missing session context, missing market regime classification, missing weekly/monthly trend direction data\n\nWHAT_TO_AVOID: Never enter a trade with incomplete market information\u2014specifically, always identify the session, regime, and weekly trend before entry, and avoid trading when RSI is at extremes (0-10 or 90-100) without strong additional confirmation.\n\nRULE_TO_ADD: IF RSI is below 15 AND stop distance equals 0 pips AND confidence is below 7.0/10 THEN block trade until conditions improve and proper risk management is established\n\nCONFIDENCE: 0.72\n\n**Additional note:** The missing data makes full analysis difficult, but the 0 pip stop loss is a critical red flag\u2014this trade had no defined risk management. The extreme RSI reading combined with low confidence suggests this may have been an impulsive entry rather than a planned trade.",
+      "root_cause": "Entry was made with incomplete market context and a technical indicator (RSI: 0.0) signaling extreme oversold conditions that typically precede reversals rather than continuations, combined with critically missing session and regime data that prevented proper directional bias confirmation.",
+      "what_to_avoid": "Never enter a trade with incomplete market information\u2014specifically, always identify the session, regime, and weekly trend before entry, and avoid trading when RSI is at extremes (0-10 or 90-100) without strong additional confirmation.",
+      "rule_to_add": "IF RSI is below 15 AND stop distance equals 0 pips AND confidence is below 7.0/10 THEN block trade until conditions improve and proper risk management is established",
+      "warning_signs": [
+        "RSI at extreme 0.0 level (oversold)",
+        "low entry confidence of 6.0/10",
+        "zero stop loss distance (unprotected position)",
+        "missing session context",
+        "missing market regime classification",
+        "missing weekly/monthly trend direction data"
+      ],
+      "confidence_in_analysis": 0.72
+    },
+    {
+      "trade_id": 1032,
+      "pair": "NZD/HKD",
+      "direction": "BUY",
+      "pips": -351.0,
+      "timestamp": "2026-06-25T01:22:39.720268+00:00",
+      "raw_analysis": "ROOT_CAUSE: Price moved 351 pips against the trade despite a 1.97 R:R setup, indicating the directional bias was fundamentally wrong and market context was absent or ignored.\n\nWARNING_SIGNS: RSI at 0.0 (extreme reading suggesting data error or invalid entry condition), confidence only 6.0/10 (below acceptable threshold), missing market regime/session/trend data (incomplete analysis), stop distance of 0 pips (no risk management defined)\n\nWHAT_TO_AVOID: Never enter a trade with confidence below 7.0/10, especially when critical market context data (regime, session, trend) is absent or unrecorded.\n\nRULE_TO_ADD: IF confidence_at_entry < 7.0 OR market_regime = UNDEFINED OR stop_distance = 0 THEN block trade until conditions clarified and risk management established\n\nCONFIDENCE: 0.65\n\n**ADDITIONAL OBSERVATION:** The missing contextual data (session, regime, weekly/monthly trends) suggests this trade may have been taken without proper analysis framework. The 0.0 RSI reading is particularly suspicious\u2014this needs verification before future NZD/HKD trades. The lack of a defined stop distance is a critical operational failure regardless of direction being right or wrong.",
+      "root_cause": "Price moved 351 pips against the trade despite a 1.97 R:R setup, indicating the directional bias was fundamentally wrong and market context was absent or ignored.",
+      "what_to_avoid": "Never enter a trade with confidence below 7.0/10, especially when critical market context data (regime, session, trend) is absent or unrecorded.",
+      "rule_to_add": "IF confidence_at_entry < 7.0 OR market_regime = UNDEFINED OR stop_distance = 0 THEN block trade until conditions clarified and risk management established",
+      "warning_signs": [
+        "RSI at 0.0 (extreme reading suggesting data error or invalid entry condition)",
+        "confidence only 6.0/10 (below acceptable threshold)",
+        "missing market regime/session/trend data (incomplete analysis)",
+        "stop distance of 0 pips (no risk management defined)"
+      ],
+      "confidence_in_analysis": 0.65
+    },
+    {
+      "trade_id": 1073,
+      "pair": "USD/CHF",
+      "direction": "SELL",
+      "pips": -53.0,
+      "timestamp": "2026-06-25T01:22:46.376760+00:00",
+      "raw_analysis": "ROOT_CAUSE: A short position was entered with an RSI reading of 0.0 (extreme oversold), which typically signals imminent upward reversal rather than continuation of a downtrend.\n\nWARNING_SIGNS: RSI at 0.0 (extreme oversold condition), stop loss distance of 0 pips (no margin for volatility), missing context on market regime/session/trend analysis, moderate confidence level (7/10) combined with incomplete setup information\n\nWHAT_TO_AVOID: Do not enter SELL trades when RSI is below 10 without confirmation from higher timeframe trends and support/resistance structure, as oversold extremes often precede mean-reversion rallies.\n\nRULE_TO_ADD: IF RSI < 10 AND direction = SELL AND stop_distance = 0 pips THEN block trade until RSI recovers above 20 AND trend confirmation is present on weekly/monthly timeframes\n\nCONFIDENCE: 0.72\n\n---\n\n**ADDITIONAL OBSERVATIONS:**\n- The 0 pip stop loss is critically dangerous\u2014this suggests either a stop wasn't set or it was placed exactly at entry, providing zero protection against normal volatility\n- Missing market regime, session, and trend data makes full analysis incomplete, but the RSI signal alone was a red flag for a short entry\n- The 3.20 R:R ratio was attractive but couldn't compensate for a poor entry setup",
+      "root_cause": "A short position was entered with an RSI reading of 0.0 (extreme oversold), which typically signals imminent upward reversal rather than continuation of a downtrend.",
+      "what_to_avoid": "Do not enter SELL trades when RSI is below 10 without confirmation from higher timeframe trends and support/resistance structure, as oversold extremes often precede mean-reversion rallies.",
+      "rule_to_add": "IF RSI < 10 AND direction = SELL AND stop_distance = 0 pips THEN block trade until RSI recovers above 20 AND trend confirmation is present on weekly/monthly timeframes",
+      "warning_signs": [
+        "RSI at 0.0 (extreme oversold condition)",
+        "stop loss distance of 0 pips (no margin for volatility)",
+        "missing context on market regime/session/trend analysis",
+        "moderate confidence level (7/10) combined with incomplete setup information"
+      ],
+      "confidence_in_analysis": 0.72
+    },
+    {
+      "trade_id": 1076,
+      "pair": "USD/SEK",
+      "direction": "SELL",
+      "pips": -847.0,
+      "timestamp": "2026-06-25T01:22:52.205068+00:00",
+      "raw_analysis": "ROOT_CAUSE: Sold into a strong uptrend with incomplete market context, allowing USD/SEK to rally 847 pips against the position without a defined stop-loss to limit damage.\n\nWARNING_SIGNS: No stop distance defined (0 pips), RSI reading of 0.0 (incomplete/suspicious data), missing session/regime/trend context, moderate confidence (7/10), no consecutive loss buffer to justify aggressive positioning\n\nWHAT_TO_AVOID: Never enter a trade without a hard stop-loss in place, regardless of confidence level or R:R ratio attractiveness.\n\nRULE_TO_ADD: IF stop_distance = 0 pips OR RSI reading incomplete OR market_regime = null OR weekly_trend = null THEN block trade entry until all parameters confirmed\n\nCONFIDENCE: 0.65\n\n---\n\n**ADDITIONAL NOTE:** This trade is missing critical contextual data (session, regime, trends all blank). The RSI=0.0 suggests data corruption or incomplete analysis. The 847-pip loss on a SELL with no stop is catastrophic position management failure. Before analyzing \"why it failed,\" you must first ensure complete market data exists at entry. These gaps prevented proper risk assessment.",
+      "root_cause": "Sold into a strong uptrend with incomplete market context, allowing USD/SEK to rally 847 pips against the position without a defined stop-loss to limit damage.",
+      "what_to_avoid": "Never enter a trade without a hard stop-loss in place, regardless of confidence level or R:R ratio attractiveness.",
+      "rule_to_add": "IF stop_distance = 0 pips OR RSI reading incomplete OR market_regime = null OR weekly_trend = null THEN block trade entry until all parameters confirmed",
+      "warning_signs": [
+        "No stop distance defined (0 pips)",
+        "RSI reading of 0.0 (incomplete/suspicious data)",
+        "missing session/regime/trend context",
+        "moderate confidence (7/10)",
+        "no consecutive loss buffer to justify aggressive positioning"
+      ],
+      "confidence_in_analysis": 0.65
+    },
+    {
+      "trade_id": 1115,
+      "pair": "EUR/USD",
+      "direction": "BUY",
+      "pips": -130.0,
+      "timestamp": "2026-06-25T01:22:58.921635+00:00",
+      "raw_analysis": "ROOT_CAUSE: Trade was entered with critically incomplete market context (missing regime, session, and trend data) and no stop loss, leaving the position unprotected against adverse movement.\n\nWARNING_SIGNS: RSI at 0.0 (data error or extreme reading), missing market regime classification, no stop distance defined, missing session and weekly/monthly trend information, below-average entry confidence (6/10), incomplete pre-trade analysis framework.\n\nWHAT_TO_AVOID: Never enter a trade without a defined stop loss in place, and never proceed when key market context variables are absent or show invalid readings (RSI of 0.0 is a red flag for data integrity).\n\nRULE_TO_ADD: IF stop_distance = 0 pips OR RSI reading = 0.0 OR market_regime = missing OR weekly_trend = missing THEN block trade and do not execute until all data fields are valid and complete.\n\nCONFIDENCE: 0.85\n\n---\n\n**ADDITIONAL COMMENTARY:**\nThis trade failed primarily due to poor risk management infrastructure rather than directional misjudgment. The 130-pip loss against a 1.51 R:R suggests the trade had reasonable potential, but without a stop loss and with incomplete market analysis, you were essentially flying blind. The missing context data is the real problem\u2014you cannot make informed trading decisions without regime, trend, and session alignment. Rebuild your pre-entry checklist to be non-negotiable.",
+      "root_cause": "Trade was entered with critically incomplete market context (missing regime, session, and trend data) and no stop loss, leaving the position unprotected against adverse movement.",
+      "what_to_avoid": "Never enter a trade without a defined stop loss in place, and never proceed when key market context variables are absent or show invalid readings (RSI of 0.0 is a red flag for data integrity).",
+      "rule_to_add": "IF stop_distance = 0 pips OR RSI reading = 0.0 OR market_regime = missing OR weekly_trend = missing THEN block trade and do not execute until all data fields are valid and complete.",
+      "warning_signs": [
+        "RSI at 0.0 (data error or extreme reading)",
+        "missing market regime classification",
+        "no stop distance defined",
+        "missing session and weekly/monthly trend information",
+        "below-average entry confidence (6/10)",
+        "incomplete pre-trade analysis framework."
+      ],
+      "confidence_in_analysis": 0.85
+    },
+    {
+      "trade_id": 1169,
+      "pair": "CAD/HKD",
+      "direction": "BUY",
+      "pips": -280.0,
+      "timestamp": "2026-06-25T01:23:05.264565+00:00",
+      "raw_analysis": "ROOT_CAUSE: Price moved decisively against the trade direction without sufficient confluence factors to support the bullish bias, indicating the entry was based on incomplete market analysis.\n\nWARNING_SIGNS: RSI at extreme 0.0 (oversold but potentially signaling strong downward momentum), stop distance of 0 pips (no risk management buffer), missing critical context data (no market regime, session, or trend information documented), confidence only 7.0/10 (should require 8.0+), moderate R:R ratio of 2.80 insufficient to justify entry with incomplete setup\n\nWHAT_TO_AVOID: Never enter a trade with a 0 pip stop loss or without documented market regime, session timing, and weekly/monthly trend alignment\u2014these gaps indicate incomplete analysis.\n\nRULE_TO_ADD: IF stop_distance=0 OR RSI=extreme_reading_without_confirming_confluence OR market_regime=undocumented OR confidence<8.0 THEN block trade until all criteria are properly established\n\nCONFIDENCE: 0.72\n\n**Note:** The missing data fields (regime, session, weekly/monthly trends) make this analysis partially constrained. The 0 pip stop and extreme RSI reading are the clearest red flags\u2014this trade should never have been executed without proper risk definition and complete situational awareness.",
+      "root_cause": "Price moved decisively against the trade direction without sufficient confluence factors to support the bullish bias, indicating the entry was based on incomplete market analysis.",
+      "what_to_avoid": "Never enter a trade with a 0 pip stop loss or without documented market regime, session timing, and weekly/monthly trend alignment\u2014these gaps indicate incomplete analysis.",
+      "rule_to_add": "IF stop_distance=0 OR RSI=extreme_reading_without_confirming_confluence OR market_regime=undocumented OR confidence<8.0 THEN block trade until all criteria are properly established",
+      "warning_signs": [
+        "RSI at extreme 0.0 (oversold but potentially signaling strong downward momentum)",
+        "stop distance of 0 pips (no risk management buffer)",
+        "missing critical context data (no market regime",
+        "session",
+        "or trend information documented)",
+        "confidence only 7.0/10 (should require 8.0+)",
+        "moderate R:R ratio of 2.80 insufficient to justify entry with incomplete setup"
+      ],
+      "confidence_in_analysis": 0.72
+    },
+    {
+      "trade_id": 1208,
+      "pair": "EUR/HKD",
+      "direction": "BUY",
+      "pips": -479.0,
+      "timestamp": "2026-06-25T01:23:11.048704+00:00",
+      "raw_analysis": "ROOT_CAUSE: Entry was made into a strong downtrend without confirmation of reversal, resulting in immediate and sustained directional movement against the position.\n\nWARNING_SIGNS: RSI at 0.0 (extreme oversold, indicating strong selling pressure rather than reversal setup), missing weekly/monthly trend data (no directional confirmation available), stop distance of 0 pips (no risk management), moderate confidence of only 7/10 despite positive R:R ratio, EUR/HKD pair with typically wide spreads making 479-pip loss significant\n\nWHAT_TO_AVOID: Never enter a BUY trade when RSI is at extreme lows (0.0-10) without a clear reversal candle or support confirmation, as this indicates strong momentum in the opposite direction.\n\nRULE_TO_ADD: IF RSI < 15 AND weekly_trend is not confirmed as BULLISH THEN block BUY entry\n\nCONFIDENCE: 0.72\n\n**ADDITIONAL OBSERVATION:** The zero stop distance is a critical flaw\u2014this suggests either a missing stop order or excessive risk exposure. This alone should have prevented entry. Any trade without a defined stop should be automatically rejected.",
+      "root_cause": "Entry was made into a strong downtrend without confirmation of reversal, resulting in immediate and sustained directional movement against the position.",
+      "what_to_avoid": "Never enter a BUY trade when RSI is at extreme lows (0.0-10) without a clear reversal candle or support confirmation, as this indicates strong momentum in the opposite direction.",
+      "rule_to_add": "IF RSI < 15 AND weekly_trend is not confirmed as BULLISH THEN block BUY entry",
+      "warning_signs": [
+        "RSI at 0.0 (extreme oversold",
+        "indicating strong selling pressure rather than reversal setup)",
+        "missing weekly/monthly trend data (no directional confirmation available)",
+        "stop distance of 0 pips (no risk management)",
+        "moderate confidence of only 7/10 despite positive R:R ratio",
+        "EUR/HKD pair with typically wide spreads making 479-pip loss significant"
+      ],
+      "confidence_in_analysis": 0.72
+    }
+  ],
+  "extracted_rules": [
+    {
+      "rule": "IF RSI is below 15 AND stop distance equals 0 pips AND confidence is below 7.0/10 THEN block trade until conditions improve and proper risk management is established",
+      "pair": "CAD/AUD",
+      "added": "2026-06-25T01:22:34.017958+00:00",
+      "times_triggered": 0,
+      "times_prevented_loss": 0
+    },
+    {
+      "rule": "IF confidence_at_entry < 7.0 OR market_regime = UNDEFINED OR stop_distance = 0 THEN block trade until conditions clarified and risk management established",
+      "pair": "NZD/HKD",
+      "added": "2026-06-25T01:22:39.720268+00:00",
+      "times_triggered": 0,
+      "times_prevented_loss": 0
+    },
+    {
+      "rule": "IF RSI < 10 AND direction = SELL AND stop_distance = 0 pips THEN block trade until RSI recovers above 20 AND trend confirmation is present on weekly/monthly timeframes",
+      "pair": "USD/CHF",
+      "added": "2026-06-25T01:22:46.376760+00:00",
+      "times_triggered": 0,
+      "times_prevented_loss": 0
+    },
+    {
+      "rule": "IF stop_distance = 0 pips OR RSI reading incomplete OR market_regime = null OR weekly_trend = null THEN block trade entry until all parameters confirmed",
+      "pair": "USD/SEK",
+      "added": "2026-06-25T01:22:52.205068+00:00",
+      "times_triggered": 0,
+      "times_prevented_loss": 0
+    },
+    {
+      "rule": "IF stop_distance = 0 pips OR RSI reading = 0.0 OR market_regime = missing OR weekly_trend = missing THEN block trade and do not execute until all data fields are valid and complete.",
+      "pair": "EUR/USD",
+      "added": "2026-06-25T01:22:58.921635+00:00",
+      "times_triggered": 0,
+      "times_prevented_loss": 0
+    },
+    {
+      "rule": "IF stop_distance=0 OR RSI=extreme_reading_without_confirming_confluence OR market_regime=undocumented OR confidence<8.0 THEN block trade until all criteria are properly established",
+      "pair": "CAD/HKD",
+      "added": "2026-06-25T01:23:05.264565+00:00",
+      "times_triggered": 0,
+      "times_prevented_loss": 0
+    },
+    {
+      "rule": "IF RSI < 15 AND weekly_trend is not confirmed as BULLISH THEN block BUY entry",
+      "pair": "EUR/HKD",
+      "added": "2026-06-25T01:23:11.048704+00:00",
+      "times_triggered": 0,
+      "times_prevented_loss": 0
+    }
+  ],
+  "pattern_counts": {
+    "regime": 2,
+    "oversold": 2,
+    "session": 2,
+    "trend": 4,
+    "stop": 2
+  }
+}

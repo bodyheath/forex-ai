@@ -194,7 +194,7 @@ def _save_loss_analysis(analysis: dict, log_fn=None) -> None:
         tmp = str(journal_path) + ".tmp"
         Path(tmp).write_text(json.dumps(journal, indent=2), encoding="utf-8")
         _sh.move(tmp, str(journal_path))
-        _log("[loss-analysis] Saved to loss_journal.json ✅")
+        _log("[loss-analysis] Saved to loss_journal.json OK")
     except Exception as exc:
         _log(f"[loss-analysis] Save error: {exc}")
 
