@@ -5035,6 +5035,35 @@ def _send_telegram_summary(
                     continue
             else:
                 _log_line(log, f"[trend] WARNING {_yt_pair} — monthly_trend_aligned not available — allowing trade")
+            # Loss journal — block or penalise setups matching past-loss patterns
+            _journal_check = _check_loss_journal(
+                pair=_yt_pair,
+                direction=_yt_dir_ta,
+                regime=_regime_str,
+                session=",".join(_get_current_session()),
+                weekly_trend=_trend_align.get("weekly_trend", "NEUTRAL"),
+                log_fn=lambda m: _log_line(log, m),
+            )
+            if _journal_check["blocked"]:
+                _blk_journal = (
+                    f"Loss journal: {_journal_check['warnings'][0][:80]}"
+                    if _journal_check["warnings"] else "Loss journal: high risk pattern"
+                )
+                _log_line(log, (
+                    f"[loss-journal] BLOCKED {_yt_pair} — matches loss patterns "
+                    f"risk={_journal_check['risk_score']:.2f}"
+                ))
+                _fund_st_blocked.append((_yt, _blk_journal))
+                continue
+            elif _journal_check["risk_score"] > 0.2:
+                _jrnl_penalty = round(_journal_check["risk_score"] * 0.5, 1)
+                _jrnl_orig    = float(_yt_parsed.get("confidence") or 0)
+                if isinstance(_yt.get("parsed"), dict):
+                    _yt["parsed"]["confidence"] = max(0.0, _jrnl_orig - _jrnl_penalty)
+                _log_line(log, (
+                    f"[loss-journal] {_yt_pair} conf penalty -{_jrnl_penalty} "
+                    f"for past loss pattern (score={_journal_check['risk_score']:.2f})"
+                ))
             # Improvement 5: Minimum R:R for fund trades
             _yt_rr_val = float(_yt_parsed.get("reward_risk") or 0)
             if _yt_rr_val > 0 and _yt_rr_val < FUND_MIN_RR:
