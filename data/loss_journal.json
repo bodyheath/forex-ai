@@ -146,34 +146,6 @@
       "times_prevented_loss": 0
     },
     {
-      "rule": "IF confidence_at_entry < 7.0 OR market_regime = UNDEFINED OR stop_distance = 0 THEN block trade until conditions clarified and risk management established",
-      "pair": "NZD/HKD",
-      "added": "2026-06-25T01:22:39.720268+00:00",
-      "times_triggered": 0,
-      "times_prevented_loss": 0
-    },
-    {
-      "rule": "IF RSI < 10 AND direction = SELL AND stop_distance = 0 pips THEN block trade until RSI recovers above 20 AND trend confirmation is present on weekly/monthly timeframes",
-      "pair": "USD/CHF",
-      "added": "2026-06-25T01:22:46.376760+00:00",
-      "times_triggered": 0,
-      "times_prevented_loss": 0
-    },
-    {
-      "rule": "IF stop_distance = 0 pips OR RSI reading incomplete OR market_regime = null OR weekly_trend = null THEN block trade entry until all parameters confirmed",
-      "pair": "USD/SEK",
-      "added": "2026-06-25T01:22:52.205068+00:00",
-      "times_triggered": 0,
-      "times_prevented_loss": 0
-    },
-    {
-      "rule": "IF stop_distance = 0 pips OR RSI reading = 0.0 OR market_regime = missing OR weekly_trend = missing THEN block trade and do not execute until all data fields are valid and complete.",
-      "pair": "EUR/USD",
-      "added": "2026-06-25T01:22:58.921635+00:00",
-      "times_triggered": 0,
-      "times_prevented_loss": 0
-    },
-    {
       "rule": "IF stop_distance=0 OR RSI=extreme_reading_without_confirming_confluence OR market_regime=undocumented OR confidence<8.0 THEN block trade until all criteria are properly established",
       "pair": "CAD/HKD",
       "added": "2026-06-25T01:23:05.264565+00:00",
@@ -194,5 +166,6 @@
     "session": 2,
     "trend": 4,
     "stop": 2
-  }
+  },
+  "_cleanup_note": "Corrupt data-quality rules removed 2026-06-25T03:05:37.419104+00:00"
 }
