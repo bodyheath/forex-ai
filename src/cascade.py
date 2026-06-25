@@ -43,15 +43,7 @@ def _is_true(val) -> bool:
 
 
 def _pip_size(pair: str) -> float:
-    cleaned = (pair or "").upper().replace("/", "").replace("-", "")
-    if len(cleaned) >= 6:
-        if cleaned[3:6] == "JPY":
-            return 0.01
-        if cleaned[:3] == "JPY":
-            return 0.000001
-    if "JPY" in (pair or "").upper():
-        return 0.01
-    return 0.0001
+    return 0.01 if "JPY" in (pair or "").upper() else 0.0001
 
 
 def _to_float(val):
