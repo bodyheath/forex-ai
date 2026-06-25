@@ -70,32 +70,24 @@ _SESSION_UTC = {
     "ZAR": (6, 15),  "TRY": (6, 16),
 }
 
-# Tier scores reflect tradeable liquidity rank (G7 majors highest, unlisted liquid = 1.5).
-# With a small coefficient (0.3) in the pre-score, tier is a modest tiebreaker.
-# All pairs scoring 0.1 (illiquid or unknown currency) are excluded before scoring.
+# Tier scores for the 28 curated G8 pairs only.
+# Reflects global daily volume rank — used as a tiebreaker in pre-scoring.
 _TIER_SCORES = {
-    # G7 majors — highest liquidity, not a guaranteed selection
+    # G7 majors (USD leg) — top global liquidity
     "EUR/USD": 8.0, "GBP/USD": 8.0, "USD/JPY": 8.0,
     "AUD/USD": 7.5, "USD/CAD": 7.5, "NZD/USD": 7.0, "USD/CHF": 7.0,
-    # Key crosses among the G8 currencies
-    "EUR/GBP": 6.5, "EUR/JPY": 6.5, "GBP/JPY": 6.5,
-    "AUD/JPY": 6.0, "EUR/AUD": 5.5, "EUR/CAD": 5.5,
-    "GBP/AUD": 5.0, "GBP/CAD": 5.0, "CAD/JPY": 5.0, "CHF/JPY": 5.0,
-    "EUR/CHF": 5.0, "AUD/CAD": 4.5, "AUD/NZD": 4.5,
-    "AUD/CHF": 4.0, "GBP/CHF": 4.0, "NZD/JPY": 4.0,
-    "NZD/CAD": 4.0, "NZD/CHF": 4.0, "GBP/NZD": 4.0,
-    # G10 Scandinavian currencies (NOK, SEK)
-    "USD/HKD": 4.5, "USD/SGD": 4.0,
-    "EUR/NOK": 3.5, "USD/NOK": 3.5, "EUR/SEK": 3.5, "USD/SEK": 3.5,
-    "EUR/SGD": 3.5, "SGD/JPY": 3.0,
-    "GBP/NOK": 3.0, "GBP/SEK": 3.0, "GBP/SGD": 3.0,
-    "EUR/HKD": 3.0, "GBP/HKD": 3.0,
-    "AUD/SGD": 2.5, "AUD/NOK": 2.5, "AUD/SEK": 2.5,
-    "NZD/NOK": 2.5, "NZD/SEK": 2.5,
-    "CAD/NOK": 2.5, "CAD/SEK": 2.5,
-    "NOK/JPY": 2.5, "SEK/JPY": 2.5, "NOK/SEK": 2.5,
-    "CHF/NOK": 2.5, "CHF/SEK": 2.5,
-    "AUD/HKD": 2.5, "HKD/JPY": 2.5, "SGD/HKD": 2.0,
+    # EUR crosses
+    "EUR/JPY": 6.5, "EUR/GBP": 6.5, "EUR/CHF": 5.5, "EUR/CAD": 5.5,
+    "EUR/AUD": 5.5, "EUR/NZD": 4.5,
+    # GBP crosses
+    "GBP/JPY": 6.5, "GBP/CHF": 4.5, "GBP/CAD": 5.0,
+    "GBP/AUD": 5.0, "GBP/NZD": 4.0,
+    # JPY crosses
+    "CAD/JPY": 5.0, "AUD/JPY": 6.0, "NZD/JPY": 4.0, "CHF/JPY": 5.0,
+    # Remaining G8 crosses
+    "AUD/CAD": 4.5, "AUD/CHF": 4.0, "AUD/NZD": 4.5,
+    "NZD/CAD": 4.0, "NZD/CHF": 3.5,
+    "CAD/CHF": 3.5,
 }
 
 # Expanded eligible universe: G8 + G10 Scandinavian + liquid Asian crosses.
