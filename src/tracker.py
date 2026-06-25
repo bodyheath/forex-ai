@@ -19,21 +19,21 @@ FIELDS = [
     "status", "exit_price", "r_multiple", "pips", "net_pips", "closed_at", "notes",
     "report_file", "key_thesis", "best_entry_time",
     # ── Cascading targets (append-only) ──────────────────────────────────────
-    "t1_price",                   # entry ± 0.4× ATR
-    "t2_price",                   # entry ± 0.7× ATR
-    "t3_price",                   # existing target
+    "t1_price",                   # entry ± 1.0× ATR  (1:1 R:R)
+    "t2_price",                   # entry ± 2.0× ATR  (2:1 R:R)
+    "t3_price",                   # analyst target, floor ≥ 2.5× ATR
     "t1_hit",                     # TRUE / FALSE
     "t1_hit_price",               # live price when T1 triggered
-    "t1_hit_pips",                # pip profit on 40% closed at T1
+    "t1_hit_pips",                # pip profit on 35% closed at T1
     "t2_hit",                     # TRUE / FALSE
     "t2_hit_price",
-    "t2_hit_pips",                # pip profit on 30% closed at T2
+    "t2_hit_pips",                # pip profit on 35% closed at T2
     "t3_hit",                     # TRUE / FALSE
     "t3_hit_price",
     "t3_hit_pips",                # pip profit on final 30% at T3
     "effective_stop",             # starts as stop_loss; moves to entry after T1 hit
     "cascading_total_pips",       # sum of pips across all hit portions
-    "cascading_total_pips_weighted",  # 0.4×t1 + 0.3×t2 + 0.3×t3
+    "cascading_total_pips_weighted",  # 0.35×t1 + 0.35×t2 + 0.30×t3
     # ── Adaptive sizing at entry ─────────────────────────────────────────────
     "sizing_mode",                    # normal | win_streak | drawdown_caution | drawdown_protection
     "consecutive_wins_at_entry",      # win streak length when trade was opened
