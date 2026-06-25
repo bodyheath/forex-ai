@@ -5441,6 +5441,13 @@ def _send_telegram_summary(
                 _blk_conf = f"Confidence {_yt_conf_val:.1f} < {FUND_TRADE_MIN_CONF:.1f} min (regime: {_regime_str})"
                 _log_line(log, f"[fund] BLOCKING {_yt_pair} — {_blk_conf}")
                 _fund_st_blocked.append((_yt, _blk_conf))
+                try:
+                    from src import tracker as _trk_conf
+                    if _yt.get("id"):
+                        _trk_conf.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                 notes=f"Blocked: {_blk_conf}")
+                except Exception:
+                    pass
                 continue
             # Improvement 4: Weekly + Monthly trend alignment
             _yt_dir_ta = (_yt_parsed.get("direction") or "").upper()
