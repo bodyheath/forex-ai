@@ -5395,6 +5395,17 @@ def _send_telegram_summary(
                 _blk_rsn_cap = _cap["reason"]
                 _swap_executed = False
 
+                # CB blocks swaps entirely — no new directional exposure when losing
+                try:
+                    _swap_cb_l = int(_fund_st.get("consecutive_losses") or 0)
+                except Exception:
+                    _swap_cb_l = 0
+                if _swap_cb_l >= 3:
+                    _log_line(log, f"[swap] BLOCKED — circuit breaker active "
+                              f"({_swap_cb_l} losses)")
+                    _fund_st_blocked.append((_yt, f"Circuit breaker ({_swap_cb_l} losses)"))
+                    continue
+
                 if _yt_conf_val >= SWAP_MIN_NEW_CONF:
                     _log_line(log, f"[swap] {_yt_pair} conf {_yt_conf_val:.1f} "
                               f">= {SWAP_MIN_NEW_CONF} — evaluating swap...")
