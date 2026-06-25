@@ -21,15 +21,20 @@ def _to_float(v):
         return None
 
 
+_WIN_STATUSES    = {"WIN", "FULL_WIN", "PARTIAL_WIN"}
+_LOSS_STATUSES   = {"LOSS"}
+_CLOSED_STATUSES = _WIN_STATUSES | _LOSS_STATUSES | {"BREAKEVEN"}
+
+
 def _closed(rows):
-    return [r for r in rows if r.get("status") in ("WIN", "LOSS", "BREAKEVEN")]
+    return [r for r in rows if r.get("status") in _CLOSED_STATUSES]
 
 
 def _winrate(rows):
-    decisive = [r for r in rows if r.get("status") in ("WIN", "LOSS")]
+    decisive = [r for r in rows if r.get("status") in (_WIN_STATUSES | _LOSS_STATUSES)]
     if not decisive:
         return None, 0
-    wins = sum(1 for r in decisive if r["status"] == "WIN")
+    wins = sum(1 for r in decisive if r["status"] in _WIN_STATUSES)
     return wins / len(decisive), len(decisive)
 
 
