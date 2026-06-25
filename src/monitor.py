@@ -1341,7 +1341,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 try:
                     ta.send(
                         f"✅ <b>{pair} has reached its first profit target</b>\n\n"
-                        f"40% of position banked at +{pips:.1f} pips.\n"
+                        f"35% of position banked at +{pips:.1f} pips.\n"
                         f"Stop loss moved to breakeven — this trade can no longer lose money.\n"
                         f"No action needed from you.\n\n"
                         f"Direction: {direction}  |  T1 price: {mprice}"
