@@ -60,7 +60,9 @@ def compute(
     regime = _read_regime()
     regime_base = _REGIME_BASE.get(regime, _DEFAULT_BASE)
 
-    # Factor 2: Win rate adjustment (last 20 decisive research trades)
+    # Factor 2: Win rate adjustment (last 50 decisive research trades)
+    # 50-trade window (~2-3 months at normal cadence) gives a stable signal;
+    # the old 20-trade window swung the threshold ±1.0 from a single bad week.
     n_decisive = 0
     n_wins = 0
     win_rate = None
@@ -73,10 +75,10 @@ def compute(
                 decisive.append(True)
             elif st == "LOSS":
                 decisive.append(False)
-            if len(decisive) >= 20:
+            if len(decisive) >= 50:
                 break
         n_decisive = len(decisive)
-        if n_decisive >= 10:
+        if n_decisive >= 20:
             n_wins = sum(decisive)
             win_rate = n_wins / n_decisive
             if win_rate > 0.55:
