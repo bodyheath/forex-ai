@@ -5307,12 +5307,24 @@ def _send_telegram_summary(
             else:
                 _log_line(log, f"[trend] WARNING {_yt_pair} — monthly_trend_aligned not available — allowing trade")
             # Loss journal — block or penalise setups matching past-loss patterns
+            _jrnl_e  = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
+            _jrnl_sl = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
+            _jrnl_ps = 0.01 if "JPY" in _yt_pair else 0.0001
+            _jrnl_sp = abs(_jrnl_e - _jrnl_sl) / _jrnl_ps if _jrnl_e and _jrnl_sl else 0.0
             _journal_check = _check_loss_journal(
                 pair=_yt_pair,
                 direction=_yt_dir_ta,
                 regime=_regime_str,
                 session=",".join(_get_current_session()),
                 weekly_trend=_trend_align.get("weekly_trend", "NEUTRAL"),
+                rsi=float(
+                    (_yt.get("bundle") or {})
+                    .get("technical", {})
+                    .get("daily", {})
+                    .get("rsi14") or 0
+                ),
+                stop_pips=_jrnl_sp,
+                confidence=_yt_conf_val,
                 log_fn=lambda m: _log_line(log, m),
             )
             if _journal_check["blocked"]:
