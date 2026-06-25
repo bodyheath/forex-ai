@@ -5155,7 +5155,7 @@ def _send_telegram_summary(
             FUND_TRADE_MIN_CONF = 7.5
         else:
             FUND_TRADE_MIN_CONF = 7.0
-        FUND_MIN_RR = 1.5
+        FUND_MIN_RR = 2.5
         _log_line(log, (
             f"[fund] Filters: min_conf={FUND_TRADE_MIN_CONF} "
             f"min_rr={FUND_MIN_RR} "
