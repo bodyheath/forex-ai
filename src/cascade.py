@@ -94,10 +94,19 @@ def compute_levels(entry, stop_loss, target, direction, atr=None,
         t1 = e + t1_m * use_atr
         t2 = e + t2_m * use_atr
         t3 = (e + t3_mult * use_atr) if t3_mult is not None else t
+        # Ensure T3 clears the T3_MIN_MULT floor (must be above T2)
+        if t3 is not None:
+            t3_floor = e + T3_MIN_MULT * use_atr
+            if t3 < t3_floor:
+                t3 = t3_floor
     elif d == "SELL":
         t1 = e - t1_m * use_atr
         t2 = e - t2_m * use_atr
         t3 = (e - t3_mult * use_atr) if t3_mult is not None else t
+        if t3 is not None:
+            t3_floor = e - T3_MIN_MULT * use_atr
+            if t3 > t3_floor:
+                t3 = t3_floor
     else:
         return None, None, t
 
