@@ -1565,6 +1565,50 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 log(f"  Monitor: safety-net check failed for #{rec_id}: {_sn_exc}")
             closed_rows.append(updated)
             _online_learn_closure("main", updated)
+            # Loss autopsy — analyse why this trade failed
+            if casc_oc == "LOSS":
+                log("[loss-analysis] Pure loss — running autopsy...")
+                try:
+                    _loss_trade_data = dict(row)
+                    _loss_trade_data["exit_price"] = mprice
+                    _analysis = _analyse_loss(
+                        trade=_loss_trade_data,
+                        prices=prices,
+                        log_fn=log,
+                    )
+                    if _analysis:
+                        _save_loss_analysis(analysis=_analysis, log_fn=log)
+                        # Send Discord alert for this loss
+                        try:
+                            if _dn:
+                                _loss_dols = 0.0
+                                try:
+                                    _sz_pct_la = float(row.get("position_size_pct_at_entry") or 1.0)
+                                    _bal_la    = 10000.0
+                                    try:
+                                        from src import fund_state as _fs_la
+                                        _fs_la_data = _fs_la.load()
+                                        _bal_la = float(
+                                            _fs_la_data.get("balance") or
+                                            _fs_la_data.get("daily_opening_balance") or 10000
+                                        )
+                                    except Exception:
+                                        pass
+                                    _loss_dols = round(-(_sz_pct_la / 100.0 * _bal_la), 2)
+                                except Exception:
+                                    pass
+                                _dn.send_loss_analysis_alert(
+                                    trade_id=rec_id,
+                                    pair=pair,
+                                    direction=direction,
+                                    pips=float(updated.get("pips") or pips or 0),
+                                    dollars=_loss_dols,
+                                    analysis=_analysis,
+                                )
+                        except Exception as _la_dsc_err:
+                            log(f"[loss-analysis] Discord alert failed: {_la_dsc_err}")
+                except Exception as _la_err:
+                    log(f"[loss-analysis] Failed: {_la_err}")
             break   # trade closed
 
     return closed_rows
