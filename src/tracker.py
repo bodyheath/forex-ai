@@ -321,7 +321,7 @@ def update_outcome(rec_id: int, status: str, exit_price=None, notes: str = "",
         try:
             from src import trade_costs as _tc
             opened = datetime.strptime(target.get("timestamp", "")[:19], "%Y-%m-%d %H:%M:%S")
-            days_held = max(0.0, (datetime.now() - opened).total_seconds() / 86400)
+            days_held = max(0.0, (datetime.now(timezone.utc).replace(tzinfo=None) - opened).total_seconds() / 86400)
             net_pips = _tc.net_pips_for_closed_trade(
                 target.get("pair", ""),
                 target.get("direction", ""),
