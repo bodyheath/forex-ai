@@ -5402,6 +5402,13 @@ def _send_telegram_summary(
                 _blk_rgm = f"Regime: {_regime_str} — waiting for trending market"
                 _log_line(log, f"[regime] BLOCKING fund trade {_yt_pair} — regime is {_regime_str}")
                 _fund_st_blocked.append((_yt, _blk_rgm))
+                try:
+                    from src import tracker as _trk_rgm
+                    if _yt.get("id"):
+                        _trk_rgm.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                notes=f"Blocked: {_blk_rgm}")
+                except Exception:
+                    pass
                 continue
             # Pair history confidence adjustment (based on research win rate for this pair)
             try:
