@@ -21,18 +21,18 @@ import config
 _CONFIG_FILE = config.DATA_DIR / "threshold_config.json"
 
 _DEFAULTS = {
-    "confidence_threshold":  6,
-    "min_rr":                1.3,
-    "data_collection_mode":  True,
+    "confidence_threshold":  7,
+    "min_rr":                2.5,
+    "data_collection_mode":  False,
     "lowered_at":            "2026-06-09",
     "auto_revert_trades":    50,
     "auto_revert_win_rate":  0.45,
-    "reverted_at":           None,
-    "revert_reason":         None,
+    "reverted_at":           "2026-06-25",
+    "revert_reason":         "R:R restructure — T1/T2 raised to 1R/2R, min_rr raised to 2.5 to clear T2 floor",
 }
 
 _ORIGINAL_THRESHOLD = 7
-_ORIGINAL_MIN_RR    = 1.5
+_ORIGINAL_MIN_RR    = 2.5
 
 
 def load() -> dict:
