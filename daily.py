@@ -6591,7 +6591,7 @@ def _send_telegram_summary(
             pass
 
         _cl_fib_near = bool((_qg_tb or {}).get("fib_near", False))
-        _cl_rr_ok    = (rr_num is not None and rr_num >= 2.0)
+        _cl_rr_ok    = (rr_num is not None and rr_num >= 2.5)
         _cl_kz_ok    = bool((_kz_result or {}).get("aligned", False))
         _cl_hhhl_ok  = (_hhhl_aligned_tb == 1)
         _cl_div_ok   = (_div_type_tb not in ("NONE", None, ""))
