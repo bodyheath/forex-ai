@@ -98,7 +98,7 @@ def check_and_adjust(log=print):
     if win_rate >= min_wr:
         log(
             f"Threshold check: {total} trades, win rate {win_rate*100:.0f}% "
-            f">= {min_wr*100:.0f}% — conf-6 performing, keeping threshold at 6."
+            f">= {min_wr*100:.0f}% — thresholds performing, no change needed."
         )
         return None
 
