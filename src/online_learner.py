@@ -137,6 +137,14 @@ def partial_fit_trade(source_table: str, trade_id, outcome: str,
     meta["recent_win_rate"] = round(recent_wins / len(meta["recent_outcomes"]), 3)
 
     _save_meta(meta)
+
+    # Immediate retrain on loss — learn faster from mistakes
+    if label == 0:
+        try:
+            retrain_all_from_feature_store()
+        except Exception:
+            pass
+
     return True
 
 
