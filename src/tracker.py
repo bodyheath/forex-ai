@@ -98,11 +98,24 @@ def load() -> list:
 
 
 def _write_all(rows: list) -> None:
-    with config.TRADES_CSV.open("w", encoding="utf-8", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=FIELDS)
-        writer.writeheader()
-        for row in rows:
-            writer.writerow({k: row.get(k, "") for k in FIELDS})
+    """Write all rows atomically via .tmp → rename. Never truncates the live file."""
+    import shutil as _shutil_trk
+    import os as _os_trk
+    tmp = str(config.TRADES_CSV) + ".tmp"
+    try:
+        with open(tmp, "w", encoding="utf-8", newline="") as fh:
+            writer = csv.DictWriter(fh, fieldnames=FIELDS)
+            writer.writeheader()
+            for row in rows:
+                writer.writerow({k: row.get(k, "") for k in FIELDS})
+        _shutil_trk.move(tmp, str(config.TRADES_CSV))
+    except Exception:
+        try:
+            if _os_trk.path.exists(tmp):
+                _os_trk.unlink(tmp)
+        except Exception:
+            pass
+        raise
 
 
 def _next_id(rows: list) -> int:
