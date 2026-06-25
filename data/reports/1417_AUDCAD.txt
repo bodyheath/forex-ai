@@ -1,0 +1,26 @@
+```
+PAIR: AUD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD rate rise + CAD rate fall support BUY, but weak oscillator confluence, MTF conflict (monthly SELL vs D1 BUY), and AUD COT reversal cap confidence at breakeven.
+RISK_FACTORS: [1. MTF misalignment: monthly/weekly SELL conflicts with daily/4H BUY (conf=2/3, below 2/3 threshold); reversal risk if weekly dominates]. [2. AUD COT REVERSING from long: institutions unwinding conviction, contradicts BUY direction; reduces positioning conviction despite rate differential].
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.9846
+ENTRY_TRIGGER_REASON: Retest of D1 SMA50 (key support at 0.9846); requires MTF alignment confirmation (4H retest of broken resistance) and RSI >35 to reduce ambiguity.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical (5/10):**
+- D1 RSI=42.8 (neutral zone 35–45, trend-neutral) + T_sig=BUY_4 baseline =

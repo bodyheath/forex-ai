@@ -1,0 +1,23 @@
+```
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 5
+TECHNICAL_SCORE: 5
+FUNDAMENTAL_SCORE: 3
+SENTIMENT_SCORE: 4
+POSITIONING_SCORE: 4
+MACRO_SCORE: 5
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders pattern confirmed on both D1 and 4H with matching bearish signals, but MTF conflict (weekly BUY vs daily/4H SELL at 2/3) and neutral ribbon alignment limit conviction.
+RISK_FACTORS: [1] MTF disagreement — weekly uptrend contradicts daily/4H sell signals, reducing confluence below 3/3 threshold. [2] AUD COT reversing from short to long while your SELL trade shorts AUD exposure — institutional positioning flipping against trade direction.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do NOT both agree (2/3 < 2/3 threshold). Daily SELL conflicts with weekly BUY; confidence 5 falls below 6 minimum. Additionally, AUD positioning reversal creates headwind for short AUD leg.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS:**
+
+**MTF FAILURE (BLOCKING):** Your weekly chart says BUY (uptrend structure), but daily and 4H both say SELL (head-and-shoulders, RSI >55 in both). At 2/3 agreement, you do **not** meet the MTF rule

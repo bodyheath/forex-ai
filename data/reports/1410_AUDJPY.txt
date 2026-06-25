@@ -1,0 +1,25 @@
+```
+PAIR: AUD/JPY
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI oversold (35.8) at double-top support + AUD rate rising create BUY setup, but 4H downtrend and MTF conflict (W:SELL vs D:BUY) severely limit conviction.
+RISK_FACTORS: [1] MTF misalignment: weekly SELL conflicts daily BUY; conf=2/3 fails MTF threshold — trade violates MTF rule (weekly AND daily must both agree). [2] AUD COT REVERSING from long conviction (institutional positioning flipping bearish mid-week) contradicts BUY direction — reduces CONFIDENCE by 1 and signals institutional exit risk.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly=SELL, Daily=BUY; conf=2/3 < 2/3 threshold. Weekly and daily do NOT both agree. Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**Detailed Scorecard:**
+
+| Layer | Score | Rationale |
+|-------|-------|-----------|
+| **TECHNICAL** | 5/10 | D1 T_sig=BUY

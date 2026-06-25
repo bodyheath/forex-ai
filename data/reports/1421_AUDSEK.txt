@@ -1,0 +1,25 @@
+PAIR: AUD/SEK
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern at resistance conflicts with aligned bullish ribbon and rising AUD rates; COT reversal from long to short AUD weakens conviction despite T_sig=SELL_4.
+RISK_FACTORS: [1] MTF agreement only 2/3 (4H neutral breaks consensus; W+D+M agree SELL but 4H inside_bar neutral weakens alignment below 3/3 threshold), [2] COT positioning reversing short (institutions unwinding conviction) contradicts trade direction, raising reversal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF conf=2/3 fails ≥3/3 requirement; TRADE_THIS rule mandates NO when weekly+daily don't both align with 4H confirmation or 4H conflicts directional consensus.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS DETAIL:**
+
+1. **TECHNICAL_SCORE: 4/10**
+   - D1 RSI=59.5 → 55–65 band = 4–5 SELL (apply 4, midpoint lower)
+   - MACD histogram +0.0070

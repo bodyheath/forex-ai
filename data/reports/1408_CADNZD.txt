@@ -1,0 +1,23 @@
+```
+PAIR: CAD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level + head-and-shoulders pattern + oversold oscillators (RSI 68.5, Stoch 87.7) suggest bearish reversal, but MTF conflict (weekly neutral vs daily/4H sell) and fundamental weakness in both rates limit conviction.
+RISK_FACTORS: [1. MTF disagreement: weekly is neutral while daily and 4H are sell — only 2/3 agreement fails the MTF rule threshold; reversal risk if weekly rejuvenates. 2. Fundamental headwinds mutual: both CAD and NZD rates falling equally (diff=-0.34%) removes directional bias; FUND_SCORE penalized for lack of conviction.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.2410
+ENTRY_TRIGGER_REASON: Sell below SMA50 (1.2348) only if price breaks and closes below 1.2410 (mid-range support) on daily candle to confirm reversal; wait for weekly alignment or stronger fundamental divergence first.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Rationale:**
+
+- **TECHNICAL_SCORE 6/10**: RSI 60.

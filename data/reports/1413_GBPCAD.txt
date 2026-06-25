@@ -1,0 +1,28 @@
+# GBP/CAD ANALYSIS
+
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 3/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: T_sig=SELL_3 conflicts with uptrend structure and MTF agreement failure (M:SELL vs W/D/4H:NEUTRAL = 1/3 only); ribbon converging signals trend weakening but insufficient confluence for confidence >3.
+RISK_FACTORS: [1. MTF CONFLICT — only monthly agrees SELL; weekly+daily both NEUTRAL breaks MTF rule (require both daily AND weekly alignment for TRADE_THIS=YES). 2. RIBBON CONVERGING — EMAs tightening indicates trend exhaustion/reversal risk; uptrend is fragile despite price > SMA50 > SMA200.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W+D do not both agree on SELL direction (conf=1/3 << 2/3 threshold). D1 T_sig=SELL_3 is overridden by lack of daily+weekly alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+## REASONING
+
+**Technical Layer (Score 4/10):**
+- D1 RSI=56.5
