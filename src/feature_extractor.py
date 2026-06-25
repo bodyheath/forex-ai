@@ -765,6 +765,8 @@ def extract(pair: str, parsed: dict, bundle: dict,
 
     hour_auckland = hour_ak
     vix_level_val = _safe(extra_data.get("vix_at_entry"), 0.0)
+    if vix_level_val == 0.0:
+        vix_level_val = extra_vix_from_bundle(bundle)
     regime_str    = (extra_data.get("market_regime") or "").lower()
     is_ranging    = 1.0 if "ranging" in regime_str else 0.0
     fund_tail_high = 1.0 if (fund_aligned_count >= 3 and fa_str.upper() == "TAILWIND") else 0.0
