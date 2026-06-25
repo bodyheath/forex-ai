@@ -1749,6 +1749,135 @@ def _analyse_pair(pair: str, log, force_deep: bool = False,
         return None
 
 
+# ── Currency consensus post-processing ────────────────────────────────────────
+
+def _apply_currency_consensus(deep_results: list, threshold: int, log) -> int:
+    """Adjust each result's confidence by ±1 based on cross-pair currency consensus.
+
+    After all pairs are analysed, we aggregate directional signals across results
+    to compute a net bullish/bearish score for each currency. A pair whose direction
+    aligns with the consensus (e.g. BUY EUR/USD when EUR is broadly bullish and USD
+    broadly bearish across other pairs) gets +1 confidence. A pair that contradicts
+    the consensus gets -1.
+
+    Rules:
+    - Requires ≥4 deep results with known direction; otherwise skips (no consensus).
+    - Each result contributes weight = (confidence - 4) to the currency score, so
+      low-confidence results have near-zero influence and high-confidence ones drive
+      the consensus. Results with confidence < 5 are excluded from voting.
+    - A pair's own signal is excluded from the consensus used to judge it (no self-reinforcement).
+    - Consensus is only decisive when net_support > 4 (+1) or < -4 (-1); anything
+      in between is noise and produces no adjustment.
+    - Final confidence is clamped to [1, 10].
+    - TRADE_THIS is NOT modified — consensus only shifts watch-list ranking and
+      display. A pair already below threshold can surface higher; a trade already
+      approved is not revoked.
+
+    Returns the count of results adjusted.
+    """
+    # Need at least 4 results to form a meaningful consensus
+    eligible = [
+        r for r in deep_results
+        if (_conf(r) or 0) >= 5
+        and (r.get("parsed") or {}).get("direction") in ("BUY", "SELL")
+        and r.get("pair")
+    ]
+    if len(eligible) < 4:
+        return 0
+
+    # Build global currency score map (all eligible results combined)
+    def _pair_ccys(pair: str):
+        clean = pair.upper().replace("/", "").replace("-", "")
+        if len(clean) < 6:
+            return None, None
+        return clean[:3], clean[3:6]
+
+    global_score: dict = {}
+    for r in eligible:
+        base, quote = _pair_ccys(r["pair"])
+        if not base or not quote:
+            continue
+        pp   = r["parsed"]
+        conf = _conf(r) or 5
+        w    = float(conf - 4)
+        if pp["direction"] == "BUY":
+            global_score[base]  = global_score.get(base,  0.0) + w
+            global_score[quote] = global_score.get(quote, 0.0) - w
+        else:  # SELL
+            global_score[base]  = global_score.get(base,  0.0) - w
+            global_score[quote] = global_score.get(quote, 0.0) + w
+
+    # Currencies with only one pair in the universe give trivial "consensus" —
+    # require a currency appears in at least 2 eligible results before we trust it.
+    ccy_pair_count: dict = {}
+    for r in eligible:
+        base, quote = _pair_ccys(r["pair"])
+        for c in (base, quote):
+            if c:
+                ccy_pair_count[c] = ccy_pair_count.get(c, 0) + 1
+
+    adjustments = 0
+    for r in deep_results:
+        pp = r.get("parsed")
+        if not pp:
+            continue
+        direction = (pp.get("direction") or "").upper()
+        if direction not in ("BUY", "SELL"):
+            continue
+        base, quote = _pair_ccys(r.get("pair", ""))
+        if not base or not quote:
+            continue
+
+        # Build leave-one-out score (exclude this result's own contribution)
+        own_conf = _conf(r) or 5
+        own_w    = float(own_conf - 4) if own_conf >= 5 else 0.0
+        if direction == "BUY":
+            base_excl  = global_score.get(base,  0.0) - own_w
+            quote_excl = global_score.get(quote, 0.0) + own_w
+        else:
+            base_excl  = global_score.get(base,  0.0) + own_w
+            quote_excl = global_score.get(quote, 0.0) - own_w
+
+        # Skip if either currency has too few peers to form a real consensus
+        if ccy_pair_count.get(base, 0) < 2 or ccy_pair_count.get(quote, 0) < 2:
+            continue
+
+        # Net support: positive = consensus agrees with this trade direction
+        # BUY BASE/QUOTE: base should be bullish (base_excl > 0) and quote bearish (quote_excl < 0)
+        if direction == "BUY":
+            net_support = base_excl + (-quote_excl)
+        else:  # SELL BASE/QUOTE
+            net_support = (-base_excl) + quote_excl
+
+        if net_support > 4:
+            adj = +1
+        elif net_support < -4:
+            adj = -1
+        else:
+            continue
+
+        old_conf = pp.get("confidence") or 5
+        new_conf = max(1, min(10, old_conf + adj))
+        if new_conf == old_conf:
+            continue
+
+        pp["confidence"] = new_conf
+        pp["consensus_adj"] = adj
+        adjustments += 1
+        direction_str = "agrees" if adj > 0 else "contradicts"
+        _log_line(log,
+            f"[CONSENSUS] {r['pair']} {direction}: cross-pair {direction_str} "
+            f"(base={base_excl:+.1f}, quote={quote_excl:+.1f}, net={net_support:+.1f}) "
+            f"→ conf {old_conf}→{new_conf}"
+        )
+
+    if adjustments:
+        _log_line(log, f"[CONSENSUS] {adjustments} pair(s) confidence adjusted by cross-pair currency consensus")
+    else:
+        _log_line(log, "[CONSENSUS] No consensus adjustments (signals balanced or insufficient peer data)")
+    return adjustments
+
+
 # ── Telegram context helpers ───────────────────────────────────────────────────
 
 def _derive_market_context(deep_results: list, risk_data: dict) -> dict:
