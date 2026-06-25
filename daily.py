@@ -5101,6 +5101,26 @@ def _send_telegram_summary(
                         "reason":    f"Circuit breaker ({_cb_losses} losses)",
                     })
                 continue
+            # ── DATA VALIDATION GATE — runs before any other market filter ────
+            _yt_dir_dv = (_yt_parsed.get("direction") or "").upper()
+            _data_val = _validate_trade_data(
+                parsed=_yt_parsed,
+                pair=_yt_pair,
+                direction=_yt_dir_dv,
+                bundle=(_yt.get("bundle") or {}),
+                log_fn=lambda m: _log_line(log, m),
+            )
+            if not _data_val["valid"]:
+                _log_line(log, (
+                    f"[validate-data] BLOCKED {_yt_pair} "
+                    f"— data quality failures: {_data_val['failures']}"
+                ))
+                _yt_parsed["trade_this"] = "NO"
+                _yt_parsed["block_reason"] = (
+                    f"Data validation: {_data_val['failures'][0]}"
+                    if _data_val["failures"] else "Data validation failed"
+                )
+                continue
             # Regime filter — no fund trades in ranging/risk-off
             if any(r in _regime_str for r in _REGIME_BLOCK):
                 _blk_rgm = f"Regime: {_regime_str} — waiting for trending market"
