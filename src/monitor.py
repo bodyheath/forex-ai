@@ -1552,7 +1552,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 import pandas as _pd_fin
                 from src.trading import financials as _fin
                 _df_fin = _pd_fin.read_csv(str(config.TRADES_CSV), encoding="utf-8-sig")
-                _prices_fin = prices  # use live prices already fetched this run
+                _prices_fin = prices or {}  # passed from run() — never NameError
                 _state_fin = _fin.calculate_fund_state(_df_fin, _prices_fin)
                 _ok_fin = _fin.sync_fund_state_json(_state_fin)
                 log(f"  Monitor fund #{rec_id} {pair}: fund_state synced — "
