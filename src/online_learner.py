@@ -253,7 +253,8 @@ def retrain_all_from_feature_store(log=None) -> dict:
             X = np.array([[float(feat_row.get(c) or 0.0) for c in FEATURE_COLS]])
             scaler.partial_fit(X)
             X_s = scaler.transform(X)
-            weight = _recency_weight(closed_at) if closed_at else 0.5
+            r_mult = _R_WEIGHTS.get(status, 0.70)
+            weight = (_recency_weight(closed_at) * r_mult) if closed_at else (0.5 * r_mult)
             clf.partial_fit(X_s, [label], classes=[0, 1], sample_weight=[weight])
             history.append({"label": label, "ts": (closed_at or "")[:10]})
             trained += 1
