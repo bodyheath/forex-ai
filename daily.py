@@ -11247,6 +11247,53 @@ def run() -> int:
                     import sys as _sys_cl
                     print(f"[rt-ml] checklist_score failed for {r_result['pair']}: {_e_cl_rt}", file=_sys_cl.stderr)
 
+                # ── Enrich _extra_rt with fund stress, regime bonus, and pair stats ──
+                # Fund stress at the moment this trade is being considered
+                _extra_rt["fund_consecutive_losses"] = _ml_fund_state.get("consecutive_losses", 0)
+                _extra_rt["fund_drawdown_pct"]       = _ml_fund_state.get("current_drawdown_pct", 0.0)
+                _extra_rt["fund_sizing_mode"]        = _ml_fund_state.get("sizing_mode", "normal")
+                _extra_rt["open_trades_count"]       = _ml_open_count
+
+                # Regime alignment bonus for this specific pair
+                try:
+                    _rt_bonus_parts = r_result["pair"].split("/")
+                    if len(_rt_bonus_parts) == 2:
+                        from src import market_regime as _mr_bonus_rt
+                        _extra_rt["regime_pair_bonus"] = _mr_bonus_rt.regime_currency_bonus(
+                            _regime_rt,
+                            _rt_bonus_parts[0].upper(),
+                            _rt_bonus_parts[1].upper(),
+                        )
+                except Exception:
+                    pass
+
+                # Per-pair historical win rate and sample count
+                try:
+                    _rt_pair_perf = _pair_perf_map.get(r_result["pair"], {})
+                    if isinstance(_rt_pair_perf, dict):
+                        _extra_rt["pair_win_rate"]  = _rt_pair_perf.get("wr", 0.5)
+                        _extra_rt["pair_n_samples"] = _rt_pair_perf.get("n", 0)
+                except Exception:
+                    pass
+
+                # VIX level from macro bundle (fills the always-zero gap)
+                try:
+                    from src.feature_extractor import extra_vix_from_bundle as _evib_rt
+                    _extra_rt["vix_at_entry"] = _evib_rt(_bundle_rt)
+                except Exception:
+                    pass
+
+                # DXY direction derived from USD currency strength score
+                try:
+                    if _ccy_strength and "USD" in _ccy_strength:
+                        _usd_score = float(_ccy_strength["USD"].get("score", 0) or 0)
+                        _extra_rt["dxy_direction"] = (
+                            "rising" if _usd_score > 20 else
+                            "falling" if _usd_score < -20 else "flat"
+                        )
+                except Exception:
+                    pass
+
                 # Check for inverse pair conflict — BLOCK research trade if inverse already open
                 _rt_inv_blocked = False
                 try:
