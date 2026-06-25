@@ -71,8 +71,8 @@ def analyse_and_log(
                 log(f"[service] BLOCKING trade — {_inv_warn}")
                 parsed["trade_this"] = "NO"
                 result["inverse_blocked"] = _inv_warn
-        except Exception:
-            pass
+        except Exception as _e:
+            log(f"[service] inverse-check error: {_e}")
 
     # Check currency concentration — max 2 open fund trades per currency
     if parsed.get("trade_this") == "YES":
@@ -84,8 +84,8 @@ def analyse_and_log(
                 log(f"[service] CONCENTRATION BLOCK — {_conc_warn}")
                 parsed["trade_this"] = "NO"
                 result["concentration_warning"] = _conc_warn
-        except Exception:
-            pass
+        except Exception as _e:
+            log(f"[service] concentration-check error: {_e}")
 
     rec_id = tracker.log_recommendation(
         result["pair"], parsed, result["availability"]["count"], result["report"]
