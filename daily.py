@@ -2391,7 +2391,7 @@ def _grade_display_line(qg: dict) -> str:
             badges.append("W/D conflict")
         if qg.get("rib_against"):
             badges.append("ribbon against")
-        if rr < 1.5:
+        if rr < 2.5:
             badges.append("low R:R")
 
     return f"{qg['icon']} <b>Grade {grade} — {qg['label']}</b>  {' · '.join(badges)}"
