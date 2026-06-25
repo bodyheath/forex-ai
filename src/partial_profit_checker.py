@@ -192,7 +192,7 @@ def run(open_trades: list, price_cache: dict, log=print) -> None:
                 "stage": 2,
                 "partial_close_price":     round(price, 6),
                 "partial_close_pips":      round(pips, 1),
-                "partial_close_timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "partial_close_timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
             })
             state_changed = True
             log(f"  #{trade_id} {pair}: Stage 2 — 50% partially closed at {price} (+{pips:.1f} pips)")
