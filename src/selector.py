@@ -41,21 +41,22 @@ import requests
 import config
 from src import cache
 
-# Fallback universe when Twelve Data /forex_pairs is unavailable.
+# Curated universe: all 28 G8 pairs (7 USD-majors + 21 G8 crosses).
+# Every pair here has tight spreads, high liquidity, and clean-trending price action.
+# Static — no API fetch required. Exotics, Scandinavian, and Asian crosses excluded.
 UNIVERSE = [
-    # G8 majors
+    # G7/G8 majors (USD leg)
     "EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "USD/CAD", "AUD/USD", "NZD/USD",
-    # G8 crosses
-    "EUR/JPY", "GBP/JPY", "AUD/JPY", "CAD/JPY", "CHF/JPY",
-    "EUR/GBP", "EUR/AUD", "EUR/CAD", "EUR/CHF",
-    "GBP/AUD", "GBP/CAD", "GBP/CHF",
-    "AUD/CAD", "AUD/NZD",
-    # G10 Scandinavian (NOK, SEK)
-    "EUR/NOK", "USD/NOK", "GBP/NOK",
-    "EUR/SEK", "USD/SEK", "GBP/SEK",
-    # Liquid Asian (SGD, HKD)
-    "USD/SGD", "EUR/SGD", "GBP/SGD", "SGD/JPY",
-    "USD/HKD", "EUR/HKD",
+    # EUR crosses
+    "EUR/JPY", "EUR/GBP", "EUR/CHF", "EUR/CAD", "EUR/AUD", "EUR/NZD",
+    # GBP crosses
+    "GBP/JPY", "GBP/CHF", "GBP/CAD", "GBP/AUD", "GBP/NZD",
+    # JPY crosses
+    "CAD/JPY", "AUD/JPY", "NZD/JPY", "CHF/JPY",
+    # Remaining G8 crosses
+    "AUD/CAD", "AUD/CHF", "AUD/NZD",
+    "NZD/CAD", "NZD/CHF",
+    "CAD/CHF",
 ]
 
 _SESSION_UTC = {
