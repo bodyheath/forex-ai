@@ -18,7 +18,7 @@ print()
 
 print('TOP LOSS PATTERNS:')
 for pat, count in sorted(patterns.items(), key=lambda x: x[1], reverse=True):
-    bar = '█' * count
+    bar = '#' * count
     print(f'  {pat:<20} {bar} ({count}x)')
 
 print()
