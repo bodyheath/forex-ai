@@ -502,7 +502,7 @@ def _check_loss_journal(
             rule_matched = True
         elif _regime_ranging and "ranging" in regime_l:
             rule_matched = True
-        elif _wt_missing and wt_l in ("", "null", "none", "unknown", "neutral"):
+        elif _wt_missing and wt_l in ("", "null", "none", "unknown"):
             rule_matched = True
         elif _wt_bullish_only and dir_l == "buy" and wt_l not in ("buy", "bullish", "up"):
             rule_matched = True
