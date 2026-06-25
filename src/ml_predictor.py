@@ -180,10 +180,10 @@ def _soft_weight(status: str, trade_row: dict) -> float:
     informative and is weighted 0.85 rather than 0.4.
     """
     s = status.upper()
-    if s == "WIN":
-        return 1.0
+    if s in ("WIN", "FULL_WIN"):
+        return 1.0   # full/near-full R banked — strongest signal
     if s == "PARTIAL_WIN":
-        return 0.7   # solid win but only partial target — high quality signal
+        return 0.55  # only 0.35R banked — weaker directional signal (R-proportional)
     if s == "LOSS":
         return 1.0   # definitive loss — full training weight
     if s in ("EXPIRED", "EXPIRED_PROFITABLE", "EXPIRED_LOSS", "EXPIRED_NEUTRAL"):
