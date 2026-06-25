@@ -33,3 +33,9 @@ data/price_cache.json
 
 # Claude Code artifacts
 .claude/
+
+# ML model pickle files — never commit (security risk)
+*.pkl
+data/*.pkl
+data/fund_online_model.pkl
+data/online_model.pkl

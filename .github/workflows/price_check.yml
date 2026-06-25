@@ -53,10 +53,28 @@ jobs:
         run: |
           git config user.name "forex-ai[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/partial_profit_state.json data/trades.csv
-          git diff --staged --quiet || git commit -m "chore: price check $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          git add data/partial_profit_state.json data/trades.csv data/fund_state.json 2>/dev/null || true
+          git add data/discord_dashboard.json 2>/dev/null || true
+          git diff --staged --quiet && exit 0
+          git commit -m "chore: price check $(date -u +'%Y-%m-%d %H:%M UTC')"
+          PUSHED=false
+          for i in 1 2 3; do
+            if ! git pull --rebase -X ours origin main 2>&1; then
+              git rebase --abort 2>/dev/null || true
+              git pull --no-rebase -X ours origin main 2>&1 || true
+            fi
+            if git push origin HEAD:main 2>&1; then
+              echo "Push succeeded on attempt $i"
+              PUSHED=true
+              break
+            fi
+            echo "Push attempt $i failed — waiting $((i * 5)) seconds"
+            sleep $((i * 5))
+          done
+          if [ "$PUSHED" = "false" ]; then
+            echo "All 3 push attempts failed"
+            exit 1
+          fi
 
   notify-failure:
     needs: check
