@@ -2183,13 +2183,17 @@ def _check_pending_trades(prices: dict, log_fn=None) -> list:
         if not triggered:
             continue
 
-        # Check fund capacity (max 4 open trades)
+        # Check fund capacity — respect 5th-slot tiered override if trade was approved as one
         currently_open = len(df[
             (df["trade_this"].astype(str).str.strip().str.upper() == "YES") &
             (df["status"] == "OPEN")
         ])
-        if currently_open >= 4:
-            _log(f"[pending] #{trade_id} {pair} trigger hit but fund at capacity {currently_open}/4 — extending expiry 24h")
+        _pend_conf     = float(t.get("confidence") or 0)
+        _pend_override = str(t.get("capacity_override", "")).upper() in ("TRUE", "YES", "1")
+        _pend_cap      = 5 if (_pend_override and _pend_conf >= 7.5) else 4
+        if currently_open >= _pend_cap:
+            _log(f"[pending] #{trade_id} {pair} trigger hit but fund at capacity "
+                 f"{currently_open}/{_pend_cap} — extending expiry 24h")
             try:
                 new_expiry = datetime.now(timezone.utc) + timedelta(hours=24)
                 df.loc[idx, "entry_trigger_expiry"] = new_expiry.strftime("%Y-%m-%d %H:%M:%S")
