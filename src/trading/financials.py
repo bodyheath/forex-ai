@@ -655,7 +655,7 @@ def _open_trade_summary(row, prices: dict, running_balance: float = STARTING_BAL
         if t2h:
             pnl_note = "T1+T2 banked · 30% running"
         elif t1h:
-            pnl_note = "T1 banked · 60% running"
+            pnl_note = "T1 banked · 65% running"
         else:
             pnl_note = "Full position running"
 
