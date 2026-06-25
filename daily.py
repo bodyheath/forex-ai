@@ -11440,6 +11440,10 @@ def run() -> int:
                     f"⚠️ <b>{scan_mode.upper()} scan complete but summary build failed</b>\n"
                     f"{type(_tg_exc).__name__}: {str(_tg_exc)[:200]}"
                 )
+        # These are locals of _send_telegram_summary — init safe defaults for Discord report.
+        _blocked_setups = []
+        _swapped_setups = []
+        _override_pairs = {}
         try:
             if _discord:
                 _log_line(log, "[discord] Preparing scan report data...")
