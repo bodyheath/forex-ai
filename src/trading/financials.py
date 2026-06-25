@@ -83,13 +83,19 @@ def parse_utc_dt(s: Any) -> Optional[datetime]:
         return None
 
 
+def _nzt_offset_hours() -> int:
+    """Auckland DST-aware UTC offset. NZST May–Sep = UTC+12; NZDT Oct–Apr = UTC+13."""
+    m = datetime.now(timezone.utc).month
+    return 13 if (m >= 10 or m <= 4) else 12
+
+
 def _auckland_today() -> str:
     """Return today's date string in Auckland time (UTC+12 or UTC+13 in DST)."""
     try:
         from zoneinfo import ZoneInfo
         nzt = datetime.now(ZoneInfo("Pacific/Auckland"))
     except Exception:
-        nzt = datetime.now(timezone.utc) + timedelta(hours=12)
+        nzt = datetime.now(timezone.utc) + timedelta(hours=_nzt_offset_hours())
     return nzt.strftime("%Y-%m-%d")
 
 
