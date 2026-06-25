@@ -99,6 +99,16 @@ FEATURE_COLS = [
     "max_target_reached",       # 0=none, 1=T1 only, 2=T2, 3=T3/FULL_WIN
     "pips_at_t1",               # pip distance from entry to T1 (ATR × 0.4 / pip_size)
     "trade_closed_at_t1_only",  # 1 if T1 hit but T2 not hit and trade is PARTIAL_WIN
+    # ── Fund stress context at entry ───────────────────────────────────────────
+    "fund_consecutive_losses",  # current loss streak 0-10 (0=fresh, 3=pause threshold)
+    "fund_drawdown_pct",        # portfolio drawdown from peak 0.0-15.0
+    "fund_sizing_mode_num",     # 0=normal, 1=drawdown_caution, 2=protection, 3=paused
+    "open_trades_count",        # open fund trades at entry time 0-5
+    # ── Regime-pair alignment ──────────────────────────────────────────────────
+    "regime_pair_bonus",        # 0=no alignment, 4=partial, 8=strong
+    # ── Per-pair historical performance ───────────────────────────────────────
+    "pair_win_rate",            # historical win rate for this exact pair 0.0-1.0 (0.5=unknown)
+    "pair_n_samples",           # number of historical trades on this pair (0=unknown)
 ]
 
 
