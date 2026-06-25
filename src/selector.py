@@ -137,7 +137,7 @@ _COUNTRY_CURRENCY = {
     "poland": "PLN", "hungary": "HUF", "czech republic": "CZK",
 }
 
-_PRICE_FETCH_LIMIT = 30
+_PRICE_FETCH_LIMIT = len(UNIVERSE)  # score all 28 curated pairs
 
 # Paths for dynamic booster state — persisted between scans
 _SCAN_SNAPSHOT_FILE  = config.DATA_DIR / "scan_price_snapshot.json"
