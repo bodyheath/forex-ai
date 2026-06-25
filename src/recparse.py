@@ -69,7 +69,9 @@ def _score(text: str):
     if not text or "UNAVAILABLE" in text.upper():
         return None
     n = _first_number(text)
-    return int(n) if n is not None else None
+    if n is None:
+        return None
+    return max(1, min(10, int(n)))
 
 
 def _reward_risk(text: str):
