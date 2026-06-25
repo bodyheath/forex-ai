@@ -87,7 +87,7 @@ OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "SKIPPED", "EXPIRED", "PARTIAL_W
 
 
 def _now() -> str:
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
 
 
 def load() -> list:
