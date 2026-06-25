@@ -5498,6 +5498,13 @@ def _send_telegram_summary(
                     _blk_mta = "Monthly trend misaligned (both timeframes confirmed)"
                     _log_line(log, f"[trend] BLOCKING {_yt_pair} — monthly trend NOT aligned")
                     _fund_st_blocked.append((_yt, _blk_mta))
+                    try:
+                        from src import tracker as _trk_mta
+                        if _yt.get("id"):
+                            _trk_mta.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                    notes=f"Blocked: {_blk_mta}")
+                    except Exception:
+                        pass
                     continue
             else:
                 _log_line(log, f"[trend] WARNING {_yt_pair} — monthly_trend_aligned not available — allowing trade")
