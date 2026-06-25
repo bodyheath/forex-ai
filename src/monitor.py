@@ -48,6 +48,156 @@ def _online_learn_closure(source_table: str, updated: dict) -> None:
     except Exception:
         pass
 
+
+def _analyse_loss(trade: dict, prices: dict, log_fn=None) -> dict:
+    """Use Claude Haiku to analyse why a trade lost and what to learn from it."""
+    _log = log_fn or print
+
+    pair      = str(trade.get("pair", ""))
+    direction = str(trade.get("direction", "")).upper()
+    entry     = float(trade.get("entry", 0) or 0)
+    exit_p    = float(trade.get("exit_price", 0) or 0)
+    pips      = float(trade.get("pips", 0) or 0)
+    conf      = float(trade.get("confidence", 0) or 0)
+    regime    = str(trade.get("regime_at_entry", "") or trade.get("market_regime", "") or "")
+    rsi       = float(trade.get("rsi_at_entry", 0) or 0)
+    weekly    = str(trade.get("weekly_trend_at_entry", "") or trade.get("weekly_trend", "") or "")
+    monthly   = str(trade.get("monthly_trend_at_entry", "") or trade.get("monthly_trend", "") or "")
+    stop_pips = float(trade.get("stop_pips_at_entry", 0) or 0)
+    rr        = float(trade.get("rr_at_entry", 0) or trade.get("reward_risk", 0) or 0)
+    session   = str(trade.get("session_at_entry", "") or "")
+    cons_l    = int(trade.get("consecutive_losses_at_entry", 0) or 0)
+
+    prompt = f"""You are a forex trading analyst.
+A trade just closed as a LOSS. Analyse why it failed and what should be learned.
+
+TRADE DETAILS:
+Pair: {pair}
+Direction: {direction}
+Entry: {entry:.5f}
+Exit: {exit_p:.5f}
+Loss: {pips:.1f} pips
+Confidence at entry: {conf}/10
+
+CONDITIONS AT ENTRY:
+Market regime: {regime}
+Session: {session}
+RSI: {rsi:.1f}
+Weekly trend: {weekly}
+Monthly trend: {monthly}
+Stop distance: {stop_pips:.0f} pips
+R:R ratio: {rr:.2f}
+Consecutive losses before this: {cons_l}
+
+Analyse this loss and respond in this EXACT format:
+
+ROOT_CAUSE: [one sentence — the main reason this trade failed]
+
+WARNING_SIGNS: [comma-separated list of signals present at entry that should have warned against this trade]
+
+WHAT_TO_AVOID: [one sentence — specific condition to avoid in future]
+
+RULE_TO_ADD: [one specific rule in IF/THEN format that would have prevented this loss. Example: IF regime=RANGING and direction opposes weekly trend THEN block trade]
+
+CONFIDENCE: [0.0-1.0 how confident you are in this analysis]"""
+
+    try:
+        import requests as _req
+        import os as _os
+        response = _req.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key":         _os.getenv("ANTHROPIC_API_KEY", ""),
+                "anthropic-version": "2023-06-01",
+                "content-type":      "application/json",
+            },
+            json={
+                "model":      "claude-haiku-4-5-20251001",
+                "max_tokens": 400,
+                "messages":   [{"role": "user", "content": prompt}],
+            },
+            timeout=30,
+        )
+
+        if response.status_code == 200:
+            text = response.json()["content"][0]["text"]
+            import re as _re
+            analysis = {
+                "trade_id":  trade.get("id"),
+                "pair":      pair,
+                "direction": direction,
+                "pips":      pips,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "raw_analysis": text,
+            }
+            for field, key in [
+                ("ROOT_CAUSE",   "root_cause"),
+                ("WHAT_TO_AVOID","what_to_avoid"),
+                ("RULE_TO_ADD",  "rule_to_add"),
+            ]:
+                m = _re.search(f"{field}:\\s*(.+?)(?=\\n[A-Z_]+:|$)", text, _re.DOTALL)
+                analysis[key] = m.group(1).strip() if m else ""
+
+            m_warn = _re.search(r"WARNING_SIGNS:\s*(.+?)(?=\n[A-Z_]+:|$)", text, _re.DOTALL)
+            analysis["warning_signs"] = (
+                [w.strip() for w in m_warn.group(1).split(",")]
+                if m_warn else []
+            )
+            m_conf = _re.search(r"CONFIDENCE:\s*([0-9.]+)", text)
+            analysis["confidence_in_analysis"] = float(m_conf.group(1)) if m_conf else 0.5
+
+            _log(f"[loss-analysis] {pair} {direction}: {analysis.get('root_cause', '')[:80]}")
+            return analysis
+
+        _log(f"[loss-analysis] API error: {response.status_code}")
+        return {}
+    except Exception as exc:
+        _log(f"[loss-analysis] Error: {exc}")
+        return {}
+
+
+def _save_loss_analysis(analysis: dict, log_fn=None) -> None:
+    """Append a loss analysis to data/loss_journal.json."""
+    _log = log_fn or print
+    import shutil as _sh
+    try:
+        journal_path = config.DATA_DIR / "loss_journal.json"
+        try:
+            journal = json.loads(journal_path.read_text(encoding="utf-8"))
+        except Exception:
+            journal = {"analyses": [], "extracted_rules": [], "pattern_counts": {}}
+
+        journal["analyses"].append(analysis)
+
+        # Track pattern frequency in root causes
+        root = analysis.get("root_cause", "")
+        if root:
+            patterns = journal.get("pattern_counts", {})
+            for word in ["ranging", "trend", "regime", "correlation", "oversold",
+                         "overbought", "session", "stop", "rr", "timing", "news", "spread"]:
+                if word.lower() in root.lower():
+                    patterns[word] = patterns.get(word, 0) + 1
+            journal["pattern_counts"] = patterns
+
+        # Deduplicate and append extracted rules
+        rule = analysis.get("rule_to_add", "")
+        existing_rules = [r.get("rule", "") for r in journal.get("extracted_rules", [])]
+        if rule and rule not in existing_rules:
+            journal["extracted_rules"].append({
+                "rule":               rule,
+                "pair":               analysis.get("pair"),
+                "added":              analysis.get("timestamp"),
+                "times_triggered":    0,
+                "times_prevented_loss": 0,
+            })
+
+        tmp = str(journal_path) + ".tmp"
+        Path(tmp).write_text(json.dumps(journal, indent=2), encoding="utf-8")
+        _sh.move(tmp, str(journal_path))
+        _log("[loss-analysis] Saved to loss_journal.json ✅")
+    except Exception as exc:
+        _log(f"[loss-analysis] Save error: {exc}")
+
 _PRICE_URL    = "https://api.twelvedata.com/price"
 _OHLCV_URL    = "https://api.twelvedata.com/time_series"
 _MONITOR_LOG  = config.DATA_DIR / "monitor_log.json"
