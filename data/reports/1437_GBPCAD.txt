@@ -1,0 +1,22 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Daily pin bar at key level with bearish MACD and D1 SELL signal conflicts with aligned bullish ribbon and uptrend structure; MTF agreement weak (1/3) creates indecision.
+RISK_FACTORS: (1) MTF conf=1/3 — only Daily agrees on SELL; Weekly and 4H neutral/mixed undermines conviction. (2) Ribbon fully aligned bullish (5/5) contradicts SELL direction — ribbon continuation would target higher despite T_sig=SELL_5.
+TRADE_THIS: NO
+
+**RATIONALE:**
+
+**MTF ENFORCEMENT (HARD RULE TRIGGERED):**
+MTF conf=1/3 (only D1:SELL; W:NEUTRAL, 4H:NEUTRAL). Per rule: *"if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless."* Weekly is NEUTRAL (not SELL), so MTF agreement fails. **Trade blocked.**
+
+**Technical Layer (score=5):**
+- **T_sig=SELL_5** (baseline) — but context reveals conflict:
+  - D1: RSI=57.2 in confirmed **UPTREND** (price > SMA50 > SMA200). Per RSI trend-context rule for uptrends

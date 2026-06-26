@@ -1,0 +1,24 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure (golden cross, IHS pattern) conflicts with MTF sell signal (M:SELL+W:SELL); fundamental AUD strength (rising rates, +1.80% diff) supports directional bias but COT institutional reversal from long creates execution risk.
+RISK_FACTORS: [1. MTF disagree: Monthly+Weekly SELL vs D1 NEUTRAL — only 1/3 MTF agreement (conf=45%) violates MTF rule for high-confidence trade entry; 2. AUD COT REVERSING from net long: institutions unwinding conviction, reducing positioning momentum despite fundamental strength — divergence between macro and institutional flow]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement insufficient (1/3 = 45% < 67% threshold). Monthly+Weekly signal SELL, but D1+4H NEUTRAL; cannot execute with confidence. Require W:SELL + D:SELL alignment before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL [4/10]:**
+- D1 RSI=56.5 (neutral zone
