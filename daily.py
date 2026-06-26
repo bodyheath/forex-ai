@@ -5389,6 +5389,7 @@ def _send_telegram_summary(
                 )
                 _yt_parsed["trade_this"] = "NO"
                 _yt_parsed["block_reason"] = _blk_dv
+                _fund_st_blocked.append((_yt, _blk_dv))
                 try:
                     from src import tracker as _trk_dv
                     if _yt.get("id"):
