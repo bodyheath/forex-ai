@@ -3,10 +3,12 @@ name: Intraday Forex Scans
 # Triggered exclusively by cron-job.org via workflow_dispatch.
 # No GitHub Actions built-in schedule — cron-job.org controls all timing.
 #
-# cron-job.org jobs:
-#   9:05am Mon-Fri  → scan_mode=morning   (cron: 5 21 * * 0-4 UTC)
-#   5:05pm Mon-Fri  → scan_mode=prelondon (cron: 5 5 * * 1-5 UTC)
-#   11:05pm Mon-Fri → scan_mode=preny     (cron: 5 11 * * 1-5 UTC)
+# cron-job.org jobs (all times Auckland NZST = UTC+12):
+#   9:05am  Mon-Fri → scan_mode=morning   (cron: 5 21 * * 0-4 UTC)  — Auckland morning setup
+#   5:05pm  Mon-Fri → scan_mode=prelondon (cron: 5 5 * * 1-5 UTC)   — 2h pre-London open
+#   7:05pm  Mon-Fri → scan_mode=london    (cron: 5 7 * * 1-5 UTC)   — London open momentum ← ADD
+#   11:05pm Mon-Fri → scan_mode=preny     (cron: 5 11 * * 1-5 UTC)  — 2h pre-NY open
+#   1:05am  Mon-Fri → scan_mode=nyopen    (cron: 5 13 * * 1-5 UTC)  — NY open momentum    ← ADD
 
 on:
   workflow_dispatch:
