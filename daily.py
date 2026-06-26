@@ -5284,12 +5284,19 @@ def _send_telegram_summary(
             FUND_TRADE_MIN_CONF = 7.5
         else:
             FUND_TRADE_MIN_CONF = 7.0
+        # Raise the bar after losses — demand higher confidence before circuit breaker fires.
+        # 1 loss: +0.5  |  2 losses: +1.0  |  3 losses: circuit breaker (hard halt)
+        if _consec_losses_fs >= 2:
+            FUND_TRADE_MIN_CONF = min(FUND_TRADE_MIN_CONF + 1.0, 8.5)
+        elif _consec_losses_fs == 1:
+            FUND_TRADE_MIN_CONF = min(FUND_TRADE_MIN_CONF + 0.5, 8.5)
         FUND_MIN_RR = 2.5
         _log_line(log, (
             f"[fund] Filters: min_conf={FUND_TRADE_MIN_CONF} "
             f"min_rr={FUND_MIN_RR} "
             f"regime={_regime_str!r} "
             f"consecutive_losses={_consec_losses_fs}"
+            + (f" (conf +{0.5 * min(_consec_losses_fs, 2):.1f} loss-streak penalty)" if _consec_losses_fs else "")
         ))
         # Per-pair win-rate lookup from research history (computed once, used inside loop)
         _pair_wr_lkp: dict = {}
