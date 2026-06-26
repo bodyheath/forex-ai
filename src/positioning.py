@@ -345,14 +345,16 @@ def _for_currency(ccy: str) -> dict:
     report_date = (rows[0].get("report_date_as_yyyy_mm_dd") or "")
     age = _days_old(report_date)
 
-    # FIX 3 Step 1: Permanently stale data (>365d e.g. USD Dollar Index frozen 2022)
+    # Permanently stale data (>365d e.g. USD Dollar Index frozen 2022)
     # is not a failure — return neutral score so it does not trigger the failure counter.
     if age is not None and age > 365:
-        print(
-            f"[COT] {market}: permanently stale ({age}d) — "
-            f"neutral score applied — not counted as failure",
-            file=sys.stderr,
-        )
+        if market not in _permanently_stale_logged:
+            _permanently_stale_logged.add(market)
+            print(
+                f"[COT] {market}: permanently stale ({age}d) — "
+                f"neutral score applied — not counted as failure",
+                file=sys.stderr,
+            )
         return {
             "currency": ccy,
             "status": "ok",
