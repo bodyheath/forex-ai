@@ -284,8 +284,8 @@ def check_inverse_open(pair: str, direction: str) -> str | None:
     return None
 
 
-def check_currency_concentration(pair: str, direction: str, max_per_ccy: int = 2) -> str | None:
-    """Return warning string if opening this trade would put >= max_per_ccy open trades on any one currency."""
+def check_currency_concentration(pair: str, direction: str, max_per_ccy: int = 1) -> str | None:
+    """Return warning string if opening this trade would exceed max_per_ccy open trades on any one currency."""
     try:
         cleaned = pair.upper().replace("/", "").replace("-", "")
         if len(cleaned) < 6:
@@ -301,7 +301,7 @@ def check_currency_concentration(pair: str, direction: str, max_per_ccy: int = 2
             if count >= max_per_ccy:
                 return (
                     f"WARNING: {ccy} already appears in {count} open fund trade(s) "
-                    f"(max {max_per_ccy}) — {pair} {direction.upper()} would add a 3rd {ccy} exposure"
+                    f"(max {max_per_ccy}) — {pair} {direction.upper()} would exceed the 1-per-currency limit"
                 )
     except Exception:
         pass
