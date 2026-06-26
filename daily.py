@@ -5983,6 +5983,19 @@ def _send_telegram_summary(
                             f"[ML] {_yt_pair} ML disagrees with AI — "
                             f"conf -{_ml_penalty} → {_yt_parsed.get('confidence', 0):.1f}"
                         ))
+                    # Hard block: ML win probability < 25% — model is highly confident this loses
+                    if _ol_prob < 0.25:
+                        _blk_ml = f"ML win probability too low ({_ol_prob:.1%})"
+                        _log_line(log, f"[ML] BLOCKING {_yt_pair} — {_blk_ml}")
+                        _fund_st_blocked.append((_yt, _blk_ml))
+                        try:
+                            from src import tracker as _trk_ml_blk
+                            if _yt.get("id"):
+                                _trk_ml_blk.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                           notes=f"Blocked: {_blk_ml}")
+                        except Exception:
+                            pass
+                        continue
             except Exception as _ml_err:
                 _log_line(log, f"[ML] prediction error for {_yt_pair}: {_ml_err}")
             _fund_st = _fs.increment_daily_trades(_fund_st)
