@@ -308,8 +308,8 @@ def retrain_all_from_feature_store(log=None) -> dict:
     _save_meta(meta)
 
     wr_str = f"{recent_wr:.0%}" if recent_wr is not None else "?"
-    _log(f"[online_learner] Bulk retrain complete: {trained} trades trained, "
-         f"{skipped} skipped, recent win rate {wr_str}")
+    _log(f"[online_learner] Bulk retrain complete: {trained} trades trained "
+         f"(research + fund), {skipped} skipped, recent win rate {wr_str}")
     return {"trained": trained, "skipped": skipped, "win_rate": recent_wr}
 
 
