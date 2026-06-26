@@ -31,6 +31,9 @@ STALE_DAYS = 14
 # this scan are skipped and pairs receive a neutral COT score.
 _cot_consecutive_failures: list = [0]   # mutable so _series_for can update it
 
+# Track permanently stale markets already logged this session to suppress noise.
+_permanently_stale_logged: set = set()
+
 
 def _cache_path_for_key(key: str) -> Path:
     """Return the disk Path for a cache key (mirrors cache._path_for internals)."""
