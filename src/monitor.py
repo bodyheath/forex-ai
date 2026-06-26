@@ -3606,11 +3606,14 @@ def run(log=print) -> dict:
             for _ct_t in _ct_rows:
                 _oc = _ct_t["outcome"]
                 if "WIN" in _oc:
-                    _ct_wins_row += 1; _ct_loss_row = 0
+                    if _ct_loss_row > 0:
+                        break
+                    _ct_wins_row += 1
                 elif "LOSS" in _oc:
-                    _ct_loss_row += 1; _ct_wins_row = 0
-                else:
-                    break
+                    if _ct_wins_row > 0:
+                        break
+                    _ct_loss_row += 1
+                # else: non-decisive (BREAKEVEN, EXPIRED_NEUTRAL, etc.) — skip
 
             _dn.update_closed_trades_log(
                 closed_trades=_ct_rows,
