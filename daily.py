@@ -12000,8 +12000,17 @@ def run() -> int:
                         _dsc_ml_rwr = float(_dsc_ml_meta.get("recent_win_rate") or 0) * 100
                         _dsc_ml_owr = float(_dsc_ml_meta.get("overall_win_rate") or 0) * 100
                         _dsc_ml_acc = _dsc_ml_owr
-                        # Model is ACTIVE only when all three gates pass
-                        _n_reliable  = int(_dsc_ml_meta.get("n_consecutive_reliable", 0) or 0)
+                        # Model is ACTIVE only when all three gates pass.
+                        # n_consecutive_reliable lives in the batch ml_predictor meta (ml_model_meta.json),
+                        # not in online_model_meta.json — read from the correct file.
+                        _n_reliable = 0
+                        try:
+                            _ml_pred_path = config.DATA_DIR / "ml_model_meta.json"
+                            if _ml_pred_path.exists():
+                                _ml_pred_meta = json.loads(_ml_pred_path.read_text(encoding="utf-8"))
+                                _n_reliable = int(_ml_pred_meta.get("n_consecutive_reliable", 0) or 0)
+                        except Exception:
+                            pass
                         _model_ready = bool(_dsc_ml_meta.get("model_ready", False))
                         _dsc_ml_act  = (
                             _model_ready
