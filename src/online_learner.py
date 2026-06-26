@@ -255,7 +255,11 @@ def retrain_all_from_feature_store(log=None) -> dict:
 
     for feat_row in research_rows:
         tid = str(feat_row.get("trade_id", ""))
-        status, closed_at = outcome_map.get(tid, ("", ""))
+        src = feat_row.get("source_table", "research")
+        if src == "main":
+            status, closed_at = fund_outcome_map.get(tid, ("", ""))
+        else:
+            status, closed_at = outcome_map.get(tid, ("", ""))
         status = (status or "").upper()
 
         if status in WIN_STATUSES:
