@@ -102,6 +102,24 @@ def compute_levels(entry, stop_loss, target, direction, atr=None,
     else:
         return None, None, t
 
+    # Enforce minimum R:R floors measured against stop distance.
+    # ATR-based multiples fall short of 1:1 when the AI sets a stop wider than
+    # 1× ATR (e.g. stop at 2.5× ATR makes T1=1×ATR only 0.4R).
+    # Guarantees: T1 ≥ 1:1, T2 ≥ 1.5:1, T3 ≥ 2:1 — regardless of ATR size.
+    if s is not None:
+        _sd = abs(e - s)
+        if _sd > 0:
+            if d == "BUY":
+                t1 = max(t1, round(e + _sd,       6))
+                t2 = max(t2, round(e + _sd * 1.5, 6))
+                if t3 is not None:
+                    t3 = max(t3, round(e + _sd * 2.0, 6))
+            else:  # SELL
+                t1 = min(t1, round(e - _sd,       6))
+                t2 = min(t2, round(e - _sd * 1.5, 6))
+                if t3 is not None:
+                    t3 = min(t3, round(e - _sd * 2.0, 6))
+
     return round(t1, 6), round(t2, 6), round(t3, 6) if t3 is not None else None
 
 
