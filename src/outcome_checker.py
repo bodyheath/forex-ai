@@ -120,6 +120,112 @@ def _determine_outcome(direction: str, price: float,
     return None
 
 
+def check_virtual_trades(log=print, price_cache: dict | None = None) -> int:
+    """Record virtual outcomes for NO_TRADE and SKIPPED setups to accelerate ML training.
+
+    These are setups the AI analyzed but didn't enter (no-trade decision or system block).
+    Tracking whether they would have worked gives the ML free training signal without
+    risking real money.  Runs after check_open_trades so pairs already in the price
+    cache cost no extra API calls.
+
+    Returns count of new virtual outcomes recorded this run.
+    """
+    from datetime import timedelta
+
+    rows = tracker.load()
+    cutoff = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(days=10)
+
+    candidates = []
+    for r in rows:
+        st = str(r.get("status", "")).upper()
+        if st not in ("NO_TRADE", "SKIPPED"):
+            continue
+        if "VIRTUAL_OUTCOME:" in str(r.get("notes", "")):
+            continue
+        if str(r.get("direction", "")).upper() not in ("BUY", "SELL"):
+            continue
+        e = _to_float(r.get("entry"))
+        s = _to_float(r.get("stop_loss"))
+        t = _to_float(r.get("target"))
+        if not all([e, s, t]) or e == 0 or s == 0 or t == 0:
+            continue
+        try:
+            ts = datetime.strptime(str(r.get("timestamp", ""))[:19], "%Y-%m-%d %H:%M:%S")
+            if ts < cutoff:
+                continue
+        except (ValueError, TypeError):
+            continue
+        candidates.append(r)
+
+    if not candidates:
+        return 0
+
+    log(f"Virtual outcome check: {len(candidates)} unresolved NO_TRADE/SKIPPED setup(s).")
+    recorded = 0
+    _last_api_t = 0.0
+
+    for row in candidates:
+        rec_id    = int(row.get("id", 0))
+        pair      = row.get("pair", "")
+        direction = str(row.get("direction", "")).upper()
+
+        try:
+            price = (price_cache or {}).get(pair)
+            if price is None:
+                _elapsed = time.time() - _last_api_t
+                if _last_api_t > 0 and _elapsed < _FETCH_DELAY:
+                    time.sleep(_FETCH_DELAY - _elapsed)
+                price = _fetch_live_price(pair)
+                _last_api_t = time.time()
+            if price is None:
+                continue
+
+            e = _to_float(row.get("entry"))
+            s = _to_float(row.get("stop_loss"))
+            t = _to_float(row.get("target"))
+
+            virtual_outcome = None
+            if direction == "BUY":
+                if price >= t:
+                    virtual_outcome = "WIN"
+                elif price <= s:
+                    virtual_outcome = "LOSS"
+            else:
+                if price <= t:
+                    virtual_outcome = "WIN"
+                elif price >= s:
+                    virtual_outcome = "LOSS"
+
+            if virtual_outcome is None:
+                continue  # setup still in play
+
+            # Mark as processed so we don't reprocess next run
+            existing = str(row.get("notes", ""))
+            new_notes = f"VIRTUAL_OUTCOME:{virtual_outcome} | {existing}".rstrip(" |")
+            tracker.update_fields(rec_id, notes=new_notes)
+
+            # Feed into online learner — succeeds if feature store has an entry for this trade
+            try:
+                from src import online_learner as _ol
+                _ol.partial_fit_trade(
+                    "main", rec_id, virtual_outcome,
+                    datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+                )
+            except Exception:
+                pass
+
+            log(f"  Virtual #{rec_id} {pair} {direction}: {virtual_outcome} "
+                f"(entry={e:.5f}, stop={s:.5f}, target={t:.5f}, price={price:.5f})")
+            recorded += 1
+
+        except Exception as exc:
+            log(f"  Virtual #{rec_id} {pair}: virtual check error — {exc}")
+
+    if recorded:
+        log(f"Virtual outcome check: {recorded} new virtual outcome(s) fed to ML.")
+    return recorded
+
+
 def check_open_trades(log=print, price_cache: dict | None = None) -> list:
     """Check all OPEN trades; close any that hit target/stop/expiry.
 
