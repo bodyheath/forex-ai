@@ -11800,6 +11800,20 @@ def run() -> int:
                 _dsc_szpct    = _dsc_tof(_dsc_fs.get("current_sizing_pct"), 1.0)
                 _dsc_cw       = int(_dsc_fs.get("consecutive_wins") or 0)
                 _dsc_cl       = int(_dsc_fs.get("consecutive_losses") or 0)
+                # fund_state.json can be stale (last written at previous trade close or monitor run).
+                # Recalculate the volatile daily fields fresh so the scan report is accurate.
+                try:
+                    from src.trading import financials as _dsc_fins
+                    _dsc_fresh_fs = _dsc_fins.calculate_fund_state()
+                    _dsc_dpnl_pct = _dsc_tof(_dsc_fresh_fs.get("daily_pnl_pct"), _dsc_dpnl_pct)
+                    _dsc_dpnl_d   = _dsc_tof(_dsc_fresh_fs.get("daily_pnl_dollars"), _dsc_dpnl_d)
+                    _dsc_dd       = _dsc_tof(_dsc_fresh_fs.get("current_drawdown_pct"), _dsc_dd)
+                    _dsc_bal      = _dsc_tof(_dsc_fresh_fs.get("balance"), _dsc_bal)
+                    _dsc_open_bal = _dsc_tof(_dsc_fresh_fs.get("daily_opening_balance"), _dsc_open_bal)
+                    _dsc_cw       = int(_dsc_fresh_fs.get("consecutive_wins") or _dsc_cw)
+                    _dsc_cl       = int(_dsc_fresh_fs.get("consecutive_losses") or _dsc_cl)
+                except Exception:
+                    pass  # fall back to cached values already set above
 
                 # ── Fund performance from trades.csv ─────────────────────────────
                 import pandas as _dsc_pd
