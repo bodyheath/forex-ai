@@ -10442,7 +10442,7 @@ def run() -> int:
                 _pns_data = json.loads(_wl_cache_path_pns.read_text(encoding="utf-8"))
                 _pns_list = _pns_data.get("priority_for_next_scan", [])
                 for _pns_p in (_pns_list or []):
-                    if _pns_p and _pns_p not in pairs_today:
+                    if _pns_p and _pns_p not in pairs_today and _pns_p in selector.UNIVERSE:
                         pairs_today.append(_pns_p)
                         _priority_from_wl.append(_pns_p)
                 if _priority_from_wl:
