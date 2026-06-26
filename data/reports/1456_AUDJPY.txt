@@ -1,0 +1,17 @@
+PAIR: AUD/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_BUY
+KEY_THESIS: Pin bar at key support (111.3) with triple oscillator confluence (RSI+Stoch+CCI all BUY) and institutional divergence (+5 SMD) suggest limited downside, but conflicted MTF (W:SELL vs D:BUY) and AUD COT reversal constrain confidence.
+RISK_FACTORS: (1) Weekly timeframe remains in confirmed SELL with death-cross structure (price < SMA50 < SMA200 on 4H); MTF agreement only 2/3 — daily BUY lacks weekly confirmation, reversing the "both timeframes agree" requirement. (2) AUD COT REVERSING from net long to net SHORT at 52% — institutions are reducing conviction precisely as you'd enter BUY; this flags positioning risk and reduces POSITIONING_SCORE to 4.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 111.30
+ENTRY_TRIGGER_REASON: Confluence of Fib SL (111.3), pin bar low, and RSI oversold (34.8) in downtrend context; only enter if weekly trend reverses above SMA50 (113.49) to confirm MTF alignment.
+ENTRY_

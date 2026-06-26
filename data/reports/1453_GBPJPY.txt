@@ -1,0 +1,27 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly downtrend and pin bar at resistance offer weak bearish structure, but neutral daily RSI and mixed ribbon alignment undermine conviction; range-bound setup with limited directional momentum.
+RISK_FACTORS: [1. MTF agreement only 1/3 (monthly SELL vs daily NEUTRAL) fails the dual-timeframe confirmation rule; 2. RSI 48.1 D1 + 53.8 4H both neutral-to-bullish (near midpoint), MACD negative but weak (−0.1573), oscillator confluence NONE — insufficient technical conviction for 7+ confidence.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do not both agree on direction (W:SELL, D:NEUTRAL → conf 1/3 < 2/3 threshold). Trade blocked regardless of other factors.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**DETAILED RATIONALE:**
+
+**1. MTF Alignment Check (HARD RULE — CRITICAL FAIL)**
+- Monthly: SELL | Weekly: SELL | Daily: NEUTRAL | 4H: NEUTRAL
+- Agreement: only

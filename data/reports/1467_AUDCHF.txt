@@ -1,0 +1,30 @@
+```
+PAIR: AUD/CHF
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+
+KEY_THESIS: AUD strength (rising rates + rising sentiment) + CHF weakness (falling rates) + inverse H&S + RSI recovery support a retest of 0.5622 SMA50, but weekly SELL disagrees and double-top pattern creates reversal risk at current levels.
+
+RISK_FACTORS: [1] MTF conflict: W:SELL vs D:BUY (conf=2/3 <threshold) weakens conviction; double-top bearish candle pattern contradicts bullish setup. [2] COT reversal in AUD (net SHORT reversing to unwind) and CHF building SHORT reduce positioning confidence; ATR=3.7p implies tight stops required.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.5579
+ENTRY_TRIGGER_REASON: Bounce from Fibonacci 0% support (SL level) + RSI 34.3 oversold (4H inverse H&S confirmation); wait for candle close above 0.5579 to confirm support hold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+**RATIONALE:**
+
+**Why NO (despite 6/10 confidence):**
+- **MTF rule breach:**

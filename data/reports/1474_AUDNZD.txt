@@ -1,0 +1,27 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Fundamental AUD strength (rising rates) conflicts with technical D1 uptrend, COT reversal signals institutional capitulation; low MTF confluence (1/3) blocks high-confidence trade despite SELL_3 signal.
+RISK_FACTORS: [1] MTF conf=1/3 (only M:SELL, W:SELL; D:NEUTRAL, 4H:NEUTRAL) — daily disagrees, violating MTF rule for TRADE_THIS. [2] COT AUD reversing from net short (52%) — institutions may be covering shorts into strength, removing downside follow-through.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.2167
+ENTRY_TRIGGER_REASON: Fib 78.6% @ 1.22167 as resistance rejection + Stochastic overbought (80.7) confluent; if price fails to break above and reverses, enter on break below 1.2167.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Why NO TRADE despite SELL_3 signal:**
+
+1. **MTF Failure (Critical):** conf=1/3

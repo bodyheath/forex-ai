@@ -1,0 +1,31 @@
+```
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: D1 RSI overbought (73.2) + double-top pattern + MACD near zero in mixed D1 trend support SELL, but 4H uptrend and ALIGNED_BULL ribbon create conflicting momentum.
+
+RISK_FACTORS: [1] MTF disagreement: D1:SELL vs 4H:BUY (conf=1/3, wt=20%) — trade lacks strong multi-timeframe confluence. [2] ALIGNED_BULL ribbon (5/5 EMAs stacked bullish) signals trend continuation upside; D1 price above SMA50 (1.3824) contradicts bearish bias despite RSI extremity.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly is NEUTRAL, daily is SELL, 4H is BUY — less than 2/3 agreement on direction. CONFIDENCE < 7 and MTF fail disqualifies trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (6/10):**
+- D1 RSI=73.2 (overb

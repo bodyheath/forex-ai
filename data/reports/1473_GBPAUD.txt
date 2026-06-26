@@ -1,0 +1,27 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: H&S bearish pattern confirmed by D1 SELL signal, 4H pin bar rejection, and RSI overbought (67.9), but MTF conflict (W:NEUTRAL vs D:SELL) and AUD COT reversal limit conviction.
+RISK_FACTORS: [1) MTF disagreement — Weekly is NEUTRAL, only D1+4H agree on SELL (conf=2/3, below 3/3 threshold); momentum may not sustain. 2) AUD positioning reversal — institutions flipped short, reducing tailwind for GBP strength fade; GBP rate flat while AUD rising narrows fundamental support for SELL.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.9200
+ENTRY_TRIGGER_REASON: Await pullback to neckline of H&S pattern at ~1.9200 for higher-probability short entry; pin bar at key level confirms rejection.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**SCORING LOGIC:**
+
+**TECHNICAL (6/10):**
+- D1 T_sig=SELL_5 (baseline) → 5
+- RSI 64.0
