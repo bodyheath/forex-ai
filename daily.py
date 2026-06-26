@@ -5456,16 +5456,14 @@ def _send_telegram_summary(
                 _yt_pair, _yt_dir_ta,
                 log_fn=lambda m: _log_line(log, m),
             )
-            # Hard block: BOTH weekly AND monthly oppose direction
-            if (_trend_align.get("weekly_aligned") is False and
-                    _trend_align.get("monthly_aligned") is False):
+            # Hard block: weekly trend opposes direction (monthly adds context but weekly alone is decisive)
+            if _trend_align.get("weekly_aligned") is False:
                 _blk_trend = (
-                    f"Trend opposed: weekly={_trend_align['weekly_trend']} "
+                    f"Weekly trend opposed: weekly={_trend_align['weekly_trend']} "
                     f"monthly={_trend_align['monthly_trend']}"
                 )
                 _log_line(log, f"[trend] BLOCKING {_yt_pair} {_yt_dir_ta} — "
-                          f"BOTH weekly ({_trend_align['weekly_trend']}) AND monthly "
-                          f"({_trend_align['monthly_trend']}) oppose direction")
+                          f"weekly trend ({_trend_align['weekly_trend']}) opposes direction")
                 _fund_st_blocked.append((_yt, _blk_trend))
                 try:
                     from src import tracker as _trk_trnd
