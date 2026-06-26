@@ -212,8 +212,25 @@ def retrain_all_from_feature_store(log=None) -> dict:
         except Exception as exc:
             _log(f"[online_learner] Could not read research_trades.csv: {exc}")
 
+    # Also build outcome lookup from trades.csv so fund trades retrain alongside research
+    fund_path = config.DATA_DIR / "trades.csv"
+    fund_outcome_map: dict = {}
+    if fund_path.exists():
+        try:
+            with fund_path.open("r", encoding="utf-8", newline="") as fh:
+                for row in csv.DictReader(fh):
+                    tid = str(row.get("id", ""))
+                    if tid:
+                        fund_outcome_map[tid] = (
+                            row.get("status", ""),
+                            row.get("closed_at", ""),
+                        )
+        except Exception as exc:
+            _log(f"[online_learner] Could not read trades.csv: {exc}")
+
     feat_rows = feature_store.load()
-    research_rows = [r for r in feat_rows if r.get("source_table") == "research"]
+    # Include both research and fund (main) feature rows for comprehensive retraining
+    research_rows = [r for r in feat_rows if r.get("source_table") in ("research", "main")]
 
     # Sort oldest first so scaler partial_fit sees full range before clf trains
     research_rows.sort(key=lambda r: r.get("captured_at", ""))
