@@ -510,4 +510,8 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
             f"{beven} BREAKEVEN, {expired} EXPIRED.")
     else:
         log("Outcome check: no trades hit target/stop today.")
+    try:
+        check_virtual_trades(log, price_cache=full_cache)
+    except Exception as _virt_exc:
+        log(f"  Virtual outcome check error — {_virt_exc}")
     return closed
