@@ -3400,7 +3400,20 @@ def run(log=print) -> dict:
                             _win_dollars_list.append(_dollar_pnl)
                     elif _st_out == "BREAKEVEN":
                         _st_breakeven += 1
-                    elif _st_out in ("LOSS", "EXPIRED", "EXPIRED_LOSS", "STALE_EXIT"):
+                    elif _st_out == "EXPIRED":
+                        if _fp > 0:
+                            _st_wins += 1
+                            _win_pips_list.append(_fp)
+                            if _dollar_pnl > 0:
+                                _win_dollars_list.append(_dollar_pnl)
+                        elif _fp == 0:
+                            _st_breakeven += 1
+                        else:
+                            _st_losses += 1
+                            _loss_pips_list.append(abs(_fp))
+                            if _dollar_pnl < 0:
+                                _loss_dollars_list.append(abs(_dollar_pnl))
+                    elif _st_out in ("LOSS", "EXPIRED_LOSS", "STALE_EXIT"):
                         if _fp > 0:
                             _st_partial += 1
                             _win_pips_list.append(_fp)
