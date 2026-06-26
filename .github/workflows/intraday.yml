@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
     inputs:
       scan_mode:
-        description: 'Scan mode (morning / prelondon / preny / full / gap)'
+        description: 'Scan mode (morning / prelondon / london / preny / nyopen / full / gap)'
         required: false
         default: ''
 
