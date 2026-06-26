@@ -3482,7 +3482,8 @@ def run(log=print) -> dict:
                     _all_ct = [r for r in _csv_ct.DictReader(_ctf)
                                if r.get("trade_this") == "YES"]
                 _closed_ct = [r for r in _all_ct
-                               if str(r.get("status", "")).upper() not in ("OPEN", "")]
+                               if str(r.get("status", "")).upper() not in
+                               ("OPEN", "", "SKIPPED", "NO_TRADE", "PENDING")]
                 # Sort most recent first by closed_at
                 def _ct_sort_key(r):
                     return str(r.get("closed_at") or r.get("timestamp") or "")
