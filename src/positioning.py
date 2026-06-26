@@ -215,12 +215,17 @@ def _series_for(market_name: str) -> list:
                     file=sys.stderr,
                 )
                 if _da is not None and _da > STALE_DAYS:
-                    print(
-                        f"[COT] ❌ COT data: fetch failed — positioning scores set to neutral "
-                        f"(latest report {_rd[:10]} is {_da} days old — exceeds {STALE_DAYS}-day limit)",
-                        file=sys.stderr,
-                    )
-                    # Don't cache stale data — retry on next run
+                    if _da > 365:
+                        # Permanently stale — cache with 48h TTL so subsequent calls
+                        # within the same run (and next run) skip the re-fetch.
+                        cache.set(key, rows)
+                    else:
+                        print(
+                            f"[COT] ❌ COT data: fetch failed — positioning scores set to neutral "
+                            f"(latest report {_rd[:10]} is {_da} days old — exceeds {STALE_DAYS}-day limit)",
+                            file=sys.stderr,
+                        )
+                    # Don't log ❌ for permanently stale — _for_currency handles that message
                     return rows
                 # Success: data is fresh
                 week_end = _rd[:10]
