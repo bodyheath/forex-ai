@@ -168,8 +168,11 @@ def _series_for(market_name: str) -> list:
         if cached:
             _rdate = (cached[0].get("report_date_as_yyyy_mm_dd") or "")
             _age   = _days_old(_rdate)
+            if _age is not None and _age > 365:
+                # Permanently stale — no point re-fetching; serve from cache
+                return cached
             if _age is not None and _age > STALE_DAYS:
-                # Delete stale cache file so next run gets a clean fetch
+                # Stale but recoverable — delete cache so next run gets a fresh fetch
                 try:
                     _stale_path = _cache_path_for_key(key)
                     if _stale_path.exists():
