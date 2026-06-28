@@ -227,9 +227,9 @@ def send_fund_stop_hit(pair, direction,
         fields = [
             {"name": "Trade Type",              "value": _trade_type_label(True),                             "inline": False},
             {"name": "\U0001f3c6 Cascade",      "value": cascade_label or "T1 + T2 both banked",             "inline": False},
-            {"name": "✅ T1 banked (40%)",      "value": f"+{t1_pips:.1f}p / +${t1_dollars:.2f}",            "inline": True},
+            {"name": "✅ T1 banked (50%)",      "value": f"+{t1_pips:.1f}p / +${t1_dollars:.2f}",            "inline": True},
             {"name": "✅ T2 banked (30%)",      "value": f"+{t2_pips:.1f}p / +${t2_dollars:.2f}",            "inline": True},
-            {"name": "\U0001f512 Remainder (30%)", "value": "Stopped at breakeven",                          "inline": True},
+            {"name": "\U0001f512 Remainder (20%)", "value": "Stopped at breakeven",                          "inline": True},
             {"name": "\U0001f4b0 Net Result",   "value": f"**+{net_pips:.1f}p / +${net_dollars:.2f}**",      "inline": False},
         ]
         return _send_embed(
