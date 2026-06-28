@@ -1344,11 +1344,11 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
             if ta and _send_telegram:
                 try:
                     ta.send(
-                        f"✅ <b>{pair} has reached its first profit target</b>\n\n"
-                        f"50% of position banked at +{pips:.1f} pips.\n"
-                        f"Stop loss moved to breakeven — this trade can no longer lose money.\n"
+                        f"🛡️ <b>{pair} trail stop activated</b>\n\n"
+                        f"Price moved +{pips:.1f} pips — stop moved to breakeven.\n"
+                        f"Full position still open, targeting 2R.\n"
                         f"No action needed from you.\n\n"
-                        f"Direction: {direction}  |  T1 price: {mprice}"
+                        f"Direction: {direction}  |  Trail level: {mprice}"
                         f"{f'  |  Candle: {cdt}' if cdt else ''}"
                         + wknd_note
                     )
