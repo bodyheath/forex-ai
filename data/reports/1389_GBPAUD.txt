@@ -1,0 +1,34 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Head-and-shoulders bearish pattern with RSI overbought on D1 and 4H, but MTF weekly neutrality and ribbon misalignment weaken conviction; AUD rate rise supports sell but GBP COT reversal creates conflicting institutional signal.
+
+RISK_FACTORS: 
+1. MTF weekly:NEUTRAL breaks 2/3 agreement rule — weekly buying intent conflicts with daily/4H selling, reducing trade conviction below threshold.
+2. GBP COT REVERSING from long to short mid-position while pair directionally aligns with sell: institutional positioning flipflop suggests entry into unwinding, not continuation.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF weekly does not confirm daily/sell direction (2/3 < threshold). COT reversal in GBP adds execution risk.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### Analysis Summary:
+
+**Why NO despite SELL signal:**
+
+1. **MTF Rule Failure (Critical):** Weekly=NEUTRAL, Daily=SELL, 4H=SELL → only 2/3 timeframes agree. Mandate requires **both weekly AND daily**

@@ -1,0 +1,24 @@
+```
+PAIR: EUR/GBP
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly+Daily both BUY with pin bar at support near Fibonacci SL (5p away) and RSI 43 in confirmed downtrend context favors reversal, but ribbon misalignment and EUR position unwinding create moderate headwinds.
+RISK_FACTORS: [1] EUR COT unwinding conviction (institutions reducing long exposure) conflicts with BUY thesis — potential fake reversal if EUR momentum stalls. [2] Ribbon ALIGNED_BEAR (5/5 fan) suggests downtrend continuation; pin bar + oversold RSI may only be tactical bounce, not trend reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.86199
+ENTRY_TRIGGER_REASON: Pin bar breakout above 0.8620 (exact Fibonacci SL support, 5p confluence) with RSI confirmation >35 on retest.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**Why NOT YES (confidence 6 < threshold 7):**
+- **MTF alignment is 2/3 (W+D BUY, but 4H NEUTRAL)** → rules require ≥2/3, which you meet, but

@@ -1,0 +1,35 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Month-long downtrend signal conflicts with neutral daily/weekly—pin bar at key level offers reversal setup, but divergent MTF and unwinding EUR positioning severely limit conviction.
+
+RISK_FACTORS: 
+1. MTF structure broken: Monthly SELL vs. Daily/Weekly NEUTRAL (0/3 agreement) violates core trade rule—daily and weekly must both agree for execution; this setup fails that gate.
+2. COT unwinding EUR long positioning while CAD builds shorts creates institutional momentum reversal risk—EUR conviction collapsing into the proposed short.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation—Daily and Weekly do not both confirm direction (both NEUTRAL). Monthly SELL lacks daily/weekly confluence required for TRADE_THIS approval. Pin bar at key level (4H) is noted as potential reversal evidence, but insufficient to override MTF gate failure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS NOTES:**
+
+**MTF STRUCTURE FAILURE (Critical Gate):**
+- Monthly: SELL (downtrend context)
+- Weekly: NEUTRAL
+- Daily: NEUTRAL
+- Confidence: 0/3 (neither W nor

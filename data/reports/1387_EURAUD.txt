@@ -1,0 +1,24 @@
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 SELL signal conflicts with weekly BUY and 4H neutral structure; EUR unwinding + AUD reversing short suggests institutional positioning risk for EUR longs.
+
+RISK_FACTORS: 
+1. MTF disagreement (W:BUY vs D:SELL, conf=1/3) — weekly and daily do NOT both agree; trade fails MTF rule threshold.
+2. AUD COT REVERSING from net SHORT (institutions covering shorts) — contradicts SELL bias; EUR unwinding simultaneously reduces conviction on both sides.
+
+TRADE_THIS: NO
+
+**RATIONALE:**
+- **MTF Rule Violation**: Weekly = BUY, Daily = SELL, 4H = NEUTRAL. Confidence = 1/3 (only M aligns). **Hard rule requires weekly AND daily to both agree** — they do not. Trade disqualified regardless of score.
+- **Technical**: D1 T_sig=SELL_5 is baseline, but RSI=61.4 in confirmed uptrend (4H: price > SMA50 > SMA200). In uptrend, RSI 58–70 = normal, not oversold → score 4–5 SELL only (not strong). MACD positive (h=0.0011), price above SMA50 (1.6

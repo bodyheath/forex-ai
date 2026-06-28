@@ -1,0 +1,16 @@
+PAIR: EUR/JPY
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 41.8 in mixed-trend range with double-top bearish pattern conflicts with T_sig=BUY_4; MTF agreement fails (1/3 conf), EUR unwinding institutional longs while JPY building shorts creates reversal risk.
+RISK_FACTORS: [1] MTF fragmentation (M:SELL, W:NEUTRAL, D:BUY, 4H:NEUTRAL = 40% confluence, fails ≥2/3 rule); D1 double-top + price 0.89% below SMA50 signals trend weakness despite BUY label. [2] EUR positioning collapse: net LONG at 20.0% but MOM=UNWINDING (institutions exiting), while JPY SHORT only 1.0% with MOM=BUILDING (weak conviction flip); if EUR unwind accelerates, buy thesis fails.
+TRADE_THIS: NO
+ENTRY_TYPE: [BLOCKED]
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule veto: Weekly and Daily do NOT both agree on direction (W=NEUTRAL, D=BUY, M=SELL, 4H=NEUTRAL). Confidence 1/3 << 2/3 threshold. TRADE_THIS locked

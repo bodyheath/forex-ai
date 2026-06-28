@@ -1,0 +1,27 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: AUD uptrend structure conflicts with D1 SELL_3 signal and OSC 2/3 SELL confirmation, but MTF alignment is broken (D/4H neutral vs M/W sell) preventing high-conviction entry.
+RISK_FACTORS: [1. MTF conflict: only 45% agreement (M+W sell vs D+4H neutral) — lacks daily/weekly alignment required for TRADE_THIS YES. 2. COT reversal risk: AUD positioning flipped to SHORT while trade direction is SELL — institutional unwinding of shorts could reverse bias]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated: W:SELL + D:NEUTRAL do not both agree on direction (45% < 66% threshold). Daily must confirm weekly signal for trade eligibility.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### ANALYSIS SUMMARY
+
+**Why NO despite technical SELL signals:**
+
+1. **MTF FATAL FLAW (HARD RULE)**: Your MTF rule requires **both weekly AND daily to agree**. Here M:SELL + W:SELL but **D:NEUTRAL breaks the

@@ -1,0 +1,16 @@
+PAIR: EUR/JPY
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: T_sig=BUY_4 supported by rising EUR rates and D1 RSI (41.8) in neutral zone, but MTF misalignment (M:SELL vs D:BUY, conf=1/3), 4H downtrend structure, and double-top pattern bearish reversal signal severely limit conviction.
+RISK_FACTORS: [1] MTF conflict — monthly SELL + 4H downtrend (price < SMA50 < SMA200) undermine daily BUY; confidence fails 2/3 agreement rule. [2] EUR positioning unwinding (institutions reducing conviction) while JPY building shorts — potential squeeze/reversal if EUR rally stalls; double-top candle pattern on both D1 and 4H is reversal-bearish.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF weekly+daily do not both agree (M:SELL, W:NEUTRAL, D:BUY, 4H:NEUTRAL = 1/3 confluence). Hard rule: TRADE_THIS=NO when MTF conf<2/3, regardless of technical score. Double-top pattern + ribbon neutral (3/5 aligned) + oscillator
