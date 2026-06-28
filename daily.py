@@ -5576,15 +5576,16 @@ def _send_telegram_summary(
                 except Exception:
                     pass
                 continue
-            # Stop distance cap: block if stop > 2.5x ATR (reduces avg loss from wide-stop setups)
+            # Stop distance cap: block if stop > 2.0x ATR (was 2.5x — tightened for smaller losses
+            # and more reachable T1 targets; 2.0x ATR still clears most valid swing setups)
             _yt_bndl  = (_yt.get("bundle") or {})
             _yt_atr14 = float(((_yt_bndl.get("technical") or {}).get("daily", {}).get("atr14") or 0))
             _yt_entry_v = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
             _yt_stop_v  = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
             if _yt_atr14 > 0 and _yt_entry_v and _yt_stop_v:
                 _yt_stop_dist = abs(_yt_entry_v - _yt_stop_v)
-                if _yt_stop_dist > _yt_atr14 * 2.5:
-                    _blk_atr = f"Stop too wide ({_yt_stop_dist:.5f}) vs 2.5xATR ({_yt_atr14 * 2.5:.5f})"
+                if _yt_stop_dist > _yt_atr14 * 2.0:
+                    _blk_atr = f"Stop too wide ({_yt_stop_dist:.5f}) vs 2.0xATR ({_yt_atr14 * 2.0:.5f})"
                     _log_line(log, f"[stop] BLOCKING {_yt_pair} — stop too wide")
                     _fund_st_blocked.append((_yt, _blk_atr))
                     try:
