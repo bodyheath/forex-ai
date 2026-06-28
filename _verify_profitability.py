@@ -35,7 +35,7 @@ for const in ["T1_SIZE", "T2_SIZE", "T3_SIZE"]:
 # ── Step 3: Confirm daily.py changes ────────────────────────────────────────
 print()
 print("3. DAILY.PY RISK SETTINGS:")
-with open("daily.py") as f:
+with open("daily.py", encoding="utf-8", errors="replace") as f:
     daily_text = f.read()
 m_risk = re.search(r"BASE_RISK_PCT\s*=\s*([0-9.]+)", daily_text)
 m_atr  = re.search(r"_yt_atr14\s*\*\s*([0-9.]+)", daily_text)
