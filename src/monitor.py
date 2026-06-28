@@ -1658,64 +1658,34 @@ def _apply_research_milestones(row: dict, milestones: list, row_state: dict,
             _verify_milestone_write(rec_id, "T1", _rt, pair, log=log)
             if _send_frag:
                 _record_milestone_sent(pair, "T1", rec_id, trade_type="research")
-                fragments.append(f"{pair} T1 hit (+{pips:.1f} pips partial WIN)")
-            log(f"  Monitor research #{rec_id} {pair}: T1 at {mprice} (+{pips:.1f}p)")
+                fragments.append(f"{pair} trail active (+{pips:.1f}p, stop at BE)")
+            log(f"  Monitor research #{rec_id} {pair}: trail at {mprice} (+{pips:.1f}p)")
 
         elif level == "T2":
             _rt.update_fields(
                 rec_id, t2_hit="TRUE", t2_hit_price=mprice, t2_hit_pips=pips,
             )
             _verify_milestone_write(rec_id, "T2", _rt, pair, log=log)
+            closed_row = _rt.update_outcome(
+                rec_id, "WIN",
+                close_price=mprice,
+                exit_reason="TARGET_HIT",
+            )
             if _send_frag:
                 _record_milestone_sent(pair, "T2", rec_id, trade_type="research")
-                fragments.append(f"{pair} T2 hit (+{pips:.1f} pips)")
-                # Item 10: individual alert for high-quality research T2
+                fragments.append(f"{pair} WIN +{pips:.1f}p (2R target)")
                 if ta and _cs >= 8.0:
                     try:
                         ta.send(
-                            f"🔬 <b>HIGH-QUALITY RESEARCH MILESTONE</b>\n\n"
-                            f"{pair} {direction} — T2 hit at {mprice} (+{pips:.1f} pips)\n"
-                            f"Checklist score: {_cs:.0f}/10 — strong setup confirmed\n"
-                            f"ML training data updated"
-                        )
-                    except Exception:
-                        pass
-            log(f"  Monitor research #{rec_id} {pair}: T2 at {mprice} (+{pips:.1f}p)")
-
-        elif level == "T3":
-            _rt.update_fields(
-                rec_id, t3_hit="TRUE", t3_hit_price=mprice, t3_hit_pips=pips,
-            )
-            _verify_milestone_write(rec_id, "T3", _rt, pair, log=log)
-            _wp = _casc.weighted_pips(row_state)
-            _tp = _casc.total_pips(row_state)
-            _rt.update_fields(
-                rec_id,
-                cascading_total_pips=_tp,
-                cascading_total_pips_weighted=_wp,
-            )
-            closed_row = _rt.update_outcome(
-                rec_id, "FULL_WIN",
-                close_price=_to_float(row_state.get("t3_price") or row_state.get("target")),
-                exit_reason="TARGET_HIT",
-                cascading_pips=_wp,
-            )
-            if _send_frag:
-                _record_milestone_sent(pair, "T3", rec_id, trade_type="research")
-                fragments.append(f"{pair} FULL_WIN (+{_wp:.1f}p weighted)")
-                # Item 10: individual alert for high-quality research FULL_WIN
-                if ta and _cs >= 8.0:
-                    try:
-                        ta.send(
-                            f"🔬 <b>HIGH-QUALITY RESEARCH FULL WIN</b>\n\n"
-                            f"{pair} {direction} — FULL WIN at {mprice} (+{_wp:.1f} pips weighted)\n"
-                            f"Checklist score: {_cs:.0f}/10 — all 3 targets hit\n"
+                            f"🔬 <b>HIGH-QUALITY RESEARCH WIN</b>\n\n"
+                            f"{pair} {direction} — WIN at {mprice} (+{pips:.1f} pips, 2R)\n"
+                            f"Checklist score: {_cs:.0f}/10 — setup confirmed\n"
                             f"ML training data updated"
                         )
                     except Exception:
                         pass
             _online_learn_closure("research", closed_row)
-            log(f"  Monitor research #{rec_id} {pair}: FULL_WIN {_wp:.1f}p")
+            log(f"  Monitor research #{rec_id} {pair}: WIN — +{pips:.1f}p (2R target)")
             break
 
         elif level == "STOP":
