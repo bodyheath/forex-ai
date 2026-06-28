@@ -246,15 +246,14 @@ def send_fund_stop_hit(pair, direction,
     elif t1_hit:
         fields = [
             {"name": "Trade Type",              "value": _trade_type_label(True),                             "inline": False},
-            {"name": "\U0001f6e1️ Cascade",      "value": cascade_label or "T1 banked · 60% breakeven",      "inline": False},
-            {"name": "✅ T1 banked (40%)",      "value": f"+{t1_pips:.1f}p / +${t1_dollars:.2f}",            "inline": True},
-            {"name": "\U0001f512 Remainder (60%)", "value": "Stopped at breakeven",                          "inline": True},
-            {"name": "\U0001f4b0 Net Result",   "value": f"**+{net_pips:.1f}p / +${net_dollars:.2f}**",      "inline": False},
+            {"name": "\U0001f6e1️ Trail Protection", "value": "Trail was active — stop at breakeven",         "inline": False},
+            {"name": "🛡️ Result",              "value": "**BREAKEVEN — 0R net**",                            "inline": True},
+            {"name": "\U0001f512 Closed at",    "value": "Entry price — no loss taken",                      "inline": True},
         ]
         return _send_embed(
             WEBHOOK_FUND,
             f"\U0001f6e1️ {pair} {dir_emoji} — Stop Hit — PROTECTED",
-            "\U0001f4bc FUND TRADE — Cascade protection saved this trade",
+            "\U0001f4bc FUND TRADE — Trail protection saved this trade",
             0xF39C12,
             fields=fields,
         )
