@@ -191,7 +191,7 @@ def send_fund_milestone(pair, direction, milestone, pips, entry, current, stop,
     tv_url        = _get_tradingview_url(pair)
     dir_emoji     = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
     milestone_num = int(milestone[1]) if len(milestone) > 1 and milestone[1].isdigit() else 1
-    pct_banked    = 40 if milestone_num == 1 else (70 if milestone_num == 2 else 100)
+    pct_banked    = 50 if milestone_num == 1 else (80 if milestone_num == 2 else 100)
     next_tgt_val  = t2 or t1 or current
 
     fields = [
