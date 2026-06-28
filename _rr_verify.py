@@ -1,4 +1,6 @@
-import re, pandas as pd, json
+import re, pandas as pd, json, sys, io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 def grep_py(filepath, pattern, context=0):
     """Pure-Python grep returning [(lineno, line)] matches."""
