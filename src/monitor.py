@@ -1369,16 +1369,21 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 rec_id, t2_hit="TRUE", t2_hit_price=mprice, t2_hit_pips=pips,
             )
             _verify_milestone_write(rec_id, "T2", _trk, pair, log=log)
-            log(f"  Monitor fund #{rec_id} {pair}: T2 recorded at {mprice} (+{pips:.1f}p)")
+            updated = _trk.update_outcome(
+                rec_id, "WIN",
+                exit_price=mprice,
+                notes=f"WIN via monitor: +{pips:.1f}p (2R target reached)",
+            )
+            log(f"  Monitor fund #{rec_id} {pair}: WIN — +{pips:.1f}p (2R target)")
             if _send_telegram:
                 _record_milestone_sent(pair, "T2", rec_id, trade_type="fund")
             if ta and _send_telegram:
                 try:
                     ta.send(
-                        f"💰 <b>{pair} has reached its second profit target</b>\n\n"
-                        f"Another 30% of position banked at +{pips:.1f} pips (80% total).\n"
-                        f"Final 20% running toward full target — stop trailed to T1 (+1R locked).\n\n"
-                        f"Direction: {direction}  |  T2 price: {mprice}"
+                        f"🎯 <b>{pair} hit its 2R profit target — WIN</b>\n\n"
+                        f"Full position closed at +{pips:.1f} pips.\n"
+                        f"Trade complete — ML training data updated.\n\n"
+                        f"Direction: {direction}  |  Exit price: {mprice}"
                         f"{f'  |  Candle: {cdt}' if cdt else ''}"
                         + wknd_note
                     )
@@ -1393,54 +1398,9 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     )
             except Exception:
                 pass
-
-        elif level == "T3":
-            _trk.update_fields(
-                rec_id, t3_hit="TRUE", t3_hit_price=mprice, t3_hit_pips=pips,
-            )
-            _verify_milestone_write(rec_id, "T3", _trk, pair, log=log)
-            _wp = _casc.weighted_pips(row_state)
-            _tp = _casc.total_pips(row_state)
-            _trk.update_fields(
-                rec_id,
-                cascading_total_pips=_tp,
-                cascading_total_pips_weighted=_wp,
-            )
-            t1p_str = f"{_to_float(row_state.get('t1_hit_pips')) or 0:.1f}"
-            t2p_str = f"{_to_float(row_state.get('t2_hit_pips')) or 0:.1f}"
-            updated = _trk.update_outcome(
-                rec_id, "FULL_WIN",
-                exit_price=_to_float(row_state.get("t3_price") or row_state.get("target")),
-                notes=f"FULL_WIN via monitor: T1+{t1p_str}p T2+{t2p_str}p T3+{pips:.1f}p = {_wp:.1f}p weighted",
-                cascading_pips=_wp,
-            )
-            log(f"  Monitor fund #{rec_id} {pair}: FULL_WIN — {_wp:.1f}p weighted")
-            if _send_telegram:
-                _record_milestone_sent(pair, "T3", rec_id, trade_type="fund")
-            if ta and _send_telegram:
-                try:
-                    ta.send(
-                        f"🎯 <b>{pair} has hit its full profit target</b>\n\n"
-                        f"Final 20% of position closed — trade complete.\n"
-                        f"T1 +{t1p_str}p (50%)  T2 +{t2p_str}p (30%)  T3 +{pips:.1f}p (20%)\n"
-                        f"Weighted total: +{_wp:.1f} pips\n\n"
-                        f"Direction: {direction}  |  Final price: {mprice}"
-                        + wknd_note
-                    )
-                except Exception:
-                    pass
-            try:
-                if _dn and _send_telegram:
-                    _dn.send_fund_milestone(
-                        pair, direction, "T3", pips or 0.0,
-                        _to_float(row_state.get("entry")) or 0.0, mprice,
-                        _to_float(row_state.get("effective_stop") or row_state.get("stop_loss")) or 0.0,
-                    )
-            except Exception:
-                pass
             closed_rows.append(updated)
             _online_learn_closure("main", updated)
-            break   # trade closed — skip further milestones
+            break   # trade WIN — no further milestones
 
         elif level == "STOP":
             # Guard: if already CLOSED in CSV, skip entirely (git conflict revert protection)
