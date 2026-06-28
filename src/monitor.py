@@ -251,8 +251,8 @@ def _update_trailing_stop(trade_row: dict, current_price: float,
     """Update effective_stop based on cascade levels hit.
 
     T1 hit → stop to breakeven (entry)
-    T2 hit → stop to T1 price  (locks 40% profit)
-    T3 hit → stop to T2 price  (locks 40%+30% profit)
+    T2 hit → stop to T1 price  (locks 80% of position at ≥1R)
+    T3 hit → stop to T2 price  (locks 80% of position at ≥1R + ≥1.5R)
     Price > 50% of T2→T3 range → trail stop to T2
 
     Returns dict with new_effective_stop, stop_moved, reason.
