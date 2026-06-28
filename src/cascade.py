@@ -1,51 +1,37 @@
-"""Cascading target system: T1/T2/T3 milestone computation and checking.
-
-Shared by research_outcome_checker.py (research trades) and
-outcome_checker.py (fund trades).
+"""Simple 2:1 risk:reward target system.
 
 Design:
-  T1 = entry ± 1.0 × ATR  — close 50%, move stop to breakeven (1:1 R:R)
-  T2 = entry ± 2.0 × ATR  — close 30% more (80% total banked, 2:1 R:R)
-  T3 = existing target     — close final 20% → FULL_WIN (must be ≥ 2.5R)
+  TRAIL  = entry ± 1R (1× stop distance) — move stop to breakeven, no partial close
+  TARGET = entry ± 2R (2× stop distance) — close 100% → WIN
 
-ATR is estimated as abs(entry - stop_loss) since the stop is placed at 1× ATR.
-An explicit atr= override can be passed when ATR14 is available from the bundle.
+Trade CSV field mapping:
+  t1_price = trail level (1R)    — activates breakeven trail when crossed
+  t2_price = target (2R)         — WIN when crossed, close 100%
+  t3_price = 0                   — unused in new system
+  t1_hit   = trail activated flag
+  t2_hit   = WIN recorded flag
+  t3_hit   = always False in new system
 
 Outcome statuses:
-  FULL_WIN    — all three targets hit
-  WIN         — T1 + T2 hit, then stopped or expired (80% banked; stop at T1
-                  locks +1R on remaining 20% → total ≥ 1.70R)
-  PARTIAL_WIN — T1 hit, then stopped or expired (50% banked; stop moves to
-                  entry → 0R on rest → net +0.50R)
-  LOSS        — stopped before T1 (original stop_loss, −1R)
+  WIN         — TARGET (2R) reached, 100% position closed, +2R net
+  PARTIAL_WIN — TRAIL activated, then stopped at entry (breakeven, 0R net)
+  LOSS        — stopped before TRAIL (original stop_loss, -1R net)
 
-Position-weighted pips (cascading_total_pips_weighted):
-  0.50 × t1_pips  +  0.30 × t2_pips  +  0.20 × t3_pips
-
-Break-even analysis at minimum R:R floors (T1=1R, T2=1.5R, T3=2R):
-  PARTIAL_WIN net: 0.50R   break-even WR: 66.7%
-  WIN net:         1.70R   break-even WR: 37.0%
-  FULL_WIN net:    1.90R   break-even WR: 34.5%
-  At 55% WR (T1+T2 hitting): EV ≈ +0.03R per trade
-  At 60% WR:                  EV ≈ +0.10R per trade
+Break-even WR = 33.3%   EV at 55% WR = +0.65R per trade
 """
 
-T1_MULT = 1.0
-T2_MULT = 2.0
-T3_MIN_MULT = 2.5  # T3 floor — analyst target overridden upward if below this
+TARGET_RR   = 2.0   # Risk 1R to make 2R
+TRAIL_AT_RR = 1.0   # Move stop to breakeven at 1R from entry
 
-T1_SIZE = 0.50   # 50% closed at T1 — bank majority early, beat break-even at lower WR
-T2_SIZE = 0.30   # 30% closed at T2
-T3_SIZE = 0.20   # 20% closed at T3 (bonus upside)
+# Legacy constants — kept for backward-compatibility with old research trades.
+# NOT used for new fund trades (discriminated by t3_price == 0).
+_LEGACY_T1_SIZE = 0.50
+_LEGACY_T2_SIZE = 0.30
+_LEGACY_T3_SIZE = 0.20
 
 
 def _is_true(val) -> bool:
-    """Return True when a CSV boolean field is set.
-
-    Handles str ("TRUE", "1", "YES"), bool True, and int 1 consistently so the
-    caller never needs to know whether the value came from a CSV string, a
-    Python boolean, or a JSON number.
-    """
+    """Return True when a CSV boolean field is set."""
     return str(val).strip().upper() in ("TRUE", "1", "YES")
 
 
@@ -64,70 +50,35 @@ def _to_float(val):
 
 def compute_levels(entry, stop_loss, target, direction, atr=None,
                    t1_mult=None, t2_mult=None, t3_mult=None):
-    """Return (t1_price, t2_price, t3_price).
+    """Return (trail_level, target_level, None).
 
-    T1 and T2 are from ATR (estimated as stop distance when atr is not given).
-    T3 is the existing target by default; pass t3_mult to override with ATR-derived level.
-    Pass t1_mult / t2_mult to use adaptive multipliers (otherwise uses T1_MULT / T2_MULT).
-    Returns (None, None, target_float) when ATR cannot be determined.
+    trail_level  = entry ± 1× stop_distance  (triggers breakeven trail at 1R)
+    target_level = entry ± 2× stop_distance  (full WIN close at 2R)
+    Third element is always None — no T3 in the 2:1 system.
+
+    ATR and adaptive multipliers are ignored — targets are always 1R and 2R
+    based on the actual stop distance from entry.
     """
     e = _to_float(entry)
     s = _to_float(stop_loss)
-    t = _to_float(target)
-    if e is None:
-        return None, None, t
+    if e is None or s is None:
+        return None, None, None
 
-    atr_val = _to_float(atr)
-    if atr_val and atr_val > 0:
-        use_atr = atr_val
-    elif s is not None and abs(e - s) > 0:
-        use_atr = abs(e - s)
-    else:
-        return None, None, t
-
-    t1_m = t1_mult if t1_mult is not None else T1_MULT
-    t2_m = t2_mult if t2_mult is not None else T2_MULT
+    stop_dist = abs(e - s)
+    if stop_dist <= 0:
+        return None, None, None
 
     d = (direction or "").upper()
     if d == "BUY":
-        t1 = e + t1_m * use_atr
-        t2 = e + t2_m * use_atr
-        t3 = (e + t3_mult * use_atr) if t3_mult is not None else t
-        # Ensure T3 clears the T3_MIN_MULT floor (must be above T2)
-        if t3 is not None:
-            t3_floor = e + T3_MIN_MULT * use_atr
-            if t3 < t3_floor:
-                t3 = t3_floor
+        t1 = e + stop_dist
+        t2 = e + stop_dist * TARGET_RR
     elif d == "SELL":
-        t1 = e - t1_m * use_atr
-        t2 = e - t2_m * use_atr
-        t3 = (e - t3_mult * use_atr) if t3_mult is not None else t
-        if t3 is not None:
-            t3_floor = e - T3_MIN_MULT * use_atr
-            if t3 > t3_floor:
-                t3 = t3_floor
+        t1 = e - stop_dist
+        t2 = e - stop_dist * TARGET_RR
     else:
-        return None, None, t
+        return None, None, None
 
-    # Enforce minimum R:R floors measured against stop distance.
-    # ATR-based multiples fall short of 1:1 when the AI sets a stop wider than
-    # 1× ATR (e.g. stop at 2.5× ATR makes T1=1×ATR only 0.4R).
-    # Guarantees: T1 ≥ 1:1, T2 ≥ 1.5:1, T3 ≥ 2:1 — regardless of ATR size.
-    if s is not None:
-        _sd = abs(e - s)
-        if _sd > 0:
-            if d == "BUY":
-                t1 = max(t1, round(e + _sd,       6))
-                t2 = max(t2, round(e + _sd * 1.5, 6))
-                if t3 is not None:
-                    t3 = max(t3, round(e + _sd * 2.0, 6))
-            else:  # SELL
-                t1 = min(t1, round(e - _sd,       6))
-                t2 = min(t2, round(e - _sd * 1.5, 6))
-                if t3 is not None:
-                    t3 = min(t3, round(e - _sd * 2.0, 6))
-
-    return round(t1, 6), round(t2, 6), round(t3, 6) if t3 is not None else None
+    return round(t1, 6), round(t2, 6), None
 
 
 def pips_at(entry, level, pair, direction):
@@ -145,7 +96,7 @@ def pips_at(entry, level, pair, direction):
 # ── Milestone checkers ────────────────────────────────────────────────────────
 
 def t1_hit(row: dict, price: float) -> bool:
-    """True if price has crossed T1 and T1 not yet recorded."""
+    """True if price crossed the 1R trail level and trail not yet activated."""
     if _is_true(row.get("t1_hit")):
         return False
     t1 = _to_float(row.get("t1_price"))
@@ -156,29 +107,21 @@ def t1_hit(row: dict, price: float) -> bool:
 
 
 def t2_hit(row: dict, price: float) -> bool:
-    """True if T1 was hit and price has crossed T2 (T2 not yet recorded)."""
+    """True if trail is active and price crossed the 2R WIN target."""
     if not _is_true(row.get("t1_hit")):
         return False
     if _is_true(row.get("t2_hit")):
         return False
     t2 = _to_float(row.get("t2_price"))
-    if t2 is None:
+    if t2 is None or t2 == 0:
         return False
     d = (row.get("direction") or "").upper()
     return (price >= t2) if d == "BUY" else (price <= t2)
 
 
 def t3_hit(row: dict, price: float) -> bool:
-    """True if T2 was hit and price has crossed T3 (T3 not yet recorded)."""
-    if not _is_true(row.get("t2_hit")):
-        return False
-    if _is_true(row.get("t3_hit")):
-        return False
-    t3 = _to_float(row.get("t3_price")) or _to_float(row.get("target"))
-    if t3 is None:
-        return False
-    d = (row.get("direction") or "").upper()
-    return (price >= t3) if d == "BUY" else (price <= t3)
+    """Always False — no T3 in the 2:1 system."""
+    return False
 
 
 def effective_stop_hit(row: dict, price: float) -> bool:
@@ -193,8 +136,17 @@ def effective_stop_hit(row: dict, price: float) -> bool:
 # ── Outcome & pips ────────────────────────────────────────────────────────────
 
 def cascade_outcome(row: dict) -> str:
-    """Determine closed outcome from which targets were hit."""
-    if _is_true(row.get("t3_hit")):
+    """Determine closed outcome from which targets were hit.
+
+    New 2:1 system:
+      t2_hit      → WIN (100% closed at 2R target)
+      t1_hit only → PARTIAL_WIN (trail active, stopped at entry, 0R net)
+      neither     → LOSS (-1R)
+
+    Legacy: if t3_price > 0 and t3_hit, return FULL_WIN for old cascade trades.
+    """
+    t3p = _to_float(row.get("t3_price")) or 0.0
+    if t3p > 0 and _is_true(row.get("t3_hit")):
         return "FULL_WIN"
     if _is_true(row.get("t2_hit")):
         return "WIN"
@@ -204,15 +156,31 @@ def cascade_outcome(row: dict) -> str:
 
 
 def weighted_pips(row: dict) -> float:
-    """Position-size-weighted pips across banked portions (0 for unbanked)."""
-    t1p = _to_float(row.get("t1_hit_pips")) or 0.0
-    t2p = _to_float(row.get("t2_hit_pips")) or 0.0
-    t3p = _to_float(row.get("t3_hit_pips")) or 0.0
-    return round(T1_SIZE * t1p + T2_SIZE * t2p + T3_SIZE * t3p, 1)
+    """Net pips for the closed trade.
+
+    New 2:1 system (t3_price=0):
+      WIN (t2_hit): full t2_hit_pips at 100% position
+      PARTIAL_WIN (t1_hit only): 0.0 (stopped at entry, net breakeven)
+
+    Legacy cascade (t3_price>0): position-weighted T1/T2/T3 partials.
+    """
+    t3p   = _to_float(row.get("t3_price")) or 0.0
+    t1hp  = _to_float(row.get("t1_hit_pips")) or 0.0
+    t2hp  = _to_float(row.get("t2_hit_pips")) or 0.0
+    t3hp  = _to_float(row.get("t3_hit_pips")) or 0.0
+
+    if t3p > 0:
+        # Legacy cascade: weighted partial-close pips
+        return round(_LEGACY_T1_SIZE * t1hp + _LEGACY_T2_SIZE * t2hp + _LEGACY_T3_SIZE * t3hp, 1)
+
+    # New 2:1 system
+    if _is_true(row.get("t2_hit")):
+        return round(t2hp, 1)   # 100% at 2R
+    return 0.0                   # PARTIAL_WIN: stopped at breakeven, net = 0
 
 
 def total_pips(row: dict) -> float:
-    """Raw sum of pips from each hit T milestone (unweighted)."""
+    """Raw sum of pips from each hit milestone (unweighted)."""
     t1p = _to_float(row.get("t1_hit_pips")) or 0.0
     t2p = _to_float(row.get("t2_hit_pips")) or 0.0
     t3p = _to_float(row.get("t3_hit_pips")) or 0.0
@@ -220,7 +188,7 @@ def total_pips(row: dict) -> float:
 
 
 def expiry_extension(row: dict, base_expiry: int) -> int:
-    """Extend expiry: +3d after T1, +5d after T2; cap at 21 days total."""
+    """Extend expiry: +3d after trail activated, +5d after WIN; cap at 21d."""
     t2 = _is_true(row.get("t2_hit"))
     t1 = _is_true(row.get("t1_hit"))
     ext = base_expiry + (5 if t2 else (3 if t1 else 0))
