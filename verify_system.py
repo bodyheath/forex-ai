@@ -30,9 +30,10 @@ for _, t in fund.iterrows():
 print(f'Bad trade IDs: {len(bad_ids)} '
       f'{"OK" if not bad_ids else "FAIL " + str(bad_ids)}')
 
-# NaN position sizes
+# NaN position sizes (only for active/closed trades, not SKIPPED/BLOCKED/EXPIRED_BEFORE_ENTRY)
+_skip_statuses = {'SKIPPED', 'BLOCKED', 'EXPIRED_BEFORE_ENTRY', 'EXPIRED', 'CANCELLED'}
 bad_pos = []
-for _, t in fund.iterrows():
+for _, t in fund[~fund.status.isin(_skip_statuses)].iterrows():
     val = t.get('position_size_pct_at_entry')
     try:
         f = float(val or 0)
