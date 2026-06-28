@@ -191,28 +191,32 @@ def send_fund_milestone(pair, direction, milestone, pips, entry, current, stop,
     tv_url        = _get_tradingview_url(pair)
     dir_emoji     = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
     milestone_num = int(milestone[1]) if len(milestone) > 1 and milestone[1].isdigit() else 1
-    pct_banked    = 50 if milestone_num == 1 else (80 if milestone_num == 2 else 100)
-    next_tgt_val  = t2 or t1 or current
+    is_win        = milestone_num >= 2
 
-    fields = [
-        {"name": "Trade Type",              "value": _trade_type_label(True),                                      "inline": False},
-        {"name": "✅ Milestone Hit",         "value": f"**{milestone}** at `{current:.5f}`",                       "inline": True},
-        {"name": "\U0001f4b0 Pips Captured","value": f"**+{pips:.1f} pips**",                                     "inline": True},
-        {"name": "\U0001f4b5 Profit",        "value": f"**+${dollars:.2f}**" if dollars else "Calculating...",    "inline": True},
-        {"name": "\U0001f6e1️ Stop Protection", "value": f"Stop moved to BREAKEVEN\n`{entry:.5f}` — no loss possible", "inline": True},
-        {"name": "\U0001f4ca Cascade Progress","value": _cascade_progress_bar(t1_hit, t2_hit, t3_hit),            "inline": False},
-        {"name": "\U0001f4c8 Price Position","value": _price_position_bar(entry, current, stop, next_tgt_val, direction) or "", "inline": False},
-        {"name": "\U0001f4ca Total Banked",  "value": f"**{pct_banked}%** of position secured",                   "inline": True},
-        {"name": "⏭️ Next Target", "value": (f"T{milestone_num+1} at `{t2:.5f}`" if milestone_num == 1 and t2 else "Final 30% running"), "inline": True},
-        {"name": "\U0001f517 Chart",         "value": f"[View {pair} on TradingView]({tv_url})",                  "inline": False},
-    ]
-    return _send_embed(
-        WEBHOOK_FUND,
-        f"\U0001f3af {pair} {dir_emoji} — {milestone} HIT ✅",
-        "\U0001f4bc FUND TRADE — Partial profit locked in",
-        COLOR_FUND_WIN,
-        fields=fields,
-    )
+    if is_win:
+        title    = f"\U0001f3af {pair} {dir_emoji} — WIN ✅ (+2R)"
+        subtitle = "\U0001f4bc FUND TRADE — 2R profit target reached"
+        fields = [
+            {"name": "Trade Type",           "value": _trade_type_label(True),                                   "inline": False},
+            {"name": "🎯 Result",             "value": f"**WIN — Full position closed**",                         "inline": True},
+            {"name": "\U0001f4b0 Pips",       "value": f"**+{pips:.1f} pips (+2R)**",                           "inline": True},
+            {"name": "\U0001f4b5 Profit",     "value": f"**+${dollars:.2f}**" if dollars else "Calculating...", "inline": True},
+            {"name": "\U0001f4c8 Exit Price", "value": f"`{current:.5f}`",                                       "inline": True},
+            {"name": "\U0001f517 Chart",      "value": f"[View {pair} on TradingView]({tv_url})",               "inline": False},
+        ]
+    else:
+        title    = f"\U0001f6e1️ {pair} {dir_emoji} — Trail Active"
+        subtitle = "\U0001f4bc FUND TRADE — Stop moved to breakeven"
+        fields = [
+            {"name": "Trade Type",                 "value": _trade_type_label(True),                                           "inline": False},
+            {"name": "🛡️ Trail Activated",          "value": f"Price moved **+{pips:.1f} pips**",                             "inline": True},
+            {"name": "\U0001f512 Stop",             "value": f"Moved to BREAKEVEN\n`{entry:.5f}` — cannot lose",              "inline": True},
+            {"name": "⏭️ Next",                    "value": f"Full position targeting 2R\n`{t2:.5f}`" if t2 else "2R target", "inline": True},
+            {"name": "\U0001f4c8 Price Position",  "value": _price_position_bar(entry, current, stop, t2 or current, direction) or "", "inline": False},
+            {"name": "\U0001f517 Chart",            "value": f"[View {pair} on TradingView]({tv_url})",                       "inline": False},
+        ]
+
+    return _send_embed(WEBHOOK_FUND, title, subtitle, COLOR_FUND_WIN, fields=fields)
 
 
 def send_fund_stop_hit(pair, direction,
