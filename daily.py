@@ -5290,7 +5290,7 @@ def _send_telegram_summary(
             FUND_TRADE_MIN_CONF = min(FUND_TRADE_MIN_CONF + 1.0, 8.5)
         elif _consec_losses_fs == 1:
             FUND_TRADE_MIN_CONF = min(FUND_TRADE_MIN_CONF + 0.5, 8.5)
-        FUND_MIN_RR = 2.5
+        FUND_MIN_RR = 2.0
         _log_line(log, (
             f"[fund] Filters: min_conf={FUND_TRADE_MIN_CONF} "
             f"min_rr={FUND_MIN_RR} "
