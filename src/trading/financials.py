@@ -523,7 +523,7 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
 
         return {
             "balance":               round(running_bal, 2),
-            "opening_balance":       round(daily_open_bal, 2),
+            "opening_balance":       STARTING_BALANCE,          # FTMO starting balance — immutable
             "daily_opening_balance": round(daily_open_bal, 2),
             "daily_pnl_dollars":     round(daily_pnl_d, 2),
             "daily_pnl_pct":         round(daily_pnl_pct, 4),
