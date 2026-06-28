@@ -181,7 +181,7 @@ def _fmt_time_exact(h: int, m: int = 0) -> str:
 # ── Trading filter constants ───────────────────────────────────────────────────
 
 MAX_CORRELATED_EXPOSURE = 2
-BASE_RISK_PCT           = 1.0
+BASE_RISK_PCT           = 0.75  # conservative until edge is proven (was 1.0%)
 
 SIZING_RULES = {
     "RANGING_LOW_VOL":    0.5,
