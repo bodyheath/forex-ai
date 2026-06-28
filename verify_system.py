@@ -500,6 +500,39 @@ print(f'Uncommitted: '
 
 print()
 print('=' * 55)
+print('SECTION 8 — 2:1 SYSTEM OPEN TRADE VERIFICATION')
+print('=' * 55)
+
+open_rr_issues = []
+for _, t in open_f.iterrows():
+    _pair = str(t.get('pair', ''))
+    _dir  = str(t.get('direction', '')).upper()
+    _e    = float(t.get('entry', 0) or 0)
+    _s    = float(t.get('stop_loss', 0) or 0)
+    _t2   = float(t.get('t2_price', 0) or 0)
+    _t3   = float(t.get('t3_price', 0) or 0)
+    _ps   = 0.01 if 'JPY' in _pair else 0.0001
+    if _e and _s:
+        _sd = abs(_e - _s)
+        if _dir == 'BUY':
+            _exp_t2 = round(_e + _sd * 2, 5)
+        else:
+            _exp_t2 = round(_e - _sd * 2, 5)
+        _t2_ok  = abs(_t2 - _exp_t2) < 0.0002 if _t2 else False
+        _t3_ok  = _t3 == 0.0 or str(t.get('t3_price', '')) in ('0', '0.0', '')
+        _rr_ok  = float(t.get('rr_at_entry', 0) or 0) >= 1.8 or _t2_ok
+        _status = 'OK  ' if (_t2_ok and _t3_ok) else 'FAIL'
+        if not _t2_ok or not _t3_ok:
+            open_rr_issues.append(f'#{t["id"]} {_pair}')
+        print(f'  {_status} #{t["id"]} {_pair}: t2={_t2} (exp {_exp_t2}) t3={_t3} {"t2_ok" if _t2_ok else "t2_WRONG"} {"t3_clear" if _t3_ok else "t3_WRONG"}')
+
+if not open_rr_issues:
+    print('  All open trades have correct 2:1 targets')
+else:
+    print(f'  ISSUES: {open_rr_issues}')
+
+print()
+print('=' * 55)
 print('FINAL SUMMARY')
 print('=' * 55)
 
