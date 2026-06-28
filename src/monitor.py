@@ -1189,9 +1189,9 @@ def _detect_spot_milestones(row: dict, price: float, pair: str) -> tuple:
     _trade_id = row_state.get("id", "")
 
     if _t1_done and _t2_done:
-        print(f"  Monitor: {pair} #{_trade_id} — T1+T2 already hit — checking T3 only")
+        print(f"  Monitor: {pair} #{_trade_id} — trail+WIN both already hit — checking stop only")
     elif _t1_done:
-        print(f"  Monitor: {pair} #{_trade_id} — T1 already hit — checking T2+T3")
+        print(f"  Monitor: {pair} #{_trade_id} — trail already hit — checking 2R target")
 
     if not _t1_done and _casc.t1_hit(row_state, price):
         t1p = _casc.pips_at(row_state.get("entry"), row_state.get("t1_price"), pair, direction)
@@ -1206,14 +1206,6 @@ def _detect_spot_milestones(row: dict, price: float, pair: str) -> tuple:
         row_state.update({"t2_hit": "TRUE", "t2_hit_price": price, "t2_hit_pips": t2p})
         milestones.append({"level": "T2", "price": price, "candle_dt": None, "pips": t2p})
 
-    if _casc.t3_hit(row_state, price):
-        t3p = _casc.pips_at(
-            row_state.get("entry"),
-            row_state.get("t3_price") or row_state.get("target"),
-            pair, direction,
-        )
-        row_state.update({"t3_hit": "TRUE", "t3_hit_price": price, "t3_hit_pips": t3p})
-        milestones.append({"level": "T3", "price": price, "candle_dt": None, "pips": t3p})
     elif _casc.effective_stop_hit(row_state, price):
         eff = _to_float(row_state.get("effective_stop") or row_state.get("stop_loss"))
         milestones.append({"level": "STOP", "price": eff, "candle_dt": None, "pips": None})
