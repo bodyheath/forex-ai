@@ -1147,9 +1147,9 @@ def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) ->
             milestones.append({"level": "T1", "price": tgt_price, "candle_dt": dt, "pips": t1p})
             side_label = "HIGH" if direction == "BUY" else "LOW"
             log(
-                f"  Monitor: {pair} candle {side_label} {tgt_price} crossed T1 "
-                f"{row.get('t1_price')} during {dt} candle — T1 recorded as hit "
-                f"even if current price is now below T1 — partial WIN locked in"
+                f"  Monitor: {pair} candle {side_label} {tgt_price} crossed trail level "
+                f"{row.get('t1_price')} during {dt} candle — trail recorded as hit "
+                f"even if current price is now below trail — stop moved to breakeven"
             )
 
         if not _t2_done and _casc.t2_hit(row_state, tgt_price):
@@ -1161,24 +1161,10 @@ def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) ->
             })
             _t2_done = True
             milestones.append({"level": "T2", "price": tgt_price, "candle_dt": dt, "pips": t2p})
-            log(f"  Monitor: {pair} T2 hit at {tgt_price} (+{t2p:.1f}p) — 70% banked")
+            log(f"  Monitor: {pair} 2R WIN target hit at {tgt_price} (+{t2p:.1f}p)")
+            break   # WIN — no further milestone checks
 
-        if _casc.t3_hit(row_state, tgt_price):
-            t3p = _casc.pips_at(
-                row_state.get("entry"),
-                row_state.get("t3_price") or row_state.get("target"),
-                pair, direction,
-            )
-            row_state.update({
-                "t3_hit":       "TRUE",
-                "t3_hit_price": tgt_price,
-                "t3_hit_pips":  t3p,
-            })
-            milestones.append({"level": "T3", "price": tgt_price, "candle_dt": dt, "pips": t3p})
-            log(f"  Monitor: {pair} T3 (FULL_WIN) hit at {tgt_price} (+{t3p:.1f}p)")
-            break   # trade closed — no further milestone checks
-
-        # Stop check (only if T3 not hit in this candle)
+        # Stop check (only if WIN not hit in this candle)
         elif _casc.effective_stop_hit(row_state, stop_price):
             # Use the stop level (not the candle extreme) as the close price
             eff = _to_float(row_state.get("effective_stop") or row_state.get("stop_loss"))
