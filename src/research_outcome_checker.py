@@ -302,35 +302,14 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                     rec_id, t2_hit="TRUE", t2_hit_price=price, t2_hit_pips=_t2p,
                 )
                 row.update({"t2_hit": "TRUE", "t2_hit_price": price, "t2_hit_pips": _t2p})
-                log(f"  Research #{rec_id} {pair}: T2 hit at {price} (+{_t2p:.1f}p) — 70% banked")
-
-            if _casc.t3_hit(row, price):
-                _t3p = _casc.pips_at(
-                    row.get("entry"),
-                    row.get("t3_price") or row.get("target"),
-                    pair, direction,
-                )
-                research_tracker.update_fields(
-                    rec_id, t3_hit="TRUE", t3_hit_price=price, t3_hit_pips=_t3p,
-                )
-                row.update({"t3_hit": "TRUE", "t3_hit_price": price, "t3_hit_pips": _t3p})
-                _wp = _casc.weighted_pips(row)
-                _tp = _casc.total_pips(row)
-                research_tracker.update_fields(
-                    rec_id,
-                    cascading_total_pips=_tp,
-                    cascading_total_pips_weighted=_wp,
-                )
-                _cp = _to_float(row.get("t3_price") or row.get("target"))
                 updated = research_tracker.update_outcome(
-                    rec_id, "FULL_WIN",
-                    close_price=_cp,
+                    rec_id, "WIN",
+                    close_price=price,
                     exit_reason="TARGET_HIT",
-                    cascading_pips=_wp,
                 )
                 log(
-                    f"  Research #{rec_id} {pair} {direction}: FULL_WIN at {price} "
-                    f"(weighted {_wp:.1f}p) "
+                    f"  Research #{rec_id} {pair} {direction}: WIN at {price} "
+                    f"(+{_t2p:.1f}p, 2R target) "
                     f"[MFE={updated.get('mfe_pips', '?')}p]"
                 )
                 closed.append(updated)
