@@ -1,0 +1,23 @@
+PAIR: EUR/GBP
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key support (0.86199) in confirmed downtrend with RSI neutral offers tactical bounce, but aligned bearish ribbon and COT EUR unwinding undermine conviction.
+RISK_FACTORS: [1. MTF alignment weak (1/3 conf) — weekly BUY contradicted by daily/4H neutral, violates MTF dual-agreement rule. 2. COT EUR unwinding + GBP building creates institutional headwind; EUR downtrend bias persists despite pin signal.]
+TRADE_THIS: NO
+
+**REASONING:**
+
+**MTF RULE VIOLATION (HARD GATE):**
+- W:BUY + D:NEUTRAL + 4H:NEUTRAL = conf 1/3 (only 33% — requires ≥66% dual agreement)
+- **Weekly and daily do NOT both agree on direction.** This triggers automatic TRADE_THIS=NO per MTF rule, regardless of technical confluence.
+
+**TECHNICAL (5/10):**
+- T_sig baseline = BUY_3 (pre-computed) → start at 3, adjusted to 5:
+  - RSI 43.3 in confirmed downtrend (W:BUY + D:NEUTRAL still bearish context): RSI 42–55 zone = NEUTRAL (3–4),

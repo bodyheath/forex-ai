@@ -1,0 +1,32 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Strong bearish RSI divergence (33p/6pt) conflicts with bullish ribbon alignment and uptrend structure; pin bar at 78.6% Fib + falling CHF rates create contested setup requiring caution.
+
+RISK_FACTORS: 
+1. MTF misalignment: W/D/4H all NEUTRAL while M:BUY and ribbon fully ALIGNED_BULL — no clean directional consensus despite uptrend price structure; reversal risk if ribbon breaks.
+2. Divergence-vs-structure conflict: bearish divergence contradicts pin_bar_bul pattern and golden-cross structure — entry timing unclear; potential false signal if price breaks above 1.0730.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.0730
+ENTRY_TRIGGER_REASON: Sell-side entry only if price rallies above pin bar high to confirm divergence rejection; otherwise stay out pending ribbon convergence signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (5/10):**
+- T_sig=SELL_3 baseline, but RSI 57.9 in confirmed uptrend (D:NEUTRAL is
