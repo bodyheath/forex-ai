@@ -233,10 +233,17 @@ def calculate_pnl(
             pips_w = -stop_pips
             dollars = -risk_d
         elif status == "PARTIAL_WIN":
-            pips_w = t1_pips * T1_SIZE
+            if t3p == 0.0:
+                pips_w = 0.0  # New 2:1: trail hit, stopped at entry = breakeven
+            else:
+                pips_w = t1_pips * T1_SIZE  # Legacy cascade: 50% at T1
             dollars = pips_w * dpp
         elif status == "WIN":
-            pips_w = t1_pips * T1_SIZE + t2_pips * T2_SIZE
+            if t3p == 0.0:
+                ex_pips = _pips(ep if ep > 0 else t2p, e)
+                pips_w = ex_pips  # New 2:1: 100% of position at 2R target
+            else:
+                pips_w = t1_pips * T1_SIZE + t2_pips * T2_SIZE  # Legacy cascade
             dollars = pips_w * dpp
         elif status == "FULL_WIN":
             ex_pips = _pips(ep if ep > 0 else t3p, e)
