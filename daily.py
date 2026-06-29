@@ -5958,6 +5958,45 @@ def _send_telegram_summary(
                 except Exception:
                     pass
                 continue
+            # ── London/NY session gate — no new fund trades in dead hours ─────
+            _sess_h      = datetime.now(timezone.utc).hour
+            _sess_london = 7 <= _sess_h < 17
+            _sess_ny     = 12 <= _sess_h < 21
+            _asia_fx     = {
+                "AUD/JPY", "AUD/NZD", "AUD/USD", "NZD/USD",
+                "USD/JPY", "AUD/CAD", "AUD/CHF",
+            }
+            if not (_sess_london or _sess_ny) and _yt_pair.upper() not in _asia_fx:
+                _blk_sess_h = f"Outside London/NY — UTC {_sess_h:02d}:xx"
+                _log_line(log, f"[session] BLOCKING {_yt_pair} — {_blk_sess_h}")
+                _yt_parsed["trade_this"] = "NO"
+                _yt_parsed["block_reason"] = _blk_sess_h
+                _fund_st_blocked.append((_yt, _blk_sess_h))
+                try:
+                    from src import tracker as _trk_sess_h
+                    if _yt.get("id"):
+                        _trk_sess_h.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                    notes=f"Blocked: {_blk_sess_h}")
+                except Exception:
+                    pass
+                continue
+            # ── Pair cooldown — block after 2+ losses on same pair+direction in 48h ──
+            if _check_pair_cooldown(
+                    pair=_yt_pair,
+                    direction=(_yt_parsed.get("direction") or ""),
+                    log_fn=lambda m: _log_line(log, m)):
+                _blk_cool = f"Cooldown: 2+ losses in 48h on {_yt_pair}"
+                _yt_parsed["trade_this"] = "NO"
+                _yt_parsed["block_reason"] = _blk_cool
+                _fund_st_blocked.append((_yt, _blk_cool))
+                try:
+                    from src import tracker as _trk_cool
+                    if _yt.get("id"):
+                        _trk_cool.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                  notes=f"Blocked: {_blk_cool}")
+                except Exception:
+                    pass
+                continue
             # ── News blackout window ──────────────────────────────────────────
             _news_res = _has_upcoming_news(
                 _yt_pair, log_fn=lambda m: _log_line(log, m))
