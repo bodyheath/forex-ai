@@ -12448,6 +12448,12 @@ def run() -> int:
                     open_trades=_dsc_open_trades,
                     blocked_setups=_blocked_setups,
                     swapped_setups=_swapped_setups,
+                    v2_decisive=_dsc_v2_decisive,
+                    v2_wins=_dsc_v2_wins,
+                    v2_losses=_dsc_v2_losses,
+                    v2_win_rate=_dsc_v2_wr,
+                    v2_net_pips=_dsc_v2_pips,
+                    strategy_start_date=_dsc_strat_start,
                 )
                 _log_line(log, "Discord scan report sent ✅")
         except Exception as _dsc_exc:
