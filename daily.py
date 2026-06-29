@@ -5411,6 +5411,52 @@ def _send_telegram_summary(
                 except Exception:
                     pass
                 continue
+            # ── TREND HARD FILTER — block neutral or opposed weekly trends ───────
+            _wt_hard  = str(_yt_parsed.get("weekly_trend",
+                            _yt_parsed.get("weekly_trend_at_entry", "")) or "").upper().strip()
+            _dir_hard = (_yt_parsed.get("direction") or "").upper()
+            if _wt_hard in ("", "NEUTRAL", "NONE", "NULL", "UNKNOWN", "0"):
+                _blk_wt_n = "Weekly trend neutral — no clear directional bias"
+                _log_line(log, f"[trend-hard] BLOCKED {_yt_pair} — weekly trend neutral ({_wt_hard!r})")
+                _yt_parsed["trade_this"] = "NO"
+                _yt_parsed["block_reason"] = _blk_wt_n
+                _fund_st_blocked.append((_yt, _blk_wt_n))
+                _blocked_setups.append({
+                    "pair":      _yt_pair,
+                    "direction": _dir_hard,
+                    "conf":      float(_yt_parsed.get("confidence", 0) or 0),
+                    "reason":    "Weekly trend neutral",
+                })
+                try:
+                    from src import tracker as _trk_wtn
+                    if _yt.get("id"):
+                        _trk_wtn.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                notes=f"Blocked: {_blk_wt_n}")
+                except Exception:
+                    pass
+                continue
+            if (_dir_hard == "BUY" and _wt_hard == "DOWN") or \
+                    (_dir_hard == "SELL" and _wt_hard == "UP"):
+                _blk_wt_o = f"Opposes weekly trend: {_wt_hard}"
+                _log_line(log, f"[trend-hard] BLOCKED {_yt_pair} {_dir_hard} opposes weekly {_wt_hard}")
+                _yt_parsed["trade_this"] = "NO"
+                _yt_parsed["block_reason"] = _blk_wt_o
+                _fund_st_blocked.append((_yt, _blk_wt_o))
+                _blocked_setups.append({
+                    "pair":      _yt_pair,
+                    "direction": _dir_hard,
+                    "conf":      float(_yt_parsed.get("confidence", 0) or 0),
+                    "reason":    f"Opposes weekly trend {_wt_hard}",
+                })
+                try:
+                    from src import tracker as _trk_wto
+                    if _yt.get("id"):
+                        _trk_wto.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                notes=f"Blocked: {_blk_wt_o}")
+                except Exception:
+                    pass
+                continue
+            _log_line(log, f"[trend-hard] {_yt_pair} {_dir_hard} aligned ({_wt_hard}) OK")
             # ── PAIR FILTER — block banned exotic pairs ────────────────────────
             _pair_upper = _yt_pair.upper()
             if _pair_upper in FUND_BANNED_PAIRS:
