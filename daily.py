@@ -10319,9 +10319,14 @@ def run() -> int:
                             "push/checkout operations may fail — check GITHUB_TOKEN secret"
                         )
                     elif _gh_resp.status_code == 403:
+                        _telegram(
+                            "⚠️ GITHUB TOKEN 403 FORBIDDEN — token exists but lacks required "
+                            "permissions — regenerate PAT with repo+workflow scopes in GitHub "
+                            "Settings → Developer settings → Personal access tokens"
+                        )
                         _log_line(log,
-                            "⚠️ GitHub token returns 403 — token exists but may lack "
-                            "permissions — monitoring may be affected")
+                            "⚠️ GitHub token returns 403 — Telegram alert sent — "
+                            "regenerate token with repo+workflow scopes")
                     else:
                         _log_line(log, f"GitHub token status: HTTP {_gh_resp.status_code}")
                 else:
