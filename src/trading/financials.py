@@ -508,6 +508,32 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         _sum_loss_pips    = sum(_loss_pips_list)
         _profit_factor    = round(sum(_win_pips_list) / _sum_loss_pips, 3) if _sum_loss_pips > 0 else 0.0
 
+        # V2 strategy stats (closed v2_2R trades only)
+        if "strategy_version" in closed.columns:
+            _v2_closed = closed[closed["strategy_version"] == "v2_2R"]
+        else:
+            _v2_closed = closed.iloc[0:0]
+        _v2_pips     = pd.to_numeric(_v2_closed["pips"], errors="coerce").fillna(0) if len(_v2_closed) > 0 else pd.Series(dtype=float)
+        _v2_wins     = int((_v2_pips > 0).sum())
+        _v2_losses   = int((_v2_pips < 0).sum())
+        _v2_decisive = _v2_wins + _v2_losses
+        _v2_win_rate = round(_v2_wins / _v2_decisive * 100.0, 1) if _v2_decisive > 0 else 0.0
+        _v2_net_pips = round(float(_v2_pips.sum()), 1) if len(_v2_pips) > 0 else 0.0
+
+        # Derive strategy metadata from trades (no file reads)
+        if "strategy_version" in fund.columns:
+            _has_v2     = (fund["strategy_version"] == "v2_2R").any()
+            _strategy_v = "v2_2R" if _has_v2 else "v1_cascade"
+            _v2_all     = fund[fund["strategy_version"] == "v2_2R"]
+            if len(_v2_all) > 0 and "timestamp" in _v2_all.columns:
+                _ts_min      = _v2_all["timestamp"].dropna()
+                _strat_start = str(_ts_min.min()) if len(_ts_min) > 0 else ""
+            else:
+                _strat_start = ""
+        else:
+            _strategy_v  = "v1_cascade"
+            _strat_start = ""
+
         # Dynamic sizing multiplier derived from actual streak / drawdown state
         if int(cons_losses) >= 4:
             _sz_streak = 0.25
