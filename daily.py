@@ -582,6 +582,32 @@ def _check_loss_journal(
     }
 
 
+def _check_pair_cooldown(pair: str, direction: str, hours: int = 48, log_fn=None) -> bool:
+    """Block pair+direction if 2+ losses occurred in the last `hours` hours."""
+    _log = log_fn or print
+    try:
+        import pandas as _cd_pd
+        from datetime import datetime as _cd_dt, timezone as _cd_tz, timedelta as _cd_td
+        _cd_df  = _cd_pd.read_csv("data/trades.csv")
+        _cd_f   = _cd_df[_cd_df["trade_this"].astype(str) == "YES"]
+        cutoff  = (_cd_dt.now(_cd_tz.utc) - _cd_td(hours=hours)).isoformat()
+        _cd_rec = _cd_f[
+            (_cd_f["pair"] == pair) &
+            (_cd_f["direction"].str.upper() == direction.upper()) &
+            (~_cd_f["status"].isin(["OPEN", "PENDING"])) &
+            (_cd_f["closed_at"].fillna("") >= cutoff)
+        ].copy()
+        _cd_rec["_p"] = _cd_pd.to_numeric(_cd_rec["pips"], errors="coerce").fillna(0)
+        _n_losses = int((_cd_rec["_p"] < 0).sum())
+        if _n_losses >= 2:
+            _log(f"[cooldown] {pair} {direction} blocked — {_n_losses} losses in {hours}h")
+            return True
+        return False
+    except Exception as _cd_e:
+        _log(f"[cooldown] check error: {_cd_e}")
+        return False
+
+
 def _validate_trade_data(
     parsed: dict,
     pair: str,
