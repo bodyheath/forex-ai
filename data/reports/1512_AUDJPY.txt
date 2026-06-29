@@ -1,0 +1,24 @@
+PAIR: AUD/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: TRIPLE_BUY
+
+KEY_THESIS: Triple oscillator confluence (RSI+Stoch+CCI all BUY) + pin bar at support + D1 T_sig=8 supports bounce, but MTF misalignment (W:NEUTRAL breaks 2/3 rule) and AUD COT reversal limit confidence to 6.
+
+RISK_FACTORS: 
+1. MTF CONFLICT — weekly is NEUTRAL, only daily+4H align BUY; monthly is SELL. This breaks the strict MTF rule (both W+D must agree); confidence capped at 6 despite technical strength.
+2. AUD COT REVERSING — institutions flipping from long conviction at 47% to potential exit; reduces POSITIONING_SCORE and signals institutional conviction weakening exactly when entering BUY.
+
+TRADE_THIS: NO
+
+**REASONING:**
+- **MTF Rule Breach:** Weekly=NEUTRAL, Daily=BUY, 4H=BUY. Only 2/3 timeframes agree (conf=60%). Strict MTF rule requires **both weekly AND daily to agree on direction**. Weekly neutral breaks this mandate → **TRADE_THIS = NO** regardless of technical strength.
+- **Technical is strong:** T_sig=8, triple oscillator confluence (+2 CONFIDENCE bonus), pin bar at 111.

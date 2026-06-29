@@ -1,0 +1,28 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly SELL signal conflicts with weekly/daily neutrality; ribbon converging signals trend exhaustion; EUR COT unwinding reduces bullish conviction while CAD building supports downside.
+RISK_FACTORS: [1) MTF disagreement (M:SELL vs W/D:NEUTRAL) creates 0/3 directional confluence — high risk of whipsaw. 2) EUR net LONG unwinding into potential reversal — institutional exit may precede further weakness but creates choppy entry environment.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly AND Daily do not both agree on direction (conf=0/3, W:NEUTRAL + D:NEUTRAL conflict Monthly SELL); TRADE_THIS rejected regardless of other factors.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Detailed Scoring Rationale:**
+
+**TECHNICAL_SCORE: 3/10**
+- D1 RSI=52.1 → standard mixed (45–55 range) = **3–4 NEUTRAL** baseline
+- D1 MACD h=−0.0008 → slightly negative, no bullish confirmation
+- Price 1.
