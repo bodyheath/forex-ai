@@ -1772,27 +1772,35 @@ def build_fund_dashboard_embed(state: dict) -> dict:
     elif _total_dd > 5.0:
         _ftmo_val += f"\nTotal drawdown: {_total_dd:.2f}% of 10%"
 
-    # ── Statistics ──────────────────────────────────────────────────────────
-    if st_decisive > 0:
-        _wr_e   = ("🟢" if st_wr >= 50 else ("🟡" if st_wr >= 35 else "🔴"))
-        _be_str = (f" · {st_be} Breakeven" if st_be > 0 else "")
+    # ── Statistics (V2 / V1 split) ──────────────────────────────────────────
+    v2_wins     = int(state.get("v2_wins") or 0)
+    v2_losses   = int(state.get("v2_losses") or 0)
+    v2_decisive = int(state.get("v2_decisive") or 0)
+    v2_win_rate = float(state.get("v2_win_rate") or 0)
+    v2_net_pips = float(state.get("v2_net_pips") or 0)
+    strat_start = str(state.get("strategy_start_date") or "")
+    strat_date  = strat_start[:10] if strat_start else "Jun 29, 2026"
+
+    if v2_decisive > 0:
+        _wr_e = "🟢" if v2_win_rate >= 50 else ("🟡" if v2_win_rate >= 35 else "🔴")
         _stats_val = (
-            f"Trades: **{st_total}** total · {st_decisive} decisive\n"
-            f"{_wr_e} Win rate: **{st_wr:.0f}%**\n"
-            f"Wins: {st_wins} · Protected: {st_partial} · Losses: {st_losses}{_be_str}\n"
-            f"Avg win: +{st_avg_win_p:.1f}p"
-            + (f" / +${st_avg_win_d:.0f}" if st_avg_win_d > 0 else "")
-            + f" · Avg loss: -{st_avg_loss_p:.1f}p"
-            + (f" / -${st_avg_loss_d:.0f}" if st_avg_loss_d > 0 else "")
-            + f"\nProfit factor: {st_pf:.2f} (pips)"
-            + (f" · **{st_dollar_pf:.2f}** (dollars)" if st_dollar_pf > 0 else "")
-            + (f"\nBest: {st_best_pair} +{st_best_pips:.1f}p" if st_best_pips > 0 else "")
+            f"**V2 STRATEGY (2:1 R:R)**\n"
+            f"Started: {strat_date}\n"
+            f"{_wr_e} Win rate: **{v2_win_rate:.0f}%** ({v2_wins}W / {v2_losses}L)\n"
+            f"Decisive: {v2_decisive} · Net pips: {v2_net_pips:+.1f}p"
         )
     else:
         _stats_val = (
-            f"Trades taken: {st_total}\n"
-            f"Insufficient data for win rate\n"
-            f"Need decisive outcomes to calculate"
+            f"**V2 STRATEGY (2:1 R:R)** — Building history\n"
+            f"Started: {strat_date}\n"
+            f"No decisive outcomes yet"
+        )
+    _v1_dec = st_decisive - v2_decisive
+    if _v1_dec > 0:
+        _stats_val += (
+            f"\n\n**V1 ARCHIVE** (cascade — pre Jun 29)\n"
+            f"{_v1_dec} archived trades · WR not representative\n"
+            f"(exotic pairs + multi-target, old rules)"
         )
 
     fields = [
