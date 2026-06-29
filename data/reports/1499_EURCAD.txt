@@ -1,0 +1,23 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Converging ribbon + EUR unwinding long positioning + monthly sell signal conflict with neutral daily/weekly/4H alignment, creating low-conviction range trade.
+RISK_FACTORS: [1. MTF disagreement: Monthly SELL vs Weekly/Daily NEUTRAL creates directional confusion with conf=0/3 — high whipsaw risk in range. 2. EUR COT momentum UNWINDING long conviction while CAD BUILDING short — institutional positioning misaligned with proposed SELL direction; EUR sellers exhausting while CAD shorts still building suggests potential EUR bounce risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not agree on direction (both NEUTRAL while Monthly SELL stands alone at conf=0/3). Trade confidence falls below 7 threshold; range environment with no oscillator confluence (OSC=NONE, Stoch 45.9 neutral, CCI -9.7 flat) offers no reliable entry. Ribbon converging signals trend weakening, not direction confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF RULE BREACH (CRITICAL):** Monthly = SELL, but Weekly =

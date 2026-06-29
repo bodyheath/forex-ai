@@ -1,0 +1,24 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+
+KEY_THESIS: Overbought D1 RSI (73.4) with triple-oscillator SELL confluence and pin bar at key level conflict with bullish ribbon alignment and weak MTF agreement (1/3), creating a high-probability pullback-to-resistance trade rather than trend reversal.
+
+RISK_FACTORS: 
+1. MTF conf=1/3 (only D1 agrees SELL; W and 4H NEUTRAL) — insufficient multi-timeframe confirmation, reduces conviction below standard 2/3 threshold.
+2. ALIGNED_BULL ribbon (5/5 EMA stack) + price >SMA50>SMA200 + 4H inside bar suggest continuation above temporary overbought state — reversal risk if support holds near 161.50.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W and D do not both agree. Weekly is NEUTRAL, Daily is SELL, 4H is NEUTRAL (conf=1/3, well below 2/3 threshold). SELL setup fails mandatory MTF dual-agreement gate despite strong oscillator confluence. Wait for either Weekly to confirm SELL or for reversal evidence (4H/D shift to BUY with

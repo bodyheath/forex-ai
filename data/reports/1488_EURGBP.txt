@@ -1,0 +1,24 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Confirmed downtrend (D1+4H death-cross) with bearish ribbon alignment and pin bar at support (0.86199), but mixed MTF (W:BUY vs D:NEUTRAL) and EUR unwinding positioning limit conviction.
+RISK_FACTORS: 1) MTF conflict — weekly shows BUY while daily is NEUTRAL, reducing multi-timeframe agreement to 1/3 (below 2/3 threshold); 2) EUR COT UNWINDING (institutions reducing long conviction) contradicts SELL direction and signals positioning risk.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.86199
+ENTRY_TRIGGER_REASON: Pin bar at key support (0.8619, 8p below price, near FIB SL) — await breakdown below this level to confirm bearish rejection.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 T_sig=3 (NEUTRAL baseline); RSI=45.2 in confirmed **downtrend** (W:BUY + D:NEUTRAL = mixed, but price structure is clear death-cross). Apply downtrend RSI tier

@@ -1,0 +1,34 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: EUR strength vs CHF weakness creates fundamental tailwind, but technical setup is weak (inside bar, neutral RSI, D1+4H conflict with MTF) — positioning unwind and mixed technicals limit conviction.
+
+RISK_FACTORS: 
+1. MTF conflict: M=BUY vs W/D=NEUTRAL (conf=0/3) violates MTF rule — no clear directional consensus across timeframes.
+2. EUR COT UNWINDING from net LONG — institutions reducing longs into a SELL signal creates reversal risk; CHF COT BUILDING shorts adds execution uncertainty.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do not both agree on direction (W:NEUTRAL, D:NEUTRAL vs M:BUY only). Confidence remains below 7 threshold; R:R and fundamental alignment insufficient to override.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED REASONING:**
+
+**TECHNICAL (3/10):**
+- D1 RSI=55.4 in mixed trend = NEUTRAL zone (score 3–4); no shift applied (MTF is neutral).
+- T_sig baseline

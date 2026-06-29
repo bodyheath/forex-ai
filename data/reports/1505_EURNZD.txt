@@ -1,0 +1,28 @@
+I need to carefully assess the MTF requirement before finalizing.
+
+**MTF Check (critical gate):**
+- W: NEUTRAL — this is NOT a SELL signal
+- D: SELL ✓
+- Weekly and Daily must BOTH agree for TRADE_THIS: YES
+- W:NEUTRAL + D:SELL = only 1/2 directional agreement, not both agreeing SELL
+- conf=2/3 refers to M+D agreeing, but **Weekly is NEUTRAL**, not SELL
+
+**This fails the MTF gate.** The rule states "Weekly AND daily must both agree on direction for TRADE_THIS YES." W:NEUTRAL does not agree with D:SELL.
+
+**FIB levels:** SH=2.03102, SL=1.9446, range=864p. Price at 2.0212 — nearest resistance ~2.03102 (swing high). Target zone: 1.9853 (SMA50) or Fib retracement levels within range.
+
+**Entry:** 2.0210 | **Stop:** above swing high + ATR buffer: 2.0310 + 0.0030 = 2.0340 (~130p) | **Target:** 1.9853 (SMA50, ~360p) → R:R = 2.77:1 ✓ (meets 2.5:1 threshold)
+
+Despite strong technicals, the Weekly NEUTRAL blocks the YES gate.
+
+---
+
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 7/10
+TECHNICAL_SCORE: 9/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 4/10
+POSITIONING
+KEY_THESIS: D1 RSI 70.5 overbought with pin bar at key level + triple oscillator SELL confluence (Stoch 98.4, CCI 162.2) aligns with D1 T_sig=SELL_10 and M:SELL + D:SELL MTF agreement (2/3 conf, 65% weight meets threshold), despite 4H uptrend noise.
+RISK_FACTORS: [1] EUR COT unwinding conviction while NZD neutral creates positioning asymmetry — institutional sellers may exhaust soon, risking reversal; [2] 4H remains in uptrend with pin_bar_at_key_level:bul and price > SMA50 > SMA200, creating intra-day conflict — stop placement critical.

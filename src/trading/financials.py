@@ -432,6 +432,8 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             running_bal = running_bal + dollars
             peak_bal    = max(peak_bal, running_bal)
 
+            _status_v = str(row.get("status", "")).upper()
+            _win_statuses = {"WIN", "FULL_WIN", "PARTIAL_WIN", "PROTECTED"}
             if pips_v > 0:
                 _win_pips_list.append(pips_v)
                 _win_dollars_list.append(dollars)
@@ -445,7 +447,12 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
                 _loss_dollars_list.append(abs(dollars))
                 cons_losses += 1
                 cons_wins    = 0
-            # pips_v == 0 → neutral outcome, streak unchanged
+            elif pips_v == 0 and _status_v in _win_statuses:
+                # PARTIAL_WIN at breakeven: T1 profit was secured even though
+                # final exit pips=0 — still a win for streak purposes
+                cons_wins   += 1
+                cons_losses  = 0
+            # else pips_v == 0 and not a win status → neutral, streak unchanged
 
         if not prev_in_today:
             daily_open_bal = running_bal
