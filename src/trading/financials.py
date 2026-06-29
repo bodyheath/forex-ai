@@ -454,9 +454,9 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
                 cons_losses  = 0
             # else pips_v == 0 and not a win status → neutral, streak unchanged
 
-        # V2 strategy resets the streak: V1 losses must not carry forward into V2 sizing.
-        # If any v2_2R trades exist, recompute streak from those trades only.
-        if "strategy_version" in closed.columns and (closed["strategy_version"] == "v2_2R").any():
+        # V2 strategy resets the streak: V1 wins/losses must not carry forward into V2 sizing.
+        # Trigger: any v2_2R fund trade exists (open OR closed). Streak uses closed v2 only.
+        if "strategy_version" in fund.columns and (fund["strategy_version"] == "v2_2R").any():
             _v2_src = closed[closed["strategy_version"] == "v2_2R"].copy()
             try:
                 _v2_src = _v2_src.sort_values("closed_at", na_position="last")
