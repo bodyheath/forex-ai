@@ -5278,12 +5278,10 @@ def _send_telegram_summary(
         _REGIME_BLOCK = ["RANGING_LOW_VOL", "RANGING_LOW_VOLATILITY", "RISK_OFF"]
         _consec_losses_fs = int(_fund_st.get("consecutive_losses", 0) or 0)
         MAX_CONSECUTIVE_LOSSES = 3
-        if "TRENDING" in _regime_str:
-            FUND_TRADE_MIN_CONF = 6.0
-        elif "RANGING" in _regime_str:
+        if "RANGING" in _regime_str:
             FUND_TRADE_MIN_CONF = 7.5
         else:
-            FUND_TRADE_MIN_CONF = 7.0
+            FUND_TRADE_MIN_CONF = 7.0  # Hard minimum — includes TRENDING regime
         # Raise the bar after losses — demand higher confidence before circuit breaker fires.
         # 1 loss: +0.5  |  2 losses: +1.0  |  3 losses: circuit breaker (hard halt)
         if _consec_losses_fs >= 2:
