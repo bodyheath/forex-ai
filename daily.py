@@ -11981,10 +11981,25 @@ def run() -> int:
                     _dsc_dd       = _dsc_tof(_dsc_fresh_fs.get("current_drawdown_pct"), _dsc_dd)
                     _dsc_bal      = _dsc_tof(_dsc_fresh_fs.get("balance"), _dsc_bal)
                     _dsc_open_bal = _dsc_tof(_dsc_fresh_fs.get("daily_opening_balance"), _dsc_open_bal)
-                    _dsc_cw       = int(_dsc_fresh_fs.get("consecutive_wins") or _dsc_cw)
-                    _dsc_cl       = int(_dsc_fresh_fs.get("consecutive_losses") or _dsc_cl)
+                    _dsc_cw          = int(_dsc_fresh_fs.get("consecutive_wins") or _dsc_cw)
+                    _dsc_cl          = int(_dsc_fresh_fs.get("consecutive_losses") or _dsc_cl)
+                    _dsc_v2_decisive = int(_dsc_fresh_fs.get("v2_decisive") or 0)
+                    _dsc_v2_wins     = int(_dsc_fresh_fs.get("v2_wins") or 0)
+                    _dsc_v2_losses   = int(_dsc_fresh_fs.get("v2_losses") or 0)
+                    _dsc_v2_wr       = _dsc_tof(_dsc_fresh_fs.get("v2_win_rate"), 0.0)
+                    _dsc_v2_pips     = _dsc_tof(_dsc_fresh_fs.get("v2_net_pips"), 0.0)
+                    _dsc_strat_start = str(_dsc_fresh_fs.get("strategy_start_date") or "")
                 except Exception:
                     pass  # fall back to cached values already set above
+
+                # V2 stats defaults (in case fresh_fs failed)
+                if "_dsc_v2_decisive" not in dir():
+                    _dsc_v2_decisive = 0
+                    _dsc_v2_wins     = 0
+                    _dsc_v2_losses   = 0
+                    _dsc_v2_wr       = 0.0
+                    _dsc_v2_pips     = 0.0
+                    _dsc_strat_start = ""
 
                 # ── Fund performance from trades.csv ─────────────────────────────
                 import pandas as _dsc_pd
