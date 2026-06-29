@@ -1876,13 +1876,20 @@ def build_fund_dashboard_embed(state: dict) -> dict:
             # TV url
             _tv_url = _get_tradingview_url(_pair)
 
+            # V2: simple entry → 1R (trail) → 2R (target) display
+            _trail_str  = f"`{_t1:.5f}`" if _t1 else "`(entry)`"
+            _target_str = f"`{_t2:.5f}`" if _t2 else "2R"
+            if _t1h:
+                _be_line = f"✅ Breakeven — stop trailed to {_trail_str}"
+            else:
+                _be_line = f"⚡ Watching — 1R trail triggers at {_trail_str}"
+
             _trade_val = (
                 f"{_dir_emoji} **{_dir}** · Entry: `{_entry:.5f}`\n"
                 f"Current: `{_cur:.5f}` · Stop: `{_stop:.5f}`\n"
-                f"T1: `{_t1:.5f}`  T2: `{_t2:.5f}`  T3: `{_t3:.5f}`\n\n"
-                f"{_cascade_dots}\n"
-                f"{_protection}\n\n"
-                f"Progress → {_next}:\n"
+                f"Trail (1R): {_trail_str} · Target (2R): {_target_str}\n\n"
+                f"{_be_line}\n\n"
+                f"Progress → 2R target:\n"
                 f"`{_bar}` {max(_prog, 0):.0f}%\n"
             )
             if _pbar:
