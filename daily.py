@@ -302,9 +302,18 @@ def _has_upcoming_news(pair: str, minutes_before: int = 45,
                 continue
             try:
                 mins_until = float(event.get("hours_away", 999)) * 60
-                if -minutes_after <= mins_until <= minutes_before:
-                    title = event.get("title", "")
-                    _log(f"[news] BLOCKING {pair} — {event_ccy} {title} in {mins_until:.0f}m")
+                title = event.get("title", "")
+                _major_kw = [
+                    "non-farm", "nfp", "federal reserve", "fomc",
+                    "interest rate decision", "cpi", "consumer price",
+                    "gdp", "ecb decision", "bank of england",
+                ]
+                _is_major = any(m in title.lower() for m in _major_kw)
+                _blackout  = 90 if _is_major else minutes_before
+                if -minutes_after <= mins_until <= _blackout:
+                    _log(f"[news] BLOCKING {pair} — {event_ccy} {title} in "
+                         f"{mins_until:.0f}m (blackout={_blackout}min"
+                         f"{' MAJOR' if _is_major else ''})")
                     return {"blocked": True,
                             "reason": f"News blackout: {event_ccy} {title} in {mins_until:.0f}m",
                             "event": event}
