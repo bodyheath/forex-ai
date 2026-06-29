@@ -989,22 +989,28 @@ def send_master_scan_report(
         })
 
     # ── SECTION 4: FUND PERFORMANCE ───────────────────────────────────────────────
-    if fund_decisive > 0:
-        _wr_e = "🟢" if fund_win_rate >= 50 else ("🟡" if fund_win_rate >= 35 else "🔴")
+    _strat_date = strategy_start_date[:10] if strategy_start_date else "Jun 29, 2026"
+    if v2_decisive > 0:
+        _wr_e = "🟢" if v2_win_rate >= 50 else ("🟡" if v2_win_rate >= 35 else "🔴")
         _perf_val = (
-            f"Trades: **{fund_total}** total · {fund_decisive} decisive\n"
-            f"{_wr_e} Win rate: **{fund_win_rate:.0f}%** "
-            f"({fund_wins}W {fund_protected}P {fund_losses}L)\n"
-            f"Avg win: +{avg_win_pips:.1f}p / +${avg_win_dollars:.0f}\n"
-            f"Avg loss: -{avg_loss_pips:.1f}p / -${avg_loss_dollars:.0f}\n"
-            f"Profit factor: **{profit_factor_dollars:.2f}** (dollar basis)"
-            + (f"\nBest: {best_pair} +{best_pips:.1f}p" if best_pips > 0 else "")
-            + f"\nReturn: {total_return_pct:+.2f}% since inception"
+            f"**V2 STRATEGY (2:1 R:R)**\n"
+            f"Started: {_strat_date}\n"
+            f"{_wr_e} Win rate: **{v2_win_rate:.0f}%** ({v2_wins}W / {v2_losses}L)\n"
+            f"Decisive: {v2_decisive} · Net pips: {v2_net_pips:+.1f}p\n"
+            f"Return: {total_return_pct:+.2f}% since inception"
         )
     else:
         _perf_val = (
-            f"Trades taken: {fund_total}\n"
-            "Insufficient data — need decisive outcomes"
+            f"**V2 STRATEGY (2:1 R:R)** — Building history\n"
+            f"Started: {_strat_date}\n"
+            f"Trades taken: {fund_total} · No decisive outcomes yet\n"
+            f"Return: {total_return_pct:+.2f}% since inception"
+        )
+    _v1_dec_scan = fund_decisive - v2_decisive
+    if _v1_dec_scan > 0:
+        _perf_val += (
+            f"\n\n**V1 ARCHIVE** (cascade — pre Jun 29)\n"
+            f"{_v1_dec_scan} archived trades · WR not representative"
         )
     fields.append({
         "name": "\U0001f4c8 Fund Performance",
