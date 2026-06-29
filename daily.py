@@ -702,6 +702,18 @@ def _validate_trade_data(
         if rr < 1.0:
             failures.append(f"R:R = {rr:.2f} < 1.0 (stop wider than target)")
 
+    # ── ATR stop cap — stop must not exceed 1× ATR (prevents disaster stops) ─
+    _atr_val = float(parsed.get("atr_at_entry", 0) or parsed.get("atr", 0) or 0)
+    if _atr_val > 0 and entry > 0 and stop > 0:
+        _atr_ps  = 0.01 if "JPY" in pair else 0.0001
+        _sp_atr  = abs(entry - stop) / _atr_ps
+        _atr_pip = _atr_val / _atr_ps
+        if _sp_atr > _atr_pip * 1.0:
+            failures.append(
+                f"Stop {_sp_atr:.0f}p > 1×ATR {_atr_pip:.0f}p — exposed to outsized loss")
+            critical = True
+            _log(f"[atr-cap] {pair} stop={_sp_atr:.0f}p exceeds 1×ATR cap {_atr_pip:.0f}p")
+
     valid = not critical and len(failures) == 0
 
     if failures:
