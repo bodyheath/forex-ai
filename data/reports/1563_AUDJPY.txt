@@ -1,0 +1,26 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: Confirmed downtrend on W+M with conflicting D1 BUY creates MTF disagreement; COT AUD reversing from long wounds directional conviction despite positive rate differential.
+RISK_FACTORS: [MTF conflict: W/M SELL vs D BUY (conf=1/3 <2/3 threshold) — no directional consensus; COT AUD REVERSING from net long to short signals institutional capitulation risk, reducing positioning confidence by 2.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule breach: Weekly and Daily do NOT both agree on direction (1/3 confidence <2/3). Monthly SELL + Weekly SELL vs Daily BUY creates structural conflict. HARD RULE: TRADE_THIS=NO when MTF disagree, regardless of individual scores.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 4/10**
+- **D1 RSI=35.4** in CONFIRMED_DOWNTREND context (W:SELL + M:SELL): downtrends normalize lower RSI

@@ -1,0 +1,34 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Monthly SELL bias with pin bar at key level, but weak weekly/daily agreement and oscillator silence create low-conviction trade with range-bound technicals.
+
+RISK_FACTORS: [1) MTF conf=0/3 — weekly and daily both NEUTRAL contradicts monthly SELL signal; weekly uptrend potential not ruled out. 2) EUR COT UNWINDING conviction while JPY BUILDING creates positioning divergence — if EUR reverses higher, long-only EUR longs will exit, potentially triggering sharp move against SELL thesis.]
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 185.80
+ENTRY_TRIGGER_REASON: Rejection of SMA50 at 185.21 with limit order placed at upper range resistance (185.80) to confirm downside rejection before committing
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**REASONING:**
+
+**MTF Rule Violation (CRITICAL):**
+- Monthly = SELL, but Weekly = NEUTRAL and Daily = NEUTRAL
+- MTF confidence = 0/3 (zero agreement across weekly + daily)
+- **Hard rule: both weekly AND daily must agree on direction to proceed**
+- This alone triggers **TRADE_THIS: NO** regardless

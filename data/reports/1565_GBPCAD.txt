@@ -1,0 +1,25 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 6/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key resistance in confirmed uptrend with RSI overbought (60.8) and T_sig=SELL_5 create sell signal, but ribbon alignment and 4H double-bottom undermine conviction.
+RISK_FACTORS: [1] Ribbon fully aligned bullish (5/5 EMA fan) contradicts SELL signal—trend continuation risk. [2] MTF confidence only 2/3 (W:NEUTRAL weakens D:SELL confirmation)—mixed directional agreement reduces setup reliability.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.8740
+ENTRY_TRIGGER_REASON: Break below pin bar low (bearish candle close below pattern support) confirms rejection at 1.8781 resistance.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Detailed Scoring Rationale:**
+
+**TECHNICAL_SCORE: 5/10**
+- D1 T_sig baseline = SELL_5 (pre-computed, used as-is)
+- RSI 60.8 in uptrend context: In a confirmed uptrend (W:NEUTRAL, D:SELL, 4H:SELL = mixed MTF), standard RS

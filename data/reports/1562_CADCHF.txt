@@ -1,0 +1,24 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at resistance + downtrend structure (price below SMA50/200) + LEANING_BEAR ribbon = weak SELL setup, but MTF misalignment (W:NEUTRAL, D:NEUTRAL, 4H:BUY) blocks trade.
+RISK_FACTORS: [1] MTF weekly and daily both NEUTRAL — no directional consensus, violates MTF agreement rule; [2] OSC conf=NONE (Stochastic neutral at 53, CCI flat at 8.1) — no oscillator confirmation of reversal.
+TRADE_THIS: NO
+
+**REASONING:**
+
+**MTF Blocking Rule — TRADE_THIS = NO:**
+- Weekly: NEUTRAL
+- Daily: NEUTRAL
+- 4-Hour: BUY
+- Confidence = 0/3 (W and D must both agree; they don't). Per MTF rule: "if weekly AND daily don't both agree on direction, TRADE_THIS NO regardless."
+
+**Technical Layer (Score: 4/10):**
+- **RSI D1=48.4:** In confirmed downtrend (price < SMA50 < SMA200), RSI 48.4 is neutral-to-weak (range 42–55 = neutral in downtrend per downtrend rules). No strong overs

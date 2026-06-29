@@ -1,0 +1,32 @@
+PAIR: GBP/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Weekly + Daily both BUY with pin bar at key level and RSI 40 in mixed trend context, but 4H conflicts (SELL) and ALIGNED_BEAR ribbon undermine conviction.
+
+RISK_FACTORS: 
+1. MTF conflict — 4H trending opposite (SELL) to D1/W1 (BUY); conf=2/3 is threshold-marginal, not clear agreement.
+2. ALIGNED_BEAR ribbon (5/5 EMAs stacked bearish) contradicts BUY thesis and signals continuation downside risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 1.3290
+ENTRY_TRIGGER_REASON: Break above pin bar high at key resistance to confirm D1+W1 BUY alignment and override 4H SELL conflict.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (6/10):**
+- D1: RSI=40 in mixed trend = neutral zone (3–4 base tier). T_sig=BUY_4 baseline = 4. Pin bar at key level (pin_bar_at_key_level:bea) = bullish rever
