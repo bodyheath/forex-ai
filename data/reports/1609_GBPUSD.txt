@@ -1,0 +1,24 @@
+PAIR: GBP/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + W:BUY + D:BUY consensus with 4H pullback creates a daily timeframe continuation setup, but ALIGNED_BEAR ribbon and 4H:SELL create trend conflict requiring cautious entry.
+RISK_FACTORS: ['4H trend opposes daily BUY (2/3 MTF agreement threshold met but not dominant)', 'ALIGNED_BEAR ribbon signals downtrend structural alignment — daily bounce may be retracement within larger selloff']
+TRADE_THIS: YES
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.3220
+ENTRY_TRIGGER_REASON: Wait for price to pullback into RSI 30-35 zone on D1 (currently 42.6, neutral) while maintaining above FIB SL 1.33044; entry on pin bar confirmation at lower level confirms institutional reversal intent without fighting ribbon structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**RATIONALE:**
+
+**MTF Analysis:**  
+W:BUY + D:BUY = 2/3 agreement (conf=2/3, wt=80%) → meets minimum threshold for TRADE_THIS but is NOT dominant. 4H:SELL creates internal conflict.

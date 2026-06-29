@@ -25,11 +25,11 @@
     "n_trades_with_mfe": 1
   },
   "GBP/JPY": {
-    "n_trades_with_mfe": 19,
-    "average_mfe_atr": 1.037,
-    "mfe_percentile_25": 0.366,
-    "mfe_percentile_50": 0.796,
-    "mfe_percentile_75": 1.462,
+    "n_trades_with_mfe": 20,
+    "average_mfe_atr": 0.994,
+    "mfe_percentile_25": 0.257,
+    "mfe_percentile_50": 0.724,
+    "mfe_percentile_75": 1.453,
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
@@ -99,7 +99,9 @@
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
-    "adaptive_active": true
+    "adaptive_active": true,
+    "_prev_t1_mult": 0.8,
+    "_prev_t3_mult": 2.5
   },
   "GBP/AUD": {
     "n_trades_with_mfe": 12,
@@ -110,7 +112,9 @@
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
-    "adaptive_active": true
+    "adaptive_active": true,
+    "_prev_t1_mult": 0.8,
+    "_prev_t3_mult": 2.5
   },
   "GBP/NZD": {
     "n_trades_with_mfe": 1
@@ -187,7 +191,7 @@
     "n_trades_with_mfe": 7
   },
   "GBP/USD": {
-    "n_trades_with_mfe": 6
+    "n_trades_with_mfe": 7
   },
   "NZD/AUD": {
     "n_trades_with_mfe": 2

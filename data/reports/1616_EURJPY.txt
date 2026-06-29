@@ -1,0 +1,26 @@
+PAIR: EUR/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 50% Fib (184.999) + double bottom on 4H suggest potential reversal, but weak MTF agreement (M:SELL vs W/D:NEUTRAL) and EUR unwinding positioning limit conviction.
+RISK_FACTORS: (1) MTF conflict — Monthly in downtrend while Weekly/Daily neutral creates directional ambiguity; (2) EUR COT UNWINDING — institutions reducing long exposure contradicts BUY bias and signals weakening conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 184.999
+ENTRY_TRIGGER_REASON: Confluence of price at exact 50% Fibonacci level + pin bar at key support + 4H double bottom structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF Rule Violation (Critical):** MTF confidence = 0/3 (M:SELL, W:NEUTRAL, D:NEUTRAL). Weekly and Daily do NOT both agree on direction — this fails the mandatory MTF requirement (both must align). **TRADE_THIS forced NO** despite technical confluence.
+
+**Technical Score = 5 (Neutral):**
+- D1 RSI=50.5 (neutral zone
