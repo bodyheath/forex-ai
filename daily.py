@@ -45,6 +45,12 @@ for _stream in (sys.stdout, sys.stderr):
     except (AttributeError, ValueError):
         pass
 
+if not os.getenv("GITHUB_ACTIONS"):
+    if os.getenv("ALLOW_LOCAL_RUN") != "YES":
+        print("BLOCKED: runs on GitHub Actions only")
+        print("Do not run daily.py locally")
+        sys.exit(0)
+
 import config
 from src import dashboard, learning, selector, service
 
