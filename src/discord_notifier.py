@@ -1517,29 +1517,19 @@ def update_fund_dashboard(
             dir_emoji = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
             pnl_emoji = "🟢" if pips >= 0 else "🔴"
 
-            if t3_hit:
-                protection = "\U0001f6e1️\U0001f6e1️\U0001f6e1️ Full cascade"
-            elif t2_hit:
-                protection = "\U0001f6e1️\U0001f6e1️ T2 banked (70%)"
-            elif t1_hit:
-                protection = "\U0001f6e1️ T1 banked (40%)"
+            # V2: simple entry → 1R (trail) → 2R (target) display
+            trail_str  = f"`{t1:.5f}`" if t1 else "`(entry)`"
+            target_str = f"`{t2:.5f}`" if t2 else "2R"
+            if t1_hit:
+                be_line = f"✅ Breakeven — stop trailed to {trail_str}"
             else:
-                protection = "⚡️ Running"
+                be_line = f"⚡ Watching — 1R trail triggers at {trail_str}"
 
             bar = _progress_bar(min(max(progress, 0), 100), width=12)
-
-            active_target = (t3 if t2_hit else (t2 if t1_hit else t1))
-            price_bar = _price_position_bar(entry, current, stop, active_target, direction)
-
-            cascade_dots = (
-                f"{'🟢' if t1_hit else '⚪'} T1  "
-                f"{'🟢' if t2_hit else '⚪'} T2  "
-                f"{'🟢' if t3_hit else '⚪'} T3"
-            )
+            price_bar = _price_position_bar(entry, current, stop, t2 if t2 else t1, direction)
 
             tv_url = _get_tradingview_url(pair)
 
-            # FIX 10: Trade health status
             progress_pct = t.get("progress_pct", 0)
             if progress_pct >= 100:
                 health = "\U0001f3af Target crossed"
@@ -1559,19 +1549,16 @@ def update_fund_dashboard(
             trade_value = (
                 f"{dir_emoji} **{direction}** · Entry: `{entry:.5f}`\n"
                 f"Current: `{current:.5f}` · Stop: `{stop:.5f}`\n"
-                f"T1: `{t1:.5f}`  T2: `{t2:.5f}`  T3: `{t3:.5f}`\n"
+                f"Trail (1R): {trail_str} · Target (2R): {target_str}\n"
                 f"\n"
-                f"{cascade_dots}\n"
-                f"{protection}\n"
+                f"{be_line}\n"
                 f"\n"
-                f"Progress → {next_tgt}:\n"
+                f"Progress → 2R target:\n"
                 f"`{bar}` {max(progress, 0):.0f}%\n"
             )
             if price_bar:
                 trade_value += f"{price_bar}\n"
-            # FIX 10: health line after cascade dots
             trade_value += f"{health}\n"
-            # P&L includes all banked cascade levels
             trade_value += (
                 f"\n"
                 f"{pnl_emoji} P&L: **{pips:+.1f}p** / **${dollars:+.2f}**"
@@ -1580,7 +1567,6 @@ def update_fund_dashboard(
                 + (f" · Check: {checklist:.0f}/10" if checklist else "") +
                 "\n"
             )
-            # FIX 9: Flag trades exceeding intended risk
             risk_limit = float(t.get("risk_dollars", 100) or 100)
             if abs(dollars) > risk_limit * 1.1:
                 trade_value += (
