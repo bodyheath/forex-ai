@@ -1,0 +1,17 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar rejection at key level in confirmed downtrend (M:SELL + D:SELL) conflicts with D1 uptrend structure; ribbon convergence signals trend weakness and potential reversal — setup ambiguous.
+RISK_FACTORS: [1. MTF disagreement (W:NEUTRAL breaks 2/3 rule; D1 uptrend vs. M downtrend creates signal conflict — confidence capped at <7 despite T_sig=5), 2. Ribbon converging (5/5 aligned but tightening) indicates trend weakening and reversal risk within 24-48h — stop loss discipline critical]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly is NEUTRAL (not SELL), breaking 2/3 agreement threshold (only M + D align). D1 structure is still uptrend (price > SMA50 > SMA200, golden cross), contradicting T_sig=SELL_5. Pin bar at key level is strong reversal signal, but converging ribbon + mixed 4H (RSI=49.6 neutral) + OSC=NONE reduce setup reliability to <7 confidence. Fundamental backdrop (GBP diff

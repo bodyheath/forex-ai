@@ -1,0 +1,27 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (33p/6pt) + pin bar at key level confirms reversal risk despite bullish ribbon alignment; GBP rate flat vs CHF falling supports carry unwind.
+RISK_FACTORS: [1. MTF neutral (W+D both NEUTRAL, conf=0/3) weakens directional conviction despite strong technicals — no multi-timeframe alignment to confirm SELL]. [2. Aligned bullish ribbon (5/5 EMA fan) and uptrend structure (price > SMA50 > SMA200) contradict SELL signal — reversal may be minor correction, not trend break].
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.0720
+ENTRY_TRIGGER_REASON: Sell limit at recent swing high (SH=1.07321) to confirm bearish divergence break and pin bar rejection at resistance.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**ANALYSIS NOTES:**
+
+**Technical (5/10):**
+- **T_sig baseline = SELL_3** (pre-computed); retained at 5 due to conflicting signals.
+- **RSI = 59.4 in D1 up

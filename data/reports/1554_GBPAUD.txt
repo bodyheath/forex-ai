@@ -1,0 +1,24 @@
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar rejection at key level with RSI overbought and partial oscillator confirmation (2/3) suggests short-term pullback risk, but weak MTF alignment (1/3) and mixed ribbon (3/5) prevent high-conviction sell.
+RISK_FACTORS: [1) MTF severely conflicted—M:BUY vs D:SELL with W:NEUTRAL creates directional ambiguity; conf=1/3 fails MTF rule threshold (requires ≥2/3 agreement). 2) COT AUD reversing from long to short positioning mid-range while GBP shorts building—institutional flip on AUD undermines bearish thesis and raises whipsaw risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.9065
+ENTRY_TRIGGER_REASON: Breakdown below pin bar low at 1.9065 (key support) would confirm rejection; price currently 96p above level—insufficient confluence for immediate entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL (6/10):**
+- D1 T_sig=SELL_6 is your baseline; RSI=64.7 in **mixed/

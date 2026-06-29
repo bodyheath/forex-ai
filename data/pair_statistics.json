@@ -193,7 +193,15 @@
     "_prev_t3_mult": 2.5
   },
   "GBP/CAD": {
-    "n_trades_with_mfe": 9
+    "n_trades_with_mfe": 10,
+    "average_mfe_atr": 0.893,
+    "mfe_percentile_25": 0.461,
+    "mfe_percentile_50": 0.796,
+    "mfe_percentile_75": 0.903,
+    "t1_mult": 0.8,
+    "t2_mult": 1.5,
+    "t3_mult": 2.5,
+    "adaptive_active": true
   },
   "USD/NZD": {
     "n_trades_with_mfe": 1
