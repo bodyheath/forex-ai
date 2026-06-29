@@ -707,6 +707,12 @@ def send_master_scan_report(
     open_trades: list = None,
     blocked_setups: list = None,
     swapped_setups: list = None,
+    v2_decisive: int = 0,
+    v2_wins: int = 0,
+    v2_losses: int = 0,
+    v2_win_rate: float = 0,
+    v2_net_pips: float = 0,
+    strategy_start_date: str = "",
 ):
     if not WEBHOOK_HEALTH:
         return False
