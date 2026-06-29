@@ -506,7 +506,8 @@ def send_full_scan_report(date, scan_mode, universe_size, pairs_analysed,
                 d  = trade.get("direction", "")
                 pg = trade.get("progress_pct", 0)
                 nt = trade.get("next_target", "T1")
-                lines.append(f"{'📈' if d == 'BUY' else '📉'} {p}: {pg:.0f}% to {nt}")
+                nt_label = {"T1": "1R trail", "T2": "2R target", "T3": "exit"}.get(nt, nt)
+                lines.append(f"{'📈' if d == 'BUY' else '📉'} {p}: {pg:.0f}% to {nt_label}")
             else:
                 lines.append(str(trade))
         open_trades_text = "\n".join(lines) if lines else "No open fund trades"
