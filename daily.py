@@ -5325,6 +5325,54 @@ def _send_telegram_summary(
         _fund_st = _fs.reset_if_new_day(_fund_st, current_balance=_cur_bal_fs)
         _fund_st = _fs.reset_if_new_week(_fund_st)
         _open_fund_count = _get_open_fund_count()  # always fresh from CSV
+        # ── FRIDAY GAP-CLOSE — close unprotected trades before weekend ──────────
+        _now_fri = datetime.now(timezone.utc)
+        _is_friday = _now_fri.weekday() == 4
+        if _is_friday and _now_fri.hour >= 20:   # 20:00 UTC ≈ market winds down
+            try:
+                import pandas as _fri_pd
+                from src.trading.financials import (
+                    close_fund_trade as _fri_cft,
+                    sync_fund_state_json as _fri_sfj,
+                    load_prices as _fri_lp,
+                    get_price as _fri_gp,
+                    pip_size as _fri_ps,
+                )
+                _fri_prices = _fri_lp()
+                _fri_df     = _fri_pd.read_csv("data/trades.csv")
+                _fri_open   = _fri_df[
+                    (_fri_df["trade_this"].astype(str) == "YES") &
+                    (_fri_df["status"] == "OPEN")
+                ]
+                for _, _ft in _fri_open.iterrows():
+                    _fri_pair  = str(_ft.get("pair", ""))
+                    _fri_t1h   = str(_ft.get("t1_hit", "")).upper() in ("TRUE", "YES", "1", "T")
+                    _fri_tid   = int(float(str(_ft.get("id", 0) or 0)))
+                    if _fri_t1h:
+                        _log_line(log, f"[weekend] #{_fri_tid} {_fri_pair} T1 hit — keeping (partial-profit protected)")
+                        continue
+                    _fri_cur   = _fri_gp(_fri_prices, _fri_pair) or float(_ft.get("entry", 0) or 0)
+                    _fri_entry = float(_ft.get("entry", 0) or 0)
+                    _fri_psize = _fri_ps(_fri_pair)
+                    _fri_dir   = str(_ft.get("direction", "")).upper()
+                    _fri_pips  = (
+                        (_fri_cur - _fri_entry) / _fri_psize if _fri_dir == "BUY"
+                        else (_fri_entry - _fri_cur) / _fri_psize
+                    )
+                    _fri_outcome = "WIN" if _fri_pips > 0 else "LOSS"
+                    _log_line(log, f"[weekend] Closing #{_fri_tid} {_fri_pair} {_fri_dir} "
+                              f"{_fri_pips:+.1f}p — gap risk")
+                    _fri_cft(
+                        trade_id=_fri_tid,
+                        exit_price=_fri_cur,
+                        outcome=_fri_outcome,
+                        pips=_fri_pips,
+                        log_fn=lambda m: _log_line(log, m),
+                    )
+                _fri_sfj()
+                _open_fund_count = _get_open_fund_count()
+            except Exception as _fri_exc:
+                _log_line(log, f"[weekend] Friday close error: {_fri_exc}")
         _yt_pass: list = []
         # Pre-compute regime and loss-streak filters for this scan
         _regime_str = str((threshold_data or {}).get("regime", "") or "").upper()
