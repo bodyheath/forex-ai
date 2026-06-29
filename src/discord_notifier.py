@@ -1259,7 +1259,6 @@ def update_closed_trades_log(
         entry     = t.get("entry", 0.0)
         exit_p    = t.get("exit_price", 0.0)
         dollars   = t.get("dollars", 0.0)
-        cascade   = t.get("cascade")
         closed_at = t.get("closed_at", "")
         hold_time = t.get("hold_time", "?")
 
@@ -1269,10 +1268,8 @@ def update_closed_trades_log(
             f"{direction} · Conf: {conf:.1f}/10",
             f"Entry: {entry} → Exit: {exit_p}",
             f"Result: {pips:+.1f}p / ${dollars:+.2f}",
+            f"Closed: {closed_at} · Hold: {hold_time}",
         ]
-        if cascade:
-            field_lines.append(cascade)
-        field_lines.append(f"Closed: {closed_at} · Hold: {hold_time}")
 
         fields.append({
             "name":   field_name,
