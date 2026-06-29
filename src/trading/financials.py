@@ -596,6 +596,13 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             "open_trades":           _ot_summaries,
             "pending_count":         len(pending_trades),
             "pending_trades":        pending_list,
+            "strategy_version":      _strategy_v,
+            "strategy_start_date":   _strat_start,
+            "v2_wins":               _v2_wins,
+            "v2_losses":             _v2_losses,
+            "v2_decisive":           _v2_decisive,
+            "v2_win_rate":           _v2_win_rate,
+            "v2_net_pips":           _v2_net_pips,
         }
     except Exception:
         return {
