@@ -1318,22 +1318,12 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
             # Guard: if already CLOSED in CSV, skip entirely (git conflict revert protection)
             if _already_sent_stop_alert(rec_id, log_fn=log):
                 break
-            casc_oc = _casc.cascade_outcome(row_state)
-            _wp     = _casc.weighted_pips(row_state) if casc_oc != "LOSS" else None
-            _tp     = _casc.total_pips(row_state)    if casc_oc != "LOSS" else None
-            if _wp:
-                _trk.update_fields(
-                    rec_id,
-                    cascading_total_pips=_tp,
-                    cascading_total_pips_weighted=_wp,
-                )
             updated = _trk.update_outcome(
-                rec_id, casc_oc,
+                rec_id, "LOSS",
                 exit_price=mprice,
-                notes=f"Monitor: {casc_oc} at {mprice}{f' | cascade: {_wp:.1f}p' if _wp else ''}",
-                cascading_pips=_wp,
+                notes=f"Monitor: LOSS at {mprice} (stop_loss hit)",
             )
-            log(f"  Monitor fund #{rec_id} {pair}: {casc_oc} at {mprice}")
+            log(f"  Monitor fund #{rec_id} {pair}: LOSS at {mprice}")
             # Emergency fallback: if tracker write failed and trade is still OPEN, force-close
             if updated.get("status") in ("OPEN", "PENDING", None, ""):
                 log(f"  Monitor: [warning] #{rec_id} still OPEN after update_outcome — running emergency close")
@@ -1347,8 +1337,8 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     try:
                         _r_txt = f"R={updated.get('r_multiple')}"
                         ta.send(
-                            f"📊 <b>{pair} stop loss triggered — trade closed</b>\n\n"
-                            f"Outcome: {casc_oc}  |  Exit: {mprice}  |  {_r_txt}\n"
+                            f"❌ <b>{pair} stop loss hit — LOSS</b>\n\n"
+                            f"Exit: {mprice}  |  {_r_txt}\n"
                             f"Outcome recorded — ML training data updated."
                             + wknd_note
                         )
@@ -1356,70 +1346,27 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                         pass
             try:
                 if _dn and not _prev_stop_alert:
-                    _was_protected  = casc_oc != "LOSS"
-                    _pip_sz_sh      = 0.01 if "JPY" in pair else 0.0001
-                    _ent_sh         = _to_float(row_state.get("entry")) or 0
-                    _orig_stop_sh   = _to_float(row_state.get("stop_loss")) or 0
-                    _stop_pips_sh   = (abs(_ent_sh - _orig_stop_sh) / _pip_sz_sh
-                                       if _ent_sh and _orig_stop_sh else 0)
-                    _t1_pips_sh  = 0.0
-                    _t2_pips_sh  = 0.0
-                    _t2h_sh      = False
-                    _t1_dol_sh   = 0.0
-                    _t2_dol_sh   = 0.0
-                    _net_pips_sh = 0.0
-                    _net_dol_sh  = 0.0
-                    if _was_protected:
-                        _t1p_sh = _to_float(row_state.get("t1_price")) or 0
-                        _t2p_sh = _to_float(row_state.get("t2_price")) or 0
-                        _t2h_sh = _is_true(row_state.get("t2_hit"))
-                        if direction == "BUY":
-                            _t1_pips_sh = max(0, (_t1p_sh - _ent_sh) / _pip_sz_sh) if _t1p_sh and _ent_sh else 0.0
-                            _t2_pips_sh = max(0, (_t2p_sh - _ent_sh) / _pip_sz_sh) if _t2p_sh and _ent_sh and _t2h_sh else 0.0
-                        else:
-                            _t1_pips_sh = max(0, (_ent_sh - _t1p_sh) / _pip_sz_sh) if _t1p_sh and _ent_sh else 0.0
-                            _t2_pips_sh = max(0, (_ent_sh - _t2p_sh) / _pip_sz_sh) if _t2p_sh and _ent_sh and _t2h_sh else 0.0
-                        _sz_pct_sh_raw = _to_float(row_state.get("position_size_pct_at_entry"))
-                        _sz_pct_sh = _sz_pct_sh_raw if (_sz_pct_sh_raw and _sz_pct_sh_raw == _sz_pct_sh_raw) else 1.0
-                        try:
-                            from src import fund_state as _fs_sh
-                            _fs_sh_data = _fs_sh.load()
-                            _bal_sh = float(_fs_sh_data.get("balance") or _fs_sh_data.get("daily_opening_balance") or 10000)
-                        except Exception:
-                            _bal_sh = 10000.0
-                        _risk_sh     = _sz_pct_sh / 100.0 * max(_bal_sh, 1)
-                        _dpp_sh      = _risk_sh / _stop_pips_sh if _stop_pips_sh > 0 else 1.0
-                        _t1_dol_sh   = round(_t1_pips_sh * 0.40 * _dpp_sh, 2)
-                        _t2_dol_sh   = round(_t2_pips_sh * 0.30 * _dpp_sh, 2)
-                        _net_pips_sh = round(_t1_pips_sh * 0.40 + _t2_pips_sh * 0.30, 1)
-                        _net_dol_sh  = round(_t1_dol_sh + _t2_dol_sh, 2)
-                    else:
-                        # Pure loss — full risk amount lost
-                        _sz_pct_sl_raw = _to_float(row_state.get("position_size_pct_at_entry"))
-                        _sz_pct_sl = _sz_pct_sl_raw if (_sz_pct_sl_raw and _sz_pct_sl_raw == _sz_pct_sl_raw and _sz_pct_sl_raw > 0) else 1.0
-                        try:
-                            from src import fund_state as _fs_sl
-                            _fs_sl_data = _fs_sl.load()
-                            _bal_sl = float(_fs_sl_data.get("balance") or _fs_sl_data.get("daily_opening_balance") or 10000)
-                        except Exception:
-                            _bal_sl = 10000.0
-                        _risk_sl  = _sz_pct_sl / 100.0 * max(_bal_sl, 1)
-                        _net_pips_sh = -(_stop_pips_sh) if _stop_pips_sh > 0 else -100.0
-                        _net_dol_sh  = -(_risk_sl)
-                    _casc_lbl_sh = "T1+T2" if _t2h_sh else ("T1" if _was_protected else "")
+                    _pip_sz_sl = 0.01 if "JPY" in pair else 0.0001
+                    _ent_sl    = _to_float(row_state.get("entry")) or 0
+                    _sl_sl     = _to_float(row_state.get("stop_loss")) or 0
+                    _stop_pips = (abs(_ent_sl - _sl_sl) / _pip_sz_sl
+                                  if _ent_sl and _sl_sl else 0)
+                    _sz_pct_raw = _to_float(row_state.get("position_size_pct_at_entry"))
+                    _sz_pct = _sz_pct_raw if (_sz_pct_raw and _sz_pct_raw > 0) else 1.0
+                    try:
+                        from src import fund_state as _fs_sl
+                        _fs_sl_data = _fs_sl.load()
+                        _bal_sl = float(_fs_sl_data.get("balance") or 10000)
+                    except Exception:
+                        _bal_sl = 10000.0
+                    _risk_sl = _sz_pct / 100.0 * max(_bal_sl, 1)
                     _dn.send_fund_stop_hit(
                         pair, direction,
-                        t1_hit=_was_protected,
-                        t2_hit=_t2h_sh,
-                        t1_pips=round(_t1_pips_sh, 1),
-                        t2_pips=round(_t2_pips_sh, 1),
-                        t1_dollars=_t1_dol_sh,
-                        t2_dollars=_t2_dol_sh,
-                        net_pips=_net_pips_sh,
-                        net_dollars=_net_dol_sh,
-                        cascade_label=_casc_lbl_sh,
+                        t1_hit=False,
+                        t2_hit=False,
+                        net_pips=-_stop_pips if _stop_pips > 0 else -100.0,
+                        net_dollars=-_risk_sl,
                     )
-                    # Record that we sent the STOP alert — prevents duplicate on next monitor run
                     _record_milestone_sent(pair, "STOP", rec_id, "fund")
             except Exception:
                 pass
