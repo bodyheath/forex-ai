@@ -281,8 +281,9 @@ def log_research_trade(pair: str, parsed: dict, source: str, scan_mode: str,
         "source":      source,
         "scan_mode":   scan_mode,
         # MFE/MAE start at 0 for OPEN trades
-        "mfe_pips":    "0" if has_levels else "",
-        "mae_pips":    "0" if has_levels else "",
+        "mfe_pips":       "0" if has_levels else "",
+        "mae_pips":       "0" if has_levels else "",
+        "system_version": config.SYSTEM_VERSION,
     }
 
     # Merge in any extra context fields
