@@ -514,11 +514,8 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         _sum_loss_pips    = sum(_loss_pips_list)
         _profit_factor    = round(sum(_win_pips_list) / _sum_loss_pips, 3) if _sum_loss_pips > 0 else 0.0
 
-        # V2 strategy stats (closed v2_2R trades only)
-        if "strategy_version" in closed.columns:
-            _v2_closed = closed[closed["strategy_version"] == "v2_2R"]
-        else:
-            _v2_closed = closed.iloc[0:0]
+        # V2 strategy stats (closed is already filtered to system_version == "v2")
+        _v2_closed = closed
         _v2_pips     = pd.to_numeric(_v2_closed["pips"], errors="coerce").fillna(0) if len(_v2_closed) > 0 else pd.Series(dtype=float)
         _v2_wins     = int((_v2_pips > 0).sum())
         _v2_losses   = int((_v2_pips < 0).sum())
