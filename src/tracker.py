@@ -212,6 +212,7 @@ def log_recommendation(pair: str, parsed: dict, data_sources, report: str) -> in
                     "entry_type":           _etype,
                     "entry_trigger_price":  _trig_p,
                     "entry_trigger_reason": _trig_r,
+                    "system_version":       config.SYSTEM_VERSION,
                 })
                 _write_all(rows)
                 return rec_id
