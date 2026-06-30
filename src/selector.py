@@ -435,16 +435,28 @@ def _fetch_ohlcv_snapshot(pair: str):
 
     Returns {"closes": [...], "highs": [...], "lows": [...], "opens": [...]}
     with values newest-first, or None on failure.
+
+    Data-source priority:
+      1. SEL:snap cache (6h TTL — fast path on re-analysis)
+      2. TD:pair:1day:400 cache written by warm_cache (24h TTL — reuses
+         whatever source warm_cache used, usually Yahoo Finance)
+      3. Yahoo Finance directly (free, no rate-limit, same source technical.py
+         prefers for 1day data — preserves Twelve Data quota for 4H candles)
+
+    The previous direct Twelve Data call has been removed: technical._td_request
+    already prefers Yahoo Finance for daily data, so a raw TD call here would
+    bypass the free-source priority and unnecessarily burn daily quota.
     """
     cache_key = f"SEL:snap:{pair}"
     cached = cache.get(cache_key)
     if cached is not None:
         return cached
 
-    # Try to reuse the technical.py daily cache (populated by warm_cache, 12h TTL)
-    # This avoids redundant API calls on afternoon scans when 6am data is still fresh
+    # Reuse the technical.py daily cache (populated by warm_cache).
+    # Use 24h TTL to match _td_request / warm_cache — the default 6h TTL caused
+    # cache misses at 6am even when yesterday's warm_cache data was still good.
     _td_key = f"TD:{pair}:1day:400"
-    _td_raw = cache.get(_td_key)
+    _td_raw = cache.get(_td_key, ttl_hours=24.0)
     if isinstance(_td_raw, dict) and "values" in _td_raw:
         _closes, _highs, _lows, _opens = [], [], [], []
         for _v in (_td_raw["values"] or [])[:20]:
@@ -460,50 +472,30 @@ def _fetch_ohlcv_snapshot(pair: str):
             cache.set(cache_key, _result)
             return _result
 
-    if not config.TWELVE_DATA_KEY:
-        return None
-
-    # Cache-only mode: skip live calls when daily limit is near (≥780 calls)
-    if _get_td_calls_today() >= 780:
-        return None
-
-    symbol = pair.replace("/", "")
-    _increment_td_usage()
+    # Yahoo Finance fallback (free, no rate-limit).
+    # technical._td_request also uses YF first for 1day, so this matches the
+    # actual data source and avoids a redundant Twelve Data quota spend.
     try:
-        r = requests.get(
-            "https://api.twelvedata.com/time_series",
-            params={
-                "symbol":     symbol,
-                "interval":   "1day",
-                "outputsize": 20,
-                "format":     "JSON",
-                "apikey":     config.TWELVE_DATA_KEY,
-            },
-            timeout=12,
-        )
-        data = r.json()
+        from src.yahoo_finance import fetch_4h_candles as _yf_4h
+        _yf_data = _yf_4h(pair, n_candles=20)
+        if _yf_data and isinstance(_yf_data, dict) and "values" in _yf_data:
+            _closes, _highs, _lows, _opens = [], [], [], []
+            for _v in (_yf_data["values"] or [])[:20]:
+                try:
+                    _closes.append(float(_v["close"]))
+                    _highs.append(float(_v["high"]))
+                    _lows.append(float(_v["low"]))
+                    _opens.append(float(_v["open"]))
+                except (KeyError, ValueError):
+                    pass
+            if len(_closes) >= 2:
+                _result = {"closes": _closes, "highs": _highs, "lows": _lows, "opens": _opens}
+                cache.set(cache_key, _result)
+                return _result
     except Exception:
-        return None
+        pass
 
-    if data.get("status") == "error" or "values" not in data:
-        return None
-
-    closes, highs, lows, opens = [], [], [], []
-    for v in data["values"]:
-        try:
-            closes.append(float(v["close"]))
-            highs.append(float(v["high"]))
-            lows.append(float(v["low"]))
-            opens.append(float(v["open"]))
-        except (KeyError, ValueError):
-            pass
-
-    if len(closes) < 2:
-        return None
-
-    result = {"closes": closes, "highs": highs, "lows": lows, "opens": opens}
-    cache.set(cache_key, result)
-    return result
+    return None
 
 
 # ── Lightweight helpers (pre-score, no API) ───────────────────────────────────
