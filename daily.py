@@ -5346,11 +5346,7 @@ def _send_telegram_summary(
                 ]
                 for _, _ft in _fri_open.iterrows():
                     _fri_pair  = str(_ft.get("pair", ""))
-                    _fri_t1h   = str(_ft.get("t1_hit", "")).upper() in ("TRUE", "YES", "1", "T")
                     _fri_tid   = int(float(str(_ft.get("id", 0) or 0)))
-                    if _fri_t1h:
-                        _log_line(log, f"[weekend] #{_fri_tid} {_fri_pair} T1 hit — keeping (partial-profit protected)")
-                        continue
                     _fri_cur   = _fri_gp(_fri_prices, _fri_pair) or float(_ft.get("entry", 0) or 0)
                     _fri_entry = float(_ft.get("entry", 0) or 0)
                     _fri_psize = _fri_ps(_fri_pair)
