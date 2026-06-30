@@ -260,17 +260,7 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
             if price is not None:
                 full_cache[pair] = price
 
-    # ── Step 2: partial profit milestones (stage 1 / stage 2) ────────────
-    try:
-        from src import partial_profit_checker as _ppc
-        _ppc.run(open_trades, full_cache, log)
-        _pp_state = _ppc.load_state()
-    except Exception as exc:
-        log(f"  Partial profit checker error — {exc}")
-        _ppc = None
-        _pp_state = {}
-
-    # ── Step 3: cascade + outcome determination + close ───────────────────
+    # ── Step 2: cascade + outcome determination + close ──────────────────
     try:
         from src import telegram_alert as _ta_casc
     except Exception:
