@@ -1794,7 +1794,7 @@ def build_fund_dashboard_embed(state: dict) -> dict:
     _v1_dec = st_decisive - v2_decisive
     if _v1_dec > 0:
         _stats_val += (
-            f"\n\n**V1 ARCHIVE** (cascade — pre Jun 29)\n"
+            f"\n\n**V1 ARCHIVE** (cascade — pre Jun 30, 2026)\n"
             f"{_v1_dec} archived trades · WR not representative\n"
             f"(exotic pairs + multi-target, old rules)"
         )
