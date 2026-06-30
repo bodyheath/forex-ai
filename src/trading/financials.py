@@ -523,18 +523,18 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         _v2_win_rate = round(_v2_wins / _v2_decisive * 100.0, 1) if _v2_decisive > 0 else 0.0
         _v2_net_pips = round(float(_v2_pips.sum()), 1) if len(_v2_pips) > 0 else 0.0
 
-        # Derive strategy metadata from trades (no file reads)
-        if "strategy_version" in fund.columns:
-            _has_v2     = (fund["strategy_version"] == "v2_2R").any()
-            _strategy_v = "v2_2R" if _has_v2 else "v1_cascade"
-            _v2_all     = fund[fund["strategy_version"] == "v2_2R"]
+        # Derive strategy metadata from system_version column
+        if "system_version" in fund.columns:
+            _has_v2     = (fund["system_version"] == "v2").any()
+            _strategy_v = "v2" if _has_v2 else "v1"
+            _v2_all     = fund[fund["system_version"] == "v2"]
             if len(_v2_all) > 0 and "timestamp" in _v2_all.columns:
                 _ts_min      = _v2_all["timestamp"].dropna()
                 _strat_start = str(_ts_min.min()) if len(_ts_min) > 0 else ""
             else:
                 _strat_start = ""
         else:
-            _strategy_v  = "v1_cascade"
+            _strategy_v  = "v1"
             _strat_start = ""
 
         # Dynamic sizing multiplier derived from actual streak / drawdown state
