@@ -204,7 +204,7 @@ def retrain_all_from_feature_store(log=None) -> dict:
             with rt_path.open("r", encoding="utf-8", newline="") as fh:
                 for row in csv.DictReader(fh):
                     tid = str(row.get("id", ""))
-                    if tid:
+                    if tid and row.get("system_version", "") == "v2":
                         outcome_map[tid] = (
                             row.get("status", ""),
                             row.get("closed_at", "") or row.get("date", ""),
