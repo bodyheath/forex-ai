@@ -114,4 +114,8 @@ def parse(report: str) -> dict:
         "risk_factors": f["RISK_FACTORS"] or None,
         "news_warning": f["NEWS_WARNING"] or None,
         "best_entry_time": f["BEST_ENTRY_TIME"] or None,
+        "entry_type":               (f.get("ENTRY_TYPE")               or "").strip().upper() or None,
+        "entry_trigger_price":      _first_price(f.get("ENTRY_TRIGGER_PRICE")      or ""),
+        "entry_trigger_reason":     (f.get("ENTRY_TRIGGER_REASON")     or "").strip() or None,
+        "entry_trigger_expiry_hours": _first_number(f.get("ENTRY_TRIGGER_EXPIRY_HOURS") or ""),
     }
