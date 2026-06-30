@@ -345,7 +345,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
             outcome = _determine_outcome(
                 direction, price,
                 row.get("entry"),
-                row.get("effective_stop") or row.get("stop_loss"),
+                row.get("stop_loss"),
                 row.get("target"),
                 row.get("date", ""),
                 expiry_days=_ext_exp,
@@ -353,36 +353,11 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
             if outcome is None:
                 continue
 
-            # On expiry: if cascade milestones were reached, use cascade outcome
-            if outcome in ("EXPIRED", "PARTIAL_WIN"):
-                _casc_oc = _casc.cascade_outcome(row)
-                if _casc_oc != "LOSS":
-                    _wp = _casc.weighted_pips(row)
-                    _tp = _casc.total_pips(row)
-                    research_tracker.update_fields(
-                        rec_id,
-                        cascading_total_pips=_tp,
-                        cascading_total_pips_weighted=_wp,
-                    )
-                    updated = research_tracker.update_outcome(
-                        rec_id, _casc_oc,
-                        close_price=price,
-                        exit_reason="EXPIRED_PROFITABLE",
-                        cascading_pips=_wp,
-                    )
-                    log(
-                        f"  Research #{rec_id} {pair} {direction}: "
-                        f"expired as {_casc_oc} ({_wp:.1f}p cascade)"
-                    )
-                    closed.append(updated)
-                    _online_learn(updated)
-                    continue
-
             close_recorded = price
             if outcome == "WIN":
                 close_recorded = _to_float(row.get("target")) or price
             elif outcome == "LOSS":
-                close_recorded = _to_float(row.get("effective_stop") or row.get("stop_loss")) or price
+                close_recorded = _to_float(row.get("stop_loss")) or price
             updated = research_tracker.update_outcome(rec_id, outcome, close_price=close_recorded)
             r_txt   = f", R={updated.get('r_multiple')}, pips={updated.get('pips')}"
             log(
