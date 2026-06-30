@@ -297,84 +297,27 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                 except Exception:
                     pass
 
-            # ── CASCADE: check milestones (greedy) ───────────────────────────
+            # ── TARGET / STOP: check milestones ──────────────────────────────
             _closed_this = False
 
-            if _casc.t1_hit(row, price):
-                _t1p = _casc.pips_at(row.get("entry"), row.get("t1_price"), pair, direction)
-                tracker.update_fields(
-                    rec_id, t1_hit="TRUE", t1_hit_price=price,
-                    t1_hit_pips=_t1p, effective_stop=row.get("entry"),
-                )
-                row.update({
-                    "t1_hit": "TRUE", "t1_hit_price": price,
-                    "t1_hit_pips": _t1p, "effective_stop": row.get("entry"),
-                })
-                log(f"  #{rec_id} {pair}: T1 hit at {price} (+{_t1p:.1f}p) — stop at breakeven")
-                if _ta_casc:
-                    try:
-                        _ta_casc.send(
-                            f"✅ <b>{pair} — T1 target hit (+{_t1p:.1f} pips)</b>\n\n"
-                            f"First target reached — 35% of position banked.\n"
-                            f"Stop loss moved to breakeven — no loss possible now.\n\n"
-                            f"Direction: {direction}  |  Price: {price}\n"
-                            f"Remaining 65% running toward T2 and T3."
-                        )
-                    except Exception:
-                        pass
-
-            if _casc.t2_hit(row, price):
+            if _casc.target_hit(row, price):
                 _t2p = _casc.pips_at(row.get("entry"), row.get("t2_price"), pair, direction)
                 tracker.update_fields(rec_id, t2_hit="TRUE", t2_hit_price=price, t2_hit_pips=_t2p)
                 row.update({"t2_hit": "TRUE", "t2_hit_price": price, "t2_hit_pips": _t2p})
-                log(f"  #{rec_id} {pair}: T2 hit at {price} (+{_t2p:.1f}p) — 70% banked")
-                if _ta_casc:
-                    try:
-                        _ta_casc.send(
-                            f"💰 <b>{pair} — T2 target hit (+{_t2p:.1f} pips)</b>\n\n"
-                            f"Second target reached — 70% of position banked.\n"
-                            f"Final 30% running to full target with stop trailed to T1.\n\n"
-                            f"Direction: {direction}  |  Price: {price}\n"
-                            f"Worst case: final tranche closes at T1 (+1R locked)."
-                        )
-                    except Exception:
-                        pass
-
-            if _casc.t3_hit(row, price):
-                _t3p = _casc.pips_at(
-                    row.get("entry"),
-                    row.get("t3_price") or row.get("target"),
-                    pair, direction,
-                )
-                tracker.update_fields(
-                    rec_id, t3_hit="TRUE", t3_hit_price=price, t3_hit_pips=_t3p,
-                )
-                row.update({"t3_hit": "TRUE", "t3_hit_price": price, "t3_hit_pips": _t3p})
-                _wp = _casc.weighted_pips(row)
-                _tp = _casc.total_pips(row)
-                tracker.update_fields(
-                    rec_id,
-                    cascading_total_pips=_tp,
-                    cascading_total_pips_weighted=_wp,
-                )
-                _cp = _to_float(row.get("t3_price") or row.get("target"))
-                _notes_fw = f"FULL_WIN: T1(+{_to_float(row.get('t1_hit_pips')) or 0:.0f}p) T2(+{_to_float(row.get('t2_hit_pips')) or 0:.0f}p) T3(+{_t3p:.0f}p) = {_wp:.1f}p weighted"
+                _cp = _to_float(row.get("t2_price")) or price
                 updated = tracker.update_outcome(
-                    rec_id, "FULL_WIN",
+                    rec_id, "WIN",
                     exit_price=_cp,
-                    notes=_notes_fw,
-                    cascading_pips=_wp,
+                    notes=f"Auto-closed: WIN at {_cp} (+{_t2p:.1f}p, 2R target)",
                 )
-                log(f"  #{rec_id} {pair} {direction}: FULL_WIN — {_wp:.1f}p weighted")
+                r_txt = f", R={updated.get('r_multiple')}, pips={updated.get('pips')}"
+                log(f"  #{rec_id} {pair} {direction}: WIN at {_cp} (+{_t2p:.1f}p){r_txt}")
                 if _ta_casc:
                     try:
                         _ta_casc.send(
-                            f"🎯 <b>{pair} — FULL WIN — all three targets hit!</b>\n\n"
-                            f"T1 +{_to_float(row.get('t1_hit_pips')) or 0:.1f}p (35%)  "
-                            f"T2 +{_to_float(row.get('t2_hit_pips')) or 0:.1f}p (35%)  "
-                            f"T3 +{_t3p:.1f}p (30%)\n"
-                            f"Weighted total: +{_wp:.1f} pips\n\n"
-                            f"Direction: {direction}  |  Final price: {price}"
+                            f"🎯 <b>{pair} — 2R profit target hit — WIN</b>\n\n"
+                            f"Full position closed at +{_t2p:.1f} pips (+2R).\n\n"
+                            f"Direction: {direction}  |  Exit: {_cp}"
                         )
                     except Exception:
                         pass
@@ -382,28 +325,15 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                 _online_learn(updated)
                 _closed_this = True
 
-            elif _casc.effective_stop_hit(row, price):
-                _casc_oc = _casc.cascade_outcome(row)
-                _wp      = _casc.weighted_pips(row) if _casc_oc != "LOSS" else None
-                _tp      = _casc.total_pips(row)    if _casc_oc != "LOSS" else None
-                if _wp:
-                    tracker.update_fields(
-                        rec_id,
-                        cascading_total_pips=_tp,
-                        cascading_total_pips_weighted=_wp,
-                    )
-                _cp      = _to_float(row.get("effective_stop") or row.get("stop_loss"))
-                _notes_c = f"Auto-closed: {_casc_oc} at {_cp}"
-                if _wp:
-                    _notes_c += f" | cascade: {_wp:.1f}p weighted"
-                updated  = tracker.update_outcome(
-                    rec_id, _casc_oc,
+            elif _casc.stop_hit(row, price):
+                _cp = _to_float(row.get("stop_loss")) or price
+                updated = tracker.update_outcome(
+                    rec_id, "LOSS",
                     exit_price=_cp,
-                    notes=_notes_c,
-                    cascading_pips=_wp if _wp else None,
+                    notes=f"Auto-closed: LOSS at {_cp} (stop_loss hit)",
                 )
                 r_txt = f", R={updated.get('r_multiple')}, pips={updated.get('pips')}"
-                log(f"  #{rec_id} {pair} {direction}: {_casc_oc} at {_cp}{r_txt}")
+                log(f"  #{rec_id} {pair} {direction}: LOSS at {_cp}{r_txt}")
                 closed.append(updated)
                 _online_learn(updated)
                 _closed_this = True
@@ -411,25 +341,15 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
             if _closed_this:
                 continue
 
-            # ── Partial profit checker (breakeven stop migration) ────────────
-            _eff_stop = row.get("stop_loss")
-            _pp_stage = 0
-            if _ppc is not None:
-                _pp_stage = _ppc.get_stage(str(rec_id), _pp_state)
-                _eff_stop = _ppc.effective_stop(str(rec_id), row.get("stop_loss"), _pp_state)
-
-            _bp_protected = _pp_stage >= 1
-
             # ── EXPIRY CHECK ─────────────────────────────────────────────────
             _base_exp = _compute_expiry_days(row)
             _ext_exp  = _casc.expiry_extension(row, _base_exp)
 
             outcome = _determine_outcome(
                 direction, price,
-                row.get("entry"), _eff_stop, row.get("target"),
+                row.get("entry"), row.get("stop_loss"), row.get("target"),
                 row.get("timestamp", ""),
                 expiry_days=_ext_exp,
-                breakeven_protected=_bp_protected,
             )
             if outcome is None:
                 continue  # still open
