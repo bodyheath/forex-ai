@@ -990,7 +990,7 @@ def send_master_scan_report(
         })
 
     # ── SECTION 4: FUND PERFORMANCE ───────────────────────────────────────────────
-    _strat_date = strategy_start_date[:10] if strategy_start_date else "Jun 29, 2026"
+    _strat_date = strategy_start_date[:10] if strategy_start_date else "Jun 30, 2026"
     if v2_decisive > 0:
         _wr_e = "🟢" if v2_win_rate >= 50 else ("🟡" if v2_win_rate >= 35 else "🔴")
         _perf_val = (
