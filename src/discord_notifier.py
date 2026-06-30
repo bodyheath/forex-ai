@@ -1010,7 +1010,7 @@ def send_master_scan_report(
     _v1_dec_scan = fund_decisive - v2_decisive
     if _v1_dec_scan > 0:
         _perf_val += (
-            f"\n\n**V1 ARCHIVE** (cascade — pre Jun 29)\n"
+            f"\n\n**V1 ARCHIVE** (cascade — pre Jun 30, 2026)\n"
             f"{_v1_dec_scan} archived trades · WR not representative"
         )
     fields.append({
