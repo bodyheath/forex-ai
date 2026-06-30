@@ -110,15 +110,10 @@ def partial_fit_trade(source_table: str, trade_id, outcome: str,
     scaler, clf, f_cols = _load_model()
 
     if clf is None:
-        # class_weight not supported for partial_fit; balance via sample_weight instead
-        clf = SGDClassifier(
-            loss="log_loss",
-            alpha=0.01,
-            learning_rate="optimal",
-            random_state=42,
-        )
-        scaler = StandardScaler()
-        f_cols = FEATURE_COLS
+        # No baseline model exists yet. Don't bootstrap from a single trade —
+        # retrain_all_from_feature_store() will create the initial model once
+        # enough decisive v2 trades accumulate in the feature store.
+        return False
 
     scaler.partial_fit(X)
     X_s = scaler.transform(X)
