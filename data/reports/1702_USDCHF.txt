@@ -1,0 +1,23 @@
+```
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly sell signal + D1 pin bar at key level + rising USD rate differential conflict with bullish ribbon alignment, creating mixed-probability setup with elevated chop risk.
+RISK_FACTORS: ['MTF agreement only 1/3 (W:SELL vs D:NEUTRAL vs 4H:BUY) — insufficient confluence; D1 trend=mixed/range invalidates directional confidence', 'ALIGNED_BULL ribbon contradicts SELL bias and T_sig=SELL_3; price 0.8075 sits 170p above SMA50 0.7905 suggesting overbought extension into resistance, not fresh short setup']
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement <2/3; CONFIDENCE=5 < 7 minimum threshold. Ribbon/technicals conflict. Insufficient edge.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**DETAILED REASONING:**
+
+1. **MTF RULE VIOLATION:** Weekly=SELL, Daily=NEUTRAL, 4H=BUY → conf=1/3 (only W agrees). MTF rule states: "if weekly AND daily don't both agree on direction,

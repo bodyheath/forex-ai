@@ -94,7 +94,9 @@
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
-    "adaptive_active": true
+    "adaptive_active": true,
+    "_prev_t1_mult": 0.8,
+    "_prev_t3_mult": 2.5
   },
   "AUD/USD": {
     "n_trades_with_mfe": 8
@@ -219,7 +221,7 @@
     "n_trades_with_mfe": 7
   },
   "GBP/USD": {
-    "n_trades_with_mfe": 8
+    "n_trades_with_mfe": 9
   },
   "NZD/AUD": {
     "n_trades_with_mfe": 2
@@ -233,7 +235,9 @@
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
-    "adaptive_active": true
+    "adaptive_active": true,
+    "_prev_t1_mult": 0.8,
+    "_prev_t3_mult": 2.5
   },
   "EUR/USD": {
     "n_trades_with_mfe": 10,

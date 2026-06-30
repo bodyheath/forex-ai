@@ -1,0 +1,23 @@
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern at resistance conflicts with daily RSI neutrality; weekly/monthly sell bias and AUD COT reversal (institutions unwinding longs) suggest downside, but MTF disagreement and oscillator weakness limit conviction.
+RISK_FACTORS: [1] MTF conflict: Weekly/Monthly SELL vs Daily BUY (conf=1/3, wt=40%) — Daily buy signal undermines trade reliability; [2] AUD COT REVERSING from net long to short mid-position — institutions are exiting conviction, reducing positioning edge and signaling potential false breakout.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.9785
+ENTRY_TRIGGER_REASON: Break below 38.2% Fib support (0.98094) to confirm double-top breakdown and establish lower low below recent swing.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**REASONING:**
+
+**MTF RULE FAILURE (CRITICAL):** Weekly=SELL, Daily=BUY, Monthly=SELL → only 1 of 3 agree on direction (conf=1/3). The rule requires **both weekly AND daily to agree**. They do not. **TRADE_THIS = NO regardless

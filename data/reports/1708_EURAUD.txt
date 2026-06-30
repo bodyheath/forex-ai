@@ -1,0 +1,26 @@
+```
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level with RSI 61.4 (overbought in mixed trend) + D1 SELL signal conflicts with weekly BUY; AUD COT reversing short provides conflicting directional pressure.
+RISK_FACTORS: [1. MTF disagreement: W:BUY + D:SELL (conf=1/3) violates MTF rule — only 1/3 timeframes align with SELL direction, insufficient confluence for high-conviction trade. 2. AUD COT REVERSING from short — institutions are unwinding bearish positioning mid-week, suggesting potential AUD bounce/EUR weakness reversal within 72h.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.6520
+ENTRY_TRIGGER_REASON: Wait for confirmation above pin bar high; IF reversal fails and price breaks above SH 1.65159, enter limit short at 1.6520 for risk/reward clarity.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **REASONING:**
+
+**MTF CONFLICT (CRITICAL BLOCKER):**
+- **Weekly: BUY** | **Daily: SELL** | **4H: NEUTRAL** →
