@@ -327,8 +327,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
             try:
                 _opened_dt  = datetime.strptime(row.get("date", "")[:10], "%Y-%m-%d")
                 _days_open  = (datetime.now(timezone.utc).replace(tzinfo=None) - _opened_dt).days
-                _t1_banked  = str(row.get("t1_hit", "")).upper() in ("TRUE", "1", "YES")
-                if _days_open >= _STALE_EXIT_DAYS and not _t1_banked:
+                if _days_open >= _STALE_EXIT_DAYS:
                     updated = research_tracker.update_outcome(
                         rec_id, "STALE_EXIT", close_price=price,
                     )
