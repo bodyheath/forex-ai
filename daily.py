@@ -6290,10 +6290,10 @@ def _send_telegram_summary(
                     _yt_e, _yt_s, _yt_t, _yt_d, atr=_yt_atr or None,
                     t1_mult=_yt_t1m, t2_mult=_yt_t2m, t3_mult=_yt_t3m,
                 )
-                if _yt_t1 is not None:
+                if _yt_t2 is not None:
                     _trk_casc_yt.update_fields(
                         int(_yt_id),
-                        t1_price=_yt_t1, t2_price=_yt_t2, t3_price=_yt_t3,
+                        t2_price=_yt_t2,
                         effective_stop=_yt_s,
                         t1_was_adaptive="TRUE" if _yt_adpt else "FALSE",
                         t1_target_atr_multiple=_yt_t1m if _yt_t1m is not None else 0.4,
