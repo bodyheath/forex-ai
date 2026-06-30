@@ -8642,27 +8642,6 @@ def _send_telegram_summary(
                         _price_line += ")"
                         _ft_sec.append(_price_line)
                         # Partial profit detail lines for open trades
-                        if _fs == "OPEN":
-                            if _pp_stage >= 2:
-                                _p_price = _pp_ts.get("partial_close_price")
-                                _p_pips  = _pp_ts.get("partial_close_pips")
-                                _p_ts    = (_pp_ts.get("partial_close_timestamp") or "")[:10]
-                                if _p_price is not None and _p_pips is not None:
-                                    _ft_sec.append(
-                                        f"   💰 50% closed: {_p_price} "
-                                        f"(+{float(_p_pips):.1f} pips) · {_p_ts}"
-                                    )
-                                _be = _pp_ts.get("breakeven_stop")
-                                _ft_sec.append(
-                                    f"   50% still running — stop at breakeven"
-                                    + (f" ({float(_be):.5f})" if _be else "")
-                                )
-                            elif _pp_stage >= 1:
-                                _be = _pp_ts.get("breakeven_stop")
-                                if _be:
-                                    _ft_sec.append(
-                                        f"   🛡️ Stop at breakeven ({float(_be):.5f}) — no loss possible"
-                                    )
                         if _fpips:
                             try:
                                 _pp = float(_fpips)
