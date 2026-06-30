@@ -1126,40 +1126,14 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
     except Exception:
         pass
 
-    api_calls  = 0
     snap_ok:   list = []
     snap_fail: list = []
     pair_scores: dict = {}
 
     for pair, base, quote, _pre in candidates:
-        cache_key = f"SEL:snap:{pair}"
-        is_miss   = cache.get(cache_key) is None and bool(config.TWELVE_DATA_KEY)
-        if is_miss:
-            if api_calls > 0:
-                time.sleep(10)
-            api_calls += 1
-
+        # _fetch_ohlcv_snapshot uses Yahoo Finance (free, no rate-limit) after
+        # cache checks — no sleep needed between calls.
         snapshot = _fetch_ohlcv_snapshot(pair)
-        if not snapshot:
-            # Twelve Data failed — try Yahoo Finance as fallback
-            try:
-                from src.yahoo_finance import fetch_4h_candles as _yf_4h
-                _yf_data = _yf_4h(pair, n_candles=20)
-                if _yf_data and isinstance(_yf_data, dict) and "values" in _yf_data:
-                    _closes, _highs, _lows, _opens = [], [], [], []
-                    for _v in (_yf_data["values"] or [])[:20]:
-                        try:
-                            _closes.append(float(_v["close"]))
-                            _highs.append(float(_v["high"]))
-                            _lows.append(float(_v["low"]))
-                            _opens.append(float(_v["open"]))
-                        except (KeyError, ValueError):
-                            pass
-                    if len(_closes) >= 2:
-                        snapshot = {"closes": _closes, "highs": _highs, "lows": _lows, "opens": _opens}
-                        log(f"  [YF-PRESCORE] {pair} — using Yahoo Finance for pre-score OHLCV")
-            except Exception:
-                pass
         if snapshot:
             snap_ok.append(pair)
         else:
