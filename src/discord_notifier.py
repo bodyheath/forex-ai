@@ -1833,25 +1833,9 @@ def build_fund_dashboard_embed(state: dict) -> dict:
             _dir_emoji = "\U0001f4c8" if _dir == "BUY" else "\U0001f4c9"
             _pnl_emoji = "🟢" if _pips >= 0 else "🔴"
 
-            if _t3h:
-                _protection = "\U0001f6e1️\U0001f6e1️\U0001f6e1️ Full cascade"
-            elif _t2h:
-                _protection = "\U0001f6e1️\U0001f6e1️ T2 banked (70%)"
-            elif _t1h:
-                _protection = "\U0001f6e1️ T1 banked (40%)"
-            else:
-                _protection = "⚡️ Running"
-
-            _cascade_dots = (
-                f"{'🟢' if _t1h else '⚪'} T1  "
-                f"{'🟢' if _t2h else '⚪'} T2  "
-                f"{'🟢' if _t3h else '⚪'} T3"
-            )
-
-            # Progress bar (0-100% toward next cascade target)
-            _bar     = _progress_bar(min(max(_prog, 0), 100), width=12)
-            _active  = (_t3 if _t2h else (_t2 if _t1h else _t1))
-            _pbar    = _price_position_bar(_entry, _cur, _stop, _active, _dir)
+            # Progress bar (0-100% toward 2R target)
+            _bar    = _progress_bar(min(max(_prog, 0), 100), width=12)
+            _pbar   = _price_position_bar(_entry, _cur, _stop, _t2, _dir)
 
             # Health label
             if _prog >= 100:
@@ -1872,19 +1856,12 @@ def build_fund_dashboard_embed(state: dict) -> dict:
             # TV url
             _tv_url = _get_tradingview_url(_pair)
 
-            # V2: simple entry → 1R (trail) → 2R (target) display
-            _trail_str  = f"`{_t1:.5f}`" if _t1 else "`(entry)`"
-            _target_str = f"`{_t2:.5f}`" if _t2 else "2R"
-            if _t1h:
-                _be_line = f"✅ Breakeven — stop trailed to {_trail_str}"
-            else:
-                _be_line = f"⚡ Watching — 1R trail triggers at {_trail_str}"
+            _target_str = f"`{_t2:.5f}`" if _t2 else "2R target"
 
             _trade_val = (
                 f"{_dir_emoji} **{_dir}** · Entry: `{_entry:.5f}`\n"
                 f"Current: `{_cur:.5f}` · Stop: `{_stop:.5f}`\n"
-                f"Trail (1R): {_trail_str} · Target (2R): {_target_str}\n\n"
-                f"{_be_line}\n\n"
+                f"Target (2R): {_target_str}\n\n"
                 f"Progress → 2R target:\n"
                 f"`{_bar}` {max(_prog, 0):.0f}%\n"
             )
