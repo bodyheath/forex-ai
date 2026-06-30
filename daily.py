@@ -8617,13 +8617,6 @@ def _send_telegram_summary(
                     ]
                     _status_icons = {"WIN":"✅","LOSS":"❌","OPEN":"⏳","EXPIRED":"⏰",
                                      "BREAKEVEN":"➖","NO_TRADE":"•"}
-                    # Load partial profit state for open-trade annotations
-                    _pp_state_fund = {}
-                    try:
-                        from src import partial_profit_checker as _ppc_fund
-                        _pp_state_fund = _ppc_fund.load_state()
-                    except Exception:
-                        pass
                     for _ftr in _all_fund_t:
                         _fs    = _ftr.get("status","?")
                         _fpair = _ftr.get("pair","?")
@@ -8635,19 +8628,9 @@ def _send_telegram_summary(
                         _frm   = _ftr.get("r_multiple","")
                         _fts   = (_ftr.get("timestamp") or "")[:10]
                         _fca   = (_ftr.get("closed_at") or "")[:10]
-                        # Partial profit state for this trade
-                        _pp_ts    = _pp_state_fund.get(str(_fid), {})
-                        _pp_stage = int(_pp_ts.get("stage", 0))
                         # Icon and status label
-                        if _fs == "OPEN" and _pp_stage >= 2:
-                            _fi = "💰"
-                            _fs_label = "OPEN · 50% Profit Taken"
-                        elif _fs == "OPEN" and _pp_stage >= 1:
-                            _fi = "🛡️"
-                            _fs_label = "OPEN · Breakeven Protected"
-                        else:
-                            _fi = _status_icons.get(_fs, "•")
-                            _fs_label = _fs
+                        _fi = _status_icons.get(_fs, "•")
+                        _fs_label = _fs
 
                         _ft_sec.append(f"{_fi} <b>#{_fid} {_fpair} {_fdir}</b> — {_fs_label}")
                         _price_line = f"   Entry: {_fent}"
