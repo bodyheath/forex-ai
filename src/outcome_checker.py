@@ -226,12 +226,8 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
 
     Workflow:
       1. For each open trade, fetch current price (cache or live API).
-      2. Run partial_profit_checker.run() — handles stage 1 (breakeven stop
-         migration) and stage 2 (50% partial close recording + alert).
-      3. Determine outcome using the effective stop (breakeven if stage 1+).
-      4. For stage-2 trades, blend the partial close price with the final
-         exit price so recorded pips reflect both tranches.
-      5. Write the outcome to tracker (trades.csv).
+      2. Check cascade milestones: target_hit → WIN, stop_hit → LOSS.
+      3. Also run _determine_outcome for expiry check.
 
     Returns a list of updated trade row dicts for each trade closed this run.
     """
