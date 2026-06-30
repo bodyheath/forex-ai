@@ -79,14 +79,8 @@ def _fetch_live_price(pair: str) -> float | None:
 
 def _determine_outcome(direction: str, price: float,
                        entry, stop, target, opened_at: str,
-                       expiry_days: int = None,
-                       breakeven_protected: bool = False) -> str | None:
-    """Return 'WIN', 'LOSS', 'BREAKEVEN', 'EXPIRED', or None (still open).
-
-    breakeven_protected=True means the stop has been moved to the breakeven
-    level by partial_profit_checker.  When that stop is hit, the outcome is
-    BREAKEVEN (not LOSS) — the trade closes at entry price, no loss recorded.
-    """
+                       expiry_days: int = None) -> str | None:
+    """Return 'WIN', 'LOSS', 'EXPIRED', or None (still open)."""
     expiry = expiry_days if expiry_days is not None else _EXPIRY_DAYS
     try:
         opened = datetime.strptime(opened_at[:19], "%Y-%m-%d %H:%M:%S")
@@ -106,12 +100,12 @@ def _determine_outcome(direction: str, price: float,
         if price >= target:
             return "WIN"
         if price <= stop:
-            return "BREAKEVEN" if breakeven_protected else "LOSS"
+            return "LOSS"
     else:
         if price <= target:
             return "WIN"
         if price >= stop:
-            return "BREAKEVEN" if breakeven_protected else "LOSS"
+            return "LOSS"
     return None
 
 
