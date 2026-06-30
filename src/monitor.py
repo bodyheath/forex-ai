@@ -1261,7 +1261,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
         cdt    = m["candle_dt"] or ""
 
         # Deduplication: skip if we already sent this alert within the window
-        if level in ("T1", "T2", "T3"):
+        if level == "T2":
             _prev_ts = _check_milestone_sent(pair, level)
             if _prev_ts:
                 log(
@@ -1276,40 +1276,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
         else:
             _send_telegram = True
 
-        if level == "T1":
-            _trk.update_fields(
-                rec_id,
-                t1_hit="TRUE", t1_hit_price=mprice,
-                t1_hit_pips=pips, effective_stop=row.get("entry"),
-            )
-            _verify_milestone_write(rec_id, "T1", _trk, pair, log=log)
-            log(f"  Monitor fund #{rec_id} {pair}: T1 recorded at {mprice} (+{pips:.1f}p)")
-            if _send_telegram:
-                _record_milestone_sent(pair, "T1", rec_id, trade_type="fund")
-            if ta and _send_telegram:
-                try:
-                    ta.send(
-                        f"🛡️ <b>{pair} trail stop activated</b>\n\n"
-                        f"Price moved +{pips:.1f} pips — stop moved to breakeven.\n"
-                        f"Full position still open, targeting 2R.\n"
-                        f"No action needed from you.\n\n"
-                        f"Direction: {direction}  |  Trail level: {mprice}"
-                        f"{f'  |  Candle: {cdt}' if cdt else ''}"
-                        + wknd_note
-                    )
-                except Exception:
-                    pass
-            try:
-                if _dn and _send_telegram:
-                    _dn.send_fund_milestone(
-                        pair, direction, "T1", pips or 0.0,
-                        _to_float(row_state.get("entry")) or 0.0, mprice,
-                        _to_float(row_state.get("effective_stop") or row_state.get("stop_loss")) or 0.0,
-                    )
-            except Exception:
-                pass
-
-        elif level == "T2":
+        if level == "T2":
             _trk.update_fields(
                 rec_id, t2_hit="TRUE", t2_hit_price=mprice, t2_hit_pips=pips,
             )
