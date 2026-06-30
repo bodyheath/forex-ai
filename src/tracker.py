@@ -273,6 +273,7 @@ def log_recommendation(pair: str, parsed: dict, data_sources, report: str) -> in
         "report_file": report_file,
         "key_thesis": parsed.get("key_thesis") or "",
         "best_entry_time": parsed.get("best_entry_time") or "",
+        "system_version": config.SYSTEM_VERSION,
     })
     _write_all(rows)
     return rec_id
