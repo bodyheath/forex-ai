@@ -80,6 +80,7 @@ FIELDS = [
     "drawdown_at_entry",          # fund drawdown % at entry
     "open_trades_at_entry",       # number of open fund trades at entry
     "ml_win_probability",         # online learner P(win) at entry
+    "system_version",             # v1 | v2 — used to filter balance/stats to v2-only
 ]
 
 # status values: NO_TRADE | PENDING | OPEN | WIN | LOSS | BREAKEVEN | SKIPPED | EXPIRED | CANCELLED | PARTIAL_WIN | FULL_WIN
