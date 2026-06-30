@@ -1,0 +1,32 @@
+PAIR: AUD/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: TRIPLE_BUY
+
+KEY_THESIS: Triple oscillator confluence (RSI+Stochastic+CCI all BUY) at D1 RSI 34.3 in mixed context supports short-term bounce, but MTF weekly SELL conflicts with daily BUY, capping confidence below 7 and requiring tight risk management.
+
+RISK_FACTORS: 
+1. MTF conflict: W:SELL dominates M:SELL vs D:BUY (only 2/3 agree on direction; confidence <67% threshold) — reversal risk if weekly structure reasserts.
+2. COT positioning reversal risk on AUD: net SHORT@47% with REVERSING momentum signals institutions are unwinding conviction, conflicting with BUY signal — reduces POSITIONING_SCORE and adds execution risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 111.0
+ENTRY_TRIGGER_REASON: Wait for RSI retest of support near SL 111.3 (Fibonacci level) with oscillator confirmation; daily BUY only valid if weekly SELL structure breaks.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL (6/10):**
+- D1 T_sig=

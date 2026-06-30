@@ -1,0 +1,17 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Daily SELL signal + pin bar at key level supported by ribbon convergence and EUR unwinding, but MTF agreement weak (1/3) and 4H hammer bullish pattern create directional conflict.
+RISK_FACTORS: [1. MTF conf=1/3 (only D and M agree on SELL; W is NEUTRAL and 4H is NEUTRAL) — insufficient multi-timeframe alignment; trading against 4H momentum breaks protocol]. [2. Oscillator silence (Stoch 70.6, CCI 77.3 both elevated but conf=NONE) + ribbon CONVERGING signals trend exhaustion/reversal risk rather than continuation — entry may front-run a reversal move].
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF protocol violation — weekly and daily do not both agree on direction (W:NEUTRAL + D:SELL + 4H:NEUTRAL = conf 1/3 < 2/3 threshold). SELL bias exists on daily + monthly, but 4H hammer bullish contradicts and oscillators show no confluence. Ribbon convergence + EUR positioning unwinding create reversal risk. Do not trade.
+ENTRY_TRIGGER_EXPIRY_HOURS:

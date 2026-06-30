@@ -1,6 +1,14 @@
 {
   "USD/JPY": {
-    "n_trades_with_mfe": 6
+    "n_trades_with_mfe": 13,
+    "average_mfe_atr": 0.285,
+    "mfe_percentile_25": 0.17,
+    "mfe_percentile_50": 0.27,
+    "mfe_percentile_75": 0.395,
+    "t1_mult": 0.8,
+    "t2_mult": 1.5,
+    "t3_mult": 2.5,
+    "adaptive_active": true
   },
   "USD/CHF": {
     "n_trades_with_mfe": 15,
@@ -25,11 +33,11 @@
     "n_trades_with_mfe": 1
   },
   "GBP/JPY": {
-    "n_trades_with_mfe": 20,
-    "average_mfe_atr": 0.994,
-    "mfe_percentile_25": 0.257,
-    "mfe_percentile_50": 0.724,
-    "mfe_percentile_75": 1.453,
+    "n_trades_with_mfe": 21,
+    "average_mfe_atr": 0.961,
+    "mfe_percentile_25": 0.266,
+    "mfe_percentile_50": 0.652,
+    "mfe_percentile_75": 1.444,
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
@@ -47,7 +55,15 @@
     "n_trades_with_mfe": 9
   },
   "CAD/JPY": {
-    "n_trades_with_mfe": 9
+    "n_trades_with_mfe": 10,
+    "average_mfe_atr": 0.679,
+    "mfe_percentile_25": 0.4,
+    "mfe_percentile_50": 0.435,
+    "mfe_percentile_75": 0.782,
+    "t1_mult": 0.8,
+    "t2_mult": 1.5,
+    "t3_mult": 2.5,
+    "adaptive_active": true
   },
   "JPY/USD": {
     "n_trades_with_mfe": 0
@@ -75,11 +91,11 @@
     "n_trades_with_mfe": 1
   },
   "AUD/NZD": {
-    "n_trades_with_mfe": 12,
-    "average_mfe_atr": 0.826,
-    "mfe_percentile_25": 0.439,
-    "mfe_percentile_50": 0.529,
-    "mfe_percentile_75": 1.002,
+    "n_trades_with_mfe": 13,
+    "average_mfe_atr": 0.857,
+    "mfe_percentile_25": 0.441,
+    "mfe_percentile_50": 0.532,
+    "mfe_percentile_75": 1.039,
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
@@ -104,11 +120,11 @@
     "_prev_t3_mult": 2.5
   },
   "GBP/AUD": {
-    "n_trades_with_mfe": 12,
-    "average_mfe_atr": 0.502,
-    "mfe_percentile_25": 0.224,
+    "n_trades_with_mfe": 14,
+    "average_mfe_atr": 0.477,
+    "mfe_percentile_25": 0.239,
     "mfe_percentile_50": 0.319,
-    "mfe_percentile_75": 0.537,
+    "mfe_percentile_75": 0.458,
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
@@ -126,11 +142,11 @@
     "n_trades_with_mfe": 0
   },
   "EUR/AUD": {
-    "n_trades_with_mfe": 18,
-    "average_mfe_atr": 0.484,
-    "mfe_percentile_25": 0.198,
-    "mfe_percentile_50": 0.414,
-    "mfe_percentile_75": 0.595,
+    "n_trades_with_mfe": 19,
+    "average_mfe_atr": 0.468,
+    "mfe_percentile_25": 0.181,
+    "mfe_percentile_50": 0.339,
+    "mfe_percentile_75": 0.589,
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
@@ -160,11 +176,11 @@
     "n_trades_with_mfe": 0
   },
   "AUD/CHF": {
-    "n_trades_with_mfe": 15,
-    "average_mfe_atr": 0.583,
-    "mfe_percentile_25": 0.426,
-    "mfe_percentile_50": 0.606,
-    "mfe_percentile_75": 0.727,
+    "n_trades_with_mfe": 16,
+    "average_mfe_atr": 0.574,
+    "mfe_percentile_25": 0.427,
+    "mfe_percentile_50": 0.583,
+    "mfe_percentile_75": 0.712,
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
@@ -191,7 +207,7 @@
     "n_trades_with_mfe": 7
   },
   "GBP/USD": {
-    "n_trades_with_mfe": 7
+    "n_trades_with_mfe": 8
   },
   "NZD/AUD": {
     "n_trades_with_mfe": 2
@@ -253,7 +269,7 @@
     "n_trades_with_mfe": 1
   },
   "AUD/SEK": {
-    "n_trades_with_mfe": 3
+    "n_trades_with_mfe": 4
   },
   "GBP/SEK": {
     "n_trades_with_mfe": 5
@@ -306,5 +322,8 @@
   "SGD/HKD": {
     "n_trades_with_mfe": 3
   },
-  "_retroactive_done": true
+  "_retroactive_done": true,
+  "CHF/JPY": {
+    "n_trades_with_mfe": 1
+  }
 }

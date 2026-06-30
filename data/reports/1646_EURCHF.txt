@@ -1,0 +1,25 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 SELL signal (T_sig=4) conflicts with weak 4H inverse H&S bullish pattern and MTF disagreement (M:BUY vs D:SELL), creating low-conviction setup in choppy range.
+RISK_FACTORS: (1) MTF incoherence — only 1/3 timeframes agree (D:SELL) while M:BUY and 4H:NEUTRAL create directional conflict; (2) EUR positioning UNWINDING (institutions reducing long conviction) while CHF SHORT is BUILDING — cross-current reduces confidence in EUR bearish thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W and D do not both agree. Conf=1/3 (<2/3 threshold). Mixed range-bound structure with inverse H&S on 4H contradicts D1 SELL signal. Position unwinding in EUR reduces institutional conviction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 4/10**
+- **D1 T_sig=SELL_4** → baseline 4, held as primary.
+-
