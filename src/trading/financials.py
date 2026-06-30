@@ -399,6 +399,10 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         _best_pips = 0.0
 
         closed = fund[fund["status"].isin(list(CLOSED_STATUSES))]
+        # V2 system reset: only v2-tagged trades count toward balance, streak, and stats.
+        # v1 history is preserved in trades.csv but excluded from all running calculations.
+        if "system_version" in fund.columns:
+            closed = closed[closed["system_version"] == "v2"]
         try:
             closed = closed.sort_values("closed_at", na_position="last")
         except Exception:
