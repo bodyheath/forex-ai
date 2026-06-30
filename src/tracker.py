@@ -155,18 +155,72 @@ def log_recommendation(pair: str, parsed: dict, data_sources, report: str) -> in
 
     # Guard: YES trades MUST have valid (non-zero, non-None) entry and stop_loss.
     # A trade opened with entry=0 or stop=0 has no stop-loss protection and
-    # breaks all downstream cascade/outcome calculations.  Reject it immediately
-    # rather than silently writing invalid data to trades.csv.
+    # breaks all downstream cascade/outcome calculations.
+    #
+    # Conditional entry types (BREAKOUT_*, LIMIT_*, PULLBACK) intentionally omit
+    # ENTRY/STOP_LOSS — the AI gives a trigger level only.  We write these as
+    # SKIPPED so the setup appears in history and reports but is never shown as an
+    # open position or counted toward trade limits.  All other YES trades with
+    # missing prices are hard-rejected (not written to CSV).
     if parsed.get("trade_this") == "YES":
         _entry_v = _to_float(parsed.get("entry"))
         _stop_v  = _to_float(parsed.get("stop_loss"))
+        _etype   = (parsed.get("entry_type") or "").upper()
         if not _entry_v or _entry_v <= 0 or not _stop_v or _stop_v <= 0:
-            print(
-                f"[tracker] REJECTED {pair} YES trade — entry={parsed.get('entry')!r} "
-                f"stop={parsed.get('stop_loss')!r} — price data missing or zero at "
-                f"trade-open time — trade NOT written to trades.csv"
-            )
-            return 0
+            if _etype in _CONDITIONAL_ENTRY_TYPES:
+                _trig_p = parsed.get("entry_trigger_price") or ""
+                _trig_r = parsed.get("entry_trigger_reason") or ""
+                _note = (
+                    f"Conditional {_etype} setup — trigger at {_trig_p} — "
+                    f"no executable ENTRY/STOP_LOSS from AI output; "
+                    f"logged as SKIPPED (no position opened)"
+                )
+                print(
+                    f"[tracker] CONDITIONAL-ENTRY {pair} ({_etype}) — "
+                    f"trigger={_trig_p} — no ENTRY/STOP in report — logged as SKIPPED"
+                )
+                rec_id = _next_id(rows)
+                report_file = _save_report_file(rec_id, pair, report)
+                rows.append({
+                    "id":                   rec_id,
+                    "timestamp":            _now(),
+                    "pair":                 pair,
+                    "direction":            parsed.get("direction"),
+                    "confidence":           parsed.get("confidence"),
+                    "technical":            parsed.get("technical_score"),
+                    "fundamental":          parsed.get("fundamental_score"),
+                    "sentiment":            parsed.get("sentiment_score"),
+                    "positioning":          parsed.get("positioning_score"),
+                    "macro":                parsed.get("macro_score"),
+                    "entry":                "",
+                    "target":               "",
+                    "stop_loss":            "",
+                    "reward_risk":          "",
+                    "trade_this":           "YES",
+                    "data_sources":         data_sources,
+                    "status":               "SKIPPED",
+                    "exit_price":           "",
+                    "r_multiple":           "",
+                    "pips":                 "",
+                    "net_pips":             "",
+                    "closed_at":            "",
+                    "notes":                _note,
+                    "report_file":          report_file,
+                    "key_thesis":           parsed.get("key_thesis") or "",
+                    "best_entry_time":      parsed.get("best_entry_time") or "",
+                    "entry_type":           _etype,
+                    "entry_trigger_price":  _trig_p,
+                    "entry_trigger_reason": _trig_r,
+                })
+                _write_all(rows)
+                return rec_id
+            else:
+                print(
+                    f"[tracker] REJECTED {pair} YES trade — entry={parsed.get('entry')!r} "
+                    f"stop={parsed.get('stop_loss')!r} — price data missing or zero at "
+                    f"trade-open time — trade NOT written to trades.csv"
+                )
+                return 0
 
     # Guard: if this is a YES trade, check for an existing OPEN or PENDING row for the same pair
     if parsed.get("trade_this") == "YES":
