@@ -652,10 +652,15 @@ def get_events_7d() -> list:
 
     # Primary: Forex Factory
     ff = _fetch_forex_factory()
-    if ff is not None:
+    if ff:  # non-empty list = real success; [] means no future events this week
         _last_source = "forex_factory"
         cache.set(_CACHE_KEY, ff)
         return ff
+    if ff is not None:
+        # FF responded but returned 0 future events (all past or bad dates).
+        # Try FMP and TD which return a rolling 7-day window regardless of
+        # the Mon–Sun week boundary that ff_calendar_thisweek.xml is limited to.
+        print("[ECO-CAL] Forex Factory: 0 future events in thisweek feed — trying FMP/TD for next 7 days")
 
     # Second fallback: Financial Modeling Prep
     fmp = _fetch_fmp()
