@@ -261,54 +261,43 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
             except Exception:
                 pass
 
-            # ── CASCADE: initialise levels if not yet stored ─────────────────
-            if not _to_float(row.get("t1_price")):
+            # ── TARGET: initialise t2_price if not yet stored ────────────────
+            if not _to_float(row.get("t2_price")):
                 try:
                     _ct1, _ct2, _ct3 = _casc.compute_levels(
                         row.get("entry"), row.get("stop_loss"),
                         row.get("target"), direction,
                     )
-                    if _ct1 is not None:
+                    if _ct2 is not None:
                         research_tracker.update_fields(
                             rec_id,
-                            t1_price=_ct1, t2_price=_ct2, t3_price=_ct3,
+                            t2_price=_ct2,
                             effective_stop=row.get("stop_loss"),
                         )
                         row.update({
-                            "t1_price": _ct1, "t2_price": _ct2, "t3_price": _ct3,
+                            "t2_price": _ct2,
                             "effective_stop": row.get("stop_loss"),
                         })
                 except Exception:
                     pass
 
-            # ── CASCADE: check milestones (greedy — all in same scan) ────────
+            # ── TARGET / STOP: check milestones ──────────────────────────────
             _closed_this = False
 
-            if _casc.t1_hit(row, price):
-                _t1p = _casc.pips_at(row.get("entry"), row.get("t1_price"), pair, direction)
-                research_tracker.update_fields(
-                    rec_id, t1_hit="TRUE", t1_hit_price=price,
-                    t1_hit_pips=_t1p, effective_stop=row.get("entry"),
-                )
-                row.update({
-                    "t1_hit": "TRUE", "t1_hit_price": price,
-                    "t1_hit_pips": _t1p, "effective_stop": row.get("entry"),
-                })
-                log(f"  Research #{rec_id} {pair}: T1 hit at {price} (+{_t1p:.1f}p) — stop at breakeven")
-
-            if _casc.t2_hit(row, price):
+            if _casc.target_hit(row, price):
                 _t2p = _casc.pips_at(row.get("entry"), row.get("t2_price"), pair, direction)
+                _cp  = _to_float(row.get("t2_price")) or price
                 research_tracker.update_fields(
-                    rec_id, t2_hit="TRUE", t2_hit_price=price, t2_hit_pips=_t2p,
+                    rec_id, t2_hit="TRUE", t2_hit_price=_cp, t2_hit_pips=_t2p,
                 )
-                row.update({"t2_hit": "TRUE", "t2_hit_price": price, "t2_hit_pips": _t2p})
+                row.update({"t2_hit": "TRUE", "t2_hit_price": _cp, "t2_hit_pips": _t2p})
                 updated = research_tracker.update_outcome(
                     rec_id, "WIN",
-                    close_price=price,
+                    close_price=_cp,
                     exit_reason="TARGET_HIT",
                 )
                 log(
-                    f"  Research #{rec_id} {pair} {direction}: WIN at {price} "
+                    f"  Research #{rec_id} {pair} {direction}: WIN at {_cp} "
                     f"(+{_t2p:.1f}p, 2R target) "
                     f"[MFE={updated.get('mfe_pips', '?')}p]"
                 )
@@ -316,25 +305,15 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                 _online_learn(updated)
                 _closed_this = True
 
-            elif _casc.effective_stop_hit(row, price):
-                _casc_oc = _casc.cascade_outcome(row)
-                _wp      = _casc.weighted_pips(row) if _casc_oc != "LOSS" else None
-                _tp      = _casc.total_pips(row)    if _casc_oc != "LOSS" else None
-                if _wp:
-                    research_tracker.update_fields(
-                        rec_id,
-                        cascading_total_pips=_tp,
-                        cascading_total_pips_weighted=_wp,
-                    )
-                _cp = _to_float(row.get("effective_stop") or row.get("stop_loss"))
+            elif _casc.stop_hit(row, price):
+                _cp = _to_float(row.get("stop_loss")) or price
                 updated = research_tracker.update_outcome(
-                    rec_id, _casc_oc,
+                    rec_id, "LOSS",
                     close_price=_cp,
                     exit_reason="STOP_HIT",
-                    cascading_pips=_wp if _wp else None,
                 )
                 log(
-                    f"  Research #{rec_id} {pair} {direction}: {_casc_oc} at {_cp} "
+                    f"  Research #{rec_id} {pair} {direction}: LOSS at {_cp} "
                     f"[MFE={updated.get('mfe_pips', '?')}p MAE={updated.get('mae_pips', '?')}p]"
                 )
                 closed.append(updated)
