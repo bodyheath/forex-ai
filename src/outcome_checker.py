@@ -354,38 +354,15 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
             if outcome is None:
                 continue  # still open
 
-            # If expiring but cascade T1/T2 already banked, honour cascade state
-            if outcome == "EXPIRED":
-                _casc_oc = _casc.cascade_outcome(row)
-                if _casc_oc != "LOSS":
-                    outcome = _casc_oc
-
-            # Stage 2 + breakeven stop hit → partial profit already locked, WIN
-            if outcome == "BREAKEVEN" and _pp_stage >= 2:
-                outcome = "WIN"
-
-            # Blended exit price for stage-2 trades
-            _final_exit = price
-            _partial_note = ""
-            if _ppc is not None and _pp_stage >= 2:
-                _final_exit = _ppc.blended_exit_price(str(rec_id), price, _pp_state)
-                _partial_price = _pp_state.get(str(rec_id), {}).get("partial_close_price", "")
-                _partial_pips  = _pp_state.get(str(rec_id), {}).get("partial_close_pips", 0)
-                if _partial_price:
-                    _partial_note = (
-                        f" | Partial close: 50% at {_partial_price} "
-                        f"(+{_partial_pips:.1f}p), 50% at {price} "
-                        f"(blended {_final_exit:.5f})"
-                    )
+            # Use canonical level price (not live) to avoid overshoot distortion
+            if outcome == "WIN":
+                _final_exit = _to_float(row.get("target")) or price
+            elif outcome == "LOSS":
+                _final_exit = _to_float(row.get("stop_loss")) or price
             else:
-                # Use the canonical level (target/stop) not the live price to
-                # avoid recording pips that include overshoot past the level.
-                if outcome == "WIN":
-                    _final_exit = _to_float(row.get("target")) or price
-                elif outcome in ("LOSS", "BREAKEVEN"):
-                    _final_exit = _to_float(row.get("effective_stop") or row.get("stop_loss")) or price
+                _final_exit = price
 
-            _notes = f"Auto-closed: {outcome} at {_final_exit}{_partial_note}"
+            _notes = f"Auto-closed: {outcome} at {_final_exit}"
             updated = tracker.update_outcome(
                 rec_id, outcome,
                 exit_price=_final_exit,
