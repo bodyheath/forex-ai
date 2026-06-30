@@ -1,14 +1,9 @@
 """Automatic daily outcome detection for open trade recommendations.
 
 Fetches the live price for every OPEN trade from Twelve Data, then:
-  1. Runs partial_profit_checker — moves stops to breakeven at 50%, records
-     partial closes at 75%, and sends Telegram alerts for each milestone.
-  2. Closes any trade that has hit its target (WIN), effective stop (LOSS or
-     BREAKEVEN), or been open for 5+ days (EXPIRED).
-
-When a trade has been partially closed (stage 2), the final exit uses the
-blended average of the partial close price and the current price so the
-recorded pips accurately reflect the two-tranche exit.
+  1. For each open trade, check if price crossed target (WIN at 2R) or
+     stop_loss (LOSS at -1R).  Stop never moves — pure TP-or-SL.
+  2. Close any trade that has hit target, stop, or expired (5+ days).
 
 Returns the list of closed trade row dicts so the caller can immediately
 run win/loss analysis on them.
