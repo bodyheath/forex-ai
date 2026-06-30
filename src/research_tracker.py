@@ -126,6 +126,7 @@ FIELDS = [
     "effective_stop",             # starts as stop_loss; moves to entry after T1 hit
     "cascading_total_pips",       # sum of pips across all hit portions
     "cascading_total_pips_weighted",  # 0.4×t1 + 0.3×t2 + 0.3×t3
+    "system_version",             # v1 | v2 — used to filter ML training to v2-only
 ]
 
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN", "FULL_WIN", "STALE_EXIT"}
