@@ -523,13 +523,14 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         _v2_win_rate = round(_v2_wins / _v2_decisive * 100.0, 1) if _v2_decisive > 0 else 0.0
         _v2_net_pips = round(float(_v2_pips.sum()), 1) if len(_v2_pips) > 0 else 0.0
 
-        # Derive strategy metadata from system_version column
+        # Derive strategy metadata from system_version column.
+        # strategy_start_date = earliest closed v2 trade timestamp (blank until first v2 closes).
         if "system_version" in fund.columns:
             _has_v2     = (fund["system_version"] == "v2").any()
             _strategy_v = "v2" if _has_v2 else "v1"
-            _v2_all     = fund[fund["system_version"] == "v2"]
-            if len(_v2_all) > 0 and "timestamp" in _v2_all.columns:
-                _ts_min      = _v2_all["timestamp"].dropna()
+            # closed is already filtered to v2; use its timestamps for strategy start date
+            if len(closed) > 0 and "timestamp" in closed.columns:
+                _ts_min      = closed["timestamp"].dropna()
                 _strat_start = str(_ts_min.min()) if len(_ts_min) > 0 else ""
             else:
                 _strat_start = ""
