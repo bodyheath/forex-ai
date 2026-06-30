@@ -56,6 +56,9 @@ TELEGRAM_CHAT_ID_3 = os.getenv("TELEGRAM_CHAT_ID_3", "")
 ACCOUNT_BALANCE  = float(os.getenv("ACCOUNT_BALANCE") or "10000")
 ACCOUNT_CURRENCY = os.getenv("ACCOUNT_CURRENCY") or "USD"
 
+# Version tag written to every new trade row — used to filter v2-only stats/balance.
+SYSTEM_VERSION = "v2"
+
 RISK_PROFILE_FILE = DATA_DIR / "risk_profile.json"
 PARTIAL_PROFIT_STATE_FILE = DATA_DIR / "partial_profit_state.json"
 
