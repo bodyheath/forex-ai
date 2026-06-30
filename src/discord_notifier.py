@@ -1775,7 +1775,7 @@ def build_fund_dashboard_embed(state: dict) -> dict:
     v2_win_rate = float(state.get("v2_win_rate") or 0)
     v2_net_pips = float(state.get("v2_net_pips") or 0)
     strat_start = str(state.get("strategy_start_date") or "")
-    strat_date  = strat_start[:10] if strat_start else "Jun 29, 2026"
+    strat_date  = strat_start[:10] if strat_start else "Jun 30, 2026"
 
     if v2_decisive > 0:
         _wr_e = "🟢" if v2_win_rate >= 50 else ("🟡" if v2_win_rate >= 35 else "🔴")
