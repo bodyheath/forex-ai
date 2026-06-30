@@ -3115,7 +3115,7 @@ def run(log=print) -> dict:
                 log(
                     f"[progress] {_dt.get('pair','')} {_dt.get('direction','')}: "
                     f"entry={_dt.get('entry',0):.5f} cur={_dt.get('current',0):.5f} "
-                    f"target={_dt.get('t1',0):.5f} ({_dt.get('next_target','T1')}) "
+                    f"target={_dt.get('t1',0):.5f} (TARGET) "
                     f"progress={_dt.get('progress_pct',0):.1f}% "
                     f"P&L={_dt.get('pips_unrealised',0):+.1f}p/${_dt.get('dollars_unrealised',0):+.2f} "
                     f"t1h={_dt.get('t1_hit',False)} t2h={_dt.get('t2_hit',False)} "
