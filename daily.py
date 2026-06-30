@@ -11606,16 +11606,13 @@ def run() -> int:
                         _ct1_rt, _ct2_rt, _ct3_rt = _casc_rt_log.compute_levels(
                             _casc_e_rt, _casc_s_rt, _casc_t_rt, _casc_d_rt,
                         )
-                        if _ct1_rt is not None:
+                        if _ct2_rt is not None:
                             _extra_rt.update({
-                                "t1_price":       _ct1_rt,
                                 "t2_price":       _ct2_rt,
-                                "t3_price":       _ct3_rt,
                                 "effective_stop": _casc_s_rt,
                             })
                             _log_line(log,
-                                f"[research] {r_result['pair']} 2:1 targets: "
-                                f"trail={_ct1_rt:.5f} (1R)  target={_ct2_rt:.5f} (2R)")
+                                f"[research] {r_result['pair']} 2R target: {_ct2_rt:.5f}")
                 except Exception:
                     pass
 
