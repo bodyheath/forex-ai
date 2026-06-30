@@ -85,6 +85,12 @@ FIELDS = [
 # status values: NO_TRADE | PENDING | OPEN | WIN | LOSS | BREAKEVEN | SKIPPED | EXPIRED | CANCELLED | PARTIAL_WIN | FULL_WIN
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "SKIPPED", "EXPIRED", "PARTIAL_WIN", "FULL_WIN"}
 
+# Entry types where the AI signals a conditional trigger level rather than an
+# immediately executable price — no ENTRY/STOP_LOSS will be present in the report.
+_CONDITIONAL_ENTRY_TYPES = frozenset({
+    "BREAKOUT_BUY", "BREAKOUT_SELL", "LIMIT_BUY", "LIMIT_SELL", "PULLBACK",
+})
+
 
 def _now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
