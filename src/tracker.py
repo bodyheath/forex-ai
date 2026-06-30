@@ -141,8 +141,26 @@ def log_recommendation(pair: str, parsed: dict, data_sources, report: str) -> in
 
     If a YES trade for this pair is already OPEN, returns the existing id and
     overwrites the report file — prevents duplicate OPEN rows on re-analysis.
+
+    Returns 0 when a YES trade is rejected because entry or stop_loss is
+    missing or zero — caller should treat 0 as "trade not written".
     """
     rows = load()
+
+    # Guard: YES trades MUST have valid (non-zero, non-None) entry and stop_loss.
+    # A trade opened with entry=0 or stop=0 has no stop-loss protection and
+    # breaks all downstream cascade/outcome calculations.  Reject it immediately
+    # rather than silently writing invalid data to trades.csv.
+    if parsed.get("trade_this") == "YES":
+        _entry_v = _to_float(parsed.get("entry"))
+        _stop_v  = _to_float(parsed.get("stop_loss"))
+        if not _entry_v or _entry_v <= 0 or not _stop_v or _stop_v <= 0:
+            print(
+                f"[tracker] REJECTED {pair} YES trade — entry={parsed.get('entry')!r} "
+                f"stop={parsed.get('stop_loss')!r} — price data missing or zero at "
+                f"trade-open time — trade NOT written to trades.csv"
+            )
+            return 0
 
     # Guard: if this is a YES trade, check for an existing OPEN or PENDING row for the same pair
     if parsed.get("trade_this") == "YES":
