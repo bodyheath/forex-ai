@@ -1218,7 +1218,10 @@ def warm_cache(pairs: list, log=print) -> None:
     _stooq_before = _stooq_calls_this_run
     for pair, interval, outputsize in needed:
         if api_n > 0:
-            time.sleep(10)
+            # 4H candles use Twelve Data (rate-limited to 8/min → 10s spacing).
+            # daily/weekly/monthly use Yahoo Finance first (free, no rate-limit)
+            # so only a 1s pause is needed to avoid hammering YF concurrently.
+            time.sleep(10 if interval == "4h" else 1)
         try:
             _td_request(pair, interval, outputsize, _log=log)
             log(f"  Cached {pair} {interval}")
