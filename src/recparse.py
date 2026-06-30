@@ -18,6 +18,7 @@ LABELS = [
     "KEY_THESIS", "RISK_FACTORS",
     "ENTRY", "TARGET", "STOP_LOSS", "REWARD_RISK_RATIO",
     "BEST_ENTRY_TIME", "NEWS_WARNING", "TRADE_THIS",
+    "ENTRY_TYPE", "ENTRY_TRIGGER_PRICE", "ENTRY_TRIGGER_REASON", "ENTRY_TRIGGER_EXPIRY_HOURS",
 ]
 # Tolerate leading markdown (**, #, -, >) and bold-wrapped labels like
 # "**CONFIDENCE:** 4/10". Labels are >=2 uppercase letters/underscores.
