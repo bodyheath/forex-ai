@@ -10786,8 +10786,11 @@ def run() -> int:
         except Exception as exc:
             _log_line(log, f"Technical pre-fetch failed (analysis will still run): {exc}")
 
-        # Diagnostic: log indicator snapshot — all AUD crosses + one per currency group
-        _log_line(log, "[DIAG] Technical indicator snapshot (from cache):")
+        # Diagnostic: log indicator snapshot — all AUD crosses + one per currency group.
+        # This reads warm_cache data written moments ago.  Pairs not in the top-25
+        # pre-score list are not pre-warmed here and will show NOT IN CACHE — they
+        # will be fetched individually during the analysis loop below.
+        _log_line(log, "[DIAG] Technical indicator snapshot (warm_cache only — pairs outside top-25 pre-score show NOT IN CACHE and will be fetched during analysis):")
         _DIAG_PAIRS = [
             # AUD crosses — full set for debugging AUD-specific issues
             "AUD/CHF", "AUD/JPY", "AUD/USD", "AUD/NZD", "AUD/CAD",
