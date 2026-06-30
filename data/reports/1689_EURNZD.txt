@@ -1,0 +1,26 @@
+```
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI overbought (62.5) with double-top pattern on 4H and T_sig SELL_3, but MTF misalignment (W/D both NEUTRAL vs M SELL) and bullish ribbon create conflicting signals.
+RISK_FACTORS: [1] MTF consensus weak — weekly and daily both neutral contradicts monthly sell + double-top reversal pattern; [2] EUR COT UNWINDING while net LONG — institutional conviction weakening into potential reversal, raises whipsaw risk.
+TRADE_THIS: NO
+ENTRY_TYPE: AVOID
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated — weekly AND daily must both agree on direction; here W:NEUTRAL + D:NEUTRAL (conf=0/3) fails to confirm monthly SELL. Ribbon alignment (5/5 bullish) contradicts sell thesis. Insufficient confluence for high-confidence entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS RATIONALE:**
+
+**MTF DISQUALIFICATION (HARD RULE):**
+- Weekly & Daily both NEUTRAL; Monthly SELL alone insufficient.
+- MTF conf=0/3 (0 out of 3 timeframes agree on
