@@ -3133,7 +3133,8 @@ def run(log=print) -> dict:
                 import math as _math_st
                 with open(config.DATA_DIR / "trades.csv", encoding="utf-8-sig", newline="") as _tf:
                     _fund_rows = [r for r in _csv_dash.DictReader(_tf)
-                                  if r.get("trade_this") == "YES"]
+                                  if r.get("trade_this") == "YES"
+                                  and r.get("system_version") == "v2"]
                 _st_total = len(_fund_rows)
                 _sample   = _fund_rows[0] if _fund_rows else {}
                 _has_outcome = (
