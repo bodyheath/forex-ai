@@ -277,21 +277,21 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                 log(f"  #{rec_id} {pair}: price unavailable, skipping.")
                 continue
 
-            # ── CASCADE: initialise levels if not yet stored ─────────────────
-            if not _to_float(row.get("t1_price")):
+            # ── TARGET: initialise t2_price (target level) if not yet stored ──
+            if not _to_float(row.get("t2_price")):
                 try:
                     _ct1, _ct2, _ct3 = _casc.compute_levels(
                         row.get("entry"), row.get("stop_loss"),
                         row.get("target"), direction,
                     )
-                    if _ct1 is not None:
+                    if _ct2 is not None:
                         tracker.update_fields(
                             rec_id,
-                            t1_price=_ct1, t2_price=_ct2, t3_price=_ct3,
+                            t2_price=_ct2,
                             effective_stop=row.get("stop_loss"),
                         )
                         row.update({
-                            "t1_price": _ct1, "t2_price": _ct2, "t3_price": _ct3,
+                            "t2_price": _ct2,
                             "effective_stop": row.get("stop_loss"),
                         })
                 except Exception:
