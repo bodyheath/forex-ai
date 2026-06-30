@@ -1098,29 +1098,25 @@ def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) ->
     """Return (milestones_list, updated_row_state).
 
     milestones_list: each item is a dict with keys:
-        level     — "T1", "T2", "T3", "STOP"
+        level     — "T2" (WIN target) or "STOP"
         price     — candle extreme that triggered the level
         candle_dt — datetime string of the candle
         pips      — pip distance from entry (None for STOP)
 
-    Processes candles from oldest to newest, applying greedy cascade so that a
-    single candle crossing T1+T2+T3 fires all three in sequence.
+    Processes candles from oldest to newest.
     """
     direction = (row.get("direction") or "").upper()
     if direction not in ("BUY", "SELL"):
         return [], row
 
-    row_state  = dict(row)   # mutable local copy for greedy tracking
+    row_state  = dict(row)   # mutable local copy for tracking
     milestones = []
 
-    _t1_done  = _is_true(row_state.get("t1_hit"))
     _t2_done  = _is_true(row_state.get("t2_hit"))
     _trade_id = row_state.get("id", "")
 
-    if _t1_done and _t2_done:
-        log(f"  Monitor: {pair} #{_trade_id} — T1+T2 already hit — checking T3 only")
-    elif _t1_done:
-        log(f"  Monitor: {pair} #{_trade_id} — T1 already hit — checking T2+T3")
+    if _t2_done:
+        log(f"  Monitor: {pair} #{_trade_id} — target already hit — checking stop only")
 
     for candle in reversed(candles):   # API returns newest first → oldest first
         high = _to_float(candle.get("high"))
@@ -1134,25 +1130,7 @@ def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) ->
         tgt_price  = high if direction == "BUY" else low
         stop_price = low  if direction == "BUY" else high
 
-        # Greedy cascade: T1 → T2 → T3 — skip already-hit levels
-        if not _t1_done and _casc.t1_hit(row_state, tgt_price):
-            t1p = _casc.pips_at(row_state.get("entry"), row_state.get("t1_price"), pair, direction)
-            row_state.update({
-                "t1_hit":       "TRUE",
-                "t1_hit_price": tgt_price,
-                "t1_hit_pips":  t1p,
-                "effective_stop": row_state.get("entry"),
-            })
-            _t1_done = True
-            milestones.append({"level": "T1", "price": tgt_price, "candle_dt": dt, "pips": t1p})
-            side_label = "HIGH" if direction == "BUY" else "LOW"
-            log(
-                f"  Monitor: {pair} candle {side_label} {tgt_price} crossed trail level "
-                f"{row.get('t1_price')} during {dt} candle — trail recorded as hit "
-                f"even if current price is now below trail — stop moved to breakeven"
-            )
-
-        if not _t2_done and _casc.t2_hit(row_state, tgt_price):
+        if not _t2_done and _casc.target_hit(row_state, tgt_price):
             t2p = _casc.pips_at(row_state.get("entry"), row_state.get("t2_price"), pair, direction)
             row_state.update({
                 "t2_hit":       "TRUE",
@@ -1164,12 +1142,12 @@ def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) ->
             log(f"  Monitor: {pair} 2R WIN target hit at {tgt_price} (+{t2p:.1f}p)")
             break   # WIN — no further milestone checks
 
-        # Stop check (only if WIN not hit in this candle)
-        elif _casc.effective_stop_hit(row_state, stop_price):
-            # Use the stop level (not the candle extreme) as the close price
-            eff = _to_float(row_state.get("effective_stop") or row_state.get("stop_loss"))
-            milestones.append({"level": "STOP", "price": eff, "candle_dt": dt, "pips": None})
-            log(f"  Monitor: {pair} effective stop {eff} hit (candle extreme {stop_price}) during {dt}")
+        elif _casc.stop_hit(row_state, stop_price):
+            # Use the stop_loss level (not the candle extreme) as the close price
+            sl = _to_float(row_state.get("stop_loss"))
+            milestones.append({"level": "STOP", "price": sl, "candle_dt": dt, "pips": None})
+            side_label = "LOW" if direction == "BUY" else "HIGH"
+            log(f"  Monitor: {pair} stop_loss {sl} hit (candle {side_label} {stop_price}) during {dt}")
             break
 
     return milestones, row_state
