@@ -12140,6 +12140,7 @@ def run() -> int:
                 _dsc_ml_act = False
                 _dsc_ml_lr  = "never"
                 _dsc_mta    = _dsc_hhhl = 0.0
+                _n_reliable = 0  # safe default — only updated if ml_model_meta.json exists
                 try:
                     _dsc_ml_path = config.DATA_DIR / "online_model_meta.json"
                     if _dsc_ml_path.exists():
