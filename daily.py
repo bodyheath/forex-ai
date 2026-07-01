@@ -11963,7 +11963,12 @@ def run() -> int:
                 _dsc_expiry_al = []
                 try:
                     _dsc_df    = _dsc_pd.read_csv(config.DATA_DIR / "trades.csv", encoding="utf-8-sig")
-                    _dsc_fund  = _dsc_df[_dsc_df["trade_this"].astype(str) == "YES"].copy()
+                    _dsc_v2_mask = (
+                        _dsc_df["system_version"].astype(str) == "v2"
+                        if "system_version" in _dsc_df.columns
+                        else _dsc_pd.Series([True] * len(_dsc_df), index=_dsc_df.index)
+                    )
+                    _dsc_fund  = _dsc_df[(_dsc_df["trade_this"].astype(str) == "YES") & _dsc_v2_mask].copy()
                     _dsc_fo    = _dsc_fund[_dsc_fund["status"].astype(str).str.upper() == "OPEN"]
                     _dsc_fc    = _dsc_fund[_dsc_fund["status"].astype(str).str.upper() != "OPEN"]
                     _dsc_fopen_cnt = len(_dsc_fo)
