@@ -26,15 +26,17 @@
     "_prev_t3_mult": 2.5
   },
   "GBP/CHF": {
-    "n_trades_with_mfe": 10,
-    "average_mfe_atr": 0.593,
-    "mfe_percentile_25": 0.328,
-    "mfe_percentile_50": 0.492,
-    "mfe_percentile_75": 0.811,
+    "n_trades_with_mfe": 11,
+    "average_mfe_atr": 0.563,
+    "mfe_percentile_25": 0.294,
+    "mfe_percentile_50": 0.452,
+    "mfe_percentile_75": 0.799,
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
-    "adaptive_active": true
+    "adaptive_active": true,
+    "_prev_t1_mult": 0.8,
+    "_prev_t3_mult": 2.5
   },
   "CHF/GBP": {
     "n_trades_with_mfe": 0
@@ -43,11 +45,11 @@
     "n_trades_with_mfe": 1
   },
   "GBP/JPY": {
-    "n_trades_with_mfe": 21,
-    "average_mfe_atr": 0.961,
-    "mfe_percentile_25": 0.266,
-    "mfe_percentile_50": 0.652,
-    "mfe_percentile_75": 1.444,
+    "n_trades_with_mfe": 23,
+    "average_mfe_atr": 0.911,
+    "mfe_percentile_25": 0.283,
+    "mfe_percentile_50": 0.598,
+    "mfe_percentile_75": 1.304,
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
@@ -56,7 +58,15 @@
     "_prev_t3_mult": 2.5
   },
   "EUR/GBP": {
-    "n_trades_with_mfe": 8
+    "n_trades_with_mfe": 15,
+    "average_mfe_atr": 0.502,
+    "mfe_percentile_25": 0.247,
+    "mfe_percentile_50": 0.407,
+    "mfe_percentile_75": 0.753,
+    "t1_mult": 0.8,
+    "t2_mult": 1.5,
+    "t3_mult": 2.5,
+    "adaptive_active": true
   },
   "EUR/CHF": {
     "n_trades_with_mfe": 6
@@ -126,15 +136,17 @@
     "_prev_t3_mult": 2.5
   },
   "NZD/CHF": {
-    "n_trades_with_mfe": 11,
-    "average_mfe_atr": 0.739,
-    "mfe_percentile_25": 0.412,
-    "mfe_percentile_50": 0.583,
-    "mfe_percentile_75": 1.044,
+    "n_trades_with_mfe": 12,
+    "average_mfe_atr": 0.727,
+    "mfe_percentile_25": 0.417,
+    "mfe_percentile_50": 0.588,
+    "mfe_percentile_75": 1.039,
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
-    "adaptive_active": true
+    "adaptive_active": true,
+    "_prev_t1_mult": 0.8,
+    "_prev_t3_mult": 2.5
   },
   "EUR/JPY": {
     "n_trades_with_mfe": 12,
@@ -303,7 +315,7 @@
     "n_trades_with_mfe": 3
   },
   "NZD/USD": {
-    "n_trades_with_mfe": 7
+    "n_trades_with_mfe": 8
   },
   "NZD/SGD": {
     "n_trades_with_mfe": 1
@@ -367,6 +379,6 @@
     "n_trades_with_mfe": 5
   },
   "EUR/NZD": {
-    "n_trades_with_mfe": 1
+    "n_trades_with_mfe": 2
   }
 }
