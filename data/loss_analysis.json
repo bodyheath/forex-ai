@@ -16,5 +16,14 @@
     "analysis": "## What Went Wrong\n\nThe bearish EMA ribbon (fully aligned and fanning 5/5) was the dominant structural signal but was critically underweighted against short-term oscillator readings \u2014 a fully fanned bearish ribbon on higher timeframes nearly always overrides oversold bounces, as price continues to find new lows before any meaningful reversal. The triple oscillator confluence (RSI oversold + pin bar) was a classic **bear market oversold trap**: in entrenched downtrends, oscillators can remain oversold or reset lower without price recovering, making mean-reversion longs extremely low-probability. The 4H death-cross structure was explicitly flagged as overhead resistance, meaning the trade was entering against two compounding technical headwinds with only 351 pips of stop room in a pair showing sustained directional momentum. The warning sign that should have prevented this trade was the internal contradiction: a TECHNICAL_SCORE of 7 was inflated by oscillator signals while ignoring that the trend-following components (ribbon, death cross, SMA structure) were unanimously bearish \u2014 a divided technical picture should never score 7 or justify execution.\n\nPATTERN: Never BUY into a fully fanned bearish EMA ribbon (5/5); oversold oscillators in strong downtrends are traps, not reversals.",
     "pattern_rule": "Never BUY into a fully fanned bearish EMA ribbon (5/5); oversold oscillators in strong downtrends are traps, not reversa",
     "analysed_at": "2026-06-24 09:22:44"
+  },
+  {
+    "id": "1402",
+    "pair": "CAD/HKD",
+    "status": "EXPIRED",
+    "r_multiple": -0.01,
+    "analysis": "## What Went Wrong\n\nThe trade was almost entirely driven by the technical score (10.0/10), while Fundamental, Sentiment, and Macro layers all sat at a weak 5.0/10 \u2014 a clear signal that the technical setup lacked multi-layer confirmation. The CAD/HKD pair is inherently illiquid and macro-sensitive, meaning any softness in Canadian economic data or oil prices during the June 25\u2013July 1 window could easily override even a strong chart pattern. The sentiment and positioning scores (5.0 and 6.0) suggested the market was not aligned with the bullish thesis, which should have been a red flag for a BUY entry at that confidence level. A 7.0/10 confidence score with three out of five layers at or below neutral (5.0) was insufficient justification to risk capital, especially on a cross-pair with limited liquidity.\n\nPATTERN: Don't BUY if 3+ analysis layers score \u22645.0 \u2014 technical-only setups on illiquid crosses require broad confluence.",
+    "pattern_rule": "Don't BUY if 3+ analysis layers score \u22645.0 \u2014 technical-only setups on illiquid crosses require broad confluence.",
+    "analysed_at": "2026-07-01 21:13:35"
   }
 ]

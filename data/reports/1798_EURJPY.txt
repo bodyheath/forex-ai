@@ -1,0 +1,17 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and monthly both signal SELL, but daily is neutral and MTF confidence is weak (1/3); EUR unwinding long positions while JPY building shorts creates conflicting pressure.
+RISK_FACTORS: [1] MTF disagreement (W:SELL + D:NEUTRAL) fails 2/3 agreement threshold—trade lacks directional conviction. [2] EUR positioning unwinding into a SELL signal is contrarian risk; if unwinding accelerates, momentum could reverse upside.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do not both agree on direction (W:SELL, D:NEUTRAL = 1/3 confidence). Minimum 2/3 MTF agreement required for TRADE_THIS: YES. Inside bar (neutral pattern) + oscillator NONE + RSI neutral (50.7) + price within 5p of 50% Fib provides no directional edge. EUR unwinding positioning contradicts SELL signal—wait for clear daily breakout below 184.0 or daily RSI <40 + MACD bearish cross before reconsidering.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
