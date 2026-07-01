@@ -465,8 +465,9 @@ def _fetch_twelve_data():
 
     now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
     end_utc = now_utc + timedelta(days=7)
+    _td_resp = None
     try:
-        r = requests.get(
+        _td_resp = requests.get(
             "https://api.twelvedata.com/economic_calendar",
             params={
                 "start_date": now_utc.strftime("%Y-%m-%d"),
@@ -475,9 +476,14 @@ def _fetch_twelve_data():
             },
             timeout=15,
         )
-        data = r.json()
+        data = _td_resp.json()
     except Exception as e:
-        print(f"[ECO-CAL] Twelve Data fetch failed: {e}")
+        _td_body = ""
+        try:
+            _td_body = (_td_resp.text[:300] if _td_resp is not None else "")
+        except Exception:
+            pass
+        print(f"[ECO-CAL] Twelve Data fetch failed: {e} — raw response: {_td_body!r}")
         return None
 
     raw = data.get("result", data)
