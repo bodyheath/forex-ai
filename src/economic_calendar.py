@@ -267,7 +267,9 @@ def _build_forecast_desc(event_name: str, currency: str,
 def _fetch_forex_factory():
     """Fetch HIGH impact events from Forex Factory XML feed.
 
-    Retries up to 2 times on failure before returning None.
+    Retries up to 2 times on transient failures. Immediately skips to the
+    next source on 429 rate-limit (no retry — sleeping won't help and wastes
+    scan time).
     Returns list of event dicts on success (possibly empty when no events this
     week), or None on network/parse failure.
     """
@@ -281,14 +283,17 @@ def _fetch_forex_factory():
                 timeout=15,
                 headers={"User-Agent": "Mozilla/5.0 (forex-ai calendar)"},
             )
+            if r.status_code == 429:
+                print(f"[ECO-CAL] Forex Factory rate-limited (429) — skipping to next source")
+                return None
             r.raise_for_status()
             root = ET.fromstring(r.content)
             break
         except Exception as e:
             _last_exc = e
             if _attempt < 2:
-                print(f"[ECO-CAL] Forex Factory attempt {_attempt + 1} failed: {e} — retrying in 10s")
-                _time_ff.sleep(10)
+                print(f"[ECO-CAL] Forex Factory attempt {_attempt + 1} failed: {e} — retrying in 5s")
+                _time_ff.sleep(5)
     else:
         print(f"[ECO-CAL] Forex Factory fetch failed after 3 attempts: {_last_exc}")
         return None
