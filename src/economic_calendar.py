@@ -642,58 +642,70 @@ def _fetch_fmp():
     return events
 
 
+# ── Process-level in-memory cache ────────────────────────────────────────────
+# Prevents repeated HTTP round-trips when all sources fail within a single scan
+# run (which calls get_events_7d() 5+ times).  Cleared on next successful fetch
+# or after _PROC_CACHE_TTL seconds.
+import time as _time_proc
+_proc_cache_value: list | None = None
+_proc_cache_at: float = 0.0
+_PROC_CACHE_TTL = 1800  # 30 minutes — long enough to cover a full scan run
+
+
 # ── Public API ────────────────────────────────────────────────────────────────
 
 def get_events_7d() -> list:
     """Fetch HIGH impact events for the next 7 days.
 
     Priority order:
-      1. Forex Factory XML (2 retries before giving up)
-      2. Financial Modeling Prep free API (no key needed)
-      3. Twelve Data economic calendar API
-      4. Empty list — don't cache so the next call retries
+      1. Forex Factory XML (no retry on 429; 2 retries on other failures)
+      2. Twelve Data economic calendar API (requires TWELVE_DATA_KEY)
+      3. Empty list — cached in-process for 30 min so subsequent within-scan
+         calls don't re-attempt all sources
 
-    Results cached for 3 hours.
+    Results cached on-disk for 3 hours on success.
+    Note: FMP was removed — it now requires an API key that isn't configured.
     """
-    global _last_source
+    global _last_source, _proc_cache_value, _proc_cache_at
 
+    # 1. On-disk cache (successful fetches only, 3-hour TTL)
     cached = cache.get(_CACHE_KEY, ttl_hours=_CACHE_TTL)
     if cached is not None:
         return cached
+
+    # 2. In-process cache (covers both success and failure within a scan run)
+    if _proc_cache_value is not None and (_time_proc.time() - _proc_cache_at) < _PROC_CACHE_TTL:
+        return _proc_cache_value
 
     # Primary: Forex Factory
     ff = _fetch_forex_factory()
     if ff:  # non-empty list = real success; [] means no future events this week
         _last_source = "forex_factory"
         cache.set(_CACHE_KEY, ff)
+        _proc_cache_value = ff
+        _proc_cache_at = _time_proc.time()
         return ff
     if ff is not None:
         # FF responded but returned 0 future events (all past or bad dates).
-        # Try FMP and TD which return a rolling 7-day window regardless of
-        # the Mon–Sun week boundary that ff_calendar_thisweek.xml is limited to.
-        print("[ECO-CAL] Forex Factory: 0 future events in thisweek feed — trying FMP/TD for next 7 days")
+        # Try TD which returns a rolling 7-day window regardless of the Mon–Sun
+        # week boundary that ff_calendar_thisweek.xml is limited to.
+        print("[ECO-CAL] Forex Factory: 0 future events in thisweek feed — trying Twelve Data for next 7 days")
 
-    # Second fallback: Financial Modeling Prep
-    fmp = _fetch_fmp()
-    if fmp is not None:
-        _last_source = "fmp"
-        print(
-            f"[ECO-CAL] Calendar: Forex Factory unavailable — using Financial Modeling Prep fallback — "
-            f"{len(fmp)} HIGH impact events found"
-        )
-        cache.set(_CACHE_KEY, fmp)
-        return fmp
-
-    # Third fallback: Twelve Data
+    # Fallback: Twelve Data
     td = _fetch_twelve_data()
     if td is not None:
         _last_source = "twelve_data"
         cache.set(_CACHE_KEY, td)
+        _proc_cache_value = td
+        _proc_cache_at = _time_proc.time()
         return td
 
-    # All sources failed — don't cache so the next call retries
+    # All sources failed — cache empty result in-process so subsequent
+    # within-scan calls don't hammer the same failing endpoints again.
     _last_source = "none"
-    print("[ECO-CAL] Forex Factory, FMP, and Twelve Data all unavailable")
+    print("[ECO-CAL] Forex Factory and Twelve Data both unavailable")
+    _proc_cache_value = []
+    _proc_cache_at = _time_proc.time()
     return []
 
 
