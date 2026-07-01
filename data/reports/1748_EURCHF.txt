@@ -1,0 +1,41 @@
+```
+PAIR: EUR/CHF
+
+DIRECTION: SELL
+
+CONFIDENCE: 4/10
+
+TECHNICAL_SCORE: 4/10
+
+FUNDAMENTAL_SCORE: 5/10
+
+SENTIMENT_SCORE: 5/10
+
+POSITIONING_SCORE: 3/10
+
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 SELL signal conflicted by bullish candle pattern and weak MTF consensus (1/3 agreement), ribbon converging signals trend weakening rather than directional conviction.
+
+RISK_FACTORS: [1] MTF severely misaligned — D:SELL vs W:NEUTRAL vs M:BUY (only 1/3 agreement, conf=40%) means weekly and daily do NOT both agree on direction; MTF rule triggers TRADE_THIS=NO. [2] EUR positioning unwinding (conviction decreasing) while CHF short interest building near support creates asymmetric institutional exit risk; converging ribbon suggests reversal, not continuation.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: NONE
+
+ENTRY_TRIGGER_PRICE: N/A
+
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree. W:NEUTRAL + D:SELL fails dual-timeframe confirmation requirement. Candle pattern (double_bottom:bul) contradicts D1 T_sig=SELL_4, and ribbon convergence indicates weakening trend, not reversal strength. Do not trade.
+
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Reasoning Summary:**
+
+1. **MTF Rejection (Critical):** W:NEUTRAL

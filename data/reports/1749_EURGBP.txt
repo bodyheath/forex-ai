@@ -1,0 +1,24 @@
+PAIR: EUR/GBP
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: Pin bar at key level + RSI oversold (37) in confirmed downtrend + 4H alignment offers reversal setup, but D1 neutral MTF and bearish ribbon alignment conflict with entry conviction.
+RISK_FACTORS: [1] MTF conf=2/3 fails TRADE_THIS rule (weekly BUY but daily NEUTRAL = no agreement); D1 T_sig=BUY_3 is weak baseline. [2] EUR COT UNWINDING (institutions reducing long conviction) while GBP COT BUILDING (institutions increasing short conviction) = net institutional flow against EUR strength — positioning momentum undermines trade thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**DETAILED RATIONALE:**
+
+**MTF Rule Breach (Hard Stop):**
+- W:BUY, D:NEUTRAL, 4H:BUY → only 2/3 agreement (60% threshold). **D1 must agree with W for TRADE_THIS=YES.** D1 is NEUTRAL, not BUY. This fails the MTF rule immediately.

@@ -1,64 +1,70 @@
 {
-  "timestamp": 1782883220.400736,
+  "timestamp": 1782904828.9427814,
   "watchlist_pairs": [
     "GBP/USD",
-    "EUR/NZD",
-    "GBP/CHF",
     "CAD/JPY",
-    "CAD/CHF",
+    "EUR/JPY",
     "GBP/CAD",
     "NZD/JPY",
     "EUR/GBP",
-    "NZD/CHF",
-    "USD/CHF",
+    "CHF/JPY",
     "AUD/CHF",
     "AUD/CAD",
     "GBP/NZD",
     "EUR/AUD",
     "EUR/USD",
-    "GBP/AUD",
     "EUR/CAD"
   ],
   "near_miss": {
-    "EUR/NZD": 5,
-    "CAD/CHF": 5,
+    "EUR/JPY": 5,
     "GBP/CAD": 5,
-    "NZD/CHF": 5,
+    "EUR/GBP": 5,
+    "CHF/JPY": 5,
+    "AUD/CHF": 5,
     "AUD/CAD": 5,
+    "GBP/NZD": 5,
+    "EUR/AUD": 5,
     "EUR/CAD": 5
   },
   "near_miss_dirs": {
-    "EUR/NZD": "SELL",
-    "CAD/CHF": "BUY",
+    "EUR/JPY": "SELL",
     "GBP/CAD": "SELL",
-    "NZD/CHF": "BUY",
+    "EUR/GBP": "BUY",
+    "CHF/JPY": "SELL",
+    "AUD/CHF": "BUY",
     "AUD/CAD": "BUY",
+    "GBP/NZD": "SELL",
+    "EUR/AUD": "SELL",
     "EUR/CAD": "SELL"
   },
   "momentum_counts": {
-    "GBP/USD": 10,
+    "GBP/USD": 11,
+    "CAD/JPY": 3,
+    "EUR/JPY": 1,
+    "GBP/CAD": 3,
+    "NZD/JPY": 9,
+    "EUR/GBP": 7,
+    "CHF/JPY": 1,
+    "AUD/CHF": 5,
+    "AUD/CAD": 13,
+    "GBP/NZD": 3,
+    "EUR/AUD": 4,
+    "EUR/USD": 2,
+    "EUR/CAD": 6,
     "EUR/NZD": 7,
     "GBP/CHF": 3,
-    "CAD/JPY": 2,
     "CAD/CHF": 2,
-    "GBP/CAD": 2,
-    "NZD/JPY": 8,
-    "EUR/GBP": 6,
     "NZD/CHF": 6,
     "USD/CHF": 5,
-    "AUD/CHF": 4,
-    "AUD/CAD": 12,
-    "GBP/NZD": 2,
-    "EUR/AUD": 3,
-    "EUR/USD": 1,
-    "GBP/AUD": 3,
-    "EUR/CAD": 5,
-    "AUD/USD": 2,
-    "AUD/JPY": 5
+    "GBP/AUD": 3
   },
   "momentum_grace": {
-    "AUD/USD": 1,
-    "AUD/JPY": 1
+    "EUR/NZD": 1,
+    "GBP/CHF": 1,
+    "CAD/CHF": 1,
+    "NZD/CHF": 1,
+    "USD/CHF": 1,
+    "GBP/AUD": 1
   },
   "watchlist_weekly_stats": {
     "week_start": "2026-06-29",
@@ -66,7 +72,5 @@
     "promoted_to_deep": 1,
     "became_trade_alerts": 0
   },
-  "priority_for_next_scan": [
-    "EUR/NZD"
-  ]
+  "priority_for_next_scan": []
 }

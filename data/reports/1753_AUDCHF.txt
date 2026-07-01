@@ -1,0 +1,25 @@
+PAIR: AUD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Rate differential (+4.47% AUD>CHF) supports BUY, but MTF conflict (W:SELL vs D:BUY, conf=1/3) blocks trade; bearish double-top pattern contradicts bullish 4H IHS, and COT AUD reversing (short conviction declining) creates whipsaw risk.
+RISK_FACTORS: [1. MTF disagreement: weekly sells while daily buys — only 1/3 timeframes align; insufficient confluence for high-confidence entry. 2. COT AUD REVERSING — institutional short positioning is unwinding, suggesting conviction fading; double-top pattern on D1 conflicts with bullish setup.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do not both agree (W:SELL, D:BUY, conf 1/3 < 2/3 threshold). Trade blocked regardless of other factors.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS NOTES:**
+
+**Technical (5/10):**
+- D1 T_sig=BUY_4 baseline, but severely compromised by MTF failure
+-

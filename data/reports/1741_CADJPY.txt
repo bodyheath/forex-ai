@@ -1,0 +1,36 @@
+```
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: 4H bearish lean with institutional CAD shorts building conviction conflicts MTF neutral consensus, creating low-conviction fade setup near 23.6% Fib resistance.
+
+RISK_FACTORS: [1. MTF structure is 0/3 agreement (M/W/D all NEUTRAL) — directional conviction extremely weak; 2. D1 T_sig=NEUTRAL_3 baseline contradicts SELL direction — technical foundation fragile]
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+### Rationale:
+
+**MTF Agreement Failure (Hard Rule):**  
+W/D/M all NEUTRAL (conf=0/3); 4H:SELL is isolated outlier. MTF rule requires weekly+daily both agree on direction. They don't — **TRADE_THIS = NO** by protocol.
+
+**Technical Scoring (Neutral Baseline):**
+- **D1 RSI=49.1** (mid-range, 45–55 zone = 3–4 NEUTRAL) — no trend bias to shift zones.
+- **D1 T_sig

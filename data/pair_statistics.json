@@ -26,7 +26,15 @@
     "_prev_t3_mult": 2.5
   },
   "GBP/CHF": {
-    "n_trades_with_mfe": 7
+    "n_trades_with_mfe": 10,
+    "average_mfe_atr": 0.593,
+    "mfe_percentile_25": 0.328,
+    "mfe_percentile_50": 0.492,
+    "mfe_percentile_75": 0.811,
+    "t1_mult": 0.8,
+    "t2_mult": 1.5,
+    "t3_mult": 2.5,
+    "adaptive_active": true
   },
   "CHF/GBP": {
     "n_trades_with_mfe": 0
@@ -48,7 +56,7 @@
     "_prev_t3_mult": 2.5
   },
   "EUR/GBP": {
-    "n_trades_with_mfe": 6
+    "n_trades_with_mfe": 8
   },
   "EUR/CHF": {
     "n_trades_with_mfe": 6
@@ -118,7 +126,15 @@
     "_prev_t3_mult": 2.5
   },
   "NZD/CHF": {
-    "n_trades_with_mfe": 7
+    "n_trades_with_mfe": 11,
+    "average_mfe_atr": 0.739,
+    "mfe_percentile_25": 0.412,
+    "mfe_percentile_50": 0.583,
+    "mfe_percentile_75": 1.044,
+    "t1_mult": 0.8,
+    "t2_mult": 1.5,
+    "t3_mult": 2.5,
+    "adaptive_active": true
   },
   "EUR/JPY": {
     "n_trades_with_mfe": 12,
@@ -349,5 +365,8 @@
   "_retroactive_done": true,
   "CHF/JPY": {
     "n_trades_with_mfe": 5
+  },
+  "EUR/NZD": {
+    "n_trades_with_mfe": 1
   }
 }

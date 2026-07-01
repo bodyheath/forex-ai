@@ -1,0 +1,23 @@
+PAIR: GBP/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly+Daily both BUY with RSI 42 (neutral-to-buy zone in mixed trend) and double-bottom 4H pattern confirm upside bias, but bearish engulfing D1 candle and ALIGNED_BEAR ribbon create directional conflict requiring confirmation.
+RISK_FACTORS: (1) ALIGNED_BEAR ribbon (5/5 EMAs stacked bearish) directly contradicts BUY direction—reversal risk if price fails above SMA50 1.3419; (2) D1 bearish engulfing candle + price 175p below SMA50 suggest weakening momentum—entry should wait for daily close confirmation.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 1.3419
+ENTRY_TRIGGER_REASON: Break and close above SMA50 (1.3419) on D1 with RSI >45 confirms uptrend and overrides bearish ribbon divergence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Scoring:** W:BUY + D:BUY = 2/3 agreement (conf=80%). This meets the MTF threshold for trade consideration, but 4

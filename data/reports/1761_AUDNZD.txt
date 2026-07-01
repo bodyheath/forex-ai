@@ -1,0 +1,22 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: AUD fundamentals supportive (+1.80% rate diff, AUD rising), but technicals weakened by bearish engulfing + ribbon converging; COT AUD reversal from long adds friction to any bullish setup.
+
+RISK_FACTORS: [1] MTF disagreement (M/W=SELL vs D=NEUTRAL vs 4H=BUY) with only 1/3 agreement reduces directional conviction below 2/3 threshold — TRADE_THIS becomes NO. [2] COT AUD reversing (institutions unwinding long positioning) directly conflicts with fundamental rate advantage; entry risk elevated if trade relies on rate carry.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree on direction (conf=1/3, threshold=2/3). D1=NEUTRAL, W=SELL, M=SELL, 4H=BUY creates mixed signal. Bearish engulfing + ribbon converging suggest potential reversal risk. COT AUD reversal (institutions flipping from long to short) negates fundamental rate support. Wait for D1 trend confirmation (need D1 to shift to SELL with RSI<35

@@ -1,0 +1,27 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and monthly both signal SELL, but daily neutrality and uptrend structure create conflicting signals; EUR positioning unwinding while JPY building adds friction.
+RISK_FACTORS: [1. MTF conf=1/3 (only monthly aligns with SELL) — daily NEUTRAL breaks weekly-daily agreement rule, blocking TRADE_THIS] [2. EUR uptrend structure (price > SMA50 > SMA200, golden cross) contradicts SELL direction; RSI 54.7 is mid-range neutral, not overbought confirmation]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree. Daily is NEUTRAL (not SELL), failing the mandatory >=2/3 MTF alignment requirement. Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **DETAILED SCORING NOTES:**
+
+**TECHNICAL (4/10):**
+- D1 T_sig baseline = NEUTRAL_3; RSI 54.7 in mid-range neutral (45–55 tier) = no directional push.
+- 4H RSI 62.7 in UPTR

@@ -1,0 +1,23 @@
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level with RSI overbought (64.2) and partial oscillator confluence (Stochastic + CCI SELL 2/3) supports downside, but mixed MTF alignment (D:SELL vs 4H:uptrend structure) and neutral ribbon limit conviction.
+RISK_FACTORS: [1] Mixed MTF structure — 4H shows uptrend (price > SMA50 > SMA200, golden cross) vs D1 SELL signal — creates directional conflict that reduces reliability to 60% confidence threshold. [2] COT AUD reversal risk — AUD positioning flipping from long to short while trade targets AUD weakness may signal institutional exhaustion; GBP still net SHORT at 0.0% suggests limited fresh conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.9150
+ENTRY_TRIGGER_REASON: Wait for break below pin bar body (1.9150) to confirm rejection; improves R:R and filters false signals in mixed MTF environment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical (6/10):** D1 T_sig=SELL_5 baseline
