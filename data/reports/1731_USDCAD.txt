@@ -1,0 +1,32 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: RSI overbought (77) in confirmed uptrend with D1 T_sig=SELL_7 and MTF (M/W/D all SELL) create strong reversal signal, but ribbon alignment and bullish pattern conflict — mean-reversion setup at resistance.
+
+RISK_FACTORS: 
+1. RIBBON_CONFLICT: EMA ribbon fully aligned bullish (5/5) contradicts SELL direction, suggesting momentum continuation rather than reversal — increases false-signal risk.
+2. PATTERN_CONFLICT: D1 bullish_engulfing + 4H inside_bar (neutral setup) undermine conviction in immediate downside; price may consolidate before selling off.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.4175
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (1.3857 invalidates uptrend structure) or Fib near_below level (~1.4100-1.4050 support test) to confirm reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (7/10):**  
+- D1 T_sig=SELL_7 is

@@ -1,0 +1,27 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought (63) in confirmed uptrend with inside-bar consolidation; T_sig=SELL_3 conflicts with ribbon alignment and golden-cross structure; MTF weekly+daily both neutral breaks core BUY rule.
+RISK_FACTORS: [1) MTF misalignment — Weekly and Daily both NEUTRAL (0/3 agreement), violating 2-of-2 MTF confirmation rule; trade cannot execute. 2) Ribbon ALIGNED_BULL + price structure contradicts sell signal — golden cross (SMA50>SMA200) + ribbon 5/5 aligned bullish = structural uptrend conflict with SELL bias.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule failed: Weekly and Daily both neutral (conf=0/3). System requires weekly AND daily to align on same direction (≥2/3 agreement each). Monthly SELL context is insufficient without weekly/daily confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**DETAILED ANALYSIS:**
+
+**MTF DISQUALIFICATION (Hard Reject):**
+- **Weekly:** NEUTRAL (no directional signal)
+-

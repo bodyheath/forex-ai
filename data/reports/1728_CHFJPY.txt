@@ -1,0 +1,23 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and 4H confluence on SELL with pin bar at key level and leaning bear ribbon provide directional bias, but D1 neutrality and mixed RSI (51.4) limit conviction; fundamental headwinds (rate divergence CHF falling/JPY rising) and institutional SHORT building add conviction but positioning already heavy.
+RISK_FACTORS: [1] MTF conf=2/3 (D1 NEUTRAL breaks alignment; only W+4H agree) = borderline MTF rule threshold — trade quality degrades if D1 reverses. [2] CHF and JPY both net SHORT with BUILDING momentum = crowded positioning; COT reversal risk if institutions unwind together, which would flip trade against us.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 200.80
+ENTRY_TRIGGER_REASON: Break below 4H pin bar low (near 200.80) would confirm 4H reversal; adds D1 confirmation if RSI breaks below 50 simultaneously.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+RATIONALE:
+• **MTF RULE VIOLATION (HARD STOP):** W:SELL + 4H:SELL = 2/3

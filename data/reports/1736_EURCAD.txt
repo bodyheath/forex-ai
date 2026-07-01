@@ -1,0 +1,25 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Daily SELL signal (T_sig=6) with converging ribbon weakness conflicts with 4H uptrend; MTF conf only 1/3 (D:SELL vs W:NEUTRAL, 4H:NEUTRAL) blocks high-confidence trade.
+RISK_FACTORS: [1. MTF disagreement (daily SELL vs weekly+4H NEUTRAL) — only 1 of 3 timeframes align; trend fragility. 2. CAD positioning building while EUR unwinding — COT momentum favours CAD strength, contradicting SELL EUR/CAD bias.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do not both agree on direction (W:NEUTRAL + D:SELL ≠ confirmed directional alignment). Confidence = 1/3 = 33% < 67% required. Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+### ANALYSIS SUMMARY
+
+**Why TRADE_THIS = NO:**
+
+1. **MTF Rule Breach (Critical):** Confidence = 1/3 (only D:SELL agrees; W:NEUTRAL, 4H:NEUTRAL, M

@@ -1,0 +1,17 @@
+```
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 65 in range-bound market with T_sig=SELL_3 conflicts sharply with bullish engulfing pattern and fully aligned bull ribbon; CHF weakness supports USD directionally but MTF neutrality and oscillator divergence (Stoch/CCI elevated but no confirmation) create entry uncertainty.
+RISK_FACTORS: [1] MTF all NEUTRAL (M/W/D/4H) means no confluence directional bias — system confidence floor already applied; ribbon fully bull-aligned contradicts SELL signal and raises reversal risk. [2] OSC conf=NONE (Stoch 78.4 overbought but CCI 69.7 neutral, RSI 50.2 on 4H) — no oscillator triple/partial confluence; pin_bar_at_key_level bearish on 4H is isolated without RSI oversold confirmation.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF conf=0/3 (all timeframes neutral) violates core MTF rule — weekly AND daily must both agree on direction for TRADE_THIS=YES. T_sig=SELL_3 is overruled by MTF neutrality and ribbon

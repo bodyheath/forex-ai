@@ -1,0 +1,24 @@
+PAIR: AUD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD rate rising + CAD rate falling supports BUY, but conflicted MTF (M/W:SELL, D:BUY, 4H:NEUTRAL) and COT AUD reversal from long to short create significant directional risk.
+RISK_FACTORS: [1] MTF disagreement — Weekly and Monthly both signal SELL (conf=1/3), contradicting D1 BUY; D1 T_sig=6 is baseline but lacks MTF confluence. [2] AUD COT REVERSING — institutions flipped from net LONG to SHORT over 3 weeks, conflicting with BUY thesis and warranting CONFIDENCE reduction.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.9719
+ENTRY_TRIGGER_REASON: Support at Fibonacci SL (range low 0.9719) + RSI oversold zone (43 near 35-45 tier) offers 2R potential if price bounces; wait for confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL (5/10):**  
+D1 T_sig=BUY_6 is the baseline, supported by RSI

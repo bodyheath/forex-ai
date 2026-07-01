@@ -1,0 +1,24 @@
+```
+PAIR: EUR/GBP
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: Bullish engulfing + RSI 41.9 in confirmed downtrend (W:BUY + D:BUY) signals early reversal, but ribbon ALIGNED_BEAR and EUR unwinding positions create conflicting structural headwinds.
+RISK_FACTORS: [1. EUR COT unwinding conviction while GBP building short positioning — institutional flow opposing BUY signal] [2. Ribbon fully aligned bearish (5/5 pairs) contradicts reversal thesis; price still below SMA50/SMA200 death-cross; ATR=27p suggests low volatility entry risk]
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 0.8633
+ENTRY_TRIGGER_REASON: Pullback to SMA50 (0.8649) within 2 SDs of ATR would confirm reversal and provide 50p buffer to death-cross structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+DETAIL_SCORING:
+
+**TECHNICAL [6/10]:**
+- T_sig=BUY_4 baseline: +4
+- Confirmed MTF: Weekly BUY + Daily BUY (conf=2/3, 80%
