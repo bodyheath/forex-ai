@@ -1,0 +1,23 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 with converging ribbon and EUR unwinding from long positioning, but weak technicals and neutral-to-bullish 4H MTF conflict severely limit conviction.
+RISK_FACTORS: [1) MTF disagreement: 4H:BUY vs W:NEUTRAL vs D:NEUTRAL (conf=0/3) — no directional alignment; aggressive entry here violates MTF rule. 2) EUR COT UNWINDING while CAD BUILDING — institutional conviction is rotating away from long EUR, reducing positioning quality; converging ribbon signals trend exhaustion, not acceleration.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree on direction (conf 0/3 << 2/3 threshold). Head-and-shoulders pattern is valid reversal signal, but execution window requires MTF alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF Alignment (CRITICAL FAIL):** W:NEUTRAL + D:NEUTRAL + 4H:BUY = conf 0/3 (only 1 of 3 timeframes bull

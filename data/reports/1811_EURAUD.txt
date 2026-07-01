@@ -1,0 +1,37 @@
+PAIR: EUR/AUD
+
+DIRECTION: SELL
+
+CONFIDENCE: 5/10
+
+TECHNICAL_SCORE: 5/10
+
+FUNDAMENTAL_SCORE: 3/10
+
+SENTIMENT_SCORE: 6/10
+
+POSITIONING_SCORE: 3/10
+
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 aligns with D1 SELL signal, but MTF conflict (W:BUY vs D:SELL, conf=2/3) and mixed ribbon (3/5 aligned) severely constrain conviction; AUD short reversal is institutional red flag.
+
+RISK_FACTORS: [1] MTF disagreement — Weekly is BUY while Daily is SELL; confluence fails the ≥2/3 rule (only 2/3 agree on direction, with 4H bullish creating ambiguity). [2] AUD COT REVERSING from net SHORT — institutions are covering shorts and flipping long; EUR is simultaneously UNWINDING long positions. This is inverse-thesis risk: you're selling EUR/AUD into institutional EUR weakness and AUD strength, which contradicts the reversal momentum.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+
+ENTRY_TRIGGER_PRICE: 1.6400
+
+ENTRY_TRIGGER_REASON: Break below D1 trend-line support (implied SMA50 anchor at 1.6328) toward head-and-shoulders neckline confirmation; wait for COT reversal to stabilize.
+
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RAT

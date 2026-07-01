@@ -1,0 +1,23 @@
+I need to carefully evaluate this setup before finalizing.
+
+**Critical MTF Check:**
+- W:NEUTRAL, D:SELL, 4H:SELL → Weekly does NOT confirm SELL direction
+- Rule: "Weekly AND daily must both agree on direction for TRADE_THIS YES"
+- W:NEUTRAL ≠ SELL agreement → this is a hard barrier for YES
+
+**RSI Trend Context Check:**
+- MTF is mixed (W:NEUTRAL, D:SELL) — not a confirmed downtrend
+- Use standard RSI tiers: RSI 66.2 D1 = 55-65 zone → 4-5 SELL
+- But uptrend context (golden cross, ALIGNED_BULL ribbon 5/5) means overbought shifts higher
+- In confirmed UPTREND (W:BUY+D:BUY would apply) — but here W:NEUTRAL, so standard tiers apply
+- T_sig anchor = SELL_5, which is appropriate
+- 4H RSI=72 adds +1 bonus (D1+4H same direction)
+- TECHNICAL_SCORE: 5 base + 1 (MACD confirms) + 1 (BB/price vs SMA50 — price well above) = but wait, price above SMA50 = BULLISH, conflicts with SELL. No SMA50 bonus for SELL. +1 (D1+4H same direction). = 6
+
+**RIBBON conflict:** ALIGNED_BULL fan 5/5 — strongly contradicts SELL thesis. This raises reversal risk significantly.
+
+**OSCILLATOR:** TRIPLE_SELL → +2 confidence
+**DIV:** NONE
+**Base confidence start
+KEY_THESIS: RSI overbought (66.2 D1, 72.0 4H) in uptrend triggers mean-reversion SELL; triple oscillator confluence (Stoch 91.4 + CCI 156.1) confirms, despite bullish ribbon and pattern — profit-taking at overbought extremes.
+RISK_FACTORS: [1] UPTREND context (price > SMA50 > SMA200, golden cross, ribbon ALIGNED_BULL 5/5) — overbought is normal; RSI in 66-72 zone is only moderately extended in strong bull structure, not extreme reversal signal. [2] MTF W:NEUTRAL weakens conviction (only 2/3 agreement D+4H=SELL; monthly is SELL but weekly neutral = conflicting timeframe strength).

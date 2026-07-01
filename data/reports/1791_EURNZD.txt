@@ -1,0 +1,21 @@
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level (2.0043 support, 5p away) with RSI 56.5 in mixed trend and 4H oversold (RSI 29.4) create conflicting signals; EUR COT unwinding undermines bullish setup.
+RISK_FACTORS: MTF fails critical rule — W:NEUTRAL + D:NEUTRAL disagree with 4H:BUY, confidence 0/3 (<2/3 threshold); EUR positioning UNWINDING while RIB shows ALIGNED_BULL contradicts SELL thesis, reversing confidence floor.
+TRADE_THIS: NO
+
+**RATIONALE:**
+
+1. **MTF FAILURE (CRITICAL):** Weekly NEUTRAL + Daily NEUTRAL + 4H BUY = conf=0/3. Hard rule: MTF must show weekly AND daily *both* agreeing on direction for trade approval. This pair shows no clear MTF consensus. **TRADE_THIS = NO regardless of other factors.**
+
+2. **TECHNICAL_SCORE = 4:**
+   - D1 RSI=56.5 in **mixed MTF context** → standard tier 55–65=4–5 SELL → baseline 4
+   - T_sig=SELL_3 (weak), but pin_bar_at_key_level:

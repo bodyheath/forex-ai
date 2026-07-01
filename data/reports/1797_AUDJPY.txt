@@ -1,0 +1,33 @@
+PAIR: AUD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at 23.6% Fibonacci level with RSI 42.6 and bullish 4H engulfing provides reversal confluence, but MTF conflict (W:SELL/D:BUY/4H:SELL) and AUD COT reversal undermine conviction.
+
+RISK_FACTORS: 
+1. MTF disagreement: weekly and 4H both SELL while D1 BUY (only 2/3 alignment; trade confidence threshold <65% hard-stops this setup). 
+2. AUD COT REVERSING from long to short positioning mid-term — institutional conviction flipping against proposed BUY direction.
+
+TRADE_THIS: NO
+
+---
+
+**REASONING:**
+
+**MTF Rule Violation (Hard Stop):**
+- W:SELL + D:BUY + 4H:SELL = 2/3 agreement required = **FAIL**
+- Only D1 supports BUY; weekly and 4H both bearish
+- Confidence weighting 65% does not meet the ≥2/3 threshold (must be both weekly AND daily aligned)
+- **MTF rule: TRADE_THIS = NO** regardless of other scores
+
+**Technical Score Breakdown (5/10):**
+- RSI 42.6 in mixed MTF
