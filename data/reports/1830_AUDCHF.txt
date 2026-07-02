@@ -1,0 +1,17 @@
+PAIR: AUD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Fundamental rate divergence (AUD rising +4.47%, CHF falling) supports BUY, but MTF conflict (W:SELL vs D:BUY, conf=1/3), double-top pattern, and AUD COT reversal (institutions flipping SHORT) create conflicting signals; oversold oscillators (Stoch 22.6, CCI -117.7) offer no confluence entry.
+RISK_FACTORS: (1) MTF disagreement — weekly shows SELL conviction while daily shows BUY; confidence cap at 5/10 under MTF rule (only 1/3 timeframes aligned). (2) AUD COT REVERSING — institutional positioning flipped to SHORT mid-range, directly conflicting with BUY direction; reduces POSITIONING_SCORE to 3 and flags contrarian risk.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 0.5579
+ENTRY_TRIGGER_REASON: Wait for price to retest Fibonacci support at exact swing low (0.5579) with fresh oscillator oversold confirmation (Stoch <20); current Stoch 22.6 is near but not extreme enough to justify entry against MTF headwind.
+ENTRY_TRIGGER_EXPIRY_

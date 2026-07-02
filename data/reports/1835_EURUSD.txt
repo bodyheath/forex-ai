@@ -1,0 +1,24 @@
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with RSI 33.9 in confirmed downtrend (W:BUY + D:BUY align) offers high-probability reversal bounce, but ribbon fully bearish and EUR positioning unwinding create headwind.
+RISK_FACTORS: [1] Ribbon fully aligned bearish (ALIGNED_BEAR 5/5) contradicts BUY reversal thesis — trend continuation risk dominates. [2] EUR COT unwinding conviction mid-trade — institutional exit could pull price lower despite technical reversal signal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.1325
+ENTRY_TRIGGER_REASON: Bounce to FIB SL support (1.13254) with RSI <30 confirm deeper capitulation before reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL [6/10]:**
+- **D1 RSI 33.9** in confirmed **downtrend (W:BUY + D:BUY, price < SMA50 < SMA200)**: Apply downtrend context — RSI <30 is normal compression. Shift BUY zone lower: 20–30
