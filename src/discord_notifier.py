@@ -971,7 +971,7 @@ def send_master_scan_report(
             if _ot_t3h: _ot_milestones.append("T3✔")
             elif _ot_t2h: _ot_milestones.append("T2✔")
             elif _ot_t1h: _ot_milestones.append("T1✔")
-            _ot_ms_str = " · ".join(_ot_milestones) if _ot_milestones else "awaiting T1"
+            _ot_ms_str = " · ".join(_ot_milestones) if _ot_milestones else "open"
             _ot_trailed = _ot_eff and _ot_orig and abs(_ot_eff - _ot_orig) > 1e-8
             if _ot_trailed:
                 _ot_stop_str = f"\U0001f512 Stop trailed → `{_ot_eff:.5f}`"
@@ -1074,7 +1074,7 @@ def send_master_scan_report(
     _rt_val = (
         f"Open: **{research_open}** · Closed: **{research_closed}**\n"
         f"{_rt_wr_e} Win rate: **{research_win_rate:.0f}%** ({research_decisive} decisive)\n"
-        f"Profit factor: {research_pf:.2f}\n"
+        f"Profit factor: {research_pf:.2f} (all history — v1+v2)\n"
         f"\n**Win rate by confidence:**\n{_conf_tbl}"
         + (f"\n\n**Best pairs (5+ trades):** {best_pairs_str}" if best_pairs_str else "")
         + (f"\nAdaptive targets: {adaptive_count} pairs" if adaptive_count > 0 else "")
