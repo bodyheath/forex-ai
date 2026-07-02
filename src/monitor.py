@@ -840,9 +840,15 @@ def _verify_milestone_write(rec_id: int, level: str, tracker_mod,
 # ── Zone classification ───────────────────────────────────────────────────────
 
 def _next_cascade_target(row: dict):
-    """Return the next unmet cascade target price, or None."""
+    """Return the next unmet cascade target price, or None.
+
+    v2 trades have no T1 (t1_price always empty) — fall through to T2 when absent.
+    """
     if not _is_true(row.get("t1_hit")):
-        return _to_float(row.get("t1_price"))
+        t1 = _to_float(row.get("t1_price"))
+        if t1 is not None:
+            return t1
+        # v2 trade: no T1 level, T2 is the only target
     if not _is_true(row.get("t2_hit")):
         return _to_float(row.get("t2_price"))
     if not _is_true(row.get("t3_hit")):
