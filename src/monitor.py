@@ -1599,25 +1599,27 @@ def _update_mfe_mae_from_ohlcv(rec_id: int, direction: str, candles: list) -> bo
 # ── Cascade initialisation ────────────────────────────────────────────────────
 
 def _ensure_cascade_levels(row: dict, tracker_mod, log=print) -> dict:
-    """If t1_price not set, compute and store cascade levels. Return updated row."""
-    if _to_float(row.get("t1_price")):
+    """If cascade levels not yet set, compute and store them. Return updated row."""
+    if _to_float(row.get("t1_price")) or _to_float(row.get("t2_price")):
         return row
     try:
         ct1, ct2, ct3 = _casc.compute_levels(
             row.get("entry"), row.get("stop_loss"),
             row.get("target"), row.get("direction"),
         )
-        if ct1 is not None:
+        # Only write fields that have a real value — avoids writing "None" to CSV
+        updates = {k: v for k, v in [
+            ("t1_price", ct1), ("t2_price", ct2), ("t3_price", ct3),
+        ] if v is not None}
+        if updates:
+            updates["effective_stop"] = row.get("stop_loss")
             tracker_mod.update_fields(
                 _safe_int_id(row.get("id", 0)),
-                t1_price=ct1, t2_price=ct2, t3_price=ct3,
-                effective_stop=row.get("stop_loss"),
+                **updates,
             )
             row = dict(row)
-            row.update({
-                "t1_price": ct1, "t2_price": ct2, "t3_price": ct3,
-                "effective_stop": row.get("stop_loss"),
-            })
+            row.update(updates)
+            log(f"  Monitor: cascade levels set for #{row.get('id')} {row.get('pair')}: {updates}")
     except Exception as exc:
         log(f"  Monitor: cascade init failed for #{row.get('id')} {row.get('pair')}: {exc}")
     return row
