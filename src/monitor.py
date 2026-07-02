@@ -521,9 +521,14 @@ def _build_hot_trade_lines(row: dict, price: float | None, pair: str) -> list:
     def _fmt(v):
         return f"{v:.{decimals}f}" if v is not None else "?"
 
-    # Determine next unmet target
+    # Determine next unmet target.
+    # v2 trades have no T1 (t1_price is empty) — fall through to T2 when t1_price absent.
     if not _is_true(row.get("t1_hit")):
-        level, tgt = "T1", _to_float(row.get("t1_price"))
+        t1 = _to_float(row.get("t1_price"))
+        if t1 is not None:
+            level, tgt = "T1", t1
+        else:
+            level, tgt = "T2", _to_float(row.get("t2_price"))
     elif not _is_true(row.get("t2_hit")):
         level, tgt = "T2", _to_float(row.get("t2_price"))
     else:
