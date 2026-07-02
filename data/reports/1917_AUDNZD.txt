@@ -1,0 +1,17 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD weakness from rate divergence (AUD rising, NZD falling) and COT institutional short-squeeze reversal conflict technical recovery signals; ribbon convergence and mixed MTF (1/3 agreement) signal trend exhaustion.
+RISK_FACTORS: [1. MTF conf=1/3 (D:NEUTRAL + 4H:BUY vs M:SELL + W:SELL) — insufficient alignment; D1 must agree for trade rule, D1 shows NEUTRAL — TRADE_THIS fails MTF gate regardless of fundamental edge. 2. COT AUD reversing from long to short mid-week conflicts with SELL thesis — institutions unwinding convictions, creates whipsaw risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF weekly+daily agreement rule violated (D1:NEUTRAL + W:SELL ≠ dual confirmation); conf=1/3 <2/3 threshold. Fundamental edge (AUD rate rising, NZD falling, +1.80% differential, AUD net SHORT positioning reversing) supports SELL thesis, but technical confluence insufficient — pin bar at key level (50% Fib @ 1.2132, 7p

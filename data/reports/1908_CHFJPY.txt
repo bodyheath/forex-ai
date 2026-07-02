@@ -1,0 +1,27 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with ribbon leaning bearish and institutional CHF shorts building, but MTF neutrality and RSI mid-range create low-conviction setup.
+RISK_FACTORS: [1) MTF conf=0/3 with W+D both NEUTRAL override any daily signal — insufficient directional agreement for trade execution. 2) T_sig=NEUTRAL_3 + RSI 46.9 in mixed trend + no MACD or oscillator confluence = low technical conviction; pin bar alone insufficient without RSI extremes.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated: Weekly and Daily do not both agree (W:NEUTRAL + D:NEUTRAL = conf 0/3 << 2/3 threshold). Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Analysis Summary:**
+
+**Why NO despite bearish technicals:**
+
+1. **MTF Fail (HARD RULE):** W=NEUTRAL + D=NEUTRAL = 0/3 directional agreement. Monthly SELL is context-only, not tradeable alone. Weekly and Daily must align; they don't → **TRADE_THIS=

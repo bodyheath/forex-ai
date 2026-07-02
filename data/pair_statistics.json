@@ -71,11 +71,11 @@
     "_prev_t3_mult": 2.5
   },
   "EUR/CHF": {
-    "n_trades_with_mfe": 17,
-    "average_mfe_atr": 0.934,
-    "mfe_percentile_25": 0.483,
-    "mfe_percentile_50": 0.763,
-    "mfe_percentile_75": 1.526,
+    "n_trades_with_mfe": 18,
+    "average_mfe_atr": 0.96,
+    "mfe_percentile_25": 0.494,
+    "mfe_percentile_50": 0.765,
+    "mfe_percentile_75": 1.496,
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
@@ -283,7 +283,9 @@
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
-    "adaptive_active": true
+    "adaptive_active": true,
+    "_prev_t1_mult": 0.8,
+    "_prev_t3_mult": 2.5
   },
   "USD/NOK": {
     "n_trades_with_mfe": 7
@@ -373,7 +375,9 @@
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
-    "adaptive_active": true
+    "adaptive_active": true,
+    "_prev_t1_mult": 0.8,
+    "_prev_t3_mult": 2.5
   },
   "NZD/SGD": {
     "n_trades_with_mfe": 1
