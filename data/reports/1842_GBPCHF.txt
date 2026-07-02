@@ -1,0 +1,21 @@
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: Strong bearish RSI divergence (33p/6pt) + triple oscillator sell confluence (RSI 66.6 overbought + Stoch 85.5 + CCI 171.6) at pin bar key level signal mean reversion from overbought conditions into corrective pullback, despite aligned bull ribbon.
+
+RISK_FACTORS: [1] MTF conflict — D1 SELL vs W NEUTRAL vs M BUY (conf=1/3 only 40% weight) weakens conviction; ribbon fully aligned bull contradicts reversal thesis and may support continuation. [2] GBP positioning near-zero (0.0%) while CHF +14% short leaves GBP without institutional support for downside — COT BUILDING momentum into shorts is reversal-risk flag; if CHF shorts unwind, pullback may reverse sharply.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.0775
+ENTRY_TRIGGER_REASON: Sell limit above current pin bar high to catch break-of-structure rejection into bearish divergence confluence; only if price fails to sustain above 1.0775 resistance within 24h.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24

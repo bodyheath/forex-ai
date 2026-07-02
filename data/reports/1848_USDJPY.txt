@@ -1,0 +1,28 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with D1 T_sig=SELL_3 and 4H oversold RSI; MTF neutrality (W/D/M all NEUTRAL) blocks conviction despite aligned ribbon.
+RISK_FACTORS: [1] MTF weekly + daily both NEUTRAL — no directional agreement required for TRADE_THIS=YES fails immediately (MTF rule: both must agree). [2] D1 golden-cross (price > SMA50 > SMA200) + ALIGNED_BULL ribbon contradicts SELL signal — structural uptrend intact despite overbought RSI 57.5.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL + D:NEUTRAL = 0/3 agreement. Trade rejected.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**EXPLANATION:**
+
+**MTF Blocking Rule (Enforced):**
+- Weekly: NEUTRAL
+- Daily: NEUTRAL  
+- 4H: BUY
+- **Conf = 1/3** (only 4H aligns; W+D both neutral = no agreement)
+- **Rule: TRADE_THIS=

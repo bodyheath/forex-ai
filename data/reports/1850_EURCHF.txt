@@ -1,0 +1,28 @@
+PAIR: EUR/CHF
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Hammer pattern at support with EUR positive rate differential, but ribbon converging and COT positioning momentum conflicting (EUR unwinding while CHF building) severely limit conviction.
+RISK_FACTORS: [1] MTF conflict — monthly bullish but weekly+daily neutral; weekly+daily must both agree per MTF rule (conf=0/3). [2] COT reversal risk — EUR unwinding conviction while CHF building; trade aligns with old EUR long positioning but momentum is now unwinding, reducing institutional support.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 0.9180
+ENTRY_TRIGGER_REASON: Retest of SMA50 (0.9181) at 61.8% Fib level (0.92005) with hammer confirmation would provide 2-point confluence for reversal entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF Rule Violation (Critical):**
+- Weekly = NEUTRAL, Daily = NEUTRAL → conf = 0/3 (both must agree on direction for TRADE_THIS: YES). Monthly bullish does not override this rule.
+- MTF weight 80% signals insufficient timeframe alignment.
+
+**Technical Score = 4:**
+- D1
