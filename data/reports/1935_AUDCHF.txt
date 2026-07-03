@@ -1,0 +1,34 @@
+```
+PAIR: AUD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+
+KEY_THESIS: Rate differential (AUD +4.47%) and partial oscillator confluence (2/3) support BUY, but MTF misalignment (W:SELL vs D:BUY) and COT AUD reversal from long to short undermine conviction.
+
+RISK_FACTORS: 
+1. MTF weekly/daily disagree (W:SELL, D:BUY, conf=1/3 < 2/3 threshold) — trend continuation risk; pattern is double_top bearish on D1.
+2. COT AUD positioning REVERSING from net long to short — institutional conviction flipping against trade direction; positions unwinding create stop-run risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do not both agree (conf=1/3 < 2/3); trade fails mandatory dual-timeframe alignment gate.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **ANALYSIS SUMMARY:**
+
+**Why NO despite fundamentals:**
+- **MTF Failure (HARD RULE):** Weekly=SELL, Daily=BUY, 4H=NEUTRAL

@@ -1,0 +1,25 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + D1 SELL signal conflicts with 4H uptrend and bullish ribbon alignment; MTF agreement is weak (1/3), blocking high-confidence trade.
+RISK_FACTORS: [1] MTF disagreement (W:NEUTRAL, D:SELL, 4H:NEUTRAL) = insufficient confirmation — confidence floor at 5 regardless of technical setup. [2] EUR positioning unwinding (long conviction declining) + CAD building shorts creates mean-reversion risk if EUR stabilizes; ribbon ALIGNED_BULL contradicts D1 SELL bias.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (W:NEUTRAL + D:SELL = only 1/3 consensus). 4H:NEUTRAL further dilutes alignment. Pin bar + T_sig=SELL_7 on D1 is negated by 4H bullish engulfing + ALIGNED_BULL ribbon (5/5 EMA stack). No trade setup meets MTF+fundamental gate.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**REASONING DETAIL:**
+
+1.

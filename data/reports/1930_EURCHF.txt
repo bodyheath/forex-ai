@@ -1,0 +1,25 @@
+PAIR: EUR/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 50% Fib + D1 RSI neutral zone + fundamental EUR strength (rate differential +2.29%) supports bounce, but conflicting MTF signals and COT unwinding EUR longs weaken conviction.
+RISK_FACTORS: (1) MTF mismatch — Weekly and Daily both NEUTRAL, 4H BUY isolated; MTF confidence only 0/3, violates buy-rule threshold. (2) EUR positioning unwinding — institutions reducing EUR longs while CHF building shorts; momentum reversal risk if EUR rally fails.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.9180
+ENTRY_TRIGGER_REASON: Confluence of pin bar, 50% Fib support (0.91803), and D1 RSI 46 in neutral zone — wait for price to touch Fib level and pin bar confirmation before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 RSI 46 = neutral zone (3–4), baseline T_sig NEUTRAL_3 → no upside boost.
+- Pin bar at key level (bullish) + price 5p above
