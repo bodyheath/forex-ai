@@ -1,0 +1,28 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 38.2% Fib support + leaning-bear ribbon + CHF institutional shorts building suggest downside bias, but mixed MTF (D/W neutral) and RSI neutral (47.8) severely limit conviction.
+RISK_FACTORS: (1) MTF zero agreement: weekly+daily both neutral breaks MTF validation rule—trade lacks directional confluence across timeframes. (2) Technical score constrained by neutral RSI, flat MACD, and inside-bar indecision on 4H; pin bar at support is only bullish pattern, contradicting SELL thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violation—weekly and daily do not both agree on direction (both NEUTRAL); confidence cannot exceed threshold even with secondary support from positioning and ribbon.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Rationale**
+
+**MTF Failure (Hard Rule)**
+- Weekly: NEUTRAL | Daily: NEUTRAL | 4H: NEUTRAL | Monthly: SELL (context only)
+- **MTF agreement:** 0/3 (zero timeframes align)
+- Rule: "if weekly AND daily don't both agree on direction

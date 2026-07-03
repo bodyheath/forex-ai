@@ -1,0 +1,27 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD weakness (rate rising, COT reversing short) + fundamental carry advantage (AUD +1.80% diff, NZD falling rates) supports SELL, but technical setup is weak—price trapped in range, ribbon converging, MTF lacks conviction (only 1/3 agreement).
+RISK_FACTORS: [1] MTF conflict: Weekly=SELL, Daily=NEUTRAL, 4H=BUY → no true directional consensus; system confidence capped at 1/3. [2] COT reversal in AUD (SHORT positioning unwinding) contradicts SELL thesis—institutions reducing conviction exactly when we want to enter; reduces POSITIONING_SCORE by 2.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.2164
+ENTRY_TRIGGER_REASON: Wait for price to clear SMA50 (1.2164) to the downside; test of 20-day MA would confirm breakdown from range-bound trading.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **Scoring Rationale:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 T_sig = NEUTRAL_3 (baseline).
+- RSI

@@ -1,0 +1,24 @@
+PAIR: AUD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 41 in mixed trend offers neutral setup; AUD rate rising supports BUY but AUD COT reversing creates institutional headwind against long entry.
+RISK_FACTORS: [1] MTF weak: Weekly=SELL conflicts with Daily=BUY (conf 1/3), no clear trend alignment — reversal risk if weekly reasserts; [2] AUD COT REVERSING from net long to net short — institutions unwinding AUD longs into your entry — positions may collapse under position-covering selling.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF agreement insufficient (Weekly SELL + Daily BUY = 1/3 confidence, <2/3 threshold). COT reversal in AUD creates institutional distribution risk. Inside bar + neutral oscillators offer no edge.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL_SCORE: 5/10**
+- D1 RSI=41.1 in mixed trend (no confirmed uptrend to shift BUY zone): standard tier applies → 41–45 range = 5–6 BUY baseline = **5**

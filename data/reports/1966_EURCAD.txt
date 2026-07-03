@@ -1,0 +1,32 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 bearish pin bar at key level + D1 SELL signal + 4H continuation SELL despite ribbon alignment = short-term pullback sell into overbought 4H RSI (67.4), hedged by EUR COT unwinding.
+
+RISK_FACTORS: [1] Ribbon ALIGNED_BULL (5/5 EMAs stacked bullish) contradicts D1 SELL signal—uptrend structure intact, limits downside. [2] EUR positioning unwinding into a SELL trade creates counter-trend risk; CAD BUILD into an oversold short could reverse sharply if risk sentiment flips.
+
+TRADE_THIS: YES
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.6200
+ENTRY_TRIGGER_REASON: Break below D1 pin bar low (1.6200) confirms bearish continuation into 4H SELL alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (7/10):**
+- D1 T_sig=SELL_7 is baseline anchor.
+- RSI 60.5 (D1) → in mixed MTF context (W:NEUTRAL, D:SELL, 4H:

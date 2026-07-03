@@ -1,0 +1,33 @@
+PAIR: NZD/CHF
+
+DIRECTION: SELL
+
+CONFIDENCE: 4/10
+
+TECHNICAL_SCORE: 4/10
+
+FUNDAMENTAL_SCORE: 5/10
+
+SENTIMENT_SCORE: 6/10
+
+POSITIONING_SCORE: 3/10
+
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Ribbon fully aligned bearish with D1 BUY conflicting 4H SELL creates MTF disagreement (conf 1/3 <2/3 threshold); RSI neutral zone (43.5) offers no directional edge; NZD rate falling undercuts fundamental support.
+
+RISK_FACTORS: (1) MTF consensus broken — only D1 agrees BUY while 4H is SELL and W is NEUTRAL; momentum agreement insufficient to override divergence. (2) RIBBON fully bearish (5/5 aligned) contradicts D1 BUY signal and creates structural sell pressure despite T_sig=4.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: NONE
+
+ENTRY_TRIGGER_PRICE: NONE
+
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (conf 1/3 < 2/3 threshold). Weekly is NEUTRAL, 4H is SELL, only D1 is BUY. Ribbon ALIGNED_BEAR conflicts with D1 T_sig=4. Confidence cannot exceed 6 without MTF alignment; current setup fails hard rule requiring both W+D agreement for TRADE_THIS=YES.
+
+ENTRY_TRIGGER_EXPIRY_HOURS: 0

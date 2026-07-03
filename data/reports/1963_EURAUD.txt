@@ -1,0 +1,29 @@
+```
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 2/10
+POSITIONING_SCORE: 2/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed MTF signals (W:BUY vs D:NEUTRAL) + AUD institutional reversal from SHORT to LONG undercuts EUR strength; pin bar at key level suggests entry near support but insufficient confluence for high-confidence trade.
+RISK_FACTORS: [1] MTF disagreement (W:BUY, D:NEUTRAL, 4H:NEUTRAL = 1/3 agreement, conf 45%) violates MTF rule requiring weekly + daily both agree — TRADE_THIS flagged. [2] AUD COT REVERSING from net SHORT to long conviction creates reversal risk; EUR unwinding reduces EUR momentum conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violated: Weekly BUY vs Daily NEUTRAL + 4H NEUTRAL = insufficient directional alignment. Confidence threshold 7 not achievable; positioning momentum unfavorable (EUR unwinding, AUD reversing).
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### Detailed Reasoning:
+
+**MTF Analysis (CRITICAL FAIL):**
+- **Weekly:** BUY
+- **Daily:** NEUTRAL  
+- **4H:** NEUTRAL
+- **Confidence

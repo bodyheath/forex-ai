@@ -1,0 +1,24 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level offers tactical short setup, but weak MTF alignment (M:SELL vs W/D:NEUTRAL) and unwinding EUR long positioning create conflicting signals with limited conviction.
+RISK_FACTORS: (1) MTF disagreement — Monthly SELL contradicts Weekly and Daily NEUTRAL; confluence is 0/3, failing the 2/3 MTF rule for reliable directional bias. (2) EUR COT UNWINDING while JPY COT BUILDING creates opposing institutional momentum; EUR long unwind into a short entry is contrarian to fund flows.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 183.80
+ENTRY_TRIGGER_REASON: Break below pin bar low at ~183.80 (confluent with lower Fibonacci support near SL=182.063) to confirm Monthly downtrend signal against Daily resistance.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+### Detailed Rationale:
+
+**TECHNICAL_SCORE = 3/10 (Neutral, no directional conviction)**
+- **D1 RSI 46.4**: Mixed MTF context (W:NEUTRAL, D:NEUTRAL) → standard tier applies → RSI 45–55 = NEUTRAL 3
