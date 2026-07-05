@@ -1,0 +1,21 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: EUR positioning unwinding into rising JPY rates and 4H downtrend structure, but mixed daily technicals and weak oscillator confluence prevent high-conviction trade.
+RISK_FACTORS: [1. MTF confluence 0/3 — weekly and daily both NEUTRAL against monthly SELL; no directional agreement across timeframes breaks MTF rule. 2. EUR/JPY oscillator_confluence=NONE (Stoch 40.3, CCI -49.0) — no RSI+MACD+Stochastic/CCI alignment; technical entry probability low.]
+TRADE_THIS: NO
+
+**RATIONALE:**
+
+**MTF Rule Violation (Hard Stop):** MTF data shows W:NEUTRAL + D:NEUTRAL + 4H:NEUTRAL (conf=0/3). Monthly shows SELL context, but weekly AND daily do NOT both agree on direction. Per MTF rule: *"if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless."* This trade fails the mandatory gate.
+
+**Technical Breakdown:**
+- **D1 T_sig=NEUTRAL_3:** RSI 46.0 is in the 45–55 neutral zone (no directional bias). MACD histogram −0.0068 (barely negative) confirms neutrality.
+-

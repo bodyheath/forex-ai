@@ -1,0 +1,25 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 6/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed MTF alignment (M:SELL + W:SELL vs D:BUY) with ribbon neutral and RSI in mid-range creates low-conviction environment; weak AUD COT reversal and JPY building positioning offer slight bearish bias but insufficient confluence.
+RISK_FACTORS: [1] MTF conflict: Daily BUY vs Weekly/Monthly SELL (conf=1/3) violates MTF rule — directional confidence capped at 5. [2] COT reversal in AUD positioning (institutions unwinding long) undermines fundamental conviction; JPY reversal risk if building unwinds.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF alignment <2/3 (1/3 agreement) blocks entry per MTF hard rule.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS:**
+
+**MTF Layer (Critical Blocker):**
+- Monthly: **SELL** | Weekly: **SELL** | Daily: **BUY** | 4H: **NEUTRAL**
+- Agreement: 1/3 (only D1:BUY isolated; M+W agree on SELL, but D conflicts)

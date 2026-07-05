@@ -1,0 +1,23 @@
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Inverse H&S pattern suggests bullish reversal, but weak technical setup (mixed MTF, RSI neutral, ribbon only leaning bear) and rising JPY rates create conflicting signals; no high-conviction edge.
+RISK_FACTORS: MTF disagreement (Monthly SELL vs Weekly/Daily NEUTRAL) creates directional ambiguity; inverse H&S pattern contradicts SELL thesis and may resolve upward instead.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: Confidence below 7/10 threshold and MTF agreement rule violated (W=NEUTRAL, D=NEUTRAL, M=SELL = 1/3 agreement, <66%). Inverse H&S candle pattern (bullish bias) conflicts with SELL direction; RSI neutral (48.7) offers no momentum confirmation. Do not trade until MTF aligns or pattern resolves into clear breakout structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**REASONING:**
+
+1. **MTF Rule Breach:** W:NEUTRAL + D:NEUTRAL + M:SELL = only 1/3 agreement (33%). Rule requires Weekly AND Daily to both agree on direction. TRADE_THIS = NO automatically.

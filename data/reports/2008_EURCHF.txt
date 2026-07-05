@@ -1,0 +1,30 @@
+```
+PAIR: EUR/CHF
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+
+KEY_THESIS: Partial oscillator confluence (RSI+Stochastic aligned BUY) at 50% Fib support with favourable rate differential, but weak MTF alignment and EUR positioning unwinding limit conviction.
+
+RISK_FACTORS: 
+1. MTF fragmentation: Monthly BUY contradicted by W/D/4H NEUTRAL (confidence 0/3) — no weekly+daily agreement blocks trade regardless of oscillators.
+2. EUR COT UNWINDING: institutions reducing long conviction while we align with old long positioning — reversal risk embedded.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.91803
+ENTRY_TRIGGER_REASON: Price retest of 50% Fibonacci support + RSI 45–50 (neutral zone in mixed trend) + Stochastic+CCI confluence (2/3 oscillators BUY).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Rationale:**
+
+- **TECHNICAL (4/10):** T_sig=NEUTRAL_3 baseline. D1 & 4H both NEUTRAL (no trend agreement; price near SMA50 but above SMA200 on D1 yet below on 4

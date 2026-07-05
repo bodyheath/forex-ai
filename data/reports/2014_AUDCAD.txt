@@ -1,0 +1,23 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with 3/3 MTF sell signals (M+W+4H agree), but daily neutral and RSI 51.5 neutral blunt conviction; AUD rate-positive but COT reversing reduces edge.
+RISK_FACTORS: [1. MTF confidence only 2/3 (D:NEUTRAL breaks consensus; conf=65% below TRADE_THIS threshold) — daily hesitation conflicts with 4H/weekly bearish setup. 2. COT REVERSING on AUD (net SHORT 47% but momentum unwinding) — institutions reducing conviction in short AUD, contradicts SELL thesis.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade fails TRADE_THIS gate: MTF weekly+daily agreement rule violated (D=NEUTRAL, W=SELL; conf 2/3 < required 3/3). COT reversal in AUD shorts reduces positioning conviction. Confidence 5 < 7 minimum.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**REJECTION SUMMARY:**
+
+1. **MTF RULE FAILURE**: Weekly (SELL) + Daily (NEUTRAL) do not both agree. Confidence
