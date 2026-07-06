@@ -1,0 +1,24 @@
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed technicals (D1 neutral RSI + pin bar bearish signal) conflict with MTF weakness (M/W/4H SELL vs D NEUTRAL, conf=2/3), and AUD COT reversal undermines the fundamental rate-differential edge.
+RISK_FACTORS: [1] MTF agreement insufficient (2/3 <2/3 threshold) — daily neutral RSI conflicts with multi-timeframe bearish bias, reducing directional confidence. [2] AUD COT REVERSING (institutions flipping from long) contradicts the fundamental +2.14% rate advantage; institutional unwinding of AUD longs into strength is a major reversal warning.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement insufficient for entry rules (2/3 conf <2/3 threshold). D1 RSI=51.6 neutral + AUD COT reversing eliminate high-conviction setups.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- D1 RSI=51.6 is mid-neutral (45–55 zone). T_sig baseline=NEUTRAL_3

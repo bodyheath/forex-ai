@@ -1,0 +1,17 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 2/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 SELL_3 signal from overbought RSI (63) in mixed trend conflicts with 4H uptrend structure; weak fundamental divergence and institutional AUD positioning reversal create ambiguity.
+RISK_FACTORS: [1] MTF all-neutral (M/W/D/4H=NEUTRAL, conf=0/3) — no directional consensus across timeframes — trade lacks confluence and may whipsaw. [2] AUD COT REVERSING from net short mid-position — institutions unwinding bearish AUD bets, opposing the SELL signal — reduces conviction and creates reversal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated: all four timeframes (M/W/D/4H) are NEUTRAL with 0/3 directional agreement. No valid directional consensus; confidence 4/10 << 7.0 minimum. AUD COT reversal (institutions reducing short conviction) conflicts with SELL thesis. Inside-bar pattern on 4H is neutral (neither bullish nor bearish continuation). Trade does not meet TRADE_THIS criteria: MTF confidence < 2/3, CONFIDENCE < 7, and >= 2

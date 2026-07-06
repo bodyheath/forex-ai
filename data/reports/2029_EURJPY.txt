@@ -1,0 +1,24 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double top pattern at resistance conflicts with uptrend structure; EUR momentum unwinding while JPY positioning building creates tactical short bias, but D1 neutrality and price support at 50% Fib undermine conviction.
+RISK_FACTORS: [1] MTF disagreement (M:SELL vs W/D:NEUTRAL, conf=0/3) violates core MTF rule — no directional consensus across timeframes. [2] EUR COT unwinding into JPY building creates whipsaw risk; price sits 8p above 50% Fib support (184.999), limiting downside margin before reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 183.50
+ENTRY_TRIGGER_REASON: Break below 50% Fibonacci support at 184.999, targeting SL swing at 182.063 with RSI confirmation <45.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**  
+- T_sig=3 (NEUTRAL baseline) anchors score. D1 RSI=51.6 in confirmed uptrend (price > SMA50 > SMA200) = normal neutral zone in trend; 4H RS

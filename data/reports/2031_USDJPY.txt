@@ -1,0 +1,18 @@
+```
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + D1 T_sig=SELL_3 + rising JPY rates conflict with uptrend structure and aligned bull ribbon, creating ambiguous risk/reward.
+RISK_FACTORS: ['MTF disagree: W/D both NEUTRAL but 4H=SELL (conf=0/3 <2/3 threshold) — MTF rule breaches TRADE_THIS viability', 'MACD histogram mixed (D1 negative -0.0040 but 4H positive +0.0934) — technical confirmation weak; aligned bull ribbon contradicts SELL setup']
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily both NEUTRAL, 4H alone signals SELL — multi-timeframe consensus <2/3 threshold. Fundamental layers insufficient (only 2/4 align: JPY rate rising + D1 T_sig=SELL; USD rate flat is neutral, not bearish). ALIGNED_BULL ribbon (5/5) contradicts bearish setup. Confidence capped at 4/10, below 7/10 trade threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0

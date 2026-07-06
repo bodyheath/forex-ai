@@ -1,0 +1,20 @@
+PAIR: CAD/CHF
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level (0.5643 SL) in confirmed downtrend with RSI 39.4 (oversold zone) + MTF weekly+daily BUY alignment (2/3 threshold) + aligned bearish ribbon suggests exhaustion reversal, but 4H neutral and MACD near-zero limit conviction.
+RISK_FACTORS: [1] RIBBON=ALIGNED_BEAR contradicts BUY direction — fan still favoring downside continuation despite D1 oversold setup; [2] 4H=NEUTRAL breaks MTF consensus (only 2/3 agreement, below ideal 3/3) and OSC=NONE (no oscillator confluence) reduces reversal confidence.
+TRADE_THIS: YES
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.5643
+ENTRY_TRIGGER_REASON: Pin bar low (key level at SL swing) + RSI oversold (39.4 in downtrend = shift BUY zone, score 7-8BUY at <42) + FIB SL support confluence = triple-confirmed entry; await bounce-off confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**NOTES:**
+- **MTF confidence = 2

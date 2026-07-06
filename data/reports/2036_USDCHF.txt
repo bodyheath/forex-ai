@@ -1,0 +1,27 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key resistance + D1 SELL signal + converging ribbon suggest trend weakening, but MTF conflict (W:NEUTRAL vs D:SELL) and RSI neutral-to-bullish (56.3) prevent conviction.
+RISK_FACTORS: [1] MTF critical failure — weekly is NEUTRAL, daily is SELL, monthly is BUY; only 1/3 timeframes agree, confidence threshold not met. [2] COT positioning conflict — USD at neutral 50%, CHF building SHORT conviction (14.0%), yet D1 signals SELL USD (BUY CHF); institutional momentum favours CHF strength, contradicting trade direction.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**ANALYSIS NOTES:**
+
+**MTF Rule Failure (Hard Stop):**
+- W:NEUTRAL + D:SELL + M:BUY = only 1/3 agree on SELL direction (conf=1/3 << 2/3 threshold)
+- MTF rule enforced: *TRADE_THIS NO* regardless of other factors
+
+**Technical Breakdown:**

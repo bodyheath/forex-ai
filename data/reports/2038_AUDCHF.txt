@@ -1,0 +1,24 @@
+```
+PAIR: AUD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD strength (rate rising, +4.47% differential) + bullish candle patterns (hammer D1, double_bottom 4H) support BUY, but MTF conflict (W:SELL vs D:BUY, conf=1/3) and neutral ribbon/oscillators limit conviction.
+RISK_FACTORS: [1] MTF disagreement (W:SELL contradicts D:BUY) — weekly selling pressure unresolved, entry validity uncertain. [2] AUD COT reversing (short positions unwinding mid-range) + CHF building shorts — institutional flip out of AUD bias creates headwind for sustained rally.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence 1/3 (<2/3 threshold) and conf=5 do not meet TRADE_THIS threshold (requires conf≥7, MTF weekly+daily both agree, R:R≥2.0). Weekly SELL prevents trade authorization.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+**MTF Failure (Hard Stop):**  
+Weekly = SELL, Daily = BUY → conf = 1/3

@@ -1,0 +1,23 @@
+PAIR: CAD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 4/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + D1 BUY signal with rising JPY rates support CAD strength, but MTF conflict (W/M neutral, 4H bearish) and leaning-bear ribbon create reversal risk.
+RISK_FACTORS: [1] MTF disagreement: Daily BUY vs. 4H SELL (conf=1/3, 40% weighted) — trade lacks confirmation across higher and lower timeframes; [2] Ribbon leaning bear (4/5 aligned downside) conflicts with BUY thesis — trend structure weakening despite pin bar pattern.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 113.51
+ENTRY_TRIGGER_REASON: Support at FIB SL (113.51) with pin bar confirmation; re-entry only if D1 + W align bullish (avoid premature entry in MTF conflict).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE:**
+
+**Technical (6/10):**
+- D1 T_sig=BUY_7 anchors baseline; pin_bar_at_key_level:bul is high-probability reversal pattern at confluence.
+- RSI 42.7 = neutral-

@@ -1,0 +1,21 @@
+```
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key resistance with D1 T_sig SELL_3 and 4H confluence, but weakened by MTF neutral (W+D both NEUTRAL = conf 0/3) and ribbon bullish alignment creating conflicting signals.
+RISK_FACTORS: (1) MTF rule violation: Weekly AND Daily both NEUTRAL, failing the MTF agreement threshold (conf < 2/3) — this BLOCKS TRADE_THIS YES despite T_sig SELL. (2) Ribbon fully bullish-aligned (5/5) contradicts SELL thesis; price 2.0095 > SMA50 1.9872 and near SMA200 2.0021 suggests uptrend continuation, not reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 2.0236
+ENTRY_TRIGGER_REASON: Break below pin bar high (2.02357 FIB swing high) to confirm resistance rejection; D1 T_sig SELL_3 + 4H T=5 SELL confluence requires price action confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+NOTES:
+• **MTF BLOCKER**: Weekly NEUTRAL + Daily NEUTRAL = 0/
