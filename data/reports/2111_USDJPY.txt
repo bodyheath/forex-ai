@@ -1,0 +1,25 @@
+```
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with RSI 63.3 in confirmed uptrend signals overbought exhaustion, but weak MTF alignment (W:SELL vs D:NEUTRAL, conf=1/3) and bullish ribbon contradict SELL signal — mixed setup with elevated reversal risk.
+RISK_FACTORS: [1. MTF disagreement: Weekly SELL but Daily NEUTRAL breaks primary rule — trade confidence capped <7 regardless of setup quality. 2. ALIGNED_BULL ribbon (5/5 stacked) and price above SMA50>SMA200 suggest trend continuation, contradicting pin-bar reversal thesis — conflicting structural signals.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:SELL and D:NEUTRAL do NOT both agree on direction (conf=1/3 < 2/3 threshold). Trade blocked per MTF enforcement rule — despite pin bar pattern and T_sig=SELL_3, weekly-daily divergence disqualifies entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS RATIONALE:**
+
+**MTF Alignment (CRITICAL BLOCKER):**
+- Weekly =

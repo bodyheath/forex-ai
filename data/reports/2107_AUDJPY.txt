@@ -1,0 +1,25 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H pin bar at key level + overbought RSI (74.3) + weekly/monthly SELL alignment creates mean-reversion setup targeting 112.676 Fib 38.2% support, but D1 neutral and COT AUD reversal reduce conviction.
+RISK_FACTORS: COT AUD positioning reversing (institutions flipped from long to short) signals weakening conviction; D1 RSI neutral (51.0) and price above SMA50 (113.2553) conflict with 4H overbought signal, risking false breakdown.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 112.676
+ENTRY_TRIGGER_REASON: Limit sell at Fib 38.2% support + pin bar confluence; wait for retest after overbought 4H pullback.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**REASONING:**
+
+**MTF Analysis:**
+- W:SELL + 4H:SELL (2/3 agreement, 65% weighting) — marginal multi-timeframe confluence, but D1:NEUTRAL breaks the rule threshold (need both W+D agreement for high conviction).
+- Monthly:SELL adds context but is not

@@ -1,0 +1,23 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level with RSI 60.8 in mixed trend + MACD negative divergence + D1:SELL + 4H:SELL alignment (2/3 MTF) create SELL confluence, but ribbon remains bullishly aligned and OSC is neutral — moderate conviction short.
+RISK_FACTORS: [1] Ribbon fully aligned bull (5/5 EMA stack) contradicts SELL direction — reversal risk if price holds SMA50 at 1.6091. [2] EUR positioning unwinding (institutions reducing conviction) while CAD positioning building — conflicting flows weaken short thesis; EUR COT momentum negative for SELL setup.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.6290
+ENTRY_TRIGGER_REASON: Sell limit at minor resistance above current pin bar; requires price confirmation above key level before short entry to avoid false breakout given ribbon conflict.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Alignment (Critical):** D1:SELL + 4H:SELL = 2/3 agreement (weekly NEUTRAL weakens confluence to 65%). This meets minimum for directional bias but lacks full conviction.
