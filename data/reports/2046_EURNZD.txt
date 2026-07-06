@@ -1,0 +1,25 @@
+```
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Conflicting signals — D1 T_sig SELL_3 with bullish pin bar at key level vs. aligned ribbon and neutral MTF (W/D both NEUTRAL); EUR unwinding long positions into weakness.
+RISK_FACTORS: (1) MTF disagreement — weekly and daily both NEUTRAL blocks trade confidence; ribbon fully aligned bull contradicts downside thesis. (2) EUR COT unwinding from net long 20% suggests momentum loss but not yet bearish reversal — no strong institutional conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — W and D do not both agree on direction (both NEUTRAL, M:SELL isolated); ribbon alignment (5/5 bull) conflicts with SELL thesis; OSC=NONE (no oscillator confluence); price pinning at key level is bullish candle signal, not bearish confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**ANALYSIS NOTES:**
+
+1. **MTF Failure**: Weekly=NEUTRAL, Daily=NEUTRAL, Monthly=SELL (isolated). Your rule requires **both weekly AND daily to agree**. This trade fails the MTF gate immediately (conf=0/

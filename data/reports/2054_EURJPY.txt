@@ -1,0 +1,23 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double top bearish pattern at 187.935 with monthly SELL signal conflicts with daily neutrality and uptrend structure; EUR positioning unwinding into JPY strength creates positioning headwind.
+RISK_FACTORS: [1. MTF disagreement (M:SELL vs W/D:NEUTRAL) yields 0/3 conf — TRADE_THIS rule violation: weekly AND daily must both agree on direction for valid signal. 2. D1 uptrend structure (price > SMA50 > SMA200, golden cross) contradicts the bearish double-top pattern — likely continuation bias masking the setup.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF alignment failure — weekly and daily both neutral; monthly SELL is isolated. Golden-cross uptrend structure remains intact. Double top at resistance (187.935) is valid confluence point, but lack of multi-timeframe agreement and EUR unwinding + JPY building momentum create conflicting signals.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF VETO:** Monthly=SELL, Weekly=NEUTRAL, Daily=NEUTRAL, 4H=SELL; conf=0/

@@ -1,0 +1,24 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 78.6% Fib + D/4H SELL alignment + CHF rate falling supports downside, but converging ribbon and mixed MTF (W:NEUTRAL) weaken conviction.
+RISK_FACTORS: [1] Ribbon converging signals trend weakening/reversal risk — price may reverse above SMA50@0.7923 if uptrend resumes. [2] Weekly MTF is NEUTRAL (not SELL), breaking the MTF majority rule — only D+4H confirm SELL (2/3 threshold), leaving uptrend structure intact if W reverses.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8045
+ENTRY_TRIGGER_REASON: Retest of pin bar high at 78.6% Fib level (0.80608) with RSI <60 to confirm weakness before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 T_sig=SELL_6 is baseline, but RSI=57.8 is **neutral-to-bullish** (in uptrend context, 45–58=neutral per rules, but

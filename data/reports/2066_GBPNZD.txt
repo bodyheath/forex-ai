@@ -1,0 +1,23 @@
+PAIR: GBP/NZD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought (67.7) + D1:SELL + 4H:SELL (2/3 MTF agreement) + pin bar at key level signal reversal, but ribbon alignment and double bottom pattern create conflicting trend signals requiring caution.
+RISK_FACTORS: [1] Ribbon fully aligned bullish (5/5 EMA fan) contradicts SELL direction — reversal risk if price sustains above SMA50 (2.2993); [2] Weekly is NEUTRAL, weakening MTF confluence to 2/3 — only D1+4H agree, not strong enough for high conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 2.3500
+ENTRY_TRIGGER_REASON: Sell limit above current price to wait for confirmation break above pin bar high; if price reaches 2.3500 and shows rejection candle, increases conviction that overbought RSI rejection is real.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+1. **MTF Analysis (CRITICAL):** MTF conf=2/3 (D1:SELL + 4H:SELL, but W:NEUTRAL + M:SELL

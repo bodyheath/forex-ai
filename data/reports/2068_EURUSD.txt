@@ -1,0 +1,32 @@
+```
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key support with W/D/4H unanimous BUY alignment and converging ribbon signals early reversal setup, but EUR positioning unwind and downtrend structure limit confidence.
+
+RISK_FACTORS: 
+1. EUR COT unwinding conviction while in long position—institutional exit risk; 
+2. Ribbon converging (trend weakening) despite price reversal signals—potential false break below support.
+
+TRADE_THIS: YES
+
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 1.1510
+ENTRY_TRIGGER_REASON: Break above pin bar high and short-term resistance; confirms D1/4H reversal intent with confluence of W/D BUY alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+### SCORING DETAIL:
+
+**TECHNICAL (6/10):**
+- **RSI D1=40.1** in **CONFIRMED DOWNTREND** (W:BUY + D:BUY, but price < SMA50 < SMA200 = death cross). Shift BUY zone lower: RSI 35–42 in downtrend = **5–6 BUY** → score **6** (lower end, still in retracement, not aggressive).

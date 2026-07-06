@@ -1,0 +1,23 @@
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Shooting star pattern + ALIGNED_BEAR ribbon suggests bearish rejection, but mixed MTF (W:NEUTRAL + D:BUY conflict) and RSI 41.7 (mid-range neutral) prevent high-conviction entry; Fib 23.6% near offers limited confluence.
+RISK_FACTORS: [1] MTF disagreement — Weekly is NEUTRAL while Daily is BUY, breaking the 2/3 rule (conf=1/3 <2/3) = NO GO on TRADE_THIS regardless of technical score. [2] CHF COT BUILDING short positioning while NZD is STABLE creates asymmetric institutional conviction — if CHF shorts unwind, carry-trade liquidation could reverse abruptly.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly=NEUTRAL, Daily=BUY do not both agree on direction. Confidence 1/3 fails minimum 2/3 threshold. No trade authorized.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**REASONING:**
+
+1. **MTF GATE (HARD RULE):** Weekly is NEUTRAL, Daily is BUY → they

@@ -1,0 +1,22 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Intraday 4H oversold exhaustion (RSI 69.6) conflicts with D1 neutral structure; AUD rate advantage (+3.70% diff) undermined by reversing AUD COT positioning and ribbon misalignment (3/5).
+RISK_FACTORS: [1] MTF conflict: M:SELL + 4H:SELL contradicted by W:NEUTRAL + D:NEUTRAL (conf=0/3 fails MTF rule). [2] COT reversal: AUD net SHORT positioning reversing mid-term after 47% institutional conviction—institutional unwinding reduces conviction in short thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF weekly and daily do not both agree on direction (conf < 2/3 threshold); 4H oversold (RSI 69.6) is tactical noise in a weekly-neutral structure. AUD COT reversing undercuts short thesis despite rate positive.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Analysis Summary:**
+- **MTF Veto:** Weekly NEUTRAL + Daily NEUTRAL = no directional consensus. Monthly SELL and 4H SELL insufficient to override (conf=0/

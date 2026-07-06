@@ -1,0 +1,28 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: MTF weekly+4H aligned SELL with inverse H&S reversal pattern and RSI overbought at 4H, but D1 NEUTRAL and price 2p from 50% Fib support weakens conviction.
+
+RISK_FACTORS: 
+1. D1 MTF disagrees (NEUTRAL vs W/4H SELL) — MTF conf only 2/3, below 3/3 threshold for high conviction; price within 2p of 50% Fib support (201.355) creates bounce risk.
+2. OSC NONE (Stoch 68.5 + CCI 65.2 both elevated but no RSI data on 4H line = incomplete confluence); ribbon only 3/5 aligned BEAR; CHF rate falling + JPY rate rising fundamentally mixed signal.
+
+OSCILLATOR_CONFLUENCE: NONE
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 201.0550
+ENTRY_TRIGGER_REASON: Break below 50% Fib level (201.355) with confirmed lower low below D1 SMA50 (201.4920) to confirm W+4H SELL alignment and override D1 NEUTRAL weakness.
+ENTRY_TRIGGER

@@ -1,0 +1,25 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern on D1 with 4H selling pressure and rising AUD/falling CHF rate differential create a weak short bias, but mixed MTF alignment (2/3 agree) and neutral oscillators prevent high-confidence entry.
+RISK_FACTORS: [1] MTF conf=2/3 fails strict weekly+daily agreement requirement — W:SELL but D:NEUTRAL creates directional ambiguity; [2] AUD COT reversing from long → reduces positioning conviction and signals institutional de-risking into a SELL entry.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5579
+ENTRY_TRIGGER_REASON: Price test of FIB support at SL (9p below spot) + D1 double-top neckline confirmation would raise confluence to acceptable levels.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- D1 RSI=46.5 is neutral (45–55 zone) with mixed trend context (W:SELL, D:NEUTRAL = no confirmed downtrend) → no directional RSI bias applies; standard tier = NEUTRAL(3).
+- D1 T_
