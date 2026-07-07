@@ -1,0 +1,21 @@
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key Fib support (200.633) + LEANING_BEAR ribbon + CHF rate falling suggest weak downside continuation, but MTF misalignment (W/D neutral vs M/4H mixed) blocks high-conviction trade.
+RISK_FACTORS: (1) MTF disagreement — weekly and daily both NEUTRAL, violating MTF consensus rule; 4H BUY contradicts monthly SELL signal. (2) Oscillator confluence absent (Stochastic 70.5 overbought, CCI 36.6 neutral) with no MACD confirmation of direction.
+TRADE_THIS: NO
+
+**Rationale:**
+
+1. **MTF Consensus Failure**: Weekly (NEUTRAL) + Daily (NEUTRAL) do not both align downside. Monthly shows SELL, but W+D neutrality + 4H BUY (conf=0/3, only 1/3 timeframes agreeing) means the system cannot confirm a directional consensus. **MTF rule violated** — TRADE_THIS automatic NO.
+
+2. **Technical Score 4/10**: 
+   - D1 RSI=48.5 (neutral zone 45–55) = baseline 3–4 (NEUTRAL context)
+   - T_sig=NEUTRAL_3 confirms this

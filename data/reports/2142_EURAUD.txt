@@ -1,0 +1,32 @@
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Head-and-shoulders pattern on 4H with AUD strength and EUR positioning unwinding supports bearish setup, but mixed MTF alignment and neutral RSI limit conviction.
+
+RISK_FACTORS: [1] MTF agreement is weak (W:BUY vs D:NEUTRAL) — weekly-daily consensus required for high-confidence trades is not met; [2] EUR COT UNWINDING (institutions reducing long conviction) while positioning reverses on AUD SHORT mid-range — conflicting institutional signals reduce positioning score and add reversal risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.6400
+ENTRY_TRIGGER_REASON: Break below H&S neckline at 1.6400 with AUD SHORT reversal confirmation and EUR long unwinding.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS NOTES:**
+
+1. **MTF Failure**: Weekly=BUY, Daily=NEUTRAL, 4H=NEUTRAL. Confidence = 1/3 (only 33%). Your rule mandates weekly + daily BOTH agree for high-conviction trades. This setup fails — NO TRADE.
+
+2. **Technical (Score 4)**:
+   - D1 RSI 55.

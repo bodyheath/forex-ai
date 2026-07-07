@@ -1,0 +1,27 @@
+```
+PAIR: EUR/CHF
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + leaning-bull ribbon + EUR rate advantage offer weak long bias, but mixed MTF alignment and EUR unwinding limit conviction.
+RISK_FACTORS: [EUR positioning unwinding (conviction declining); MTF W+D both NEUTRAL (no weekly/daily agreement — multi-timeframe rule fails)]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.9181
+ENTRY_TRIGGER_REASON: SMA50 support confluence with pin-bar low; wait for pullback confirmation before entry
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### DETAILED SCORING RATIONALE
+
+**TECHNICAL_SCORE: 4/10**
+- **D1 RSI=52.9**: Mixed MTF (W:NEUTRAL, D:NEUTRAL) → use standard tiers → RSI 45–55 = NEUTRAL (3–4). No trend confirmation, so standard scoring applies.
+- **T_sig baseline=3 (NEUTRAL)**: No MACD signal (h=-0.0004 is flat), no RSI conviction, no oscillator confluence (stoch_k=41.1 mid-range, CCI=-22.7 weak bearish).

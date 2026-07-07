@@ -1,0 +1,26 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern conflicts with uptrend structure; D1 neutral RSI (53.3) + reversing AUD positioning undermines conviction.
+RISK_FACTORS: [1. MTF conf=0/3 — no weekly or daily agreement on direction; trade is discretionary/high-uncertainty. 2. COT AUD reversing from long → institutions exiting long positions, reducing momentum for AUD strength; CAD still building short suggests AUD weakness, but AUD reversal signal weakens the edge.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: Confidence 4/10 is below 7.0 threshold. MTF conf=0/3 (W:NEUTRAL, D:NEUTRAL) violates MTF rule: weekly AND daily must both agree on direction for TRADE_THIS=YES. No trade setup qualifies.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL (4/10):**
+- D1 T_sig baseline = NEUTRAL_3 (no adjustment needed; data present)
+- RSI 53.3 = standard tier (45–55 = 3–4

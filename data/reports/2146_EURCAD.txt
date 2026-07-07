@@ -1,0 +1,25 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Head-and-shoulders bearish pattern at 100% Fibonacci resistance (1.6266) with RSI overbought (61.4D1, 64.6 4H) and MACD divergence (price near resistance, MACD flat/declining) suggests short setup, but mixed MTF alignment (W:NEUTRAL vs D:SELL, conf=2/3) and ribbon ALIGNED_BULL (+2 for trend continuation) create conflicting signals.
+
+RISK_FACTORS: 
+1. Ribbon fully aligned bullish (5/5 EMA stack) contradicts bearish H&S pattern — trend continuation risk despite reversal pattern.
+2. Weekly timeframe NEUTRAL (not confirming D1 SELL) — MTF confidence only 2/3, below 3/3 threshold for high-probability reversal; COT EUR unwinding conviction while CAD building suggests EUR weakness may stall.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.6220
+ENTRY_TRIGGER_REASON: Confirmed break below H&S neckline at 1.6220 (midpoint of pattern) with close below SMA50 (1.6097) to confirm weakness and override bullish ribbon.

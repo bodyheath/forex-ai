@@ -1,0 +1,25 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 23.6% Fib support + weekly downtrend context suggest bearish reversal, but mixed MTF (W:SELL + D:NEUTRAL) and rising rate differential weaken conviction.
+RISK_FACTORS: [1] COT AUD reversing from net short positioning — institutional conviction flipping reduces directional confidence; [2] D1 RSI 46.6 + MACD 0.0010 at neutral midpoint with price inside tight 8p Fib zone = range-bound, not trending — stop-loss breach likely on false break.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 111.95
+ENTRY_TRIGGER_REASON: Break below 23.6% Fib support at 112.15 + close below SMA50 rejection zone (113.19) to confirm downtrend alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Assessment (Critical Blocker):**
+- Weekly: SELL (downtrend context)
+- Daily: NEUTRAL (46.6 RSI = neutral, mixed MAs, price 112.23 vs SMA50 113.19 = below 50MA
