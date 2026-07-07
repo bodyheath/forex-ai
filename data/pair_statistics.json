@@ -215,7 +215,9 @@
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
-    "adaptive_active": true
+    "adaptive_active": true,
+    "_prev_t1_mult": 0.8,
+    "_prev_t3_mult": 2.5
   },
   "CAD/AUD": {
     "n_trades_with_mfe": 2
@@ -277,11 +279,11 @@
     "n_trades_with_mfe": 6
   },
   "CAD/CHF": {
-    "n_trades_with_mfe": 15,
-    "average_mfe_atr": 0.768,
-    "mfe_percentile_25": 0.43,
-    "mfe_percentile_50": 0.59,
-    "mfe_percentile_75": 0.993,
+    "n_trades_with_mfe": 16,
+    "average_mfe_atr": 0.804,
+    "mfe_percentile_25": 0.432,
+    "mfe_percentile_50": 0.598,
+    "mfe_percentile_75": 1.321,
     "t1_mult": 0.8,
     "t2_mult": 1.5,
     "t3_mult": 2.5,
