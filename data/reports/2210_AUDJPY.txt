@@ -1,0 +1,25 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level on 4H with 4H:SELL + W:SELL alignment, but D1:NEUTRAL and weak oscillator confluence limit conviction in a range-bound structure.
+RISK_FACTORS: [1] MTF confidence only 2/3 (D1 neutral breaks agreement; trade lacks full multi-timeframe confirmation). [2] COT AUD reversing (institutions flipping from long conviction to short) — risk of whipsaw if institutional reversal is premature or retail-driven.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 111.80
+ENTRY_TRIGGER_REASON: Sell limit at Fibonacci support (SL=111.3 + buffer), confirming 4H pin bar rejection if price retests into zone with renewed SELL pressure from 4H/W alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (4/10):**
+- D1: T_sig=NEUTRAL_3 baseline (RSI 46.9 in neutral zone, MACD +0.003 flat, price 112.26 below SMA50 113.19 — mixed structure). D1

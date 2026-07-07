@@ -1,0 +1,32 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Double top bearish pattern at resistance conflicts with aligned bullish ribbon and institutional unwinding EUR long; mixed timeframe agreement (M:SELL vs W/D/4H:NEUTRAL) creates low-confidence bearish lean.
+
+RISK_FACTORS: [1] MTF conf=0/3 (no weekly+daily agreement) violates TRADE_THIS threshold — monthly bearish signal lacks daily/weekly confirmation, reducing edge. [2] EUR positioning unwinding while CAD building suggests institutional shift may reverse the trade mid-move; SMD+4 neutral adds no directional conviction.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.6189
+ENTRY_TRIGGER_REASON: Price break below 78.6% Fib support (1.61887) + double-top neckline confirmation would add confluence; await daily close below SMA50 (1.6096) first.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **RATIONALE:**
+
+**Technical (4/10):**
+- D1: RSI 53.6 = neutral (3-4), T_sig=3 baseline. Double-top bearish pattern is valid, but **price 1.6193 is

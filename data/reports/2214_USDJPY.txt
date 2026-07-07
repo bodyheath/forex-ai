@@ -1,0 +1,24 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at resistance with RSI 63.8 in uptrend and falling MACD suggests pullback risk, but MTF shows only 1/3 agreement (D:SELL vs W/4H:NEUTRAL) — insufficient confluence for high-confidence trade.
+RISK_FACTORS: (1) MTF disagreement: Weekly and Daily diverge on direction (conf=1/3); MTF rule blocks trade execution unless weekly+daily align. (2) Ribbon converging after strong uptrend — trend weakening/reversal risk emerging; golden-cross structure intact but momentum fading (MACD histogram negative on D1, 4H MACD marginal positive).
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule: Daily=SELL but Weekly=NEUTRAL and 4H=NEUTRAL. Confidence=1/3 (<2/3 threshold). Do not trade. Await weekly confirmation of downtrend or weekly trend reversal signal before reconsidering.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical (Score 5):**
+- D1 RSI=63.8 in confirmed up

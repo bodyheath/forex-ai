@@ -1,0 +1,27 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at resistance with RSI overbought (63.8) in mixed trend, but 4H uptrend and ribbon lean-bull create conflicting signals—trade low-probability zone.
+RISK_FACTORS: [1. MTF agreement only 1/3 (D:SELL vs 4H/W/M:NEUTRAL)—insufficient confluence; 2. AUD COT REVERSING (institutions flipping from short to long) contradicts SELL direction.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confluence <2/3 (only D1 agrees SELL; 4H/W/M neutral/bullish). Confidence 5 < 7 threshold. Do not trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**DETAILED SCORING:**
+
+**TECHNICAL (5/10):**
+- D1 T_sig=SELL_5 baseline
+- RSI 63.8: Standard tier → 4-5 SELL (not overbought extreme); however, D1 trend=mixed/range (NOT confirmed downtrend), so no downtrend-context shift applied

@@ -1,0 +1,28 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fib 38.2% resistance + 4H:SELL + ribbon leaning bear suggest downside bias, but MTF disagreement (W/D neutral vs M/4H sell) and RSI neutral (46.9/55.1) prevent conviction.
+RISK_FACTORS: MTF conflict — weekly and daily both neutral while monthly/4H lean sell, reducing directional confidence; CHF funding rate falling + JPY rate rising is moderately supportive but only +0.77% diff, insufficient to override mixed structure.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 200.633
+ENTRY_TRIGGER_REASON: Sell limit at Fib 38.2% resistance (10p confluence with current price); wait for confirmed break below SMA50 (201.4348) to trigger on pullback.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **Reasoning:**
+
+**TECHNICAL_SCORE = 4/10**
+- D1 RSI 46.9 = NEUTRAL zone (45–55) in mixed MTF context → baseline 3–4
+- T_sig = NEUTRAL_3 (pre-computed) → use as baseline
+-
