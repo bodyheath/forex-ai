@@ -1,0 +1,26 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Head-and-shoulders bear pattern with partial oscillator sell signal, but MTF alignment failure (weekly neutral + daily sell = 1/3 agreement) and ribbon bullish bias conflict the setup.
+RISK_FACTORS: [1. MTF rule breach: Weekly does not confirm daily sell (conf=1/3 <2/3 threshold) — trade invalidated per MTF protocol. 2. EUR COT unwinding while CAD building creates opposing institutional flows; EUR positioning unwind adds reversal risk despite SELL signal.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: BLOCKED
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly=NEUTRAL and Daily=SELL fail to achieve 2/3+ agreement. Trade cannot execute.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Detailed scoring rationale:**
+
+**TECHNICAL (5/10):**
+- D1 T_sig=SELL_5 (baseline).
+- RSI=60.4 (mixed MTF context: W:NEUTRAL + D:SELL = ambiguous zone) → RSI in 55–65 range with no confirmed trend = 5–6 neutral, not elevated.
+- MACD slightly positive D

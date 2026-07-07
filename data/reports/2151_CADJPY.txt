@@ -1,0 +1,24 @@
+PAIR: CAD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with RSI neutral and D1 BUY signal offers limited edge; CAD rate falling into rising JPY creates conflicting fundamental backdrop.
+RISK_FACTORS: MTF agreement only 1/3 (D1 BUY vs W/M NEUTRAL) — insufficient multi-timeframe confluence to meet TRADE_THIS threshold. CAD positioning BUILDING SHORT conviction while JPY stable — reversal risk if CAD shorts unwind.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 113.51
+ENTRY_TRIGGER_REASON: Retest of swing low (SL=113.51) with RSI <35 would create oversold confluence + pin bar confirmation for higher-probability entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**  
+T_sig baseline=BUY_5 is already conservative. RSI 43.2 is neutral (within 35–55 range), no overbought/oversold edge. MACD histogram tiny (+0.0189) = weak momentum confirmation. **MTF rule violation**: W=NEUTRAL, D=BUY, 4H=NEUTRAL → conf=1/3
