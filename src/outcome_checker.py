@@ -305,7 +305,7 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                     notes=f"Auto-closed: WIN at {_cp} (+{_t2p:.1f}p, 2R target)",
                 )
                 r_txt = f", R={updated.get('r_multiple')}, pips={updated.get('pips')}"
-                log(f"  #{rec_id} {pair} {direction}: WIN at {_cp} (+{_t2p:.1f}p){r_txt}")
+                log(f"  #{rec_id} {pair} {direction}: WIN at {_cp} (+{_t2p:.1f}p){r_txt} | latest_conf={updated.get('latest_conf') or '—'}")
                 if _ta_casc:
                     try:
                         _ta_casc.send(
