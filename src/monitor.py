@@ -2439,6 +2439,21 @@ def run(log=print) -> dict:
     for i, row in enumerate(_res_open):
         _res_open[i] = _ensure_cascade_levels(row, _rt, log=log)
 
+    # ── Mid-trade confidence logging — stamp latest scan confidence ───────────
+    # No action is taken on this value. It is written to the CSV so that at
+    # trade close we can answer: did confidence decay mid-flight predict outcomes?
+    _open_latest_conf: dict = {}   # {rec_id: conf|None} — also used in [progress] log
+    for _row_lc in _fund_open:
+        _rid_lc  = _safe_int_id(_row_lc.get("id", 0))
+        _pair_lc = _row_lc.get("pair", "")
+        _cv_lc   = _scan_conf_map.get(_pair_lc)   # None = pair absent from last scan
+        _open_latest_conf[_rid_lc] = _cv_lc
+        if _cv_lc is not None:
+            try:
+                _trk.update_fields(_rid_lc, latest_conf=str(_cv_lc))
+            except Exception:
+                pass
+
     def _zone(rows_list):
         zones = {"HOT": [], "WARM": [], "COLD": []}
         for row in rows_list:
