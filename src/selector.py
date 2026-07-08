@@ -158,61 +158,34 @@ def _fetch_universe() -> list:
 
 
 def _fetch_calendar(hours_ahead: int = 48) -> list:
-    """Fetch upcoming economic events from Twelve Data. Cached under global TTL."""
+    """Fetch upcoming economic events from the shared calendar module.
+
+    Delegates to economic_calendar.get_events_7d() (Forex Factory primary source)
+    and filters to events within hours_ahead. Cached under SEL:calendar TTL.
+    """
     cache_key = "SEL:calendar"
     cached = cache.get(cache_key)
     if cached is not None:
         return cached
 
-    if not config.TWELVE_DATA_KEY:
-        return []
-
+    import economic_calendar as _ec
+    all_events = _ec.get_events_7d()
     now = datetime.now(timezone.utc).replace(tzinfo=None)
-    end = now + timedelta(hours=hours_ahead)
-    try:
-        r = requests.get(
-            "https://api.twelvedata.com/economic_calendar",
-            params={
-                "start_date": now.strftime("%Y-%m-%d"),
-                "end_date":   end.strftime("%Y-%m-%d"),
-                "apikey":     config.TWELVE_DATA_KEY,
-            },
-            timeout=15,
-        )
-        data = r.json()
-    except Exception:
-        return []
-
-    raw = data.get("result", data)
-    if isinstance(raw, dict):
-        raw = raw.get("events", [])
-    if not isinstance(raw, list):
-        return []
 
     events = []
-    for ev in raw:
-        imp_raw = ev.get("importance", "")
-        if isinstance(imp_raw, int):
-            importance = {3: "high", 2: "medium", 1: "low"}.get(imp_raw, "")
-        else:
-            importance = str(imp_raw).lower().strip()
-        if importance not in _IMPACT:
+    for ev in all_events:
+        try:
+            dt_utc    = datetime.strptime(ev["dt_utc"], "%Y-%m-%d %H:%M")
+            hrs_away  = (dt_utc - now).total_seconds() / 3600
+        except Exception:
             continue
-
-        cur_raw = (ev.get("currency") or ev.get("country") or "").strip()
-        currency = (
-            cur_raw.upper() if len(cur_raw) == 3
-            else _COUNTRY_CURRENCY.get(cur_raw.lower(), "").upper()
-        )
-        if not currency:
-            continue
-
-        events.append({
-            "currency":   currency,
-            "importance": importance,
-            "event":      ev.get("event", ""),
-            "datetime":   ev.get("datetime", ""),
-        })
+        if 0 <= hrs_away <= hours_ahead:
+            events.append({
+                "currency":   ev["currency"],
+                "importance": "high",
+                "event":      ev["event"],
+                "datetime":   ev["dt_utc"],
+            })
 
     cache.set(cache_key, events)
     return events
