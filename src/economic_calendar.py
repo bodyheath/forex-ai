@@ -486,6 +486,9 @@ def _fetch_twelve_data():
             },
             timeout=15,
         )
+        if _td_resp.status_code == 404:
+            print("[ECO-CAL] Twelve Data: economic_calendar endpoint returned 404 — requires paid plan (current plan: basic)")
+            return None
         data = _td_resp.json()
     except Exception as e:
         _td_body = ""
