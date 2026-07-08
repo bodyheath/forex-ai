@@ -1,0 +1,23 @@
+```
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Confirmed downtrend (W:SELL + D:SELL) with overbought RSI 67.4 in uptrend context, morning_star reversal pattern, and partial oscillator confluence (Stoch+CCI bearish) signal a pullback into resistance, but ribbon converging weakens conviction.
+RISK_FACTORS: [1] Ribbon converging = trend weakening/reversal risk — price may consolidate instead of falling. [2] T_sig baseline = SELL_6 but 4H:NEUTRAL and MTF conf only 2/3 (not full agreement) — reduces signal reliability to 6/10, below ideal ≥7 threshold.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 162.75
+ENTRY_TRIGGER_REASON: Limit sell at minor resistance within current bar high to confirm rejection of overbought RSI in uptrend context; wait for candlestick close below SMA50 (159.77) to confirm downtrend continuation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+**RATIONALE:**
+
+1. **MTF Check (CRITICAL):** W:SELL + D:SELL = **confirmed downtr

@@ -1,0 +1,33 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at 61.8% Fibonacci resistance + RSI neutral in uptrend + weekly SELL conviction conflicts with daily NEUTRAL — mixed setup with downside rejection signal but insufficient MTF agreement.
+
+RISK_FACTORS: 
+1. MTF agreement broken — only M:SELL + W:SELL align; D1 and 4H both NEUTRAL (conf=1/3, <2/3 threshold). Trade violation of MTF rule.
+2. EUR COT UNWINDING long positioning while JPY stable — institutional conviction fading on EUR side, reduces reliability of SELL bias.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF alignment insufficient (D1 + 4H NEUTRAL overrides M + W SELL at 45% weight). TRADE_THIS rule requires weekly + daily BOTH agree on direction. Pin bar at Fib resistance is valid rejection signal, but fails MTF gate.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS DETAIL:**
+
+**TECHNICAL (5/10):**
+- D1 RSI=55.8 (neutral territory, squarely 45–55 band) in confirmed UPTREND

@@ -1,0 +1,32 @@
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Inverse H&S pattern at key support with weekly+daily BUY confluence suggests reversal, but ribbon convergence and COT unwinding in EUR weaken conviction.
+
+RISK_FACTORS: 
+1. COT UNWINDING: EUR net long positioning is contracting — institutional confidence declining into your proposed BUY, reducing tail-risk protection.
+2. RIBBON CONVERGING: EMA ribbon tightening signals trend exhaustion and reversal risk; price may fail to sustain upside if breakout occurs without ribbon re-alignment to bullish fan.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 1.1520
+ENTRY_TRIGGER_REASON: Break above neckline of inverse H&S pattern at confluent zone near SMA50 resistance (1.1578) with weekly+daily agreement.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS RATIONALE:**
+
+**MTF Agreement (80% weight):**  
+Weekly: BUY | Daily: BUY | 4H: NEUTRAL → **2/3 match = 67% agreement**. Threshold is 2/3, so MTF *passes* at minimum, but only 66.7% confidence. This is marg
