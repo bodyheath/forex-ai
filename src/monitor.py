@@ -1334,7 +1334,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 exit_price=mprice,
                 notes=f"Monitor: LOSS at {mprice} (stop_loss hit)",
             )
-            log(f"  Monitor fund #{rec_id} {pair}: LOSS at {mprice}")
+            log(f"  Monitor fund #{rec_id} {pair}: LOSS at {mprice} | latest_conf={updated.get('latest_conf') or '—'}")
             # Emergency fallback: if tracker write failed and trade is still OPEN, force-close
             if updated.get("status") in ("OPEN", "PENDING", None, ""):
                 log(f"  Monitor: [warning] #{rec_id} still OPEN after update_outcome — running emergency close")
