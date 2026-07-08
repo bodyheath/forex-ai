@@ -1297,7 +1297,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 exit_price=mprice,
                 notes=f"WIN via monitor: +{pips:.1f}p (2R target reached)",
             )
-            log(f"  Monitor fund #{rec_id} {pair}: WIN — +{pips:.1f}p (2R target)")
+            log(f"  Monitor fund #{rec_id} {pair}: WIN — +{pips:.1f}p (2R target) | latest_conf={updated.get('latest_conf') or '—'}")
             if _send_telegram:
                 _record_milestone_sent(pair, "T2", rec_id, trade_type="fund")
             if ta and _send_telegram:
