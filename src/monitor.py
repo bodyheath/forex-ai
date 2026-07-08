@@ -2297,6 +2297,17 @@ def run(log=print) -> dict:
     # ── Sunday market reopen detection ────────────────────────────────────────
     _check_market_reopen(now_ak, ta=_ta, log=log)
 
+    # ── Load most recent scan confidence map (for mid-trade confidence logging) ─
+    # morning_ranked.json = {pair: confidence_int} written by every full/intraday scan.
+    # Used below to stamp latest_conf on open trades — pure logging, no action taken.
+    _scan_conf_map: dict = {}
+    try:
+        _mr_path = config.DATA_DIR / "morning_ranked.json"
+        if _mr_path.exists():
+            _scan_conf_map = json.loads(_mr_path.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+
     # ── Watchlist movement check — flag near-miss pairs approaching trade threshold ──
     _wl_priority_pairs: list = []
     try:
