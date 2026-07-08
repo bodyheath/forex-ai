@@ -3159,6 +3159,8 @@ def run(log=print) -> dict:
                     _disp_tgt, _disp_lbl = _dt.get('t2', 0), 'T2'
                 else:
                     _disp_tgt, _disp_lbl = _dt.get('t3', 0), 'T3'
+                _lc_val = _open_latest_conf.get(_dt.get('id', 0))
+                _lc_str = str(int(_lc_val)) if _lc_val is not None else "—"
                 log(
                     f"[progress] {_dt.get('pair','')} {_dt.get('direction','')}: "
                     f"entry={_dt.get('entry',0):.5f} cur={_dt.get('current',0):.5f} "
@@ -3166,7 +3168,7 @@ def run(log=print) -> dict:
                     f"progress={_dt.get('progress_pct',0):.1f}% "
                     f"P&L={_dt.get('pips_unrealised',0):+.1f}p/${_dt.get('dollars_unrealised',0):+.2f} "
                     f"t1h={_dt.get('t1_hit',False)} t2h={_dt.get('t2_hit',False)} "
-                    f"days={_dt.get('days_open',0)}"
+                    f"days={_dt.get('days_open',0)} latest_conf={_lc_str}"
                 )
 
             # ── Fund trade statistics ──────────────────────────────────────────
