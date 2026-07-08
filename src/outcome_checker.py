@@ -327,7 +327,7 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                     notes=f"Auto-closed: LOSS at {_cp} (stop_loss hit)",
                 )
                 r_txt = f", R={updated.get('r_multiple')}, pips={updated.get('pips')}"
-                log(f"  #{rec_id} {pair} {direction}: LOSS at {_cp}{r_txt}")
+                log(f"  #{rec_id} {pair} {direction}: LOSS at {_cp}{r_txt} | latest_conf={updated.get('latest_conf') or '—'}")
                 closed.append(updated)
                 _online_learn(updated)
                 _closed_this = True
