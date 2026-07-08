@@ -410,13 +410,18 @@ def _fetch_forex_factory():
                 _med_skipped_ccy += 1
                 continue
             title    = (ev.findtext("title")    or "").strip()
-            date_str = " ".join((ev.findtext("date") or "").strip().split())  # normalise spaces
+            date_str = " ".join((ev.findtext("date") or "").strip().split())  # "07-06-2026" (MM-DD-YYYY) or legacy "Jun 06 2026"
             time_str = (ev.findtext("time")     or "").strip()
             forecast = (ev.findtext("forecast") or "").strip()
             previous = (ev.findtext("previous") or "").strip()
-            try:
-                date_part = datetime.strptime(date_str, "%b %d %Y")
-            except ValueError:
+            date_part = None
+            for _dfmt in ("%m-%d-%Y", "%b %d %Y"):
+                try:
+                    date_part = datetime.strptime(date_str, _dfmt)
+                    break
+                except ValueError:
+                    pass
+            if date_part is None:
                 _med_skipped_dt += 1
                 continue
             time_lower = time_str.lower().replace(" ", "")
