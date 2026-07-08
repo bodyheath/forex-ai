@@ -209,64 +209,28 @@ def count_weekly_high_impact_events() -> tuple:
 
     Returns (count: int, notable_names: list[str]) where notable_names
     contains up to 3 well-known event labels (NFP, FOMC, CPI, etc.).
-    Cached 6h — cheap to call from the 6am message builder.
+    Cached 6h. Delegates to economic_calendar.get_events_7d() (Forex Factory).
     """
     cache_key = "SEL:calendar_7d"
     cached = cache.get(cache_key, ttl_hours=6.0)
     if cached is not None:
         return cached
 
-    if not config.TWELVE_DATA_KEY:
-        return (0, [])
+    import economic_calendar as _ec
+    all_events = _ec.get_events_7d()  # already filtered to HIGH impact
 
-    now = datetime.now(timezone.utc).replace(tzinfo=None)
-    end = now + timedelta(days=7)
-    try:
-        r = requests.get(
-            "https://api.twelvedata.com/economic_calendar",
-            params={
-                "start_date": now.strftime("%Y-%m-%d"),
-                "end_date":   end.strftime("%Y-%m-%d"),
-                "apikey":     config.TWELVE_DATA_KEY,
-            },
-            timeout=15,
-        )
-        data = r.json()
-    except Exception:
-        result = (0, [])
-        cache.set(cache_key, result)
-        return result
-
-    raw = data.get("result", data)
-    if isinstance(raw, dict):
-        raw = raw.get("events", [])
-    if not isinstance(raw, list):
-        result = (0, [])
-        cache.set(cache_key, result)
-        return result
-
-    count = 0
     notable = []
     seen_notable = set()
-    for ev in raw:
-        imp_raw = ev.get("importance", "")
-        if isinstance(imp_raw, int):
-            importance = {3: "high", 2: "medium", 1: "low"}.get(imp_raw, "")
-        else:
-            importance = str(imp_raw).lower().strip()
-        if importance != "high":
-            continue
-        count += 1
-        name = ev.get("event", "")
+    for ev in all_events:
+        name       = ev.get("event", "")
         name_lower = name.lower()
         for kw in _MAJOR_EVENT_KEYWORDS:
             if kw in name_lower and name not in seen_notable:
-                label = name[:40].strip()
-                notable.append(label)
+                notable.append(name[:40].strip())
                 seen_notable.add(name)
                 break
 
-    result = (count, notable[:3])
+    result = (len(all_events), notable[:3])
     cache.set(cache_key, result)
     return result
 
