@@ -3125,10 +3125,18 @@ def run(log=print) -> dict:
 
             # Log per-trade progress for debugging
             for _dt in _dash_trades:
+                # Mirror _build_hot_trade_lines: v2 trades have no t1_price → fall to t2
+                if not _dt.get('t1_hit', False):
+                    _disp_tgt = _dt.get('t1', 0) or _dt.get('t2', 0)
+                    _disp_lbl = 'T2' if not _dt.get('t1', 0) else 'T1'
+                elif not _dt.get('t2_hit', False):
+                    _disp_tgt, _disp_lbl = _dt.get('t2', 0), 'T2'
+                else:
+                    _disp_tgt, _disp_lbl = _dt.get('t3', 0), 'T3'
                 log(
                     f"[progress] {_dt.get('pair','')} {_dt.get('direction','')}: "
                     f"entry={_dt.get('entry',0):.5f} cur={_dt.get('current',0):.5f} "
-                    f"target={_dt.get('t1',0):.5f} (TARGET) "
+                    f"target={_disp_tgt:.5f} ({_disp_lbl}) "
                     f"progress={_dt.get('progress_pct',0):.1f}% "
                     f"P&L={_dt.get('pips_unrealised',0):+.1f}p/${_dt.get('dollars_unrealised',0):+.2f} "
                     f"t1h={_dt.get('t1_hit',False)} t2h={_dt.get('t2_hit',False)} "
