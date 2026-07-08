@@ -1,56 +1,34 @@
 {
-  "timestamp": 1783459074.3358374,
+  "timestamp": 1783487653.8312724,
   "watchlist_pairs": [
     "AUD/USD",
-    "EUR/NZD",
-    "GBP/USD",
-    "CAD/JPY",
-    "CAD/CHF",
-    "EUR/JPY",
-    "AUD/JPY",
-    "USD/JPY",
-    "NZD/JPY",
-    "USD/CHF",
-    "NZD/CHF",
-    "AUD/CHF",
-    "AUD/CAD",
-    "EUR/AUD",
-    "GBP/AUD",
-    "EUR/CAD"
+    "USD/CAD",
+    "NZD/USD",
+    "EUR/GBP",
+    "EUR/JPY"
   ],
   "near_miss": {
     "AUD/USD": 5,
-    "EUR/NZD": 5,
-    "CAD/JPY": 5,
-    "CAD/CHF": 5,
-    "EUR/JPY": 5,
-    "AUD/JPY": 5,
-    "NZD/JPY": 5,
-    "NZD/CHF": 5,
-    "AUD/CHF": 5,
-    "EUR/AUD": 5,
-    "EUR/CAD": 5
+    "USD/CAD": 5,
+    "NZD/USD": 5,
+    "EUR/JPY": 5
   },
   "near_miss_dirs": {
     "AUD/USD": "BUY",
-    "EUR/NZD": "SELL",
-    "CAD/JPY": "BUY",
-    "CAD/CHF": "BUY",
-    "EUR/JPY": "SELL",
-    "AUD/JPY": "SELL",
-    "NZD/JPY": "BUY",
-    "NZD/CHF": "BUY",
-    "AUD/CHF": "SELL",
-    "EUR/AUD": "BUY",
-    "EUR/CAD": "SELL"
+    "USD/CAD": "SELL",
+    "NZD/USD": "BUY",
+    "EUR/JPY": "SELL"
   },
   "momentum_counts": {
-    "AUD/USD": 14,
+    "AUD/USD": 15,
+    "USD/CAD": 1,
+    "NZD/USD": 2,
+    "EUR/GBP": 1,
+    "EUR/JPY": 5,
     "EUR/NZD": 2,
     "GBP/USD": 2,
     "CAD/JPY": 5,
     "CAD/CHF": 5,
-    "EUR/JPY": 4,
     "AUD/JPY": 1,
     "USD/JPY": 12,
     "NZD/JPY": 1,
@@ -60,13 +38,23 @@
     "AUD/CAD": 5,
     "EUR/AUD": 10,
     "GBP/AUD": 10,
-    "EUR/CAD": 3,
-    "EUR/USD": 1,
-    "NZD/USD": 1
+    "EUR/CAD": 3
   },
   "momentum_grace": {
-    "EUR/USD": 1,
-    "NZD/USD": 1
+    "EUR/NZD": 1,
+    "GBP/USD": 1,
+    "CAD/JPY": 1,
+    "CAD/CHF": 1,
+    "AUD/JPY": 1,
+    "USD/JPY": 1,
+    "NZD/JPY": 1,
+    "USD/CHF": 1,
+    "NZD/CHF": 1,
+    "AUD/CHF": 1,
+    "AUD/CAD": 1,
+    "EUR/AUD": 1,
+    "GBP/AUD": 1,
+    "EUR/CAD": 1
   },
   "watchlist_weekly_stats": {
     "week_start": "2026-07-06",
@@ -74,7 +62,5 @@
     "promoted_to_deep": 1,
     "became_trade_alerts": 0
   },
-  "priority_for_next_scan": [
-    "EUR/NZD"
-  ]
+  "priority_for_next_scan": []
 }

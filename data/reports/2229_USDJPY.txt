@@ -1,0 +1,23 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both signal SELL in confirmed downtrend context (ribbon converging = trend weakening), but D1 RSI 66.3 is only moderately overbought for an uptrend, and morning_star pattern adds bullish noise — conviction is medium.
+RISK_FACTORS: [1] Price remains above SMA50 (159.76) in technical uptrend structure — golden cross intact despite MTF SELL signals, risking false signal if buyers defend. [2] Ribbon converging signals weakening trend rather than confirmed reversal; D1 T_sig=SELL_6 is pre-computed but MACDh=-0.0223 is only marginally negative, not strong confirmation.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 161.85
+ENTRY_TRIGGER_REASON: Pullback to SMA50 resistance (159.76) + retest of fib nearest_below (approx 161.5–161.9 zone) would provide confluence for MTF SELL with reduced false-signal risk.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+1. **MTF Check (Critical):** W:SELL + D:SELL = 2

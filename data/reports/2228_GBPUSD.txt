@@ -1,0 +1,25 @@
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H overbought (RSI 77.3) and 4H SELL signal conflict with D1 NEUTRAL; pin bar at key level suggests rejection but no MTF consensus.
+RISK_FACTORS: [1. MTF disagreement: 4H SELL vs D1 NEUTRAL (0/3 conf) violates MTF rule — no directional consensus across timeframes. 2. GBP COT BUILDING short conviction while RSI overbought on 4H creates mean-reversion trap risk; price below both SMA50/200 near range mid.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — daily and weekly do not agree (both NEUTRAL); 4H SELL is isolated. Confidence 4/10 fails minimum 7/10 threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS:**
+
+**MTF BLOCKING RULE (HARD STOP):**
+- Weekly: NEUTRAL | Daily: NEUTRAL | 4H: SELL → conf=0/3 (wt=80%)
+- Rule: "If weekly AND daily don't both agree on direction, TRADE_THIS

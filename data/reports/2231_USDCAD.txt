@@ -1,0 +1,32 @@
+```
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Daily RSI overbought (67.9) in uptrend signals potential pullback; 4H double-top bearish pattern + converging ribbon confirms weakening momentum despite USD rate advantage.
+
+RISK_FACTORS: [1] MTF agreement fails (D:SELL + 4H:BUY, only 1/3 confluence = 33% — below 67% threshold); [2] USD fundamental advantage (+1.34% diff) + CAD rate falling supports USD strength; ribbon convergence suggests reversal risk, contradicting short thesis.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: CONDITIONAL_PULLBACK
+ENTRY_TRIGGER_PRICE: 1.4100
+ENTRY_TRIGGER_REASON: Price retracement to SMA50 (1.3910) would provide lower-risk short entry with RSI relief; 4H double-top confirmation at 1.4100 level aligns with Fibonacci resistance near SH (1.42478).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (6/10):**
+- D1 T_sig = SELL_6 (baseline respected)
+- RSI 67.9 = **9-10 SELL tier** in uptrend context
