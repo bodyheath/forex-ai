@@ -1,0 +1,23 @@
+```
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + RSI 42.8 in confirmed downtrend (W:BUY + D:BUY agree) + weekly buy signal suggest reversal attempt, but converging ribbon and unwinding EUR longs reduce conviction.
+RISK_FACTORS: (1) Ribbon converging — trend weakening, reversal risk if breakout fails below 1.1380 SL. (2) EUR COT unwinding longs while we buy — institutional positioning flipped from conviction to reduction; if unwind accelerates, support could crack.
+TRADE_THIS: YES
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.1380
+ENTRY_TRIGGER_REASON: Buy limit at swing low (SL=1.13254 + 5p buffer) where pin bar + RSI 42.8 (neutral in downtrend, not yet oversold) + nearest Fib support (1.13254) converge; allows reversal confirmation before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+1. **MTF Alignment (conf=2/3, wt=80%):** W:BUY + D:BUY both agree — pass MTF rule. 4H

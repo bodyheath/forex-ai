@@ -1,0 +1,25 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 3/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H overbought (RSI 66.7) into converging ribbon and downtrend divergence between monthly BUY and daily/4H NEUTRAL/SELL creates low-conviction setup.
+RISK_FACTORS: [1. MTF disagreement (M:BUY vs W/D:NEUTRAL, 4H:SELL; conf=0/3) — no clear directional consensus. 2. Price 168p below SMA50 (0.5735 vs 0.5822) and SMA50≈SMA200 (flat regime) — range-bound, no trend conviction.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF conf 0/3 fails mandatory weekly+daily agreement rule; confidence 3/10 << threshold 7/10.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**REASONING:**
+
+1. **MTF RULE FAILURE (CRITICAL):** Weekly=NEUTRAL, Daily=NEUTRAL, 4H=SELL (monthly bonus BUY not enough). Conf=0/3 means *no* two timeframes agree. Hard rule: TRADE_THIS=

@@ -1,0 +1,19 @@
+I need to carefully evaluate several conflicting signals here.
+
+**Key tensions to resolve:**
+
+**FOR BUY:**
+- D1 RSI=26.5 — deeply oversold. In confirmed downtrend context, shift tiers: RSI<20=9-10BUY, 20-30=7-8BUY. RSI 26.5 = score 7-8. T_sig=BUY_7 confirmed.
+- OSC TRIPLE_BUY (+2 confidence): Stoch%K=8.4 (<20) ✓, CCI=-151.1 (<-100) ✓, RSI<35 ✓
+- MTF: W:BUY + D:BUY = both agree ✓ (meets threshold for TRADE_THIS consideration)
+- DIVERGENCE: NONE (neutral)
+
+**AGAINST BUY (serious concerns):**
+- PAT=head_and_shoulders:bea — this is a BEARISH pattern. A H&S on D1 at resistance is a high-probability SELL continuation signal. This conflicts with the BUY direction significantly.
+- RIB=ALIGNED_BEAR, fan aligned=5/5 — all EMAs stacked bearish, spreading. This is strong trend continuation (DOWN) evidence.
+- Price < SMA50 < SMA200, death-cross — structural downtrend
+- FUND: rate diff = -1.48% (EUR vs GBP negative for EUR)
+- POS: EUR net LONG UNWINDING + GBP net SHORT BUILDING — both moving against EUR/GBP BUY
+- FIB range=110p only, SL=0.86199
+KEY_THESIS: D1 RSI deeply oversold (26.5) in confirmed downtrend + triple oscillator confluence (Stoch 8.4/CCI -151) + W:BUY + D:BUY MTF agreement = high-probability mean reversion bounce into head-and-shoulders neckline resistance.
+RISK_FACTORS: (1) EUR COT UNWINDING conviction while GBP COT BUILDING — institutional positioning conflict creates slippage risk if bounce stalls before neckline. (2) ALIGNED_BEAR ribbon (all 5/5 EMAs stacked bearish) signals strong downtrend structure; bounce may be tactical only — risk reversal through SL=0.86199.
