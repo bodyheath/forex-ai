@@ -1,0 +1,24 @@
+# USD/CAD ANALYSIS
+
+**ASSESSMENT:**
+
+**MTF ALIGNMENT FAILURE:**
+- Weekly: NEUTRAL | Daily: SELL | 4H: BUY → conf=1/3 (only 4H agrees with BUY)
+- MTF rule: Weekly AND Daily must both agree for trade validity
+- Current state: D1=SELL conflicts with 4H=BUY; W=NEUTRAL provides no support
+- **Verdict: MTF condition FAILED** (need W+D alignment; currently disagree)
+
+---
+
+**LAYER SCORING:**
+
+**TECHNICAL_SCORE: 5**
+- D1 T_sig baseline = SELL_5 (input) → use as reference
+- D1 RSI=62.0 in confirmed UPTREND (price>SMA50>SMA200, golden-cross):
+  - Uptrend context: RSI 58–70 = 4–5 SELL zone (overbought normal in uptrend)
+  - RSI=62 → 4–5 SELL (within expected range, not extreme)
+  - MACDh=-0.0013 (negative histogram) = bearish momentum divergence despite uptrend
+  - Pin bar at key level (bullish pattern) conflicts with SELL_5 baseline
+  - SMA50 alignment is STRONG (price 1.4163 > SMA50 1.3920): +1 BUY bonus negated by MACD bearish
+  - **Net: T_sig=SELL_5 stands, but pin bar weakens conviction.** Adjust to **5 (neutral/conflicted)**
+- 4H RSI=38.7 in mixed
