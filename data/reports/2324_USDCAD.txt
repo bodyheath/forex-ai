@@ -1,0 +1,24 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level + RSI 62 in uptrend + MACD negative divergence suggests reversal attempt, but weak MTF alignment (D:SELL vs 4H:BUY, conf=1/3) and converging ribbon undermine conviction.
+RISK_FACTORS: [1] MTF disagreement (Daily SELL vs 4H BUY, only 1/3 agreement) fails TRADE_THIS MTF rule — trade invalid. [2] Converging ribbon signals trend exhaustion but lacks oscillator confirmation (OSC=NONE, no RSI/MACD/Stoch triple-confluence) — reversal probability unconfirmed.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Daily and 4H do not both agree on direction (conf=1/3 < 2/3 threshold). Trade blocked regardless of technical setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**MTF Rejection (Hard Rule):**
+- W=NEUTRAL, D=SELL, 4H=BUY → only 1 of 3 timeframes align on a
