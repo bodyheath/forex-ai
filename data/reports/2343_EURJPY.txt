@@ -1,0 +1,40 @@
+PAIR: EUR/JPY
+
+DIRECTION: SELL
+
+CONFIDENCE: 4/10
+
+TECHNICAL_SCORE: 4/10
+
+FUNDAMENTAL_SCORE: 5/10
+
+SENTIMENT_SCORE: 5/10
+
+POSITIONING_SCORE: 3/10
+
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Double top bearish pattern at 187.55 resistance with weekly/monthly SELL alignment conflicts with neutral daily RSI (49.5) and leaning-bull ribbon; JPY rate rise supports short bias but EUR unwinding positioning removes conviction.
+
+RISK_FACTORS: (1) MTF disagreement: Weekly+Monthly agree SELL but Daily is NEUTRAL (conf 1/3 <2/3 threshold) — insufficient MTF consensus for high-confidence trade. (2) EUR positioning unwinding (3/5 confidence decay) + ribbon leaning bull (4/5 pairs aligned) reduce directional edge; double top needs break below 182.063 SL to confirm.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+
+ENTRY_TRIGGER_PRICE: 182.063
+
+ENTRY_TRIGGER_REASON: Break below Fibonacci SL (swing low) to confirm double-top rejection and weekly SELL bias.
+
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**RATIONALE:**
+
+- **MTF Rule Violation:** Weekly (SELL) + Daily (NEUTRAL) do not both agree. Confidence = 1/3, below 2/3 threshold → **TRADE_THIS: NO** per hard rule.
+- **Technical:** D1

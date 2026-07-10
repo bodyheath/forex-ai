@@ -1,0 +1,31 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Weekly and daily both signal SELL in a confirmed downtrend context; pin bar at key level (D1) + converging ribbon + rising JPY rates provide confluence, but 4H BUY creates MTF friction and D1 T_sig=5 (mild SELL) limits conviction.
+
+RISK_FACTORS: [1] MTF conflict: 4H disagrees (BUY), reducing directional agreement to 2/3 (80% threshold met but marginal). [2] Ribbon converging signals weakening trend — reversal risk if price breaks above SMA50 at 159.91.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 161.50
+ENTRY_TRIGGER_REASON: Retest of recent swing high (162.836 SH); sell on weakness below pin bar tail; confirm ribbon still bearish-leaning and 4H RSI <40.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**RATIONALE:**
+
+**MTF Analysis (Critical Gate):**
+- Weekly: SELL | Daily: SELL | 4H: BUY → **2/3 agreement (conf=2/3)**
+- Rule: "if weekly AND daily don't both agree on direction

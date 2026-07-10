@@ -1,0 +1,16 @@
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 double-top pattern at resistance with RSI 59 in uptrend context conflicts with T_sig=SELL_4; MTF agreement poor (1/3 weekly+daily alignment); partial oscillator sell (Stoch+CCI 2/3) provides weak bearish bias but insufficient conviction.
+RISK_FACTORS: (1) MTF confidence = 1/3 (D:SELL, W:NEUTRAL, M:NEUTRAL) — system rule requires weekly+daily both agree for valid trade; (2) D1 T_sig=SELL_4 contradicted by price above SMA50/SMA200 golden-cross in uptrend; D1 RSI=59 in confirmed uptrend should NOT trigger aggressive sell (59 is neutral-to-overbought, not extreme).
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF weekly+daily do not both agree on direction (conf=1/3 < 2/3 threshold). Weekly is NEUTRAL; daily is SELL. Trade rule violated. Additionally, fundamental layers (FUND, SENT, POSITIONING, MACRO) all score 5/10 (neutral) — fewer than
