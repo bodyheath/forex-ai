@@ -1,0 +1,20 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 SELL signal conflicts with uptrend structure (price > SMA50 > SMA200); MTF agreement insufficient (1/3 conf) blocks trade entry despite CAD rate decline tailwind.
+RISK_FACTORS: [1] MTF misalignment — daily SELL but weekly/monthly NEUTRAL; 4H mixed range undermines momentum confirmation. [2] RSI 61.4 not yet overbought (need >70 for strong SELL in uptrend); MACD histogram near zero lacks directional force.
+TRADE_THIS: NO
+
+**REASONING:**
+
+**Technical Layer (5/10):**
+- D1 T_sig=SELL_6 baseline, but **uptrend structure intact** (price 1.4160 > SMA50 1.3943 > SMA200 1.3850 = golden cross).
+- RSI 61.4 in uptrend context → standard tier 58–70 = 4–5 SELL (not aggressive). Per uptrend rule, 58–70 = neutral (3–4); do NOT force SELL because RSI 61 in a confirmed uptrend is normal overbought. Shift: **score 4/10 SELL**.
+- MACD histogram –0.0018 (
