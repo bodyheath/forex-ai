@@ -1,0 +1,23 @@
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly + Daily both BUY (MTF 2/3 threshold met) with RSI 40.9 at support in confirmed downtrend, but ribbon convergence signals weakening trend and institutional EUR positioning reversing to SHORT undermines conviction.
+RISK_FACTORS: [1] COT EUR reversing to net SHORT while trade direction is BUY — institutional conviction flipping against setup; [2] Ribbon converging despite W+D agreement — trend structure degrading, reversal risk elevated; price 147p below SMA50 (1.1560) in deep downtrend, recovery untested.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.1370
+ENTRY_TRIGGER_REASON: Break above confluence of D1 RSI oversold (40.9) + Fib support near SL (1.13254) + W:BUY signal; limit 40p below price to await pullback confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Check:** W:BUY + D:BUY = 2/3 agreement (M:NEUTRAL, 4H:NEUTRAL) → *conf=66.7% passes 2

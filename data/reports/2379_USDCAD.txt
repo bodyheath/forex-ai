@@ -1,0 +1,26 @@
+```
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern at resistance with D1 SELL signal, but weak MTF confluence (1/3) and converging ribbon undermine conviction; USD rate advantage offset by CAD shorts and institutional unwinding.
+RISK_FACTORS: [MTF disagreement (D:SELL vs 4H:BUY, W/M neutral) — only 1/3 timeframes aligned, breaks TRADE_THIS rule requiring >=2/3 MTF agreement; Ribbon converging (5/5) signals trend weakening and reversal risk — double-top may fail into consolidation rather than follow-through].
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not both agree on direction (W:NEUTRAL, D:SELL, 4H:BUY = 1/3 conf <2/3 threshold). TRADE_THIS requires >=2/3 MTF agreement before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **ANALYSIS SUMMARY**
+
+**Technical (6/10):**
+- D1 T_sig=SELL_6 baseline held (double-top bearish
