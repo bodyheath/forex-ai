@@ -1,0 +1,16 @@
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 downtrend structure (price < SMA50 < SMA200, death-cross) with double-top bearish pattern is offset by weak technicals and MTF disagreement, while 4H pin-bar-at-key-level pin-bar suggests short-term bounce risk.
+RISK_FACTORS: [1] MTF conflict: D1 signals SELL but 4H is BUY (conf=0/3; weakest possible MTF agreement) — trade lacks directional consensus across timeframes. [2] Oscillator divergence risk: Stochastic K=67.0 is approaching overbought despite downtrend, and CCI=58.3 is neutral — neither confirms downside conviction; reversal to 4H pin-bar-bounce is plausible before continuation lower.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: D1 and 4H do not both agree on direction (D:NEUTRAL + 4H:BUY = conf 0/3 < 2/3 threshold). TRADE_THIS blocked regardless of pattern or RSI. Fundamentals flat (both rates neutral, diff minimal). Positioning shows institutional GBP SHORT

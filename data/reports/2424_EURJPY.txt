@@ -1,0 +1,25 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 50% Fib (184.809) with rising JPY rates and EUR COT reversal to short suggest downside pressure, but weak oscillator confluence and mixed MTF alignment limit conviction.
+RISK_FACTORS: [1] MTF conf=0/3 (M:SELL vs W/D:NEUTRAL) — no weekly/daily agreement blocks TRADE_THIS despite technical setup. [2] COT EUR REVERSING from net long to net short + JPY UNWINDING create institutional positioning risk; retail SENT favors JPY (8art) but positioning unwound suggests late-stage move.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 184.50
+ENTRY_TRIGGER_REASON: Break below pin bar low + 50% Fib (184.809) to confirm downside rejection and trend change; wait for weekly/daily alignment before executing.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS:**
+
+**MTF FAILURE (Critical Blocker):**
+- M:SELL vs W:NEUTRAL, D:NEUTRAL → conf=0/3 (need ≥2/3 for TRADE_THIS=YES).
+- Weekly and daily both NEUTRAL =
