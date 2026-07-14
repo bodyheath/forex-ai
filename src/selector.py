@@ -168,7 +168,7 @@ def _fetch_calendar(hours_ahead: int = 48) -> list:
     if cached is not None:
         return cached
 
-    import economic_calendar as _ec
+    from src import economic_calendar as _ec
     all_events = _ec.get_events_7d()
     now = datetime.now(timezone.utc).replace(tzinfo=None)
 
