@@ -216,7 +216,7 @@ def count_weekly_high_impact_events() -> tuple:
     if cached is not None:
         return cached
 
-    import economic_calendar as _ec
+    from src import economic_calendar as _ec
     all_events = _ec.get_events_7d()  # already filtered to HIGH impact
 
     notable = []
