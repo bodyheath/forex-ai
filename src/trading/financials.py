@@ -291,8 +291,10 @@ def calculate_pnl(
 
     dollars = round(pips_w * dpp, 2)
 
-    # Progress 0-100% (full target relative to stop distance as R)
-    progress_pct = round((raw_pips / stop_pips) * 100.0, 1) if stop_pips > 0 else 0.0
+    # Progress 0-100%: distance from entry toward the active target (not stop)
+    _active_tgt  = t1p if not t1h else (t2p if not t2h else t3p)
+    target_pips  = abs(_active_tgt - e) / ps if _active_tgt > 0 and e > 0 else 0.0
+    progress_pct = round((raw_pips / target_pips) * 100.0, 1) if target_pips > 0 else 0.0
     progress_pct = max(-100.0, min(200.0, progress_pct))  # clamp to sane range
 
     return {
