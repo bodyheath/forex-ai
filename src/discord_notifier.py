@@ -1565,7 +1565,7 @@ def update_fund_dashboard(
                 "\n"
             )
             risk_limit = float(t.get("risk_dollars", 100) or 100)
-            if abs(dollars) > risk_limit * 1.1:
+            if dollars < 0 and abs(dollars) > risk_limit * 1.1:
                 trade_value += (
                     f"⚠️ Loss exceeds risk limit — "
                     f"${abs(dollars):.2f} vs ${risk_limit:.2f} max\n"
