@@ -11578,6 +11578,9 @@ def run() -> int:
                     r_result["pair"], _rp, _rsrc, _smode,
                     extra_fields=_extra_rt,
                 )
+                if _rt_id == 0:
+                    _log_line(log, f"[research] {r_result['pair']} {_rdir} — skipped duplicate (same pair/direction already open today)")
+                    return False
                 try:
                     from src import feature_extractor as _fe, feature_store as _fs
                     _feat = _fe.extract(

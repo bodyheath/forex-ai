@@ -16,6 +16,8 @@ profitable enough to warrant lowering the live-trade threshold from 7 to 6?
 """
 
 import csv
+import os
+import tempfile
 from datetime import datetime
 
 import config
@@ -127,9 +129,11 @@ FIELDS = [
     "cascading_total_pips",       # sum of pips across all hit portions
     "cascading_total_pips_weighted",  # 0.4×t1 + 0.3×t2 + 0.3×t3
     "system_version",             # v1 | v2 — used to filter ML training to v2-only
+    # ── Administrative ───────────────────────────────────────────────────────
+    "notes",                      # free-text; e.g. duplicate reason, manual override note
 ]
 
-OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN", "FULL_WIN", "STALE_EXIT"}
+OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN", "FULL_WIN", "STALE_EXIT", "SKIPPED"}
 
 
 def _now() -> str:
@@ -144,11 +148,22 @@ def load() -> list:
 
 
 def _write_all(rows: list) -> None:
-    with RESEARCH_TRADES_CSV.open("w", encoding="utf-8", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=FIELDS)
-        writer.writeheader()
-        for row in rows:
-            writer.writerow({k: row.get(k, "") for k in FIELDS})
+    tmp_fd, tmp_path = tempfile.mkstemp(
+        dir=RESEARCH_TRADES_CSV.parent, suffix=".tmp"
+    )
+    try:
+        with os.fdopen(tmp_fd, "w", encoding="utf-8", newline="") as fh:
+            writer = csv.DictWriter(fh, fieldnames=FIELDS)
+            writer.writeheader()
+            for row in rows:
+                writer.writerow({k: row.get(k, "") for k in FIELDS})
+        os.replace(tmp_path, RESEARCH_TRADES_CSV)
+    except Exception:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
 
 
 def _next_id(rows: list) -> int:
@@ -252,7 +267,22 @@ def log_research_trade(pair: str, parsed: dict, source: str, scan_mode: str,
     extra_fields: optional dict with any of the extended fields (score breakdown,
     entry context, etc.). Keys must match FIELDS entries.
     """
-    rows   = load()
+    rows = load()
+
+    # Duplicate guard: if an OPEN trade already exists for this pair+direction today,
+    # skip silently.  Each scan mode (prelondon/full/morning) sees the same market;
+    # logging the same directional signal 2-3× per day inflates open counts and WR.
+    today = datetime.now().strftime("%Y-%m-%d")
+    _direction_norm = (parsed.get("direction") or "").upper()
+    for _r in rows:
+        if (
+            _r.get("status") == "OPEN"
+            and _r.get("pair", "").upper() == pair.upper()
+            and (_r.get("direction") or "").upper() == _direction_norm
+            and (_r.get("date") or "")[:10] == today
+        ):
+            return 0  # duplicate — caller should not count this as a logged trade
+
     rec_id = _next_id(rows)
 
     entry = parsed.get("entry")
