@@ -1873,7 +1873,7 @@ def build_fund_dashboard_embed(state: dict) -> dict:
                 + (f"\n_{_note}_" if _note else "")
                 + f"\nOpen: {_ostr} · Conf: {_conf}/10\n"
             )
-            if _risk > 0 and abs(_usd) > _risk * 1.1:
+            if _usd < 0 and _risk > 0 and abs(_usd) > _risk * 1.1:
                 _trade_val += (
                     f"⚠️ Loss exceeds risk limit — "
                     f"${abs(_usd):.2f} vs ${_risk:.2f} max\n"
