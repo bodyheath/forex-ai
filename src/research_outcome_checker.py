@@ -168,13 +168,9 @@ def _determine_outcome(direction: str, price: float,
         return None
 
     if direction == "BUY":
-        if price >= target:
-            return "WIN"
         if price <= stop:
             return "LOSS"
     else:
-        if price <= target:
-            return "WIN"
         if price >= stop:
             return "LOSS"
     return None
@@ -354,9 +350,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                 continue
 
             close_recorded = price
-            if outcome == "WIN":
-                close_recorded = _to_float(row.get("target")) or price
-            elif outcome == "LOSS":
+            if outcome == "LOSS":
                 close_recorded = _to_float(row.get("stop_loss")) or price
             updated = research_tracker.update_outcome(rec_id, outcome, close_price=close_recorded)
             r_txt   = f", R={updated.get('r_multiple')}, pips={updated.get('pips')}"
