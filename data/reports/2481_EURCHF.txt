@@ -1,0 +1,24 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Price at Fib 78.6% resistance with D1 SELL_7 signal and pin bar rejection, but 4H uptrend + aligned ribbon + EUR rate flat vs CHF falling create conflicting directional signals; MTF disagreement (M:BUY vs D:SELL, conf=1/3) blocks high-confidence entry.
+
+RISK_FACTORS: 
+1. MTF conflict — only 1/3 timeframes agree (Monthly BUY, Weekly NEUTRAL, Daily SELL, 4H NEUTRAL); rule requires weekly+daily both agree for TRADE_THIS=YES; they don't.
+2. EUR COT positioning REVERSING from long to short while fundamentals show EUR rate flat + CHF rate falling (CHF supportive, EUR neutral) — institutional conviction flipping against EUR while technicals mixed.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence 1/3 (40%) is below 2/3 threshold; weekly must confirm direction with daily. D1 pin bar at Fib 78.6% is valid reversal setup, but 4H alignment + aligned ribbon + CHF momentum divergence create too much directional ambiguity. Wait for weekly

@@ -1,0 +1,22 @@
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 38.9 in confirmed downtrend signals mean-reversion BUY at oversold levels, supported by 4H alignment and leaning-bull ribbon, but MTF conflict (W:NEUTRAL vs D:BUY) and COT EUR reversal limit conviction.
+RISK_FACTORS: MTF weekly-daily agreement fails (60% < 66% threshold) — strict MTF rule violated; EUR COT reversing from long to short while CAD building conviction creates institutional divergence and reduces positioning credibility.
+TRADE_THIS: NO
+
+**RATIONALE:**
+
+1. **MTF FAILURE (HARD RULE):** Weekly is NEUTRAL, Daily is BUY → only 2/3 agreement (60%) = does not meet "MTF weekly+daily both agree" mandate. Trade rejected regardless of other scores.
+
+2. **TECHNICAL_SCORE = 5:**
+   - D1 RSI 38.9 in **confirmed downtrend** (M:SELL, price << SMA50/200): shifts BUY zone lower → RSI 30–42 = 5–6 BUY range → score **5** (baseline).
+   - T_sig=BUY_4 supports, but conflicted by:
+     - Double-top bearish pattern (

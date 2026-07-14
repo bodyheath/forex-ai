@@ -1,0 +1,23 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Inverse H&S pattern conflicts with 4H uptrend and D1 mixed setup; RSI 60.6 is neutral, not overbought enough to justify SELL despite T_sig=SELL_3 and partial oscillator confluence.
+
+RISK_FACTORS: [1] MTF alignment CRITICAL FAILURE — all timeframes (M/W/D/4H) are NEUTRAL or conflicting; 4H shows uptrend structure (price > SMA50 > SMA200) contradicting D1 SELL signal. [2] Pattern contradiction — D1 PAT=inverse_head_and_shoulders:bul (bullish continuation) directly conflicts with T_sig=SELL_3; RSI 60.6 is mid-range, not overbought territory (67.6 on 4H further supports upside bias).
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade rejected: MTF rule violation. Weekly AND daily do NOT both agree on direction (D=NEUTRAL, 4H=SELL, but M/W both NEUTRAL). Confidence = 0/3 agreement. Additionally, bullish candle pattern (inverse H&S) +

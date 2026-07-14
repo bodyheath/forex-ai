@@ -1,0 +1,21 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-bottom pattern with 4H overbought (RSI 70) creates short-term pullback risk despite positive rate diff, but weak MTF alignment and conflicting positioning momentum undermine conviction.
+RISK_FACTORS: [1] MTF conflict — Monthly SELL vs Weekly/Daily NEUTRAL (conf=0/3) violates MTF rule: weekly and daily must BOTH agree to trade; [2] Positioning conflict — AUD COT BUILDING (institutions adding shorts) while trade is SELL creates momentum trap risk if institutions reverse; JPY COT UNWINDING (reducing shorts) contradicts JPY weakness narrative.
+TRADE_THIS: NO
+
+**REASONING:**
+
+1. **MTF RULE VIOLATION (HARD STOP):** Weekly and Daily are both NEUTRAL; only Monthly shows SELL. Rule requires ≥2/3 MTF agreement. With conf=0/3 and 80% weighting on this calculation, **MTF rule blocks entry regardless of other scores.** This alone triggers TRADE_THIS: NO.
+
+2. **TECHNICAL_SCORE: 4/10**
+   - D1 RSI=54.8 (standard neutral zone 45–62 = score 3–4) → **3 base**
+   - 4H RSI=70.0 (uptrend

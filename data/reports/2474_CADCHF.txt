@@ -1,0 +1,30 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 SELL signal (T_sig=6) with pin bar at key resistance and RSI overbought (62) conflicts sharply with 4H uptrend structure (IHS, price>SMA50>SMA200), creating lower-probability trade due to MTF disagreement (1/3 conf).
+
+RISK_FACTORS: 
+1. MTF conflict — Daily SELL vs 4H NEUTRAL/uptrend bias (W:NEUTRAL blocks weekly confirmation); only 40% MTF confidence threshold triggers NO-TRADE rule.
+2. 4H inverse head-and-shoulders (bullish pattern) + golden cross opposes D1 SELL; CAD positioning momentum is BUILDING (long conviction rising) while CHF unwinding — institutional flow favors CAD strength, contradicting SELL bias.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated — Daily and Weekly do not both agree on direction (D:SELL, W:NEUTRAL). Confidence 1/3 < 2/3 threshold. Trade rejected despite T_sig=SELL_6.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**ANALYSIS
