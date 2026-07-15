@@ -3125,6 +3125,14 @@ def run(log=print) -> dict:
             f"{result['api_calls_used']} API calls used."
         )
 
+    # ── Outcome analysis for fund trades closed this run ─────────────────────
+    if fund_closed:
+        try:
+            from src import outcome_analyst as _oa
+            _oa.run_outcome_analysis(fund_closed, log=log)
+        except Exception as _oa_exc:
+            log(f"Monitor: outcome analysis hook failed: {_oa_exc}")
+
     result["last_prices"]    = {p: prices[p] for p in all_pairs if p in prices}
     result["previously_hot"] = sorted(current_hot_keys)
     _append_to_monitor_history(result)
