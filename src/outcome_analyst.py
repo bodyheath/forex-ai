@@ -193,11 +193,28 @@ def _extract_pattern(text: str) -> str | None:
 def run_outcome_analysis(closed_trades: list, log=print) -> list:
     """Analyse each newly-closed trade with Claude.
 
-    Skips EXPIRED trades (no clear directional lesson) unless R > 0 (treat as
-    WIN) or R < 0 (treat as LOSS).  Returns list of pattern strings added to
-    memory this run.
+    Processes newly-closed trades AND any trades in pending_analysis.json
+    whose Claude call failed in a previous run (retried each scan until
+    success).
+
+    Status handling:
+    - WIN / LOSS           → analysed directly
+    - EXPIRED / PARTIAL_WIN → resolved via r_multiple sign (r>0 → WIN, r<0 → LOSS,
+                              r=0 → skipped, no clear lesson)
+
+    Returns list of pattern strings added to memory this run.
     """
     new_patterns = []
+
+    # Merge any pending retries into this run's queue.
+    pending_ids = _load_pending()
+    if pending_ids:
+        all_rows = tracker.load()
+        existing_ids = {str(t.get("id")) for t in closed_trades}
+        for row in all_rows:
+            if str(row.get("id")) in pending_ids and str(row.get("id")) not in existing_ids:
+                closed_trades = list(closed_trades) + [row]
+                log(f"  Retrying pending analysis for #{row.get('id')} {row.get('pair', '?')}")
 
     for trade in closed_trades:
         rec_id = trade.get("id")
@@ -205,18 +222,18 @@ def run_outcome_analysis(closed_trades: list, log=print) -> list:
         status = (trade.get("status") or "").upper()
 
         try:
-            # Resolve effective status for EXPIRED trades.
-            if status == "EXPIRED":
+            # Resolve effective status.
+            if status == "EXPIRED" or status == "PARTIAL_WIN":
                 try:
                     r_val = float(trade.get("r_multiple") or 0)
                 except (TypeError, ValueError):
                     r_val = 0.0
                 if r_val == 0.0:
-                    log(f"  Outcome analysis — #{rec_id} {pair} EXPIRED at breakeven, skipping.")
+                    log(f"  Outcome analysis — #{rec_id} {pair} {status} at breakeven, skipping.")
                     continue
                 effective_status = "WIN" if r_val > 0 else "LOSS"
-                log(f"  Outcome analysis — #{rec_id} {pair} EXPIRED "
-                    f"(treating as {effective_status} at expiry)")
+                log(f"  Outcome analysis — #{rec_id} {pair} {status} "
+                    f"(treating as {effective_status}, r={r_val})")
             elif status in ("WIN", "LOSS"):
                 effective_status = status
                 log(f"  Outcome analysis — #{rec_id} {pair} {status}")
@@ -225,6 +242,7 @@ def run_outcome_analysis(closed_trades: list, log=print) -> list:
 
             if _already_analysed(rec_id):
                 log(f"  #{rec_id} already analysed, skipping.")
+                _remove_pending(rec_id)
                 continue
 
             # Load original report text for richer context.
@@ -237,7 +255,7 @@ def run_outcome_analysis(closed_trades: list, log=print) -> list:
                 if rp.exists():
                     report_text = rp.read_text(encoding="utf-8")
 
-            # Call Claude.
+            # Call Claude — failures saved to pending_analysis.json for retry.
             if effective_status == "WIN":
                 prompt = _win_prompt(row, report_text)
                 dest   = config.WIN_ANALYSIS_FILE
@@ -245,8 +263,14 @@ def run_outcome_analysis(closed_trades: list, log=print) -> list:
                 prompt = _loss_prompt(row, report_text)
                 dest   = config.LOSS_ANALYSIS_FILE
 
-            analysis = _call_claude(prompt)
-            pattern  = _extract_pattern(analysis)
+            try:
+                analysis = _call_claude(prompt)
+            except Exception as _claude_exc:
+                _add_pending(rec_id)
+                log(f"  #{rec_id} {pair} Claude call failed — queued for retry: {_claude_exc}")
+                continue
+
+            pattern = _extract_pattern(analysis)
 
             # Persist full analysis.
             records = _load_json(dest)
@@ -260,6 +284,7 @@ def run_outcome_analysis(closed_trades: list, log=print) -> list:
                 "analysed_at": _now(),
             })
             _save_json(dest, records)
+            _remove_pending(rec_id)
 
             # Add pattern to memory.
             if pattern and not _is_near_duplicate(pattern):
