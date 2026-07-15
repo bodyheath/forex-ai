@@ -25,5 +25,68 @@
     "analysis": "## What Went Wrong\n\nThe trade was almost entirely driven by the technical score (10.0/10), while Fundamental, Sentiment, and Macro layers all sat at a weak 5.0/10 \u2014 a clear signal that the technical setup lacked multi-layer confirmation. The CAD/HKD pair is inherently illiquid and macro-sensitive, meaning any softness in Canadian economic data or oil prices during the June 25\u2013July 1 window could easily override even a strong chart pattern. The sentiment and positioning scores (5.0 and 6.0) suggested the market was not aligned with the bullish thesis, which should have been a red flag for a BUY entry at that confidence level. A 7.0/10 confidence score with three out of five layers at or below neutral (5.0) was insufficient justification to risk capital, especially on a cross-pair with limited liquidity.\n\nPATTERN: Don't BUY if 3+ analysis layers score \u22645.0 \u2014 technical-only setups on illiquid crosses require broad confluence.",
     "pattern_rule": "Don't BUY if 3+ analysis layers score \u22645.0 \u2014 technical-only setups on illiquid crosses require broad confluence.",
     "analysed_at": "2026-07-01 21:13:35"
+  },
+  {
+    "id": "1073",
+    "pair": "USD/CHF",
+    "status": "LOSS",
+    "r_multiple": "-0.98",
+    "analysis": "## What Went Wrong\n\nThe most critical error was underweighting the fully fanned bullish EMA ribbon (5/5 alignment), which the analysis itself flagged as a strong trend-continuation signal but then overrode with oscillator readings alone. The rate differential of +3.67% USD advantage was scored only 4-5/10 fundamentally when it represented a genuine structural tailwind for USD/CHF upside, meaning the fundamental layer was miscalibrated rather than truly neutral. The trade attempted a counter-trend reversal sell against a dominant bull trend, relying on overbought oscillators that can remain extended for extended periods in strong trending markets \u2014 a classic mistake where oscillator confluence is treated as a reversal trigger rather than a trend-strength indicator. The explicit risk factor warning that \"a break above 0.8090 invalidates the reversal thesis\" was present in the analysis yet the trade was still taken, meaning a known invalidation level was ignored in the entry decision.\n\nPATTERN: Never short a 5/5 bull EMA ribbon on oscillator signals alone when rate differential structurally favors USD upside.",
+    "pattern_rule": "Never short a 5/5 bull EMA ribbon on oscillator signals alone when rate differential structurally favors USD upside.",
+    "analysed_at": "2026-07-15 19:04:07"
+  },
+  {
+    "id": "1076",
+    "pair": "USD/SEK",
+    "status": "LOSS",
+    "r_multiple": "-1.0",
+    "analysis": "## What Went Wrong\n\nThe most critical error was underweighting the fully aligned bullish EMA ribbon (5/5 fan spreading), which was explicitly flagged in the analysis yet failed to reduce confidence below the execution threshold \u2014 a contradictory signal that was acknowledged but not acted upon decisively. The trade attempted to fade a confirmed institutional trend using oscillator exhaustion signals alone, which is a low-probability strategy when price structure and trend-following indicators remain uniformly bullish. The Riksbank rate-falling bias widening the USD/SEK rate differential was a live fundamental tailwind for USD that directly undermined the mean-reversion thesis, yet the Fundamental Score of only 4/10 was insufficient to veto the trade. The NEWS_WARNING itself flagged CPI/Fed speaker risk within 48 hours, and the trade was stopped out within roughly 2.5 days \u2014 almost certainly coinciding with exactly the macro catalyst the analysis warned about but failed to treat as a hard block.\n\nPATTERN: Never SELL into a 5/5 bullish EMA fan with adverse rate differentials \u2014 oscillator exhaustion alone cannot overcome aligned trend + macro tailwinds.",
+    "pattern_rule": "Never SELL into a 5/5 bullish EMA fan with adverse rate differentials \u2014 oscillator exhaustion alone cannot overcome alig",
+    "analysed_at": "2026-07-15 19:04:15"
+  },
+  {
+    "id": "1115",
+    "pair": "EUR/USD",
+    "status": "LOSS",
+    "r_multiple": "",
+    "analysis": "## What Went Wrong\n\nThe most critical failure was underweighting the **fully fanned bearish EMA ribbon (5/5 aligned bearish)**, which explicitly signaled a dominant downtrend \u2014 this single signal should have overridden the countertrend reversal thesis, yet the trade was taken anyway. The **Fundamental score of only 4/10**, driven by a negative rate differential and a death-cross structure (SMA50/SMA200), directly warned that price had no macro tailwind to sustain a bounce, making the pattern-based entry fragile. The report's own **NEWS_WARNING flagged Fed speakers and US CPI/PPI within 48 hours**, and a trade opened Sunday evening into a major data week had extremely high odds of being stopped out by a USD-strengthening catalyst before the technical setup could develop. The 6/10 confidence score was insufficiently low given the combination of a fully bearish ribbon, weak fundamentals, and live macro risk \u2014 the system identified all the warning signs but still recommended entry.\n\nPATTERN: Never BUY against a 5/5 bearish EMA ribbon with <5 fundamental score and live high-impact news within 48h.",
+    "pattern_rule": "Never BUY against a 5/5 bearish EMA ribbon with <5 fundamental score and live high-impact news within 48h.",
+    "analysed_at": "2026-07-15 19:04:24"
+  },
+  {
+    "id": "1169",
+    "pair": "CAD/HKD",
+    "status": "LOSS",
+    "r_multiple": "",
+    "analysis": "## What Went Wrong\n\nThe most critical error was underweighting the **ALIGNED_BEAR EMA ribbon** \u2014 a 5/5 bearish fan is an extremely strong structural signal that was explicitly acknowledged but then overridden by oscillator confluence, which is a classic mistake of fighting a dominant trend with mean-reversion logic. The **CAD net SHORT positioning** (Positioning score only 5/10) was a direct institutional flow warning that momentum was still bearish, meaning the \"oversold\" RSI reading was more likely a continuation pattern within a downtrend than a genuine reversal signal. A D1 RSI of 16.2 in a strong downtrend is not a buy signal \u2014 it is evidence of trend strength, and the triple oscillator BUY confluence simply reflected extreme extension without confirming any structural reversal catalyst. The combination of bearish ribbon, bearish positioning, and weak Fundamental/Macro scores (both 5/10) should have been a hard veto against a counter-trend long trade.\n\nPATTERN: Never BUY against a 5/5 bearish EMA ribbon + net SHORT positioning \u2014 oversold RSI in a downtrend signals trend strength, not reversal.",
+    "pattern_rule": "Never BUY against a 5/5 bearish EMA ribbon + net SHORT positioning \u2014 oversold RSI in a downtrend signals trend strength,",
+    "analysed_at": "2026-07-15 19:04:32"
+  },
+  {
+    "id": "1208",
+    "pair": "EUR/HKD",
+    "status": "LOSS",
+    "r_multiple": "",
+    "analysis": "## What Went Wrong\n\nThe most critical error was **underweighting the fully bearish EMA ribbon (5/5 fan alignment)**, which was explicitly flagged as a risk factor yet still yielded a 7/10 confidence score \u2014 the dominant downtrend simply continued rather than mean-reverting. The 4H death-cross with no reversal confirmation pattern meant the trade was attempting to catch a falling knife against a structurally bearish trend, with oscillator oversold readings being a symptom of momentum, not a reversal signal. The fundamental and macro scores of 5/10 each were weak anchors for a counter-trend long, and the NEWS_WARNING about ECB speakers and HKD peg flows within a 48-hour window likely introduced directional pressure that overwhelmed the technical mean-reversion thesis. The warning sign that should have prevented this trade was the explicit internal contradiction: a \"TRIPLE_BUY\" oscillator signal paired with an \"ALIGNED_BEAR\" ribbon is a classic **oversold-in-a-downtrend trap**, not a reversal setup.\n\nPATTERN: Never long against a 5/5 bearish EMA fan on oscillator oversold alone \u2014 downtrends make oversold readings meaningless.",
+    "pattern_rule": "Never long against a 5/5 bearish EMA fan on oscillator oversold alone \u2014 downtrends make oversold readings meaningless.",
+    "analysed_at": "2026-07-15 19:04:40"
+  },
+  {
+    "id": "1379",
+    "pair": "GBP/NOK",
+    "status": "LOSS",
+    "r_multiple": "-1.0",
+    "analysis": "## What Went Wrong\n\nThe critical failure here was the stark divergence between the technical score (9.0) and the fundamental/sentiment scores (both 4.0), which should have been a red flag \u2014 the trade was essentially a technically-driven short against an unfavorable fundamental and sentiment backdrop. The low fundamental score (4.0) suggests GBP or NOK macro conditions did not support a sustained GBP selloff, and the sentiment score (4.0) indicates the market was not positioned bearishly enough to drive follow-through. The trade closed in under 19 hours, meaning an adverse move hit the stop quickly \u2014 consistent with a news or macro catalyst (likely NOK weakness reversal or GBP strength event on June 26) overriding the technical picture entirely. The warning sign was clear: a confidence of 8.0 built almost entirely on technicals while three out of five layers scored at or below 5.0 represented a false consensus \u2014 high composite confidence masking a deeply unconvincing fundamental case.\n\nPATTERN: Never rate confidence >7 when 3+ non-technical layers score \u22645; technicals alone cannot sustain exotic pair directional trades.",
+    "pattern_rule": "Never rate confidence >7 when 3+ non-technical layers score \u22645; technicals alone cannot sustain exotic pair directional ",
+    "analysed_at": "2026-07-15 19:05:20"
+  },
+  {
+    "id": "2059",
+    "pair": "EUR/GBP",
+    "status": "LOSS",
+    "r_multiple": "-1.0",
+    "analysis": "## What Went Wrong\n\nThe most critical error was underweighting the **ALIGNED_BEAR ribbon with fan structure** \u2014 this was explicitly flagged as a dominant downtrend signal yet the trade still received a BUY rating, meaning the counter-trend bias overrode a structurally bearish environment. The **EUR net long positioning unwinding** (Fundamental: 5, Positioning: 5) confirmed institutional momentum was moving *against* the trade, yet both scores were treated as neutral rather than directional warnings. The setup relied almost entirely on oscillator confluence (triple buy, RSI oversold) which is a notoriously unreliable signal in strong trending markets \u2014 oversold conditions in a downtrend simply mean price is falling hard, not reversing. The **NEWS_WARNING about UK/EU releases and GBP net short volatility** was acknowledged but not acted upon with a reduced position size or skipped entry, and the trade closing on July 8 suggests a macro release within the 48-hour window likely accelerated the stop hit.\n\n---\n\nPATTERN: Never BUY counter-trend against an aligned bear ribbon + unwinding institutional longs; oscillator signals fail in strong trends.",
+    "pattern_rule": "Never BUY counter-trend against an aligned bear ribbon + unwinding institutional longs; oscillator signals fail in stron",
+    "analysed_at": "2026-07-15 19:05:30"
   }
 ]

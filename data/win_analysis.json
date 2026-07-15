@@ -34,5 +34,59 @@
     "analysis": "## Trade Success Analysis: USD/CAD SELL\n\nThe core thesis proved correct: a D1 RSI of 76.3 representing a deeply overbought exhaustion top, combined with M+W+D timeframe alignment on the SELL side, provided the strongest predictive signal \u2014 the multi-timeframe confluence overrode the bullish EMA ribbon resistance that was flagged as the primary risk factor. The bearish H4 Head & Shoulders pattern served as the critical timing trigger, identifying the structural exhaustion point where momentum was transferring from buyers to sellers. Sentiment (7/10) and Technical (7/10) scores led the confluence stack and were the most reliable layers, while the weaker Macro score (5/10) correctly reflected background noise rather than a directional headwind. Entry timing near the London open window was reasonable, though the 7-day hold to target suggests the reversal developed gradually rather than impulsively, meaning patience \u2014 not precision entry \u2014 was the decisive execution factor.\n\nPATTERN: When D1 RSI >75 aligns with M+W+D sell confluence and an H4 reversal pattern, fade the trend even against bullish EMA structure.",
     "pattern_rule": "When D1 RSI >75 aligns with M+W+D sell confluence and an H4 reversal pattern, fade the trend even against bullish EMA st",
     "analysed_at": "2026-07-08 05:11:08"
+  },
+  {
+    "id": "1030",
+    "pair": "EUR/HKD",
+    "status": "WIN",
+    "r_multiple": "0.33",
+    "analysis": "## Trade Success Analysis: EUR/HKD BUY\n\nThe trade succeeded primarily on the strength of the **triple oscillator confluence (RSI+Stoch+CCI all BUY)** firing simultaneously with RSI at deeply oversold 30.2 and price sitting at the lower Bollinger Band \u2014 a classic mean-reversion setup where technical exhaustion signaled a high-probability bounce. The **multi-timeframe alignment (W+D+4H) with T_sig=9** provided the structural backbone, confirming the bounce signal wasn't noise but a coordinated oversold condition across timeframes. Entry timing was reasonably optimal given the Tokyo/London overlap window, and the trade resolved quickly (~16 hours), suggesting the technical snap-back was immediate and momentum-driven rather than requiring fundamental catalysts. Notably, the trade succeeded **despite** bearish ribbon structure and weakening COT positioning, confirming that in extreme oversold conditions, technical mean-reversion can temporarily override trend and positioning headwinds.\n\n---\n\nPATTERN: Triple oscillator confluence (RSI+Stoch+CCI) at Bollinger lower band with MTF alignment signals high-probability mean-reversion bounces even in downtrends.",
+    "pattern_rule": "Triple oscillator confluence (RSI+Stoch+CCI) at Bollinger lower band with MTF alignment signals high-probability mean-re",
+    "analysed_at": "2026-07-15 19:03:59"
+  },
+  {
+    "id": "1324",
+    "pair": "AUD/NZD",
+    "status": "PARTIAL_WIN",
+    "r_multiple": "0.16",
+    "analysis": "## What Made This Trade Successful\n\nThe bearish pin bar at key resistance (near the 1.2280 structural high) proved to be the most predictive signal, with the M/W/D triple timeframe SELL alignment providing directional confluence that ultimately overpowered the bullish EMA ribbon. The fundamental layer score (6/10) correctly captured the nuance that while the AUD rate differential was a headwind, it wasn't strong enough to prevent a mean-reversion from an overextended resistance zone. The CCI >100 reading at the upper Fibonacci zone flagged exhaustion accurately, suggesting the oscillator pressure was the most actionable short-term indicator despite the longer-term bullish structure. Entry timing was suboptimal \u2014 the trade was opened at 21:50 NZST rather than the recommended Sydney/Tokyo overlap (09:00\u201311:00 NZST), meaning the target was hit on residual momentum rather than peak-session liquidity, which likely explains the modest 11.7 pip capture versus the full 129 pip target potential.\n\n---\n\nPATTERN: Pin bar at triple-TF resistance + CCI>100 exhaustion justifies mean-reversion SELL even against bullish ribbon, targeting nearest S-level.",
+    "pattern_rule": "Pin bar at triple-TF resistance + CCI>100 exhaustion justifies mean-reversion SELL even against bullish ribbon, targetin",
+    "analysed_at": "2026-07-15 19:04:47"
+  },
+  {
+    "id": "1339",
+    "pair": "USD/SEK",
+    "status": "PARTIAL_WIN",
+    "r_multiple": "0.16",
+    "analysis": "## Trade Success Analysis: USD/SEK SELL\n\nThe trade's success was driven primarily by the **triple oscillator SELL confluence** (Stochastic 95.2, CCI 191.5, RSI 71.8\u201372.4) correctly identifying extreme overbought exhaustion at the upper Bollinger Band, which proved more predictive than the conflicting bullish EMA ribbon structure. The **multi-timeframe alignment** across Weekly, Daily, and 4H all pointing SELL provided the directional conviction needed, while the fundamental and macro headwinds (scores of 5/10) were sufficiently neutral to avoid overriding the technical signal. Entry timing was **suboptimal** \u2014 the trade opened at 21:21 NZST versus the recommended London open window of 18:00\u201320:00 NZST, yet the mean reversion was so technically overdue that the trade still reached target within 70 minutes, suggesting the exhaustion signal was robust enough to absorb the timing deviation. The key insight was that when three independent oscillators simultaneously reach extreme readings at a structural resistance level, the mean reversion probability overwhelms even genuinely bullish underlying trend conditions.\n\nPATTERN: Triple oscillator extremes (Stoch >90, CCI >150, RSI >70) at Bollinger upper band signal high-probability mean reversion regardless of trend ribbon direction.",
+    "pattern_rule": "Triple oscillator extremes (Stoch >90, CCI >150, RSI >70) at Bollinger upper band signal high-probability mean reversion",
+    "analysed_at": "2026-07-15 19:04:55"
+  },
+  {
+    "id": "1341",
+    "pair": "AUD/NZD",
+    "status": "PARTIAL_WIN",
+    "r_multiple": "0.16",
+    "analysis": "## Trade Success Analysis\n\nThe fundamental divergence was the primary driver here \u2014 the 7/10 fundamental score correctly identified that despite AUD's positive rate differential, the NZD macro backdrop was strong enough to pressure the pair lower from the swing high. The D1 pin bar at key resistance combined with RSI topping at 56 (below overbought) provided the critical technical confirmation that distribution was occurring, making this the most predictive indicator combination. However, the trade's rapid closure (under 40 minutes) and minimal pip capture (11.7 pips against a 146-pip target) reveals the target was hit on an initial thrust rather than a sustained move \u2014 suggesting the entry timing near the Tokyo/Sydney open captured early session volatility effectively but the full thesis never fully played out. The weekly and monthly SELL alignment provided the directional bias that mattered most, overriding the conflicting bull ribbon signal that represented the primary risk factor.\n\n---\n\nPATTERN: D1 pin bar at swing high + RSI <60 topping + multi-timeframe SELL alignment = high-probability fade entry even against bull ribbon.",
+    "pattern_rule": "D1 pin bar at swing high + RSI <60 topping + multi-timeframe SELL alignment = high-probability fade entry even against b",
+    "analysed_at": "2026-07-15 19:05:03"
+  },
+  {
+    "id": "1372",
+    "pair": "GBP/SEK",
+    "status": "PARTIAL_WIN",
+    "r_multiple": "0.16",
+    "analysis": "## GBP/SEK SELL \u2014 Win Analysis\n\nThe trade succeeded primarily because the **triple oscillator confluence** (RSI 70.2, Stochastic 87.6, CCI 164.9) accurately identified an exhausted overbought condition at a key resistance level, with the bearish pin bar providing the precise reversal signal. The **Technical score of 9/10** was the dominant predictive layer here, correctly overriding the weaker fundamental and sentiment readings \u2014 the mean-reversion thesis played out rapidly, with the target hit in just 24 minutes, confirming the setup had genuine momentum behind the reversal. Entry timing was effective given the London session liquidity, though the original report cited a later window (20:00\u201322:00 NZST), suggesting the actual entry captured an earlier but equally valid liquidity surge. Notably, the known risk factors (bullish EMA ribbon, GBP-positive rate differential) failed to invalidate the trade, confirming that extreme oscillator readings at confluent resistance can override trend-continuation bias when all three oscillators align simultaneously.\n\n---\n\nPATTERN: When RSI>70 + Stoch>85 + CCI>150 all align at key resistance with a bearish pin bar, prioritize mean-reversion SELL over trend bias.",
+    "pattern_rule": "When RSI>70 + Stoch>85 + CCI>150 all align at key resistance with a bearish pin bar, prioritize mean-reversion SELL over",
+    "analysed_at": "2026-07-15 19:05:12"
+  },
+  {
+    "id": "2257",
+    "pair": "GBP/JPY",
+    "status": "EXPIRED",
+    "r_multiple": "0.7",
+    "analysis": "## GBP/JPY SELL \u2014 Post-Trade Analysis\n\nThe trade's success was primarily driven by strong technical conviction (score: 8), where price action likely showed clear resistance at the 217.75 entry zone with bearish structure supporting the downside target of 214.11. Positioning data (score: 7) reinforced the thesis by indicating crowded long positioning in GBP/JPY, which historically precedes mean-reversion selloffs, particularly in a risk-sensitive cross like this. The fundamental layer (score: 6) and sentiment (score: 6) provided modest but sufficient corroboration \u2014 likely reflecting GBP vulnerability or JPY safe-haven demand building during the July 8\u201313 window. Entry timing appears reasonable though not optimal, as the 0.7 R-multiple on 93.9 pips with a 135-pip stop suggests the stop was relatively wide, meaning a tighter entry or scaled entry closer to resistance could have improved the reward-to-risk ratio meaningfully.\n\n---\n\nPATTERN: High technical score (8+) combined with elevated positioning score (7+) on GBP/JPY SELL signals strong mean-reversion edge; prioritize these two layers.",
+    "pattern_rule": "High technical score (8+) combined with elevated positioning score (7+) on GBP/JPY SELL signals strong mean-reversion ed",
+    "analysed_at": "2026-07-15 19:05:38"
   }
 ]

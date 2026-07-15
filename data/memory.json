@@ -15,6 +15,31 @@
     "outcome": "Mixed results - fundamentals tend to win over weeks. Lower confidence on such conflicts."
   },
   {
+    "source": "auto",
+    "pattern": "Overall track record to date (n=14)",
+    "outcome": "Win rate 43%, expectancy -0.36R."
+  },
+  {
+    "source": "auto",
+    "pattern": "Setups taken at confidence >= 7 (n=9 closed trades)",
+    "outcome": "Win rate 33%, expectancy -0.52R. This segment has underperformed - reduce confidence here."
+  },
+  {
+    "source": "auto",
+    "pattern": "Setups taken at confidence < 7 (n=5 closed trades)",
+    "outcome": "Win rate 60%, expectancy -0.09R. This segment has performed well - a point in its favour, but still demand full confluence."
+  },
+  {
+    "source": "auto",
+    "pattern": "BUY setups (n=6 closed trades)",
+    "outcome": "Win rate 17%, expectancy -0.56R. This segment has underperformed - reduce confidence here."
+  },
+  {
+    "source": "auto",
+    "pattern": "SELL setups (n=8 closed trades)",
+    "outcome": "Win rate 62%, expectancy -0.29R. This segment has performed well - a point in its favour, but still demand full confluence."
+  },
+  {
     "source": "outcome",
     "pattern": "When 4+/5 MTF bearish alignment meets overbought RSI\u226565 on D1, fade trend-structure bias \u2014 momentum divergence outweighs",
     "outcome": "[EXPIRED] USD/JPY closed 2026-06-15 08:14:17"
@@ -45,28 +70,68 @@
     "outcome": "[EXPIRED] USD/CAD closed 2026-07-08 05:11:01"
   },
   {
-    "source": "auto",
-    "pattern": "Overall track record to date (n=14)",
-    "outcome": "Win rate 43%, expectancy -0.36R."
+    "source": "outcome",
+    "pattern": "Triple oscillator confluence (RSI+Stoch+CCI) at Bollinger lower band with MTF alignment signals high-probability mean-re",
+    "outcome": "[WIN] EUR/HKD closed 2026-06-23 10:27:20"
   },
   {
-    "source": "auto",
-    "pattern": "Setups taken at confidence >= 7 (n=9 closed trades)",
-    "outcome": "Win rate 33%, expectancy -0.52R. This segment has underperformed - reduce confidence here."
+    "source": "outcome",
+    "pattern": "Never short a 5/5 bull EMA ribbon on oscillator signals alone when rate differential structurally favors USD upside.",
+    "outcome": "[LOSS] USD/CHF closed 2026-06-24 08:01:39"
   },
   {
-    "source": "auto",
-    "pattern": "Setups taken at confidence < 7 (n=5 closed trades)",
-    "outcome": "Win rate 60%, expectancy -0.09R. This segment has performed well - a point in its favour, but still demand full confluence."
+    "source": "outcome",
+    "pattern": "Never SELL into a 5/5 bullish EMA fan with adverse rate differentials \u2014 oscillator exhaustion alone cannot overcome alig",
+    "outcome": "[LOSS] USD/SEK closed 2026-06-23 09:01:41"
   },
   {
-    "source": "auto",
-    "pattern": "BUY setups (n=6 closed trades)",
-    "outcome": "Win rate 17%, expectancy -0.56R. This segment has underperformed - reduce confidence here."
+    "source": "outcome",
+    "pattern": "Never BUY against a 5/5 bearish EMA ribbon with <5 fundamental score and live high-impact news within 48h.",
+    "outcome": "[LOSS] EUR/USD closed 2026-06-24 21:11:21"
   },
   {
-    "source": "auto",
-    "pattern": "SELL setups (n=8 closed trades)",
-    "outcome": "Win rate 62%, expectancy -0.29R. This segment has performed well - a point in its favour, but still demand full confluence."
+    "source": "outcome",
+    "pattern": "Never BUY against a 5/5 bearish EMA ribbon + net SHORT positioning \u2014 oversold RSI in a downtrend signals trend strength,",
+    "outcome": "[LOSS] CAD/HKD closed 2026-06-24 20:57:46"
+  },
+  {
+    "source": "outcome",
+    "pattern": "Never long against a 5/5 bearish EMA fan on oscillator oversold alone \u2014 downtrends make oversold readings meaningless.",
+    "outcome": "[LOSS] EUR/HKD closed 2026-06-24 07:50:36"
+  },
+  {
+    "source": "outcome",
+    "pattern": "Pin bar at triple-TF resistance + CCI>100 exhaustion justifies mean-reversion SELL even against bullish ribbon, targetin",
+    "outcome": "[PARTIAL_WIN] AUD/NZD closed 2026-06-24 02:31:34"
+  },
+  {
+    "source": "outcome",
+    "pattern": "Triple oscillator extremes (Stoch >90, CCI >150, RSI >70) at Bollinger upper band signal high-probability mean reversion",
+    "outcome": "[PARTIAL_WIN] USD/SEK closed 2026-06-24 22:31:27"
+  },
+  {
+    "source": "outcome",
+    "pattern": "D1 pin bar at swing high + RSI <60 topping + multi-timeframe SELL alignment = high-probability fade entry even against b",
+    "outcome": "[PARTIAL_WIN] AUD/NZD closed 2026-06-24 22:01:50"
+  },
+  {
+    "source": "outcome",
+    "pattern": "When RSI>70 + Stoch>85 + CCI>150 all align at key resistance with a bearish pin bar, prioritize mean-reversion SELL over",
+    "outcome": "[PARTIAL_WIN] GBP/SEK closed 2026-06-25 12:01:36"
+  },
+  {
+    "source": "outcome",
+    "pattern": "Never rate confidence >7 when 3+ non-technical layers score \u22645; technicals alone cannot sustain exotic pair directional ",
+    "outcome": "[LOSS] GBP/NOK closed 2026-06-26 13:01:49"
+  },
+  {
+    "source": "outcome",
+    "pattern": "Never BUY counter-trend against an aligned bear ribbon + unwinding institutional longs; oscillator signals fail in stron",
+    "outcome": "[LOSS] EUR/GBP closed 2026-07-08 18:01:34"
+  },
+  {
+    "source": "outcome",
+    "pattern": "High technical score (8+) combined with elevated positioning score (7+) on GBP/JPY SELL signals strong mean-reversion ed",
+    "outcome": "[EXPIRED] GBP/JPY closed 2026-07-13 21:10:50"
   }
 ]
