@@ -47,6 +47,39 @@ def _now() -> str:
 
 
 # ---------------------------------------------------------------------------
+# Pending-retry queue
+# ---------------------------------------------------------------------------
+
+def _load_pending() -> list:
+    """Return list of trade ID strings awaiting Claude retry."""
+    if not _PENDING_FILE.exists():
+        return []
+    try:
+        return json.loads(_PENDING_FILE.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return []
+
+
+def _save_pending(ids: list) -> None:
+    _PENDING_FILE.write_text(
+        json.dumps(sorted(set(str(i) for i in ids)), indent=2),
+        encoding="utf-8",
+    )
+
+
+def _add_pending(trade_id) -> None:
+    ids = _load_pending()
+    if str(trade_id) not in ids:
+        ids.append(str(trade_id))
+        _save_pending(ids)
+
+
+def _remove_pending(trade_id) -> None:
+    ids = [i for i in _load_pending() if i != str(trade_id)]
+    _save_pending(ids)
+
+
+# ---------------------------------------------------------------------------
 # Duplicate detection
 # ---------------------------------------------------------------------------
 
