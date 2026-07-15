@@ -11765,7 +11765,18 @@ def run() -> int:
         try:
             from src import fund_state as _fs_cb
             _fs_cb_st = _fs_cb.load()
-            _cb_bal = (risk_data.get("profile") or {}).get("estimated_balance") if risk_data else None
+            try:
+                import pandas as _pd_cb
+                from src.trading import financials as _fin_cb
+                _df_cb = _pd_cb.read_csv(str(config.TRADES_CSV), encoding="utf-8-sig")
+                _cb_bal = _fin_cb.calculate_fund_state(_df_cb).get("balance")
+                if _cb_bal and risk_data and risk_data.get("profile"):
+                    _rp = risk_data["profile"]
+                    _rp["estimated_balance"] = round(_cb_bal, 2)
+                    _rp["peak_balance"] = max(_rp.get("peak_balance", 0), _cb_bal)
+                    risk_manager.save_profile(_rp)
+            except Exception:
+                _cb_bal = (risk_data.get("profile") or {}).get("estimated_balance") if risk_data else None
             if _cb_bal:
                 # 1. Daily P&L circuit breaker
                 _fs_cb_st, _cb_alert = _fs_cb.check_circuit_breaker(_fs_cb_st, _cb_bal)
