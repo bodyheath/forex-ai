@@ -5320,7 +5320,13 @@ def _send_telegram_summary(
     _override_pairs: dict = {}    # pair → tier for 5th-slot overrides; used in Discord report
     try:
         from src import fund_state as _fs
-        _cur_bal_fs = (risk_data.get("profile") or {}).get("estimated_balance") if risk_data else None
+        try:
+            import pandas as _pd_szg
+            from src.trading import financials as _fin_szg
+            _df_szg = _pd_szg.read_csv(str(config.TRADES_CSV), encoding="utf-8-sig")
+            _cur_bal_fs = _fin_szg.calculate_fund_state(_df_szg).get("balance")
+        except Exception:
+            _cur_bal_fs = (risk_data.get("profile") or {}).get("estimated_balance") if risk_data else None
         _fund_st = _fs.load()
         _fund_st = _fs.reset_if_new_day(_fund_st, current_balance=_cur_bal_fs)
         _fund_st = _fs.reset_if_new_week(_fund_st)
