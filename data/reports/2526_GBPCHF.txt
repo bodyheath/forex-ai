@@ -1,0 +1,18 @@
+I need to carefully analyze this setup before confirming Haiku's output.
+
+**MTF Check:** W:SELL + D:SELL = both agree SELL ✓ (conf=2/3 meets threshold). 4H:NEUTRAL is optional bonus only.
+
+**RSI Context:** RSI=74.3 in confirmed downtrend (W:SELL+D:SELL). Standard tiers apply for mixed... wait — W:SELL+D:SELL = confirmed DOWNTREND. Downtrend RSI rules: overbought at 74.3 doesn't get a shift — the shift only lowers BUY thresholds. RSI 74.3 in downtrend = SELL signal (62-70=4-5SELL standard, but 74.3 > 70 = 7-8SELL). T_sig=SELL_7. Confirmed. No adjustment needed.
+
+**DIV:** bearish:strong → DIVERGENCE: CONFIRMED → +1 confidence
+
+**OSC:** Triple SELL (RSI>65 ✓, Stoch 91.3>80+D likely>75 ✓, CCI 125.5>100 ✓) → +2 confidence
+
+**RIBBON:** ALIGNED_BULL fan — this CONFLICTS with SELL direction. Important risk factor but doesn't override MTF+RSI+DIV+OSC confluence.
+
+**FIB:** SH=1.07321 is the swing HIGH used for Fib — price at 1.0861 is above SH, so price has broken above the 3-month swing high. Nearest resistance from extension levels.
+
+**Entry/Stop/Target calculation:**
+- Entry: ~1.
+KEY_THESIS: RSI overbought (74.3) in confirmed downtrend (W:SELL + D:SELL) with bearish divergence and triple oscillator confluence signal reversal despite bullish ribbon — pin bar at key level provides entry pattern.
+RISK_FACTORS: (1) Aligned bullish ribbon (5/5 EMA stack) conflicts with SELL signal — trend continuation risk if 1.0900 breaks. (2) GBP COT positioning building conviction SHORT while CHF unwinding — asymmetric institutional conviction could delay reversal or extend move against trade.

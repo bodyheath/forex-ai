@@ -1,0 +1,25 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD weakness from rising rates + CAD structural downtrend on 4H offset by mixed D1/W MTF signals and neutral oscillators; fundamental support insufficient for conviction.
+RISK_FACTORS: [1] MTF alignment critical — W:NEUTRAL + D:NEUTRAL + 4H:NEUTRAL = 0/3 conf (no directional consensus across timeframes; M:SELL isolated and may reverse). [2] Oscillator confluence absent (Stoch neutral 48.7, CCI negative but weak -42.4) — lack of RSI/MACD/Stochastic triplet agreement weakens reversal signal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.9750
+ENTRY_TRIGGER_REASON: Drop to nearest Fibonacci support (FIB SL=0.9719 zone) with MACD negative + D1 price < SMA50 confirmation would improve risk/reward.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL (3/10 — NEUTRAL, no trade trigger):**
+- D1 T_sig=NEUTRAL_3 is baseline → TECHNICAL_SCORE = 3

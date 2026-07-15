@@ -1,0 +1,25 @@
+```
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+
+KEY_THESIS: Triple oscillator confluence (RSI 77.3 overbought + Stochastic 99.6 + CCI 193 all SELL) + pin bar at key 78.6% Fib + D1 T_sig=SELL_8 align for a short at resistance, but MTF Weekly=NEUTRAL weakens conviction below 7/10 threshold.
+
+RISK_FACTORS: 
+1. MTF Weekly is NEUTRAL (not confirmed SELL) — only D+4H agree; requires price to break below 94.471 Fib support quickly or setup invalidates.
+2. NZD COT positioning UNWINDING (institutions reducing conviction) — reduces POSITIONING_SCORE to 4 despite overbought technicals; fundamental rate divergence (+1.90% NZD/JPY, NZD falling, JPY rising) contradicts short thesis.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 94.471
+ENTRY_TRIGGER_REASON: Breach below 78.6% Fib confluence + oscillator SELL signal requires confirmation at support; if price bounces here, short invalidates.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24

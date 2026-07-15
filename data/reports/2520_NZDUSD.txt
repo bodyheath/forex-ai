@@ -1,0 +1,23 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key resistance with RSI overbought in 4H uptrend + D1 SELL signal + LEANING_BEAR ribbon = short-term pullback setup; weak NZD fundamentals support downside.
+RISK_FACTORS: [1] MTF only 2/3 agreement (W:NEUTRAL lacks confirmation—reduces conviction below 7), [2] 4H inside bar neutralizes pin bar pattern; 4H trend still technically up despite D1 SELL signal (trend conflict).
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5840
+ENTRY_TRIGGER_REASON: Sell limit above pin bar high at nearest resistance; wait for D1 confirmation below SMA50 (0.5812) to breach 2/3 MTF threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Rationale:**
+
+- **TECHNICAL (7/10):** T_sig=SELL_6 is baseline. RSI 61.9 on D1 in *mixed trend* context = standard zone (62–70 = 4–5 SELL), but D1 trend is "mixed/range," not confirmed downtrend

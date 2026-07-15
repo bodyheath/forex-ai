@@ -1,0 +1,27 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 SELL_5 signal with pin bar at key level conflicts with aligned bullish ribbon and 4H double bottom; MTF disagreement (D:SELL vs 4H/W:NEUTRAL, M:BUY) prevents high-confidence trade.
+RISK_FACTORS: ['MTF conflict — only 1/3 timeframes agree (conf=40%), violating >=2/3 rule; aligned bullish ribbon + 4H uptrend structure undermine D1 SELL conviction', 'COT reversal in EUR (long→short) and CHF unwinding reduce institutional conviction; RSI 59.7 in mixed range lacks momentum confirmation']
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement <66% (1/3 only); trade does not meet minimum confidence threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Why NO despite T_sig=SELL_5:**
+
+1. **MTF Failure (Critical):** M:BUY / W:NEUTRAL / D:SELL / 4H:NEUTRAL = only 1/3 agree on direction (D
