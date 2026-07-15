@@ -24,8 +24,9 @@ MEMORY_FILE = DATA_DIR / "memory.json"
 REPORTS_DIR = DATA_DIR / "reports"
 TRADES_CSV = DATA_DIR / "trades.csv"
 DASHBOARD_HTML     = DATA_DIR / "dashboard.html"
-WIN_ANALYSIS_FILE  = DATA_DIR / "win_analysis.json"
-LOSS_ANALYSIS_FILE = DATA_DIR / "loss_analysis.json"
+WIN_ANALYSIS_FILE      = DATA_DIR / "win_analysis.json"
+LOSS_ANALYSIS_FILE     = DATA_DIR / "loss_analysis.json"
+PENDING_ANALYSIS_FILE  = DATA_DIR / "pending_analysis.json"
 
 for _d in (DATA_DIR, CACHE_DIR, REPORTS_DIR):
     _d.mkdir(parents=True, exist_ok=True)
