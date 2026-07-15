@@ -22,6 +22,7 @@ from src import memory, tracker
 
 _MAX_OUTCOME_PATTERNS = 20
 _DEDUP_CHARS = 60
+_PENDING_FILE = config.DATA_DIR / "pending_analysis.json"
 
 
 # ---------------------------------------------------------------------------
