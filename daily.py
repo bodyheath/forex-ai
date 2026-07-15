@@ -10348,7 +10348,7 @@ def run() -> int:
         except Exception as exc:
             _log_line(log, f"Outcome step failed: {exc}")
 
-        # Update fund state: consecutive losses after trade closures
+        # Update fund state: consecutive losses + balance sync after trade closures
         if closed_today:
             try:
                 from src import fund_state as _fs_oc
@@ -10359,9 +10359,29 @@ def run() -> int:
                         _fs_oc_st, _fs_oc_alert = _fs_oc.update_after_close(_fs_oc_st, _ct_status)
                         if _fs_oc_alert:
                             _telegram(_fs_oc_alert)
+                # Recalculate financial fields from trades.csv so EXPIRED closes
+                # (which bypass update_after_close above) still update balance,
+                # win/loss counts, and drawdown in fund_state.json.
+                # Operational fields (pause_until, circuit_breaker, daily_trades_count,
+                # etc.) come from _fs_oc_st and are preserved through the merge.
+                try:
+                    import pandas as _pd_oc_s
+                    from src.trading import financials as _fin_oc_s
+                    _df_oc_s  = _pd_oc_s.read_csv(
+                        str(config.TRADES_CSV), encoding="utf-8-sig"
+                    )
+                    _fs_fresh = _fin_oc_s.calculate_fund_state(
+                        _df_oc_s, _open_trade_prices
+                    )
+                    for _k, _v in _fs_fresh.items():
+                        if _k != "open_trades":
+                            _fs_oc_st[_k] = _v
+                except Exception as _oc_calc_exc:
+                    _log_line(log, f"Fund state recalc failed: {_oc_calc_exc}")
                 _fs_oc.save(_fs_oc_st)
                 _log_line(log, (
                     f"Fund state updated: {len(closed_today)} trade(s) closed — "
+                    f"bal=${_fs_oc_st.get('balance', 0):,.2f} "
                     f"consecutive_losses={_fs_oc_st.get('consecutive_losses', 0)}"
                 ))
             except Exception as _fs_oc_exc:
