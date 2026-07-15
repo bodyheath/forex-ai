@@ -1413,10 +1413,13 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     _sn_target["exit_price"] = updated.get("exit_price", mprice)
                     _sn_target["pips"]       = updated.get("pips", "")
                     _sn_target["closed_at"]  = updated.get("closed_at", "")
-                    # Atomic write — never truncate the live file directly
+                    # Atomic write — unique tmp per write avoids collision with concurrent scan
                     import shutil as _sn_sh
-                    _sn_tmp = str(config.TRADES_CSV) + ".tmp"
-                    with open(_sn_tmp, "w", encoding="utf-8", newline="") as _sn_wh:
+                    import tempfile as _tempfile_sn
+                    _sn_fd, _sn_tmp = _tempfile_sn.mkstemp(
+                        dir=str(config.TRADES_CSV.parent), suffix=".tmp"
+                    )
+                    with os.fdopen(_sn_fd, "w", encoding="utf-8", newline="") as _sn_wh:
                         _sn_writer = _csv_sn.DictWriter(_sn_wh, fieldnames=_sn_fields)
                         _sn_writer.writeheader()
                         for _sn_r in _sn_rows:

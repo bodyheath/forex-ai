@@ -106,22 +106,23 @@ def load() -> list:
 
 
 def _write_all(rows: list) -> None:
-    """Write all rows atomically via .tmp → rename. Never truncates the live file."""
-    import shutil as _shutil_trk
+    """Write all rows atomically via unique .tmp → rename. Never truncates the live file."""
+    import tempfile as _tempfile_trk
     import os as _os_trk
-    tmp = str(config.TRADES_CSV) + ".tmp"
+    tmp_fd, tmp_path = _tempfile_trk.mkstemp(
+        dir=str(config.TRADES_CSV.parent), suffix=".tmp"
+    )
     try:
-        with open(tmp, "w", encoding="utf-8", newline="") as fh:
+        with _os_trk.fdopen(tmp_fd, "w", encoding="utf-8", newline="") as fh:
             writer = csv.DictWriter(fh, fieldnames=FIELDS)
             writer.writeheader()
             for row in rows:
                 writer.writerow({k: row.get(k, "") for k in FIELDS})
-        _shutil_trk.move(tmp, str(config.TRADES_CSV))
+        _os_trk.replace(tmp_path, str(config.TRADES_CSV))
     except Exception:
         try:
-            if _os_trk.path.exists(tmp):
-                _os_trk.unlink(tmp)
-        except Exception:
+            _os_trk.unlink(tmp_path)
+        except OSError:
             pass
         raise
 

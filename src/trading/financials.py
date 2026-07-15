@@ -13,7 +13,9 @@ Guarantees:
 
 import json
 import math
+import os
 import shutil
+import tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -117,13 +119,21 @@ def atomic_write_json(path: Path, data: dict) -> bool:
 
 
 def atomic_write_csv(path: Path, df: pd.DataFrame) -> bool:
-    """Write DataFrame as CSV atomically via .tmp → rename. Returns True on success."""
+    """Write DataFrame as CSV atomically via unique .tmp → rename. Returns True on success."""
     try:
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
-        tmp = path.with_suffix(".tmp")
-        df.to_csv(str(tmp), index=False, encoding="utf-8")
-        shutil.move(str(tmp), str(path))
+        tmp_fd, tmp_path = tempfile.mkstemp(dir=str(path.parent), suffix=".tmp")
+        try:
+            os.close(tmp_fd)
+            df.to_csv(tmp_path, index=False, encoding="utf-8")
+            shutil.move(tmp_path, str(path))
+        except Exception:
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+            raise
         return True
     except Exception:
         return False
