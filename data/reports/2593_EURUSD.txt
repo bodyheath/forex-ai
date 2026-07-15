@@ -1,0 +1,24 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: EUR/USD in structural downtrend (price below SMA50/200 death-cross) with 4H stochastic overbought (88.8) and reversal signal (pin bar at key level), but MTF disagreement (W:BUY vs D:NEUTRAL vs 4H:SELL, conf=1/3 <2/3 threshold) and ribbon converging weakens conviction.
+
+RISK_FACTORS: 
+1. MTF conflict below confidence threshold (1/3 agreement insufficient — weekly bullish vs daily neutral vs 4H bearish creates contradictory setup; cannot confidently enter either direction).
+2. COT EUR positioning REVERSING away from short (institutions unwinding EUR short conviction while price still in downtrend — classic fade risk if bounce fails; stops hit hard on short entries).
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: HOLD
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly (BUY) and daily (NEUTRAL) do not both agree on direction; 4H contradicts further (SELL). Confidence 4/10 is below 7.0 threshold and MTF conf=1/3 fails 2/3 requirement. Ribbon CONVERGING signals weakening trend — reversal

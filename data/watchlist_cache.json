@@ -1,46 +1,54 @@
 {
-  "timestamp": 1784139818.81218,
+  "timestamp": 1784150726.5188987,
   "watchlist_pairs": [
     "CAD/CHF",
     "AUD/CAD",
     "EUR/CHF",
     "AUD/CHF",
-    "USD/CAD",
-    "EUR/USD",
+    "EUR/AUD",
+    "USD/CHF",
+    "CHF/JPY",
+    "GBP/AUD",
     "GBP/NZD",
-    "AUD/USD"
+    "EUR/CAD"
   ],
   "near_miss": {
     "CAD/CHF": 5,
+    "AUD/CAD": 5,
     "EUR/CHF": 5,
-    "EUR/USD": 5
+    "AUD/CHF": 5,
+    "USD/CHF": 5,
+    "GBP/NZD": 5,
+    "EUR/CAD": 5
   },
   "near_miss_dirs": {
     "CAD/CHF": "SELL",
+    "AUD/CAD": "BUY",
     "EUR/CHF": "BUY",
-    "EUR/USD": "BUY"
+    "AUD/CHF": "SELL",
+    "USD/CHF": "BUY",
+    "GBP/NZD": "SELL",
+    "EUR/CAD": "BUY"
   },
   "momentum_counts": {
-    "CAD/CHF": 1,
-    "AUD/CAD": 1,
-    "EUR/CHF": 4,
-    "AUD/CHF": 1,
+    "CAD/CHF": 2,
+    "AUD/CAD": 2,
+    "EUR/CHF": 5,
+    "AUD/CHF": 2,
+    "EUR/AUD": 1,
+    "USD/CHF": 5,
+    "CHF/JPY": 2,
+    "GBP/AUD": 2,
+    "GBP/NZD": 4,
+    "EUR/CAD": 1,
     "USD/CAD": 1,
     "EUR/USD": 3,
-    "GBP/NZD": 3,
-    "AUD/USD": 1,
-    "GBP/USD": 7,
-    "USD/CHF": 4,
-    "CHF/JPY": 1,
-    "GBP/AUD": 1,
-    "AUD/NZD": 2
+    "AUD/USD": 1
   },
   "momentum_grace": {
-    "GBP/USD": 1,
-    "USD/CHF": 1,
-    "CHF/JPY": 1,
-    "GBP/AUD": 1,
-    "AUD/NZD": 1
+    "USD/CAD": 1,
+    "EUR/USD": 1,
+    "AUD/USD": 1
   },
   "watchlist_weekly_stats": {
     "week_start": "2026-07-13",

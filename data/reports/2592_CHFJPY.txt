@@ -1,0 +1,24 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Price in daily uptrend structure but 4H overbought (RSI 71.7) + bearish inverse H&S + M/W/4H confluence on SELL (2/3 MTF agreement) creates mean-reversion short bias, though daily neutrality (RSI 54.4, T_sig=3) prevents conviction.
+
+RISK_FACTORS: [1] Both CHF and JPY net SHORT positioning UNWINDING — institutional retreat from existing shorts removes directional tailwind; sharp reversal if longs re-enter. [2] Daily uptrend structure (price > SMA50 > SMA200, golden cross) conflicts with 4H bearish signal — D1 NEUTRAL T_sig (3) suggests no strong daily conviction, creating whipsaw risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 201.9500
+ENTRY_TRIGGER_REASON: Sell limit at nearest Fibonacci resistance (range SH 204.091 midpoint ≈ 201.19, use 201.95 as pullback rejection level near SMA50 201.36); wait for price to reject upside before shorting, reducing whipsaw risk from daily uptrend structure.
+ENTRY_TRIGGER_

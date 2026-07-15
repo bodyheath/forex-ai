@@ -1,0 +1,23 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with 4H uptrend and bullish double-bottom pattern; MTF alignment absent (M:BUY vs W/D:NEUTRAL) breaks multi-timeframe agreement rule, making directional conviction unreliable.
+RISK_FACTORS: (1) MTF conf=0/3 — no weekly/daily agreement, violating core TRADE_THIS requirement; (2) 4H uptrend (price > SMA50 > SMA200) contradicts D1 SELL signal; PAT=double_bottom:bul is reversal-positive but undermined by RSI neutral zone (57.0=uptrend-context NEUTRAL 45-65 tier).
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule fail — W and D do not both agree on direction (both NEUTRAL, M alone BUY). Confidence <7 and RSI/pattern conflicts prevent execution.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF RULE BREACH**: Weekly=NEUTRAL, Daily=NEUTRAL, 4H=NEUTRAL; only Monthly=
