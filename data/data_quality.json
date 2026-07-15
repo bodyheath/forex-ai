@@ -1,30 +1,6 @@
 {
   "scans": [
     {
-      "ts": "2026-06-19T17:21:40",
-      "mode": "prelondon",
-      "n_deep": 20,
-      "tech_ok": 7,
-      "tech_total": 20,
-      "fund_ok": 20,
-      "sent_ok": 20,
-      "pos_ok": 18,
-      "overall_pct": 72,
-      "high_conf_fallback_count": 9
-    },
-    {
-      "ts": "2026-06-20T11:04:53",
-      "mode": "full",
-      "n_deep": 23,
-      "tech_ok": 0,
-      "tech_total": 23,
-      "fund_ok": 23,
-      "sent_ok": 23,
-      "pos_ok": 21,
-      "overall_pct": 58,
-      "high_conf_fallback_count": 13
-    },
-    {
       "ts": "2026-06-21T11:14:49",
       "mode": "full",
       "n_deep": 20,
@@ -669,6 +645,30 @@
       "fund_ok": 8,
       "sent_ok": 8,
       "pos_ok": 8,
+      "overall_pct": 100,
+      "high_conf_fallback_count": 0
+    },
+    {
+      "ts": "2026-07-14T21:18:35",
+      "mode": "morning",
+      "n_deep": 25,
+      "tech_ok": 25,
+      "tech_total": 25,
+      "fund_ok": 25,
+      "sent_ok": 25,
+      "pos_ok": 25,
+      "overall_pct": 100,
+      "high_conf_fallback_count": 0
+    },
+    {
+      "ts": "2026-07-15T05:20:21",
+      "mode": "prelondon",
+      "n_deep": 25,
+      "tech_ok": 25,
+      "tech_total": 25,
+      "fund_ok": 25,
+      "sent_ok": 25,
+      "pos_ok": 25,
       "overall_pct": 100,
       "high_conf_fallback_count": 0
     }

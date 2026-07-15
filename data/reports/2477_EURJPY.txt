@@ -1,0 +1,23 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: MTF conflict (M:SELL + W:SELL vs D:NEUTRAL + 4H:NEUTRAL) breaks BUY momentum; pin bars at key levels + rising JPY rates + institutional reversal risk create marginal SELL edge, but weak uptrend structure and RSI-MACD ambiguity limit confidence.
+RISK_FACTORS: [1] MTF disagreement (only 45% weekly+daily alignment; D1 is NEUTRAL, blocking high-conviction entry) — reversal signal weak. [2] EUR COT flipped REVERSING (long→short) while JPY unwinding — conflicting institutional messages and withdrawal of JPY short conviction erode positioning edge.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 184.50
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (184.9810) with RSI <45 confirmation would confirm reversal; pin bar at that level + OSC reset would raise confidence to 7+.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+```
+
+**Rationale:**
+
+1. **MTF Critical Failure:** Monthly + Weekly are SELL (downtrend context), but Daily is NEUTRAL (RSI 51.5

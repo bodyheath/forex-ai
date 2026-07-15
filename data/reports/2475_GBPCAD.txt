@@ -1,0 +1,24 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Ribbon converging into mixed MTF signals and divergent 4H head-and-shoulders bearish pattern opposes D1 pin bar; weak fundamental support (CAD falling, GBP flat) insufficient to drive conviction.
+RISK_FACTORS: [1] MTF weekly+daily both NEUTRAL — agreement threshold not met (0/3 conf); cannot sustain TRADE_THIS. [2] 4H bearish H&S conflicts with D1 bullish pin bar — intraday noise masks directional bias; COT GBP building SHORT conviction but near-zero repositioning momentum reduces edge.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule failed — W:NEUTRAL + D:NEUTRAL do not both agree; RIBBON converging signals trend weakening, not reversal. OSC shows no oscillator confluence (conf=NONE). Insufficient confluence for execution.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS SUMMARY:**
+
+**MTF Conflict (CRITICAL):**  
+Weekly = SELL (Monthly context), Daily = NEUTRAL, 4H = BUY → **conf = 0/3** (neither W+D both agree

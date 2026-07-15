@@ -1,0 +1,25 @@
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD strength vs CAD weakness supports bearish bias, but weak technicals (RSI neutral, no oscillator confluence, mixed MTF) and price at support (38.2% Fib) limit conviction.
+RISK_FACTORS: [1] MTF shows conf=0/3 (M:SELL but W+D both NEUTRAL) — fails MTF rule; weekly confirmation absent. [2] Price at 38.2% Fib support (0.98094 = 0p away) creates bounce risk; no breakout pattern to confirm downside.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.9765
+ENTRY_TRIGGER_REASON: Break below 38.2% Fib support at 0.98094 to confirm downtrend and establish lower-level sell entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (3/10):**
+- D1 T_sig=NEUTRAL_3 baseline; RSI 46.2 = neutral zone (45–62), no directional bias.
+- 4H shows pin_bar_at_key_level:bea (bearish) at support, but RSI 46

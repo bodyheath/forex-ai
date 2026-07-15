@@ -1,0 +1,24 @@
+```
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Strong MTF sell alignment (W+D+4H all SELL, conf 3/3) with overbought technicals (RSI 73.9 on 4H, BB upper breach, OSC partial SELL) conflicts with bullish divergence and D1 uptrend structure — reversal signal present but trend context weakens conviction.
+
+RISK_FACTORS: 
+1. Bullish RSI divergence (13p/6pt moderate) contradicts SELL direction — price made new high but RSI failed to confirm, suggesting entry risk if divergence is false signal or price continues higher on momentum.
+2. D1 T_sig=SELL_5 conflicts with price > SMA50 > SMA200 golden-cross uptrend structure — CAD rate falling vs JPY rising provides weak fundamental support; COT shows CAD unwinding conviction (MOM=BUILDING) while JPY positioning unwinding (MOM=UNWINDING), reducing institutional conviction in either direction.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 115.80
+ENTRY_TRIGGER_REASON: Sell limit above pin_bar_at_key_level (bearish pin) at upper BB resistance; wait for confirmation that overbought 4

@@ -1,0 +1,27 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weak bearish lean (ribbon 4/5 bear + monthly SELL context) conflicted by neutral MTF alignment on W/D/4H and mixed price structure; CHF rate falling supports SELL but positioning unwinding removes momentum conviction.
+RISK_FACTORS: MTF confidence 0/3 (W/D/4H all NEUTRAL) violates multi-timeframe agreement rule; CHF/JPY both unwinding institutional shorts removes directional conviction and risks whipsaw reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF alignment fails (weekly + daily both NEUTRAL, not conf ≥2/3); positioning momentum unwinding in both currencies reduces edge to noise level.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+### Reasoning:
+
+**MTF Rejection (CRITICAL):**
+- Weekly: NEUTRAL | Daily: NEUTRAL | 4H: NEUTRAL → confidence = 0/3
+- MTF rule requires **weekly AND daily both agree on direction** (conf ≥2/3). Here, neither W nor D shows BUY or SELL conviction; both sit neutral.
+- This is a **hard fail** for TRADE_

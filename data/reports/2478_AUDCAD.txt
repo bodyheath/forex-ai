@@ -1,0 +1,23 @@
+PAIR: AUD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fib 38.2% resistance with AUD rate rising and CAD falling supports a bounce, but mixed MTF agreement (D:BUY vs M:SELL, only 1/3 confirmed) and downtrend structure on 4H limit conviction.
+RISK_FACTORS: [1] MTF conflict—M1 shows SELL while D1 shows BUY; only 1/3 MTF layers agree, falling short of 2/3 confirmation threshold. [2] 4H remains in death-cross downtrend (price < SMA50 < SMA200) despite D1 pin bar; ribbon neutral (3/5 aligned) provides no trend acceleration support.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.98094
+ENTRY_TRIGGER_REASON: Break and hold above Fib 38.2% (0.98094, 7p resistance) with RSI > 50 would signal D1 BUY confirmation and 4H trend shift.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+• **MTF Rule Violation (Hard Fail):** Weekly=SELL, Daily=BUY
