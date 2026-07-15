@@ -531,31 +531,10 @@ def compute_open_exposure(profile: dict) -> dict:
 # ── Balance update from outcome ───────────────────────────────────────────────
 
 def update_balance_from_outcome(trade: dict) -> None:
-    """Adjust estimated_balance and peak_balance in risk_profile after a close."""
-    profile = load_profile()
-    r_mult  = _to_float(trade.get("r_multiple")) or 0.0
-    if r_mult == 0.0:
-        return
-
-    est     = profile.get("estimated_balance", config.ACCOUNT_BALANCE)
-    mode    = profile.get("risk_mode", "normal")
-    b_pct   = MODE_RISK.get(mode, 1.0)
-    conf    = int(_to_float(trade.get("confidence")) or 8)
-    c_mult  = CONF_MULT.get(conf, 1.0)
-    eff_pct = min(b_pct * c_mult, MAX_RISK_PCT)
-    risk_amt = est * eff_pct / 100.0
-
-    new_est  = max(round(est + risk_amt * r_mult, 2), 1.0)
-    profile["estimated_balance"] = new_est
-    profile["peak_balance"]      = max(profile.get("peak_balance", 0), new_est)
-
-    snaps = profile.get("weekly_snapshots", [])
-    if not snaps or (datetime.now() - datetime.strptime(
-            snaps[-1]["date"][:10], "%Y-%m-%d")).days >= 7:
-        snaps.append({"date": _now(), "balance": new_est})
-    profile["weekly_snapshots"] = snaps[-52:]
-
-    save_profile(profile)
+    # No-op: estimated_balance is now synced from calculate_fund_state() every
+    # scan (daily.py Site 1, ~line 11762).  Kept as a shell so any remaining
+    # callers do not raise AttributeError.
+    return
 
 
 # ── Telegram / display helpers ────────────────────────────────────────────────
