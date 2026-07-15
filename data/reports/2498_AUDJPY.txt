@@ -1,0 +1,25 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key resistance in confirmed downtrend structure (D1:SELL + 4H:SELL + M:SELL) with overbought 4H RSI 74.4 and Stochastic/CCI 2/3 confluence, but W:NEUTRAL and mixed ribbon limit conviction.
+RISK_FACTORS: [1] MTF conf=2/3 (W:NEUTRAL weakens multi-timeframe alignment — not ≥2/3 agreement threshold for trade rule); [2] POSITIONING_SCORE=4 driven by AUD COT UNWINDING (institutions reducing conviction) despite MOM=BUILDING signal — conflicting institutional momentum undermines trend continuation bias.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 113.50
+ENTRY_TRIGGER_REASON: Sell limit at pin bar high; await retest of resistance before shorting into already-extended 4H.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**RATIONALE:**
+
+**Technical (7/10):**
+- D1 T_sig=SELL_4 baseline confirmed: price 113.2650 > SMA50 113.0970 forms uptrend
