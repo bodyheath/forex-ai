@@ -82,6 +82,9 @@ FIELDS = [
     "ml_win_probability",         # online learner P(win) at entry
     "system_version",             # v1 | v2 — used to filter balance/stats to v2-only
     "latest_conf",                # most recent scan's confidence score for this pair (null if pair not in scan pool)
+    # ── Live excursion tracking ───────────────────────────────────────────────
+    "mfe_pips",   # max favourable excursion — furthest price moved in trade direction
+    "mae_pips",   # max adverse excursion — furthest price moved against trade direction
 ]
 
 # status values: NO_TRADE | PENDING | OPEN | WIN | LOSS | BREAKEVEN | SKIPPED | EXPIRED | CANCELLED | PARTIAL_WIN | FULL_WIN
@@ -335,6 +338,35 @@ def update_fields(rec_id: int, **kwargs) -> None:
         if k in FIELDS:
             target[k] = v
     _write_all(rows)
+
+
+def update_mfe_mae(rec_id: int, current_price: float) -> dict:
+    """Update mfe_pips and mae_pips for an open fund trade. Running max — never decreases."""
+    rows   = load()
+    target = next((r for r in rows if str(r.get("id")) == str(rec_id)), None)
+    if target is None:
+        return {}
+
+    entry     = _to_float(target.get("entry"))
+    direction = (target.get("direction") or "").upper()
+    if entry is None or direction not in ("BUY", "SELL"):
+        return target
+
+    ps   = _pip_size(target.get("pair", ""))
+    move = (current_price - entry) if direction == "BUY" else (entry - current_price)
+
+    cur_mfe = _to_float(target.get("mfe_pips")) or 0.0
+    cur_mae = _to_float(target.get("mae_pips")) or 0.0
+
+    new_mfe = max(cur_mfe, round(max(0.0, move) / ps, 1))
+    new_mae = max(cur_mae, round(max(0.0, -move) / ps, 1))
+
+    if new_mfe != cur_mfe or new_mae != cur_mae:
+        target["mfe_pips"] = new_mfe
+        target["mae_pips"] = new_mae
+        _write_all(rows)
+
+    return target
 
 
 def check_inverse_open(pair: str, direction: str) -> str | None:

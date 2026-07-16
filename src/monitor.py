@@ -1589,9 +1589,15 @@ def _apply_research_milestones(row: dict, milestones: list, row_state: dict,
 
 # ── MFE / MAE update ─────────────────────────────────────────────────────────
 
-def _update_mfe_mae_from_ohlcv(rec_id: int, direction: str, candles: list) -> bool:
-    """Update MFE and MAE using candle extremes. Returns True if updated."""
-    from src import research_tracker as _rt
+def _update_mfe_mae_from_ohlcv(rec_id: int, direction: str, candles: list,
+                                tracker_mod=None) -> bool:
+    """Update MFE and MAE using candle extremes. Returns True if updated.
+
+    tracker_mod: module with update_mfe_mae(rec_id, price). Defaults to research_tracker.
+    """
+    if tracker_mod is None:
+        from src import research_tracker as _rt
+        tracker_mod = _rt
     if not candles:
         return False
     highs = [_to_float(c.get("high")) for c in candles if _to_float(c.get("high")) is not None]
@@ -1600,11 +1606,11 @@ def _update_mfe_mae_from_ohlcv(rec_id: int, direction: str, candles: list) -> bo
         return False
     d = direction.upper()
     if d == "BUY":
-        _rt.update_mfe_mae(rec_id, max(highs))   # best MFE candidate
-        _rt.update_mfe_mae(rec_id, min(lows))    # worst MAE candidate
+        tracker_mod.update_mfe_mae(rec_id, max(highs))
+        tracker_mod.update_mfe_mae(rec_id, min(lows))
     elif d == "SELL":
-        _rt.update_mfe_mae(rec_id, min(lows))    # best MFE candidate for SELL
-        _rt.update_mfe_mae(rec_id, max(highs))   # worst MAE candidate for SELL
+        tracker_mod.update_mfe_mae(rec_id, min(lows))
+        tracker_mod.update_mfe_mae(rec_id, max(highs))
     else:
         return False
     return True
@@ -3103,6 +3109,27 @@ def run(log=print) -> dict:
     result["mfe_mae_updated"] = mfe_updated
     if mfe_updated:
         log(f"Monitor: MFE/MAE updated for {mfe_updated} research trade(s).")
+
+    # ── Step 6b: MFE/MAE updates for open fund trades ─────────────────────────
+    fund_mfe_updated = 0
+    for row in _fund_open:
+        pair      = row.get("pair", "")
+        direction = (row.get("direction") or "").upper()
+        rec_id    = _safe_int_id(row.get("id", 0))
+        try:
+            _, candles_mfe, resolved_p_mfe = pair_data.get(pair, ("t0_no_data", None, None))
+            if candles_mfe:
+                if _update_mfe_mae_from_ohlcv(rec_id, direction, candles_mfe,
+                                               tracker_mod=_trk):
+                    fund_mfe_updated += 1
+            elif resolved_p_mfe is not None:
+                _trk.update_mfe_mae(rec_id, resolved_p_mfe)
+                fund_mfe_updated += 1
+        except Exception:
+            pass
+    result["fund_mfe_mae_updated"] = fund_mfe_updated
+    if fund_mfe_updated:
+        log(f"Monitor: MFE/MAE updated for {fund_mfe_updated} fund trade(s).")
 
     # ── Step 7: Research milestones — Discord #research only, never Telegram ──
     if research_fragments:
