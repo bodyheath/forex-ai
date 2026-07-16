@@ -1,0 +1,34 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Weekly and daily MTF alignment on SELL with RSI overbought (61 in uptrend context = neutral-to-elevated), but ribbon fully bullish and price above SMA50 create conflicting signals—trade only on confirmed breakdown below 0.5616 SMA50.
+
+RISK_FACTORS: 
+1. ALIGNMENT CONFLICT: Fully bullish ribbon (5/5 EMA alignment) contradicts SELL signal; price holding above golden cross structure suggests trend continuation not reversal.
+2. WEAK OSCILLATOR: Only 2/3 oscillators confirm SELL (Stochastic overbought 83.6 + CCI elevated); MACD at zero shows no directional conviction, reducing setup reliability.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5616
+ENTRY_TRIGGER_REASON: Break and close below SMA50 (golden-cross support) confirming W+D SELL alignment and invalidating uptrend structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (5/10):**
+- T_sig baseline = SELL_4 (pre-computed)
+- RSI

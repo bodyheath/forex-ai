@@ -1,0 +1,26 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Oscillator confluence (Stoch+CCI) supports SELL, but mixed MTF structure and bullish candle patterns create conflicting signals with only neutral macro backdrop.
+RISK_FACTORS: [1. MTF shows 0/3 alignment (W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL) — no directional conviction at any timeframe; 2. Bullish candle patterns (double_bottom + pin_bar_at_key_level) contradict SELL thesis, suggesting potential reversal risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily both NEUTRAL; no multi-timeframe agreement. Conflicting technicals (T_sig=SELL_3 vs PAT bullish signals) without fundamental or positioning conviction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING BREAKDOWN:**
+
+**TECHNICAL_SCORE: 5/10**
+- **D1 RSI 61.4** → in neutral zone (45–62) = base score 3–4. D1 T_sig=SELL_3 is baseline.
+- **4
