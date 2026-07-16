@@ -1,0 +1,25 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: EUR fundamental advantage (+2.29% diff, CHF rate falling) contradicted by weak technicals (mixed D1 trend, RSI neutral 56.5, T_sig=SELL_3), MTF misalignment (M:BUY vs D/W:NEUTRAL), and institutional EUR SHORT reversal creating conflicting signals.
+
+RISK_FACTORS: 
+1. MTF CONFLICT: Monthly bullish but Daily/Weekly neutral; conf=0/3 fails MTF rule (need ≥2/3 agreement). Cannot confidently execute either direction.
+2. COT REVERSAL RISK: EUR positioning flipped from long to short (REVERSING); trading SHORT into institutional positioning reversal is contrarian and reduces edge.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: [UNAVAILABLE — DO NOT TRADE]
+ENTRY_TRIGGER_PRICE: [N/A]
+ENTRY_TRIGGER_REASON: MTF structure broken (conf=0/3); T_sig=SELL_3 contradicted by 4H uptrend + ribbon ALIGNED_BULL + D1 bullish engulfing; insufficient directional confluence. COT EUR reversal adds uncertainty. Wait for Daily/Weekly alignment or clear breakout.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0

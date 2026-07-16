@@ -1,0 +1,25 @@
+```
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 overbought (RSI 62) at upper Bollinger Band with 4H pin bar at key level and bearish T_sig, but bullish divergence and uptrend structure create mixed-conviction setup.
+RISK_FACTORS: [1. Bullish divergence (13p/6pt) conflicts with SELL direction — reversal risk if price holds above 115.446 Fib 50%]. [2. MTF agreement weak (conf 2/3: W:SELL + D:NEUTRAL + 4H:SELL) — daily neutrality breaks sell conviction; CAD funding rate falling (supportive for long carry) offsets JPY rate rise].
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 115.600
+ENTRY_TRIGGER_REASON: Sell limit above current price at resistance above upper Bollinger Band; only enter if price confirms breakdown of uptrend structure (break below 114.7484 SMA50 required for high-confidence short).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL [6/10]:**
+- D1 RSI=62 in confirmed uptrend (
