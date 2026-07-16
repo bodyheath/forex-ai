@@ -506,6 +506,11 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
     _cost["sonnet_input"]  += getattr(resp.usage, "input_tokens",  0)
     _cost["sonnet_output"] += getattr(resp.usage, "output_tokens", 0)
     report = "".join(block.text for block in resp.content if block.type == "text")
+    if not report.strip():
+        raise RuntimeError(
+            f"Sonnet returned empty response for {pair}"
+            f" (stop_reason={getattr(resp, 'stop_reason', '?')})"
+        )
 
     # Inject Haiku thesis/risk if Sonnet omitted them (saves output tokens)
     if haiku_report:
