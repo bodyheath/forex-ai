@@ -9961,6 +9961,11 @@ def _scan_all_pairs_movement(
     now_ak_mvt  = _auckland_now()
     today_str   = now_ak_mvt.strftime("%Y-%m-%d")
     monday_str  = (now_ak_mvt - timedelta(days=now_ak_mvt.weekday())).strftime("%Y-%m-%d")
+    _prev_ts  = float(_prev_data.get("last_scan_timestamp", 0))
+    _prev_age = (now_ak_mvt.timestamp() - _prev_ts) / 3600.0
+    if _prev_age > 26:
+        prev_prices = {}
+        log(f"[MOVEMENT] Previous scan prices are {_prev_age:.0f}h old — skipping movement comparison (max 26h)")
     weekly      = _prev_data.get("weekly_stats", {})
     if weekly.get("week_start", "") != monday_str:
         weekly = {
