@@ -9984,7 +9984,7 @@ def _scan_all_pairs_movement(
     for pair in universe:
         cur  = current_prices.get(pair)
         prev = prev_prices.get(pair)
-        if cur is None or prev is None or cur <= 0:
+        if cur is None or prev is None or cur <= 0 or prev <= 0:
             continue
 
         pip      = _sel_pip_mvt(pair)
