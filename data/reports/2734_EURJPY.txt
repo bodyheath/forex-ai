@@ -1,0 +1,22 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern with monthly sell signal conflicts with bullish ribbon alignment and uptrend structure; MTF agreement insufficient (only 1/3), creating low-conviction setup.
+RISK_FACTORS: [1] MTF conflict — Monthly:SELL contradicts Daily:NEUTRAL and 4H:NEUTRAL (conf=1/3 <2/3 threshold); ribbon fully bullish-aligned despite pattern. [2] EUR COT reversing to short while trade direction is SELL creates institutional headwind; positioning unwinding in JPY reduces conviction for yen strength.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF agreement insufficient (1/3 <2/3 required). D1 T_sig=NEUTRAL_3 + D1:NEUTRAL + 4H:NEUTRAL override monthly sell signal. Pattern (head-and-shoulders) conflicts with bullish ribbon fan (5/5 aligned). Confidence 5/10 < 7 threshold. R:R not computable without clear entry/target levels.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Analysis:**
+- **MTF Failure:** Monthly is SELL, but Daily and

@@ -1,0 +1,29 @@
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly SELL context conflicts with D1/4H neutrality and pin bar setup; weak setup—avoid.
+RISK_FACTORS: MTF disagreement (M:SELL vs W/D:NEUTRAL) creates directionless signal; both CHF and JPY unwinding positions reduces conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS:**
+
+**MTF Rule Breach (Critical):**
+MTF confidence = 0/3 (M:SELL vs W:NEUTRAL + D:NEUTRAL). Weekly and daily both NEUTRAL—directional agreement fails the 2/3 threshold. **TRADE_THIS = NO** per MTF rule, regardless of other signals.
+
+**Technical Layer (Score: 3/10):**
+- **D1 RSI 51.7** = NEUTRAL (45–62 zone, standard tiers). No shift applied because MTF is mixed (W/D neutral, M alone doesn't override).
+- **MACD histogram +0.1036** = marginally positive, no strong confirmation.
+- **Price 201.0550 vs SMA50
