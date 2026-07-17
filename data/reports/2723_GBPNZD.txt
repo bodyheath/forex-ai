@@ -1,0 +1,17 @@
+PAIR: GBP/NZD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: D1 inverse H&S breakout with golden-cross setup and partial oscillator confluence, but 4H downtrend and institutional GBP short-building create MTF friction and entry risk.
+RISK_FACTORS: [1] MTF conflict — D1 BUY aligned with 4H uptrend per your data, but 4H death-cross (price<SMA50<SMA200) contradicts; confidence capped at 6 due to <2/3 MTF agreement (M:SELL overrules). [2] COT positioning danger — GBP net SHORT at 13.0% with MOM=BUILDING means institutions are *increasing* conviction in GBP weakness; trade direction (BUY GBP) opposes institutional momentum → reduce confidence by 1 and flag execution risk.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 2.3120
+ENTRY_TRIGGER_REASON: Break above inverse H&S neckline (~2.3120) with D1 close above SMA50 (2.3047) AND 4H recovery above 4H SMA50 (est. 2.3090), resolving MTF conflict.
+ENTRY

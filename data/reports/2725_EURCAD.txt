@@ -1,0 +1,27 @@
+```
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: D1 RSI oversold (39.8) with inside bar + 4H bounce signal, but MTF conflict (M:SELL vs D:BUY) and COT reversal undermine conviction.
+RISK_FACTORS: EUR COT reversing from long to short while trade goes BUY (directional conflict with institutional unwinding); 4H double-top bearish pattern contradicts BUY setup despite RSI oversold.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.5980
+ENTRY_TRIGGER_REASON: Wait for break and retest of SL swing (1.5904) + RSI recovery to 45+ to confirm 4H reversal; avoid chasing into COT reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### RATIONALE
+
+**TECHNICAL_SCORE: 5/10**
+- D1 RSI 39.8 = standard BUY zone (7-8), BUT price mixed/range-bound (SMA50 ≈ SMA200, no directional alignment) → neutral structure downgrades to **5**.
+- T_sig=BUY_4 is baseline
