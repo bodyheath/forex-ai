@@ -1,0 +1,24 @@
+```
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at 23.6% Fib + D1 RSI 46.8 (neutral zone) creates micro-reversal setup into 4H uptrend, but D1 downtrend structure and MTF disagreement (W:BUY vs D:NEUTRAL) limit conviction.
+
+RISK_FACTORS: 
+1. MTF conflict: weekly shows BUY conviction but daily remains in downtrend (price < SMA50 < SMA200 death-cross); only 1 of 3 timeframes agree on direction — low probability sustained move.
+2. COT reversal in EUR: net SHORT positioning is now REVERSING (institutions unwinding/flipping), which conflicts with BUY direction — reduced institutional support; SMD=-4 indicates retail slightly more bullish than institutions (contrarian signal weak).
+
+TRADE_THIS: NO
+
+REASONING:
+- **MTF Rule Violation**: Weekly=BUY, Daily=NEUTRAL, 4H=NEUTRAL → conf=1/3 (only 33%). Requires ≥2/3 agreement (≥66%) for trade. TRADE_THIS defaults to NO.
+- **Technical**: T_sig=NEUTRAL_3 baseline appropriate. Pin bar at 23.6% Fib is bullish pattern but within a D

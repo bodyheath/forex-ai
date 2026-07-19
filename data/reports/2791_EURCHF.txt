@@ -1,0 +1,23 @@
+```
+PAIR: EUR/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fib 78.6% support with aligned bullish ribbon, but bearish RSI divergence and conflicting MTF (weekly/daily NEUTRAL) block high-conviction entry.
+RISK_FACTORS: [1] Bearish RSI divergence (12p/2pt) conflicts with BUY direction — price near recent highs but oscillator weakening. [2] COT reversal in EUR (long to short, institutional conviction unwinding) and CHF unwinding near mid-position — reduces positioning edge and increases reversal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.9220
+ENTRY_TRIGGER_REASON: Fib 78.6% confirmation + SMA50 hold at 0.9192 if price pulls back into support zone; requires oscillator recovery (Stoch >60, RSI >55) to validate continuation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+SCORING DETAIL:
+
+**TECHNICAL_SCORE: 5/10**
+- D1 RSI=53.0 (mixed trend context: W:NEUTRAL + D:NEUTRAL = standard tiers) → RSI 45–62 zone = 3–4

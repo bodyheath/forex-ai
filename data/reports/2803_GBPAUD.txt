@@ -1,0 +1,28 @@
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key resistance (1.9359 SH) with D1 SELL signal and bearish rate differential (AUD rising, GBP flat) supports downside, but MTF shows only 2/3 agreement (W:NEUTRAL conflicts D+4H:SELL) limiting conviction.
+
+RISK_FACTORS: 
+1. MTF conflict — Weekly is NEUTRAL while Daily and 4H are SELL; only 2/3 agreement fails the MTF rule threshold (requires both Weekly AND Daily in same direction). Reduces confidence below 7 threshold.
+2. GBP COT unwinding long positions mid-week into a SELL setup = contrarian institutional positioning against retail; reversal risk if institutions exit shorts and rally price.
+
+TRADE_THIS: NO
+
+**REASONING:**
+
+**MTF Rule Violation:** W:NEUTRAL + D:SELL + 4H:SELL = 2/3 agreement (60% weighting). The hard MTF rule requires **Weekly AND Daily to both agree on direction**. Weekly is NEUTRAL (neither BUY nor SELL), so the MTF confluence fails. This alone triggers TRADE_THIS: NO regardless of other factors.
+
+**Technical Score: 6/10**
+- D1 T_sig=SELL_7 is baseline (7).
+-
