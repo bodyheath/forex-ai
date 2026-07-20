@@ -1,0 +1,22 @@
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Price trapped in 198.3–204.1 range with conflicting MTF signals (M:SELL vs D:NEUTRAL vs 4H:BUY); pin bar at key level suggests reversal risk, but RSI neutral and both CHF/JPY unwinding positions reduce conviction.
+RISK_FACTORS: (1) MTF conflict: Monthly SELL vs Daily/4H NEUTRAL/BUY—no directional alignment, violates MTF rule; (2) COT unwinding in both legs (CHF -SHORT, JPY -SHORT) reduces positioning confidence and increases reversal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: Trade fails MTF rule (conf=0/3, weekly+daily must agree). Both currencies unwinding COT positions; neutral RSI, no oscillator confluence. Pin bar at key level + bearish 4H double_top suggest caution, but insufficient confluence to commit.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+- **MTF Conflict (CRITICAL):** Monthly=SELL, Weekly=NEUTRAL, Daily=NEUTRAL, 4H=BUY. Confidence=0/3 (no alignment

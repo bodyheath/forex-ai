@@ -1,0 +1,27 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level with RSI overbought in confirmed uptrend, but conflicting MTF (weekly SELL vs daily NEUTRAL) prevents high-conviction entry.
+RISK_FACTORS: [1) MTF disagreement—daily neutral while weekly sells, weakening signal reliability; 2) AUD COT BUILDING while JPY UNWINDING suggests institutional conviction divergence, potential trend weakness]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 114.50
+ENTRY_TRIGGER_REASON: Retest of pin_bar_at_key_level at SH (114.903) with RSI >76 confirmation for triple-confluence SELL setup
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 5/10**
+- **RSI Analysis (Uptrend Context):** D1 RSI=60.1 is in upper-neutral zone (45–65 is neutral in an uptrend per rules). This is *not* overbought (>77 would be); it's within normal uptrend momentum. Score: 4 (neutral-to-mild sell).
+- **4H

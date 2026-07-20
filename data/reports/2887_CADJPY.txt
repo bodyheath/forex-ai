@@ -1,0 +1,24 @@
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with 4H breakdown and W:SELL signal; bullish divergence contradicts SELL thesis, creating conflicting signals that reduce trade conviction.
+RISK_FACTORS: [1. MTF conflict: Weekly bearish, Daily neutral, 4H bullish = no MTF agreement (conf 1/3); trade direction violates MTF rule. 2. RSI 59.3 in D1 uptrend is normal neutral-to-bullish state; oscillator confluence missing (Stoch 75.8 overbought + CCI 143.4 strong but no RSI agreement) weakens SELL conviction.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**RATIONALE:**
+
+**MTF Violation (Hard Stop):** W:SELL + D:NEUTRAL + 4H:BUY = conf 1/3 (20%). Requirement is both weekly AND daily must agree on direction; they do not. TRADE_THIS must be NO regardless of other factors.
+
+**Technical Layer (Score: 4/10):**
+- D1 T_sig

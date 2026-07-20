@@ -1,0 +1,26 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern on 4H + weekly/monthly SELL alignment conflict with D1 uptrend structure and bullish ribbon, creating low-conviction setup with institutional positioning reversals adding downside risk.
+RISK_FACTORS: [1] MTF agreement failure — weekly/monthly SELL but D1 NEUTRAL conflicts directional conviction (conf=1/3); [2] COT reversals in both pairs (EUR unwinding shorts, JPY unwinding shorts) contradict sell thesis and signal institutional de-risking, not conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 185.10
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (185.0811) and test of 4H double-top neckline invalidation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**DETAILED SCORECARD:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 T_sig baseline = NEUTRAL_3 → start at 3
+- **RSI:** D1=52.7 (standard tier 45–62 = NEUTRAL 3–4). Uptrend context (price > SMA50 > SMA200) →

@@ -1,0 +1,24 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weak bearish setup hampered by mixed MTF signals (M:SELL, W:SELL vs D:NEUTRAL/4H:NEUTRAL) and converging ribbon suggesting trend weakening; GBP rate flat while CAD rate falling provides minimal fundamental support for directional conviction.
+RISK_FACTORS: [1] MTF agreement insufficient (only 2/3 timeframes align bearish; D1+4H neutral undermines confluence required for TRADE_THIS YES), [2] COT positioning unwinding in GBP (institutions reducing conviction) while ribbon converging signals exhaustion risk — reversal setup possible.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Violation (Critical):**  
+Weekly *and* Daily must both agree per MTF rule. Here: M:SELL, W:SELL (bearish bias), but D:NEUTRAL and 4H:NEUTRAL. Confidence = 2/3 timeframes = **does not meet ≥2/3 same direction required**. This alone triggers **TRADE_THIS: NO** regardless of

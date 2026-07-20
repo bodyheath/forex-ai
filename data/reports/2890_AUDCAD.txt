@@ -1,0 +1,25 @@
+```
+PAIR: AUD/CAD
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD supported by rising rate differential (+2.19%) and pin bar at key level, but MTF conflict (M:SELL vs D:NEUTRAL) and 4H overbought (RSI 72.1) severely limit conviction.
+RISK_FACTORS: MTF disagreement (Monthly SELL vs Daily NEUTRAL) violates core rule; 4H RSI 72.1 overbought with no confirmatory oscillator confluence (Stochastic 71.7 but CCI negative).
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 0.9820
+ENTRY_TRIGGER_REASON: Pullback to SMA50 (0.9854) in a supported downtrend would provide lower-risk entry if fundamentals persist.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**ANALYSIS:**
+
+**MTF Rule Veto:** MTF shows M:SELL, W:NEUTRAL, D:NEUTRAL, 4H:SELL (conf=0/3 with 80% weighting). Weekly and Daily do NOT both agree on direction — they're neutral-to-conflicted. This triggers the hard MTF rule: **TRADE_THIS = NO** regardless of other factors.
