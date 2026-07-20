@@ -10352,10 +10352,9 @@ def run() -> int:
                 log=lambda m: _log_line(log, m),
                 price_cache=_open_trade_prices,
             )
-            if closed_today:
-                new_patterns = outcome_analyst.run_outcome_analysis(
-                    closed_today, log=lambda m: _log_line(log, m)
-                )
+            new_patterns = outcome_analyst.run_outcome_analysis(
+                closed_today, log=lambda m: _log_line(log, m)
+            )
         except Exception as exc:
             _log_line(log, f"Outcome step failed: {exc}")
 
