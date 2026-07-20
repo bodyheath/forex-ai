@@ -1,0 +1,23 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed MTF signals (Monthly+Weekly SELL vs Daily NEUTRAL) conflict with fully-aligned bullish ribbon; EUR positioned SHORT but COT reversing suggests conviction loss; inside bars + elevated Stochastic warn of consolidation breakout risk, not trend continuation.
+RISK_FACTORS: [1] MTF confidence only 45% (1/3 agree) — D1 and 4H neutral while M/W bearish creates conflicting directional bias; any daily reversal above 186.50 invalidates SELL thesis. [2] COT REVERSING on EUR (long unwinding) + JPY unwinding both legs — institutional conviction collapsing into consolidation; Stoch 88.4 + CCI 93.7 overbought without oscillator confluence signals false-breakout risk.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly SELL + Daily NEUTRAL do NOT both agree (conf<2/3 = 45%). Per mandate, TRADE_THIS = NO regardless of technical score.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF Conflict (CRITICAL):** M:SELL

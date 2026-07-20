@@ -1,0 +1,26 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Pin bar at 61.8% Fib support + RSI 58.5 (upper-neutral in confirmed uptrend) + partial oscillator SELL (Stoch 86.9 overbought, CCI 124.5 bullish) creates a mean-reversion setup, but weak MTF agreement and LEANING_BULL ribbon severely limit conviction.
+
+RISK_FACTORS: 
+1. MTF BREAKDOWN: M:SELL conflicts W:NEUTRAL + D:NEUTRAL + 4H:NEUTRAL (conf=0/3) — no multi-timeframe alignment; daily price still >SMA50>SMA200 uptrend structure intact.
+2. COT CONTRADICTION: AUD SHORT positioning BUILDING institutional conviction counter to SELL signal; JPY SHORT UNWINDING reduces SHORT momentum — mixed institutional support for JPY sell-off.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 113.477
+ENTRY_TRIGGER_REASON: Sell limit at 61.8% Fibonacci support level (3p away) where pin bar pattern + RSI mean-reversion confluence; wait for rejection confirmation rather than entering weak setup immediately.
+ENTRY_TRIGGER_EXPIRY_HOURS:
