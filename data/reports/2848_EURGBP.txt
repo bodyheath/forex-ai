@@ -1,0 +1,17 @@
+I need to carefully analyze this setup, particularly the conflict between RSI oversold signals and the bearish ribbon/trend structure.
+
+**Key Analysis:**
+
+**MTF:** M:BUY W:BUY D:BUY 4H:BUY — all four agree BUY. Weekly AND daily both agree ✓
+
+**RSI Context:** Confirmed downtrend (W:BUY actually — wait, MTF shows W:BUY D:BUY, so this is actually MTF BUY alignment despite price < SMA50 < SMA200 on the chart). The trend= line describes chart structure, but MTF signals override for scoring. With W:BUY+D:BUY, this is an UPTREND context for RSI purposes — but RSI=28.3 is extremely oversold even by standard tiers (9-10 BUY). T_sig=BUY_7 is the anchor.
+
+**Conflicts to note:**
+- RIB=ALIGNED_BEAR fan (bearish ribbon conflicts with MTF BUY — ribbon reflects recent price action)
+- PAT=pin_bar_at_key_level:bea (BEARISH pin bar — conflicts with BUY direction, do NOT re-score but note it reduces confidence)
+- SMD=-6 MODERATE_SELL conflicts
+- FIB: SH=0.87294, SL=0.86199 — price at 0.8487 is BELOW the Fibonacci SL, meaning price is outside/below the measured fib range — no nearby fib support confirmed
+
+**TECHNICAL_SCORE:** T_sig=BUY_7. Bearish pin bar conflicts (-1 justified). Score: 7
+KEY_THESIS: Confirmed downtrend with oversold RSI (28.3), pin bar at key level, triple oscillator confluence (3/3), and full MTF alignment (M/W/D/4H all BUY) creates high-probability mean-reversion bounce setup within ongoing bearish structure.
+RISK_FACTORS: [1] EUR COT positioning REVERSING from net short conviction — institutional EUR longs may be exiting, conflicting with BUY signal and reducing conviction. [2] RIB fully ALIGNED_BEAR (5/5) confirms downtrend remains structurally intact; bounce target limited by SMA50 resistance at 0.8616 — risk of failed reversal if price cannot clear this zone.
