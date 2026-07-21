@@ -1,0 +1,34 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Pin bar at key level + partial oscillator confluence (Stoch/CCI SELL) offset by MTF disagreement and mixed ribbon structure — neutral-to-weak SELL setup.
+
+RISK_FACTORS: 
+1. MTF conflict: Monthly BUY vs D1/W NEUTRAL creates directional ambiguity; 0/3 MTF agreement blocks high-confidence trade.
+2. CHF positioning UNWINDING (-1 to POSITIONING_SCORE) signals institutional conviction weakening; CAD net SHORT@0% = no institutional short bias to support SELL.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+**RATIONALE:**
+
+1. **TECHNICAL_SCORE = 5** (neutral):
+   - D1 T_sig = SELL_3 is baseline, but MTF context is critical: W:NEUTRAL + D:NEUTRAL = 0/3 agreement. Hard MTF rule: "if weekly AND daily don't both agree, TRADE_THIS NO regardless."
+   - RSI 60.9 (D1, mixed trend):

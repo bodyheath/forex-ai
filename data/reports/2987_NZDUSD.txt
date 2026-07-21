@@ -1,0 +1,25 @@
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level + bearish double top on 4H support SELL bias, but MTF conflict (D:SELL vs 4H:BUY, conf=1/3) and mixed ribbon (3/5 aligned) prevent high-conviction entry.
+RISK_FACTORS: MTF disagreement (only 1/3 timeframes aligned) violates core entry rule; NZD rate falling but USD flat creates weak fundamental tailwind, not structural conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 0.5850
+ENTRY_TRIGGER_REASON: Pullback to broken resistance/range-high before re-entry into SELL zone; requires MTF alignment confirmation (D and 4H both SELL before execution).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Violation (CRITICAL):** Weekly and Daily must both agree to trade. Here: W=NEUTRAL, D=SELL, 4H=BUY → conf=1/3 (only 1 of 3 agreeing on direction). This fails the "both agree" standard. **TRADE_THIS forced to NO** despite technical pattern merit.
+
+**Technical (5/10
