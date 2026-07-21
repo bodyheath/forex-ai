@@ -152,11 +152,6 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
 
     rows = research_tracker.load()
 
-    # ── Retroactively reclassify EXPIRED → PARTIAL_WIN ───────────────────────
-    reclassified = _reclassify_expired(rows, log)
-    if reclassified:
-        rows = research_tracker.load()  # reload after mutations
-
     open_trades = [r for r in rows if r.get("status") == "OPEN"]
     no_levels   = [r for r in rows if r.get("status") == "NO_PRICE_LEVELS"]
     closed_hist = [r for r in rows if r.get("status") in research_tracker.OUTCOME_STATUSES]
