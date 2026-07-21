@@ -1,0 +1,12 @@
+I need to work through the RSI trend context rule carefully here.
+
+**RSI TREND CONTEXT CHECK:**
+MTF = W:SELL + D:SELL = Confirmed DOWNTREND direction for trade. BUT the structural trend (price > SMA50 > SMA200, golden cross, ALIGNED_BULL ribbon) is an uptrend. The MTF *signal* is SELL, meaning we're fading the structural uptrend. Apply UPTREND RSI shift rules: RSI 65-77 = 4-5 SELL (not 7-8). D1 RSI=70.6 falls in 65-77 range → 4-5 SELL. However, T_sig=SELL_10 is the Python anchor. The contradiction here is significant — ribbon is ALIGNED_BULL, structural uptrend, but RSI 70.6 in uptrend context is only mild overbought. I'll adjust T_sig down by 1 for the ribbon conflict → TECHNICAL_SCORE=9... but ALIGNED_BULL ribbon strongly argues against a SELL entry. I'll adjust to 8.
+
+**FIB:** SH=216.585, SL=210.521, range=606p. Price=219.391 is ABOVE the swing high — no Fibonacci resistance overhead from this range. Price has broken out above the measured range. No nearby Fib level acting as resistance.
+
+**OSCILLATOR:** TRIPLE_SELL (3/3) → +2 confidence.
+
+**Confidence build:** Base ~6, MTF 3/3 SELL +1, TRIPLE_SELL +2, pin bar bearish at key level +1, but ALIGNED_BULL ribbon -1, no
+KEY_THESIS: Overbought reversal at resistance with all timeframes aligned SELL, pin bar at key level, and triple oscillator confluence signals structural top after extended uptrend.
+RISK_FACTORS: [1] Ribbon fully ALIGNED_BULL with price above SMA50—trend continuation risk if breakout holds above 220.75 (nearest Fib resistance). [2] GBP positioning BUILDING (institutions adding to shorts) while JPY unwinding (reducing shorts)—if JPY shorts reverse abruptly, carry unwind could reverse GBP/JPY higher.

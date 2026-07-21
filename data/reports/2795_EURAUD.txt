@@ -1,0 +1,25 @@
+```
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + 4H selling + AUD rate rising + EUR COT reversing (long to short) = weak multi-timeframe conflict with downside bias, but insufficient confluence for high-conviction trade.
+RISK_FACTORS: [1] MTF conflict: W:BUY + D:NEUTRAL + 4H:SELL = only 1/3 agreement (conf=45%) — does NOT meet MTF rule (requires both W AND D agree). [2] EUR positioning reversal from net long to SHORT without price confirmation — institutional flip may indicate late-cycle move or trend exhaustion; AUD positioning still building but diverges with EUR reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.6350
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (1.6362) + 4H sell signal confirmation would establish lower timeframe alignment; currently pin bar rejection + rising AUD rate + EUR COT reversal point downside, but MTF agreement insufficient to execute.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL (4/10):**
+- D1 T_sig baseline = NEUTRAL_

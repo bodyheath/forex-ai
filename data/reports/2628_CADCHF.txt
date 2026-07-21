@@ -1,0 +1,23 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: RSI overbought at 62.9 with MACD bearish divergence and double-top pattern on 4H confirm sell bias, but MTF disagreement (D:NEUTRAL vs 4H:SELL) and conflicting candle patterns (D1 bullish double-bottom vs 4H bearish double-top) create high uncertainty.
+
+RISK_FACTORS: (1) MTF conf=0/3 — daily and weekly neutral provides no directional agreement; weekly uptrend (M:BUY) contradicts sell thesis. (2) CAD positioning unwinding (MOM=UNWINDING) and CHF positioning already heavily short at 31% reduces further downside room; CAD rate falling supports fundamental sell but is offset by falling CHF rate (rate differential +2.33% favors CAD strength).
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: [NOT APPLICABLE — TRADE BLOCKED]
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — daily and weekly do not both agree on direction (W:NEUTRAL + D:NEUTRAL = conf 0/3 << 2/3 threshold). Oscillator confluence is PARTIAL_SELL (2/3), not triple. Conflicting D1/

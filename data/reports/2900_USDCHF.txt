@@ -1,0 +1,31 @@
+```
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: USD strength (diff +3.67%, rate flat) conflicts with D1 SELL signal in uptrend context; converging ribbon + neutral MTF signals weakening conviction, risk of continuation rather than reversal.
+
+RISK_FACTORS: 
+1. MTF FAILURE: All timeframes neutral (M:NEUTRAL W:NEUTRAL D:NEUTRAL 4H:NEUTRAL, conf=0/3) — no directional alignment; SELL signal lacks MTF confirmation (hard rule: weekly + daily must both agree for TRADE_THIS YES).
+2. POSITIONING UNWINDING: CHF net SHORT unwinding (MOM=UNWINDING) while attempting SELL USD/CHF — reduces institutional conviction and increases reversal risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade fails MTF rule (0/3 agreement); no valid entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+1. **MTF KILL RULE**: M/W/D/4H all NEUTRAL with conf=0/3. Per mandate: *"MTF rule: if weekly AND daily don't both agree on direction (conf<2/3), TRADE

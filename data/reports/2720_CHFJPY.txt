@@ -1,0 +1,17 @@
+```
+PAIR: CHF/JPY
+DIRECTION: NEUTRAL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level suggests potential reversal, but MTF disagreement (M:SELL vs W/D:NEUTRAL), mixed ribbon alignment, and COT unwinding across both currencies prevent directional conviction.
+RISK_FACTORS: [1] MTF conflicted — Monthly SELL vs Weekly/Daily NEUTRAL creates signal ambiguity; TRADE_THIS rule requires weekly+daily agreement. [2] COT UNWINDING on both CHF (31%) and JPY (12%) — institutions reducing conviction mid-move; risk of trapped position reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT_FOR_CLARITY
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF conf=0/3 (monthly/weekly/daily fail to align); rule enforces weekly+daily agreement. Pin bar (bullish candle) at key level is noted, but price 200.7710 trades below SMA50 201.3416 and between FIB SL 198.297 and SH 204.091 — no clear directional bias. Wait for weekly close or break above 201.50 (SMA50 resistance) with daily RSI >60 + MACD positive to confirm BUY, or below 199.50 with RSI

@@ -1,0 +1,28 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Bearish RSI divergence (12p/2pt) at pin bar resistance + CHF rate falling support shorting, but MTF conflict (M:BUY vs W/D:NEUTRAL) + ribbon aligned bull = low-conviction SELL setup at neutral price.
+
+RISK_FACTORS: (1) MTF disagreement (0/3 conf) — weekly and daily neutral, only monthly + 4H lean bullish, violates MTF rule. (2) Ribbon fully aligned bullish (5/5 EMA stack) contradicts bearish divergence signal and suggests continuation risk; EUR COT reversing from net short while CHF unwinding creates positioning churn.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**RATIONALE:**
+
+1. **MTF RULE VIOLATION (PRIMARY):** Weekly=NEUTRAL, Daily=NEUTRAL, 4H=BUY, Monthly=BUY. Only 2 of 3 major timeframes (W+D) required to agree; they do not. Confidence = 0/3 → **TRADE_THIS = NO** per strict MTF

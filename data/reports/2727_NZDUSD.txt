@@ -1,0 +1,23 @@
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Overbought 4H stochastic (87.6) and MACD histogram reversal signal a pullback, but conflicting MTF alignment (M/W/D neutral, 4H alone at SELL) and mixed D1 price action (inverse H&S bullish pattern vs T_sig SELL_3) create low conviction.
+RISK_FACTORS: MTF disagreement (only 4H offers direction, 0/3 agreement rule breached); D1 inverse head-and-shoulders pattern contradicts sell thesis and suggests bullish breakout potential above 0.5832.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 0.5860
+ENTRY_TRIGGER_REASON: Await break and pullback to resistance retest; if price holds above 0.5832 and forms higher low on 4H, inverse H&S confirms bullish breakout instead—abandon SELL.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+1. **MTF RULE VIOLATION (CRITICAL):** M/W/D all NEUTRAL; only 4H is SELL. This fails the "weekly + daily both agree" requirement. Confidence capped at ≤5

@@ -1,0 +1,27 @@
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern with leaning-bear ribbon alignment conflicts with neutral RSI and mixed MTF; downside risk capped by unwinding CHF shorts and weak fundamental divergence.
+RISK_FACTORS: [1] MTF shows 0/3 agreement (monthly SELL vs. weekly/daily NEUTRAL) — no MTF confluence to validate reversal; [2] CHF and JPY COT both UNWINDING — institutional conviction declining, reduces positioning edge and reversal probability.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**ANALYSIS RATIONALE:**
+
+**MTF Failure (Critical):**
+Monthly shows SELL, but weekly and daily are both NEUTRAL — confidence = 0/3. Per MTF rule, when weekly AND daily don't both agree on direction, **TRADE_THIS = NO regardless**. This pair fails the hard gating condition.
+
+**Technical Breakdown:**
+- **D1 T_sig = NEUTRAL_3**: RSI 50.5 is centered neutral (45–62 band), MACD +0.0463 is slightly bullish but weak. Price

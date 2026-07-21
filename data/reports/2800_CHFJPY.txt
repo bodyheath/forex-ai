@@ -1,0 +1,17 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with bearish rejection + monthly SELL bias, but mixed MTF alignment (0/3 agreement) and neutral D1/4H trend severely limit conviction.
+RISK_FACTORS: [1] MTF conf=0/3 — no weekly/daily agreement on direction; trade violates core MTF rule (TRADE_THIS NO if weekly AND daily don't both agree). [2] RSI neutral (51.4 D1, 51.8 4H) + MACD divergent (D1 +0.0988 vs 4H -0.0406) — no oscillator confluence; coin-flip technicals. [3] COT UNWINDING on both CHF and JPY — institutions reducing conviction in short positions; reduces positioning confidence. [4] Oscillator confluence = NONE (stoch 75.5 overbought but CCI 61.9 neutral; no 2/3 threshold met).
+TRADE_THIS: NO
+ENTRY_TYPE: INVALID
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL and D:NEUTRAL do not satisfy "both agree on direction" requirement. Monthly SELL alone is insufficient; monthly is context only. Pin bar + key level are supporting evidence

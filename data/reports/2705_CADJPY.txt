@@ -1,0 +1,30 @@
+```
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: D1 uptrend with overbought RSI (64.9) + BB upper band + 4H SELL confirmation creates reversal setup, but W:SELL / D:NEUTRAL MTF disagreement (conf=2/3) and bullish DIV conflict reduce conviction below 7-threshold.
+
+RISK_FACTORS: [1] MTF conflict: Weekly SELL but Daily NEUTRAL prevents high-confidence SHORT (MTF rule: 2/3 agreement insufficient); [2] Bullish RSI divergence (13p price / 6pt RSI) contradicts SELL thesis — institutional buyers may defend support.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 115.30
+ENTRY_TRIGGER_REASON: Pullback to SMA50 (114.77) + RSI <70 zone to await MTF convergence (W:SELL + D:SELL required before entry).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL [6/10]:**
+- D1 RSI=64.9 in confirmed uptrend (price > SMA50 > SMA200): use uptrend-adjusted SELL

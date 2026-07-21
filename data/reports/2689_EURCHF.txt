@@ -1,0 +1,23 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 SELL_3 signal with bearish evening star conflicts with 4H uptrend and fully aligned bullish ribbon; MTF shows zero agreement (M:BUY, W/D/4H:NEUTRAL), violating core trade rule.
+RISK_FACTORS: (1) MTF conf=0/3 — weekly and daily both neutral, failing the mandatory both-agree requirement; (2) 4H in uptrend with price > SMA50 > SMA200 directly contradicts D1 SELL_3 signal, creating conflicting timeframe directions.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violated — weekly and daily do not both agree on direction (both NEUTRAL). Additionally, 4H uptrend structure conflicts with D1 bearish signal. Confidence below 7.0 and MTF agreement impossible.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**REASONING:**
+
+1. **MTF Validation (HARD RULE)**: W:NEUTRAL + D:NEUTRAL = 0/3 agreement (fail). The mandatory rule requires *both* weekly AND daily to align on the same direction. They don't — both

@@ -1,0 +1,23 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar rejection at 61.8% Fibonacci resistance combined with overbought 4H RSI (70.6) and D1 SELL signal creates pullback SELL setup in uptrend structure, but MTF agreement is insufficient (2/3, not 3/3) and conflicting W:NEUTRAL weakens conviction.
+RISK_FACTORS: [1. MTF agreement only 65% (D/4H agree but W:NEUTRAL breaks 3/3 rule — reduces TRADE_THIS to NO despite technical setup); 2. AUD COT positioning is BUILDING (institutions adding shorts) while JPY is UNWINDING (reducing conviction) — creates mixed institutional signal, and trade aligns with AUD shorting but JPY conviction weakening is a hedge risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 113.477
+ENTRY_TRIGGER_REASON: Rejection at 61.8% Fib level (9p support/resistance confluence) with pin bar bearish reversal pattern; only execute if MTF W upgrades to SELL (currently NEUTRAL blocks TRADE_THIS rule).
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+---
+
+### DETAILED SCORING LOGIC

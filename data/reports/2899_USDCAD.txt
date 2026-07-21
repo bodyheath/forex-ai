@@ -1,0 +1,24 @@
+PAIR: USD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + uptrend structure + CAD rate falling supports USD strength, but D1 neutral RSI and 4H SELL conflict create low-conviction setup.
+RISK_FACTORS: [1] MTF disagreement: 4H in SELL while D1/W/M neutral — conflicting timeframes reduce signal reliability. [2] OSC collapse: Stochastic_k=33.8 (oversold) but CCI=-135.4 (extreme bearish) = no oscillator confluence, divergence in momentum indicators.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.4015
+ENTRY_TRIGGER_REASON: Wait for retracement to D1 SMA50 (1.3986) + 0.29p buffer; confluence of uptrend support + pin bar reversal confirmation required before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**TECHNICAL_SCORE = 5 (NEUTRAL):**
+- D1 RSI=48.1 → Standard tier → NEUTRAL (3–4), bumped to 5 via T_sig=NEUTRAL_3 baseline + uptrend price>SMA50>

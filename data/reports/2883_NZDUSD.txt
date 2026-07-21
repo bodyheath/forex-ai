@@ -1,0 +1,30 @@
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: RSI overbought (63.5) and MACD histogram positive but decaying on D1 align with inverse H&S completion SELL signal, but MTF neutrality and mixed price/MA alignment weaken conviction.
+
+RISK_FACTORS: (1) MTF conf=0/3 — all timeframes neutral, no directional consensus; (2) 4H uptrend structure (price > SMA50 > SMA200) contradicts D1 SELL bias and undermines signal strength.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: CONDITIONAL_LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5820
+ENTRY_TRIGGER_REASON: Rejection at SMA200 (0.5820) after failed breakout above 0.59946 (swing high) would confirm inverse H&S neckline reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS DETAIL:**
+
+**TECHNICAL_SCORE = 4/10 (justified)**
+- D1 RSI 63.5 falls in the neutral-to-mild-SELL zone (62-70 = 4-5 SELL). No confirmed downtrend (MTF all NEUTRAL), so standard tier applies: score

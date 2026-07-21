@@ -1,0 +1,26 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with RSI 61.6 in uptrend signals caution, but MTF disagreement (M:SELL vs D:NEUTRAL) and aligned ribbon conflict trade conviction.
+RISK_FACTORS: (1) MTF conf only 1/3 — weekly and daily disagree, violating core MTF rule for high-confidence trade; (2) Ribbon fully aligned bullish (5/5) contradicts SELL direction — price structure still in confirmed uptrend (SMA50 > SMA200, price > both).
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violation — only 1 of 3 timeframes (Monthly) agrees with SELL; Weekly is SELL but Daily is NEUTRAL, conf<2/3. Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### ANALYSIS SUMMARY
+
+**MTF Breach (Critical):**  
+Monthly:SELL + Weekly:SELL + Daily:NEUTRAL + 4H:NEUTRAL = conf 2/5, weighted 45% = **1/3 agreement**. Hard rule: *both weekly AND daily must agree on direction*. They

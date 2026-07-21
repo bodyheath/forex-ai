@@ -1,0 +1,23 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with confirmed W+D SELL alignment and converging ribbon signals trend exhaustion; RSI 60 in uptrend context is neutral-to-overbought, MACD histogram negative confirms momentum loss.
+RISK_FACTORS: [1] MTF conf=2/3 (D+W agree but 4H neutral) falls short of 3/3 ideal; [2] JPY COT positioning UNWINDING (institutions reducing short conviction) contradicts SELL bias and lowers positioning score.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 161.950
+ENTRY_TRIGGER_REASON: Break below pin bar low (key resistance rejection level) with MACD histogram negative confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Alignment (Critical Gate):** W:SELL + D:SELL = 2/3 agreement. 4H:NEUTRAL breaks full triple confluence. Rules require **MTF weekly+daily both agree** — this passes (80% weight). However, TRADE_THIS rule demands **confidence ≥7 AND MTF weekly+daily both agree** — while MTF passes, confidence is only 6, **below threshold.**

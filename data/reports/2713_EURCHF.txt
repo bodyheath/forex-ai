@@ -1,0 +1,26 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence + D1 pin bar at resistance + EUR COT reversing SHORT confirms sell signal, but ribbon/4H uptrend and MTF disagreement (1/3 conf) create conflicting context.
+RISK_FACTORS: ['MTF severely misaligned (D:SELL vs W:NEUTRAL vs 4H:NEUTRAL) — only 1/3 agree, trade confidence capped at 5', 'EUR COT REVERSING to short positioning while ribbon fully bull-aligned (5/5) suggests institutional divergence — potential trap']
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.9265
+ENTRY_TRIGGER_REASON: Sell limit at D1 pin bar bearish rejection level (SH=0.92657); await break below SL=0.9095 to confirm downtrend validity.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **SCORING BREAKDOWN**
+
+**TECHNICAL_SCORE: 5/10**
+- **D1 RSI 57.9**: In mixed/neutral MTF context (W:NEUTRAL, D:SELL disagree), standard tier applies → 57.9 = 45

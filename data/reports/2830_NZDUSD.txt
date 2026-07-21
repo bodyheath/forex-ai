@@ -1,0 +1,23 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought at 65 with partial oscillator sell signal conflicts bullish inverse H&S pattern and 4H uptrend structure; mixed MTF and neutral ribbon weaken conviction.
+RISK_FACTORS: [1. MTF completely neutral (M/W/D all NEUTRAL) = no directional confirmation; trade violates MTF rule], [2. D1 pattern is inverse H&S (bullish) yet T_sig=SELL_3 — conflicting signals; 4H is uptrend but D1 is mixed/range]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: no clear weekly or daily agreement on direction (both NEUTRAL). RSI 65 + MACD +0.0025 suggest overbought but price structure (mixed range, H&S pattern bullish) conflicts with SELL bias. Confidence 4/10 fails 7+ threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF RULE FAILURE (CRITICAL):** W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL = conf=0/

@@ -1,0 +1,18 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Strong bearish RSI divergence (price makes new high but RSI fails, -33p/6pt) confirms D1 pin bar reversal signal at key level despite bullish ribbon structure; MTF weekly+daily both SELL (2/3 agreement, 80% weighting) supports downside, but uptrend structure and ALIGNED_BULL ribbon create conflicting headwinds.
+RISK_FACTORS: [1. Bullish EMA ribbon (5/5 pairs aligned) and golden-cross structure (price>SMA50>SMA200) contradict the SELL signal — reversal may fail if ribbon holds. 2. COT positioning unwinding in both pairs (GBP -32%, CHF -34%) reduces conviction; if institutions reduce SHORT exposure, momentum may evaporate.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.0920
+ENTRY_TRIGGER_REASON: Sell limit above current price near recent swing high; wait for price to fail to break above 1.0920, confirming RSI divergence and pin-bar rejection. Enter on breakbelow pin-bar low (1.0821) with stops above the swing high.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48

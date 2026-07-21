@@ -1,0 +1,23 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 with bearish pin bar on 4H conflicts with aligned bullish ribbon; MTF shows only M:BUY while W/D/4H neutral — insufficient conviction across timeframes to trade.
+RISK_FACTORS: (1) MTF weekly+daily both NEUTRAL — fails MTF rule requiring both to agree on direction; (2) Ribbon fully aligned bull (RIB=5/5) contradicts SELL signal, creating technical conflict and lowering directional conviction.
+TRADE_THIS: NO
+
+**RATIONALE:**
+
+1. **MTF Conflict (CRITICAL):** Weekly and Daily are both NEUTRAL; 4H is also NEUTRAL. Only Monthly shows BUY. MTF rule requires **both weekly AND daily to agree on direction** — this fails. Confidence floor is capped at ~4 regardless of other signals.
+
+2. **Technical Contradiction:** 
+   - D1 T_sig=SELL_3 (bearish baseline)
+   - 4H T=3 (neutral)
+   - But RIB=ALIGNED_BULL (5/5 EMAs fanning bullish) typically signals trend continuation *upward*, contradicting the SELL
+   - 4H pin_bar_at_key_level:bea (bearish)

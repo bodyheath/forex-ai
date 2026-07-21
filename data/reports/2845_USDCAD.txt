@@ -1,0 +1,21 @@
+PAIR: USD/CAD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: D1 pin bar at key level with RSI 38.5 in confirmed uptrend (price > SMA50 > SMA200) + partial oscillator confluence (RSI + Stochastic BUY) provides reversal edge, but MTF conflict (M:SELL + W:NEUTRAL vs D:BUY) and 4H downtrend create execution risk.
+RISK_FACTORS: [1] MTF disagreement — monthly is in SELL while daily is BUY; only 1/3 timeframes aligned (40% confidence threshold breached), increasing whipsaw risk. [2] 4H structure conflicts with daily setup — price < SMA50 < SMA200 on 4H creates lower timeframe headwind; entry may face early resistance.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.4010
+ENTRY_TRIGGER_REASON: Await pullback to support at lower Bollinger Band + RSI retest of 35–40 zone to confirm reversal before entering; current MTF conf=1/3 does not meet ≥2/3 rule.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING

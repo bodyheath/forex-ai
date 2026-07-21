@@ -1,0 +1,29 @@
+```
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fib 23.6% in confirmed downtrend offers oversold bounce setup, but ribbon convergence and COT reversal weaken conviction; wait for weekly confirmation.
+RISK_FACTORS: ['COT reversal: EUR positioning flipped from long to short while institutions unwind conviction (MOM=REVERSING)', 'Ribbon converging signals trend weakening; D1 price still below SMA50 in death-cross structure — bounce likely contained']
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.1445
+ENTRY_TRIGGER_REASON: Price hold above pin bar low (1.1426) + RSI recross above 50 on D1 to confirm uptrend bounce within death-cross context
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### Analysis Summary
+
+**Rationale for NO TRADE_THIS:**
+
+1. **MTF Confidence Failure**: Weekly=BUY + Daily=NEUTRAL (conf=1/3, wt=40%) does NOT satisfy "weekly AND daily both agree on direction" rule. You need ≥2/3 or clear aligned signal. This alone blocks TRADE_THIS.
+
+2. **Technical Score = 5 (

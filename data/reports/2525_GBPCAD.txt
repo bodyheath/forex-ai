@@ -1,0 +1,32 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 with pin bar confirmation on 4H, but weak MTF agreement (0/3) and converging ribbon undermine conviction.
+
+RISK_FACTORS: 
+1. MTF conflict: Monthly SELL vs Weekly/Daily NEUTRAL creates directional ambiguity; 4H BUY diverges further (conf=0/3 fails MTF rule threshold).
+2. Converging ribbon signals trend weakening/reversal risk; D1 remains in uptrend structure (price > SMA50 > SMA200) despite H&S pattern.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree on direction (W:NEUTRAL, D:NEUTRAL vs M:SELL, 4H:BUY) → confidence too low and directional consensus insufficient.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 4/10**
+- **D1 RSI=52.3**: In confirmed uptrend (price > SMA50 > SMA200, golden-cross).

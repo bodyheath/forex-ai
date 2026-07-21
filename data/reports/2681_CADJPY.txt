@@ -1,0 +1,24 @@
+```
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: D1 RSI overbought (63.9) in uptrend with 4H extreme RSI (72.6) + MACD divergence (0.2070 weakening) + partial oscillator agreement (Stoch/CCI SELL 2/3) creates reversal confluence, but MTF misalignment (W:SELL / D:NEUTRAL / 4H:SELL = 2/3 agree) and bullish PA (double_bottom + pin_bar) create conflicting signals.
+
+RISK_FACTORS: 
+1. MTF agreement insufficient (2/3 < 3/3 threshold) — Daily trend is NEUTRAL, weakening conviction; golden-cross structure and price > SMA50 > SMA200 still intact.
+2. Fundamental headwind weak (CAD rate falling, JPY rate rising supports JPY strength/CAD weakness = SELL case, but +1.43% differential is modest); COT CAD unwinding conviction while JPY also unwinding creates ambiguity.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 115.35
+ENTRY_TRIGGER_REASON: Break below 4H pin_bar low (115.35) to confirm 4

@@ -1,0 +1,31 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar rejection at key level + converging ribbon + CHF rate declining supports a pullback from extended uptrend, but weak MTF alignment (1/3) and RSI neutral zone limit conviction.
+
+RISK_FACTORS: (1) MTF disagreement — only Daily confirms SELL while Weekly/Monthly are NEUTRAL (40% MTF confidence threshold failed); (2) COT unwinding on CHF shorts reduces positioning edge and suggests institutional conviction fading on the trade direction.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8065
+ENTRY_TRIGGER_REASON: Await pullback to 23.6% Fibonacci retracement (0.8065) with RSI <45 for higher-probability reversal confirmation in weakening trend.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS NOTES:**
+
+1. **Technical Score = 5** (Neutral):
+   - D1 T_sig = SELL_5 (baseline).
+   - RSI 55.9 = upper neutral zone (45–62 = 3–4 NEUTRAL). Uptrend context (price > SMA50 > SMA200) means RSI 55 is *not* overbought
