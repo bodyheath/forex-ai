@@ -535,6 +535,11 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         _v2_win_rate = round(_v2_wins / _v2_decisive * 100.0, 1) if _v2_decisive > 0 else 0.0
         _v2_net_pips = round(float(_v2_pips.sum()), 1) if len(_v2_pips) > 0 else 0.0
 
+        # Strict decisive: only true TARGET_HIT (WIN/FULL_WIN) and STOP_HIT (LOSS) exits.
+        # Excludes EXPIRED reclassified by r_multiple sign and PARTIAL_WIN legacy trades.
+        _strict_mask        = _v2_closed["status"].str.upper().isin({"WIN", "FULL_WIN", "LOSS"})
+        _v2_decisive_strict = int(_strict_mask.sum())
+
         # Derive strategy metadata from system_version column.
         # strategy_start_date = earliest closed v2 trade timestamp (blank until first v2 closes).
         if "system_version" in fund.columns:
