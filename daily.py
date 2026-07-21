@@ -12453,6 +12453,7 @@ def run() -> int:
                     v2_losses=_dsc_v2_losses,
                     v2_win_rate=_dsc_v2_wr,
                     v2_net_pips=_dsc_v2_pips,
+                    v2_decisive_strict=_dsc_v2_decisive_strict,
                     strategy_start_date=_dsc_strat_start,
                 )
                 _log_line(log, "Discord scan report sent ✅")
