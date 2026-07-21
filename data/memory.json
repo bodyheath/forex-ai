@@ -15,31 +15,6 @@
     "outcome": "Mixed results - fundamentals tend to win over weeks. Lower confidence on such conflicts."
   },
   {
-    "source": "auto",
-    "pattern": "Overall track record to date (n=14)",
-    "outcome": "Win rate 43%, expectancy -0.36R."
-  },
-  {
-    "source": "auto",
-    "pattern": "Setups taken at confidence >= 7 (n=9 closed trades)",
-    "outcome": "Win rate 33%, expectancy -0.52R. This segment has underperformed - reduce confidence here."
-  },
-  {
-    "source": "auto",
-    "pattern": "Setups taken at confidence < 7 (n=5 closed trades)",
-    "outcome": "Win rate 60%, expectancy -0.09R. This segment has performed well - a point in its favour, but still demand full confluence."
-  },
-  {
-    "source": "auto",
-    "pattern": "BUY setups (n=6 closed trades)",
-    "outcome": "Win rate 17%, expectancy -0.56R. This segment has underperformed - reduce confidence here."
-  },
-  {
-    "source": "auto",
-    "pattern": "SELL setups (n=8 closed trades)",
-    "outcome": "Win rate 62%, expectancy -0.29R. This segment has performed well - a point in its favour, but still demand full confluence."
-  },
-  {
     "source": "outcome",
     "pattern": "When 4+/5 MTF bearish alignment meets overbought RSI\u226565 on D1, fade trend-structure bias \u2014 momentum divergence outweighs",
     "outcome": "[EXPIRED] USD/JPY closed 2026-06-15 08:14:17"
@@ -133,5 +108,35 @@
     "source": "outcome",
     "pattern": "High technical score (8+) combined with elevated positioning score (7+) on GBP/JPY SELL signals strong mean-reversion ed",
     "outcome": "[EXPIRED] GBP/JPY closed 2026-07-13 21:10:50"
+  },
+  {
+    "source": "outcome",
+    "pattern": "MTF 3/3 SELL + RSI entering overbought zone + negative MACDh near Fib swing high = high-conviction mean-reversion short.",
+    "outcome": "[EXPIRED] USD/JPY closed 2026-07-21 05:10:56"
+  },
+  {
+    "source": "auto",
+    "pattern": "Overall track record to date (n=14)",
+    "outcome": "Win rate 43%, expectancy -0.36R."
+  },
+  {
+    "source": "auto",
+    "pattern": "Setups taken at confidence >= 7 (n=9 closed trades)",
+    "outcome": "Win rate 33%, expectancy -0.52R. This segment has underperformed - reduce confidence here."
+  },
+  {
+    "source": "auto",
+    "pattern": "Setups taken at confidence < 7 (n=5 closed trades)",
+    "outcome": "Win rate 60%, expectancy -0.09R. This segment has performed well - a point in its favour, but still demand full confluence."
+  },
+  {
+    "source": "auto",
+    "pattern": "BUY setups (n=6 closed trades)",
+    "outcome": "Win rate 17%, expectancy -0.56R. This segment has underperformed - reduce confidence here."
+  },
+  {
+    "source": "auto",
+    "pattern": "SELL setups (n=8 closed trades)",
+    "outcome": "Win rate 62%, expectancy -0.29R. This segment has performed well - a point in its favour, but still demand full confluence."
   }
 ]

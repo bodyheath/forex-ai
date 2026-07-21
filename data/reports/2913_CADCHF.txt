@@ -1,0 +1,30 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Pin bar at resistance with RSI 61 and MACD divergence in mixed trend context; weekly downtrend conflicts with daily neutral, limiting conviction.
+
+RISK_FACTORS: [1] MTF misalignment—W:SELL vs D:NEUTRAL vs 4H:NEUTRAL (1/3 confidence threshold) undermines directional confidence despite pin bar setup. [2] CAD positioning is net SHORT at 0.0% with BUILDING momentum vs CHF SHORT at 34% UNWINDING—CAD strength flow divergence reduces downside sustainability.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5771
+ENTRY_TRIGGER_REASON: Pin bar rejection at swing high (SH=0.5771) with RSI 61 oversold threshold in mixed trend; await confirmation break below 0.5758 D1 close to validate weekly downtrend.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (5/10):**
+- T_sig=SELL_3 baseline, RSI=61.2 (standard tier 62-70=7-8SELL context), BUT MTF shows W:
