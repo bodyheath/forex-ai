@@ -1770,11 +1770,12 @@ def build_fund_dashboard_embed(state: dict) -> dict:
         _ftmo_val += f"\nTotal drawdown: {_total_dd:.2f}% of 10%"
 
     # ── Statistics (V2 / V1 split) ──────────────────────────────────────────
-    v2_wins     = int(state.get("v2_wins") or 0)
-    v2_losses   = int(state.get("v2_losses") or 0)
-    v2_decisive = int(state.get("v2_decisive") or 0)
-    v2_win_rate = float(state.get("v2_win_rate") or 0)
-    v2_net_pips = float(state.get("v2_net_pips") or 0)
+    v2_wins            = int(state.get("v2_wins") or 0)
+    v2_losses          = int(state.get("v2_losses") or 0)
+    v2_decisive        = int(state.get("v2_decisive") or 0)
+    v2_win_rate        = float(state.get("v2_win_rate") or 0)
+    v2_net_pips        = float(state.get("v2_net_pips") or 0)
+    v2_decisive_strict = int(state.get("v2_decisive_strict") or 0)
     strat_start = str(state.get("strategy_start_date") or "")
     strat_date  = strat_start[:10] if strat_start else "Jun 30, 2026"
 
