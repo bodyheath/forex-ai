@@ -998,7 +998,7 @@ def send_master_scan_report(
             f"**V2 STRATEGY (2:1 R:R)**\n"
             f"Started: {_strat_date}\n"
             f"{_wr_e} Win rate: **{v2_win_rate:.0f}%** ({v2_wins}W / {v2_losses}L)\n"
-            f"Decisive: {v2_decisive} · Net pips: {v2_net_pips:+.1f}p\n"
+            f"Decisive: {v2_decisive} · Strict: {v2_decisive_strict}/30 · Net pips: {v2_net_pips:+.1f}p\n"
             f"Return: {total_return_pct:+.2f}% since inception"
         )
     else:
