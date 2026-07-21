@@ -111,8 +111,6 @@ def _determine_outcome(direction: str, price: float,
     try:
         opened = datetime.strptime(opened_at[:10], "%Y-%m-%d")
         if (datetime.now(timezone.utc).replace(tzinfo=None) - opened).days >= expiry:
-            if _is_partial_win(direction, price, entry, stop, target):
-                return "PARTIAL_WIN"
             return "EXPIRED"
     except (ValueError, TypeError):
         pass
