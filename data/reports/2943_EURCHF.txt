@@ -1,0 +1,24 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (12p/2pt) conflicts with bullish pattern setup and aligned ribbon; MTF disagree (4H:SELL vs W/D:NEUTRAL) blocking trade entry; EUR COT reversing from long to short amplifies downside risk but insufficient confluence.
+RISK_FACTORS: MTF conflict (4H:SELL vs W/D:NEUTRAL, conf=0/3) violates MTF rule—no trade confidence regardless of pattern. EUR COT reversing from long to short into SELL direction creates momentum risk; if short unwinds (MOM=REVERSING), counter-trend rally could stop loss.
+TRADE_THIS: NO
+ENTRY_TYPE: BLOCKED
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated—4H:SELL but W and D both NEUTRAL; conf=0/3 < 2/3 threshold. No directional agreement across timeframes.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS:**
+
+**Technical (4/10):**
+- D1 T_sig=SELL_3 (baseline 3), adjusted to 4: RSI 57.5 is NEUTRAL (45–62), no directional push.

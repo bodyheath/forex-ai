@@ -1,0 +1,20 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: USD fundamentally bid (+3.67% diff, CHF rate falling) but technicals show uptrend reversal risk (morning star, ribbon converging, T_sig SELL) in absence of clear directional confirmation across timeframes.
+RISK_FACTORS: (1) MTF conf=0/3 — no timeframe alignment; all four (M/W/D/4H) scored NEUTRAL, violating the core rule that weekly AND daily must both agree for a valid trade signal. (2) CHF COT unwinding — institutional SHORT positioning is reducing conviction, conflicting with a SELL recommendation.
+TRADE_THIS: NO
+
+**REASONING:**
+
+**MTF Fail (Critical):** MTF line shows M:NEUTRAL, W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL, conf=0/3. Per the hard rule, *both* weekly AND daily must agree on direction for TRADE_THIS=YES. Here, neither D nor W show a directional lean — both are NEUTRAL. This alone disqualifies the trade regardless of other confluence.
+
+**Technical Contradiction:**
+- T_sig=SELL_3 (baseline score) conflicts with D1 structure: price is above SMA50 (0.8105 > 0.7980) and SMA200 (0.7980 >
