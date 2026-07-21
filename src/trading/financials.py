@@ -624,6 +624,7 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             "v2_decisive":           _v2_decisive,
             "v2_win_rate":           _v2_win_rate,
             "v2_net_pips":           _v2_net_pips,
+            "v2_decisive_strict":    _v2_decisive_strict,
         }
     except Exception:
         return {
