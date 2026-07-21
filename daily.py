@@ -11987,12 +11987,13 @@ def run() -> int:
 
                 # V2 stats defaults (in case fresh_fs failed)
                 if "_dsc_v2_decisive" not in dir():
-                    _dsc_v2_decisive = 0
-                    _dsc_v2_wins     = 0
-                    _dsc_v2_losses   = 0
-                    _dsc_v2_wr       = 0.0
-                    _dsc_v2_pips     = 0.0
-                    _dsc_strat_start = ""
+                    _dsc_v2_decisive        = 0
+                    _dsc_v2_wins            = 0
+                    _dsc_v2_losses          = 0
+                    _dsc_v2_wr              = 0.0
+                    _dsc_v2_pips            = 0.0
+                    _dsc_v2_decisive_strict = 0
+                    _dsc_strat_start        = ""
 
                 # ── Fund performance from trades.csv ─────────────────────────────
                 import pandas as _dsc_pd
