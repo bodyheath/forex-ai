@@ -142,7 +142,7 @@ def run(pair: str, log=print, force_deep: bool = False,
     # Stage 2: Sonnet confirmation for high-confidence pairs
     log(f"Sonnet: confirming (Haiku conf={haiku['confidence']}/10, threshold={sonnet_threshold}) ...")
     report = analyst.analyse(canonical, bundle, haiku_report=haiku["report"],
-                             threshold_override=pair_threshold_override)
+                             threshold_override=pair_threshold_override, log=log)
     return {
         "pair":         canonical,
         "bundle":       bundle,
