@@ -484,7 +484,7 @@ def _build_sonnet_message(pair: str, bundle: dict, haiku_report: str) -> str:
 
 
 def analyse(pair: str, bundle: dict, haiku_report: str = "",
-            threshold_override: "float | None" = None) -> str:
+            threshold_override: "float | None" = None, log=print) -> str:
     """Sonnet confirmation for high-confidence pairs.
 
     Input: ~400-600 tokens (compressed data + Haiku report).
@@ -503,15 +503,29 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
             messages=[{"role": "user", "content": user_message}],
         )
 
-    resp   = _call_api(_call)
-    _cost["sonnet_input"]  += getattr(resp.usage, "input_tokens",  0)
-    _cost["sonnet_output"] += getattr(resp.usage, "output_tokens", 0)
-    report = "".join(block.text for block in resp.content if block.type == "text")
-    if not report.strip():
-        raise RuntimeError(
-            f"Sonnet returned empty response for {pair}"
-            f" (stop_reason={getattr(resp, 'stop_reason', '?')})"
+    report = ""
+    for attempt in range(1, 3):
+        resp   = _call_api(_call)
+        _cost["sonnet_input"]  += getattr(resp.usage, "input_tokens",  0)
+        _cost["sonnet_output"] += getattr(resp.usage, "output_tokens", 0)
+        report = "".join(block.text for block in resp.content if block.type == "text")
+        stop_reason = getattr(resp, "stop_reason", "?")
+        if not report.strip():
+            raise RuntimeError(
+                f"Sonnet returned empty response for {pair} (stop_reason={stop_reason})"
+            )
+        if re.search(r"CONFIDENCE:\s*\d", report):
+            break
+        log(
+            f"Sonnet: {pair} attempt {attempt} — response missing parseable CONFIDENCE "
+            f"(stop_reason={stop_reason}). Raw: {report[:300]!r}"
         )
+        if attempt == 2:
+            raise RuntimeError(
+                f"Sonnet confirmation for {pair} missing CONFIDENCE after 2 attempts "
+                f"(stop_reason={stop_reason})\n"
+                f"Last raw response: {report[:400]!r}"
+            )
 
     # Inject Haiku thesis/risk if Sonnet omitted them (saves output tokens)
     if haiku_report:
