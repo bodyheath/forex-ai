@@ -713,6 +713,7 @@ def send_master_scan_report(
     v2_losses: int = 0,
     v2_win_rate: float = 0,
     v2_net_pips: float = 0,
+    v2_decisive_strict: int = 0,
     strategy_start_date: str = "",
 ):
     if not WEBHOOK_HEALTH:
