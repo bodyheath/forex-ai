@@ -14,6 +14,7 @@ ANTHROPIC_API_KEY_2 for the rest of the run.
 """
 
 import json
+import re
 import time
 
 from anthropic import Anthropic
