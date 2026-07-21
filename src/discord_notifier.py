@@ -1245,7 +1245,7 @@ def update_closed_trades_log(
         label_map = {
             "WIN":           "WIN",
             "FULL_WIN":      "FULL WIN",
-            "PARTIAL_WIN":   "PROTECTED",
+            "PARTIAL_WIN":   "PARTIAL WIN",
             "LOSS":          "LOSS",
             "WIN (expired)": "WIN (expired)",
             "LOSS (expired)":"LOSS (expired)",
