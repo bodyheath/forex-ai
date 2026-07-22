@@ -1,0 +1,25 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 SELL_4 signal with pin bar at key level on 4H provides mild bearish structure, but MTF conflict (D:SELL vs 4H:BUY, conf=1/3) and mixed ribbon (3/5 aligned) prevent high-conviction trade.
+RISK_FACTORS: [1] MTF disagreement—4H pinbar suggests reversal while D1 trend is mixed; confluence insufficient. [2] USD rate flat + NZD falling (diff=-0.95%) is weak fundamental tailwind; no institutional COT momentum to confirm.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5815
+ENTRY_TRIGGER_REASON: Sell only if price retraces to SMA50 (0.5801) or FIB support at 0.5815 while RSI <45 to confirm oversold on 4H.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**TECHNICAL (4/10):**
+- D1 T_sig=SELL_4 is baseline, but RSI 59.1 is mid-range (neutral zone 45–62), not confirming.
+- MA

@@ -1,0 +1,26 @@
+```
+PAIR: GBP/AUD
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with 4H alignment offers micro-structure setup, but macro headwinds (rate divergence, GBP unwinding, mixed MTF) prevent conviction.
+RISK_FACTORS: [1] MTF conflict: Weekly and Daily are NEUTRAL — MTF conf=0/3 triggers HARD NO per protocol (not both agree). [2] Fundamental deterioration: GBP rate flat vs AUD rising (-0.73% diff), institutional GBP unwinding contradicts bullish bias.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily must both confirm direction; currently W:NEUTRAL + D:NEUTRAL = no consensus. Pin bar + 4H BUY insufficient without weekly/daily agreement.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**EXPLANATION:**
+
+1. **MTF HARD RULE VIOLATION:**  
+   - W:NEUTRAL + D:NEUTRAL = conf=0/3 (neither agree on direction)  
+   - Protocol mandates: "if weekly AND daily don't both agree (conf<2/3), TRADE_THIS NO regardless"  
+   - This

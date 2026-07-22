@@ -1,0 +1,18 @@
+```
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: MTF alignment (W+D+4H all BUY, conf=3/3) + RSI 39.8 near oversold in confirmed uptrend context supports bounce, but ribbon convergence and COT EUR reversal from long to short create meaningful headwinds against sustained upside.
+RISK_FACTORS: [1] COT EUR positioning REVERSING (institutions exiting long EUR) directly conflicts with BUY thesis — reduces conviction and increases reversal risk. [2] Ribbon CONVERGING signals trend weakening; D1 price 104p below SMA50 (1.1516) in downtrend structure (death cross: 50<200) — recovery must clear SMA50 resistance or face rejection.
+TRADE_THIS: YES
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.1390
+ENTRY_TRIGGER_REASON: RSI 39.8 (near 35-40 bounce zone in uptrend context) + pin_bar_at_key_level on 4H + Fib SL 1.13254 nearby confluence = high-probability entry on minor pullback to support before spiking to SMA50 retest at 1.1516.
+ENTRY_TRIGGER_EXPIRY_HOURS
