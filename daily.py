@@ -5332,6 +5332,33 @@ def _send_telegram_summary(
             except Exception:
                 pass
 
+    # Second pass after DA: pairs whose eff_conf dropped below threshold during DA
+    # (but were NOT already in _demoted_pairs because they passed the pre-DA check)
+    # also need their CSV row corrected to SKIPPED.
+    for _da_sk in deep_results:
+        if _da_sk["pair"] in _demoted_pairs:
+            continue  # already handled by the demotion write-back above
+        if _da_sk["pair"] in _not_viable_pairs:
+            continue  # already handled by the not-viable write-back above
+        if _da_sk["parsed"].get("trade_this") != "YES":
+            continue
+        if _eff_conf(_da_sk) < _trade_conf_thr:
+            _da_sk_id = _da_sk.get("id")
+            if not _da_sk_id:
+                continue
+            try:
+                from src import tracker as _trk_da
+                _eff_da = _eff_conf(_da_sk)
+                _trk_da.update_outcome(
+                    int(_da_sk_id), "SKIPPED",
+                    notes=f"DA-demoted: eff_conf={_eff_da:.1f} below threshold {_trade_conf_thr:.1f} after devil's advocate",
+                )
+            except Exception as _da_sk_exc:
+                print(
+                    f"[da_demoted] Failed to mark {_da_sk['pair']} #{_da_sk_id} SKIPPED: {_da_sk_exc}",
+                    file=sys.stderr,
+                )
+
     # Issue 1: overall confidence is the deciding factor, not individual layer scores.
     # Any pair with 7+ effective confidence qualifies for a trade alert regardless of
     # what the analyst's trade_this field says — confidence overrides individual layers.
