@@ -4,7 +4,7 @@ Stage 1  — Haiku full analysis for ALL pairs in scope (~200 input tokens each)
            Outputs confidence 1-10, direction, all 5 layer scores, key thesis.
 Stage 2  — Sonnet confirmation ONLY for pairs where Haiku confidence >= threshold
            (6 for the 6am full scan, 7 for intraday scans). Typically 0-3 pairs.
-           Uses ultra-compressed input (<500 tokens) and 400 max_tokens output.
+           Uses ultra-compressed input (<500 tokens) and 600 max_tokens output.
 
 Skip-unchanged: pairs that moved <10 pips since last scan are skipped entirely,
 further reducing API calls on repeated intraday runs.
@@ -488,7 +488,8 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
     """Sonnet confirmation for high-confidence pairs.
 
     Input: ~400-600 tokens (compressed data + Haiku report).
-    Output: max 400 tokens (full structured format with entry/stop/target).
+    Output: max 600 tokens (raised from 400 — complex/conflicting signals were hitting the limit
+    before reaching the CONFIDENCE line, causing stop_reason=max_tokens failures).
     Only called for pairs where Haiku confidence >= sonnet_threshold (6 for full scan, 7 for intraday).
     threshold_override: if set, replaces the global confidence threshold in the Sonnet prompt.
     """
@@ -498,7 +499,7 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
     def _call(client):
         return client.messages.create(
             model=config.CLAUDE_MODEL,
-            max_tokens=400,
+            max_tokens=600,
             system=[{"type": "text", "text": system_prompt, "cache_control": {"type": "ephemeral"}}],
             messages=[{"role": "user", "content": user_message}],
         )
