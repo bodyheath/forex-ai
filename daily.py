@@ -5263,6 +5263,28 @@ def _send_telegram_summary(
     except Exception:
         pass
 
+    # Immediately correct the CSV row for every not-viable YES trade.
+    # net R:R < 1.3 after spread/overnight costs disqualifies the trade, but
+    # tracker.log_recommendation() already wrote status=OPEN — leave it ghost
+    # without this write-back.
+    for _r_nv_sk in deep_results:
+        if _r_nv_sk["pair"] not in _not_viable_pairs:
+            continue
+        _nv_id = _r_nv_sk.get("id")
+        if not _nv_id:
+            continue
+        try:
+            from src import tracker as _trk_nv
+            _trk_nv.update_outcome(
+                int(_nv_id), "SKIPPED",
+                notes="Not viable: net R:R after spread/overnight costs < 1.3",
+            )
+        except Exception as _nv_exc:
+            print(
+                f"[not_viable] Failed to mark {_r_nv_sk['pair']} #{_nv_id} SKIPPED: {_nv_exc}",
+                file=sys.stderr,
+            )
+
     # ── GLOBAL MARKET REGIME — prime cache and apply overrides ───────────────────
     # Run before _yes_raw assembly so conf_override and size_mult are in effect.
     try:
