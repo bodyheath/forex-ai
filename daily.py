@@ -5193,6 +5193,30 @@ def _send_telegram_summary(
         and _eff_conf(r) < _trade_conf_thr
     }
 
+    # Immediately correct the CSV row for every demoted YES trade.
+    # tracker.log_recommendation() writes status=OPEN before this check runs;
+    # without this block those rows stay as ghost OPEN entries — monitored by
+    # outcome_checker, consuming capacity slots, and eligible to produce fake
+    # WIN/LOSS records even though they never entered the fund.
+    for _dr in deep_results:
+        if _dr["pair"] not in _demoted_pairs:
+            continue
+        _dr_id = _dr.get("id")
+        if not _dr_id:
+            continue
+        try:
+            from src import tracker as _trk_dem
+            _eff_v = _eff_conf(_dr)
+            _trk_dem.update_outcome(
+                int(_dr_id), "SKIPPED",
+                notes=f"Demoted: eff_conf={_eff_v:.1f} below threshold {_trade_conf_thr:.1f}",
+            )
+        except Exception as _dem_exc:
+            print(
+                f"[demoted] Failed to mark {_dr['pair']} #{_dr_id} SKIPPED: {_dem_exc}",
+                file=sys.stderr,
+            )
+
     # Grade all results — used by display helpers and filtering below
     _quality_grades: dict = {r["pair"]: _trade_quality_grade(r) for r in deep_results}
 
