@@ -1,0 +1,24 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Price extended into RSI 62.7 overbought within confirmed uptrend (D1 golden-cross); T_sig=SELL_3 conflicts with D1:NEUTRAL MTF and fully aligned bull ribbon, creating a reversal-vs-continuation clash.
+
+RISK_FACTORS: 
+1. MTF conflict (M:SELL + W:SELL but D:NEUTRAL + 4H:NEUTRAL = 1/3 consensus, 45% confidence threshold missed). D1 is in uptrend structure (price > SMA50 > SMA200, golden-cross intact), which normally favors continuation, not reversal.
+2. COT positioning unwinding on both GBP (SHORT) and JPY (SHORT) reduces institutional conviction. Ribbon fully aligned bullish (5/5 EMAs in bull fan) contradicts T_sig SELL signal — reversal risk if ribbon deteriorates or price holds above SMA50.
+
+OSCILLATOR_CONFLUENCE: NONE (Stochastic K=75.9 overbought, CCI=80.7 overbought, but RSI=62.7 and 4H RSI=51.7 are not synchronized; no triple agreement).
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE
