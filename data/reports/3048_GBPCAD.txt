@@ -1,0 +1,33 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: GBP weakening vs CAD despite uptrend structure, but MTF misalignment (M:SELL vs D:NEUTRAL vs 4H:BUY) and ribbon convergence signal trend exhaustion rather than conviction reversal.
+
+RISK_FACTORS: [1] MTF conflict (0/3 agreement) — no directional consensus; D1 inside_bar (neutral continuation, no pattern trigger). [2] COT GBP UNWINDING (institutional conviction decreasing) while CAD BUILDING — positioning divergence creates whipsaw risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly=SELL, Daily=NEUTRAL, 4H=BUY do not achieve ≥2/3 agreement (0/3). Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### SCORING RATIONALE
+
+**TECHNICAL_SCORE: 3/10**
+- D1 RSI=50.3 (NEUTRAL tier, 45–62 = 3–4 baseline) → **3**
+- Uptrend context (price > SMA50 > SMA200

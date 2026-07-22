@@ -1,0 +1,17 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Downtrend structure intact (price < SMA50 < SMA200) with ALIGNED_BEAR ribbon, but MTF agreement failure (W:BUY vs D:NEUTRAL vs 4H:SELL = 1/3 conf) and conflicting signals (D1 T_sig=BUY_3 vs 4H RSI overbought 66.7 + double_bottom recovery risk) make entry unreliable.
+RISK_FACTORS: [1] COT EUR REVERSING from net SHORT into unwinding phase while GBP unwinding mid—institutional conviction fading on both sides, reducing directional conviction. [2] MTF discord critical: W:BUY directly contradicts D:NEUTRAL + 4H:SELL (conf=1/3, below 2/3 floor)—no regime agreement; inside_bar D1 + double_bottom 4H suggest consolidation/breakout imminent, not established trend entry.
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT_BREAKOUT
+ENTRY_TRIGGER_PRICE: 0.86199 (SL break below Fib SL, or 0.8610 reclaim above SMA50 for BUY flip)
+ENTRY_TRIGGER_REASON: MTF

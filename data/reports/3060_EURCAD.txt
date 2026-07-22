@@ -1,0 +1,23 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed MTF signals and COT reversal in EUR undermine a weak technical setup; double-top bearish pattern on D1 conflicts with 4H downtrend lack of confirmation.
+RISK_FACTORS: [1) MTF disagreement (M:SELL vs W:NEUTRAL vs D:BUY) yields only 1/3 agreement — below 2/3 threshold, violating MTF rule; 2) EUR COT REVERSING (institutions flipping from long to short) while positioning still net SHORT — contradicts SELL direction and raises institutional flight risk]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W and D do not both agree on direction. Weekly is NEUTRAL, Daily is BUY — insufficient consensus (1/3, well below 2/3). COT reversal in EUR adds directional uncertainty.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+1. **MTF Rule Violation (CRITICAL):** Monthly=SELL, Weekly=NEUTRAL, Daily=BUY, 4H=NEUTRAL. Only 1/3 timeframes align on SELL (Monthly alone). Weekly and Daily

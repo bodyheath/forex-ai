@@ -1,0 +1,30 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Weekly+Daily both SELL with RSI 62 neutral-overbought and 4H uptrend conflict blocks trade entry despite MACD negative.
+RISK_FACTORS: MTF conf only 2/3 (4H NEUTRAL conflicts W+D SELL, violates MTF rule); CHF positioning UNWINDING reduces conviction, CAD positioning BUILDING reduces conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule fails: W:SELL + D:SELL + 4H:NEUTRAL = conf 2/3 < 3/3 required. Do not trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**ANALYSIS BREAKDOWN:**
+
+**MTF Check (HARD GATE):**
+- Weekly: SELL | Daily: SELL | 4H: NEUTRAL | Monthly: BUY (context)
+- Conf = 2/3 (W+D agree, but 4H breaks consensus) — **BELOW 3/3 threshold**
+- **MTF rule violated** → **TRADE_THIS = NO** (regardless of other scores)
+
+**Technical (5/10):**

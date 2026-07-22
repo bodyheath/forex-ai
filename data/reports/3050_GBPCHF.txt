@@ -1,0 +1,17 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 6/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly+Daily both SELL with strong confluence (MTF 2/3 confirmed), but D1 uptrend structure and ALIGNED_BULL ribbon create conflicting signals; risk-reward favors short into weakness on rate divergence (+3.78% GBP diff vs falling CHF) and institutional unwinding.
+RISK_FACTORS: [1. RSI 65.7 in confirmed uptrend (D1 price>SMA50>SMA200) — overbought signal reversed by trend context, reducing sell conviction; D1 T_sig=5 is baseline but ribbon alignment suggests continuation risk]. [2. 4H head_and_shoulders (bearish) conflicts with D1 inside_bar_neutral and M1 uptrend — MTF conf=2/3 (W:SELL+D:SELL agree but 4H:NEUTRAL disagrees); both GBP and CHF unwinding positioning mid-cycle removes institutional conviction backing].
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.0750
+ENTRY_TRIGGER_REASON: Sell limit into pullback to SMA50 (1.0679) + 10p buffer; await 4H alignment or break below FIB support
