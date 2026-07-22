@@ -1,0 +1,24 @@
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 SELL_3 signal conflicts with 4H uptrend structure; GBP COT unwinding (institutional conviction weakening) adds bearish pressure, but MTF neutral consensus and mixed price/MA alignment create low-conviction setup.
+RISK_FACTORS: (1) MTF all-neutral (0/3 agreement) kills directional confidence; (2) GBP COT unwinding mid-cycle reduces positioning conviction — institutional SHORT may be forced stop-loss, not conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W/D/M all NEUTRAL — no dual-MTF confirmation. Confidence 4/10 < 7 threshold. COT positioning conflict (BUY 4H structure but SHORT unwinding) = mixed signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Why NO:**
+1. **MTF Failure (Critical):** All timeframes (W/D/M/4H) score NEUTRAL with 0/3 agreement. Rule requires weekly AND daily both agree on direction — this fails entirely. conf=0/3 is a kill-switch for TRADE_THIS

@@ -1,0 +1,22 @@
+```
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: USD strength (+3.67% diff, flat rates) conflicts with bearish technicals (T_sig=SELL_3, RSI overbought 57.5-62.5, MACD weak, converging ribbon); morning_star is bullish setup but MTF neutral removes conviction.
+
+RISK_FACTORS: [1] MTF all NEUTRAL (M/W/D/4H all NEUTRAL, conf=0/3) blocks entry — no directional agreement across timeframes, invalidates TRADE_THIS rule. [2] CHF rate falling + CHF net SHORT unwinding creates conflicting positioning — CHF weakness supports USD strength (BUY USD/CHF), not SELL.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly, daily, and 4H all NEUTRAL; no multi-timeframe alignment. Fundamental (USD +3.67%, CHF falling) actually favors BUY USD/CHF, not SELL. T_sig=SELL_3 is isolated and contradicted by uptrend structure (price > SMA50 > SMA200, golden cross). Converging ribbon warns of trend weakening, not reversal. Morning star is bull

@@ -1,0 +1,16 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top pattern at 1.4247 resistance clashes with uptrend structure; neutral MTF alignment and weak oscillator confluence (no RSI/MACD/Stoch agreement) prevent high-confidence entry despite bearish PAT signal.
+RISK_FACTORS: [1] MTF conf=0/3 — no multi-timeframe directional agreement (M/W/D/4H all NEUTRAL) means reversal risk is high and trend bias is undefined. [2] USD rate flat + CAD rate falling creates mild USD strength, but COT USD=STABLE and CAD positioning BUILDING from SHORT — institutional conviction for USD weakness may support CAD bounce, conflicting with bearish PAT.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade fails TRADE_THIS gate: confidence 4 < 7 minimum AND MTF conf 0/3 < 2/3 (weekly/daily MTF rule hard-stop). Double-top bearish signal is negated by uptrend structure (price > SMA50 > SMA200), oscillator divergence=NONE, and no triple/partial confluence. Positioning data unclear (USD neutral, CAD building) — insufficient fundamental conviction. WAIT for

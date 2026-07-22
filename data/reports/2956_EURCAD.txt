@@ -1,0 +1,26 @@
+```
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: RSI oversold in mixed structure with partial oscillator confluence and SMD institutional edge, but MTF misalignment and D1 reversal pattern (double top bearish) create directional conflict.
+RISK_FACTORS: [1. MTF fail: M=SELL + W=NEUTRAL + D=BUY = 1/3 alignment (40% confidence) — NO consensus across timeframes; 2. COT EUR reversal + CAD building = institutional conviction flipping away from EUR long bias — contradicts BUY directon]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree (W=NEUTRAL, D=BUY). Monthly=SELL adds downside context. Confidence 1/3 < 2/3 threshold. Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING BREAKDOWN:**
+
+**TECHNICAL (5/10):**
+- D1 RSI=41.8 in mixed trend context: standard tier → 5-6 BUY zone, score **+5**
+- T_sig=BUY_4: baseline

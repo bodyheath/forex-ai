@@ -1,0 +1,35 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: 4H overbought (RSI 75.2) with bearish engulfing pattern conflicts with D1 uptrend structure and neutral MTF alignment (W:NEUTRAL, D:NEUTRAL), creating low-conviction mixed signal.
+
+RISK_FACTORS: 
+1. MTF conf=0/3 (M:SELL vs W:NEUTRAL vs D:NEUTRAL) — no directional agreement; TRADE_THIS rules require weekly+daily both agree on direction.
+2. D1 trend=uptrend (price > SMA50 > SMA200, golden cross) contradicts 4H:SELL — conflicting timeframe bias reduces reliability.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**ANALYSIS NOTES:**
+
+**MTF Veto Applied:** W:NEUTRAL and D:NEUTRAL do NOT both agree on direction. M:SELL is outnumbered. Confidence is insufficient and MTF rule blocks entry regardless of other factors.
+
+**Technical Breakdown:**
+- **D1 (NEUTRAL_3, in uptrend context):** RSI 54.

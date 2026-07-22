@@ -1,0 +1,24 @@
+```
+PAIR: CHF/JPY
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Morning star pattern on D1 with 4H uptrend structure offers limited bullish setup, but conflicting MTF consensus (M:SELL) and dual COT unwinding significantly constrain conviction.
+RISK_FACTORS: [1] MTF disagree (M:SELL vs D/4H:NEUTRAL) — MOE rule broken: weekly/daily consensus absent; confidence cap enforced. [2] COT dual unwinding (CHF & JPY both reducing conviction) + falling CHF rates + rising JPY rates = deteriorating fundamental tailwinds; positioning risk of institutional capitulation.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly (SELL) and daily (NEUTRAL) do not agree on direction (conf 0/3). Weekly bearish bias contradicts D1 morning star. Trade fails confidence gate (4<7) and MOE multi-timeframe alignment requirement.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+### Rationale:
+
+**Technical (4/10):**
+- D1 T_sig=NEUTRAL_3, morning_star pattern is bullish, but price (200.82) sits *below*

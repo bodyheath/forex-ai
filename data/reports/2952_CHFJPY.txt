@@ -1,0 +1,25 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish double-top pattern on D1 and pin bar at key level on 4H suggest downside, but weak technicals (RSI neutral, no oscillator confluence, MTF disagree) and dual COT unwinding reduce conviction.
+RISK_FACTORS: [1. MTF misalignment: Monthly SELL vs D1/4H NEUTRAL—no directional agreement on weekly+daily, violating MTF rule.] [2. COT UNWINDING on both CHF and JPY reduces institutional conviction and increases reversal risk; dual unwinding suggests weak follow-through.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation—weekly and daily do not both agree on direction (M:SELL vs W:NEUTRAL, D:NEUTRAL). Confidence capped at 4/10 (<7 threshold). Pattern confluence insufficient to override structural disagreement.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 3/10**
+- D1 RSI=49.6 (neutral zone 45–62 = 3–4 baseline); MTF neutral (W:NEUTRAL
