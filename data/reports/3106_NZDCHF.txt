@@ -1,0 +1,26 @@
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 RSI 75.1 overbought in confirmed uptrend with pin bar at key level signals reversal; weekly SELL + daily SELL provide 2/3 MTF agreement but 4H neutral weakens conviction.
+RISK_FACTORS: Ribbon fully aligned bullish (5/5) contradicts SELL signal and suggests trend continuation; CHF COT unwinding reduces institutional support for CHF strength (short positioning reducing).
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.4708
+ENTRY_TRIGGER_REASON: Break below pin bar low (key support at ~0.4708) confirms D1 reversal pattern; RSI compression below 70 validates overbought exit.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS NOTES:**
+
+**MTF Conflict (Critical):**
+- Weekly: SELL | Daily: SELL | 4H: NEUTRAL → 2/3 agreement = 80% confidence threshold NOT met (system requires ≥2/3 *strong* agreement).
+- Monthly BUY contradicts weekly/daily, creating structural confusion.
+- **TRADE_THIS = NO** per MTF rule: "if weekly

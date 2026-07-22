@@ -1,0 +1,25 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought on 4H (70.6) with 2/3 oscillator SELL confluence and D1 T_sig=SELL_3 align, but MTF shows no weekly/daily agreement (conf=0/3), conflicting double-bottom bullish pattern, and CAD positioning reversing (SHORT building while CHF unwinding) — trade fails MTF rule.
+RISK_FACTORS: [1] MTF critical failure: W:NEUTRAL + D:NEUTRAL + 4H:SELL disagree (0/3 agreement threshold far below 2/3 requirement); [2] COT conflict: CAD SHORT positioning BUILDING (conviction) contradicts SELL bias — institutional support for CAD weakness weakening.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF weekly and daily do not both agree on direction (0/3 agreement vs required 2/3 minimum). Hard rule: TRADE_THIS NO regardless of oscillator or RSI signals.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+RATIONALE:
+
+**MTF Enforcement (BLOCKING RULE):**
+- Weekly: NEUTRAL (no clear direction
