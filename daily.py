@@ -5373,7 +5373,30 @@ def _send_telegram_summary(
         r for r in _yes_raw
         if _dd_allows_trade(r, _dd_mode, _quality_grades, _trade_conf_thr)
     ]
+    # Immediately correct CSV rows for trades blocked by drawdown-mode tier filtering.
+    # These pairs passed conf threshold (_yes_raw) but _dd_allows_trade rejected them;
+    # without this write-back their CSV rows stay ghost OPEN.
+    _yes_trades_pairs: set = {r["pair"] for r in yes_trades}
+    for _dd_sk in _yes_raw:
+        if _dd_sk["pair"] in _yes_trades_pairs:
+            continue
+        _dd_sk_id = _dd_sk.get("id")
+        if not _dd_sk_id:
+            continue
+        try:
+            from src import tracker as _trk_dd
+            _trk_dd.update_outcome(
+                int(_dd_sk_id), "SKIPPED",
+                notes=f"Drawdown filter: excluded by _dd_allows_trade (mode={_dd_mode})",
+            )
+        except Exception as _dd_sk_exc:
+            print(
+                f"[dd_filter] Failed to mark {_dd_sk['pair']} #{_dd_sk_id} SKIPPED: {_dd_sk_exc}",
+                file=sys.stderr,
+            )
+
     # Deduplicate inverse pairs (e.g. USD/CHF SELL + CHF/USD BUY) — keep higher-ranked
+    _yes_trades_pre_dedup = yes_trades  # capture before dedup so we can SKIPPED dropped pairs
     _yt_seen: set = set()
     _yt_deduped = []
     for _r in yes_trades:
@@ -5383,6 +5406,26 @@ def _send_telegram_summary(
             _yt_deduped.append(_r)
             _yt_seen.add(_p)
     yes_trades = _yt_deduped
+
+    # Immediately correct CSV rows for inverse-pair dedup losers.
+    _yt_deduped_pairs: set = {r["pair"] for r in _yt_deduped}
+    for _inv_sk in _yes_trades_pre_dedup:
+        if _inv_sk["pair"] in _yt_deduped_pairs:
+            continue
+        _inv_sk_id = _inv_sk.get("id")
+        if not _inv_sk_id:
+            continue
+        try:
+            from src import tracker as _trk_inv
+            _trk_inv.update_outcome(
+                int(_inv_sk_id), "SKIPPED",
+                notes=f"Inverse dedup: dropped in favour of higher-ranked inverse pair",
+            )
+        except Exception as _inv_sk_exc:
+            print(
+                f"[inv_dedup] Failed to mark {_inv_sk['pair']} #{_inv_sk_id} SKIPPED: {_inv_sk_exc}",
+                file=sys.stderr,
+            )
 
     # ── Fund state: daily limits + circuit breaker ──────────────────────────────
     # Applies ONLY to fund trades (trades.csv). Research trades are never affected.
