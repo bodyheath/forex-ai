@@ -13,6 +13,7 @@ Design rules:
 """
 
 import json
+import sys
 from datetime import datetime
 
 from anthropic import Anthropic
@@ -34,7 +35,8 @@ def _load_json(path) -> list:
         return []
     try:
         return json.loads(path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
+    except (json.JSONDecodeError, OSError) as exc:
+        print(f"[outcome_analyst] corrupt {path.name}: {exc} — returning empty, trades may be re-analysed", file=sys.stderr)
         return []
 
 
@@ -56,7 +58,8 @@ def _load_pending() -> list:
         return []
     try:
         return json.loads(_PENDING_FILE.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
+    except (json.JSONDecodeError, OSError) as exc:
+        print(f"[outcome_analyst] corrupt pending_analysis.json: {exc} — pending retries lost", file=sys.stderr)
         return []
 
 

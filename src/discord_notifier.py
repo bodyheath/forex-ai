@@ -1214,18 +1214,21 @@ def update_closed_trades_log(
     fields = []
 
     # Section 1 — Realised Summary
+    _max_trade_fields = 24  # Discord hard limit is 25 fields total (1 header + 24 trades)
+    _showing = min(n, _max_trade_fields)
+    _trunc_note = f" (showing last {_showing})" if n > _max_trade_fields else ""
     fields.append({
         "name": "Realised Performance",
         "value": (
-            f"Total closed: {n} trades\n"
+            f"Total closed: {n} trades{_trunc_note}\n"
             f"Realised P&L: {total_realised_pips:+.1f}p / ${total_realised_dollars:+.2f}\n"
             f"Current streak: {streak_text}"
         ),
         "inline": False,
     })
 
-    # Section 2 — One field per closed trade (most recent first)
-    for t in closed_trades:
+    # Section 2 — One field per closed trade (most recent first); capped at 24
+    for t in closed_trades[:_max_trade_fields]:
         outcome = t.get("outcome", "")
         status  = t.get("status", "")
         pips    = t.get("pips", 0.0)

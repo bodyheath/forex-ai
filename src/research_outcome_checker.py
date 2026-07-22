@@ -13,6 +13,7 @@ monitored to record whether price reached the original target, the max move
 since close, and the max reversal.  This calibrates stop/target placement.
 """
 
+import sys
 import time
 from datetime import datetime, timedelta, timezone
 
@@ -33,8 +34,8 @@ def _online_learn(updated: dict) -> None:
             updated.get("status", ""),
             updated.get("closed_at", ""),
         )
-    except Exception:
-        pass
+    except Exception as exc:
+        print(f"[research_outcome_checker] ML training error (research trade {updated.get('id')}): {exc}", file=sys.stderr)
 
 _PRICE_URL         = "https://api.twelvedata.com/price"
 _EXPIRY_DAYS       = 7      # fallback; actual expiry is computed from R:R

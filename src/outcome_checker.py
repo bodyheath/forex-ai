@@ -9,6 +9,7 @@ Returns the list of closed trade row dicts so the caller can immediately
 run win/loss analysis on them.
 """
 
+import sys
 import time
 from datetime import datetime, timezone
 
@@ -29,8 +30,8 @@ def _online_learn(updated: dict) -> None:
             updated.get("status", ""),
             updated.get("closed_at", ""),
         )
-    except Exception:
-        pass
+    except Exception as exc:
+        print(f"[outcome_checker] ML training error (main trade {updated.get('id')}): {exc}", file=sys.stderr)
 
 _PRICE_URL   = "https://api.twelvedata.com/price"
 _EXPIRY_DAYS = 5    # fallback; actual expiry is computed from R:R

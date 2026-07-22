@@ -4,6 +4,7 @@ All limits apply ONLY to main fund trades (trades.csv). Research trades are neve
 State persists across GitHub Actions runs via data/fund_state.json.
 """
 import json
+import sys
 from datetime import datetime, timedelta
 
 import config
@@ -70,22 +71,22 @@ def load() -> dict:
                 if k not in data:
                     data[k] = v
             return data
-    except Exception:
-        pass
+    except Exception as exc:
+        print(f"[fund_state] load error (resetting to defaults): {exc}", file=sys.stderr)
     state = dict(_DEFAULTS)
     try:
         _FILE.parent.mkdir(parents=True, exist_ok=True)
         _FILE.write_text(json.dumps(state, indent=2), encoding="utf-8")
-    except Exception:
-        pass
+    except Exception as exc:
+        print(f"[fund_state] could not write defaults file: {exc}", file=sys.stderr)
     return state
 
 
 def save(state: dict) -> None:
     try:
         _FILE.write_text(json.dumps(state, indent=2), encoding="utf-8")
-    except Exception:
-        pass
+    except Exception as exc:
+        print(f"[fund_state] CRITICAL: save failed — state change not persisted: {exc}", file=sys.stderr)
 
 
 def reset_if_new_day(state: dict, current_balance: float | None = None) -> dict:
@@ -166,8 +167,8 @@ def is_trading_blocked(state: dict) -> tuple:
                 return (True,
                         f"3 consecutive losses — paused until {pu.strftime('%a %d %b %H:%M')} Auckland",
                         "pause")
-        except Exception:
-            pass
+        except Exception as exc:
+            print(f"[fund_state] corrupt pause_until {pause_until!r}: {exc} — pause bypassed", file=sys.stderr)
 
     if state.get("observation_mode"):
         obs_until = state.get("observation_mode_until")
@@ -178,8 +179,8 @@ def is_trading_blocked(state: dict) -> tuple:
                     return (True,
                             f"Weekly loss limit — observation until {ou.strftime('%a %d %b %H:%M')} Auckland",
                             "observation_mode")
-            except Exception:
-                pass
+            except Exception as exc:
+                print(f"[fund_state] corrupt observation_mode_until {obs_until!r}: {exc} — block bypassed", file=sys.stderr)
 
     return False, "", "none"
 

@@ -45,8 +45,8 @@ def _online_learn_closure(source_table: str, updated: dict, log=print) -> None:
             updated.get("status", ""),
             updated.get("closed_at", ""),
         )
-    except Exception:
-        pass
+    except Exception as exc:
+        log(f"[monitor] ML online_learn error ({source_table} trade {updated.get('id')}): {exc}")
     # Fund trades: train the fund-specific ML model (features stored at trade open)
     if source_table == "main":
         try:
