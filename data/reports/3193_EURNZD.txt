@@ -1,0 +1,30 @@
+```
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 2/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: EUR/NZD shows bearish structure (death cross, aligned bear ribbon, H&S pattern) but MTF misalignment and COT reversal undermine conviction.
+
+RISK_FACTORS: [1] MTF contradiction—Weekly & Daily both NEUTRAL despite monthly SELL and 4H SELL; only 0/3 MTF agreement blocks TRADE_THIS per rules. [2] COT REVERSING on EUR (institutions flipping from long to short)—reduces positioning conviction and signals institutional de-risking into a SELL recommendation.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation—Weekly and Daily do not both agree on direction (conf=0/3, <2/3 threshold). Trade blocked regardless of technical setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS NOTES:**
+
+**Technical (4/10):**
+- **D1 T_sig=BUY_3** is the pre-computed baseline, but it contradicts the directional call. D1 RSI=41.5 (neutral 35–45 zone, zone 5–6 BUY in a downtrend) and price
