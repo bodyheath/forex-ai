@@ -1,0 +1,33 @@
+I need to carefully review the RSI trend context rule before finalizing.
+
+**MTF: W:SELL + D:SELL = CONFIRMED DOWNTREND**
+
+RSI trend context for CONFIRMED DOWNTREND: shift SELL zones higher is NOT applicable here — the downtrend shift applies to BUY zones (shifting them lower). For SELL signals in a downtrend, standard tiers apply normally. D1 RSI=70.1 in standard tiers = 7-8 SELL range. T_sig=SELL_7 confirms.
+
+**RIBBON conflict:** ALIGNED_BULL (fan 5/5) is a significant contradiction — bullish EMA structure vs W:SELL+D:SELL MTF. This is a genuine tension. The ribbon reflects recent price momentum while weekly/daily signal exhaustion/reversal. Converging would be bearish-confirm; ALIGNED_BULL fan means trend continuation risk is real. However T_sig=SELL_7 already accounts for this.
+
+**FIB:** SH=1.092, price=1.0897 — price is near the swing high resistance zone (within ~23 pips). No "near=" tag so not within 10 pips. Still significant.
+
+**ATR=0.0048:** Stop above recent resistance ~1.0930 (SH zone + buffer). Entry ~1.0897, SL ~1.0930 (33 pips ≈ ~7×ATR buffer adequate), Target = entry − (SL−entry)×2 = 1.0897 − (0.0033×2) = 1.0897 − 0.0066 = 1.0831.
+
+---
+
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 7/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+ENTRY: 1.0897
+TARGET: 1.0831
+STOP_LOSS: 1.0930
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 5:00–7:00 PM NZST
+NEWS_WARNING: Monitor GBP volatility events and SNB commentary within 48h; CHF safe-haven flows can spike unpredictably
+KEY_
+KEY_THESIS: D1 RSI 70.1 overbought in confirmed downtrend (W:SELL + D:SELL + 4H:SELL unanimous) with MACD positive divergence and partial stochastic/CCI sell confluence; ALIGNED_BULL ribbon creates bearish reversal setup at resistance.
+RISK_FACTORS: [1] Ribbon fully aligned bullish (5/5 EMA fan) contradicts downtrend thesis — trend continuation bias may override mean-reversion setup. [2] Both GBP and CHF positions unwinding simultaneously — liquidity dry-up or institutional pivot risk; entry may slip or reverse mid-trade.
