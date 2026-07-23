@@ -1,0 +1,22 @@
+```
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Weekly SELL + 4H SELL (2/3 MTF agreement) conflicts with bullish technicals (D1 uptrend, aligned ribbon, bullish divergence, double bottom); risk/reward unfavorable in continuation setup.
+
+RISK_FACTORS: [1] MTF confidence only 2/3 (M:NEUTRAL breaks agreement threshold — requires both W+D aligned; actual: W:SELL + D:NEUTRAL = MIXED, fails hard rule). [2] Ribbon fully aligned bull (5/5 fanning) + price above SMA50/200 golden cross + bullish RSI divergence + double-bottom pattern directly contradict SELL signal — technical confluence heavily favors continuation BUY, not reversal SELL.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly SELL + Daily NEUTRAL = conf < 2/3 (only 1.5/3 timeframes aligned). Hard rule triggered — do not trade. Additionally, T_sig=SELL_3 conflicts with D1 uptrend structure (price > SMA50 > SMA200), aligned ribbon (5/5 bull fan), bullish RSI
