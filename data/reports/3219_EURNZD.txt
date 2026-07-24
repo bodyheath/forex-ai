@@ -1,0 +1,25 @@
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish ribbon alignment and monthly sell signal conflict with daily neutral and weak oscillator confluence; COT EUR reversal from long to short undermines directional conviction in a choppy range.
+RISK_FACTORS: [1. MTF disagreement: Monthly SELL vs Weekly/Daily NEUTRAL creates directional conflict (conf=0/3); no agreement across timeframes. 2. COT EUR REVERSING from net long — institutions exiting conviction just as trade setup emerges, signalling weakening bullish thesis and increasing reversal risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily both NEUTRAL (not both agreeing on direction). Confidence 4/10 << 7 threshold. COT institutional reversal in EUR undermines positioning conviction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical Layer (4/10):**
+- D1 T_sig=BUY_3 (baseline 3) conflicts with overall downtrend structure (price < SMA50 < SMA200, death cross).
+- D1 RSI=43.2 is neutral-to-slightly-bullish in a
