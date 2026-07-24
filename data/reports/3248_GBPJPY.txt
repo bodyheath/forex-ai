@@ -1,0 +1,17 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with uptrend structure (price > SMA50 > SMA200, aligned ribbon); MTF conf only 1/3 (M:SELL vs W:SELL vs D:NEUTRAL + 4H:NEUTRAL) fails ≥2/3 requirement — signal unreliable.
+RISK_FACTORS: [1. MTF disagreement (D1 neutral, 4H neutral, only M+W agree on SELL) violates MTF majority rule — 45% weighting insufficient confidence]. [2. COT unwinding in both GBP (32%) and JPY (12%) reduces conviction; fundamental support weak (GBP rate flat, JPY rising supports JPY strength but contradicts GBP SELL alignment)].
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violation — D1 and 4H neutral; only 1/3 MTF agreement. Although M+W show SELL, daily timeframe required for confirmation. T_sig=SELL_3 is pre-computed baseline, but ribbon ALIGNED_BULL (5/5 EMA fan) and price structure (golden cross: price >

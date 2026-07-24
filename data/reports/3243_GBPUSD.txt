@@ -1,0 +1,30 @@
+```
+PAIR: GBP/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: 4H oversold RSI(33.1) + inside bar neutrality offer short-term bounce potential, but D1 downtrend structure (price < SMA50 < SMA200) and GBP COT unwinding limit conviction.
+
+RISK_FACTORS: [1] D1 death-cross (SMA50<SMA200) confirms downtrend; bounce likely capped near SMA50@1.3370. [2] GBP institutional unwinding (MOM=UNWINDING) signals weakening long conviction; position unwind into rally is tail risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.3285
+ENTRY_TRIGGER_REASON: 4H RSI oversold bounce confirmation at minor support below current price; aligns with Fib SL zone (1.3143–1.32).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF Conflict:**  
+MTF conf=0/3 (M, W, D all NEUTRAL; 4H:BUY isolated). Weekly + Daily both NEUTRAL → **MTF rule: TRADE_THIS=NO** (does not meet "both weekly AND daily

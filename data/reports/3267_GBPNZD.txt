@@ -1,0 +1,25 @@
+PAIR: GBP/NZD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 inside bar near SMA200 support with positive rate differential and GBP short unwinding, but mixed MTF and weak oscillator confluence limit conviction.
+RISK_FACTORS: MTF conflict (M:SELL vs D:BUY, conf 1/3 only) undermines directional agreement; GBP COT unwinding positioning reduces institutional follow-through risk.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 2.2975
+ENTRY_TRIGGER_REASON: Consolidation break below D1 SMA200 (2.3016) into FIB support zone confirms reversal bias; entry on bounce from 2.2975 (20p below SL swing at 2.2944) maximizes R:R.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF AGREEMENT CHECK (HARD RULE):**
+- M:SELL, W:NEUTRAL, D:BUY, 4H:NEUTRAL → confidence 1/3 (only 1 of 3 major timeframes agree with BUY).
+- **FAILS MTF requirement** (need ≥2/3 weekly+daily agreement
