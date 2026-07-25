@@ -11827,14 +11827,6 @@ def run() -> int:
         except Exception as exc:
             _log_line(log, f"Dashboard step failed: {exc}")
 
-        actionable = [
-            f"{r['pair']} {r['parsed']['direction']} (conf {r['parsed']['confidence']})"
-            for r in deep_results if r["parsed"].get("trade_this") == "YES"
-        ]
-        if actionable:
-            _log_line(log, "ACTIONABLE TODAY: " + "; ".join(actionable))
-        else:
-            _log_line(log, "No actionable setups today.")
         _log_line(log, "=== Daily run complete ===")
 
         # 7. Risk management

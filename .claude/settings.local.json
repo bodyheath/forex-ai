@@ -35,7 +35,10 @@
       "PowerShell(gh run view 30138114008 --log-failed 2>&1)",
       "PowerShell(gh run view 30138113661 --log-failed 2>&1)",
       "Bash(pip install *)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -m py_compile scripts/absorb_remote_trades.py)",
+      "Bash(git check-ignore *)",
+      "Bash(git fetch *)"
     ]
   },
   "hooks": {
