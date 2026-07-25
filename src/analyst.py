@@ -500,7 +500,7 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
     def _call(client):
         return client.messages.create(
             model=config.CLAUDE_MODEL,
-            max_tokens=600,
+            max_tokens=1000,
             system=[{"type": "text", "text": system_prompt, "cache_control": {"type": "ephemeral"}}],
             messages=[{"role": "user", "content": user_message}],
         )
