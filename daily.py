@@ -12039,6 +12039,31 @@ def run() -> int:
                     f"⚠️ <b>{scan_mode.upper()} scan complete but summary build failed</b>\n"
                     f"{type(_tg_exc).__name__}: {str(_tg_exc)[:200]}"
                 )
+
+        # ACTIONABLE TODAY — computed AFTER _send_telegram_summary() has run, since that
+        # call is what applies the demotion/veto filters (drawdown-tier grade filter,
+        # devil's-advocate re-evaluation, R:R viability, capacity/correlation/session/news
+        # blocks) that can downgrade a raw YES recommendation to SKIPPED. Sourcing this
+        # from trades.csv post-filter status — rather than deep_results' raw trade_this
+        # field — avoids announcing a trade that gets silently vetoed moments later.
+        try:
+            from src import tracker as _trk_actionable
+            _final_actionable_ids = {
+                str(rr.get("id")) for rr in _trk_actionable.load()
+                if rr.get("status") in ("OPEN", "PENDING")
+            }
+        except Exception:
+            _final_actionable_ids = set()
+        actionable = [
+            f"{r['pair']} {r['parsed']['direction']} (conf {r['parsed']['confidence']})"
+            for r in deep_results
+            if r["parsed"].get("trade_this") == "YES" and str(r.get("id")) in _final_actionable_ids
+        ]
+        if actionable:
+            _log_line(log, "ACTIONABLE TODAY: " + "; ".join(actionable))
+        else:
+            _log_line(log, "No actionable setups today.")
+
         # These are locals of _send_telegram_summary — init safe defaults for Discord report.
         _blocked_setups = []
         _swapped_setups = []
