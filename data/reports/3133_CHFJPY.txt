@@ -1,0 +1,24 @@
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern at resistance with falling CHF rates and unwinding institutional positioning, but weak technicals and mixed MTF reject a high-conviction trade.
+RISK_FACTORS: [1. MTF signal failure — monthly SELL but weekly+daily both NEUTRAL (conf=0/3); MTF rule requires weekly AND daily agreement for valid direction — trade setup violates MTF consensus rule.] [2. Positioning headwind — both CHF and JPY shorts are unwinding (COT momentum=UNWINDING both pairs), reducing institutional conviction; falling CHF rates (-0.89%) should theoretically support JPY but diverges from broader carry-trade unwind.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily both NEUTRAL (only Monthly shows SELL); trade requires ≥2/3 MTF agreement across W+D. Confidence <7 and MTF fails — no entry warranted.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS DETAIL:**
+
+**Technical (Score: 4/10):**
+- D1 RSI=48 (NEUTRAL tier, standard; no trend context to shift zones); MACD

@@ -1,0 +1,31 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Weak bearish lean from monthly structure and ribbon, but intraday price trapped in range with conflicting MTF signals and unwinding institutional positioning reduces conviction significantly.
+
+RISK_FACTORS: [1] MTF conflict: 4H BUY vs W/D NEUTRAL creates directional ambiguity — no clear consensus across timeframes. [2] COT UNWINDING on both pairs (CHF short unwinding, JPY short unwinding) — institutional conviction weakening, positioning reversal risk over next 1-2 weeks.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 199.75
+ENTRY_TRIGGER_REASON: Break below 50-day SMA (201.21) and into lower Fibonacci support zone (200p–199.8p); pin bar + LEANING_BEAR ribbon provide bearish structure, but only take on confirmed downside break.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+### SCORING DETAIL:
+
+**TECHNICAL_SCORE: 3/10**
+- D1 T_sig = NEUTRAL_3 (baseline)
+- RSI 47.8 (D1) = 3–4 NEUTRAL tier (standard mixed context) — no adjustment

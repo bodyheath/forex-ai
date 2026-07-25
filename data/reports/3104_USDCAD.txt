@@ -1,0 +1,26 @@
+```
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern conflicts with D1 uptrend structure; RSI neutral, MACD flat, and MTF completely neutral (0/3 agreement) creates no directional conviction—setup lacks confluence.
+RISK_FACTORS: [1] MTF structure all NEUTRAL: weekly, daily, and 4H show no agreement (conf=0/3), violating MTF rule; [2] D1 shows uptrend (price > SMA50 > SMA200) but double-top pattern signals reversal—technical conflict reduces reliability.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF Rule Violation (Hard Stop):** Weekly=NEUTRAL, Daily=NEUTRAL, 4H=NEUTRAL → conf=0/3. The system requires **both weekly AND daily to agree on direction** for a valid trade. Zero agreement means TRADE_THIS=NO regardless of other factors.
+
+2. **Technical Conflict:** 
+   - D1 trend is **uptrend** (price 1.4081 > SMA50 1.4001 >

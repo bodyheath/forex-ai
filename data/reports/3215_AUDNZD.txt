@@ -1,0 +1,32 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: AUD fundamental strength (+1.78% diff, rising rate) opposes bearish technicals (4H RSI overbought at 68.3, ribbon leaning bear, monthly SELL); MTF conflict (W/D neutral vs M/4H sell) blocks trade.
+
+RISK_FACTORS: 
+1. MTF disagreement (W:NEUTRAL + D:NEUTRAL vs M:SELL + 4H:SELL, conf=0/3) — fails MTF rule; no weekly/daily agreement on direction.
+2. AUD COT BUILDING short conviction while fundamentals bullish (rate rising, +1.78% diff) — positioning reversal risk if rate cycle inflects.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (both NEUTRAL, not SELL). Confidence 4/10 < 7 threshold. Recommend wait for weekly/daily alignment before considering.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+**Technical (4/10):**
+- D1 RSI=48 (neutral zone, 45–62) = baseline

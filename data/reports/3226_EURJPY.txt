@@ -1,0 +1,25 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Multi-timeframe SELL alignment (M/W/D/4H all SELL) with bearish pin bar at key level and partial oscillator confluence offset by bullish ribbon and fundamental headwinds.
+RISK_FACTORS: [1] ALIGNED_BULL ribbon (5/5 EMA fan) contradicts MTF SELL signal — reversal risk if price holds above SMA50. [2] COT REVERSING: EUR positioning flipped from long conviction to short, reducing institutional conviction in downside; JPY unwinding shorts weakens yen strength narrative.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 185.90
+ENTRY_TRIGGER_REASON: Break below pin bar low (186.305 SH) to confirm bearish reversal; wait for close below SMA50 (185.1704) to eliminate ribbon conflict risk.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical (6/10):**  
+- T_sig baseline = SELL_4 (pre-computed); MTF all three lower timeframes (W/D/4H) agree SELL with 100% confidence.
+- RSI D1=60.6 (in

@@ -1,0 +1,26 @@
+```
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought in confirmed uptrend (W:SELL + D:NEUTRAL mixed signal) + Stochastic/CCI SELL confluence near upper BB band suggests mean-reversion pullback, but ribbon alignment and price structure contradict — low-conviction short.
+RISK_FACTORS: [1. MTF conflict: Weekly SELL but Daily NEUTRAL weakens directional conviction (conf=2/3 < threshold); ribbon ALIGNED_BULL contradicts bearish setup. 2. COT unwinding CHF shorts reduces positioning support for SELL; USD neutral at 50% offers no directional edge.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8185
+ENTRY_TRIGGER_REASON: Rejection at/above upper Bollinger Band with Stochastic >90 + CCI divergence confirms overbought exhaustion in uptrend context.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**ANALYSIS DETAIL:**
+
+**TECHNICAL_SCORE: 6/10**
+- **RSI 64.8 in uptrend context:** Price > SMA50 > SMA200 (golden cross confirmed). In an uptrend, RSI

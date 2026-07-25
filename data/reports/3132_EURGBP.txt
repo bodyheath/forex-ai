@@ -1,0 +1,27 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar rejection at key level in confirmed downtrend with 4H overbought (RSI 67.6), but weak MTF alignment (1/3 agreement) and converging ribbon undermine conviction.
+RISK_FACTORS: MTF conf only 1/3—weekly BUY conflicts with daily NEUTRAL and 4H SELL, violating MTF rule; ribbon converging signals trend weakening/reversal risk, reducing follow-through probability on downside.
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**Rationale:**
+
+1. **MTF VETO (Critical Failure):** W:BUY + D:NEUTRAL + 4H:SELL = only 1/3 agree on direction (40% confidence threshold not met). MTF rule requires **both weekly AND daily to agree**. W/D do not agree → **TRADE_THIS = NO regardless of other factors.**
+
+2. **TECHNICAL_SCORE = 4/10:**
+   - D1: RSI 45.6 in **confirmed downtrend** (price < SMA50 < S

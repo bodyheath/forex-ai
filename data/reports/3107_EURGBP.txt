@@ -1,0 +1,26 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 downtrend structure (price < SMA50 < SMA200) + aligned bearish ribbon + 4H bearish engulfing offset by weak MTF agreement (1/3), RSI neutral, and EUR COT reversing from long conviction.
+RISK_FACTORS: [1] MTF conflict — W:BUY contradicts D:NEUTRAL and 4H:SELL, confidence threshold not met; [2] EUR positioning reversing (institutions exiting longs) while you'd be adding SHORT exposure — momentum risk.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement insufficient (conf=1/3, <2/3 threshold) and COT reversal in EUR reduces reliability despite bearish technicals.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI=41.9 in confirmed downtrend (price < SMA50 < SMA200): maps to 5-6 BUY zone per downtrend tiers. T_sig=BUY_3 is baseline.
+- However: price is *

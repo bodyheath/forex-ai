@@ -1,0 +1,24 @@
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Confirmed downtrend (price < SMA50 < SMA200) with GBP COT unwinding offers structural SELL edge, but weak RSI confirmation and mixed 4H prevent high-conviction entry.
+RISK_FACTORS: [1] MTF disagreement — D1 neutral + 4H bullish (conf=0/3) weakens directional conviction; [2] RSI 49 is dead-center neutral, no momentum bias; GBP COT unwinding into resistance (SMA50@1.3371) increases risk of forced covering bounce.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.3390
+ENTRY_TRIGGER_REASON: Sell limit at SMA50 (1.3371) or on break above to 1.3390 if GBP rate turns negative; accumulate on strength into resistance rather than chase weakness.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (4/10):**
+- T_sig=NEUTRAL_3 baseline → D1 RSI=49 is dead-center neutral (tier 45–62 = 3–4 neutral). No MACD confirmation (h

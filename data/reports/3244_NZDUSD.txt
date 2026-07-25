@@ -1,0 +1,26 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Confirmed downtrend (price < SMA50 < SMA200, death-cross) with 4H head-and-shoulders pattern, but technical setup is weak — RSI neutral, MACD flat, no oscillator confluence, and MTF agreement broken (4H:BUY conflicts W/D/M:NEUTRAL).
+RISK_FACTORS: [1. MTF disagreement: 4H shows BUY signal (conf 0/3) while weekly/daily/monthly are NEUTRAL — violates MTF rule requiring both weekly AND daily agreement for valid trade; 2. Fundamental weakness: NZD rate falling vs USD flat creates rate-cut risk (widening differential -0.95%), potentially reversing downtrend mid-trade]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.5776
+ENTRY_TRIGGER_REASON: Break below Fibonacci swing low (SL=0.56276) near D1 SMA50 (0.5796), confirming death-cross structure if momentum follows
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**Analysis Summary:**
+
+**Why NO despite SELL direction:**
+1. **MTF Rule Violation (CRITICAL):**

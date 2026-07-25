@@ -1,0 +1,24 @@
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with M/W SELL signals and T_sig=SELL_3; MTF agreement only 1/3 (M:SELL vs W:SELL vs D:NEUTRAL + 4H:NEUTRAL) — no valid multi-timeframe confluence for either direction.
+RISK_FACTORS: [1] MTF alignment failure — weekly and daily do NOT both agree on direction (W:SELL + D:NEUTRAL = 1/3 confidence threshold, fails 2/3 rule); [2] COT UNWINDING on both GBP and JPY reduces institutional conviction, conflicting with weakening technical directional bias.
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly=SELL + Daily=NEUTRAL do not achieve 2/3 agreement threshold required for trade entry. GBP/JPY fails multi-timeframe confluence prerequisite.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED RATIONALE:**
+
+**Technical Score = 4/10:**
+- D1: RSI=60.3 in confirmed **UPTREND** (price > SMA50 > SMA200
