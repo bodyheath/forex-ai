@@ -30,7 +30,12 @@
       "Bash(python -c \"import ast; ast.parse\\(open\\('daily.py', encoding='utf-8'\\).read\\(\\)\\); print\\('Syntax OK'\\)\")",
       "Bash(git rebase *)",
       "PowerShell(head *)",
-      "Bash(python *)"
+      "Bash(python *)",
+      "Bash(gh run *)",
+      "PowerShell(gh run view 30138114008 --log-failed 2>&1)",
+      "PowerShell(gh run view 30138113661 --log-failed 2>&1)",
+      "Bash(pip install *)",
+      "Bash(python3 -c ' *)"
     ]
   },
   "hooks": {
