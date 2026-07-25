@@ -488,8 +488,9 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
     """Sonnet confirmation for high-confidence pairs.
 
     Input: ~400-600 tokens (compressed data + Haiku report).
-    Output: max 600 tokens (raised from 400 — complex/conflicting signals were hitting the limit
-    before reaching the CONFIDENCE line, causing stop_reason=max_tokens failures).
+    Output: max 1000 tokens (raised 400 -> 600 -> 1000 — complex ribbon-vs-MTF conflict trades
+    kept hitting the 600 limit before reaching the CONFIDENCE line, causing stop_reason=max_tokens
+    failures).
     Only called for pairs where Haiku confidence >= sonnet_threshold (6 for full scan, 7 for intraday).
     threshold_override: if set, replaces the global confidence threshold in the Sonnet prompt.
     """
