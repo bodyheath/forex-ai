@@ -3125,8 +3125,8 @@ def run(log=print) -> dict:
             elif resolved_p_mfe is not None:
                 _trk.update_mfe_mae(rec_id, resolved_p_mfe)
                 fund_mfe_updated += 1
-        except Exception:
-            pass
+        except Exception as e:
+            log(f"[mfe_mae] {pair} #{rec_id} update failed: {e}")
     result["fund_mfe_mae_updated"] = fund_mfe_updated
     if fund_mfe_updated:
         log(f"Monitor: MFE/MAE updated for {fund_mfe_updated} fund trade(s).")
