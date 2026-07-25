@@ -3103,8 +3103,8 @@ def run(log=print) -> dict:
             elif resolved_p_mfe is not None:
                 _rt.update_mfe_mae(rec_id, resolved_p_mfe)
                 mfe_updated += 1
-        except Exception:
-            pass
+        except Exception as e:
+            log(f"[mfe_mae] {pair} #{rec_id} update failed: {e}")
 
     result["mfe_mae_updated"] = mfe_updated
     if mfe_updated:
