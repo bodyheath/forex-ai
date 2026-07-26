@@ -127,8 +127,8 @@ avg_win_d  = float(_live_state.get('avg_win_dollars', 0))
 avg_loss_d = float(_live_state.get('avg_loss_dollars', 0))
 pf         = float(_live_state.get('profit_factor', 0))
 
-# Net pips
-net_pips = closed_f._pips.sum()
+# Gross pips (raw pips column, not cost-adjusted net_pips)
+gross_pips = closed_f._pips.sum()
 
 # Consecutive streak
 cons_l = 0
