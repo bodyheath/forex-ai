@@ -12260,8 +12260,15 @@ def run() -> int:
                     _log_line(log, f"[discord] fund trades error: {_dsc_fe}")
 
                 # ── Research trades ──────────────────────────────────────────────
+                # Headline win rate / profit factor / confidence bands are v2-only —
+                # v1 used a different (legacy 3-tier PARTIAL_WIN) strategy and blending
+                # it in understates v2's real profit factor while overstating its win
+                # rate (v1's PARTIAL_WIN-heavy results skew both in opposite directions).
+                # All-time (v1+v2) figures are kept as a secondary reference only.
                 _dsc_rt_open = _dsc_rt_clsd = _dsc_rt_dec = 0
                 _dsc_rt_wr   = _dsc_rt_pf   = 0.0
+                _dsc_rt_dec_all = 0
+                _dsc_rt_wr_all  = _dsc_rt_pf_all = 0.0
                 _dsc_wr45 = _dsc_wr56 = _dsc_wr67 = _dsc_wr7p = 0.0
                 _dsc_n45  = _dsc_n56  = _dsc_n67  = _dsc_n7p  = 0
                 _dsc_best_pairs_s = ""
@@ -12272,27 +12279,36 @@ def run() -> int:
                     _dsc_rt_open = int((_dsc_rt["status"] == "OPEN").sum())
                     _dsc_rtc  = _dsc_rt[_dsc_rt["status"] != "OPEN"]
                     _dsc_rt_clsd = len(_dsc_rtc)
-                    _dsc_rtp  = _dsc_pd.to_numeric(_dsc_rtc["pips"], errors="coerce").fillna(0)
-                    _dsc_rtw  = _dsc_rtc[
-                        _dsc_rtc["status"].str.upper().isin(["WIN", "FULL_WIN", "PARTIAL_WIN"]) |
-                        (_dsc_rtc["status"].str.upper().isin(["EXPIRED"]) & (_dsc_rtp > 0))
-                    ]
-                    _dsc_rtl  = _dsc_rtc[
-                        _dsc_rtc["status"].str.upper().isin(["LOSS"]) |
-                        (_dsc_rtc["status"].str.upper().isin(["EXPIRED"]) & (_dsc_rtp <= 0))
-                    ]
-                    _dsc_rt_dec = len(_dsc_rtw) + len(_dsc_rtl)
-                    if _dsc_rt_dec > 0:
-                        _dsc_rt_wr = len(_dsc_rtw) / _dsc_rt_dec * 100
-                    _rwp = _dsc_pd.to_numeric(_dsc_rtw["pips"], errors="coerce").sum() if len(_dsc_rtw) else 0
-                    _rlp = abs(_dsc_pd.to_numeric(_dsc_rtl["pips"], errors="coerce").sum()) if len(_dsc_rtl) else 0.01
-                    _dsc_rt_pf = _rwp / _rlp
+                    _dsc_rtc_v2 = _dsc_rtc[_dsc_rtc["system_version"].astype(str) == "v2"]
+
+                    def _dsc_win_loss_pf(_rows):
+                        _pips = _dsc_pd.to_numeric(_rows["pips"], errors="coerce").fillna(0)
+                        _w = _rows[
+                            _rows["status"].str.upper().isin(["WIN", "FULL_WIN", "PARTIAL_WIN"]) |
+                            (_rows["status"].str.upper().isin(["EXPIRED"]) & (_pips > 0))
+                        ]
+                        _l = _rows[
+                            _rows["status"].str.upper().isin(["LOSS"]) |
+                            (_rows["status"].str.upper().isin(["EXPIRED"]) & (_pips <= 0))
+                        ]
+                        _dec = len(_w) + len(_l)
+                        _wr  = (len(_w) / _dec * 100) if _dec > 0 else 0.0
+                        _wp  = _dsc_pd.to_numeric(_w["pips"], errors="coerce").sum() if len(_w) else 0
+                        _lp  = abs(_dsc_pd.to_numeric(_l["pips"], errors="coerce").sum()) if len(_l) else 0.01
+                        _pf  = _wp / _lp
+                        return _dec, _wr, _pf
+
+                    # Primary/headline — v2 only (the strategy actually running now)
+                    _dsc_rt_dec, _dsc_rt_wr, _dsc_rt_pf = _dsc_win_loss_pf(_dsc_rtc_v2)
+                    # Secondary reference — all-time blend (v1+v2)
+                    _dsc_rt_dec_all, _dsc_rt_wr_all, _dsc_rt_pf_all = _dsc_win_loss_pf(_dsc_rtc)
 
                     def _dsc_wrband(lo, hi):
-                        # Same "decisive" definition as the headline research win rate above:
-                        # WIN/FULL_WIN/PARTIAL_WIN, plus EXPIRED classified by pip sign vs LOSS.
-                        _cn = _dsc_pd.to_numeric(_dsc_rtc["confidence"], errors="coerce").fillna(0)
-                        _s  = _dsc_rtc[(_cn >= lo) & (_cn < hi)]
+                        # v2-only, same "decisive" definition as the headline research win
+                        # rate above: WIN/FULL_WIN/PARTIAL_WIN, plus EXPIRED classified by
+                        # pip sign vs LOSS.
+                        _cn = _dsc_pd.to_numeric(_dsc_rtc_v2["confidence"], errors="coerce").fillna(0)
+                        _s  = _dsc_rtc_v2[(_cn >= lo) & (_cn < hi)]
                         if not len(_s):
                             return 0.0, 0
                         _sp = _dsc_pd.to_numeric(_s["pips"], errors="coerce").fillna(0)
