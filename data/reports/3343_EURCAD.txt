@@ -1,0 +1,24 @@
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Price at 38.2% Fib (1.6042) with RSI 41.6 neutral and D1 T_sig=BUY_4 suggest bounce setup, but weak MTF alignment (1/3 conf) and EUR COT reversal to SHORT undermine conviction.
+RISK_FACTORS: [1] MTF conflict — M:SELL vs D:BUY with only 1/3 agreement fails MTF rule threshold; head_and_shoulders bearish pattern on D1 contradicts BUY signal. [2] EUR institutional positioning REVERSING from long to short while trade assumes EUR strength; EUR rate flat + CAD rate falling favor CAD, opposing EUR upside.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.6024
+ENTRY_TRIGGER_REASON: Break above 38.2% Fib confluence at 1.6042 with RSI <50 oversold confirmation would validate BUY setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF RULE FAILURE (CRITICAL):**
+- M:SELL, W:NEUTRAL, D:BUY, 4H:NEUTRAL →
