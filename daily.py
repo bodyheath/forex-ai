@@ -1744,10 +1744,24 @@ def _validate_entry_prices(
 
         if stop > 0:
             if direction == "BUY" and current <= stop:
+                _msg_buy_stop = f"Price validation: BUY cancelled — price {current} at/below stop {stop}"
                 _log(f"[validate] {pair} BUY CANCELLED — price {current} at/below stop {stop}")
+                try:
+                    from src import tracker as _trk_vep
+                    if trade.get("id"):
+                        _trk_vep.update_outcome(int(trade["id"]), "SKIPPED", notes=_msg_buy_stop)
+                except Exception:
+                    pass
                 continue
             if direction == "SELL" and current >= stop:
+                _msg_sell_stop = f"Price validation: SELL cancelled — price {current} at/above stop {stop}"
                 _log(f"[validate] {pair} SELL CANCELLED — price {current} at/above stop {stop}")
+                try:
+                    from src import tracker as _trk_vep
+                    if trade.get("id"):
+                        _trk_vep.update_outcome(int(trade["id"]), "SKIPPED", notes=_msg_sell_stop)
+                except Exception:
+                    pass
                 continue
 
         if signal_price > 0:
@@ -1757,10 +1771,20 @@ def _validate_entry_prices(
                 pips_moved = (signal_price - current) / ps
 
             if pips_moved < -max_adverse_pips:
+                _msg_adverse = (
+                    f"Price validation: cancelled — price moved "
+                    f"{pips_moved:.1f}p against trade since signal"
+                )
                 _log(
                     f"[validate] {pair} CANCELLED — price moved "
                     f"{pips_moved:.1f}p against trade since signal"
                 )
+                try:
+                    from src import tracker as _trk_vep
+                    if trade.get("id"):
+                        _trk_vep.update_outcome(int(trade["id"]), "SKIPPED", notes=_msg_adverse)
+                except Exception:
+                    pass
                 continue
 
             if pips_moved > 50:
