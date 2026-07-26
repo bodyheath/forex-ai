@@ -5946,11 +5946,20 @@ def _send_telegram_summary(
                                 # the fund with no position and a CB-triggered state.
                                 _pre_cl = int(_fund_st.get("consecutive_losses") or 0)
                                 if _sw_pips < 0 and _pre_cl >= 2:
-                                    _log_line(log, (
-                                        f"[swap] CANCELLED — closing {_sw_tpair} as LOSS "
+                                    _blk_sw_cbrisk = (
+                                        f"Swap cancelled — closing {_sw_tpair} as LOSS "
                                         f"would trigger circuit breaker "
                                         f"({_pre_cl}→3 losses) with no replacement possible"
-                                    ))
+                                    )
+                                    _log_line(log, f"[swap] CANCELLED — {_blk_sw_cbrisk}")
+                                    _fund_st_blocked.append((_yt, _blk_sw_cbrisk))
+                                    try:
+                                        from src import tracker as _trk_sw_cbrisk
+                                        if _yt.get("id"):
+                                            _trk_sw_cbrisk.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                                          notes=f"Blocked: {_blk_sw_cbrisk}")
+                                    except Exception:
+                                        pass
                                     continue
                                 _cft_sw(
                                     df=_sw_df,
