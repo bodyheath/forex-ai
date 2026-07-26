@@ -12289,12 +12289,21 @@ def run() -> int:
                     _dsc_rt_pf = _rwp / _rlp
 
                     def _dsc_wrband(lo, hi):
+                        # Same "decisive" definition as the headline research win rate above:
+                        # WIN/FULL_WIN/PARTIAL_WIN, plus EXPIRED classified by pip sign vs LOSS.
                         _cn = _dsc_pd.to_numeric(_dsc_rtc["confidence"], errors="coerce").fillna(0)
                         _s  = _dsc_rtc[(_cn >= lo) & (_cn < hi)]
                         if not len(_s):
                             return 0.0, 0
-                        _sw = _s[_s["status"].str.upper().isin(["WIN", "FULL_WIN", "PARTIAL_WIN"])]
-                        _sl = _s[_s["status"].str.upper().isin(["LOSS"])]
+                        _sp = _dsc_pd.to_numeric(_s["pips"], errors="coerce").fillna(0)
+                        _sw = _s[
+                            _s["status"].str.upper().isin(["WIN", "FULL_WIN", "PARTIAL_WIN"]) |
+                            (_s["status"].str.upper().isin(["EXPIRED"]) & (_sp > 0))
+                        ]
+                        _sl = _s[
+                            _s["status"].str.upper().isin(["LOSS"]) |
+                            (_s["status"].str.upper().isin(["EXPIRED"]) & (_sp <= 0))
+                        ]
                         _d  = len(_sw) + len(_sl)
                         return (len(_sw) / _d * 100 if _d else 0.0), _d
 
