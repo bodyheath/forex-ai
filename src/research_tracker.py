@@ -389,8 +389,13 @@ def update_outcome(rec_id: int, status: str, close_price=None,
                 float(pips),
                 days_held,
             )
-        except Exception:
-            pass
+        except Exception as e:
+            import sys as _sys
+            print(
+                f"[research_tracker] net_pips cost-adjustment failed for "
+                f"{target.get('pair', '')} #{rec_id}: {e} — falling back to raw pips={pips}",
+                file=_sys.stderr,
+            )
 
     # Derive exit_reason from status if not explicitly provided
     if not exit_reason:
