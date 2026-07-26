@@ -6407,6 +6407,51 @@ def _send_telegram_summary(
             pass
         _fs.save(_fund_st)
         yes_trades = _yt_pass
+
+        # ── SAFETY NET: reconcile OPEN v2 fund trades against loop survivors ──
+        # Closes the exact gap that let #2843, #2964, #2909, and 7 other trades
+        # run unrisked for weeks: any OPEN v2 row NOT in _yt_pass bypassed every
+        # capacity/correlation/sizing gate above and was never actually risk-gated.
+        try:
+            _yt_pass_ids = {str(r.get("id")) for r in _yt_pass if r.get("id")}
+            import pandas as _pd_recon
+            _recon_df = _pd_recon.read_csv(str(config.TRADES_CSV), encoding="utf-8-sig")
+            _recon_open_v2 = _recon_df[
+                (_recon_df["status"] == "OPEN") &
+                (_recon_df["system_version"] == "v2") &
+                (_recon_df["trade_this"].astype(str) == "YES")
+            ]
+            _ghost_trades = [
+                row for _, row in _recon_open_v2.iterrows()
+                if str(row.get("id")) not in _yt_pass_ids
+            ]
+            if _ghost_trades:
+                _ghost_lines = [
+                    f"#{int(g['id'])} {g['pair']} {g.get('direction', '')} "
+                    f"(entry={g.get('entry')}, opened={g.get('timestamp')})"
+                    for g in _ghost_trades
+                ]
+                _log_line(log, (
+                    f"[GHOST-TRADE] {len(_ghost_trades)} OPEN v2 fund trade(s) NOT in "
+                    f"_yt_pass — bypassed fund-state loop entirely: "
+                    f"{'; '.join(_ghost_lines)}"
+                ))
+                try:
+                    _telegram(
+                        "🚨 GHOST TRADE DETECTED — fund position opened without risk gating\n"
+                        + "\n".join(_ghost_lines)
+                        + "\nThese trades never passed capacity/correlation/sizing checks. "
+                          "Review immediately."
+                    )
+                except Exception:
+                    pass
+                try:
+                    from src import discord_notifier as _dn_ghost
+                    _dn_ghost.send_ghost_trade_alert(_ghost_lines)
+                except Exception as _ghost_dn_exc:
+                    _log_line(log, f"[GHOST-TRADE] Discord alert failed: {_ghost_dn_exc}")
+        except Exception as _recon_exc:
+            _log_line(log, f"[GHOST-TRADE] Reconciliation check failed: {_recon_exc}")
     except Exception as _fs_exc:
         import traceback as _tb_fs
         print(f"[FUND_STATE] {_fs_exc}", file=sys.stderr)
