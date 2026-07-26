@@ -146,7 +146,7 @@ for _, t in closed_sorted.iloc[::-1].iterrows():
         else: break
 
 print(f'Balance (calc): ${balance:.2f}')
-print(f'Net pips:       {net_pips:+.1f}p')
+print(f'Gross pips:     {gross_pips:+.1f}p')
 print(f'Peak balance:   ${peak:.2f}')
 print(f'Drawdown:       {drawdown:.2f}%')
 print()
