@@ -598,6 +598,31 @@ def send_workflow_failure(workflow_name, run_url, scan_mode=""):
     )
 
 
+def send_ghost_trade_alert(ghost_lines: list):
+    """Alert that one or more OPEN v2 fund trades bypassed the fund-state
+    loop entirely — never risk-gated (capacity/correlation/sizing).
+
+    Same failure class that let #2843, #2964, #2909, and 7 other trades run
+    unrisked for weeks before detection — this must not go unnoticed again.
+    """
+    fields = [
+        {"name": "\U0001f47b Ghost Trade(s)", "value": "\n".join(ghost_lines)[:1024], "inline": False},
+        {"name": "ℹ️ What This Means",        "value": (
+            "These fund trades were written OPEN but never entered the "
+            "capacity/correlation/sizing gate chain — no risk management "
+            "was applied. Review each trade and decide whether to close, "
+            "skip, or leave open."
+        ), "inline": False},
+    ]
+    return _send_embed(
+        WEBHOOK_CRITICAL,
+        "🚨 GHOST TRADE DETECTED — opened without risk gating",
+        "Fund-state loop reconciliation check found a mismatch",
+        COLOR_CRITICAL,
+        fields=fields,
+    )
+
+
 def send_monitor_gap_alert(gap_minutes, last_run_time=""):
     fields = [
         {"name": "⏰ Gap Duration", "value": f"{gap_minutes:.0f} minutes", "inline": True},
