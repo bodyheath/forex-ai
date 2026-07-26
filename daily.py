@@ -12505,7 +12505,16 @@ def run() -> int:
                     from datetime import timezone as _tz2, timedelta as _td2
                     _df_new = _dsc_pd2.read_csv(config.DATA_DIR / "trades.csv", encoding="utf-8-sig")
                     _cutoff = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=2)
-                    _fund_new = _df_new[_df_new["trade_this"].astype(str) == "YES"]
+                    # Status filter is required here: trade_this stays "YES" forever even
+                    # after a candidate is later demoted to SKIPPED (drawdown filter,
+                    # DA-demoted, etc. — the write-back only changes status/notes, never
+                    # trade_this). Without this filter, a trade correctly rejected within
+                    # the same scan still shows up here as "opened" with real entry/stop
+                    # prices, contradicting the actual open_count shown right above it.
+                    _fund_new = _df_new[
+                        (_df_new["trade_this"].astype(str) == "YES") &
+                        (_df_new["status"].isin(["OPEN", "PENDING"]))
+                    ]
                     _dsc_yes_raw = []
                     for _, _nt in _fund_new.iterrows():
                         _ts_nt = str(_nt.get("timestamp", "") or "")
