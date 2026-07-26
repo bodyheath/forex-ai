@@ -5431,6 +5431,17 @@ def _send_telegram_summary(
             _yt_seen.add(_p)
     yes_trades = _yt_deduped
 
+    # DIAGNOSTIC — pinpointing the fund-loop-bypass bug (#2909 and 7 others
+    # since 2026-06-29 became real OPEN/EXPIRED/WIN positions with zero trace
+    # in the fund-state loop below and no demotion/veto note). This is the
+    # exact point where yes_trades is handed to that loop — log its contents
+    # here so the next occurrence shows definitively whether a candidate was
+    # already missing before the loop starts.
+    _log_line(log, (
+        f"[diag] yes_trades entering fund-state loop: {len(yes_trades)} — "
+        f"{[r.get('pair') for r in yes_trades]}"
+    ))
+
     # Immediately correct CSV rows for inverse-pair dedup losers.
     _yt_deduped_pairs: set = {r["pair"] for r in _yt_deduped}
     for _inv_sk in _yes_trades_pre_dedup:
