@@ -243,11 +243,25 @@ def log_recommendation(pair: str, parsed: dict, data_sources, report: str) -> in
             _save_report_file(rec_id, pair, report)
             existing["timestamp"]     = _now()
             existing["confidence"]    = parsed.get("confidence")
-            existing["entry"]         = parsed.get("entry") or existing.get("entry", "")
-            existing["target"]        = parsed.get("target") or existing.get("target", "")
-            existing["stop_loss"]     = parsed.get("stop_loss") or existing.get("stop_loss", "")
             existing["key_thesis"]    = parsed.get("key_thesis") or existing.get("key_thesis", "")
             existing["best_entry_time"] = parsed.get("best_entry_time") or existing.get("best_entry_time", "")
+            if existing.get("status") not in ("OPEN", "PENDING"):
+                # OPEN (live position) and PENDING (resting conditional order) rows
+                # both have price levels set by whatever made them real — and PENDING
+                # additionally has a trigger (entry_trigger_price/entry_type/
+                # entry_trigger_expiry) derived from that same setup. Overwriting
+                # entry/stop_loss/target here without also updating the trigger
+                # fields left a stale mismatch: when the trigger later fired,
+                # monitor.py computed the stop distance from a newer, unrelated
+                # analysis. For OPEN, silently rewriting the stop-loss under a live
+                # position is the same risk one status later. Leave price levels
+                # untouched for both until the trade resolves on its own — closes,
+                # or (for PENDING) activates/cancels/expires via the fund-loop's
+                # entry-type-detection step, which correctly refreshes these fields
+                # for any candidate that reaches it again on its own.
+                existing["entry"]     = parsed.get("entry") or existing.get("entry", "")
+                existing["target"]    = parsed.get("target") or existing.get("target", "")
+                existing["stop_loss"] = parsed.get("stop_loss") or existing.get("stop_loss", "")
             _write_all(rows)
             return rec_id
 
