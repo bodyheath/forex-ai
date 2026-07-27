@@ -5603,12 +5603,22 @@ def _send_telegram_summary(
                     pass
                 continue
             # ── TREND HARD FILTER — block neutral or opposed weekly trends ───────
-            _wt_hard  = str(_yt_parsed.get("weekly_trend",
-                            _yt_parsed.get("weekly_trend_at_entry", "")) or "").upper().strip()
-            _dir_hard = (_yt_parsed.get("direction") or "").upper()
+            # weekly trend comes from _get_trend_alignment() (technical.get_weekly_trend,
+            # cached OHLCV, always returns BUY/SELL/NEUTRAL) — NOT from the AI-parsed
+            # dict's "weekly_trend"/"weekly_trend_at_entry" keys, which are never actually
+            # populated anywhere in the pipeline and silently fell through to "" on every
+            # trade, making this filter block on missing data while calling it "neutral".
+            # Computed once here and reused below (Improvement 4) instead of recomputed.
+            _yt_dir_ta   = (_yt_parsed.get("direction") or "").upper()
+            _trend_align = _get_trend_alignment(
+                _yt_pair, _yt_dir_ta,
+                log_fn=lambda m: _log_line(log, m),
+            )
+            _wt_hard  = str(_trend_align.get("weekly_trend", "")).upper().strip()
+            _dir_hard = _yt_dir_ta
             if _wt_hard in ("", "NEUTRAL", "NONE", "NULL", "UNKNOWN", "0"):
                 _blk_wt_n = "Weekly trend neutral — no clear directional bias"
-                _log_line(log, f"[trend-hard] BLOCKED {_yt_pair} — weekly trend neutral ({_wt_hard!r})")
+                _log_line(log, f"[trend-hard] BLOCKED {_yt_pair} — weekly trend={_wt_hard!r}")
                 _yt_parsed["trade_this"] = "NO"
                 _yt_parsed["block_reason"] = _blk_wt_n
                 _fund_st_blocked.append((_yt, _blk_wt_n))
