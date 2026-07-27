@@ -39,6 +39,15 @@ PRICE_CACHE     = Path("data/price_cache.json")
 CLOSED_STATUSES = ("WIN", "LOSS", "PARTIAL_WIN", "FULL_WIN", "EXPIRED",
                    "STOPPED", "CLOSED", "CANCELLED")
 
+# research_outcome_checker.py (commit 6ed8af37, 2026-07-15 01:46:31 NZST) fixed
+# outcome checking to require the true 2R cascade target (t2_price) rather than
+# the AI's structural 'target' column (~1.07R avg) — trades WIN-classified before
+# this deployed carry a retired, lower-magnitude exit mechanism baked into their
+# r_multiple/pips. This is closed_at (UTC), not entry date: the fix governs when
+# a trade is *checked* for closure, not when it opened, and a handful of trades
+# opened pre-fix but closed after deployment already show the corrected ~2R exit.
+EXIT_LOGIC_FIX_UTC = pd.Timestamp("2026-07-14 13:46:31")
+
 # ─── Type helpers ─────────────────────────────────────────────────────────────
 
 def safe_float(v: Any, default: float = 0.0) -> float:
@@ -540,6 +549,15 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         _strict_mask        = _v2_closed["status"].str.upper().isin({"WIN", "FULL_WIN", "LOSS"})
         _v2_decisive_strict = int(_strict_mask.sum())
 
+        # Post-fix strict: the checkpoint-tracked figure. Same strict mask, further
+        # restricted to trades whose *closure* was evaluated under the corrected exit
+        # logic (closed_at >= EXIT_LOGIC_FIX_UTC). v2_decisive_strict above still mixes
+        # the retired ~1R exit mechanism with the current ~2R one and is kept only as a
+        # labeled historical/all-time reference — it is not what the checkpoint tracks.
+        _closed_at_dt = pd.to_datetime(_v2_closed.get("closed_at"), errors="coerce")
+        _postfix_mask = _strict_mask & (_closed_at_dt >= EXIT_LOGIC_FIX_UTC)
+        _v2_decisive_strict_postfix = int(_postfix_mask.sum())
+
         # Derive strategy metadata from system_version column.
         # strategy_start_date = earliest closed v2 trade timestamp (blank until first v2 closes).
         if "system_version" in fund.columns:
@@ -625,6 +643,7 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             "v2_win_rate":           _v2_win_rate,
             "v2_net_pips":           _v2_net_pips,
             "v2_decisive_strict":    _v2_decisive_strict,
+            "v2_decisive_strict_postfix": _v2_decisive_strict_postfix,
         }
     except Exception:
         return {

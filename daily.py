@@ -12217,6 +12217,7 @@ def run() -> int:
                     _dsc_v2_wr              = _dsc_tof(_dsc_fresh_fs.get("v2_win_rate"), 0.0)
                     _dsc_v2_pips            = _dsc_tof(_dsc_fresh_fs.get("v2_net_pips"), 0.0)
                     _dsc_v2_decisive_strict = int(_dsc_fresh_fs.get("v2_decisive_strict") or 0)
+                    _dsc_v2_decisive_strict_postfix = int(_dsc_fresh_fs.get("v2_decisive_strict_postfix") or 0)
                     _dsc_strat_start        = str(_dsc_fresh_fs.get("strategy_start_date") or "")
                 except Exception:
                     pass  # fall back to cached values already set above
@@ -12229,6 +12230,7 @@ def run() -> int:
                     _dsc_v2_wr              = 0.0
                     _dsc_v2_pips            = 0.0
                     _dsc_v2_decisive_strict = 0
+                    _dsc_v2_decisive_strict_postfix = 0
                     _dsc_strat_start        = ""
 
                 # ── Fund performance from trades.csv ─────────────────────────────
@@ -12339,6 +12341,10 @@ def run() -> int:
                 _dsc_rt_wr   = _dsc_rt_pf   = 0.0
                 _dsc_rt_dec_all = 0
                 _dsc_rt_wr_all  = _dsc_rt_pf_all = 0.0
+                _dsc_rt_dec_postfix = 0
+                _dsc_rt_wr_postfix  = _dsc_rt_pf_postfix = 0.0
+                _dsc_rt_dec_strict_all = 0
+                _dsc_rt_wr_strict_all  = 0.0
                 _dsc_wr45 = _dsc_wr56 = _dsc_wr67 = _dsc_wr7p = 0.0
                 _dsc_n45  = _dsc_n56  = _dsc_n67  = _dsc_n7p  = 0
                 _dsc_best_pairs_s = ""
@@ -12372,6 +12378,39 @@ def run() -> int:
                     _dsc_rt_dec, _dsc_rt_wr, _dsc_rt_pf = _dsc_win_loss_pf(_dsc_rtc_v2)
                     # Secondary reference — all-time blend (v1+v2)
                     _dsc_rt_dec_all, _dsc_rt_wr_all, _dsc_rt_pf_all = _dsc_win_loss_pf(_dsc_rtc)
+
+                    # Post-fix strict — the checkpoint-tracked figure. research_outcome_checker.py
+                    # (commit 6ed8af37, 2026-07-15 01:46 NZST / 2026-07-14 13:46:31 UTC) fixed WIN
+                    # classification to require the true 2R cascade target (t2_price) instead of the
+                    # AI's structural 'target' column (~1.07R avg). Trades whose closure was checked
+                    # before that deploy still carry the retired ~1R exit magnitude baked into pips/
+                    # r_multiple even though they're correctly labeled WIN — mixing them with post-fix
+                    # trades understates PF for a reason that has nothing to do with current strategy
+                    # quality. Strict here excludes PARTIAL_WIN/EXPIRED entirely (not reclassified by
+                    # pip sign) — only true TARGET_HIT/STOP_HIT exits count, same as the fund side's
+                    # v2_decisive_strict. Filtered on closed_at (when the fix-governed check ran), not
+                    # entry date — a trade opened before the fix but closed after it already gets the
+                    # corrected exit.
+                    from src.trading import financials as _dsc_fin_cut
+                    _dsc_postfix_cut = _dsc_fin_cut.EXIT_LOGIC_FIX_UTC
+
+                    def _dsc_strict_pf(_rows):
+                        _su = _rows["status"].str.upper()
+                        _w  = _rows[_su.isin(["WIN", "FULL_WIN"])]
+                        _l  = _rows[_su.isin(["LOSS"])]
+                        _dec = len(_w) + len(_l)
+                        _wr  = (len(_w) / _dec * 100) if _dec > 0 else 0.0
+                        _wp  = _dsc_pd.to_numeric(_w["pips"], errors="coerce").sum() if len(_w) else 0
+                        _lp  = abs(_dsc_pd.to_numeric(_l["pips"], errors="coerce").sum()) if len(_l) else 0.01
+                        _pf  = _wp / _lp
+                        return _dec, _wr, _pf
+
+                    _dsc_rtc_v2_closed = _dsc_pd.to_datetime(_dsc_rtc_v2["closed_at"], errors="coerce")
+                    _dsc_rtc_v2_postfix = _dsc_rtc_v2[_dsc_rtc_v2_closed >= _dsc_postfix_cut]
+                    _dsc_rt_dec_postfix, _dsc_rt_wr_postfix, _dsc_rt_pf_postfix = _dsc_strict_pf(_dsc_rtc_v2_postfix)
+                    # All-time strict (historical reference only — mixes retired + current exit
+                    # mechanism, NOT checkpoint-tracked)
+                    _dsc_rt_dec_strict_all, _dsc_rt_wr_strict_all, _ = _dsc_strict_pf(_dsc_rtc_v2)
 
                     def _dsc_wrband(lo, hi):
                         # v2-only, same "decisive" definition as the headline research win
@@ -12712,6 +12751,11 @@ def run() -> int:
                     research_win_rate_all=_dsc_rt_wr_all,
                     research_decisive_all=_dsc_rt_dec_all,
                     research_pf_all=_dsc_rt_pf_all,
+                    research_decisive_strict_all=_dsc_rt_dec_strict_all,
+                    research_win_rate_strict_all=_dsc_rt_wr_strict_all,
+                    research_decisive_postfix=_dsc_rt_dec_postfix,
+                    research_win_rate_postfix=_dsc_rt_wr_postfix,
+                    research_pf_postfix=_dsc_rt_pf_postfix,
                     wr_band_45=_dsc_wr45,
                     wr_band_56=_dsc_wr56,
                     wr_band_67=_dsc_wr67,
@@ -12752,6 +12796,7 @@ def run() -> int:
                     v2_win_rate=_dsc_v2_wr,
                     v2_net_pips=_dsc_v2_pips,
                     v2_decisive_strict=_dsc_v2_decisive_strict,
+                    v2_decisive_strict_postfix=_dsc_v2_decisive_strict_postfix,
                     strategy_start_date=_dsc_strat_start,
                     vetoed_candidates=_dsc_vetoed,
                     health_counts=_dsc_health_counts,

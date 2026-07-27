@@ -802,11 +802,17 @@ def send_master_scan_report(
     v2_win_rate: float = 0,
     v2_net_pips: float = 0,
     v2_decisive_strict: int = 0,
+    v2_decisive_strict_postfix: int = 0,
     strategy_start_date: str = "",
     vetoed_candidates: list = None,
     health_counts: dict = None,
     research_checkpoint_target: int = 80,
     fund_checkpoint_target: int = 30,
+    research_decisive_strict_all: int = 0,
+    research_win_rate_strict_all: float = 0,
+    research_decisive_postfix: int = 0,
+    research_win_rate_postfix: float = 0,
+    research_pf_postfix: float = 0,
 ):
     if not WEBHOOK_HEALTH:
         return False
@@ -1114,7 +1120,10 @@ def send_master_scan_report(
         _perf_val = (
             f"**V2 STRATEGY (2:1 R:R)** · Started: {V2_STRATEGY_START}\n"
             f"{_wr_e} Win rate: **{v2_win_rate:.0f}%** ({v2_wins}W / {v2_losses}L) · Decisive: {v2_decisive}\n"
-            f"Strict: {v2_decisive_strict}/{fund_checkpoint_target}\n"
+            f"Strict, all-time (historical — mixes retired pre-Jul-15 ~1R exit\n"
+            f"mechanism with current ~2R one, not checkpoint-tracked): {v2_decisive_strict}\n"
+            f"Strict, post-fix only (checkpoint-tracked): "
+            f"{v2_decisive_strict_postfix}/{fund_checkpoint_target}\n"
             f"ℹ️ Strict = true target-hit/stop-hit only. Decisive (and the win rate\n"
             f"   above) also counts EXPIRED trades reclassified by pip sign at\n"
             f"   timeout — those never actually reached target or stop.\n"
@@ -1201,6 +1210,11 @@ def send_master_scan_report(
         f"Profit factor: {research_pf:.2f} (v2, raw pips)\n"
         f"All-time (v1+v2, secondary reference): {research_win_rate_all:.0f}% WR "
         f"({research_decisive_all} decisive) · PF {research_pf_all:.2f}\n"
+        f"Strict, all-time (historical — mixes retired pre-Jul-15 ~1R exit\n"
+        f"mechanism with current ~2R one, not checkpoint-tracked): "
+        f"{research_win_rate_strict_all:.0f}% WR ({research_decisive_strict_all} decisive)\n"
+        f"Strict, post-fix only (checkpoint-tracked): {research_win_rate_postfix:.0f}% WR "
+        f"({research_decisive_postfix} decisive) · PF {research_pf_postfix:.2f}\n"
         f"\n**Win rate by confidence (v2):**\n{_conf_tbl}"
         + (f"\n\n**Best pairs (5+ trades):** {best_pairs_str}" if best_pairs_str else "")
         + (f"\nAdaptive targets: {adaptive_count} pairs" if adaptive_count > 0 else "")
@@ -1215,17 +1229,23 @@ def send_master_scan_report(
     # ═══════════════════════════════════════════════════════════════════════════
     # SECTION: CHECKPOINTS
     # ═══════════════════════════════════════════════════════════════════════════
-    _research_ckpt_e = "✅" if research_decisive >= research_checkpoint_target else "⏳"
-    _fund_ckpt_e     = "✅" if v2_decisive_strict >= fund_checkpoint_target else "⏳"
+    # Checkpoints track post-fix-strict decisive counts, not the blended figures —
+    # the blended numbers mix a retired exit mechanism with the current one, which
+    # would make checkpoint progress meaningless (the same reason fund's loose
+    # "decisive" count was replaced by strict decisive in the first place).
+    _research_ckpt_e = "✅" if research_decisive_postfix >= research_checkpoint_target else "⏳"
+    _fund_ckpt_e     = "✅" if v2_decisive_strict_postfix >= fund_checkpoint_target else "⏳"
     fields.append({
         "name": "\U0001f3c1 Checkpoints",
         "value": (
-            f"Research (v2, loose decisive): {_research_ckpt_e} {research_decisive}/{research_checkpoint_target}\n"
-            f"Fund (v2, strict decisive): {_fund_ckpt_e} {v2_decisive_strict}/{fund_checkpoint_target}"
+            f"Research (post-fix strict decisive): {_research_ckpt_e} "
+            f"{research_decisive_postfix}/{research_checkpoint_target}\n"
+            f"Fund (post-fix strict decisive): {_fund_ckpt_e} "
+            f"{v2_decisive_strict_postfix}/{fund_checkpoint_target}"
             + (
-                f" — {fund_checkpoint_target - v2_decisive_strict} to go before the "
+                f" — {fund_checkpoint_target - v2_decisive_strict_postfix} to go before the "
                 f"strategy's true track record is statistically meaningful"
-                if v2_decisive_strict < fund_checkpoint_target else ""
+                if v2_decisive_strict_postfix < fund_checkpoint_target else ""
             )
         ),
         "inline": False,
@@ -1997,6 +2017,7 @@ def build_fund_dashboard_embed(state: dict) -> dict:
     v2_win_rate        = float(state.get("v2_win_rate") or 0)
     v2_net_pips        = float(state.get("v2_net_pips") or 0)
     v2_decisive_strict = int(state.get("v2_decisive_strict") or 0)
+    v2_decisive_strict_postfix = int(state.get("v2_decisive_strict_postfix") or 0)
     _fund_checkpoint_target = 30
 
     if v2_decisive > 0:
@@ -2004,7 +2025,9 @@ def build_fund_dashboard_embed(state: dict) -> dict:
         _stats_val = (
             f"**V2 STRATEGY (2:1 R:R)** · Started: {V2_STRATEGY_START}\n"
             f"{_wr_e} Win rate: **{v2_win_rate:.0f}%** ({v2_wins}W / {v2_losses}L) · Decisive: {v2_decisive}\n"
-            f"Strict: {v2_decisive_strict}/{_fund_checkpoint_target}\n"
+            f"Strict, all-time (historical, not checkpoint-tracked): {v2_decisive_strict}\n"
+            f"Strict, post-fix only (checkpoint-tracked): "
+            f"{v2_decisive_strict_postfix}/{_fund_checkpoint_target}\n"
             f"ℹ️ Strict = true target-hit/stop-hit only; Decisive (and the win rate\n"
             f"   above) also counts EXPIRED trades reclassified by pip sign at timeout.\n"
             f"Gross pips: {v2_net_pips:+.1f}p (raw, not cost-adjusted)"
@@ -2022,8 +2045,11 @@ def build_fund_dashboard_embed(state: dict) -> dict:
             f"(exotic pairs + multi-target, old rules)"
         )
 
-    _ckpt_e = "✅" if v2_decisive_strict >= _fund_checkpoint_target else "⏳"
-    _stats_val += f"\n\n**Checkpoint:** {_ckpt_e} {v2_decisive_strict}/{_fund_checkpoint_target} strict decisive"
+    _ckpt_e = "✅" if v2_decisive_strict_postfix >= _fund_checkpoint_target else "⏳"
+    _stats_val += (
+        f"\n\n**Checkpoint:** {_ckpt_e} {v2_decisive_strict_postfix}/{_fund_checkpoint_target} "
+        f"post-fix strict decisive"
+    )
 
     fields = [
         {"name": "\U0001f4b0 Fund Status",          "value": fund_status_val, "inline": False},
