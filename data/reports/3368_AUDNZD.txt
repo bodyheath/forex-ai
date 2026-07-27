@@ -1,0 +1,17 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD weakness (rate rising, COT building shorts) and NZD stability create fundamental SELL bias, but weak technicals (D1 NEUTRAL, RSI 48.4, mixed ribbon) and MTF disagreement (W/D neutral vs M/4H sell) prevent high-conviction entry.
+RISK_FACTORS: MTF conflict—Weekly and Daily both NEUTRAL while Monthly leans SELL; weekly+daily do NOT both agree on direction, violating MTF rule (conf 0/3 < 2/3 threshold). Technicals weak: price range-bound between SMA50 (1.2122) and SL (1.1984), no clear trend structure; RSI 48.4 is neutral midpoint with no oscillator confluence (OSC=NONE).
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation blocks entry: Weekly and Daily must both agree on direction for valid trade setup. Here W=NEUTRAL, D=NEUTRAL vs M=SELL, 4H=SELL (conf 0/3). Additionally, TECHNICAL_SCORE 4 is below risk/reward threshold given no RSI extreme (48.4 = neutral), no pattern

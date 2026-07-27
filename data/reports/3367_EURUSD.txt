@@ -1,0 +1,23 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Confirmed downtrend (price < SMA50 < SMA200) with bearish ribbon alignment and 4H pin bar at key level, but MTF agreement weak (1/3) and RSI neutral in confirmed downtrend prevents high-conviction short.
+RISK_FACTORS: ['MTF conflict: Weekly BUY vs 4H SELL with Daily neutral—only 1/3 agreement fails MTF dual-timeframe rule (weekly+daily must both agree)', 'COT reversal: EUR positioned net SHORT but momentum REVERSING (institutions unwinding conviction)—reduces positioning score and suggests trap risk into shorts']
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violated: weekly=BUY, daily=NEUTRAL, 4H=SELL. Requires weekly AND daily both agree on same direction. Weekly bullish contradicts the bearish 4H pin bar; Daily neutral breaks consensus. Confidence insufficient at 5/10 (threshold 7). Additionally, COT momentum reversing (EUR short unwinding) conflicts with a fresh short entry into what may be a squeeze-out.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Detailed Reasoning

@@ -1,0 +1,30 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: CHF weakness (falling rates + net SHORT unwinding) conflicts with mixed technicals and lack of MTF alignment; monthly SELL sentiment offers directional bias but daily/weekly neutrality blocks high-confidence trade.
+
+RISK_FACTORS: (1) MTF conf=0/3 (W, D, 4H all NEUTRAL) — no multi-timeframe agreement required for TRADE_THIS=YES. (2) OSC=NONE (Stoch 66.7 overbought ≠ CCI -23.5 divergence) — no oscillator confluence to confirm reversal.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF alignment rule failed (weekly + daily must both agree; current: W=NEUTRAL, D=NEUTRAL, 4H=NEUTRAL). Confidence 4/10 < 7 threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Enforcement:**  
+Weekly=NEUTRAL, Daily=NEUTRAL, 4H=NEUTRAL → conf=0/3. Trade rule requires **weekly AND daily both agree on direction**. Neither does. **TRADE_THIS blocked automatically

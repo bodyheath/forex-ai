@@ -1,0 +1,22 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: Pin bar at key level + triple oscillator confluence (RSI/Stochastic/CCI all SELL) confirms bearish reversal, but ribbon fully aligned bull and weak MTF agreement (1/3) create conflicting signals.
+RISK_FACTORS: [1] MTF conflict: D1=SELL but W=NEUTRAL and 4H=NEUTRAL (conf only 1/3) — trade lacks cross-timeframe confirmation; reversals in uptrends without weekly agreement carry higher failure risk. [2] Ribbon fully bullish-aligned (5/5) contradicts SELL signal — price may continue uptrend despite technical overbought state; pin bar at key level only valid if followed by bearish candle confirmation.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 113.95
+ENTRY_TRIGGER_REASON: Break below pin bar low (111.171 SL support or nearest Fib level near 113.95 mid-range) to confirm reversal; wait for candle close below 4H trend support.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE:**
+
+**Technical (7/10):**
+- D1 T_sig=SELL_7
