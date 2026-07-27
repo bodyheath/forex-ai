@@ -4,6 +4,7 @@ Graceful degradation: missing webhook URLs or Discord errors are logged
 and ignored.  The scan is never slowed, Telegram is never blocked.
 """
 import json
+import math
 import os
 import time as _time_mod
 from datetime import datetime, timezone
@@ -12,6 +13,65 @@ from pathlib import Path
 import requests
 
 DASHBOARD_STATE_FILE = Path(__file__).resolve().parent.parent / "data" / "discord_dashboard.json"
+
+# The pure-2R v2 strategy's actual cutover date (confirmed via cascade.py's git
+# history). calculate_fund_state()'s computed `strategy_start_date` has been
+# unreliable (it trusts the earliest CLOSED trade tagged system_version=='v2',
+# but at least one trade was mislabeled v2 despite predating this date) — every
+# "Started:" display uses this constant instead of that computed field.
+V2_STRATEGY_START = "30 Jun 2026"
+
+
+def _num(value, default: float = 0.0) -> float:
+    """float(value), treating None, "", and NaN all as `default`.
+
+    Plain `float(x.get(...) or 0)` looks safe but isn't: a pandas NaN is
+    truthy in Python, so `nan or 0` evaluates to `nan`, not `0` — and that
+    nan then renders as the literal string "nan" in an f-string. This is
+    the actual, confirmed mechanism behind stray "nan" text in these reports.
+    """
+    try:
+        f = float(value)
+    except (TypeError, ValueError):
+        return default
+    return default if math.isnan(f) or math.isinf(f) else f
+
+
+def _human(value, fallback: str = "N/A") -> str:
+    """String form of a display value, or `fallback` for anything empty/NaN."""
+    if value is None:
+        return fallback
+    if isinstance(value, float) and math.isnan(value):
+        return fallback
+    s = str(value).strip()
+    return s if s and s.lower() != "nan" else fallback
+
+
+def _regime_since_str() -> str:
+    """Human-readable "how long" the current regime (per regime_state.json's
+    changed_at, written by market_regime.py) has been active. Empty string if
+    the file is missing or has no timestamp yet.
+
+    A direct, best-effort file read (unlike build_fund_dashboard_embed, this
+    function has no "never reads files" contract) — simpler than plumbing the
+    value through daily.py's already-large call site.
+    """
+    try:
+        _path = Path(__file__).resolve().parent.parent / "data" / "regime_state.json"
+        _data = json.loads(_path.read_text(encoding="utf-8"))
+        _changed_at_raw = _data.get("changed_at")
+        if not _changed_at_raw:
+            return ""
+        _changed_dt = datetime.fromisoformat(_changed_at_raw)
+        _age_hrs = (datetime.now(timezone.utc) - _changed_dt).total_seconds() / 3600
+        if _age_hrs < 1:
+            return f"{int(_age_hrs * 60)}m ago"
+        elif _age_hrs < 48:
+            return f"{_age_hrs:.0f}h ago"
+        return _changed_dt.strftime("%d %b %Y")
+    except Exception:
+        return ""
+
 
 WEBHOOK_FUND     = os.getenv("DISCORD_WEBHOOK_FUND")
 WEBHOOK_RESEARCH = os.getenv("DISCORD_WEBHOOK_RESEARCH")
@@ -743,16 +803,22 @@ def send_master_scan_report(
     v2_net_pips: float = 0,
     v2_decisive_strict: int = 0,
     strategy_start_date: str = "",
+    vetoed_candidates: list = None,
+    health_counts: dict = None,
+    research_checkpoint_target: int = 80,
+    fund_checkpoint_target: int = 30,
 ):
     if not WEBHOOK_HEALTH:
         return False
 
-    yes_trades      = yes_trades      or []
-    blocked_trades  = blocked_trades  or []
-    watch_list      = watch_list      or []
-    blocked_setups  = blocked_setups  or []
-    swapped_setups  = swapped_setups  or []
-    expiry_alerts  = expiry_alerts or []
+    yes_trades        = yes_trades        or []
+    blocked_trades     = blocked_trades     or []
+    watch_list         = watch_list         or []
+    blocked_setups      = blocked_setups      or []
+    swapped_setups      = swapped_setups      or []
+    expiry_alerts       = expiry_alerts       or []
+    vetoed_candidates   = vetoed_candidates   or []
+    health_counts       = health_counts       or {}
 
     # ── Color: green=new trade, red=issue, orange=watchlist, blue=clean ──────────
     has_issues = bool(expiry_alerts or monitor_gap_mins > 120 or td_calls > 600)
@@ -785,16 +851,22 @@ def send_master_scan_report(
     _title = f"{_mode_emoji} {_mode_name} · {auckland_time} · {scan_date}"
 
     # ── Description (one-liner summary) ─────────────────────────────────────────
-    _any_blocked = [b for b in blocked_setups if float(b.get("conf", 0)) >= 6.0]
+    # yes_trades only ever contains trades that actually reached OPEN/PENDING —
+    # the caller filters by status, so a trade later vetoed within the same scan
+    # (DA demotion, drawdown filter, etc.) never inflates this count.
+    _any_blocked = [b for b in blocked_setups if _num(b.get("conf")) >= 6.0]
+    _veto_note = f" · {len(vetoed_candidates)} candidate(s) vetoed" if vetoed_candidates else ""
     if swapped_setups:
         _desc_lead = (
             f"\U0001f504 {len(swapped_setups)} swap(s) · "
-            f"\U0001f7e2 {len(yes_trades)} trade(s) opened"
+            f"\U0001f7e2 {len(yes_trades)} trade(s) opened{_veto_note}"
         )
     elif yes_trades:
-        _desc_lead = f"\U0001f7e2 {len(yes_trades)} new fund trade(s) opened"
+        _desc_lead = f"\U0001f7e2 {len(yes_trades)} new fund trade(s) opened{_veto_note}"
     elif consecutive_losses >= 3:
         _desc_lead = f"\U0001f6a8 Circuit breaker active — {consecutive_losses} consecutive losses"
+    elif vetoed_candidates:
+        _desc_lead = f"⛔ 0 new fund trades opened this scan{_veto_note}"
     elif _any_blocked:
         _desc_lead = f"\U0001f6ab {len(_any_blocked)} setup(s) blocked (conf ≥ 6)"
     elif blocked_trades:
@@ -811,47 +883,45 @@ def send_master_scan_report(
 
     fields = []
 
-    # ── SECTION 1: NEW SETUPS ─────────────────────────────────────────────────────
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SECTION: FUND ACTIVITY THIS SCAN
+    # ═══════════════════════════════════════════════════════════════════════════
     _setup_lines = []
-    # Status banner: regime pause
     _RANGING_REGIMES_DSC = ["RANGING_LOW_VOL", "RANGING_LOW_VOLATILITY", "RISK_OFF"]
     _regime_upper_dsc = str(regime or "").upper()
     if any(r in _regime_upper_dsc for r in _RANGING_REGIMES_DSC):
+        _since = _regime_since_str()
+        _since_str = f" (since {_since})" if _since else ""
         _setup_lines.append(
-            "⏸️ **Fund paused — Ranging market**\n"
-            "   Threshold raised to 7.5/10\n"
-            "   Waiting for trending conditions"
+            f"⏸️ **Fund paused — Ranging market**{_since_str}\n"
+            "   Threshold raised — waiting for trending conditions"
         )
-    # ── 1. Swaps FIRST — shown prominently ───────────────────────────────────────
     if swapped_setups:
         _setup_lines.append("\U0001f504 **PORTFOLIO SWAP EXECUTED**")
         for _sw in swapped_setups:
-            _sw_cp  = _sw.get("closed_pair", "")
-            _sw_pp  = float(_sw.get("closed_pips", 0))
-            _sw_pd  = float(_sw.get("closed_dollars", 0))
-            _sw_np  = _sw.get("new_pair", "")
-            _sw_nc  = float(_sw.get("new_conf", 0))
-            _sw_rsn = str(_sw.get("reason", ""))[:120]
+            _sw_cp  = _human(_sw.get("closed_pair"))
+            _sw_pp  = _num(_sw.get("closed_pips"))
+            _sw_np  = _human(_sw.get("new_pair"))
+            _sw_nc  = _num(_sw.get("new_conf"))
+            _sw_rsn = _human(_sw.get("reason"), "")[:120]
             _sw_emo = "✅" if _sw_pp >= 0 else "❌"
             _setup_lines.append(
                 f"   Closed: **{_sw_cp}** {_sw_emo} {_sw_pp:+.1f}p\n"
                 f"   Opened: **{_sw_np}** conf {_sw_nc:.1f}/10\n"
                 f"   _{_sw_rsn}_"
             )
-    # ── 2. Trades opened this scan ────────────────────────────────────────────────
     for _t in yes_trades:
-        _p   = _t.get("pair", "")
-        _d   = ((_t.get("parsed") or {}).get("direction") or _t.get("direction", ""))
-        _c   = float((_t.get("parsed") or {}).get("confidence") or _t.get("conf") or 0)
-        _en  = float((_t.get("parsed") or {}).get("entry") or _t.get("entry") or 0)
-        _sl  = float((_t.get("parsed") or {}).get("stop_loss") or _t.get("stop") or 0)
-        _t1  = float((_t.get("parsed") or {}).get("target") or _t.get("t1") or 0)
-        _t2  = float((_t.get("parsed") or {}).get("t2_price") or _t.get("t2") or 0)
-        _rr  = float((_t.get("parsed") or {}).get("reward_risk") or _t.get("rr") or 0)
-        _szp = float((_t.get("_fs_sizing") or {}).get("pct") or risk_pct)
+        _p   = _human(_t.get("pair"))
+        _d   = _human((_t.get("parsed") or {}).get("direction") or _t.get("direction"), "")
+        _c   = _num((_t.get("parsed") or {}).get("confidence") or _t.get("conf"))
+        _en  = _num((_t.get("parsed") or {}).get("entry") or _t.get("entry"))
+        _sl  = _num((_t.get("parsed") or {}).get("stop_loss") or _t.get("stop"))
+        _t2  = _num((_t.get("parsed") or {}).get("t2_price") or _t.get("t2"))
+        _rr  = _num((_t.get("parsed") or {}).get("reward_risk") or _t.get("rr"))
+        _szp = _num((_t.get("_fs_sizing") or {}).get("pct") or risk_pct, risk_pct)
         _rd  = round(fund_balance * _szp / 100)
-        _de  = "\U0001f4c8" if str(_d).upper() == "BUY" else "\U0001f4c9"
-        _t2s = f" · T2: `{_t2:.5f}`" if _t2 else ""
+        _de  = "\U0001f4c8" if _d.upper() == "BUY" else "\U0001f4c9"
+        _target_line = f"Target: `{_t2:.5f}`" if _t2 else "Target: pending 2R calculation"
         _ovr = _t.get("override_tier")
         if _ovr:
             _ovr_label = f" · ⚡ 5th slot ({_ovr})"
@@ -861,15 +931,29 @@ def send_master_scan_report(
             _trade_icon = "✅"
         _setup_lines.append(
             f"{_trade_icon} {_de} **{_p} {_d}** · conf {_c:.1f}/10{_ovr_label}\n"
-            f"   Entry: `{_en:.5f}` · Stop: `{_sl:.5f}`\n"
-            f"   T1: `{_t1:.5f}`{_t2s} · R:R {_rr:.1f} · Risk: ${_rd}"
+            f"   Entry: `{_en:.5f}` · Stop: `{_sl:.5f}` · {_target_line}\n"
+            f"   R:R {_rr:.1f} · Risk: ${_rd}"
         )
-    # ── 3. Standard blocked (confidence / trend / correlation / session) ──────────
+    # Vetoed candidates — pulled straight from the notes field the gate already
+    # wrote, not a new categorization. Shows plainly WHY a promising-looking
+    # candidate didn't become a real position.
+    for _v in vetoed_candidates[:5]:
+        _vp = _human(_v.get("pair"))
+        _vd = _human(_v.get("direction"), "")
+        _vc = _num(_v.get("conf"))
+        _vn = _human(_v.get("notes"), "vetoed (no reason recorded)")
+        _vde = "\U0001f4c8" if _vd.upper() == "BUY" else "\U0001f4c9"
+        _setup_lines.append(
+            f"⛔ {_vde} **{_vp} {_vd}** · conf {_vc:.1f}/10 — vetoed\n"
+            f"   {_vn}"
+        )
+    if len(vetoed_candidates) > 5:
+        _setup_lines.append(f"_…and {len(vetoed_candidates) - 5} more vetoed_")
     for _b in blocked_trades:
-        _bp   = _b.get("pair", "")
-        _bd   = _b.get("direction", "")
-        _bc   = float(_b.get("conf") or 0)
-        _br   = str(_b.get("reason") or "blocked")
+        _bp   = _human(_b.get("pair"))
+        _bd   = _human(_b.get("direction"), "")
+        _bc   = _num(_b.get("conf"))
+        _br   = _human(_b.get("reason"), "blocked")
         _br_lo = _br.lower()
         if any(x in _br_lo for x in ("correlation", "correlated", "exposure")):
             _b_icon = "\U0001f517"
@@ -885,24 +969,23 @@ def send_master_scan_report(
             f"{_b_icon} **{_bp} {_bd}** · conf {_bc:.1f}/10\n"
             f"   {_br[:90]}"
         )
-    # ── 4. No new trades — circuit breaker + blocked setups (conf ≥ 6) ───────────
     if not yes_trades and not swapped_setups:
         if consecutive_losses >= 3:
             _cb_open = ", ".join(
-                t.get("pair", "") for t in (open_trades or []) if t.get("pair")
+                _human(t.get("pair"), "") for t in (open_trades or []) if t.get("pair")
             ) or "open positions"
             _setup_lines.append(
                 f"⚠️ **Circuit breaker: {consecutive_losses} consecutive losses**\n"
                 f"   No new trades until a win\n"
-                f"   Waiting for: {_cb_open} to hit T1"
+                f"   Waiting for: {_cb_open} to reach target"
             )
         if _any_blocked:
             _setup_lines.append("**⛔ NO NEW FUND TRADES\n\nBlocked setups (would have opened):**")
             for _hb in _any_blocked[:5]:
-                _hbp = _hb.get("pair", "")
-                _hbd = _hb.get("direction", "")
-                _hbc = float(_hb.get("conf", 0))
-                _hbr = str(_hb.get("reason", ""))[:90]
+                _hbp = _human(_hb.get("pair"))
+                _hbd = _human(_hb.get("direction"), "")
+                _hbc = _num(_hb.get("conf"))
+                _hbr = _human(_hb.get("reason"), "")[:90]
                 _setup_lines.append(
                     f"⛔ **{_hbp} {_hbd}** · conf {_hbc:.1f}/10\n"
                     f"   {_hbr}"
@@ -912,31 +995,30 @@ def send_master_scan_report(
         if not _setup_lines:
             _setup_lines.append("No actionable setups this scan")
     elif _any_blocked:
-        # Trades/swaps opened but some setups also blocked — compact mention
         _setup_lines.append(f"**⛔ Also blocked — {len(_any_blocked)} setup(s) (conf ≥ 6):**")
         for _hb in _any_blocked[:3]:
-            _hbp = _hb.get("pair", "")
-            _hbd = _hb.get("direction", "")
-            _hbc = float(_hb.get("conf", 0))
-            _hbr = str(_hb.get("reason", ""))[:90]
+            _hbp = _human(_hb.get("pair"))
+            _hbd = _human(_hb.get("direction"), "")
+            _hbc = _num(_hb.get("conf"))
+            _hbr = _human(_hb.get("reason"), "")[:90]
             _setup_lines.append(f"⛔ **{_hbp} {_hbd}** · conf {_hbc:.1f}/10  {_hbr}")
         if len(_any_blocked) > 3:
             _setup_lines.append(f"_…and {len(_any_blocked) - 3} more_")
     fields.append({
-        "name": "\U0001f3af New Fund Trades",
+        "name": "\U0001f3af Fund Activity This Scan",
         "value": "\n\n".join(_setup_lines)[:1024],
         "inline": False,
     })
 
-    # ── SECTION 2: WATCH LIST (only if populated) ─────────────────────────────────
+    # ── WATCH LIST (only if populated) ────────────────────────────────────────────
     if watch_list:
         _wl_lines = []
         for _w in watch_list[:5]:
-            _wp  = _w.get("pair", "")
-            _wd  = _w.get("direction", "")
-            _wc  = float(_w.get("conf") or _w.get("confidence") or 0)
-            _wr  = str(_w.get("reason") or "")[:55]
-            _wde = "\U0001f4c8" if str(_wd).upper() == "BUY" else "\U0001f4c9"
+            _wp  = _human(_w.get("pair"))
+            _wd  = _human(_w.get("direction"), "")
+            _wc  = _num(_w.get("conf") or _w.get("confidence"))
+            _wr  = _human(_w.get("reason"), "")[:55]
+            _wde = "\U0001f4c8" if _wd.upper() == "BUY" else "\U0001f4c9"
             _wl_lines.append(f"· {_wde} **{_wp}** conf {_wc:.1f}/10 — {_wr}")
         if len(watch_list) > 5:
             _wl_lines.append(f"_…and {len(watch_list) - 5} more_")
@@ -946,14 +1028,16 @@ def send_master_scan_report(
             "inline": False,
         })
 
-    # ── SECTION 3: FUND HEALTH ────────────────────────────────────────────────────
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SECTION: FUND HEALTH & POSITIONS
+    # ═══════════════════════════════════════════════════════════════════════════
     _slots_free  = max(0, 4 - open_count)
     _risk_d      = round(fund_balance * risk_pct / 100)
     _ftmo_used   = abs(daily_pnl_pct)
     _dd_e        = "✅" if drawdown_pct < 3 else ("⚠️" if drawdown_pct < 7 else "\U0001f6a8")
     if consecutive_losses >= 3:
         _cb_wait_pairs = ", ".join(
-            t.get("pair", "") for t in (open_trades or []) if t.get("pair")
+            _human(t.get("pair"), "") for t in (open_trades or []) if t.get("pair")
         ) or "open positions"
         _streak = (
             f"\U0001f6a8 **Circuit breaker: {consecutive_losses} consecutive losses**\n"
@@ -968,87 +1052,96 @@ def send_master_scan_report(
     _szm_lower = str(sizing_mode or "normal").lower()
     _szm_icons = {"normal": "✅", "conservative": "⚠️", "minimal": "\U0001f534", "pause": "\U0001f6d1"}
     _szm_icon  = _szm_icons.get(_szm_lower, "\U0001f4b2")
-    fields.append({
-        "name": "\U0001f4b0 Fund Health",
-        "value": (
-            f"Balance: **${fund_balance:,.2f}** ({daily_pnl_pct:+.2f}% today)\n"
-            f"Peak: ${peak_balance:,.2f} · {_dd_e} Drawdown: {drawdown_pct:.2f}%\n"
-            f"Capacity: {open_count}/4 open · {_slots_free} slot(s) free\n"
-            f"Sizing: {risk_pct:.1f}% per trade (${_risk_d} risk) · {_szm_icon} Mode: **{sizing_mode or 'normal'}**\n"
-            f"FTMO: {_ftmo_used:.2f}% of 5% daily limit\n"
-            f"Streak: {_streak}\n"
-            f"Full details → #fund-alerts ↑"
-        ),
-        "inline": False,
-    })
+    _health_val = (
+        f"Balance: **${fund_balance:,.2f}** ({daily_pnl_pct:+.2f}% today)\n"
+        f"Peak: ${peak_balance:,.2f} · {_dd_e} Drawdown: {drawdown_pct:.2f}%\n"
+        f"Capacity: {open_count}/4 open · {_slots_free} slot(s) free\n"
+        f"Sizing: {risk_pct:.1f}% per trade (${_risk_d} risk) · {_szm_icon} Mode: **{sizing_mode or 'normal'}**\n"
+        f"FTMO: {_ftmo_used:.2f}% of 5% daily limit\n"
+        f"Streak: {_streak}"
+    )
 
-    # ── SECTION 3b: OPEN POSITIONS (trailing stop status) ────────────────────────
     _open_trades = open_trades or []
     if _open_trades:
         _pos_lines = []
         for _ot in _open_trades:
-            _ot_pair = _ot.get("pair", "")
-            _ot_dir  = _ot.get("direction", "")
-            _ot_ent  = float(_ot.get("entry") or 0)
-            _ot_t1h  = str(_ot.get("t1_hit", "")).upper() in ("TRUE", "1", "YES")
-            _ot_t2h  = str(_ot.get("t2_hit", "")).upper() in ("TRUE", "1", "YES")
-            _ot_t3h  = str(_ot.get("t3_hit", "")).upper() in ("TRUE", "1", "YES")
-            _ot_eff  = float(_ot.get("effective_stop") or _ot.get("stop_loss") or 0)
-            _ot_orig = float(_ot.get("stop_loss") or 0)
-            _ot_de   = "\U0001f4c8" if str(_ot_dir).upper() == "BUY" else "\U0001f4c9"
-            _ot_milestones = []
-            if _ot_t3h: _ot_milestones.append("T3✔")
-            elif _ot_t2h: _ot_milestones.append("T2✔")
-            elif _ot_t1h: _ot_milestones.append("T1✔")
-            _ot_ms_str = " · ".join(_ot_milestones) if _ot_milestones else "open"
+            _ot_pair = _human(_ot.get("pair"))
+            _ot_dir  = _human(_ot.get("direction"), "")
+            _ot_ent  = _num(_ot.get("entry"))
+            _ot_eff  = _num(_ot.get("stop") or _ot.get("effective_stop") or _ot.get("stop_loss"))
+            _ot_orig = _num(_ot.get("stop_loss"))
+            _ot_de   = "\U0001f4c8" if _ot_dir.upper() == "BUY" else "\U0001f4c9"
+            _ot_prog = _num(_ot.get("progress_pct"))
+            _ot_pips = _num(_ot.get("pips") or _ot.get("pips_unrealised"))
+            # Plain-language progress: percentage toward target, or pip distance from stop
+            if _ot_prog:
+                _ot_prog_str = f"{max(_ot_prog, 0):.0f}% of the way to target"
+            else:
+                _ot_prog_str = "Waiting for price to move"
             _ot_trailed = _ot_eff and _ot_orig and abs(_ot_eff - _ot_orig) > 1e-8
             if _ot_trailed:
                 _ot_stop_str = f"\U0001f512 Stop trailed → `{_ot_eff:.5f}`"
-            elif _ot_t1h:
-                _ot_stop_str = f"\U0001f512 Breakeven stop `{_ot_eff:.5f}`"
             else:
                 _ot_stop_str = f"Stop: `{_ot_eff:.5f}`"
             _pos_lines.append(
-                f"{_ot_de} **{_ot_pair} {_ot_dir}** · {_ot_ms_str}\n"
+                f"{_ot_de} **{_ot_pair} {_ot_dir}** · {_ot_prog_str} · {_ot_pips:+.1f}p\n"
                 f"   Entry: `{_ot_ent:.5f}` · {_ot_stop_str}"
             )
-        fields.append({
-            "name": "\U0001f4bc Open Positions",
-            "value": "\n\n".join(_pos_lines)[:1024],
-            "inline": False,
-        })
+        _health_val += "\n\n**Open Positions:**\n" + "\n\n".join(_pos_lines)
+    else:
+        # 0 open trades doesn't mean nothing happened — show what was evaluated.
+        if vetoed_candidates:
+            _mv = vetoed_candidates[0]
+            _health_val += (
+                f"\n\n**Open Positions:** none right now\n"
+                f"Most recent candidate: {_human(_mv.get('pair'))} {_human(_mv.get('direction'), '')} — "
+                f"vetoed ({_human(_mv.get('notes'), 'no reason recorded')})"
+            )
+        else:
+            _health_val += "\n\n**Open Positions:** none right now"
 
-    # ── SECTION 4: FUND PERFORMANCE ───────────────────────────────────────────────
-    _strat_date = strategy_start_date[:10] if strategy_start_date else "Jun 30, 2026"
+    fields.append({
+        "name": "\U0001f4b0 Fund Health & Positions",
+        "value": _health_val[:1024],
+        "inline": False,
+    })
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SECTION: FUND PERFORMANCE — Strict vs Loose
+    # ═══════════════════════════════════════════════════════════════════════════
     if v2_decisive > 0:
         _wr_e = "🟢" if v2_win_rate >= 50 else ("🟡" if v2_win_rate >= 35 else "🔴")
         _perf_val = (
-            f"**V2 STRATEGY (2:1 R:R)**\n"
-            f"Started: {_strat_date}\n"
-            f"{_wr_e} Win rate: **{v2_win_rate:.0f}%** ({v2_wins}W / {v2_losses}L)\n"
-            f"Decisive: {v2_decisive} · Strict: {v2_decisive_strict}/30 · Gross pips: {v2_net_pips:+.1f}p\n"
+            f"**V2 STRATEGY (2:1 R:R)** · Started: {V2_STRATEGY_START}\n"
+            f"{_wr_e} Win rate: **{v2_win_rate:.0f}%** ({v2_wins}W / {v2_losses}L) · Decisive: {v2_decisive}\n"
+            f"Strict: {v2_decisive_strict}/{fund_checkpoint_target}\n"
+            f"ℹ️ Strict = true target-hit/stop-hit only. Decisive (and the win rate\n"
+            f"   above) also counts EXPIRED trades reclassified by pip sign at\n"
+            f"   timeout — those never actually reached target or stop.\n"
+            f"Gross pips: {v2_net_pips:+.1f}p (raw pips, not cost-adjusted)\n"
             f"Return: {total_return_pct:+.2f}% since inception"
         )
     else:
         _perf_val = (
-            f"**V2 STRATEGY (2:1 R:R)** — Building history\n"
-            f"Started: {_strat_date}\n"
+            f"**V2 STRATEGY (2:1 R:R)** — Building history · Started: {V2_STRATEGY_START}\n"
             f"Trades taken: {fund_total} · No decisive outcomes yet\n"
             f"Return: {total_return_pct:+.2f}% since inception"
         )
     _v1_dec_scan = fund_decisive - v2_decisive
     if _v1_dec_scan > 0:
         _perf_val += (
-            f"\n\n**V1 ARCHIVE** (cascade — pre Jun 30, 2026)\n"
+            f"\n\n**V1 ARCHIVE** (cascade — pre {V2_STRATEGY_START})\n"
             f"{_v1_dec_scan} archived trades · WR not representative"
         )
     fields.append({
-        "name": "\U0001f4c8 Fund Performance",
+        "name": "\U0001f4c8 Fund Performance — Strict vs Loose",
         "value": _perf_val[:1024],
         "inline": False,
     })
 
-    # ── SECTION 5: ML SYSTEM ──────────────────────────────────────────────────────
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SECTION: ML SYSTEM
+    # ═══════════════════════════════════════════════════════════════════════════
     if ml_trained == 0:
         _ml_status = "❌ UNTRAINED — no model yet"
         _ml_detail = "Needs first training run"
@@ -1092,7 +1185,9 @@ def send_master_scan_report(
         "inline": False,
     })
 
-    # ── SECTION 6: RESEARCH TRADES ───────────────────────────────────────────────
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SECTION: RESEARCH PERFORMANCE — v2 primary, v1+v2 secondary
+    # ═══════════════════════════════════════════════════════════════════════════
     _rt_wr_e = "🟢" if research_win_rate >= 50 else ("🟡" if research_win_rate >= 35 else "🔴")
     _conf_tbl = (
         f"`conf 4-5` {wr_band_45:.0f}% ({n_band_45} trades)\n"
@@ -1102,21 +1197,43 @@ def send_master_scan_report(
     )
     _rt_val = (
         f"Open: **{research_open}** · Closed: **{research_closed}**\n"
-        f"{_rt_wr_e} Win rate: **{research_win_rate:.0f}%** ({research_decisive} decisive, v2)\n"
-        f"Profit factor: {research_pf:.2f} (v2)\n"
-        f"All-time (v1+v2): {research_win_rate_all:.0f}% WR ({research_decisive_all} decisive) · PF {research_pf_all:.2f}\n"
+        f"{_rt_wr_e} Win rate: **{research_win_rate:.0f}%** ({research_decisive} decisive, v2 — primary)\n"
+        f"Profit factor: {research_pf:.2f} (v2, raw pips)\n"
+        f"All-time (v1+v2, secondary reference): {research_win_rate_all:.0f}% WR "
+        f"({research_decisive_all} decisive) · PF {research_pf_all:.2f}\n"
         f"\n**Win rate by confidence (v2):**\n{_conf_tbl}"
         + (f"\n\n**Best pairs (5+ trades):** {best_pairs_str}" if best_pairs_str else "")
         + (f"\nAdaptive targets: {adaptive_count} pairs" if adaptive_count > 0 else "")
         + (f"\n\n{hot_research_str}" if hot_research_str else "")
     )
     fields.append({
-        "name": "\U0001f52c Research Trades",
+        "name": "\U0001f52c Research Performance",
         "value": _rt_val[:1024],
         "inline": False,
     })
 
-    # ── SECTION 7: MARKET CONTEXT ────────────────────────────────────────────────
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SECTION: CHECKPOINTS
+    # ═══════════════════════════════════════════════════════════════════════════
+    _research_ckpt_e = "✅" if research_decisive >= research_checkpoint_target else "⏳"
+    _fund_ckpt_e     = "✅" if v2_decisive_strict >= fund_checkpoint_target else "⏳"
+    fields.append({
+        "name": "\U0001f3c1 Checkpoints",
+        "value": (
+            f"Research (v2, loose decisive): {_research_ckpt_e} {research_decisive}/{research_checkpoint_target}\n"
+            f"Fund (v2, strict decisive): {_fund_ckpt_e} {v2_decisive_strict}/{fund_checkpoint_target}"
+            + (
+                f" — {fund_checkpoint_target - v2_decisive_strict} to go before the "
+                f"strategy's true track record is statistically meaningful"
+                if v2_decisive_strict < fund_checkpoint_target else ""
+            )
+        ),
+        "inline": False,
+    })
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SECTION: MARKET CONTEXT
+    # ═══════════════════════════════════════════════════════════════════════════
     _regime_e = {
         "trending": "\U0001f4c8", "ranging": "↔️", "volatile": "⚡",
         "risk-on": "\U0001f7e2", "risk-off": "\U0001f534",
@@ -1154,7 +1271,9 @@ def send_master_scan_report(
         "inline": False,
     })
 
-    # ── SECTION 8: SYSTEM HEALTH ─────────────────────────────────────────────────
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SECTION: SYSTEM HEALTH
+    # ═══════════════════════════════════════════════════════════════════════════
     _sys_alerts = list(expiry_alerts)
     if abs(daily_pnl_pct) > 4:
         _sys_alerts.append(f"\U0001f6a8 Fund near FTMO daily limit ({abs(daily_pnl_pct):.2f}%/5%)")
@@ -1162,7 +1281,18 @@ def send_master_scan_report(
         _sys_alerts.append(f"⚠️ Monitor gap {monitor_gap_mins:.0f}m — check cron-job.org")
     if td_calls > 600:
         _sys_alerts.append(f"⚠️ API calls {td_calls}/{td_limit} — approaching limit")
-    _alert_str   = "\n".join(_sys_alerts) if _sys_alerts else "✅ All systems normal"
+    _health_labels = {
+        "mfe_mae":           "MFE/MAE update",
+        "t2_price":          "t2_price init",
+        "ghost_trade":       "GHOST-TRADE reconciliation",
+        "sonnet_max_tokens": "Sonnet max_tokens truncation",
+    }
+    _silent_total = sum(health_counts.values())
+    if _silent_total:
+        for _cat, _n in health_counts.items():
+            if _n:
+                _sys_alerts.append(f"⚠️ {_n} {_health_labels.get(_cat, _cat)} failure(s) this scan")
+    _alert_str   = "\n".join(_sys_alerts) if _sys_alerts else "✅ 0 issues detected this scan"
     _cost_nzd    = scan_cost * 2.2
     fields.append({
         "name": "⚙️ System Health",
@@ -1206,6 +1336,34 @@ def _save_closed_trades_state(state: dict) -> None:
         print(f"[closed-trades] State saved to discord_dashboard.json: message_id={state.get('message_id')}")
     except Exception as e:
         print(f"[closed-trades] SAVE FAILED: {e}")
+
+
+def _load_last_dashboard_balance():
+    """Last balance the fund dashboard reported, or None if never recorded.
+
+    Lets the dashboard show a scan-over-scan delta ("since last update:
+    +$X") instead of only the static intraday "today" percentage, which
+    resets to 0 at the start of each day and hides moves within the day.
+    """
+    try:
+        data = json.loads(DASHBOARD_STATE_FILE.read_text(encoding="utf-8"))
+        val = data.get("last_dashboard_balance")
+        return float(val) if val is not None else None
+    except Exception:
+        return None
+
+
+def _save_last_dashboard_balance(balance: float) -> None:
+    try:
+        try:
+            data = json.loads(DASHBOARD_STATE_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            data = {}
+        data["last_dashboard_balance"] = balance
+        DASHBOARD_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        DASHBOARD_STATE_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    except Exception as e:
+        print(f"[dashboard-balance] SAVE FAILED: {e}")
 
 
 def update_closed_trades_log(
@@ -1723,20 +1881,36 @@ def build_fund_dashboard_embed(state: dict) -> dict:
     Reads directly from `state` — never re-calculates, never reads files.
     All prices/P&L come from the state's open_trades which were built by
     _open_trade_summary() with live prices.
+
+    Optional keys the caller (monitor.py) may add to `state` beyond what
+    calculate_fund_state() itself returns:
+      balance_delta      — float, change in balance since the last dashboard
+                            update (monitor.py tracks this via
+                            _load_last_dashboard_balance/_save_last_dashboard_balance)
+      regime              — str, current market regime
+      regime_since         — str, human-readable "how long" the current regime
+                            has been active (monitor.py reads regime_state.json)
+      recent_vetoed        — dict, most recent SKIPPED fund candidate
+                            ({pair, direction, conf, notes, closed_at}), shown
+                            only when there are 0 open trades
     """
-    balance     = float(state.get("balance") or 0)
-    unrealised  = float(state.get("unrealised_dollars") or 0)
-    total_eq    = float(state.get("total_equity") or balance)
-    daily_d     = float(state.get("daily_pnl_dollars") or 0)
-    daily_pct   = float(state.get("daily_pnl_pct") or 0)
-    drawdown    = float(state.get("current_drawdown_pct") or state.get("drawdown_pct") or 0)
-    peak        = float(state.get("peak_balance") or 10000)
+    balance     = _num(state.get("balance"))
+    unrealised  = _num(state.get("unrealised_dollars"))
+    total_eq    = _num(state.get("total_equity"), balance)
+    daily_d     = _num(state.get("daily_pnl_dollars"))
+    daily_pct   = _num(state.get("daily_pnl_pct"))
+    drawdown    = _num(state.get("current_drawdown_pct") or state.get("drawdown_pct"))
+    peak        = _num(state.get("peak_balance"), 10000)
     open_trades = state.get("open_trades") or []
-    cons_l      = int(state.get("consecutive_losses") or 0)
-    cons_w      = int(state.get("consecutive_wins") or 0)
-    sizing_mode = str(state.get("sizing_mode") or "normal")
-    risk_pct    = float(state.get("current_sizing_pct") or 1.0)
-    unreal_pips = float(state.get("unrealised_pips") or 0)
+    cons_l      = int(_num(state.get("consecutive_losses")))
+    cons_w      = int(_num(state.get("consecutive_wins")))
+    sizing_mode = _human(state.get("sizing_mode"), "normal")
+    risk_pct    = _num(state.get("current_sizing_pct"), 1.0)
+    unreal_pips = _num(state.get("unrealised_pips"))
+    balance_delta = state.get("balance_delta")
+    regime        = _human(state.get("regime"), "")
+    regime_since  = _human(state.get("regime_since"), "")
+    recent_vetoed = state.get("recent_vetoed") or None
 
     # Statistics (added by monitor before passing state)
     st_wins    = int(state.get("win_count") or 0)
@@ -1745,15 +1919,15 @@ def build_fund_dashboard_embed(state: dict) -> dict:
     st_be      = int(state.get("breakeven_count") or 0)
     st_total   = int(state.get("fund_total_trades") or 0)
     st_decisive = st_wins + st_losses + st_partial
-    st_wr      = float(state.get("win_rate") or 0)
-    st_pf      = float(state.get("profit_factor") or 0)
-    st_avg_win_p = float(state.get("avg_win_pips") or 0)
-    st_avg_win_d = float(state.get("avg_win_dollars") or 0)
-    st_avg_loss_p = float(state.get("avg_loss_pips") or 0)
-    st_avg_loss_d = float(state.get("avg_loss_dollars") or 0)
-    st_best_pair = str(state.get("best_pair") or "")
-    st_best_pips = float(state.get("best_pips") or 0)
-    st_dollar_pf = float(state.get("fund_dollar_pf") or 0)
+    st_wr      = _num(state.get("win_rate"))
+    st_pf      = _num(state.get("profit_factor"))
+    st_avg_win_p = _num(state.get("avg_win_pips"))
+    st_avg_win_d = _num(state.get("avg_win_dollars"))
+    st_avg_loss_p = _num(state.get("avg_loss_pips"))
+    st_avg_loss_d = _num(state.get("avg_loss_dollars"))
+    st_best_pair = _human(state.get("best_pair"), "")
+    st_best_pips = _num(state.get("best_pips"))
+    st_dollar_pf = _num(state.get("fund_dollar_pf"))
 
     now_str = datetime.now(timezone.utc).strftime("%H:%M UTC")
 
@@ -1773,15 +1947,30 @@ def build_fund_dashboard_embed(state: dict) -> dict:
     else:
         streak = "➡️ Neutral"
 
+    if balance_delta is not None:
+        _delta = _num(balance_delta)
+        _delta_line = f"\nSince last update: **${_delta:+.2f}**"
+    else:
+        _delta_line = ""
+
     fund_status_val = (
         f"\U0001f4b5 Cash: **${balance:,.2f}** ({cash_pct:+.2f}%)\n"
         f"{unreal_emoji} Unrealised: **${unrealised:+.2f}** ({unreal_pips:+.1f}p)\n"
         f"{'─' * 20}\n"
         f"{eq_emoji} **Total equity: ${total_eq:,.2f}** ({eq_pct:+.2f}%)\n"
-        f"{fund_emoji} Today: {daily_pct:+.2f}% (${daily_d:+.2f})\n"
+        f"{fund_emoji} Today: {daily_pct:+.2f}% (${daily_d:+.2f}){_delta_line}\n"
         f"{dd_emoji} Drawdown: {drawdown:.2f}% · {streak}\n"
         f"Sizing: {sizing_mode} ({risk_pct:.2f}% per trade)"
     )
+
+    # ── Market state — surface a regime pause plainly rather than burying it ──
+    _RANGING_REGIMES_DASH = ["RANGING_LOW_VOL", "RANGING_LOW_VOLATILITY", "RISK_OFF"]
+    if any(r in regime.upper() for r in _RANGING_REGIMES_DASH):
+        _since_str = f" (since {regime_since})" if regime_since else ""
+        fund_status_val += (
+            f"\n\n⏸️ **Fund paused — Ranging market**{_since_str}\n"
+            f"Threshold raised — lifts automatically once conditions trend again"
+        )
 
     # ── FTMO bar (daily P&L vs 5% daily limit) ──────────────────────────────
     _daily_used = abs(daily_pct)
@@ -1808,30 +1997,33 @@ def build_fund_dashboard_embed(state: dict) -> dict:
     v2_win_rate        = float(state.get("v2_win_rate") or 0)
     v2_net_pips        = float(state.get("v2_net_pips") or 0)
     v2_decisive_strict = int(state.get("v2_decisive_strict") or 0)
-    strat_start = str(state.get("strategy_start_date") or "")
-    strat_date  = strat_start[:10] if strat_start else "Jun 30, 2026"
+    _fund_checkpoint_target = 30
 
     if v2_decisive > 0:
         _wr_e = "🟢" if v2_win_rate >= 50 else ("🟡" if v2_win_rate >= 35 else "🔴")
         _stats_val = (
-            f"**V2 STRATEGY (2:1 R:R)**\n"
-            f"Started: {strat_date}\n"
-            f"{_wr_e} Win rate: **{v2_win_rate:.0f}%** ({v2_wins}W / {v2_losses}L)\n"
-            f"Decisive: {v2_decisive} · Strict: {v2_decisive_strict}/30 · Gross pips: {v2_net_pips:+.1f}p"
+            f"**V2 STRATEGY (2:1 R:R)** · Started: {V2_STRATEGY_START}\n"
+            f"{_wr_e} Win rate: **{v2_win_rate:.0f}%** ({v2_wins}W / {v2_losses}L) · Decisive: {v2_decisive}\n"
+            f"Strict: {v2_decisive_strict}/{_fund_checkpoint_target}\n"
+            f"ℹ️ Strict = true target-hit/stop-hit only; Decisive (and the win rate\n"
+            f"   above) also counts EXPIRED trades reclassified by pip sign at timeout.\n"
+            f"Gross pips: {v2_net_pips:+.1f}p (raw, not cost-adjusted)"
         )
     else:
         _stats_val = (
-            f"**V2 STRATEGY (2:1 R:R)** — Building history\n"
-            f"Started: {strat_date}\n"
+            f"**V2 STRATEGY (2:1 R:R)** — Building history · Started: {V2_STRATEGY_START}\n"
             f"No decisive outcomes yet"
         )
     _v1_dec = st_decisive - v2_decisive
     if _v1_dec > 0:
         _stats_val += (
-            f"\n\n**V1 ARCHIVE** (cascade — pre Jun 30, 2026)\n"
+            f"\n\n**V1 ARCHIVE** (cascade — pre {V2_STRATEGY_START})\n"
             f"{_v1_dec} archived trades · WR not representative\n"
             f"(exotic pairs + multi-target, old rules)"
         )
+
+    _ckpt_e = "✅" if v2_decisive_strict >= _fund_checkpoint_target else "⏳"
+    _stats_val += f"\n\n**Checkpoint:** {_ckpt_e} {v2_decisive_strict}/{_fund_checkpoint_target} strict decisive"
 
     fields = [
         {"name": "\U0001f4b0 Fund Status",          "value": fund_status_val, "inline": False},
@@ -1842,27 +2034,27 @@ def build_fund_dashboard_embed(state: dict) -> dict:
     # ── Open trade blocks ────────────────────────────────────────────────────
     if open_trades:
         for _t in open_trades:
-            _pair  = str(_t.get("pair", ""))
-            _dir   = str(_t.get("direction", "")).upper()
-            _entry = float(_t.get("entry") or 0)
-            _cur   = float(_t.get("current") or _entry)
-            _stop  = float(_t.get("stop") or _t.get("stop_loss") or 0)
-            _t1    = float(_t.get("t1") or _t.get("t1_price") or 0)
-            _t2    = float(_t.get("t2") or _t.get("t2_price") or 0)
-            _t3    = float(_t.get("t3") or _t.get("t3_price") or 0)
+            _pair  = _human(_t.get("pair"), "")
+            _dir   = _human(_t.get("direction"), "").upper()
+            _entry = _num(_t.get("entry"))
+            _cur   = _num(_t.get("current"), _entry)
+            _stop  = _num(_t.get("stop") or _t.get("stop_loss"))
+            _t1    = _num(_t.get("t1") or _t.get("t1_price"))
+            _t2    = _num(_t.get("t2") or _t.get("t2_price"))
+            _t3    = _num(_t.get("t3") or _t.get("t3_price"))
             _t1h   = bool(_t.get("t1_hit"))
             _t2h   = bool(_t.get("t2_hit"))
             _t3h   = bool(_t.get("t3_hit"))
-            _pips  = float(_t.get("pips") or _t.get("pips_unrealised") or 0)
-            _usd   = float(_t.get("dollars") or _t.get("dollars_unrealised") or 0)
-            _prog  = float(_t.get("progress_pct") or 0)
-            _next  = str(_t.get("next_target") or "T1")
-            _days  = int(_t.get("days_open") or 0)
-            _ostr  = str(_t.get("open_str") or "") or (f"{_days}d" if _days else "?d")
-            _conf  = float(_t.get("conf") or _t.get("confidence") or 0)
-            _risk  = float(_t.get("risk_dollars") or 0)
-            _tid   = str(_t.get("id") or "")
-            _note  = str(_t.get("pnl_note") or "")
+            _pips  = _num(_t.get("pips") or _t.get("pips_unrealised"))
+            _usd   = _num(_t.get("dollars") or _t.get("dollars_unrealised"))
+            _prog  = _num(_t.get("progress_pct"))
+            _next  = _human(_t.get("next_target"), "T1")
+            _days  = int(_num(_t.get("days_open")))
+            _ostr  = _human(_t.get("open_str"), "") or (f"{_days}d" if _days else "?d")
+            _conf  = _num(_t.get("conf") or _t.get("confidence"))
+            _risk  = _num(_t.get("risk_dollars"))
+            _tid   = _human(_t.get("id"), "")
+            _note  = _human(_t.get("pnl_note"), "")
 
             _dir_emoji = "\U0001f4c8" if _dir == "BUY" else "\U0001f4c9"
             _pnl_emoji = "🟢" if _pips >= 0 else "🔴"
@@ -1920,9 +2112,22 @@ def build_fund_dashboard_embed(state: dict) -> dict:
                 "inline": False,
             })
     else:
+        _empty_val = "No open fund trades\nWaiting for next signal..."
+        if recent_vetoed:
+            _rv_pair = _human(recent_vetoed.get("pair"))
+            _rv_dir  = _human(recent_vetoed.get("direction"), "")
+            _rv_conf = _num(recent_vetoed.get("conf"))
+            _rv_note = _human(recent_vetoed.get("notes"), "no reason recorded")
+            _rv_when = _human(recent_vetoed.get("closed_at"), "")
+            _empty_val += (
+                f"\n\nMost recent candidate this scan: **{_rv_pair} {_rv_dir}** "
+                f"(conf {_rv_conf:.1f}/10) — vetoed\n"
+                f"{_rv_note}"
+                + (f"\n_{_rv_when}_" if _rv_when else "")
+            )
         fields.append({
             "name":  "\U0001f4ca Open Fund Trades",
-            "value": "No open fund trades\nWaiting for next signal...",
+            "value": _empty_val,
             "inline": False,
         })
 

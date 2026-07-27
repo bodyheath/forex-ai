@@ -778,9 +778,14 @@ def _send_dashboard(state: dict, log_fn=None) -> None:
                 _new_id = resp.json().get("id")
                 if _new_id:
                     import json as _json2
+                    try:
+                        _existing = _json2.loads(_DASHBOARD_MSG_FILE.read_text(encoding="utf-8"))
+                    except Exception:
+                        _existing = {}
+                    _existing["message_id"] = _new_id
                     _DASHBOARD_MSG_FILE.parent.mkdir(parents=True, exist_ok=True)
                     _DASHBOARD_MSG_FILE.write_text(
-                        _json2.dumps({"message_id": _new_id}, indent=2), encoding="utf-8"
+                        _json2.dumps(_existing, indent=2), encoding="utf-8"
                     )
                     _log(f"  [dashboard] Posted Discord dashboard (msg {_new_id})")
             except Exception as _e:
@@ -3329,6 +3334,64 @@ def run(log=print) -> dict:
             from src import fund_state as _fs_dash
             _fs_d = _fs_dash.load()
 
+            # Scan-over-scan balance delta — how much changed since the last
+            # dashboard post, independent of the intraday "today %" figure.
+            _dash_balance_delta = None
+            try:
+                _prev_dash_bal = _dn._load_last_dashboard_balance()
+                if _prev_dash_bal is not None:
+                    _dash_balance_delta = _dash_bal - _prev_dash_bal
+                _dn._save_last_dashboard_balance(_dash_bal)
+            except Exception as _bd_exc:
+                log(f"  [dashboard] balance-delta tracking failed: {_bd_exc}")
+
+            # Regime pause duration — read the same state file market_regime.py
+            # writes to, so the dashboard can show "since when" rather than just
+            # the regime name.
+            _dash_regime, _dash_regime_since = "", ""
+            try:
+                _regime_state_path = config.DATA_DIR / "regime_state.json"
+                if _regime_state_path.exists():
+                    _regime_data = json.loads(_regime_state_path.read_text(encoding="utf-8"))
+                    _dash_regime = str(_regime_data.get("regime") or "")
+                    _changed_at_raw = _regime_data.get("changed_at")
+                    if _changed_at_raw:
+                        _changed_dt = datetime.fromisoformat(_changed_at_raw)
+                        _age = datetime.now(timezone.utc) - _changed_dt
+                        _age_hrs = _age.total_seconds() / 3600
+                        if _age_hrs < 1:
+                            _dash_regime_since = f"{int(_age.total_seconds() / 60)}m ago"
+                        elif _age_hrs < 48:
+                            _dash_regime_since = f"{_age_hrs:.0f}h ago"
+                        else:
+                            _dash_regime_since = _changed_dt.strftime("%d %b %Y")
+            except Exception as _rg_exc:
+                log(f"  [dashboard] regime-since lookup failed: {_rg_exc}")
+
+            # Most recent vetoed candidate — only useful context when there are
+            # 0 open trades (otherwise the open-position blocks already tell the
+            # story). Same SKIPPED-row query pattern daily.py uses for the scan
+            # report's vetoed-candidates list.
+            _dash_recent_vetoed = None
+            if not _dash_trades:
+                try:
+                    _skipped_rows = _df_dash[
+                        (_df_dash["trade_this"].astype(str) == "YES") &
+                        (_df_dash["status"] == "SKIPPED")
+                    ].copy()
+                    if len(_skipped_rows):
+                        _skipped_rows = _skipped_rows.sort_values("closed_at", ascending=False)
+                        _mv_row = _skipped_rows.iloc[0]
+                        _dash_recent_vetoed = {
+                            "pair":      str(_mv_row.get("pair", "")),
+                            "direction": str(_mv_row.get("direction", "")),
+                            "conf":      float(_mv_row.get("confidence", 0) or 0),
+                            "notes":     str(_mv_row.get("notes", "") or ""),
+                            "closed_at": str(_mv_row.get("closed_at", "") or ""),
+                        }
+                except Exception as _rv_exc:
+                    log(f"  [dashboard] recent-vetoed lookup failed: {_rv_exc}")
+
             # Build full state dict — single source of truth for the dashboard
             _full_state = {
                 **_state_dash,
@@ -3352,6 +3415,11 @@ def run(log=print) -> dict:
                 "sizing_mode":         str(_fs_d.get("sizing_mode") or "normal"),
                 "current_sizing_pct":  float(_fs_d.get("current_sizing_pct") or 1.0),
                 "consecutive_wins":    int(_fs_d.get("consecutive_wins") or 0),
+                # New display-only context (redesigned dashboard)
+                "balance_delta":       _dash_balance_delta,
+                "regime":              _dash_regime,
+                "regime_since":        _dash_regime_since,
+                "recent_vetoed":       _dash_recent_vetoed,
             }
             _send_dashboard(state=_full_state, log_fn=log)
     except Exception as _dash_exc:

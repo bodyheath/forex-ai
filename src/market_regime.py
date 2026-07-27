@@ -33,6 +33,8 @@ telegram_line(regime_data) -> str
 
 import json
 import pathlib
+from datetime import datetime, timezone
+
 import requests
 
 import config
@@ -310,12 +312,23 @@ def _check_regime_change(current_regime: str) -> None:
     """Persist regime to disk; send Telegram alert if it changed since last scan."""
     try:
         prev_regime = None
+        prev_changed_at = None
         if _REGIME_STATE_FILE.exists():
             try:
                 data = json.loads(_REGIME_STATE_FILE.read_text(encoding="utf-8"))
                 prev_regime = data.get("regime")
+                prev_changed_at = data.get("changed_at")
             except Exception:
                 pass
+
+        # changed_at tracks when the CURRENT regime started, so the dashboard can
+        # show "paused since X" instead of just the regime name. Reset it only
+        # when the regime actually flips; otherwise carry the previous value
+        # forward (an unbroken regime is not a "new" one just because a scan ran).
+        if prev_regime == current_regime and prev_changed_at:
+            changed_at = prev_changed_at
+        else:
+            changed_at = datetime.now(timezone.utc).isoformat()
 
         if prev_regime and prev_regime != current_regime:
             prev_info = REGIMES.get(prev_regime, {})
@@ -337,7 +350,7 @@ def _check_regime_change(current_regime: str) -> None:
                 pass
 
         _REGIME_STATE_FILE.write_text(
-            json.dumps({"regime": current_regime}, indent=2),
+            json.dumps({"regime": current_regime, "changed_at": changed_at}, indent=2),
             encoding="utf-8",
         )
     except Exception:

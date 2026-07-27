@@ -522,6 +522,12 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
             f"Sonnet: {pair} attempt {attempt} — response missing parseable CONFIDENCE "
             f"(stop_reason={stop_reason}). Raw: {report[:300]!r}"
         )
+        if stop_reason == "max_tokens":
+            try:
+                from src import health_counters as _hc
+                _hc.record("sonnet_max_tokens", f"{pair} attempt {attempt}")
+            except Exception:
+                pass
         if attempt == 2:
             raise RuntimeError(
                 f"Sonnet confirmation for {pair} missing CONFIDENCE after 2 attempts "

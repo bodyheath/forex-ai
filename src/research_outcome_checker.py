@@ -207,6 +207,11 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                 research_tracker.update_mfe_mae(rec_id, price)
             except Exception as e:
                 log(f"[mfe_mae] {pair} #{rec_id} update failed: {e}")
+                try:
+                    from src import health_counters as _hc
+                    _hc.record("mfe_mae", f"{pair} #{rec_id}: {e}")
+                except Exception:
+                    pass
 
             # ── TARGET: initialise t2_price if not yet stored ────────────────
             if not _to_float(row.get("t2_price")):
@@ -230,9 +235,19 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                             f"(entry={row.get('entry')!r} stop={row.get('stop_loss')!r} "
                             f"direction={direction!r}) — trade cannot register a WIN via target_hit "
                             f"until t2_price is set")
+                        try:
+                            from src import health_counters as _hc
+                            _hc.record("t2_price", f"{pair} #{rec_id}: no target from compute_levels")
+                        except Exception:
+                            pass
                 except Exception as e:
                     log(f"[t2_price] {pair} #{rec_id} init failed: {e} — trade cannot register "
                         f"a WIN via target_hit until t2_price is set")
+                    try:
+                        from src import health_counters as _hc
+                        _hc.record("t2_price", f"{pair} #{rec_id}: {e}")
+                    except Exception:
+                        pass
 
             # ── TARGET / STOP: check milestones ──────────────────────────────
             _closed_this = False

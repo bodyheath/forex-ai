@@ -6437,6 +6437,11 @@ def _send_telegram_summary(
                     f"{'; '.join(_ghost_lines)}"
                 ))
                 try:
+                    from src import health_counters as _hc_ghost
+                    _hc_ghost.record("ghost_trade", "; ".join(_ghost_lines))
+                except Exception:
+                    pass
+                try:
                     _telegram(
                         "🚨 GHOST TRADE DETECTED — fund position opened without risk gating\n"
                         + "\n".join(_ghost_lines)
@@ -10242,6 +10247,15 @@ def run() -> int:
     # ── Determine run environment first — affects guard and data-write behaviour ─
     IS_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
+    # Reset this-scan silent-failure tally (feeds the scan report's System Health
+    # section). Each GitHub Actions run is a fresh process so this is normally a
+    # no-op, but explicit reset guards against any accidental module re-import.
+    try:
+        from src import health_counters as _hc_reset
+        _hc_reset.reset()
+    except Exception:
+        pass
+
     # ── Auckland startup log — very first line, before all guards and checks ──
     _startup_ak = _auckland_now()
     print(
@@ -12527,7 +12541,6 @@ def run() -> int:
                                     "conf":         float(_nt.get("confidence", 0) or 0),
                                     "entry":        float(_nt.get("entry", 0) or 0),
                                     "stop":         float(_nt.get("stop_loss", 0) or 0),
-                                    "t1":           float(_nt.get("t1_price") or _nt.get("target", 0) or 0),
                                     "t2":           float(_nt.get("t2_price", 0) or 0),
                                     "rr":           float(_nt.get("reward_risk", 0) or 0),
                                     "status":       str(_nt.get("status", "")),
@@ -12539,9 +12552,35 @@ def run() -> int:
                         f"[discord] New trades from CSV: {len(_dsc_yes_raw)} — "
                         f"{[t['pair'] for t in _dsc_yes_raw]}"
                     ))
+
+                    # Vetoed candidates — same pairs, same 2h window, but rejected by a
+                    # real gate after initially looking promising (DA demotion, drawdown
+                    # filter, R:R viability, etc.). Pulls straight from the notes field
+                    # already written by the gate that caught it — no new categorization.
+                    _dsc_vetoed = []
+                    _fund_skipped = _df_new[
+                        (_df_new["trade_this"].astype(str) == "YES") &
+                        (_df_new["status"] == "SKIPPED")
+                    ]
+                    for _, _vt in _fund_skipped.iterrows():
+                        _ts_vt = str(_vt.get("timestamp", "") or "")
+                        try:
+                            _dt_vt = datetime.strptime(_ts_vt[:19], "%Y-%m-%d %H:%M:%S")
+                            if _dt_vt > _cutoff:
+                                _dsc_vetoed.append({
+                                    "pair":      str(_vt.get("pair", "")),
+                                    "direction": str(_vt.get("direction", "")),
+                                    "conf":      float(_vt.get("confidence", 0) or 0),
+                                    "notes":     str(_vt.get("notes", "") or ""),
+                                    "closed_at": str(_vt.get("closed_at", "") or ""),
+                                })
+                        except Exception:
+                            pass
+                    _dsc_vetoed.sort(key=lambda v: v.get("closed_at", ""), reverse=True)
                 except Exception as _e_yes:
                     _log_line(log, f"[discord] New trade read failed: {_e_yes}")
                     _dsc_yes_raw = []
+                    _dsc_vetoed = []
 
                 # Blocked trades
                 try:
@@ -12600,20 +12639,13 @@ def run() -> int:
                 except Exception:
                     pass
 
-                # Open trades for trailing stop display
+                # Open trades — reuse the same _open_trade_summary() dicts already
+                # computed by calculate_fund_state() above (_dsc_fresh_fs), which carry
+                # progress_pct/pips/dollars/current price alongside entry/stop — no need
+                # to rebuild a thinner version from the raw CSV rows.
                 _dsc_open_trades = []
                 try:
-                    for _, _dsc_ot3 in _dsc_fo.iterrows():
-                        _dsc_open_trades.append({
-                            "pair":           str(_dsc_ot3.get("pair", "")),
-                            "direction":      str(_dsc_ot3.get("direction", "")),
-                            "entry":          float(_dsc_ot3.get("entry") or 0),
-                            "stop_loss":      float(_dsc_ot3.get("stop_loss") or 0),
-                            "effective_stop": float(_dsc_ot3.get("effective_stop") or _dsc_ot3.get("stop_loss") or 0),
-                            "t1_hit":         str(_dsc_ot3.get("t1_hit", "")).upper() in ("TRUE", "1", "YES"),
-                            "t2_hit":         str(_dsc_ot3.get("t2_hit", "")).upper() in ("TRUE", "1", "YES"),
-                            "t3_hit":         str(_dsc_ot3.get("t3_hit", "")).upper() in ("TRUE", "1", "YES"),
-                        })
+                    _dsc_open_trades = list(_dsc_fresh_fs.get("open_trades") or [])
                 except Exception:
                     pass
 
@@ -12626,6 +12658,13 @@ def run() -> int:
                     _dsc_date_str = str(date)
                 except Exception:
                     _dsc_date_str = ""
+
+                # Silent-failure tally for this scan (System Health section)
+                try:
+                    from src import health_counters as _hc_report
+                    _dsc_health_counts = _hc_report.counts()
+                except Exception:
+                    _dsc_health_counts = {}
 
                 _log_line(log, (
                     f"[discord] Data ready: bal=${_dsc_bal:,.0f} "
@@ -12714,6 +12753,10 @@ def run() -> int:
                     v2_net_pips=_dsc_v2_pips,
                     v2_decisive_strict=_dsc_v2_decisive_strict,
                     strategy_start_date=_dsc_strat_start,
+                    vetoed_candidates=_dsc_vetoed,
+                    health_counts=_dsc_health_counts,
+                    research_checkpoint_target=80,
+                    fund_checkpoint_target=30,
                 )
                 _log_line(log, "Discord scan report sent ✅")
         except Exception as _dsc_exc:
