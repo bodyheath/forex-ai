@@ -1,0 +1,12 @@
+{
+  "dataset_name": "research_v2_strict_postfix",
+  "dataset_description": "Research v2 trades, strict outcomes only (true TARGET_HIT/STOP_HIT, PARTIAL_WIN/EXPIRED excluded), closed_at >= the 2026-07-14 exit-logic fix. This is the checkpoint-tracked, current-rules population.",
+  "source_csv": "C:\\Users\\bodyh\\Desktop\\forex-ai\\data\\research_trades.csv",
+  "source_csv_git_commit": "a6ed9875371ce9478ff41148dd184f64a75fb196",
+  "row_count": 161,
+  "date_range": [
+    "2026-07-14 15:01:38",
+    "2026-07-27 07:01:38"
+  ],
+  "exit_logic_fix_utc": "2026-07-14 13:46:31"
+}

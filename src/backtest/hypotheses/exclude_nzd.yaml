@@ -1,0 +1,7 @@
+name: exclude-nzd-pairs
+description: >
+  What if we never took any NZD-involving pair trade? Tests whether excluding
+  NZD exposure would have improved results in the post-fix strict window.
+dataset: research_v2_strict_postfix
+filters:
+  exclude_pair_contains: ["NZD"]

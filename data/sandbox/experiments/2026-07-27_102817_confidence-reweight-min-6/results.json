@@ -1,0 +1,64 @@
+{
+  "run_id": "2026-07-27_102817_confidence-reweight-min-6",
+  "timestamp_utc": "2026-07-27T10:28:17.626613+00:00",
+  "hypothesis": {
+    "name": "confidence-reweight-min-6",
+    "description": "What if the minimum confidence required to take a trade was 6, instead of the current gate (effectively 4)? Tests whether raising the floor and dropping the 4-5 confidence bands would have improved results in the post-fix strict window.\n",
+    "dataset": "research_v2_strict_postfix",
+    "filters": {
+      "min_confidence": 6
+    },
+    "custom_rule": null
+  },
+  "snapshot_meta": {
+    "dataset_name": "research_v2_strict_postfix",
+    "dataset_description": "Research v2 trades, strict outcomes only (true TARGET_HIT/STOP_HIT, PARTIAL_WIN/EXPIRED excluded), closed_at >= the 2026-07-14 exit-logic fix. This is the checkpoint-tracked, current-rules population.",
+    "source_csv": "C:\\Users\\bodyh\\Desktop\\forex-ai\\data\\research_trades.csv",
+    "source_csv_git_commit": "a6ed9875371ce9478ff41148dd184f64a75fb196",
+    "row_count": 161,
+    "date_range": [
+      "2026-07-14 15:01:38",
+      "2026-07-27 07:01:38"
+    ],
+    "exit_logic_fix_utc": "2026-07-14 13:46:31"
+  },
+  "baseline": {
+    "n": 161,
+    "wins": 26,
+    "losses": 135,
+    "win_rate_pct": 16.15,
+    "profit_factor": 0.401,
+    "expectancy_r": -0.495,
+    "sample_size_flag": "n=161 \u2014 usable sample size, still check the significance test below"
+  },
+  "included": {
+    "n": 91,
+    "wins": 12,
+    "losses": 79,
+    "win_rate_pct": 13.19,
+    "profit_factor": 0.317,
+    "expectancy_r": -0.578,
+    "sample_size_flag": "n=91 \u2014 usable sample size, still check the significance test below"
+  },
+  "excluded": {
+    "n": 70,
+    "wins": 14,
+    "losses": 56,
+    "win_rate_pct": 20.0,
+    "profit_factor": 0.516,
+    "expectancy_r": -0.387,
+    "sample_size_flag": "n=70 \u2014 usable sample size, still check the significance test below"
+  },
+  "comparison_included_vs_excluded": {
+    "test": "chi-square (included vs excluded)",
+    "applicable": true,
+    "chi2": 0.8998,
+    "dof": 1,
+    "p_value": 0.34283,
+    "min_expected_cell": 11.3,
+    "valid_test": true,
+    "validity_note": "valid \u2014 all expected cells >= 5",
+    "significant_at_0.05": false
+  },
+  "limitations": "LIMITATIONS \u2014 read before trusting this result:\nThis is an approximation, not a replay of history. It filters ALREADY-LOGGED outcomes by an alternative rule applied after the fact \u2014 it cannot reconstruct how downstream gates (devil's-advocate demotion, drawdown filter, correlation/concentration limits, position sizing, etc.) might have behaved differently under the alternative rule, since those gates only ran once, under the actual historical rules, at the actual historical confidence/context values. A trade excluded or included by this hypothesis might, under a real system change, have triggered a different downstream gate entirely (e.g. freed up fund capacity that a different trade would have taken instead). Treat every result below as a DIRECTIONAL ESTIMATE of what the historical outcomes would suggest, not a precise 'this is what would have happened.'"
+}

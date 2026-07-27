@@ -8,3 +8,5 @@ tzdata>=2024.1          # IANA timezone DB for zoneinfo on systems without syste
 scikit-learn>=1.3.0     # ML win-probability model (ml_predictor.py)
 imbalanced-learn>=0.11.0  # SMOTE synthetic minority oversampling (ml_predictor.py)
 yfinance>=0.2.0           # Yahoo Finance OHLCV fallback when Twelve Data rate-limits
+scipy>=1.11.0             # chi-square significance tests (src/backtest/metrics.py)
+PyYAML>=6.0               # hypothesis config files (src/backtest/)

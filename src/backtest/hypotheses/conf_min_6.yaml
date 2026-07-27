@@ -1,0 +1,9 @@
+name: confidence-reweight-min-6
+description: >
+  What if the minimum confidence required to take a trade was 6, instead of
+  the current gate (effectively 4)? Tests whether raising the floor and
+  dropping the 4-5 confidence bands would have improved results in the
+  post-fix strict window.
+dataset: research_v2_strict_postfix
+filters:
+  min_confidence: 6
