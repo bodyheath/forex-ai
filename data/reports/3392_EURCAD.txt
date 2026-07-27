@@ -1,0 +1,33 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 + 4H RSI overbought (70.4) + price near 50% Fib support (1.6085) creates weak SELL setup, but MTF W/D NEUTRAL kills directional conviction.
+
+RISK_FACTORS: 
+1. MTF confusion — Monthly SELL vs Weekly/Daily NEUTRAL (conf=0/3) violates MTF agreement rule; no clear multi-timeframe consensus.
+2. EUR COT REVERSING (long → short flip) while CAD BUILDING shorts — institutional conviction misaligned; D1 T_sig already NEUTRAL_3 reflects uncertainty.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: TRADE_THIS=NO due to failed MTF rule (W+D must both agree; here both are NEUTRAL, Monthly SELL is outlier). Confidence 4/10 < 7 threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- D1 RSI=47 is mid-zone NEUTRAL(3–4); T_sig baseline=NEUTRAL_3 stands

@@ -1,0 +1,24 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 bearish structure (price < SMA50 < SMA200 death-cross) conflicts with 4H morning star and W:BUY, creating mixed signal with reversal risk in a converging ribbon.
+RISK_FACTORS: [1] MTF disagreement: W:BUY + D:NEUTRAL + 4H:SELL = conf 1/3 (well below 2/3 threshold — trade viability severely compromised). [2] COT EUR positioning REVERSING (institutions flipping from long to short) while trade direction aligns with old long bias — institutional conviction collapse undermines thesis.
+TRADE_THIS: NO
+
+RATIONALE:
+─────────
+
+**MTF VETO (Critical Rule):**
+W:BUY, D:NEUTRAL, 4H:SELL = 1/3 agreement. Requires ≥2/3 (≥2 timeframes aligned) to proceed. **Trade rejected at structural level.** Confidence capped at 4 regardless of other factors.
+
+**TECHNICAL (4/10):**
+- D1 T_sig=NEUTRAL_3 (baseline preserved, no override justified)
+- D1 RSI=46.9 (NEUTRAL tier, 45–62 = 3–4 score

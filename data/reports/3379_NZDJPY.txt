@@ -1,0 +1,34 @@
+```
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key resistance on D1 with RSI overbought (64.6) in uptrend context signals reversal risk, but MTF disagreement (only D:SELL vs W/M/4H neutral) and aligned bullish ribbon prevent high-conviction short.
+
+RISK_FACTORS: 
+1. MTF CONFLICT: D1 SELL vs W/M/4H NEUTRAL (conf=1/3 <2/3 threshold) — trade lacks multi-timeframe confirmation; 
+2. RIBBON CONTRADICTION: ALIGNED_BULL (5/5 EMAs stacked) directly opposes SELL signal — continuation bias favors longs despite pin bar.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 94.55
+ENTRY_TRIGGER_REASON: Retest of pin bar high (94.88) with RSI confirmation below 60 on pullback
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- D1 T_sig=SELL_4 baseline, pin_bar_at_key_level:bea (bearish pin at resistance) justifies downside bias.
+- RS

@@ -1,0 +1,29 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 RSI 60.5 in confirmed uptrend (golden cross) is neutral-to-overbought; Weekly SELL + D1 NEUTRAL creates MTF conflict (conf=1/3); T_sig=SELL_3 conflicts with aligned ribbon and price structure, but CHF short unwinding and USD rate flat weaken conviction.
+
+RISK_FACTORS: [1] MTF conflict (W:SELL vs D:NEUTRAL vs 4H:BUY) fails 2/3 agreement rule—direction unclear; [2] CHF COT unwinding (institutions reducing short conviction) contradicts SELL direction and flags reversal risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF weekly+daily do not both agree (1/3 confidence); COT unwinding weakens positioning conviction for SELL.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF Rule Failure:** Weekly=SELL, Daily=NEUTRAL, 4H=BUY → only 1 of 3 timeframes align. Confidence=20%, well below 2/3 threshold. **TRADE_THIS blocked.**

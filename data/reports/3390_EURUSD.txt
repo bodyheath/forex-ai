@@ -1,0 +1,27 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish double-top pattern and fully-aligned bear ribbon support downside, but weak MTF agreement (1/3) and reversing EUR COT positioning undermine conviction.
+RISK_FACTORS: [1] MTF confluence weak (W:BUY vs D:NEUTRAL vs 4H:SELL, conf=1/3 <2/3 threshold) — MTF rule blocks HIGH confidence. [2] EUR COT REVERSING from net SHORT to unwinding — institutional conviction flipping against EUR downside; conflicts with SELL thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly (BUY) and daily (NEUTRAL) do not both agree on direction. Weekly-daily misalignment prevents trade execution despite bearish technicals. Minimum 2/3 MTF consensus (weekly + daily aligned) required; current conf=1/3 fails threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Analysis Summary**
+
+**Why NO despite bearish setup:**
+
+1. **MTF Rule Violation (Hard Block)** — Weekly=BUY, Daily=NEUTRAL, 4H=SELL. Only 4

@@ -1,0 +1,32 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 SELL signal (T_sig=3) + double-top pattern at resistance conflicts with ALIGNED_BULL ribbon and bullish 4H; MTF disagreement (W:SELL vs D:NEUTRAL vs 4H:BUY, conf=1/3) blocks high-confidence trade.
+
+RISK_FACTORS: 
+1. Ribbon fully aligned bullish (5/5 EMA pairs) contradicts SELL thesis — reversal risk if price breaks above 0.5771.
+2. MTF confidence only 25% (1/3 timeframes agree on direction) — conflicting signals W:SELL, D:NEUTRAL, 4H:BUY; CAD COT position unwinding reduces conviction.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.5771
+ENTRY_TRIGGER_REASON: Double-top neckline breakdownConfirmation below Fibonacci 100% (resistance at SH=0.5771) with D1 RSI 61.5 near overbought.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 T_sig=SELL

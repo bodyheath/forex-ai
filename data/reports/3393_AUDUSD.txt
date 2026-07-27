@@ -1,0 +1,31 @@
+```
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key level + elevated Stochastic/CCI suggest short-term pullback risk into resistance, but weak MTF alignment and mixed trend structure prevent high-confidence entry.
+
+RISK_FACTORS: 
+1. MTF conf=0/3 (all timeframes neutral/mixed) — no directional consensus across W/D/4H; D1 and 4H diverge (D1 NEUTRAL vs 4H SELL).
+2. OSC conf=NONE (Stochastic K=81.7 overbought, but CCI=84.9 conflicting signals) — no triple or even partial oscillator confluence; Stochastic overextension alone insufficient without MACD/RSI confirmation.
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.6965
+ENTRY_TRIGGER_REASON: Sell limit placed at support (Fib SL zone ~0.6866 + ATR buffer); await pullback to near 21-SMA (~0.6965) before entry to reduce false-signal risk from pin bar at resistance.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+TRADE_THIS: NO
+
+---
+
+### SCORING RATIONALE
+
+**TECHNICAL_SCORE: 4/10

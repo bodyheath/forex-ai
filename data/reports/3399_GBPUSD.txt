@@ -1,0 +1,26 @@
+```
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish pin bar at key level within established downtrend structure (death cross) provides weak confluence, but mixed MTF alignment and neutral oscillators limit conviction.
+RISK_FACTORS: [1. MTF misalignment (4H:SELL vs W/D:NEUTRAL, conf=0/3) violates MTF agreement rule — reversal risk if weekly/daily fail to confirm downside.] [2. COT GBP unwinding positioning mid-term — institutional conviction weakening into potential bounce; USD neutral provides no directional aid.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.3290
+ENTRY_TRIGGER_REASON: Break below pin bar low at near-term support; confluence with SMA50=1.3370 resistance and downtrend confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 4/10**  
+- **D1 RSI=48.2**: Confirmed DOWNTREND (price < SMA50 < SMA200, death cross). Standard tier applies: 45–62=NEUTRAL (3–4). RSI at 48 = baseline 3, **

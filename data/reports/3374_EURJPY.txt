@@ -1,0 +1,25 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level with RSI overbought and MACD flattening signals potential pullback within uptrend, but MTF disagreement (W:SELL vs D:NEUTRAL) and aligned ribbon weaken conviction.
+RISK_FACTORS: [1] MTF conflict: Weekly shows SELL while Daily is NEUTRAL — only 1/3 MTF agreement fails the MTF rule; [2] EUR COT positioning REVERSING from long to short while pair rallies creates institutional conviction risk — retail bearish at +8 sentiment suggests crowded long.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 186.95
+ENTRY_TRIGGER_REASON: Confirmation of pin bar rejection at intraday resistance near SMA50 zone; wait for daily close below 186.70 to confirm D1 reversal pattern.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 T_sig=SELL_3 (pre-computed baseline) — pin bar at key level is early reversal signal
+- RSI=62.4 (D1) is in the NEUTRAL zone (45–62 standard tier) but
