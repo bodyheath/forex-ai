@@ -1,0 +1,28 @@
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly SELL + bullish divergence + aligned ribbon create conflicting signals; RSI 62.2 in uptrend is neutral-to-overbought but not confirmatory for a SELL trade.
+
+RISK_FACTORS: [1. MTF agreement only 1/3 (W:SELL vs D:NEUTRAL vs 4H:BUY) — insufficient conviction for directional trade. 2. D1 T_sig=SELL_3 contradicted by bullish divergence and aligned-bull ribbon (5/5 EMAs), suggesting trend continuation rather than reversal.]
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence 1/3 (20% weighting) fails rule: both weekly AND daily must agree. Weekly=SELL but Daily=NEUTRAL; 4H=BUY disagrees. Insufficient MTF alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Violation (PRIMARY):**  
+Weekly=SELL, Daily=NEUTRAL, 4H=BUY → only 1/3 agreement. Your rule requires **both weekly AND daily to agree on direction** for

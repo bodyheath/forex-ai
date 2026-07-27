@@ -1,0 +1,25 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 T_sig=SELL_3 supported by Stochastic 85.7 (overbought) + CCI 146.1, but MTF weekly/daily disagreement (W:SELL vs D:NEUTRAL) and ALIGNED_BULL ribbon contradict bearish setup — internal conflict prevents high conviction.
+RISK_FACTORS: [1) MTF weekly/daily divergence (conf=1/3, wt=45%) violates MTF rule — weekly SELL conflicts with daily NEUTRAL, reducing trade reliability], [2) EUR COT REVERSING from long to short while JPY stable — institutional conviction flipping against EUR direction creates directional whipsaw risk]
+TRADE_THIS: NO
+ENTRY_TYPE: HOLD
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule breach: weekly and daily do not both agree. W:SELL + D:NEUTRAL fails 2/3 agreement threshold (conf=45%). Trade blocked per protocol.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS DETAIL:**
+
+**Technical (5/10):**
+- D1 T_sig=SELL_3 is baseline; RSI=60.6 in confirmed uptrend

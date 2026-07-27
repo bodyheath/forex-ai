@@ -1,0 +1,25 @@
+PAIR: EUR/GBP
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Weekly uptrend signal and double-bottom pattern offer bounce setup, but conflicting MTF (W:BUY vs D:NEUTRAL vs 4H:SELL at conf=1/3) and converging ribbon signal weakening momentum; positioned for mean-reversion bounce to SMA50 (0.8601) rather than trend continuation.
+
+RISK_FACTORS: 
+1. MTF confidence critical failure — weekly BUY contradicts 4H SELL and daily NEUTRAL; only 1/3 agreement means trade violates MTF rule (requires ≥2/3 agreement). 
+2. COT positioning reversal on EUR (net SHORT flipped) + GBP unwinding (institutional conviction declining) signals institutional de-risking; downtrend structure (price < SMA50 < SMA200) remains intact despite pattern bounce.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree (conf=1/3 << 2/3 threshold). Pattern + RSI neutral do not offset structural downtrend + institutional reversal risk. Setup requires weekly+daily agreement; only 1/3 present.
+ENTRY_TRIGGER_EXP

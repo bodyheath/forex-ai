@@ -1,0 +1,23 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI overbought (62) in uptrend context with T_sig=SELL_3 conflicts with ALIGNED_BULL ribbon and bullish patterns; MTF agreement only 1/3 (4H BUY vs W:SELL vs M/D:NEUTRAL) fails multi-timeframe confirmation rule.
+RISK_FACTORS: [1] MTF conf=1/3 violates 2/3 weekly+daily agreement threshold — D:NEUTRAL + W:SELL + 4H:BUY = fragmented directional consensus; [2] CHF COT positioning UNWINDING (institutions reducing conviction) while USD neutral — reduces edge on any SELL direction.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly=SELL, daily=NEUTRAL, 4H=BUY fails 2/3 alignment threshold (conf=1/3). No valid entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF Failure (HARD RULE):** W:SELL + D:NEUTRAL + 4H:BUY = only 1/3 agree

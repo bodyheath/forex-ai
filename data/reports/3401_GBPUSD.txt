@@ -1,0 +1,26 @@
+```
+PAIR: GBP/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level in confirmed downtrend with RSI 44.4 (neutral-to-oversold) offers reversal confluence, but MTF disagreement (W:NEUTRAL, D:NEUTRAL vs 4H:BUY) and GBP COT unwinding severely restrict conviction.
+RISK_FACTORS: [1] MTF conflict: W/D both NEUTRAL while 4H BUY creates directional consensus failure — 0/3 MTF agreement disqualifies trade per hard rule. [2] GBP positioning unwinding: institutions reducing long conviction while you enter long — classic reversal trap risk.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — W and D do not both agree on direction; conf=0/3 < 2/3 threshold. TRADE_THIS automatically NO regardless of technical setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Scoring Rationale:**
+
+**TECHNICAL (5):** T_sig baseline = BUY_3, adjusted to 5 in final score:
+- RSI 44.4 in *confirmed downtrend* (D:price
