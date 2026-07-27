@@ -288,7 +288,7 @@ def log_recommendation(pair: str, parsed: dict, data_sources, report: str) -> in
         "data_sources": data_sources,
         "status": status,
         "exit_price": "", "r_multiple": "", "pips": "", "net_pips": "",
-        "closed_at": "", "notes": "",
+        "closed_at": "", "notes": parsed.get("block_reason", ""),
         "report_file": report_file,
         "key_thesis": parsed.get("key_thesis") or "",
         "best_entry_time": parsed.get("best_entry_time") or "",
