@@ -5756,11 +5756,8 @@ def _send_telegram_summary(
                     pass
                 continue
             # Improvement 4: Weekly + Monthly trend alignment
-            _yt_dir_ta = (_yt_parsed.get("direction") or "").upper()
-            _trend_align = _get_trend_alignment(
-                _yt_pair, _yt_dir_ta,
-                log_fn=lambda m: _log_line(log, m),
-            )
+            # _yt_dir_ta / _trend_align already computed above in the TREND HARD FILTER
+            # block — reused here rather than recomputed.
             # Hard block: weekly trend opposes direction (monthly adds context but weekly alone is decisive)
             if _trend_align.get("weekly_aligned") is False:
                 _blk_trend = (
