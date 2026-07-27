@@ -1,0 +1,26 @@
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with T_sig=SELL_3 signal; MTF neutral (W/D/4H all NEUTRAL) blocks confirmation, and CHF COT unwinding undermines the directional thesis.
+RISK_FACTORS: (1) MTF confluence critical rule violated—Weekly AND Daily both NEUTRAL, not both BUY or both SELL; MTF weight=100% blocks trade regardless of technical. (2) CHF positioning unwinding mid-move contradicts directional conviction; D1 pin bar at key level is bullish-leaning, not bearish.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule breach: Weekly and Daily both NEUTRAL (not aligned BUY+BUY or SELL+SELL). Trade rejected per hard MTF requirement.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS DETAIL:**
+
+**MTF Rejection (Hard Stop):**
+- **Weekly:** NEUTRAL (not BUY/SELL)
+- **Daily:** NEUTRAL (not BUY/SELL)  
+- **4H:** NEUTRAL (range-bound, price/MAs not aligned)

@@ -1,0 +1,53 @@
+I need to carefully evaluate this trade, particularly the **UPTREND RSI rule** and the **ribbon conflict**.
+
+## Critical Analysis
+
+**RSI Uptrend Shift Rule (HARD):**
+- MTF = M:SELL W:SELL D:SELL 4H:SELL — this is a CONFIRMED DOWNTREND signal from MTF
+- Wait — RIB=ALIGNED_BULL contradicts, but MTF conf=3/3 SELL wins for RSI tier assignment
+- Confirmed DOWNTREND MTF: RSI 70.7 → standard tiers apply (downtrend shifts BUY zones lower, not SELL zones)
+- RSI 70.7 in confirmed downtrend MTF: standard tier 70-76 = 7-8 SELL ✓
+- T_sig=SELL_9 → anchor at 9, ribbon ALIGNED_BULL is a contradictory factor → adjust to 8
+
+**Ribbon Conflict:**
+- ALIGNED_BULL (5/5) directly contradicts SELL — this is the single biggest risk
+- However MTF 3/3 SELL + RSI 70.7 + TRIPLE_SELL OSC + bearish pin bar at key level override
+
+**Uptrend RSI shift check:**
+- MTF is W:SELL + D:SELL = confirmed downtrend direction for RSI purposes
+- RSI 70.7 in downtrend context: normal tiers apply → 70-76 = 7-8 SELL ✓ (not shifted)
+
+**OSCILLATOR_CONFLUENCE TRIPLE_SELL:** +2 confidence
+**Haiku base confidence 8** → ribbon conflict -0 (already noted as risk) → final 8
+
+**Positioning:** AUD net SHORT building (bearish AUD), CHF net SHORT unwinding (bullish CHF) → both support AUD/CHF SELL ✓
+
+**Fundamental conflict:** Rate diff +4.50% favors AUD long-term, but CHF unwinding shorts = CHF strengthening pressure
+
+**ATR=0.0036, entry=0.5714:**
+- Stop: above pin bar high + buffer = ~0.5714 + (1.5×ATR) = 0.5714 + 0.0054 = **0.5768**
+- Risk = 0.5768 - 0.5714 = 54 pips
+- Target = 0.5714 - (0.0054 × 2) = **0.5606**
+- R:R = 2.0:1 ✓
+
+---
+
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 8/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 0.5714
+TARGET: 0.5606
+STOP_LOSS: 0.5768
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 19:00–21:00 NZST
+NEWS_WARNING: AUD employment data and CHF CPI releases within 48h — confirm calendar before entry
+KEY_THESIS: RSI 70.7 bearish pin bar at key resistance with triple oscillator SELL confluence (Stoch 90.9, CCI 131.0) and unanimous MTF SELL (M/W/D/4H 3/3) signals high-probability mean reversion toward SMA50 at 0.5622, despite ALIGNED_BULL ribbon which represents the primary risk.
+RISK_FACTORS: 1. EMA ribbon ALIGNED_BULL (5/5 fan) signals active trend momentum — a close above 0.5750 invalidates the reversal thesis entirely. 2. Fundamental rate differential (+4.50% AUD advantage) and AUD rising/CHF falling rate trajectory structurally oppose the SELL, limiting downside conviction on larger timeframes.
+TRADE_THIS:
