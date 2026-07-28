@@ -80,12 +80,17 @@ def _fetch_live_price(pair: str) -> float | None:
 
 def _determine_outcome(direction: str, price: float,
                        entry, stop, target, opened_at: str,
-                       expiry_days: int = None) -> str | None:
-    """Return 'WIN', 'LOSS', 'EXPIRED', or None (still open)."""
+                       expiry_days: int = None, as_of: datetime = None) -> str | None:
+    """Return 'WIN', 'LOSS', 'EXPIRED', or None (still open).
+
+    as_of: clock to evaluate expiry against; defaults to real now() (live use).
+    Passed explicitly by the virtual outcome simulator to evaluate expiry
+    against a historical bar timestamp instead of the real clock."""
     expiry = expiry_days if expiry_days is not None else _EXPIRY_DAYS
+    _now = as_of if as_of is not None else datetime.now(timezone.utc)
     try:
         opened = datetime.strptime(opened_at[:19], "%Y-%m-%d %H:%M:%S")
-        if (datetime.now(timezone.utc).replace(tzinfo=None) - opened).days >= expiry:
+        if (_now.replace(tzinfo=None) - opened).days >= expiry:
             return "EXPIRED"
     except (ValueError, TypeError):
         pass
