@@ -311,9 +311,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
 
             # ── STALE EXIT: hard 21-day maximum if T1 never hit ──────────────
             try:
-                _opened_dt  = datetime.strptime(row.get("date", "")[:10], "%Y-%m-%d")
-                _days_open  = (datetime.now(timezone.utc).replace(tzinfo=None) - _opened_dt).days
-                if _days_open >= _STALE_EXIT_DAYS:
+                if _is_stale_exit(row.get("date", "")):
                     updated = research_tracker.update_outcome(
                         rec_id, "STALE_EXIT", close_price=price,
                     )
