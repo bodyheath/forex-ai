@@ -1,60 +1,58 @@
 {
-  "timestamp": 1785237515.851837,
+  "timestamp": 1785262832.8653123,
   "watchlist_pairs": [
-    "GBP/USD",
     "AUD/JPY",
     "CAD/JPY",
     "EUR/JPY",
-    "GBP/JPY",
-    "AUD/CAD",
     "NZD/JPY",
-    "EUR/AUD",
     "GBP/CAD",
-    "NZD/CHF",
-    "CHF/JPY",
     "EUR/USD",
     "AUD/NZD",
-    "GBP/AUD"
+    "EUR/CAD",
+    "NZD/CAD",
+    "GBP/NZD",
+    "GBP/USD"
   ],
   "near_miss": {
-    "AUD/JPY": 5,
-    "GBP/JPY": 5,
-    "AUD/CAD": 5,
-    "EUR/AUD": 5,
-    "GBP/CAD": 5,
-    "CHF/JPY": 5,
-    "AUD/NZD": 5
+    "NZD/JPY": 5,
+    "AUD/NZD": 5,
+    "EUR/CAD": 5,
+    "NZD/CAD": 5,
+    "GBP/NZD": 5
   },
   "near_miss_dirs": {
-    "AUD/JPY": "SELL",
-    "GBP/JPY": "SELL",
-    "AUD/CAD": "SELL",
-    "EUR/AUD": "BUY",
-    "GBP/CAD": "BUY",
-    "CHF/JPY": "BUY",
-    "AUD/NZD": "SELL"
+    "NZD/JPY": "SELL",
+    "AUD/NZD": "SELL",
+    "EUR/CAD": "BUY",
+    "NZD/CAD": "BUY",
+    "GBP/NZD": "BUY"
   },
   "momentum_counts": {
-    "GBP/USD": 7,
-    "AUD/JPY": 5,
-    "CAD/JPY": 8,
-    "EUR/JPY": 8,
+    "AUD/JPY": 6,
+    "CAD/JPY": 9,
+    "EUR/JPY": 9,
+    "NZD/JPY": 17,
+    "GBP/CAD": 2,
+    "EUR/USD": 2,
+    "AUD/NZD": 26,
+    "EUR/CAD": 1,
+    "NZD/CAD": 1,
+    "GBP/NZD": 1,
+    "GBP/USD": 8,
     "GBP/JPY": 26,
     "AUD/CAD": 1,
-    "NZD/JPY": 16,
     "EUR/AUD": 3,
-    "GBP/CAD": 1,
     "NZD/CHF": 4,
     "CHF/JPY": 5,
-    "EUR/USD": 1,
-    "AUD/NZD": 25,
-    "GBP/AUD": 2,
-    "USD/CAD": 5,
-    "AUD/USD": 1
+    "GBP/AUD": 2
   },
   "momentum_grace": {
-    "USD/CAD": 1,
-    "AUD/USD": 1
+    "GBP/JPY": 1,
+    "AUD/CAD": 1,
+    "EUR/AUD": 1,
+    "NZD/CHF": 1,
+    "CHF/JPY": 1,
+    "GBP/AUD": 1
   },
   "watchlist_weekly_stats": {
     "week_start": "2026-07-27",
@@ -62,7 +60,5 @@
     "promoted_to_deep": 2,
     "became_trade_alerts": 0
   },
-  "priority_for_next_scan": [
-    "GBP/CAD"
-  ]
+  "priority_for_next_scan": []
 }
