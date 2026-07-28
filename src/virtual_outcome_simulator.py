@@ -195,11 +195,20 @@ def simulate_row(row: dict, source: str, bars: list, now_utc: datetime) -> dict:
         return result
     result["t2_price"] = t2_price
 
+    # Use full time-of-day precision when available (fund's timestamp is
+    # "YYYY-MM-DD HH:MM:SS") so the bar walk starts at the actual moment the
+    # candidate was generated, not midnight of that date — otherwise hours
+    # of pre-signal price action would be scanned as if it were "post-block"
+    # history. Research only carries a date (matching its own real logic's
+    # own opened_at[:10] precision), so midnight-start is its true ceiling.
     try:
-        opened_dt = datetime.strptime(opened_at[:10], "%Y-%m-%d")
+        opened_dt = datetime.strptime(opened_at[:19], "%Y-%m-%d %H:%M:%S")
     except (ValueError, TypeError):
-        result["virtual_outcome"] = "INVALID_ROW"
-        return result
+        try:
+            opened_dt = datetime.strptime(opened_at[:10], "%Y-%m-%d")
+        except (ValueError, TypeError):
+            result["virtual_outcome"] = "INVALID_ROW"
+            return result
 
     row_bars = [b for b in bars if b["dt"] >= opened_dt]
     if not row_bars:
