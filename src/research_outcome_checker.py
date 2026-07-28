@@ -107,11 +107,15 @@ def _fetch_live_price(pair: str):
 
 def _determine_outcome(direction: str, price: float,
                        entry, stop, target, opened_at: str,
-                       expiry_days: int = None):
+                       expiry_days: int = None, as_of: datetime = None):
+    """as_of: clock to evaluate expiry against; defaults to real now() (live use).
+    Passed explicitly by the virtual outcome simulator to evaluate expiry
+    against a historical bar timestamp instead of the real clock."""
     expiry = expiry_days if expiry_days is not None else _EXPIRY_DAYS
+    _now = as_of if as_of is not None else datetime.now(timezone.utc)
     try:
         opened = datetime.strptime(opened_at[:10], "%Y-%m-%d")
-        if (datetime.now(timezone.utc).replace(tzinfo=None) - opened).days >= expiry:
+        if (_now.replace(tzinfo=None) - opened).days >= expiry:
             return "EXPIRED"
     except (ValueError, TypeError):
         pass
@@ -130,6 +134,20 @@ def _determine_outcome(direction: str, price: float,
         if price >= stop:
             return "LOSS"
     return None
+
+
+def _is_stale_exit(opened_at: str, as_of: datetime = None) -> bool:
+    """True once a trade has been open >= _STALE_EXIT_DAYS without resolving.
+
+    Extracted from check_open_research_trades so the virtual outcome
+    simulator can evaluate the identical rule against historical timestamps
+    instead of the real clock (as_of defaults to real now() for live use)."""
+    _now = as_of if as_of is not None else datetime.now(timezone.utc)
+    try:
+        opened = datetime.strptime(opened_at[:10], "%Y-%m-%d")
+    except (ValueError, TypeError):
+        return False
+    return (_now.replace(tzinfo=None) - opened).days >= _STALE_EXIT_DAYS
 
 
 def check_open_research_trades(log=print, price_cache: dict | None = None) -> list:
