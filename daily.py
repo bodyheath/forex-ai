@@ -6546,8 +6546,22 @@ def _send_telegram_summary(
             _log_line(log, f"[GHOST-TRADE] Reconciliation check failed: {_recon_exc}")
     except Exception as _fs_exc:
         import traceback as _tb_fs
+        _fs_tb_str = _tb_fs.format_exc()
         print(f"[FUND_STATE] {_fs_exc}", file=sys.stderr)
-        print(_tb_fs.format_exc(), file=sys.stderr)
+        print(_fs_tb_str, file=sys.stderr)
+        _log_line(log, f"[FUND_STATE] {type(_fs_exc).__name__}: {_fs_exc}")
+        _log_line(log, _fs_tb_str)
+        _fund_loop_ok = False
+        try:
+            from src import discord_notifier as _dn_fsloop_exc
+            _dn_fsloop_exc.send_fund_loop_exception_alert(
+                pair="N/A",
+                error_str=f"{type(_fs_exc).__name__}: {_fs_exc}\n\n{_fs_tb_str[-800:]}",
+                scan_mode=scan_mode,
+                scope="loop",
+            )
+        except Exception as _dn_fsloop_send_exc:
+            _log_line(log, f"[FUND_STATE] Discord CRITICAL alert failed: {_dn_fsloop_send_exc}")
 
     # ── Cascade target levels for YES fund trades ─────────────────────────────
     # Computed after deduplication so only real fund trades get cascade fields.
