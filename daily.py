@@ -5389,9 +5389,19 @@ def _send_telegram_summary(
             try:
                 from src import tracker as _trk_da
                 _eff_da = _eff_conf(_da_sk)
+                _da_reasons_sk = "; ".join(
+                    (_da_sk.get("second_opinion") or {}).get("reasons") or []
+                ) or "no objections recorded"
+                _log_line(log, (
+                    f"[da_demoted] {_da_sk['pair']} — eff_conf={_eff_da:.1f} below "
+                    f"threshold {_trade_conf_thr:.1f} — DA reasons: {_da_reasons_sk}"
+                ))
                 _trk_da.update_outcome(
                     int(_da_sk_id), "SKIPPED",
-                    notes=f"DA-demoted: eff_conf={_eff_da:.1f} below threshold {_trade_conf_thr:.1f} after devil's advocate",
+                    notes=(
+                        f"DA-demoted: eff_conf={_eff_da:.1f} below threshold "
+                        f"{_trade_conf_thr:.1f} after devil's advocate — {_da_reasons_sk}"
+                    ),
                 )
             except Exception as _da_sk_exc:
                 print(
