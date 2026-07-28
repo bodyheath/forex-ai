@@ -658,6 +658,39 @@ def send_workflow_failure(workflow_name, run_url, scan_mode=""):
     )
 
 
+def send_fund_loop_exception_alert(pair: str, error_str: str, scan_mode: str = "",
+                                    scope: str = "candidate") -> bool:
+    """Alert that an unhandled exception disrupted fund-candidate evaluation.
+
+    scope="candidate" — one candidate's evaluation failed; the loop recovered
+      and continued to the next candidate (see reliability review, fix #1).
+    scope="loop" — the exception escaped per-candidate handling entirely;
+      remaining candidates in this scan were not evaluated.
+
+    A caught exception here must never look identical to a clean run from the
+    outside — this is the Discord-side half of that guarantee.
+    """
+    fields = [
+        {"name": "\U0001f4c9 Pair",       "value": pair or "unknown",      "inline": True},
+        {"name": "\U0001f4cb Scan Mode",  "value": scan_mode or "unknown", "inline": True},
+        {"name": "\U0001f50d Scope",      "value": scope,                  "inline": True},
+        {"name": "⚠️ Error",              "value": (error_str or "")[:1000], "inline": False},
+        {"name": "ℹ️ Impact", "value": (
+            "Remaining fund-candidate evaluation for this scan was disrupted."
+            if scope == "loop" else
+            "This candidate was skipped; the rest of this scan's candidates "
+            "were still evaluated normally."
+        ), "inline": False},
+    ]
+    return _send_embed(
+        WEBHOOK_CRITICAL,
+        "🚨 FUND LOOP EXCEPTION — candidate evaluation disrupted",
+        "An unhandled exception occurred while evaluating a fund trade candidate",
+        COLOR_CRITICAL,
+        fields=fields,
+    )
+
+
 def send_ghost_trade_alert(ghost_lines: list):
     """Alert that one or more OPEN v2 fund trades bypassed the fund-state
     loop entirely — never risk-gated (capacity/correlation/sizing).
