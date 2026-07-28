@@ -434,7 +434,7 @@ def update_peak_and_drawdown(state: dict, current_balance: float) -> tuple:
 
 
 def compute_sizing(state: dict, current_balance: float,
-                   checklist_score: float = 10.0) -> tuple:
+                   checklist_score: float = 10.0, log_fn=None) -> tuple:
     """Compute adaptive position size based on win streak and drawdown state.
 
     Returns (size_pct, mode, reason).
@@ -447,6 +447,7 @@ def compute_sizing(state: dict, current_balance: float,
       7–10%:  0.25% — requires confidence 9+
       >=10%:  0.0 (trading paused)
     """
+    _log = log_fn or print
     drawdown  = float(state.get("current_drawdown_pct") or 0.0)
     paused    = state.get("drawdown_paused", False) or state.get("circuit_breaker_active", False)
 
@@ -455,12 +456,16 @@ def compute_sizing(state: dict, current_balance: float,
 
     if drawdown >= 7.0:
         if checklist_score < 9.0:
+            _log(f"[sizing] BLOCKED — drawdown {drawdown:.1f}% from peak requires "
+                 f"checklist_score>=9.0, got {checklist_score:.1f}")
             return None, "drawdown_blocked", f"Drawdown {drawdown:.1f}% from peak — requires confidence 9+"
         base = 0.25
         mode = "drawdown_protection"
         reason = f"Drawdown protection — fund {drawdown:.1f}% from peak (0.25% risk)"
     elif drawdown >= 5.0:
         if checklist_score < 8.0:
+            _log(f"[sizing] BLOCKED — drawdown {drawdown:.1f}% from peak requires "
+                 f"checklist_score>=8.0, got {checklist_score:.1f}")
             return None, "drawdown_blocked", f"Drawdown {drawdown:.1f}% from peak — requires confidence 8+"
         base = 0.5
         mode = "drawdown_protection"
