@@ -5231,6 +5231,10 @@ def _send_telegram_summary(
         try:
             from src import tracker as _trk_dem
             _eff_v = _eff_conf(_dr)
+            _log_line(log, (
+                f"[demoted] {_dr['pair']} — eff_conf={_eff_v:.1f} "
+                f"below threshold {_trade_conf_thr:.1f}"
+            ))
             _trk_dem.update_outcome(
                 int(_dr_id), "SKIPPED",
                 notes=f"Demoted: eff_conf={_eff_v:.1f} below threshold {_trade_conf_thr:.1f}",
