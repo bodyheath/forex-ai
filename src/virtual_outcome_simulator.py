@@ -444,113 +444,197 @@ def _load_existing() -> pd.DataFrame:
     return pd.DataFrame(columns=_OUT_COLUMNS)
 
 
-def backfill(log=print, limit: int = None) -> pd.DataFrame:
+def backfill(log=print, limit: int = None, max_pairs: int = None) -> pd.DataFrame:
     """Backfill virtual outcomes for every eligible blocked candidate in
-    trades.csv and research_trades.csv. Idempotent: rows already present
-    in data/virtual_outcomes.csv (by source_table+source_id) are skipped.
+    trades.csv and research_trades.csv.
 
-    Fetches one historical bar-range per unique pair (not per candidate) to
-    stay well inside the shared 800-calls/day TwelveData budget.
+    Incremental, not merely idempotent: rows already resolved to a terminal
+    outcome (WIN/LOSS/EXPIRED/STALE_EXIT/INVALID_ROW) are skipped entirely —
+    no re-fetch, no re-simulation. Rows still PENDING or NO_DATA from a
+    previous run ARE retried (their expiry window may have elapsed, or bar
+    data may now exist), and their row is replaced in place rather than
+    duplicated. This is what keeps a daily re-run cheap: steady-state work
+    is only newly-added candidates + the still-unresolved backlog.
+
+    Quota safety: aborts outright if the shared TD call counter already
+    reads above _QUOTA_ABORT_THRESHOLD (a floor, not a true count — see the
+    module docstring). Independent of that, work is capped at
+    _MAX_PAIRS_PER_RUN unique pairs per call (override via max_pairs) so a
+    single run's worst-case cost is fixed regardless of backlog size.
+
+    Never truncates or corrupts virtual_outcomes.csv: the file is rewritten
+    only once, atomically, at the very end, from an in-memory frame built by
+    layering this run's results over a full copy of the previous file. A
+    crash or exception at any point before that leaves the existing file
+    untouched. Per-pair fetch failures and per-candidate simulation errors
+    are caught individually and logged — one bad pair or row cannot abort
+    the rest of the run.
     """
     if not config.TWELVE_DATA_KEY:
         log("Virtual outcome backfill: TWELVE_DATA_KEY not set — aborting.")
-        return pd.DataFrame(columns=_OUT_COLUMNS)
+        return _load_existing()
+
+    quota_used = _get_td_calls_today()
+    if quota_used > _QUOTA_ABORT_THRESHOLD:
+        log(f"Virtual outcome backfill: shared TD quota already at {quota_used}/800 "
+            f"(>{_QUOTA_ABORT_THRESHOLD}) — skipping this run entirely to protect the live scan pipeline.")
+        return _load_existing()
+
+    cap = max_pairs if max_pairs is not None else _MAX_PAIRS_PER_RUN
 
     candidates = _load_candidates()
     existing = _load_existing()
-    done_keys = set(zip(existing.get("source_table", []), existing.get("source_id", [])))
-    candidates = [c for c in candidates if (c["source_table"], c["source_id"]) not in done_keys]
+
+    terminal_keys = set()
+    retryable_keys = set()
+    if not existing.empty:
+        for _, r in existing.iterrows():
+            key = (r["source_table"], int(r["source_id"]))
+            if r["virtual_outcome"] in _TERMINAL_OUTCOMES:
+                terminal_keys.add(key)
+            else:
+                retryable_keys.add(key)
+
+    new_candidates = [c for c in candidates
+                      if (c["source_table"], c["source_id"]) not in terminal_keys
+                      and (c["source_table"], c["source_id"]) not in retryable_keys]
+    retry_candidates = [c for c in candidates
+                        if (c["source_table"], c["source_id"]) in retryable_keys]
+    to_process = new_candidates + retry_candidates
 
     if limit is not None:
-        candidates = candidates[:limit]
+        to_process = to_process[:limit]
 
-    log(f"Virtual outcome backfill: {len(candidates)} candidate(s) to simulate "
-        f"({len(done_keys)} already done, skipped).")
+    log(f"Virtual outcome backfill: {len(new_candidates)} new candidate(s), "
+        f"{len(retry_candidates)} retryable (PENDING/NO_DATA) from a previous run, "
+        f"{len(terminal_keys)} already resolved and skipped.")
 
-    if not candidates:
+    if not to_process:
+        log("Virtual outcome backfill: nothing to do.")
         return existing
 
-    # ── Group by pair, determine the fetch window each pair needs ──────────
+    # ── Group by pair, cap the number of distinct pairs fetched this run ───
     by_pair: dict = {}
-    for c in candidates:
+    for c in to_process:
         by_pair.setdefault(c["pair"], []).append(c)
 
+    pairs_sorted = sorted(by_pair.items())
+    if len(pairs_sorted) > cap:
+        deferred_pairs = [p for p, _ in pairs_sorted[cap:]]
+        deferred_n = sum(len(rows) for _, rows in pairs_sorted[cap:])
+        log(f"Virtual outcome backfill: {len(pairs_sorted)} pairs need work this run — "
+            f"capped at {cap}/run, deferring {deferred_n} candidate(s) across "
+            f"{len(deferred_pairs)} pair(s) to a future run: {', '.join(deferred_pairs)}")
+        pairs_sorted = pairs_sorted[:cap]
+
     now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
-    new_rows = []
+    result_rows = []
     fetch_failures = []
+    row_errors = []
     _last_call_t = 0.0
+    _calls_made = 0
 
-    for i, (pair, rows) in enumerate(sorted(by_pair.items())):
-        opened_dts = []
-        for c in rows:
-            try:
-                opened_dts.append(datetime.strptime(c["opened_at"][:10], "%Y-%m-%d"))
-            except (ValueError, TypeError):
-                pass
-        if not opened_dts:
-            continue
-        start_dt = min(opened_dts)
-        end_dt = now_utc  # 21-day max expiry is always inside "today"
+    for i, (pair, rows) in enumerate(pairs_sorted):
+        try:
+            opened_dts = []
+            for c in rows:
+                try:
+                    opened_dts.append(datetime.strptime(c["opened_at"][:10], "%Y-%m-%d"))
+                except (ValueError, TypeError):
+                    pass
+            if not opened_dts:
+                continue
+            start_dt = min(opened_dts)
+            end_dt = now_utc  # 21-day max expiry is always inside "today"
 
-        _elapsed = time.time() - _last_call_t
-        if _last_call_t > 0 and _elapsed < _FETCH_DELAY:
-            time.sleep(_FETCH_DELAY - _elapsed)
-        bars = fetch_historical_bars(
-            pair,
-            start_dt.strftime("%Y-%m-%d 00:00:00"),
-            end_dt.strftime("%Y-%m-%d %H:%M:%S"),
-        )
-        _last_call_t = time.time()
+            _elapsed = time.time() - _last_call_t
+            if _last_call_t > 0 and _elapsed < _FETCH_DELAY:
+                time.sleep(_FETCH_DELAY - _elapsed)
+            bars = fetch_historical_bars(
+                pair,
+                start_dt.strftime("%Y-%m-%d 00:00:00"),
+                end_dt.strftime("%Y-%m-%d %H:%M:%S"),
+            )
+            _last_call_t = time.time()
+            _calls_made += 1
+            _increment_td_usage(1)
 
-        log(f"  [{i+1}/{len(by_pair)}] {pair}: {len(rows)} candidate(s), "
-            f"{len(bars)} bar(s) fetched "
-            f"({start_dt.date()} -> {end_dt.date()})" if bars else
-            f"  [{i+1}/{len(by_pair)}] {pair}: NO DATA — fetch failed or symbol unavailable.")
+            if bars:
+                log(f"  [{i+1}/{len(pairs_sorted)}] {pair}: {len(rows)} candidate(s), "
+                    f"{len(bars)} bar(s) fetched ({start_dt.date()} -> {end_dt.date()})")
+            else:
+                log(f"  [{i+1}/{len(pairs_sorted)}] {pair}: NO DATA — fetch failed or symbol unavailable.")
+                fetch_failures.append(pair)
 
-        if not bars:
+            data_start = bars[0]["dt"].strftime("%Y-%m-%d %H:%M:%S") if bars else ""
+            data_end = bars[-1]["dt"].strftime("%Y-%m-%d %H:%M:%S") if bars else ""
+
+            for c in rows:
+                try:
+                    sim_input = {
+                        "pair": c["pair"], "direction": c["direction"],
+                        "entry": c["entry"], "stop_loss": c["stop_loss"],
+                        "target": c["target"], "opened_at": c["opened_at"],
+                        **{k: v for k, v in c["_raw"].items() if k not in
+                           ("pair", "direction", "entry", "stop_loss", "target")},
+                    }
+                    res = simulate_row(sim_input, c["source"], bars, now_utc)
+                    notes_str = "" if c["notes"] is None or c["notes"] != c["notes"] else str(c["notes"])
+                    gate = _classify_block_reason(c["source"], notes_str)
+                    result_rows.append({
+                        "source_table": c["source_table"], "source_id": c["source_id"],
+                        "pair": c["pair"], "direction": c["direction"],
+                        "opened_at": c["opened_at"],
+                        "entry": c["entry"], "stop_loss": c["stop_loss"],
+                        "target_raw": c["target"], "t2_price": res.get("t2_price"),
+                        "blocked_by_gate": gate, "block_notes_raw": notes_str[:200],
+                        "virtual_outcome": res["virtual_outcome"],
+                        "virtual_close_price": res["virtual_close_price"],
+                        "virtual_exit_reason": res["virtual_exit_reason"],
+                        "virtual_r_multiple": res["virtual_r_multiple"],
+                        "virtual_pips": res["virtual_pips"],
+                        "virtual_closed_at": res["virtual_closed_at"],
+                        "same_bar_tiebreak": res["same_bar_tiebreak"],
+                        "bars_used": res["bars_used"],
+                        "data_start": data_start, "data_end": data_end,
+                        "simulated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+                    })
+                except Exception as exc:
+                    row_errors.append((c["source_table"], c["source_id"], str(exc)))
+                    log(f"    ERROR simulating {c['source_table']}#{c['source_id']} ({pair}): {exc}")
+        except Exception as exc:
             fetch_failures.append(pair)
+            log(f"  ERROR processing pair {pair}: {exc} — its candidates are left untouched this run.")
 
-        data_start = bars[0]["dt"].strftime("%Y-%m-%d %H:%M:%S") if bars else ""
-        data_end = bars[-1]["dt"].strftime("%Y-%m-%d %H:%M:%S") if bars else ""
+    # ── Merge: this run's results replace any prior PENDING/NO_DATA row for
+    #    the same candidate; everything else in the existing file is kept
+    #    verbatim. Single write, at the end, so a crash above never touches
+    #    the file on disk. ──────────────────────────────────────────────────
+    processed_keys = {(r["source_table"], r["source_id"]) for r in result_rows}
+    if not existing.empty:
+        keep_mask = ~existing.apply(
+            lambda r: (r["source_table"], int(r["source_id"])) in processed_keys, axis=1)
+        kept_existing = existing[keep_mask]
+    else:
+        kept_existing = existing
 
-        for c in rows:
-            sim_input = {
-                "pair": c["pair"], "direction": c["direction"],
-                "entry": c["entry"], "stop_loss": c["stop_loss"],
-                "target": c["target"], "opened_at": c["opened_at"],
-                **{k: v for k, v in c["_raw"].items() if k not in
-                   ("pair", "direction", "entry", "stop_loss", "target")},
-            }
-            res = simulate_row(sim_input, c["source"], bars, now_utc)
-            notes_str = "" if c["notes"] is None or c["notes"] != c["notes"] else str(c["notes"])
-            gate = _classify_block_reason(c["source"], notes_str)
-            new_rows.append({
-                "source_table": c["source_table"], "source_id": c["source_id"],
-                "pair": c["pair"], "direction": c["direction"],
-                "opened_at": c["opened_at"],
-                "entry": c["entry"], "stop_loss": c["stop_loss"],
-                "target_raw": c["target"], "t2_price": res.get("t2_price"),
-                "blocked_by_gate": gate, "block_notes_raw": notes_str[:200],
-                "virtual_outcome": res["virtual_outcome"],
-                "virtual_close_price": res["virtual_close_price"],
-                "virtual_exit_reason": res["virtual_exit_reason"],
-                "virtual_r_multiple": res["virtual_r_multiple"],
-                "virtual_pips": res["virtual_pips"],
-                "virtual_closed_at": res["virtual_closed_at"],
-                "same_bar_tiebreak": res["same_bar_tiebreak"],
-                "bars_used": res["bars_used"],
-                "data_start": data_start, "data_end": data_end,
-                "simulated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
-            })
+    new_df = pd.DataFrame(result_rows, columns=_OUT_COLUMNS)
+    combined = pd.concat([kept_existing, new_df], ignore_index=True) if not kept_existing.empty else new_df
 
-    new_df = pd.DataFrame(new_rows, columns=_OUT_COLUMNS)
-    combined = pd.concat([existing, new_df], ignore_index=True) if not existing.empty else new_df
-    combined.to_csv(_OUT_CSV, index=False, encoding="utf-8-sig")
+    tmp_path = _OUT_CSV.with_suffix(".csv.tmp")
+    combined.to_csv(tmp_path, index=False, encoding="utf-8-sig")
+    tmp_path.replace(_OUT_CSV)  # atomic on both POSIX and Windows
 
-    log(f"Virtual outcome backfill complete: {len(new_rows)} new row(s) written to {_OUT_CSV}.")
+    resolved_now = sum(1 for r in result_rows if r["virtual_outcome"] in _TERMINAL_OUTCOMES)
+    log(f"Virtual outcome backfill complete: {len(result_rows)} row(s) processed "
+        f"({resolved_now} newly resolved) — {_calls_made} TD call(s) made this run — "
+        f"written to {_OUT_CSV}.")
     if fetch_failures:
-        log(f"  DATA LIMITATION: no historical bars available for {len(fetch_failures)} "
-            f"pair(s): {', '.join(fetch_failures)} — their candidates are marked NO_DATA.")
+        log(f"  DATA LIMITATION: no historical bars available for {len(set(fetch_failures))} "
+            f"pair(s): {', '.join(sorted(set(fetch_failures)))} — their candidates are marked NO_DATA.")
+    if row_errors:
+        log(f"  {len(row_errors)} row-level simulation error(s) — see ERROR lines above. "
+            f"Those candidates were left out of this run's results and will be retried next run.")
 
     return combined
 
