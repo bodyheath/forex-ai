@@ -5515,6 +5515,10 @@ def _send_telegram_summary(
     _blocked_setups:  list = []   # high-conf setups blocked by capacity
     _swapped_setups:  list = []   # trades closed to free a slot
     _override_pairs: dict = {}    # pair → tier for 5th-slot overrides; used in Discord report
+    # Reliability fix #1: set False on any exception during fund-candidate evaluation
+    # (per-candidate or whole-loop). Returned by _send_telegram_summary() so run()'s
+    # exit code correctly reflects a disrupted scan instead of always exiting 0.
+    _fund_loop_ok = True
     try:
         from src import fund_state as _fs
         try:
