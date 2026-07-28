@@ -33,6 +33,7 @@ Persistence: data/virtual_outcomes.csv, a new file. trades.csv and
 research_trades.csv are never written to by this module.
 """
 
+import json
 import sys
 import time
 from datetime import datetime, timezone
