@@ -5351,6 +5351,7 @@ def _send_telegram_summary(
                 )
                 _da_r["second_opinion"] = _da
                 if _da.get("has_objections"):
+                    _da_conf_before = _da_r["parsed"].get("confidence")
                     try:
                         _da_r["parsed"]["confidence"] = max(1, int(_da_r["parsed"]["confidence"]) - 1)
                     except (TypeError, ValueError):
@@ -5361,6 +5362,11 @@ def _send_telegram_summary(
                         _da_r["parsed"]["risk_factors"] = (
                             _new_rf + ("; " + _existing_rf if _existing_rf else "")
                         )
+                    _log_line(log, (
+                        f"[devil-advocate] {_da_r['pair']} objections found — "
+                        f"conf {_da_conf_before}→{_da_r['parsed'].get('confidence')} — "
+                        f"reasons: {'; '.join(_da.get('reasons') or []) or 'none given'}"
+                    ))
                 else:
                     _da_r["_da_boost"] = 0.5
             except Exception:
