@@ -4308,7 +4308,7 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
 # ── Drawdown-aware trade filter ───────────────────────────────────────────────
 
 def _dd_allows_trade(r: dict, dd_mode: str, quality_grades: dict,
-                     conf_threshold: int) -> bool:
+                     conf_threshold: int, log_fn=None) -> bool:
     """Return True if the active drawdown protection tier permits this trade.
 
     Tier rules:
@@ -4318,21 +4318,39 @@ def _dd_allows_trade(r: dict, dd_mode: str, quality_grades: dict,
       caution      — A or B grade only
       normal       — A, B, or (C with effective confidence >= threshold)
     """
+    _log = log_fn or print
     grade = (quality_grades.get(r["pair"]) or {}).get("grade", "F")
     if dd_mode == "halt":
+        _log(f"[dd-tier] {r['pair']} BLOCKED — mode=halt (no new trades)")
         return False
     if dd_mode == "preservation":
         if grade != "A":
+            _log(f"[dd-tier] {r['pair']} BLOCKED — mode=preservation requires grade A, got {grade}")
             return False
         mtf = (r.get("bundle") or {}).get("mtf") or {}
-        return mtf.get("agreeing_count", 0) >= 3
+        _agree = mtf.get("agreeing_count", 0)
+        _ok = _agree >= 3
+        if not _ok:
+            _log(f"[dd-tier] {r['pair']} BLOCKED — mode=preservation requires 3 aligned "
+                 f"timeframes, got {_agree}")
+        return _ok
     if dd_mode == "defensive":
-        return grade == "A"
+        _ok = grade == "A"
+        if not _ok:
+            _log(f"[dd-tier] {r['pair']} BLOCKED — mode=defensive requires grade A, got {grade}")
+        return _ok
     if dd_mode == "caution":
-        return grade in ("A", "B")
+        _ok = grade in ("A", "B")
+        if not _ok:
+            _log(f"[dd-tier] {r['pair']} BLOCKED — mode=caution requires grade A/B, got {grade}")
+        return _ok
     # normal
-    return (grade in ("A", "B") or
-            (grade == "C" and _eff_conf(r) >= conf_threshold))
+    _eff = _eff_conf(r)
+    _ok = (grade in ("A", "B") or (grade == "C" and _eff >= conf_threshold))
+    if not _ok:
+        _log(f"[dd-tier] {r['pair']} BLOCKED — mode=normal requires grade A/B or "
+             f"(C with eff_conf>={conf_threshold}), got grade={grade} eff_conf={_eff:.1f}")
+    return _ok
 
 
 # ── Main summary builder ───────────────────────────────────────────────────────
