@@ -482,7 +482,11 @@ def backfill(log=print, limit: int = None, max_pairs: int = None) -> pd.DataFram
 
     cap = max_pairs if max_pairs is not None else _MAX_PAIRS_PER_RUN
 
-    candidates = _load_candidates()
+    try:
+        candidates = _load_candidates()
+    except Exception as exc:
+        log(f"Virtual outcome backfill: could not load trades.csv / research_trades.csv — {exc} — aborting.")
+        return _load_existing()
     existing = _load_existing()
 
     terminal_keys = set()
