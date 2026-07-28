@@ -453,7 +453,8 @@ def backfill(log=print, limit: int = None) -> pd.DataFrame:
                    ("pair", "direction", "entry", "stop_loss", "target")},
             }
             res = simulate_row(sim_input, c["source"], bars, now_utc)
-            gate = _classify_block_reason(c["source"], c["notes"])
+            notes_str = "" if c["notes"] is None or c["notes"] != c["notes"] else str(c["notes"])
+            gate = _classify_block_reason(c["source"], notes_str)
             new_rows.append({
                 "source_table": c["source_table"], "source_id": c["source_id"],
                 "pair": c["pair"], "direction": c["direction"],
