@@ -5615,833 +5615,862 @@ def _send_telegram_summary(
         except Exception:
             pass
         for _yt in yes_trades:
-            _yt_pair   = _yt.get("pair", "")
-            _yt_parsed = (_yt.get("parsed") or {})
-            # ── CIRCUIT BREAKER — FIRST check, reads fresh from disk every trade ──
             try:
-                with open("data/fund_state.json", encoding="utf-8") as _cb_f:
-                    _cb_st   = json.load(_cb_f)
-                _cb_losses = int(_cb_st.get("consecutive_losses", 0) or 0)
-            except Exception:
-                _cb_losses = 0
-            if _cb_losses >= 3:
-                _cb_reason = (
-                    f"Circuit breaker active: {_cb_losses} consecutive losses"
-                )
-                _log_line(
-                    log,
-                    f"[circuit] BLOCKED {_yt_pair} — {_cb_losses} consecutive "
-                    f"losses — no new trades until a win",
-                )
-                _yt_parsed["trade_this"] = "NO"
-                _yt_parsed["block_reason"] = _cb_reason
-                _fund_st_blocked.append((_yt, _cb_reason))
-                _yt_conf_cb = _eff_conf(_yt)
-                if _yt_conf_cb >= 6.0:
-                    _blocked_setups.append({
-                        "pair":      _yt_pair,
-                        "direction": (_yt_parsed.get("direction") or "").upper(),
-                        "conf":      _yt_conf_cb,
-                        "reason":    f"Circuit breaker ({_cb_losses} losses)",
-                    })
+                _yt_pair_safe = "?"
                 try:
-                    from src import tracker as _trk_cb
-                    if _yt.get("id"):
-                        _trk_cb.update_outcome(int(_yt["id"]), "SKIPPED",
-                                               notes=f"Blocked: {_cb_reason}")
+                    _yt_pair_safe = _yt.get("pair", "?")
                 except Exception:
                     pass
-                continue
-            # ── TREND HARD FILTER — block neutral or opposed weekly trends ───────
-            # weekly trend comes from _get_trend_alignment() (technical.get_weekly_trend,
-            # cached OHLCV, always returns BUY/SELL/NEUTRAL) — NOT from the AI-parsed
-            # dict's "weekly_trend"/"weekly_trend_at_entry" keys, which are never actually
-            # populated anywhere in the pipeline and silently fell through to "" on every
-            # trade, making this filter block on missing data while calling it "neutral".
-            # Computed once here and reused below (Improvement 4) instead of recomputed.
-            _yt_dir_ta   = (_yt_parsed.get("direction") or "").upper()
-            _trend_align = _get_trend_alignment(
-                _yt_pair, _yt_dir_ta,
-                log_fn=lambda m: _log_line(log, m),
-            )
-            _wt_hard  = str(_trend_align.get("weekly_trend", "")).upper().strip()
-            _dir_hard = _yt_dir_ta
-            if _wt_hard in ("", "NEUTRAL", "NONE", "NULL", "UNKNOWN", "0"):
-                _blk_wt_n = "Weekly trend neutral — no clear directional bias"
-                _log_line(log, f"[trend-hard] BLOCKED {_yt_pair} — weekly trend={_wt_hard!r}")
-                _yt_parsed["trade_this"] = "NO"
-                _yt_parsed["block_reason"] = _blk_wt_n
-                _fund_st_blocked.append((_yt, _blk_wt_n))
-                _blocked_setups.append({
-                    "pair":      _yt_pair,
-                    "direction": _dir_hard,
-                    "conf":      float(_yt_parsed.get("confidence", 0) or 0),
-                    "reason":    "Weekly trend neutral",
-                })
+                _yt_pair   = _yt.get("pair", "")
+                _yt_parsed = (_yt.get("parsed") or {})
+                # ── CIRCUIT BREAKER — FIRST check, reads fresh from disk every trade ──
                 try:
-                    from src import tracker as _trk_wtn
-                    if _yt.get("id"):
-                        _trk_wtn.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                notes=f"Blocked: {_blk_wt_n}")
+                    with open("data/fund_state.json", encoding="utf-8") as _cb_f:
+                        _cb_st   = json.load(_cb_f)
+                    _cb_losses = int(_cb_st.get("consecutive_losses", 0) or 0)
                 except Exception:
-                    pass
-                continue
-            if (_dir_hard == "BUY" and _wt_hard == "DOWN") or \
-                    (_dir_hard == "SELL" and _wt_hard == "UP"):
-                _blk_wt_o = f"Opposes weekly trend: {_wt_hard}"
-                _log_line(log, f"[trend-hard] BLOCKED {_yt_pair} {_dir_hard} opposes weekly {_wt_hard}")
-                _yt_parsed["trade_this"] = "NO"
-                _yt_parsed["block_reason"] = _blk_wt_o
-                _fund_st_blocked.append((_yt, _blk_wt_o))
-                _blocked_setups.append({
-                    "pair":      _yt_pair,
-                    "direction": _dir_hard,
-                    "conf":      float(_yt_parsed.get("confidence", 0) or 0),
-                    "reason":    f"Opposes weekly trend {_wt_hard}",
-                })
-                try:
-                    from src import tracker as _trk_wto
-                    if _yt.get("id"):
-                        _trk_wto.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                notes=f"Blocked: {_blk_wt_o}")
-                except Exception:
-                    pass
-                continue
-            _log_line(log, f"[trend-hard] {_yt_pair} {_dir_hard} aligned ({_wt_hard}) OK")
-            # ── PAIR FILTER — block banned exotic pairs ────────────────────────
-            _pair_upper = _yt_pair.upper()
-            if _pair_upper in FUND_BANNED_PAIRS:
-                _blk_pair = f"Pair banned: {_yt_pair} is an illiquid exotic"
-                _log_line(log, f"[pair-filter] BLOCKING {_yt_pair} — banned exotic pair")
-                _yt_parsed["trade_this"] = "NO"
-                _yt_parsed["block_reason"] = _blk_pair
-                _fund_st_blocked.append((_yt, _blk_pair))
-                try:
-                    from src import tracker as _trk_pf
-                    if _yt.get("id"):
-                        _trk_pf.update_outcome(int(_yt["id"]), "SKIPPED",
-                                               notes=f"Blocked: {_blk_pair}")
-                except Exception:
-                    pass
-                continue
-            # ── DATA VALIDATION GATE — runs before any other market filter ────
-            _yt_dir_dv = (_yt_parsed.get("direction") or "").upper()
-            _data_val = _validate_trade_data(
-                parsed=_yt_parsed,
-                pair=_yt_pair,
-                direction=_yt_dir_dv,
-                bundle=(_yt.get("bundle") or {}),
-                log_fn=lambda m: _log_line(log, m),
-            )
-            if not _data_val["valid"]:
-                _log_line(log, (
-                    f"[validate-data] BLOCKED {_yt_pair} "
-                    f"— data quality failures: {_data_val['failures']}"
-                ))
-                _blk_dv = (
-                    f"Data validation: {_data_val['failures'][0]}"
-                    if _data_val["failures"] else "Data validation failed"
-                )
-                _yt_parsed["trade_this"] = "NO"
-                _yt_parsed["block_reason"] = _blk_dv
-                _fund_st_blocked.append((_yt, _blk_dv))
-                try:
-                    from src import tracker as _trk_dv
-                    if _yt.get("id"):
-                        _trk_dv.update_outcome(int(_yt["id"]), "SKIPPED",
-                                               notes=f"Blocked: {_blk_dv}")
-                except Exception:
-                    pass
-                continue
-            # Regime filter — no fund trades in ranging/risk-off
-            if any(r in _regime_str for r in _REGIME_BLOCK):
-                _blk_rgm = f"Regime: {_regime_str} — waiting for trending market"
-                _log_line(log, f"[regime] BLOCKING fund trade {_yt_pair} — regime is {_regime_str}")
-                _fund_st_blocked.append((_yt, _blk_rgm))
-                try:
-                    from src import tracker as _trk_rgm
-                    if _yt.get("id"):
-                        _trk_rgm.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                notes=f"Blocked: {_blk_rgm}")
-                except Exception:
-                    pass
-                continue
-            # Pair history confidence adjustment (based on research win rate for this pair)
-            try:
-                _ps_data = _pair_wr_lkp.get(_yt_pair.upper(), {})
-                _ps_dec  = int(_ps_data.get("decisive", 0))
-                _ps_wr   = float(_ps_data.get("win_rate", 0))
-                if _ps_dec >= 10:
-                    if _ps_wr >= 0.65:
-                        _ps_boost = 0.3
-                    elif _ps_wr <= 0.35:
-                        _ps_boost = -0.3
-                    else:
-                        _ps_boost = 0.0
-                    if _ps_boost != 0 and isinstance(_yt.get("parsed"), dict):
-                        _ps_orig = float(_yt["parsed"].get("confidence") or 0)
-                        _yt["parsed"]["confidence"] = round(
-                            min(10.0, max(0.0, _ps_orig + _ps_boost)), 1
-                        )
-                        _yt["parsed"]["_pair_wr_boost"]  = _ps_boost
-                        _yt["parsed"]["_pair_wr_sample"] = _ps_dec
-                        _log_line(log, (
-                            f"[pair] {_yt_pair} {_ps_wr*100:.0f}% WR ({_ps_dec} trades) "
-                            f"→ conf {_ps_boost:+.1f} ({_ps_orig:.1f}→{_yt['parsed']['confidence']:.1f})"
-                        ))
-            except Exception as _ps_exc:
-                _log_line(log, f"[pair] stats error: {_ps_exc}")
-            # Improvement 2: Dynamic confidence threshold by regime
-            _yt_conf_val = _eff_conf(_yt)
-            if _yt_conf_val < FUND_TRADE_MIN_CONF:
-                _blk_conf = f"Confidence {_yt_conf_val:.1f} < {FUND_TRADE_MIN_CONF:.1f} min (regime: {_regime_str})"
-                _log_line(log, f"[fund] BLOCKING {_yt_pair} — {_blk_conf}")
-                _fund_st_blocked.append((_yt, _blk_conf))
-                try:
-                    from src import tracker as _trk_conf
-                    if _yt.get("id"):
-                        _trk_conf.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                 notes=f"Blocked: {_blk_conf}")
-                except Exception:
-                    pass
-                continue
-            # Improvement 4: Weekly + Monthly trend alignment
-            # _yt_dir_ta / _trend_align already computed above in the TREND HARD FILTER
-            # block — reused here rather than recomputed.
-            # Hard block: weekly trend opposes direction (monthly adds context but weekly alone is decisive)
-            if _trend_align.get("weekly_aligned") is False:
-                _blk_trend = (
-                    f"Weekly trend opposed: weekly={_trend_align['weekly_trend']} "
-                    f"monthly={_trend_align['monthly_trend']}"
-                )
-                _log_line(log, f"[trend] BLOCKING {_yt_pair} {_yt_dir_ta} — "
-                          f"weekly trend ({_trend_align['weekly_trend']}) opposes direction")
-                _fund_st_blocked.append((_yt, _blk_trend))
-                try:
-                    from src import tracker as _trk_trnd
-                    if _yt.get("id"):
-                        _trk_trnd.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                 notes=f"Blocked: {_blk_trend}")
-                except Exception:
-                    pass
-                continue
-            # Soft block: in RANGING regime with any misaligned trend
-            elif ("RANGING" in _regime_str and (
-                    _trend_align.get("weekly_aligned") is False or
-                    _trend_align.get("monthly_aligned") is False)):
-                _blk_trend = "Ranging market + trend misaligned"
-                _log_line(log, f"[trend] BLOCKING {_yt_pair} in RANGING — "
-                          f"single trend misaligned")
-                _fund_st_blocked.append((_yt, _blk_trend))
-                try:
-                    from src import tracker as _trk_trnd
-                    if _yt.get("id"):
-                        _trk_trnd.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                 notes=f"Blocked: {_blk_trend}")
-                except Exception:
-                    pass
-                continue
-            # Fallback: legacy monthly_trend_aligned from parsed analysis
-            _mta_val = _yt_parsed.get("monthly_trend_aligned")
-            if _mta_val is not None:
-                _mta_bool = str(_mta_val).upper() in ("TRUE", "YES", "1", "T")
-                if not _mta_bool and _trend_align.get("weekly_aligned") is False:
-                    _blk_mta = "Monthly trend misaligned (both timeframes confirmed)"
-                    _log_line(log, f"[trend] BLOCKING {_yt_pair} — monthly trend NOT aligned")
-                    _fund_st_blocked.append((_yt, _blk_mta))
-                    try:
-                        from src import tracker as _trk_mta
-                        if _yt.get("id"):
-                            _trk_mta.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                    notes=f"Blocked: {_blk_mta}")
-                    except Exception:
-                        pass
-                    continue
-            else:
-                _log_line(log, f"[trend] WARNING {_yt_pair} — monthly_trend_aligned not available — allowing trade")
-            # Loss journal — block or penalise setups matching past-loss patterns
-            _jrnl_e  = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
-            _jrnl_sl = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
-            _jrnl_ps = 0.01 if "JPY" in _yt_pair else 0.0001
-            _jrnl_sp = abs(_jrnl_e - _jrnl_sl) / _jrnl_ps if _jrnl_e and _jrnl_sl else 0.0
-            _journal_check = _check_loss_journal(
-                pair=_yt_pair,
-                direction=_yt_dir_ta,
-                regime=_regime_str,
-                session=",".join(_get_current_session()),
-                weekly_trend=_trend_align.get("weekly_trend", "NEUTRAL"),
-                rsi=float(
-                    (_yt.get("bundle") or {})
-                    .get("technical", {})
-                    .get("daily", {})
-                    .get("rsi14") or 0
-                ),
-                stop_pips=_jrnl_sp,
-                confidence=_yt_conf_val,
-                log_fn=lambda m: _log_line(log, m),
-            )
-            if _journal_check["blocked"]:
-                _blk_journal = (
-                    f"Loss journal: {_journal_check['warnings'][0][:80]}"
-                    if _journal_check["warnings"] else "Loss journal: high risk pattern"
-                )
-                _log_line(log, (
-                    f"[loss-journal] BLOCKED {_yt_pair} — matches loss patterns "
-                    f"risk={_journal_check['risk_score']:.2f}"
-                ))
-                _fund_st_blocked.append((_yt, _blk_journal))
-                try:
-                    from src import tracker as _trk_jrn
-                    if _yt.get("id"):
-                        _trk_jrn.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                notes=f"Blocked: {_blk_journal}")
-                except Exception:
-                    pass
-                continue
-            elif _journal_check["risk_score"] > 0.2:
-                _jrnl_penalty = round(_journal_check["risk_score"] * 0.5, 1)
-                _jrnl_orig    = float(_yt_parsed.get("confidence") or 0)
-                if isinstance(_yt.get("parsed"), dict):
-                    _yt["parsed"]["confidence"] = max(0.0, _jrnl_orig - _jrnl_penalty)
-                _log_line(log, (
-                    f"[loss-journal] {_yt_pair} conf penalty -{_jrnl_penalty} "
-                    f"for past loss pattern (score={_journal_check['risk_score']:.2f})"
-                ))
-            # Improvement 5: Minimum R:R for fund trades
-            _yt_rr_val = float(_yt_parsed.get("reward_risk") or 0)
-            if _yt_rr_val > 0 and _yt_rr_val < FUND_MIN_RR:
-                _blk_rr = f"R:R {_yt_rr_val:.2f} < {FUND_MIN_RR} minimum"
-                _log_line(log, f"[rr] BLOCKING {_yt_pair} — R:R {_yt_rr_val:.2f} below fund minimum {FUND_MIN_RR}")
-                _fund_st_blocked.append((_yt, _blk_rr))
-                try:
-                    from src import tracker as _trk_rr
-                    if _yt.get("id"):
-                        _trk_rr.update_outcome(int(_yt["id"]), "SKIPPED",
-                                               notes=f"Blocked: {_blk_rr}")
-                except Exception:
-                    pass
-                continue
-            # Stop distance cap: block if stop > 2.0x ATR (was 2.5x — tightened for smaller losses
-            # and more reachable T1 targets; 2.0x ATR still clears most valid swing setups)
-            _yt_bndl  = (_yt.get("bundle") or {})
-            _yt_atr14 = float(((_yt_bndl.get("technical") or {}).get("daily", {}).get("atr14") or 0))
-            _yt_entry_v = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
-            _yt_stop_v  = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
-            if _yt_atr14 > 0 and _yt_entry_v and _yt_stop_v:
-                _yt_stop_dist = abs(_yt_entry_v - _yt_stop_v)
-                if _yt_stop_dist > _yt_atr14 * 2.0:
-                    _blk_atr = f"Stop too wide ({_yt_stop_dist:.5f}) vs 2.0xATR ({_yt_atr14 * 2.0:.5f})"
-                    _log_line(log, f"[stop] BLOCKING {_yt_pair} — stop too wide")
-                    _fund_st_blocked.append((_yt, _blk_atr))
-                    try:
-                        from src import tracker as _trk_atr
-                        if _yt.get("id"):
-                            _trk_atr.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                    notes=f"Blocked: {_blk_atr}")
-                    except Exception:
-                        pass
-                    continue
-            # Tiered capacity check — supports 5th slot for conf ≥ 7.5
-            _cap = _check_capacity_tiered(
-                pair=_yt_pair,
-                confidence=_yt_conf_val,
-                regime=_regime_str,
-                fund_state=_fund_st,
-                log_fn=lambda m: _log_line(log, m),
-            )
-            if not _cap["allowed"]:
-                _blk_rsn_cap = _cap["reason"]
-                _swap_executed = False
-
-                # CB blocks swaps entirely — no new directional exposure when losing
-                try:
-                    _swap_cb_l = int(_fund_st.get("consecutive_losses") or 0)
-                except Exception:
-                    _swap_cb_l = 0
-                if _swap_cb_l >= 3:
-                    _log_line(log, f"[swap] BLOCKED — circuit breaker active "
-                              f"({_swap_cb_l} losses)")
-                    _blk_sw_cb = f"Circuit breaker ({_swap_cb_l} losses)"
-                    _fund_st_blocked.append((_yt, _blk_sw_cb))
-                    try:
-                        from src import tracker as _trk_sw_cb
-                        if _yt.get("id"):
-                            _trk_sw_cb.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                      notes=f"Blocked: {_blk_sw_cb}")
-                    except Exception:
-                        pass
-                    continue
-
-                if _yt_conf_val >= SWAP_MIN_NEW_CONF:
-                    _log_line(log, f"[swap] {_yt_pair} conf {_yt_conf_val:.1f} "
-                              f">= {SWAP_MIN_NEW_CONF} — evaluating swap...")
-                    _swap_res = _find_swap_target(
-                        new_pair=_yt_pair,
-                        new_direction=_yt_parsed.get("direction", ""),
-                        new_conf=_yt_conf_val,
-                        open_trades=_ot_open_trades,
-                        log_fn=lambda m: _log_line(log, m),
+                    _cb_losses = 0
+                if _cb_losses >= 3:
+                    _cb_reason = (
+                        f"Circuit breaker active: {_cb_losses} consecutive losses"
                     )
-                    if _swap_res["should_swap"]:
-                        try:
-                            from src.trading.financials import (
-                                close_fund_trade as _cft_sw,
-                                sync_fund_state_json as _sfsj_sw,
-                                load_prices as _lp_sw,
-                                get_price as _gp_sw,
-                                pip_size as _pips_sw,
-                            )
-                            import pandas as _sw_pd
-                            _sw_prices  = _lp_sw()
-                            _sw_tid     = int(float(str(_swap_res["target_id"])))
-                            _sw_tpair   = _swap_res["target_pair"]
-                            _sw_exit    = _gp_sw(_sw_prices, _sw_tpair)
-                            _sw_df      = _sw_pd.read_csv("data/trades.csv")
-                            _sw_df_row  = _sw_df[_sw_df["id"].astype(str) == str(_sw_tid)]
-                            if _sw_exit and not _sw_df_row.empty:
-                                _sw_r     = _sw_df_row.iloc[0]
-                                _sw_entry = float(_sw_r.get("entry", 0) or 0)
-                                _sw_dir   = str(_sw_r.get("direction", "")).upper()
-                                _sw_t1h   = str(_sw_r.get("t1_hit", "")).upper() in ("TRUE", "YES", "1", "T")
-                                _sw_ps    = _pips_sw(_sw_tpair)
-                                _sw_pips  = ((_sw_exit - _sw_entry) / _sw_ps if _sw_dir == "BUY"
-                                             else (_sw_entry - _sw_exit) / _sw_ps)
-                                _sw_status = ("PARTIAL_WIN" if _sw_t1h and _sw_pips > 0
-                                              else "WIN" if _sw_pips > 0 else "LOSS")
-                                # Guard: if closing this trade as a LOSS would push
-                                # consecutive_losses to 3 the CB would fire and block
-                                # the replacement — cancel swap instead of leaving
-                                # the fund with no position and a CB-triggered state.
-                                _pre_cl = int(_fund_st.get("consecutive_losses") or 0)
-                                if _sw_pips < 0 and _pre_cl >= 2:
-                                    _blk_sw_cbrisk = (
-                                        f"Swap cancelled — closing {_sw_tpair} as LOSS "
-                                        f"would trigger circuit breaker "
-                                        f"({_pre_cl}→3 losses) with no replacement possible"
-                                    )
-                                    _log_line(log, f"[swap] CANCELLED — {_blk_sw_cbrisk}")
-                                    _fund_st_blocked.append((_yt, _blk_sw_cbrisk))
-                                    try:
-                                        from src import tracker as _trk_sw_cbrisk
-                                        if _yt.get("id"):
-                                            _trk_sw_cbrisk.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                                          notes=f"Blocked: {_blk_sw_cbrisk}")
-                                    except Exception:
-                                        pass
-                                    continue
-                                _cft_sw(
-                                    df=_sw_df,
-                                    trade_id=_sw_tid,
-                                    status=_sw_status,
-                                    exit_price=float(_sw_exit),
-                                    pips=float(_sw_pips),
-                                )
-                                _sfsj_sw()
-                                # Remove swapped trade from in-memory list so slot count is correct
-                                _ot_open_trades = [
-                                    r for r in _ot_open_trades
-                                    if str(r.get("id", "")) != str(_sw_tid)
-                                ]
-                                # Reset _cap to reflect freed slot
-                                _cap = {"allowed": True, "is_override": False,
-                                        "risk_pct": None, "tier": "normal",
-                                        "reason": "slot freed by swap"}
-                                _swapped_setups.append({
-                                    "closed_pair":    _sw_tpair,
-                                    "closed_pips":    round(_sw_pips, 1),
-                                    "closed_dollars": 0.0,
-                                    "new_pair":       _yt_pair,
-                                    "new_conf":       _yt_conf_val,
-                                    "reason":         _swap_res["reason"],
-                                })
-                                # Immediate Discord alert for the swap
-                                try:
-                                    from src import discord_notifier as _dn_sw
-                                    _dn_sw.send_swap_alert(
-                                        closed_pair=_sw_tpair,
-                                        closed_pips=round(_sw_pips, 1),
-                                        closed_dollars=0.0,
-                                        new_pair=_yt_pair,
-                                        new_conf=_yt_conf_val,
-                                        swap_reason=_swap_res["reason"],
-                                    )
-                                except Exception as _dn_sw_exc:
-                                    _log_line(log, f"[swap] Discord alert failed: {_dn_sw_exc}")
-                                _log_line(log, f"[swap] Slot freed — {_yt_pair} can open")
-                                _swap_executed = True
-                            else:
-                                _log_line(log, f"[swap] No price for {_sw_tpair} — swap aborted")
-                        except Exception as _sw_exc:
-                            _log_line(log, f"[swap] Execution error: {_sw_exc}")
-                    else:
-                        _log_line(log, f"[swap] No swap: {_swap_res['reason']}")
-
-                if not _swap_executed:
-                    _fund_st_blocked.append((_yt, _blk_rsn_cap))
-                    if _yt_conf_val >= 6.0:
+                    _log_line(
+                        log,
+                        f"[circuit] BLOCKED {_yt_pair} — {_cb_losses} consecutive "
+                        f"losses — no new trades until a win",
+                    )
+                    _yt_parsed["trade_this"] = "NO"
+                    _yt_parsed["block_reason"] = _cb_reason
+                    _fund_st_blocked.append((_yt, _cb_reason))
+                    _yt_conf_cb = _eff_conf(_yt)
+                    if _yt_conf_cb >= 6.0:
                         _blocked_setups.append({
                             "pair":      _yt_pair,
                             "direction": (_yt_parsed.get("direction") or "").upper(),
-                            "conf":      _yt_conf_val,
-                            "reason":    _blk_rsn_cap,
+                            "conf":      _yt_conf_cb,
+                            "reason":    f"Circuit breaker ({_cb_losses} losses)",
                         })
                     try:
-                        from src import tracker as _trk_cap
+                        from src import tracker as _trk_cb
                         if _yt.get("id"):
-                            _trk_cap.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                    notes=f"Blocked: {_blk_rsn_cap}")
+                            _trk_cb.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                   notes=f"Blocked: {_cb_reason}")
                     except Exception:
                         pass
                     continue
-            _blk, _blk_rsn, _blk_tp = _fs.is_trading_blocked(_fund_st)
-            if _blk:
-                _fund_st = _fs.record_missed_opportunity(
-                    _fund_st, _yt.get("pair", ""),
-                    (_yt.get("parsed") or {}).get("direction", ""),
-                    _eff_conf(_yt),
-                    float((_yt.get("screen") or {}).get("score") or 0),
-                    _blk_tp,
+                # ── TREND HARD FILTER — block neutral or opposed weekly trends ───────
+                # weekly trend comes from _get_trend_alignment() (technical.get_weekly_trend,
+                # cached OHLCV, always returns BUY/SELL/NEUTRAL) — NOT from the AI-parsed
+                # dict's "weekly_trend"/"weekly_trend_at_entry" keys, which are never actually
+                # populated anywhere in the pipeline and silently fell through to "" on every
+                # trade, making this filter block on missing data while calling it "neutral".
+                # Computed once here and reused below (Improvement 4) instead of recomputed.
+                _yt_dir_ta   = (_yt_parsed.get("direction") or "").upper()
+                _trend_align = _get_trend_alignment(
+                    _yt_pair, _yt_dir_ta,
+                    log_fn=lambda m: _log_line(log, m),
                 )
-                _fund_st_blocked.append((_yt, _blk_rsn))
-                try:
-                    from src import tracker as _trk_fsb
-                    if _yt.get("id"):
-                        _trk_fsb.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                notes=f"Blocked: {_blk_rsn}")
-                except Exception:
-                    pass
-                continue
-            _ccy_blk, _ccy = _fs.check_currency_exposure(_yt.get("pair", ""), _ot_open_trades)
-            if _ccy_blk:
-                _blk_rsn_ccy = (
-                    f"Currency concentration — {_ccy} at {_fs.MAX_CURRENCY_EXPOSURE} open trades"
-                )
-                _fund_st = _fs.record_missed_opportunity(
-                    _fund_st, _yt.get("pair", ""),
-                    (_yt.get("parsed") or {}).get("direction", ""),
-                    _eff_conf(_yt),
-                    float((_yt.get("screen") or {}).get("score") or 0),
-                    "currency_exposure",
-                )
-                _fund_st_blocked.append((_yt, _blk_rsn_ccy))
-                try:
-                    from src import tracker as _trk_fsb
-                    if _yt.get("id"):
-                        _trk_fsb.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                notes=f"Blocked: {_blk_rsn_ccy}")
-                except Exception:
-                    pass
-                continue
-            # ── Correlation filter ────────────────────────────────────────────
-            _yt_dir_corr = (_yt_parsed.get("direction") or "").upper()
-            _corr = _check_correlation(
-                new_pair=_yt_pair,
-                new_direction=_yt_dir_corr,
-                open_trades=_ot_open_trades,
-                log_fn=lambda m: _log_line(log, m),
-            )
-            if _corr["blocked"]:
-                _blk_rsn_corr = f"Correlation: {_corr['reason']}"
-                _fund_st_blocked.append((_yt, _blk_rsn_corr))
-                try:
-                    from src import tracker as _trk_corr
-                    if _yt.get("id"):
-                        _trk_corr.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                  notes=f"Blocked: {_blk_rsn_corr}")
-                except Exception:
-                    pass
-                continue
-            # ── Session filter (advisory; hard block in RANGING) ──────────────
-            _session_res = _check_session_filter(
-                _yt_pair, log_fn=lambda m: _log_line(log, m))
-            _yt["_session_optimal"] = _session_res["allowed"]
-            if not _session_res["allowed"] and "RANGING" in _regime_str:
-                _blk_rsn_sess = f"Ranging + wrong session: {_session_res['reason']}"
-                _log_line(log, f"[session] BLOCKING {_yt_pair} — {_blk_rsn_sess}")
-                _fund_st_blocked.append((_yt, _blk_rsn_sess))
-                try:
-                    from src import tracker as _trk_sess
-                    if _yt.get("id"):
-                        _trk_sess.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                  notes=f"Blocked: {_blk_rsn_sess}")
-                except Exception:
-                    pass
-                continue
-            # ── London/NY session gate — no new fund trades in dead hours ─────
-            _sess_h      = datetime.now(timezone.utc).hour
-            _sess_london = 7 <= _sess_h < 17
-            _sess_ny     = 12 <= _sess_h < 21
-            _asia_fx     = {
-                "AUD/JPY", "AUD/NZD", "AUD/USD", "NZD/USD",
-                "USD/JPY", "AUD/CAD", "AUD/CHF",
-            }
-            if not (_sess_london or _sess_ny) and _yt_pair.upper() not in _asia_fx:
-                _blk_sess_h = f"Outside London/NY — UTC {_sess_h:02d}:xx"
-                _log_line(log, f"[session] BLOCKING {_yt_pair} — {_blk_sess_h}")
-                _yt_parsed["trade_this"] = "NO"
-                _yt_parsed["block_reason"] = _blk_sess_h
-                _fund_st_blocked.append((_yt, _blk_sess_h))
-                try:
-                    from src import tracker as _trk_sess_h
-                    if _yt.get("id"):
-                        _trk_sess_h.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                    notes=f"Blocked: {_blk_sess_h}")
-                except Exception:
-                    pass
-                continue
-            # ── Pair cooldown — block after 2+ losses on same pair+direction in 48h ──
-            if _check_pair_cooldown(
-                    pair=_yt_pair,
-                    direction=(_yt_parsed.get("direction") or ""),
-                    log_fn=lambda m: _log_line(log, m)):
-                _blk_cool = f"Cooldown: 2+ losses in 48h on {_yt_pair}"
-                _yt_parsed["trade_this"] = "NO"
-                _yt_parsed["block_reason"] = _blk_cool
-                _fund_st_blocked.append((_yt, _blk_cool))
-                try:
-                    from src import tracker as _trk_cool
-                    if _yt.get("id"):
-                        _trk_cool.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                  notes=f"Blocked: {_blk_cool}")
-                except Exception:
-                    pass
-                continue
-            # ── News blackout window ──────────────────────────────────────────
-            _news_res = _has_upcoming_news(
-                _yt_pair, log_fn=lambda m: _log_line(log, m))
-            if _news_res["blocked"]:
-                _blk_rsn_news = _news_res["reason"]
-                _log_line(log, f"[news] BLOCKING {_yt_pair} — {_blk_rsn_news}")
-                _fund_st_blocked.append((_yt, _blk_rsn_news))
-                try:
-                    from src import tracker as _trk_news
-                    if _yt.get("id"):
-                        _trk_news.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                  notes=f"Blocked: {_blk_rsn_news}")
-                except Exception:
-                    pass
-                continue
-            # ── Adaptive sizing ───────────────────────────────────────────────
-            _szg_pct, _szg_mode, _szg_reason = _fs.compute_sizing(
-                _fund_st,
-                _cur_bal_fs or float(config.ACCOUNT_BALANCE),
-                _eff_conf(_yt),
-                log_fn=lambda m: _log_line(log, m),
-            )
-            if _szg_pct is None:
-                # Drawdown tier quality requirement not met — block this trade
-                _fund_st = _fs.record_missed_opportunity(
-                    _fund_st, _yt.get("pair", ""),
-                    (_yt.get("parsed") or {}).get("direction", ""),
-                    _eff_conf(_yt),
-                    float((_yt.get("screen") or {}).get("score") or 0),
-                    "drawdown_quality",
-                )
-                _fund_st_blocked.append((_yt, _szg_reason))
-                try:
-                    from src import tracker as _trk_fsb2
-                    if _yt.get("id"):
-                        _trk_fsb2.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                 notes=f"Blocked: {_szg_reason}")
-                except Exception:
-                    pass
-                continue
-            # ── Volatility-adjusted position sizing ───────────────────────────
-            _add_sizing = _calculate_position_size(
-                regime=_regime_str,
-                consecutive_losses=_consec_losses_fs,
-                drawdown_pct=float(_fund_st.get("current_drawdown_pct") or 0),
-                base_pct=float(_szg_pct) if _szg_pct else BASE_RISK_PCT,
-                log_fn=lambda m: _log_line(log, m),
-            )
-            if _add_sizing["risk_pct"] < float(_szg_pct or BASE_RISK_PCT):
-                _szg_pct   = _add_sizing["risk_pct"]
-                _szg_mode  = _add_sizing["sizing_mode"]
-                _szg_reason = _add_sizing["reason"]
-                _log_line(log, f"[sizing] {_yt_pair}: volatility-adjusted → "
-                          f"{_szg_pct}% ({_szg_mode})")
-            # 5th-slot override: cap risk to the override level
-            if _cap.get("is_override") and _cap.get("risk_pct") is not None:
-                if _szg_pct is None or float(_szg_pct) > float(_cap["risk_pct"]):
-                    _szg_pct    = _cap["risk_pct"]
-                    _szg_mode   = f"OVERRIDE_{_cap['tier']}"
-                    _szg_reason = _cap["reason"]
-                    _log_line(log, f"[capacity] {_yt_pair}: 5th-slot override → "
-                              f"{_szg_pct}% ({_szg_mode})")
-            _yt["_fs_sizing"] = {
-                "pct":      _szg_pct,
-                "mode":     _szg_mode,
-                "reason":   _szg_reason,
-                "balance":  _cur_bal_fs or float(config.ACCOUNT_BALANCE),
-                "wins":     int(_fund_st.get("consecutive_wins") or 0),
-                "drawdown": float(_fund_st.get("current_drawdown_pct") or 0.0),
-            }
-            # Stamp ML sizing + trend + session fields on the fund trade row
-            # CRITICAL: position_size_pct_at_entry written first in its own isolated call
-            # so it cannot be swallowed by a failure in the optional metadata fields.
-            if _yt.get("id") and _szg_pct is not None:
-                try:
-                    from src import tracker as _trk_szg_pct
-                    _trk_szg_pct.update_fields(
-                        int(_yt["id"]),
-                        position_size_pct_at_entry=float(_szg_pct),
-                    )
-                except Exception as _szg_pct_err:
-                    _log_line(log, f"[sizing] ERROR stamping position_size_pct_at_entry "
-                              f"for #{_yt['id']}: {_szg_pct_err}")
-            # Stamp optional metadata fields (non-critical — failures are logged, not fatal)
-            try:
-                from src import tracker as _trk_szg
-                if _yt.get("id"):
-                    _trk_szg.update_fields(
-                        int(_yt["id"]),
-                        sizing_mode=_szg_mode,
-                        consecutive_wins_at_entry=int(_fund_st.get("consecutive_wins") or 0),
-                        drawdown_pct_at_entry=float(_fund_st.get("current_drawdown_pct") or 0.0),
-                        threshold_at_entry=threshold_data.get("final_threshold", "") if threshold_data else "",
-                        regime_base_at_entry=threshold_data.get("regime_base", "") if threshold_data else "",
-                        win_rate_adjustment_at_entry=threshold_data.get("win_rate_adjustment", "") if threshold_data else "",
-                        data_quality_adjustment_at_entry=threshold_data.get("data_quality_adjustment", "") if threshold_data else "",
-                    )
-            except Exception as _szg_meta_err:
-                _log_line(log, f"[sizing] ERROR stamping metadata fields "
-                          f"for #{_yt.get('id')}: {_szg_meta_err}")
-            # Stamp rich entry-context features (PART 1 — ML fuel)
-            try:
-                from src import tracker as _trk_rich
-                if _yt.get("id"):
-                    _rich_bndl  = (_yt.get("bundle") or {})
-                    _rich_daily = (_rich_bndl.get("technical") or {}).get("daily") or {}
-                    _rich_entry = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
-                    _rich_stop  = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
-                    _rich_atr   = float(_rich_daily.get("atr14") or 0)
-                    _pip_sz     = 0.01 if "JPY" in _yt_pair else 0.0001
-                    _rich_stop_pips = abs(_rich_entry - _rich_stop) / _pip_sz if _rich_entry and _rich_stop else 0
-                    _rich_atr_mult  = abs(_rich_entry - _rich_stop) / _rich_atr if _rich_atr and _rich_stop and _rich_entry else 0
-                    _rich_rsi    = float(_rich_daily.get("rsi14") or 0)
-                    _rich_macd   = float(_rich_daily.get("macd_histogram") or 0)
-                    _rich_bb_pos = str(_rich_daily.get("bb_position") or "")
-                    _rich_rr     = float(_yt_parsed.get("reward_risk") or 0)
-                    _trk_rich.update_fields(
-                        int(_yt["id"]),
-                        rsi_at_entry=_rich_rsi or "",
-                        macd_at_entry=_rich_macd or "",
-                        bb_position_at_entry=_rich_bb_pos,
-                        atr_at_entry=_rich_atr or "",
-                        regime_at_entry=_regime_str,
-                        session_at_entry=",".join(_get_current_session()),
-                        weekly_trend_at_entry=_trend_align.get("weekly_trend", ""),
-                        monthly_trend_at_entry=_trend_align.get("monthly_trend", ""),
-                        trend_score_at_entry=int(_trend_align.get("alignment_score") or 0),
-                        technical_score=float(_yt_parsed.get("technical_score") or 0) or "",
-                        fundamental_score=float(_yt_parsed.get("fundamental_score") or 0) or "",
-                        sentiment_score=float(_yt_parsed.get("sentiment_score") or 0) or "",
-                        cot_score=float(_yt_parsed.get("cot_score") or 0) or "",
-                        momentum_score=float(_yt_parsed.get("momentum_score") or 0) or "",
-                        stop_pips_at_entry=round(_rich_stop_pips, 1) or "",
-                        rr_at_entry=_rich_rr or "",
-                        atr_multiple_at_entry=round(_rich_atr_mult, 2) or "",
-                        consecutive_losses_at_entry=_consec_losses_fs,
-                        drawdown_at_entry=float(_fund_st.get("current_drawdown_pct") or 0.0),
-                        open_trades_at_entry=_open_fund_count,
-                    )
-            except Exception as _rich_err:
-                _log_line(log, f"[rich-features] ERROR stamping entry features "
-                          f"for #{_yt.get('id')}: {_rich_err}")
-            # ML win-probability display (PART 6)
-            try:
-                from src import online_learner as _ol_fund
-                from src.feature_extractor import FEATURE_COLS as _ol_fund_cols
-                _ol_feats = {c: 0.0 for c in _ol_fund_cols}
-                _ol_feats["confidence"]     = float(_yt_parsed.get("confidence") or 0)
-                _ol_feats["reward_risk"]    = float(_yt_parsed.get("reward_risk") or 0)
-                _ol_feats["direction_buy"]  = 1.0 if _yt_dir_ta == "BUY" else 0.0
-                _ol_feats["rsi14"]          = float((_yt.get("bundle") or {}).get("technical", {}).get("daily", {}).get("rsi14") or 50)
-                _ol_prob = _ol_fund.predict_proba(_ol_feats)
-                if _ol_prob is not None:
-                    _ml_emoji = "\U0001f7e2" if _ol_prob >= 0.6 else ("\U0001f534" if _ol_prob <= 0.4 else "\U0001f7e1")
-                    _log_line(log, (
-                        f"[ML] {_yt_pair} {_yt_dir_ta}: "
-                        f"P(win)={_ol_prob:.1%} {_ml_emoji} "
-                        f"(conf={float(_yt_parsed.get('confidence', 0)):.1f})"
-                    ))
-                    # Stamp on trade row
-                    if isinstance(_yt.get("parsed"), dict):
-                        _yt["parsed"]["ml_win_probability"] = round(_ol_prob, 3)
+                _wt_hard  = str(_trend_align.get("weekly_trend", "")).upper().strip()
+                _dir_hard = _yt_dir_ta
+                if _wt_hard in ("", "NEUTRAL", "NONE", "NULL", "UNKNOWN", "0"):
+                    _blk_wt_n = "Weekly trend neutral — no clear directional bias"
+                    _log_line(log, f"[trend-hard] BLOCKED {_yt_pair} — weekly trend={_wt_hard!r}")
+                    _yt_parsed["trade_this"] = "NO"
+                    _yt_parsed["block_reason"] = _blk_wt_n
+                    _fund_st_blocked.append((_yt, _blk_wt_n))
+                    _blocked_setups.append({
+                        "pair":      _yt_pair,
+                        "direction": _dir_hard,
+                        "conf":      float(_yt_parsed.get("confidence", 0) or 0),
+                        "reason":    "Weekly trend neutral",
+                    })
                     try:
-                        from src import tracker as _trk_mlp
+                        from src import tracker as _trk_wtn
                         if _yt.get("id"):
-                            _trk_mlp.update_fields(int(_yt["id"]), ml_win_probability=round(_ol_prob, 3))
+                            _trk_wtn.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                    notes=f"Blocked: {_blk_wt_n}")
                     except Exception:
                         pass
-                    # If AI says good but ML says bad — penalise confidence
-                    if float(_yt_parsed.get("confidence") or 0) >= 7.0 and _ol_prob <= 0.35:
-                        _ml_penalty = 0.5
-                        if isinstance(_yt.get("parsed"), dict):
-                            _yt["parsed"]["confidence"] = max(
-                                0.0, float(_yt["parsed"].get("confidence", 0)) - _ml_penalty
+                    continue
+                if (_dir_hard == "BUY" and _wt_hard == "DOWN") or \
+                        (_dir_hard == "SELL" and _wt_hard == "UP"):
+                    _blk_wt_o = f"Opposes weekly trend: {_wt_hard}"
+                    _log_line(log, f"[trend-hard] BLOCKED {_yt_pair} {_dir_hard} opposes weekly {_wt_hard}")
+                    _yt_parsed["trade_this"] = "NO"
+                    _yt_parsed["block_reason"] = _blk_wt_o
+                    _fund_st_blocked.append((_yt, _blk_wt_o))
+                    _blocked_setups.append({
+                        "pair":      _yt_pair,
+                        "direction": _dir_hard,
+                        "conf":      float(_yt_parsed.get("confidence", 0) or 0),
+                        "reason":    f"Opposes weekly trend {_wt_hard}",
+                    })
+                    try:
+                        from src import tracker as _trk_wto
+                        if _yt.get("id"):
+                            _trk_wto.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                    notes=f"Blocked: {_blk_wt_o}")
+                    except Exception:
+                        pass
+                    continue
+                _log_line(log, f"[trend-hard] {_yt_pair} {_dir_hard} aligned ({_wt_hard}) OK")
+                # ── PAIR FILTER — block banned exotic pairs ────────────────────────
+                _pair_upper = _yt_pair.upper()
+                if _pair_upper in FUND_BANNED_PAIRS:
+                    _blk_pair = f"Pair banned: {_yt_pair} is an illiquid exotic"
+                    _log_line(log, f"[pair-filter] BLOCKING {_yt_pair} — banned exotic pair")
+                    _yt_parsed["trade_this"] = "NO"
+                    _yt_parsed["block_reason"] = _blk_pair
+                    _fund_st_blocked.append((_yt, _blk_pair))
+                    try:
+                        from src import tracker as _trk_pf
+                        if _yt.get("id"):
+                            _trk_pf.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                   notes=f"Blocked: {_blk_pair}")
+                    except Exception:
+                        pass
+                    continue
+                # ── DATA VALIDATION GATE — runs before any other market filter ────
+                _yt_dir_dv = (_yt_parsed.get("direction") or "").upper()
+                _data_val = _validate_trade_data(
+                    parsed=_yt_parsed,
+                    pair=_yt_pair,
+                    direction=_yt_dir_dv,
+                    bundle=(_yt.get("bundle") or {}),
+                    log_fn=lambda m: _log_line(log, m),
+                )
+                if not _data_val["valid"]:
+                    _log_line(log, (
+                        f"[validate-data] BLOCKED {_yt_pair} "
+                        f"— data quality failures: {_data_val['failures']}"
+                    ))
+                    _blk_dv = (
+                        f"Data validation: {_data_val['failures'][0]}"
+                        if _data_val["failures"] else "Data validation failed"
+                    )
+                    _yt_parsed["trade_this"] = "NO"
+                    _yt_parsed["block_reason"] = _blk_dv
+                    _fund_st_blocked.append((_yt, _blk_dv))
+                    try:
+                        from src import tracker as _trk_dv
+                        if _yt.get("id"):
+                            _trk_dv.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                   notes=f"Blocked: {_blk_dv}")
+                    except Exception:
+                        pass
+                    continue
+                # Regime filter — no fund trades in ranging/risk-off
+                if any(r in _regime_str for r in _REGIME_BLOCK):
+                    _blk_rgm = f"Regime: {_regime_str} — waiting for trending market"
+                    _log_line(log, f"[regime] BLOCKING fund trade {_yt_pair} — regime is {_regime_str}")
+                    _fund_st_blocked.append((_yt, _blk_rgm))
+                    try:
+                        from src import tracker as _trk_rgm
+                        if _yt.get("id"):
+                            _trk_rgm.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                    notes=f"Blocked: {_blk_rgm}")
+                    except Exception:
+                        pass
+                    continue
+                # Pair history confidence adjustment (based on research win rate for this pair)
+                try:
+                    _ps_data = _pair_wr_lkp.get(_yt_pair.upper(), {})
+                    _ps_dec  = int(_ps_data.get("decisive", 0))
+                    _ps_wr   = float(_ps_data.get("win_rate", 0))
+                    if _ps_dec >= 10:
+                        if _ps_wr >= 0.65:
+                            _ps_boost = 0.3
+                        elif _ps_wr <= 0.35:
+                            _ps_boost = -0.3
+                        else:
+                            _ps_boost = 0.0
+                        if _ps_boost != 0 and isinstance(_yt.get("parsed"), dict):
+                            _ps_orig = float(_yt["parsed"].get("confidence") or 0)
+                            _yt["parsed"]["confidence"] = round(
+                                min(10.0, max(0.0, _ps_orig + _ps_boost)), 1
                             )
-                        _log_line(log, (
-                            f"[ML] {_yt_pair} ML disagrees with AI — "
-                            f"conf -{_ml_penalty} → {_yt_parsed.get('confidence', 0):.1f}"
-                        ))
-                    # Hard block: ML win probability < 25% — model is highly confident this loses
-                    if _ol_prob < 0.25:
-                        _blk_ml = f"ML win probability too low ({_ol_prob:.1%})"
-                        _log_line(log, f"[ML] BLOCKING {_yt_pair} — {_blk_ml}")
-                        _fund_st_blocked.append((_yt, _blk_ml))
+                            _yt["parsed"]["_pair_wr_boost"]  = _ps_boost
+                            _yt["parsed"]["_pair_wr_sample"] = _ps_dec
+                            _log_line(log, (
+                                f"[pair] {_yt_pair} {_ps_wr*100:.0f}% WR ({_ps_dec} trades) "
+                                f"→ conf {_ps_boost:+.1f} ({_ps_orig:.1f}→{_yt['parsed']['confidence']:.1f})"
+                            ))
+                except Exception as _ps_exc:
+                    _log_line(log, f"[pair] stats error: {_ps_exc}")
+                # Improvement 2: Dynamic confidence threshold by regime
+                _yt_conf_val = _eff_conf(_yt)
+                if _yt_conf_val < FUND_TRADE_MIN_CONF:
+                    _blk_conf = f"Confidence {_yt_conf_val:.1f} < {FUND_TRADE_MIN_CONF:.1f} min (regime: {_regime_str})"
+                    _log_line(log, f"[fund] BLOCKING {_yt_pair} — {_blk_conf}")
+                    _fund_st_blocked.append((_yt, _blk_conf))
+                    try:
+                        from src import tracker as _trk_conf
+                        if _yt.get("id"):
+                            _trk_conf.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                     notes=f"Blocked: {_blk_conf}")
+                    except Exception:
+                        pass
+                    continue
+                # Improvement 4: Weekly + Monthly trend alignment
+                # _yt_dir_ta / _trend_align already computed above in the TREND HARD FILTER
+                # block — reused here rather than recomputed.
+                # Hard block: weekly trend opposes direction (monthly adds context but weekly alone is decisive)
+                if _trend_align.get("weekly_aligned") is False:
+                    _blk_trend = (
+                        f"Weekly trend opposed: weekly={_trend_align['weekly_trend']} "
+                        f"monthly={_trend_align['monthly_trend']}"
+                    )
+                    _log_line(log, f"[trend] BLOCKING {_yt_pair} {_yt_dir_ta} — "
+                              f"weekly trend ({_trend_align['weekly_trend']}) opposes direction")
+                    _fund_st_blocked.append((_yt, _blk_trend))
+                    try:
+                        from src import tracker as _trk_trnd
+                        if _yt.get("id"):
+                            _trk_trnd.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                     notes=f"Blocked: {_blk_trend}")
+                    except Exception:
+                        pass
+                    continue
+                # Soft block: in RANGING regime with any misaligned trend
+                elif ("RANGING" in _regime_str and (
+                        _trend_align.get("weekly_aligned") is False or
+                        _trend_align.get("monthly_aligned") is False)):
+                    _blk_trend = "Ranging market + trend misaligned"
+                    _log_line(log, f"[trend] BLOCKING {_yt_pair} in RANGING — "
+                              f"single trend misaligned")
+                    _fund_st_blocked.append((_yt, _blk_trend))
+                    try:
+                        from src import tracker as _trk_trnd
+                        if _yt.get("id"):
+                            _trk_trnd.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                     notes=f"Blocked: {_blk_trend}")
+                    except Exception:
+                        pass
+                    continue
+                # Fallback: legacy monthly_trend_aligned from parsed analysis
+                _mta_val = _yt_parsed.get("monthly_trend_aligned")
+                if _mta_val is not None:
+                    _mta_bool = str(_mta_val).upper() in ("TRUE", "YES", "1", "T")
+                    if not _mta_bool and _trend_align.get("weekly_aligned") is False:
+                        _blk_mta = "Monthly trend misaligned (both timeframes confirmed)"
+                        _log_line(log, f"[trend] BLOCKING {_yt_pair} — monthly trend NOT aligned")
+                        _fund_st_blocked.append((_yt, _blk_mta))
                         try:
-                            from src import tracker as _trk_ml_blk
+                            from src import tracker as _trk_mta
                             if _yt.get("id"):
-                                _trk_ml_blk.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                           notes=f"Blocked: {_blk_ml}")
+                                _trk_mta.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                        notes=f"Blocked: {_blk_mta}")
                         except Exception:
                             pass
                         continue
-            except Exception as _ml_err:
-                _log_line(log, f"[ML] prediction error for {_yt_pair}: {_ml_err}")
-            _fund_st = _fs.increment_daily_trades(_fund_st)
-            _open_fund_count = _get_open_fund_count()  # re-read after write
-            _cap_max = MAX_FUND_TRADES_OVERRIDE if _cap.get("is_override") else MAX_FUND_TRADES_NORMAL
-            _log_line(log, f"[capacity] {_yt_pair} opened → now {_open_fund_count}/{_cap_max}"
-                      + (" ⚡ OVERRIDE" if _cap.get("is_override") else ""))
-            _ensure_trade_data_complete(
-                trade_row=_yt_parsed,
-                pair=_yt_pair,
-                log_fn=lambda m: _log_line(log, m),
-            )
-            # ML — store fund trade features for training on closure
-            try:
-                from src.online_learner import OnlineLearner as _OL_cls
-                _ol_inst  = _OL_cls()
-                _ol_bndl  = (_yt.get("bundle") or {}).get("technical", {}).get("daily") or {}
-                _ol_entry = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
-                _ol_stop  = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
-                _ol_ps    = 0.01 if "JPY" in _yt_pair else 0.0001
-                _ol_sp    = abs(_ol_entry - _ol_stop) / _ol_ps if _ol_entry and _ol_stop else 0.0
-                _ol_feats = {
-                    "confidence":         float(_yt_parsed.get("confidence") or 0),
-                    "rsi":                float(_ol_bndl.get("rsi14") or 0),
-                    "regime":             str(_regime_str),
-                    "session":            ",".join(_get_current_session()),
-                    "weekly_trend":       str(_trend_align.get("weekly_trend", "")),
-                    "monthly_trend":      str(_trend_align.get("monthly_trend", "")),
-                    "stop_pips":          round(_ol_sp, 1),
-                    "rr":                 float(_yt_parsed.get("reward_risk") or 0),
-                    "consecutive_losses": int(_consec_losses_fs or 0),
-                    "drawdown":           float(_fund_st.get("current_drawdown_pct") or 0.0),
-                    "trend_score":        float(_trend_align.get("alignment_score") or 0),
+                else:
+                    _log_line(log, f"[trend] WARNING {_yt_pair} — monthly_trend_aligned not available — allowing trade")
+                # Loss journal — block or penalise setups matching past-loss patterns
+                _jrnl_e  = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
+                _jrnl_sl = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
+                _jrnl_ps = 0.01 if "JPY" in _yt_pair else 0.0001
+                _jrnl_sp = abs(_jrnl_e - _jrnl_sl) / _jrnl_ps if _jrnl_e and _jrnl_sl else 0.0
+                _journal_check = _check_loss_journal(
+                    pair=_yt_pair,
+                    direction=_yt_dir_ta,
+                    regime=_regime_str,
+                    session=",".join(_get_current_session()),
+                    weekly_trend=_trend_align.get("weekly_trend", "NEUTRAL"),
+                    rsi=float(
+                        (_yt.get("bundle") or {})
+                        .get("technical", {})
+                        .get("daily", {})
+                        .get("rsi14") or 0
+                    ),
+                    stop_pips=_jrnl_sp,
+                    confidence=_yt_conf_val,
+                    log_fn=lambda m: _log_line(log, m),
+                )
+                if _journal_check["blocked"]:
+                    _blk_journal = (
+                        f"Loss journal: {_journal_check['warnings'][0][:80]}"
+                        if _journal_check["warnings"] else "Loss journal: high risk pattern"
+                    )
+                    _log_line(log, (
+                        f"[loss-journal] BLOCKED {_yt_pair} — matches loss patterns "
+                        f"risk={_journal_check['risk_score']:.2f}"
+                    ))
+                    _fund_st_blocked.append((_yt, _blk_journal))
+                    try:
+                        from src import tracker as _trk_jrn
+                        if _yt.get("id"):
+                            _trk_jrn.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                    notes=f"Blocked: {_blk_journal}")
+                    except Exception:
+                        pass
+                    continue
+                elif _journal_check["risk_score"] > 0.2:
+                    _jrnl_penalty = round(_journal_check["risk_score"] * 0.5, 1)
+                    _jrnl_orig    = float(_yt_parsed.get("confidence") or 0)
+                    if isinstance(_yt.get("parsed"), dict):
+                        _yt["parsed"]["confidence"] = max(0.0, _jrnl_orig - _jrnl_penalty)
+                    _log_line(log, (
+                        f"[loss-journal] {_yt_pair} conf penalty -{_jrnl_penalty} "
+                        f"for past loss pattern (score={_journal_check['risk_score']:.2f})"
+                    ))
+                # Improvement 5: Minimum R:R for fund trades
+                _yt_rr_val = float(_yt_parsed.get("reward_risk") or 0)
+                if _yt_rr_val > 0 and _yt_rr_val < FUND_MIN_RR:
+                    _blk_rr = f"R:R {_yt_rr_val:.2f} < {FUND_MIN_RR} minimum"
+                    _log_line(log, f"[rr] BLOCKING {_yt_pair} — R:R {_yt_rr_val:.2f} below fund minimum {FUND_MIN_RR}")
+                    _fund_st_blocked.append((_yt, _blk_rr))
+                    try:
+                        from src import tracker as _trk_rr
+                        if _yt.get("id"):
+                            _trk_rr.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                   notes=f"Blocked: {_blk_rr}")
+                    except Exception:
+                        pass
+                    continue
+                # Stop distance cap: block if stop > 2.0x ATR (was 2.5x — tightened for smaller losses
+                # and more reachable T1 targets; 2.0x ATR still clears most valid swing setups)
+                _yt_bndl  = (_yt.get("bundle") or {})
+                _yt_atr14 = float(((_yt_bndl.get("technical") or {}).get("daily", {}).get("atr14") or 0))
+                _yt_entry_v = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
+                _yt_stop_v  = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
+                if _yt_atr14 > 0 and _yt_entry_v and _yt_stop_v:
+                    _yt_stop_dist = abs(_yt_entry_v - _yt_stop_v)
+                    if _yt_stop_dist > _yt_atr14 * 2.0:
+                        _blk_atr = f"Stop too wide ({_yt_stop_dist:.5f}) vs 2.0xATR ({_yt_atr14 * 2.0:.5f})"
+                        _log_line(log, f"[stop] BLOCKING {_yt_pair} — stop too wide")
+                        _fund_st_blocked.append((_yt, _blk_atr))
+                        try:
+                            from src import tracker as _trk_atr
+                            if _yt.get("id"):
+                                _trk_atr.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                        notes=f"Blocked: {_blk_atr}")
+                        except Exception:
+                            pass
+                        continue
+                # Tiered capacity check — supports 5th slot for conf ≥ 7.5
+                _cap = _check_capacity_tiered(
+                    pair=_yt_pair,
+                    confidence=_yt_conf_val,
+                    regime=_regime_str,
+                    fund_state=_fund_st,
+                    log_fn=lambda m: _log_line(log, m),
+                )
+                if not _cap["allowed"]:
+                    _blk_rsn_cap = _cap["reason"]
+                    _swap_executed = False
+
+                    # CB blocks swaps entirely — no new directional exposure when losing
+                    try:
+                        _swap_cb_l = int(_fund_st.get("consecutive_losses") or 0)
+                    except Exception:
+                        _swap_cb_l = 0
+                    if _swap_cb_l >= 3:
+                        _log_line(log, f"[swap] BLOCKED — circuit breaker active "
+                                  f"({_swap_cb_l} losses)")
+                        _blk_sw_cb = f"Circuit breaker ({_swap_cb_l} losses)"
+                        _fund_st_blocked.append((_yt, _blk_sw_cb))
+                        try:
+                            from src import tracker as _trk_sw_cb
+                            if _yt.get("id"):
+                                _trk_sw_cb.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                          notes=f"Blocked: {_blk_sw_cb}")
+                        except Exception:
+                            pass
+                        continue
+
+                    if _yt_conf_val >= SWAP_MIN_NEW_CONF:
+                        _log_line(log, f"[swap] {_yt_pair} conf {_yt_conf_val:.1f} "
+                                  f">= {SWAP_MIN_NEW_CONF} — evaluating swap...")
+                        _swap_res = _find_swap_target(
+                            new_pair=_yt_pair,
+                            new_direction=_yt_parsed.get("direction", ""),
+                            new_conf=_yt_conf_val,
+                            open_trades=_ot_open_trades,
+                            log_fn=lambda m: _log_line(log, m),
+                        )
+                        if _swap_res["should_swap"]:
+                            try:
+                                from src.trading.financials import (
+                                    close_fund_trade as _cft_sw,
+                                    sync_fund_state_json as _sfsj_sw,
+                                    load_prices as _lp_sw,
+                                    get_price as _gp_sw,
+                                    pip_size as _pips_sw,
+                                )
+                                import pandas as _sw_pd
+                                _sw_prices  = _lp_sw()
+                                _sw_tid     = int(float(str(_swap_res["target_id"])))
+                                _sw_tpair   = _swap_res["target_pair"]
+                                _sw_exit    = _gp_sw(_sw_prices, _sw_tpair)
+                                _sw_df      = _sw_pd.read_csv("data/trades.csv")
+                                _sw_df_row  = _sw_df[_sw_df["id"].astype(str) == str(_sw_tid)]
+                                if _sw_exit and not _sw_df_row.empty:
+                                    _sw_r     = _sw_df_row.iloc[0]
+                                    _sw_entry = float(_sw_r.get("entry", 0) or 0)
+                                    _sw_dir   = str(_sw_r.get("direction", "")).upper()
+                                    _sw_t1h   = str(_sw_r.get("t1_hit", "")).upper() in ("TRUE", "YES", "1", "T")
+                                    _sw_ps    = _pips_sw(_sw_tpair)
+                                    _sw_pips  = ((_sw_exit - _sw_entry) / _sw_ps if _sw_dir == "BUY"
+                                                 else (_sw_entry - _sw_exit) / _sw_ps)
+                                    _sw_status = ("PARTIAL_WIN" if _sw_t1h and _sw_pips > 0
+                                                  else "WIN" if _sw_pips > 0 else "LOSS")
+                                    # Guard: if closing this trade as a LOSS would push
+                                    # consecutive_losses to 3 the CB would fire and block
+                                    # the replacement — cancel swap instead of leaving
+                                    # the fund with no position and a CB-triggered state.
+                                    _pre_cl = int(_fund_st.get("consecutive_losses") or 0)
+                                    if _sw_pips < 0 and _pre_cl >= 2:
+                                        _blk_sw_cbrisk = (
+                                            f"Swap cancelled — closing {_sw_tpair} as LOSS "
+                                            f"would trigger circuit breaker "
+                                            f"({_pre_cl}→3 losses) with no replacement possible"
+                                        )
+                                        _log_line(log, f"[swap] CANCELLED — {_blk_sw_cbrisk}")
+                                        _fund_st_blocked.append((_yt, _blk_sw_cbrisk))
+                                        try:
+                                            from src import tracker as _trk_sw_cbrisk
+                                            if _yt.get("id"):
+                                                _trk_sw_cbrisk.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                                              notes=f"Blocked: {_blk_sw_cbrisk}")
+                                        except Exception:
+                                            pass
+                                        continue
+                                    _cft_sw(
+                                        df=_sw_df,
+                                        trade_id=_sw_tid,
+                                        status=_sw_status,
+                                        exit_price=float(_sw_exit),
+                                        pips=float(_sw_pips),
+                                    )
+                                    _sfsj_sw()
+                                    # Remove swapped trade from in-memory list so slot count is correct
+                                    _ot_open_trades = [
+                                        r for r in _ot_open_trades
+                                        if str(r.get("id", "")) != str(_sw_tid)
+                                    ]
+                                    # Reset _cap to reflect freed slot
+                                    _cap = {"allowed": True, "is_override": False,
+                                            "risk_pct": None, "tier": "normal",
+                                            "reason": "slot freed by swap"}
+                                    _swapped_setups.append({
+                                        "closed_pair":    _sw_tpair,
+                                        "closed_pips":    round(_sw_pips, 1),
+                                        "closed_dollars": 0.0,
+                                        "new_pair":       _yt_pair,
+                                        "new_conf":       _yt_conf_val,
+                                        "reason":         _swap_res["reason"],
+                                    })
+                                    # Immediate Discord alert for the swap
+                                    try:
+                                        from src import discord_notifier as _dn_sw
+                                        _dn_sw.send_swap_alert(
+                                            closed_pair=_sw_tpair,
+                                            closed_pips=round(_sw_pips, 1),
+                                            closed_dollars=0.0,
+                                            new_pair=_yt_pair,
+                                            new_conf=_yt_conf_val,
+                                            swap_reason=_swap_res["reason"],
+                                        )
+                                    except Exception as _dn_sw_exc:
+                                        _log_line(log, f"[swap] Discord alert failed: {_dn_sw_exc}")
+                                    _log_line(log, f"[swap] Slot freed — {_yt_pair} can open")
+                                    _swap_executed = True
+                                else:
+                                    _log_line(log, f"[swap] No price for {_sw_tpair} — swap aborted")
+                            except Exception as _sw_exc:
+                                _log_line(log, f"[swap] Execution error: {_sw_exc}")
+                        else:
+                            _log_line(log, f"[swap] No swap: {_swap_res['reason']}")
+
+                    if not _swap_executed:
+                        _fund_st_blocked.append((_yt, _blk_rsn_cap))
+                        if _yt_conf_val >= 6.0:
+                            _blocked_setups.append({
+                                "pair":      _yt_pair,
+                                "direction": (_yt_parsed.get("direction") or "").upper(),
+                                "conf":      _yt_conf_val,
+                                "reason":    _blk_rsn_cap,
+                            })
+                        try:
+                            from src import tracker as _trk_cap
+                            if _yt.get("id"):
+                                _trk_cap.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                        notes=f"Blocked: {_blk_rsn_cap}")
+                        except Exception:
+                            pass
+                        continue
+                _blk, _blk_rsn, _blk_tp = _fs.is_trading_blocked(_fund_st)
+                if _blk:
+                    _fund_st = _fs.record_missed_opportunity(
+                        _fund_st, _yt.get("pair", ""),
+                        (_yt.get("parsed") or {}).get("direction", ""),
+                        _eff_conf(_yt),
+                        float((_yt.get("screen") or {}).get("score") or 0),
+                        _blk_tp,
+                    )
+                    _fund_st_blocked.append((_yt, _blk_rsn))
+                    try:
+                        from src import tracker as _trk_fsb
+                        if _yt.get("id"):
+                            _trk_fsb.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                    notes=f"Blocked: {_blk_rsn}")
+                    except Exception:
+                        pass
+                    continue
+                _ccy_blk, _ccy = _fs.check_currency_exposure(_yt.get("pair", ""), _ot_open_trades)
+                if _ccy_blk:
+                    _blk_rsn_ccy = (
+                        f"Currency concentration — {_ccy} at {_fs.MAX_CURRENCY_EXPOSURE} open trades"
+                    )
+                    _fund_st = _fs.record_missed_opportunity(
+                        _fund_st, _yt.get("pair", ""),
+                        (_yt.get("parsed") or {}).get("direction", ""),
+                        _eff_conf(_yt),
+                        float((_yt.get("screen") or {}).get("score") or 0),
+                        "currency_exposure",
+                    )
+                    _fund_st_blocked.append((_yt, _blk_rsn_ccy))
+                    try:
+                        from src import tracker as _trk_fsb
+                        if _yt.get("id"):
+                            _trk_fsb.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                    notes=f"Blocked: {_blk_rsn_ccy}")
+                    except Exception:
+                        pass
+                    continue
+                # ── Correlation filter ────────────────────────────────────────────
+                _yt_dir_corr = (_yt_parsed.get("direction") or "").upper()
+                _corr = _check_correlation(
+                    new_pair=_yt_pair,
+                    new_direction=_yt_dir_corr,
+                    open_trades=_ot_open_trades,
+                    log_fn=lambda m: _log_line(log, m),
+                )
+                if _corr["blocked"]:
+                    _blk_rsn_corr = f"Correlation: {_corr['reason']}"
+                    _fund_st_blocked.append((_yt, _blk_rsn_corr))
+                    try:
+                        from src import tracker as _trk_corr
+                        if _yt.get("id"):
+                            _trk_corr.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                      notes=f"Blocked: {_blk_rsn_corr}")
+                    except Exception:
+                        pass
+                    continue
+                # ── Session filter (advisory; hard block in RANGING) ──────────────
+                _session_res = _check_session_filter(
+                    _yt_pair, log_fn=lambda m: _log_line(log, m))
+                _yt["_session_optimal"] = _session_res["allowed"]
+                if not _session_res["allowed"] and "RANGING" in _regime_str:
+                    _blk_rsn_sess = f"Ranging + wrong session: {_session_res['reason']}"
+                    _log_line(log, f"[session] BLOCKING {_yt_pair} — {_blk_rsn_sess}")
+                    _fund_st_blocked.append((_yt, _blk_rsn_sess))
+                    try:
+                        from src import tracker as _trk_sess
+                        if _yt.get("id"):
+                            _trk_sess.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                      notes=f"Blocked: {_blk_rsn_sess}")
+                    except Exception:
+                        pass
+                    continue
+                # ── London/NY session gate — no new fund trades in dead hours ─────
+                _sess_h      = datetime.now(timezone.utc).hour
+                _sess_london = 7 <= _sess_h < 17
+                _sess_ny     = 12 <= _sess_h < 21
+                _asia_fx     = {
+                    "AUD/JPY", "AUD/NZD", "AUD/USD", "NZD/USD",
+                    "USD/JPY", "AUD/CAD", "AUD/CHF",
                 }
-                _ol_tid = str(_yt.get("id", ""))
-                if _ol_tid:
-                    _ol_inst.store_fund_features(trade_id=_ol_tid, features=_ol_feats)
-                    _log_line(log, f"[ML] Fund trade #{_ol_tid} features stored")
-            except Exception as _ol_err:
-                _log_line(log, f"[ML] Feature store error: {_ol_err}")
-            _yt_pass.append(_yt)
-            if _cap.get("is_override"):
-                _override_pairs[_yt_pair] = _cap["tier"]
-            _ot_open_trades.append(_yt)  # live update so next trade in same scan sees this currency
+                if not (_sess_london or _sess_ny) and _yt_pair.upper() not in _asia_fx:
+                    _blk_sess_h = f"Outside London/NY — UTC {_sess_h:02d}:xx"
+                    _log_line(log, f"[session] BLOCKING {_yt_pair} — {_blk_sess_h}")
+                    _yt_parsed["trade_this"] = "NO"
+                    _yt_parsed["block_reason"] = _blk_sess_h
+                    _fund_st_blocked.append((_yt, _blk_sess_h))
+                    try:
+                        from src import tracker as _trk_sess_h
+                        if _yt.get("id"):
+                            _trk_sess_h.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                        notes=f"Blocked: {_blk_sess_h}")
+                    except Exception:
+                        pass
+                    continue
+                # ── Pair cooldown — block after 2+ losses on same pair+direction in 48h ──
+                if _check_pair_cooldown(
+                        pair=_yt_pair,
+                        direction=(_yt_parsed.get("direction") or ""),
+                        log_fn=lambda m: _log_line(log, m)):
+                    _blk_cool = f"Cooldown: 2+ losses in 48h on {_yt_pair}"
+                    _yt_parsed["trade_this"] = "NO"
+                    _yt_parsed["block_reason"] = _blk_cool
+                    _fund_st_blocked.append((_yt, _blk_cool))
+                    try:
+                        from src import tracker as _trk_cool
+                        if _yt.get("id"):
+                            _trk_cool.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                      notes=f"Blocked: {_blk_cool}")
+                    except Exception:
+                        pass
+                    continue
+                # ── News blackout window ──────────────────────────────────────────
+                _news_res = _has_upcoming_news(
+                    _yt_pair, log_fn=lambda m: _log_line(log, m))
+                if _news_res["blocked"]:
+                    _blk_rsn_news = _news_res["reason"]
+                    _log_line(log, f"[news] BLOCKING {_yt_pair} — {_blk_rsn_news}")
+                    _fund_st_blocked.append((_yt, _blk_rsn_news))
+                    try:
+                        from src import tracker as _trk_news
+                        if _yt.get("id"):
+                            _trk_news.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                      notes=f"Blocked: {_blk_rsn_news}")
+                    except Exception:
+                        pass
+                    continue
+                # ── Adaptive sizing ───────────────────────────────────────────────
+                _szg_pct, _szg_mode, _szg_reason = _fs.compute_sizing(
+                    _fund_st,
+                    _cur_bal_fs or float(config.ACCOUNT_BALANCE),
+                    _eff_conf(_yt),
+                    log_fn=lambda m: _log_line(log, m),
+                )
+                if _szg_pct is None:
+                    # Drawdown tier quality requirement not met — block this trade
+                    _fund_st = _fs.record_missed_opportunity(
+                        _fund_st, _yt.get("pair", ""),
+                        (_yt.get("parsed") or {}).get("direction", ""),
+                        _eff_conf(_yt),
+                        float((_yt.get("screen") or {}).get("score") or 0),
+                        "drawdown_quality",
+                    )
+                    _fund_st_blocked.append((_yt, _szg_reason))
+                    try:
+                        from src import tracker as _trk_fsb2
+                        if _yt.get("id"):
+                            _trk_fsb2.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                     notes=f"Blocked: {_szg_reason}")
+                    except Exception:
+                        pass
+                    continue
+                # ── Volatility-adjusted position sizing ───────────────────────────
+                _add_sizing = _calculate_position_size(
+                    regime=_regime_str,
+                    consecutive_losses=_consec_losses_fs,
+                    drawdown_pct=float(_fund_st.get("current_drawdown_pct") or 0),
+                    base_pct=float(_szg_pct) if _szg_pct else BASE_RISK_PCT,
+                    log_fn=lambda m: _log_line(log, m),
+                )
+                if _add_sizing["risk_pct"] < float(_szg_pct or BASE_RISK_PCT):
+                    _szg_pct   = _add_sizing["risk_pct"]
+                    _szg_mode  = _add_sizing["sizing_mode"]
+                    _szg_reason = _add_sizing["reason"]
+                    _log_line(log, f"[sizing] {_yt_pair}: volatility-adjusted → "
+                              f"{_szg_pct}% ({_szg_mode})")
+                # 5th-slot override: cap risk to the override level
+                if _cap.get("is_override") and _cap.get("risk_pct") is not None:
+                    if _szg_pct is None or float(_szg_pct) > float(_cap["risk_pct"]):
+                        _szg_pct    = _cap["risk_pct"]
+                        _szg_mode   = f"OVERRIDE_{_cap['tier']}"
+                        _szg_reason = _cap["reason"]
+                        _log_line(log, f"[capacity] {_yt_pair}: 5th-slot override → "
+                                  f"{_szg_pct}% ({_szg_mode})")
+                _yt["_fs_sizing"] = {
+                    "pct":      _szg_pct,
+                    "mode":     _szg_mode,
+                    "reason":   _szg_reason,
+                    "balance":  _cur_bal_fs or float(config.ACCOUNT_BALANCE),
+                    "wins":     int(_fund_st.get("consecutive_wins") or 0),
+                    "drawdown": float(_fund_st.get("current_drawdown_pct") or 0.0),
+                }
+                # Stamp ML sizing + trend + session fields on the fund trade row
+                # CRITICAL: position_size_pct_at_entry written first in its own isolated call
+                # so it cannot be swallowed by a failure in the optional metadata fields.
+                if _yt.get("id") and _szg_pct is not None:
+                    try:
+                        from src import tracker as _trk_szg_pct
+                        _trk_szg_pct.update_fields(
+                            int(_yt["id"]),
+                            position_size_pct_at_entry=float(_szg_pct),
+                        )
+                    except Exception as _szg_pct_err:
+                        _log_line(log, f"[sizing] ERROR stamping position_size_pct_at_entry "
+                                  f"for #{_yt['id']}: {_szg_pct_err}")
+                # Stamp optional metadata fields (non-critical — failures are logged, not fatal)
+                try:
+                    from src import tracker as _trk_szg
+                    if _yt.get("id"):
+                        _trk_szg.update_fields(
+                            int(_yt["id"]),
+                            sizing_mode=_szg_mode,
+                            consecutive_wins_at_entry=int(_fund_st.get("consecutive_wins") or 0),
+                            drawdown_pct_at_entry=float(_fund_st.get("current_drawdown_pct") or 0.0),
+                            threshold_at_entry=threshold_data.get("final_threshold", "") if threshold_data else "",
+                            regime_base_at_entry=threshold_data.get("regime_base", "") if threshold_data else "",
+                            win_rate_adjustment_at_entry=threshold_data.get("win_rate_adjustment", "") if threshold_data else "",
+                            data_quality_adjustment_at_entry=threshold_data.get("data_quality_adjustment", "") if threshold_data else "",
+                        )
+                except Exception as _szg_meta_err:
+                    _log_line(log, f"[sizing] ERROR stamping metadata fields "
+                              f"for #{_yt.get('id')}: {_szg_meta_err}")
+                # Stamp rich entry-context features (PART 1 — ML fuel)
+                try:
+                    from src import tracker as _trk_rich
+                    if _yt.get("id"):
+                        _rich_bndl  = (_yt.get("bundle") or {})
+                        _rich_daily = (_rich_bndl.get("technical") or {}).get("daily") or {}
+                        _rich_entry = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
+                        _rich_stop  = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
+                        _rich_atr   = float(_rich_daily.get("atr14") or 0)
+                        _pip_sz     = 0.01 if "JPY" in _yt_pair else 0.0001
+                        _rich_stop_pips = abs(_rich_entry - _rich_stop) / _pip_sz if _rich_entry and _rich_stop else 0
+                        _rich_atr_mult  = abs(_rich_entry - _rich_stop) / _rich_atr if _rich_atr and _rich_stop and _rich_entry else 0
+                        _rich_rsi    = float(_rich_daily.get("rsi14") or 0)
+                        _rich_macd   = float(_rich_daily.get("macd_histogram") or 0)
+                        _rich_bb_pos = str(_rich_daily.get("bb_position") or "")
+                        _rich_rr     = float(_yt_parsed.get("reward_risk") or 0)
+                        _trk_rich.update_fields(
+                            int(_yt["id"]),
+                            rsi_at_entry=_rich_rsi or "",
+                            macd_at_entry=_rich_macd or "",
+                            bb_position_at_entry=_rich_bb_pos,
+                            atr_at_entry=_rich_atr or "",
+                            regime_at_entry=_regime_str,
+                            session_at_entry=",".join(_get_current_session()),
+                            weekly_trend_at_entry=_trend_align.get("weekly_trend", ""),
+                            monthly_trend_at_entry=_trend_align.get("monthly_trend", ""),
+                            trend_score_at_entry=int(_trend_align.get("alignment_score") or 0),
+                            technical_score=float(_yt_parsed.get("technical_score") or 0) or "",
+                            fundamental_score=float(_yt_parsed.get("fundamental_score") or 0) or "",
+                            sentiment_score=float(_yt_parsed.get("sentiment_score") or 0) or "",
+                            cot_score=float(_yt_parsed.get("cot_score") or 0) or "",
+                            momentum_score=float(_yt_parsed.get("momentum_score") or 0) or "",
+                            stop_pips_at_entry=round(_rich_stop_pips, 1) or "",
+                            rr_at_entry=_rich_rr or "",
+                            atr_multiple_at_entry=round(_rich_atr_mult, 2) or "",
+                            consecutive_losses_at_entry=_consec_losses_fs,
+                            drawdown_at_entry=float(_fund_st.get("current_drawdown_pct") or 0.0),
+                            open_trades_at_entry=_open_fund_count,
+                        )
+                except Exception as _rich_err:
+                    _log_line(log, f"[rich-features] ERROR stamping entry features "
+                              f"for #{_yt.get('id')}: {_rich_err}")
+                # ML win-probability display (PART 6)
+                try:
+                    from src import online_learner as _ol_fund
+                    from src.feature_extractor import FEATURE_COLS as _ol_fund_cols
+                    _ol_feats = {c: 0.0 for c in _ol_fund_cols}
+                    _ol_feats["confidence"]     = float(_yt_parsed.get("confidence") or 0)
+                    _ol_feats["reward_risk"]    = float(_yt_parsed.get("reward_risk") or 0)
+                    _ol_feats["direction_buy"]  = 1.0 if _yt_dir_ta == "BUY" else 0.0
+                    _ol_feats["rsi14"]          = float((_yt.get("bundle") or {}).get("technical", {}).get("daily", {}).get("rsi14") or 50)
+                    _ol_prob = _ol_fund.predict_proba(_ol_feats)
+                    if _ol_prob is not None:
+                        _ml_emoji = "\U0001f7e2" if _ol_prob >= 0.6 else ("\U0001f534" if _ol_prob <= 0.4 else "\U0001f7e1")
+                        _log_line(log, (
+                            f"[ML] {_yt_pair} {_yt_dir_ta}: "
+                            f"P(win)={_ol_prob:.1%} {_ml_emoji} "
+                            f"(conf={float(_yt_parsed.get('confidence', 0)):.1f})"
+                        ))
+                        # Stamp on trade row
+                        if isinstance(_yt.get("parsed"), dict):
+                            _yt["parsed"]["ml_win_probability"] = round(_ol_prob, 3)
+                        try:
+                            from src import tracker as _trk_mlp
+                            if _yt.get("id"):
+                                _trk_mlp.update_fields(int(_yt["id"]), ml_win_probability=round(_ol_prob, 3))
+                        except Exception:
+                            pass
+                        # If AI says good but ML says bad — penalise confidence
+                        if float(_yt_parsed.get("confidence") or 0) >= 7.0 and _ol_prob <= 0.35:
+                            _ml_penalty = 0.5
+                            if isinstance(_yt.get("parsed"), dict):
+                                _yt["parsed"]["confidence"] = max(
+                                    0.0, float(_yt["parsed"].get("confidence", 0)) - _ml_penalty
+                                )
+                            _log_line(log, (
+                                f"[ML] {_yt_pair} ML disagrees with AI — "
+                                f"conf -{_ml_penalty} → {_yt_parsed.get('confidence', 0):.1f}"
+                            ))
+                        # Hard block: ML win probability < 25% — model is highly confident this loses
+                        if _ol_prob < 0.25:
+                            _blk_ml = f"ML win probability too low ({_ol_prob:.1%})"
+                            _log_line(log, f"[ML] BLOCKING {_yt_pair} — {_blk_ml}")
+                            _fund_st_blocked.append((_yt, _blk_ml))
+                            try:
+                                from src import tracker as _trk_ml_blk
+                                if _yt.get("id"):
+                                    _trk_ml_blk.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                               notes=f"Blocked: {_blk_ml}")
+                            except Exception:
+                                pass
+                            continue
+                except Exception as _ml_err:
+                    _log_line(log, f"[ML] prediction error for {_yt_pair}: {_ml_err}")
+                _fund_st = _fs.increment_daily_trades(_fund_st)
+                _open_fund_count = _get_open_fund_count()  # re-read after write
+                _cap_max = MAX_FUND_TRADES_OVERRIDE if _cap.get("is_override") else MAX_FUND_TRADES_NORMAL
+                _log_line(log, f"[capacity] {_yt_pair} opened → now {_open_fund_count}/{_cap_max}"
+                          + (" ⚡ OVERRIDE" if _cap.get("is_override") else ""))
+                _ensure_trade_data_complete(
+                    trade_row=_yt_parsed,
+                    pair=_yt_pair,
+                    log_fn=lambda m: _log_line(log, m),
+                )
+                # ML — store fund trade features for training on closure
+                try:
+                    from src.online_learner import OnlineLearner as _OL_cls
+                    _ol_inst  = _OL_cls()
+                    _ol_bndl  = (_yt.get("bundle") or {}).get("technical", {}).get("daily") or {}
+                    _ol_entry = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
+                    _ol_stop  = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
+                    _ol_ps    = 0.01 if "JPY" in _yt_pair else 0.0001
+                    _ol_sp    = abs(_ol_entry - _ol_stop) / _ol_ps if _ol_entry and _ol_stop else 0.0
+                    _ol_feats = {
+                        "confidence":         float(_yt_parsed.get("confidence") or 0),
+                        "rsi":                float(_ol_bndl.get("rsi14") or 0),
+                        "regime":             str(_regime_str),
+                        "session":            ",".join(_get_current_session()),
+                        "weekly_trend":       str(_trend_align.get("weekly_trend", "")),
+                        "monthly_trend":      str(_trend_align.get("monthly_trend", "")),
+                        "stop_pips":          round(_ol_sp, 1),
+                        "rr":                 float(_yt_parsed.get("reward_risk") or 0),
+                        "consecutive_losses": int(_consec_losses_fs or 0),
+                        "drawdown":           float(_fund_st.get("current_drawdown_pct") or 0.0),
+                        "trend_score":        float(_trend_align.get("alignment_score") or 0),
+                    }
+                    _ol_tid = str(_yt.get("id", ""))
+                    if _ol_tid:
+                        _ol_inst.store_fund_features(trade_id=_ol_tid, features=_ol_feats)
+                        _log_line(log, f"[ML] Fund trade #{_ol_tid} features stored")
+                except Exception as _ol_err:
+                    _log_line(log, f"[ML] Feature store error: {_ol_err}")
+                _yt_pass.append(_yt)
+                if _cap.get("is_override"):
+                    _override_pairs[_yt_pair] = _cap["tier"]
+                _ot_open_trades.append(_yt)  # live update so next trade in same scan sees this currency
+            except Exception as _cand_exc:
+                import traceback as _cand_tb
+                _cand_tb_str = _cand_tb.format_exc()
+                _log_line(log, (
+                    f"[fund-loop] EXCEPTION evaluating {_yt_pair_safe}: "
+                    f"{type(_cand_exc).__name__}: {_cand_exc}"
+                ))
+                _log_line(log, _cand_tb_str)
+                _fund_loop_ok = False
+                try:
+                    from src import discord_notifier as _dn_floop_exc
+                    _dn_floop_exc.send_fund_loop_exception_alert(
+                        pair=_yt_pair_safe,
+                        error_str=(
+                            f"{type(_cand_exc).__name__}: {_cand_exc}\n\n"
+                            f"{_cand_tb_str[-800:]}"
+                        ),
+                        scan_mode=scan_mode,
+                        scope="candidate",
+                    )
+                except Exception as _dn_floop_send_exc:
+                    _log_line(log, f"[fund-loop] Discord CRITICAL alert failed: {_dn_floop_send_exc}")
+                continue
         # Stamp ML sizing fields on matching research trades
         try:
             from src import research_tracker as _rtrk_szg
