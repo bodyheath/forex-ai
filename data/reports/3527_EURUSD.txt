@@ -1,0 +1,24 @@
+```
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: Bullish RSI divergence + MTF alignment (W:BUY, D:BUY, 4H:BUY) creates reversal edge despite bearish ribbon, but downtrend structure and COT reversal limit conviction.
+RISK_FACTORS: [1] COT EUR positioning REVERSING (was net SHORT, now flipping) — institutional conviction collapsing, reduces reliability by 1 confidence point; [2] RIBBON ALIGNED_BEAR (5/5 stacked) — strong bearish structure contradicts reversal setup, increases false-signal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.1350
+ENTRY_TRIGGER_REASON: RSI(37.6) at key support confluent with bullish divergence (14p/6pt) + moderate oversold in confirmed downtrend; limit buy at 10p below current price to allow pullback before entry — requires price to hold above SL=1.13254 (Fib swing low).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**SCORE BREAKDOWN:**
+
+**TECHNICAL (6/10):**  
+- D1 T_sig=BUY_4

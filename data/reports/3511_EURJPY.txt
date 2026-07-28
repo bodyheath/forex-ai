@@ -1,0 +1,23 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level + confirmed downtrend (M:SELL W:SELL D:SELL) conflict with ALIGNED_BULL ribbon and 4H inverse H&S, creating ambiguous setup with weak reversal signal overshadowed by structural trend weakness.
+RISK_FACTORS: [1] ALIGNED_BULL ribbon + 4H bullish pattern (inverse H&S) contradict D1 SELL signal — reversal potential if 4H breaks above 186.30; [2] EUR COT reversing from net SHORT → institutional positioning flip risks sudden long squeeze if EUR recovers, negating downside thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 185.65
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (185.2273) confirms bearish structure; pin bar rejection at 186.305 (SH) validates downtrend continuation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE:**
+
+**MTF Conflict (Critical):**
+- Weekly + Daily both SELL (confirmed downtrend), but 4H is BUY
+- MTF confidence = 2/3 (67%) — below threshold for HIGH-CONFIDENCE

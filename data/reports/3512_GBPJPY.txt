@@ -1,0 +1,26 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level (219.516 SH) suggests bearish rejection, but MTF misalignment (M:SELL vs W/D:NEUTRAL vs 4H:BUY) and converging ribbon undermine conviction.
+RISK_FACTORS: [1] MTF conflict: Monthly SELL contradicts Weekly and Daily NEUTRAL — no consensus direction across timeframes, violating 2/3 rule (conf=0/3). [2] COT unwinding GBP shorts: institutions reducing SHORT conviction while you signal SELL — positioning momentum reverses into entry, high fade risk.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not agree (both NEUTRAL), failing the 2/3 agreement requirement. Cannot execute trade regardless of technical confluences.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **DETAILED SCORING BREAKDOWN:**
+
+**TECHNICAL_SCORE: 4/10**
+- **D1 RSI=55.5** in uptrend context (price > SMA50 > SMA200): RSI 45–65 = **NEUTRAL (3–4)**.

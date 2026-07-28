@@ -1,0 +1,33 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Fundamental AUD strength (rising rate + 1.78% carry edge) conflicts with weak MTF technicals (M:SELL + W:SELL vs D:NEUTRAL); pin bar at key level suggests indecision; LEANING_BEAR ribbon supports downside but insufficient confluence for high-conviction trade.
+
+RISK_FACTORS: MTF alignment only 1/3 (45% conf) — D1 neutral weakens sell case; AUD positioning is SHORT and BUILDING (institutions adding shorts into fundamental strength) — potential squeeze risk if carry-traders re-enter.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.2040
+ENTRY_TRIGGER_REASON: Break below pin bar low at key level; test of SMA50 (1.2119) rejection.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **Analysis Summary:**
+
+**Why NOT a trade (CONFIDENCE=5, below 7 threshold):**
+
+1. **MTF Fragmentation (CRITICAL):** Monthly + Weekly = SELL, but Daily = NEUTRAL. Confidence only 1/3 (45%) — **hard rule violation**. You need ≥2/3 (67%) MT

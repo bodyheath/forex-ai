@@ -1,0 +1,29 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with fully aligned bullish ribbon and uptrend structure; MTF disagreement (M:SELL vs W/D:NEUTRAL vs 4H:BUY, conf=0/3) blocks trade despite double-top pattern at resistance.
+RISK_FACTORS: [1. MTF incoherence (0/3 agreement) — weekly and daily neutral while monthly sells and 4H buys; no directional consensus. 2. Ribbon fully bullish (5/5 aligned fan) contradicts D1 sell signal — uptrend structure intact despite T_sig negative.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**ANALYSIS DETAIL:**
+
+**MTF FRAMEWORK [CRITICAL VETO]:**  
+- Monthly: SELL | Weekly: NEUTRAL | Daily: NEUTRAL | 4H: BUY  
+- Confidence: 0/3 (no two timeframes agree)  
+- **MTF rule violation:** W+D do not both agree on direction. Trade blocked regardless of other factors.
+
+**TECHNICAL

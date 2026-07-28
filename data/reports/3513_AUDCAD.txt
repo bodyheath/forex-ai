@@ -1,0 +1,23 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 4/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Double-top pattern bearish at 50% Fib, but mixed MTF (M:SELL vs W/D:NEUTRAL) and RSI-neutral at 50.7 limit conviction; AUD rate rise vs CAD fall supports directional bias toward AUD strength (CAD weakness), conflicting with SELL signal.
+
+RISK_FACTORS: [1] MTF conflict: Monthly SELL but Weekly and Daily both NEUTRAL (conf 0/3 wt=80%) — trade lacks multi-timeframe confirmation, reducing reliability. [2] RSI 50.7 and MACD near-zero (D1: +0.0003, 4H: -0.0001) show no directional momentum; double-top at 9p from 50% Fib near is weak confluence without oscillator support.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated — Weekly and Daily both NEUTRAL while Monthly SELL. Confidence 0/3 fails multi-timeframe agreement. Fundamental AUD-bullish (rising rate) + CAD bearish contradicts SELL. RSI-neutral + MACD-neutral + no oscillator confluence = insufficient technical conviction.

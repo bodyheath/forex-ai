@@ -1,0 +1,25 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed MTF signals (M:SELL vs D:BUY) with low directional conviction (1/3 agreement) and technical weakness (4H head-and-shoulders bearish, OSC=NONE) offset by flat EUR fundamentals and CAD rate decline support.
+RISK_FACTORS: MTF conf=1/3 fails the 2/3 threshold — no clear directional agreement between weekly/daily, violating core MTF rule. EUR COT positioning REVERSING (flipping from long conviction) while trade direction leans SELL — institutional de-risking creates exit risk.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL and D:BUY do NOT both confirm a SELL direction (conf=1/3 << 2/3 threshold). Insufficient confluence to justify entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+**Technical Score = 4/10:**
+- D1 RSI=42.7 (neutral zone 45–62) in **mixed/range trend** → neutral bias (3 points baseline)
+- D1 T_sig=BUY
