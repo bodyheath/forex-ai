@@ -51,6 +51,28 @@ _FETCH_DELAY = 10           # seconds between API calls (free tier: 8 req/min)
 _INTERVAL = "1h"
 _TIMEOUT = 20
 
+# Shared with monitor.py / selector.py / daily.py — same file, same schema
+# ({"date": "YYYY-MM-DD", "calls": N}), reset daily. NOTE: this counter is
+# known to under-report real usage — selector.py's own _increment_td_usage()
+# is dead code (never called), so the bulk of the main pipeline's per-pair
+# technical/price fetches are invisible to it. Treat a high reading here as
+# a reliable STOP signal (real usage is at least this high) but never as
+# proof of headroom (real usage could be far higher than it shows). This is
+# why this module is self-limiting via _MAX_PAIRS_PER_RUN rather than
+# sizing itself off whatever headroom this counter appears to report.
+_API_USAGE_FILE = config.DATA_DIR / "api_usage.json"
+_QUOTA_ABORT_THRESHOLD = 700   # matches monitor.py's own "critical" cutoff
+
+# Hard per-run cap, independent of the (unreliable) quota reading above.
+# Steady-state need is small (only pairs for newly-added blocked candidates
+# since the last run + pairs with a currently-PENDING row) — 25 pairs/run
+# covers that with room to spare while keeping worst-case daily add-on cost
+# at 25 calls, well inside the shared 800/day budget even on a heavy scan day.
+_MAX_PAIRS_PER_RUN = 25
+
+_TERMINAL_OUTCOMES = {"WIN", "LOSS", "EXPIRED", "STALE_EXIT", "INVALID_ROW"}
+_RETRYABLE_OUTCOMES = {"PENDING", "NO_DATA"}
+
 _TRADES_CSV = config.DATA_DIR / "trades.csv"
 _RESEARCH_CSV = config.DATA_DIR / "research_trades.csv"
 _OUT_CSV = config.DATA_DIR / "virtual_outcomes.csv"
