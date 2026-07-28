@@ -85,6 +85,12 @@ def _classify_block_reason(source: str, notes: str) -> str:
     labels stay identical to the existing veto-reporting tool.
     """
     n = "" if notes is None or notes != notes else str(notes).strip()  # notes != notes catches NaN
+    # Strip the existing live-polling VIRTUAL_OUTCOME: tag (outcome_checker.
+    # check_virtual_trades already stamps ~100 of these rows) so the gate
+    # bucket reflects the real block reason, not that unrelated tag. When
+    # nothing follows the tag, the row's original notes were genuinely empty.
+    if n.startswith("VIRTUAL_OUTCOME:"):
+        n = n.split("|", 1)[1].strip() if "|" in n else ""
     if source == "research" and n.lower().startswith("duplicate"):
         return "Research dedup (duplicate pair/direction, same scan date)"
     try:
