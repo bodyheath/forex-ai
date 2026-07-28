@@ -1,0 +1,27 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 4/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern and monthly SELL context conflict with neutral daily/weekly MTF; rate differential (AUD rising, CAD falling) supports USD strength but weakens AUD/CAD fundamentals, leaving setup ambiguous.
+RISK_FACTORS: [MTF confidence 0/3 — daily and weekly both neutral, violating core rule for directional conviction; double-top lacks confirmation from RSI divergence or oscillator confluence, reducing pattern reliability]
+TRADE_THIS: NO
+ENTRY_TYPE: STANDBY
+ENTRY_TRIGGER_PRICE: 0.9750 (SL proximity; breakout below range SL at 0.97423)
+ENTRY_TRIGGER_REASON: Breach below range support (SL=0.97423) + daily RSI drop <40 would confirm double-top + downside pressure from rate/macro headwinds.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 3/10**
+- D1 T_sig=NEUTRAL_3 (baseline).
+- D1 RSI=50.4 (midpoint, standard NEUTRAL tier=3-4). No adjustment in mixed MTF context.
+- MACD histogram D1=

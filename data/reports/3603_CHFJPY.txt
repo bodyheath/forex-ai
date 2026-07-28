@@ -1,0 +1,25 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish pattern setup (double top D1, H&S 4H) with weak institutional conviction; JPY strength + CHF weakness support downside, but mixed MTF invalidates high-confidence trade.
+RISK_FACTORS: [1. MTF misalignment: M:SELL but W/D both NEUTRAL — no clear directional confluence; 2. CHF positioning UNWINDING — institutional conviction weakening, potential whipsaw if flows reverse]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 199.30
+ENTRY_TRIGGER_REASON: Break below H&S neckline (~199.40) and nearest Fib support near 198.716; confluence with 4H downtrend structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**ANALYSIS SUMMARY:**
+
+**Why NO despite bearish bias:**
+- **MTF rule violation:** Monthly shows SELL, but Weekly and Daily both NEUTRAL. Confidence requirement is 2/3 agreement (W+D both confirm); you have only 1/3. This alone triggers TRADE_THIS: NO per protocol.
+- **Technical weak (3/10):** T_sig baseline=3 (NEUTRAL). RSI 45

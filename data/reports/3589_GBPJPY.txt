@@ -1,0 +1,30 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key resistance + D1 T_sig=SELL_3 suggest reversal signal, but MTF conf=0/3 (M:SELL only, W/D neutral) and converging ribbon undermine conviction.
+RISK_FACTORS: [1. MTF critical rule: W and D both NEUTRAL — no daily/weekly directional agreement, forcing TRADE_THIS=NO regardless of other factors. 2. Ribbon converging (trend weakening) + GBP positioning unwinding (COT MOM) reduces follow-through confidence.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily must both agree on direction. W:NEUTRAL + D:NEUTRAL fails the >=2/3 MTF agreement threshold. Pin bar + T_sig=SELL_3 noted but insufficient without daily confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**DETAIL REASONING:**
+
+**MTF Critical Check (HARD RULE):**
+- Weekly: NEUTRAL
+- Daily: NEUTRAL
+- 4H: BUY
+- Monthly: SELL (context only)
+- **Conf =

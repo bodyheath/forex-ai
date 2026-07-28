@@ -1,0 +1,25 @@
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Multi-timeframe disagreement (W:SELL vs D:NEUTRAL) with uptrend structure undermines directional conviction despite bearish daily T_sig and bullish divergence conflict.
+
+RISK_FACTORS: 
+1. MTF confidence only 1/3 (W:SELL but D+4H NEUTRAL) — insufficient agreement to override price structure; golden-cross + SMA50>SMA200 + aligned ribbon all support continuation, not reversal.
+2. CAD positioning is net SHORT+BUILDING (institutions adding shorts) while price remains in uptrend — potential trap if CAD bounces; JPY positioning stable, limiting tailwind.
+
+TRADE_THIS: NO
+
+**REASONING:**
+
+**MTF Rule Violation (Critical):** Weekly shows SELL (conf=1/3), but Daily is NEUTRAL and 4H is NEUTRAL. MTF agreement required for TRADE_THIS=YES is **not met** (need ≥2/3 agreement on direction). This alone triggers NO.
+
+**Technical Layer (Score: 4/10):**
+- **D1 T_sig=SELL_3** (bearish baseline) — but contradicted by:
+  - **D1 RSI=64.3** in confirmed uptrend (W:SELL context) → shift SELL zone higher:

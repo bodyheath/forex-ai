@@ -1,0 +1,27 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Oversold Stochastic (93.4) + CCI confirmation in uptrend context creates mean-reversion SELL setup, but ribbon alignment and price structure above SMA50 limit downside conviction.
+RISK_FACTORS: [1] MTF conf=2/3 (D1 NEUTRAL weakens consensus — not full agreement); [2] ALIGNED_BULL ribbon contradicts SELL bias and suggests trend continuation risk.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 186.305
+ENTRY_TRIGGER_REASON: Sell into Stochastic overbought (93.4) at recent swing high (SH=186.305) with CCI confirmation; risk to SMA50=185.237 if ribbon holds.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+---
+
+**RATIONALE:**
+
+**MTF & TECHNICAL ANALYSIS:**
+- **MTF Rule Check:** M:SELL, W:SELL, D:NEUTRAL, 4H:SELL → conf=2/3 (weekly+daily do NOT both agree). Per mandate, this triggers TRADE_THIS: NO automatically.
+- **D1 RSI=61.9 in uptr

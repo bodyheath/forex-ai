@@ -1,0 +1,24 @@
+```
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: Overbought RSI (69.7) in confirmed uptrend with triple oscillator sell confluence and aligned ribbon support reversal signal at resistance.
+RISK_FACTORS: [1. Ribbon fully aligned bullish (5/5) contradicts SELL thesis — trend structure remains intact despite overbought RSI. 2. D1 T_sig=SELL_5 is baseline but MTF context (all timeframes SELL conf=3/3) creates false-signal risk in strong uptrend structure (price > SMA50 > SMA200 + golden cross).] 
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 164.50
+ENTRY_TRIGGER_REASON: Sell limit at recent swing high resistance (SH=162.836 + ATR buffer); wait for price touch before entry to confirm upper band rejection.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**TECHNICAL (6/10):**
+- RSI=69.7 in **confirmed UPTREND** (W:SELL + D:SELL per MTF, but D1 golden-cross structure price > SMA50 > SMA200 = uptrend regime

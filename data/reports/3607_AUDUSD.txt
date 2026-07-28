@@ -1,0 +1,21 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 4/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD rate rising and COT building shorts create mild fundamental headwind, but technical picture is indecisive across all timeframes with no directional confluence.
+RISK_FACTORS: [1. MTF broken: 4H shows BUY but D/W/M all NEUTRAL — no multi-timeframe alignment; trade setup violates MTF rule. 2. RSI 49.2 (D1) and 44.0 (4H) both in neutral zone (45–62) with MACD flat and OSC showing no oscillator confluence — reversal risk in either direction.]
+TRADE_THIS: NO
+
+**REASONING:**
+
+1. **MTF Rule Violation (HARD STOP):** Weekly=NEUTRAL, Daily=NEUTRAL, Monthly=NEUTRAL, 4H=BUY. Confidence across MTF is 0/3 (only 4H agrees, <2/3 threshold). Per rules: *"if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless."* This is a **mandatory NO** — no trade.
+
+2. **Technical Score (4/10):**
+   - D1 RSI 49.2 = neutral zone (45–62) = 3–4 base score.
+   - 4H RSI

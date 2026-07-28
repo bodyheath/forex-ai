@@ -1,0 +1,24 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + D1 SELL signal in uptrend context, but MTF disagreement (W/M neutral) and converging ribbon weaken conviction; GBP rate differential +3.78% favours long but both pairs unwinding positions creates uncertainty.
+RISK_FACTORS: [1] MTF confidence only 1/3 (D:SELL, W:NEUTRAL, M:NEUTRAL) — majority of timeframes lack directional agreement, reducing setup reliability. [2] COT unwinding on both GBP and CHF reduces institutional conviction; positioning momentum flipped from building to unwinding, contradicting the SELL direction and increasing reversal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.0825
+ENTRY_TRIGGER_REASON: Sell only if price breaks below the pin bar low (1.0825) with close, confirming reversal; requires D1 close confirmation to offset MTF disagreement risk.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**ANALYSIS SUMMARY:**
+
+**Technical (5/10):**
+- D1 T_sig=SELL_5 is baseline, but in an **established uptrend** (price 1.0
