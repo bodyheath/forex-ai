@@ -1,0 +1,25 @@
+```
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern at resistance conflicts with uptrend structure; MTF neutrality and mixed 4H trend weaken conviction; CAD rate decline + USD rate flat provide mild fundamental support for SELL, but technical setup is ambiguous.
+RISK_FACTORS: [1] Uptrend structure (price > SMA50 > SMA200) still intact — continuation bias favors USD strength despite pattern. [2] RSI 53.9 and MACD near zero show no momentum conviction; entry here is premature without breakout confirmation below double-top neckline (~1.4080).
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.4080
+ENTRY_TRIGGER_REASON: Confirmed break below double-top neckline with RSI <50 and close below SMA50 (1.4030).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**Technical (3/10):**
+- T_sig baseline = NEUTRAL_3; no adjustment justified.
+- Double-top pattern is **bearish directionally**, but price is still **above SMA50 (1.4030)** and **above SMA200 (1.3854)

@@ -1,0 +1,33 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Double-top bearish pattern and 4H head-and-shoulders signal downside, but weak MTF alignment (M:SELL vs W/D:NEUTRAL) and neutral RSI/oscillators limit conviction.
+
+RISK_FACTORS: 
+1. MTF disagreement — Monthly SELL conflicts with Weekly/Daily NEUTRAL; only 0/3 agreement (price may range-trade instead of trending lower).
+2. Oscillators in neutral territory (RSI 49.1 D1, stoch_k 50.7, CCI 35.7) with no directional confluence — reversal not yet confirmed.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not both agree on direction. Confidence 5/10 is below 7 threshold; R:R and fundamental support insufficient to override MTF weakness.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**TECHNICAL (4/10):**
+- D1 T_sig=NEUTRAL_3 (baseline); PAT=double_top:bea adds bearish structure but is not confirmed by price action yet (0.9

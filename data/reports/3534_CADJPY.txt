@@ -1,0 +1,26 @@
+```
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 overextension (RSI 64.7 in uptrend, MACD fading) + weekly SELL signal + bullish DIV conflict creates choppy setup; CAD rate falling undermines bull case.
+RISK_FACTORS: MTF weak alignment (W:SELL vs D:NEUTRAL = 1/3 agreement, only 40% confidence floor); ribbon fully aligned bullish contradicts T_sig=SELL_3, suggesting uptrend continuation risk.
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF consensus insufficient (<2/3 weekly+daily agreement required); uptrend structure intact despite overbought RSI.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF CRITICAL FAILURE:** W:SELL + D:NEUTRAL = **only 1/3 agreement** (conf=1/3, wt=40%). Hard rule: TRADE_THIS=NO unless weekly AND daily both agree on direction. Here they diverge → **veto trade regardless of other scores.**
+
+2. **TECHNICAL_SCORE = 5 (neutral):**
+   - D1 RSI=

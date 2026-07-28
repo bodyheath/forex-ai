@@ -1,0 +1,56 @@
+I need to carefully evaluate this trade before confirming or overriding Haiku's preliminary.
+
+**Critical MTF Check:**
+- W:SELL + D:SELL = both agree SELL ✓ (conf=2/3 meets the W+D requirement)
+- 4H:NEUTRAL = no bonus, but doesn't block
+
+**RSI in UPTREND Context (critical rule):**
+- MTF shows W:SELL + D:SELL, so the *daily/weekly* trend signal is SELL, but the *price structure* is uptrend (price > SMA50 > SMA200, golden cross, ALIGNED_BULL ribbon 5/5)
+- RSI=70.6: In confirmed uptrend price structure, shift SELL zones higher → RSI 65-77 = 4-5 SELL (not 7-8). T_sig=SELL_8 is the Python anchor.
+- However, W:SELL + D:SELL MTF means the momentum indicators confirm selling pressure. The ribbon is ALIGNED_BULL but that's price structure lag.
+- T_sig=SELL_8 is the anchor. The uptrend price structure could justify pulling back to 7, but triple oscillator SELL (Stoch 98.3, CCI 167, RSI 70.6) + BB upper band is strong. I'll keep SELL_8 but note the ribbon conflict.
+
+**TRIPLE_SELL OSC:** +2 confidence
+**DIVERGENCE: NONE:** no adjustment
+**Ribbon conflict:** ALIGNED_BULL fan = strong uptrend structure, reversal risk is real — this is a counter-trend trade, warrants caution on confidence
+
+**FIB:** SH=162.836, SL=155.047, range=779p. Price at 163.934 is ABOVE the swing high — extended territory, no nearby fib resistance above, nearest support below at 162.836.
+
+**Fundamental:** Rate diff +2.79% favors USD (against SELL), but JPY_rate=rising counters. Net: mixed, slight headwind for SELL = 4/10
+
+**SENTIMENT:** Both USD=8 and JPY=8 — equal bullish sentiment on both sides = neutral = 5/10
+
+**MACRO:** VIX=18.6 (moderate risk-off), oil=84.4 (risk-on), curve=0.4 (slight positive) = mixed = 5/10
+
+**Confidence calculation:**
+- Base: W:SELL+D:SELL, triple oscillator SELL +2 = solid
+- ALIGNED_BULL ribbon (strong uptrend structure) = this is counter-trend, -1
+- Rate diff favors USD = -1 headwind
+- No divergence confirmation
+- Starting ~7, +2 OSC triple = 9, -1 ribbon counter-trend = 8
+
+**Entry/Stop/Target:**
+- Entry: 163.9340
+- Stop: Above recent high, ATR=0.6583 → 163.9340 + (1.5×0.6583) = 163.9340 + 0.9875 ≈ 164.922
+- Target: 2R = 163.9340 − (0.988×2) = 163.9340 − 1.976 = 161.958
+
+---
+
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 8/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 163.9340
+TARGET: 161.958
+STOP_LOSS: 164.922
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: Tokyo open 09:00–10:00 NZST (UTC+12)
+NEWS_WARNING: BoJ policy commentary and US employment/CPI releases within 48h could trigger sharp JPY or USD volatility — check calendar before entry
+KEY_THESIS: RS
+RISK_FACTORS: [1] ALIGNED_BULL ribbon (5/5 fan) + golden-cross SMA structure + price 163.93 > SMA50 161.17 signals strong uptrend continuation — reversal may be tactical pullback, not trend break. [2] USD/JPY positioning permanently stale + USD neutral — lack of institutional conviction to support SELL momentum; BoJ rising rates may re-ignite bids if hawkish surprise emerges.

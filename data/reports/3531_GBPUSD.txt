@@ -1,0 +1,24 @@
+```
+PAIR: GBP/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: RSI oversold at 30.7 on 4H with partial oscillator confluence and institutional GBP short unwinding, but conflicted MTF structure (D1 neutral, 4H sole BUY, ribbon leaning bear) limits conviction in recovery.
+RISK_FACTORS: [1. MTF disagreement: D1 is NEUTRAL (not BUY) while 4H signals BUY — fails MTF dual-confirmation rule; only 1/3 timeframes agree. 2. COT GBP unwinding positioning while trade is LONG — institutional support weakening; positioned SHORT@48% suggests smart money may re-enter shorts on bounce.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.3220
+ENTRY_TRIGGER_REASON: Limit buy at 4H oversold bounce toward 38.2% Fib (1.3220) if D1 confirms uptrend direction with price > SMA50 (1.3367).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**Technical (5/10):**  
+D1 T_sig=BUY_3 establishes baseline=

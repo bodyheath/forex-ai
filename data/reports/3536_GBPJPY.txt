@@ -1,0 +1,26 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with converging ribbon signals reversal risk, but MTF discord (M:SELL vs W/D:NEUTRAL) and UNWINDING GBP positioning undermine conviction.
+RISK_FACTORS: [1] MTF agreement failure — Weekly and Daily both NEUTRAL while only Monthly shows SELL; conf=0/3 fails trading rule threshold. [2] GBP positioning unwinding (institutions reducing short conviction) contradicts SELL direction and increases reversal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly + Daily must both agree. Currently W:NEUTRAL + D:NEUTRAL = no confluence. T_sig=SELL_3 is overridden by failed MTF alignment (conf=0/3, wt=80%).
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **DETAILED RATIONALE:**
+
+**Technical Analysis (Score: 4/10)**
+- **RSI D1=55.6**: Mid-range, NEUTRAL in confirmed uptrend context (price > SMA50 > SMA200 golden-cross). Not a reliable SELL signal; standard tier would score 3

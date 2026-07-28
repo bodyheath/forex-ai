@@ -1,0 +1,27 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: AUD weakness (rising rates paradox + net SHORT positioning building) conflicts with mixed technicals and weak MTF alignment; range-bound structure limits conviction.
+
+RISK_FACTORS: 
+1. MTF conf=0/3 (only M:SELL, W/D:NEUTRAL) — no daily/weekly agreement required for TRADE_THIS; breaks hard rule.
+2. RSI 49.7 (D1) + 56.1 (4H) both neutral-to-overbought-leaning without directional confirmation; oscillators show no confluence (Stoch 71.2 overbought but CCI 22.6 neutral=NONE).
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — W and D both NEUTRAL, monthly SELL unsupported by intraday structure. Technical score 4 falls short of minimum 3-point buffer to offset weak fundamentals. Range-bound structure (price 1.2075 vs SMA50 1.2119 vs SMA200 1.1848) indicates accumulation, not directional breakout.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```

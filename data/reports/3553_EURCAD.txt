@@ -1,0 +1,17 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1/4H with 4H confirmed downtrend (death-cross SMA50<SMA200) conflicts with D1 BUY signal and neutral MTF (W:NEUTRAL + D:BUY = only 2/3 agreement); EUR COT reversing from long while CAD building short conviction creates cross-directional institutional conflict.
+RISK_FACTORS: [1. MTF agreement weak (2/3 threshold = 60% conf only; Monthly SELL vs D1 BUY = directional disagreement — hard stop if price breaks above 1.6150 SMA50 support flip), 2. EUR COT reversing (institutions flipped from long conviction) while trade thesis is SELL EUR = positioned against institutional flow — reversal risk if EUR positions stabilize]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE — DO NOT ENTER
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL + D:BUY do not both agree on direction (only 2/3 agreement = <66.7% threshold). H&S pattern and 4H downtrend are compelling, but D1 T_sig=BUY_4 (technical baseline

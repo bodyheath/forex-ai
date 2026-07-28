@@ -1,0 +1,32 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Bearish pin bar at key resistance (0.8556) in confirmed downtrend with ribbon converging signals early trend weakness, but mixed MTF (W:BUY vs D:NEUTRAL, conf=1/3) undermines conviction — COT EUR reversing short reduces confidence further.
+
+RISK_FACTORS: 
+1. MTF disagreement (Weekly BUY vs Daily NEUTRAL, conf=1/3 <2/3 threshold) — no clean multi-timeframe confirmation.
+2. COT EUR REVERSING from long to short positioning: institutions flipped bearish, conflicts with chart pin bar setup — institutional conviction weakening.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8520
+ENTRY_TRIGGER_REASON: Break below pin bar low at key support (FIB SL=0.8468 zone), confirming bearish engulfing rejection; wait for pullback or institutional sellers to re-enter post-COT flip.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical (3/10):**
+- D1 T_sig=NEUTRAL_3 baseline maintained (RSI 50.4 mid-range, M

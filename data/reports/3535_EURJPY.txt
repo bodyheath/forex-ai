@@ -1,0 +1,26 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Multi-timeframe weakness (M:SELL + W:SELL) with 4H head-and-shoulders pattern conflicts with D1 uptrend structure and aligned bullish ribbon, creating low-conviction mixed signal.
+RISK_FACTORS: [1. MTF agreement weak (conf=1/3): Daily is neutral while weekly/monthly sell, invalidating TRADE_THIS threshold. 2. COT EUR reversing from long to short while EUR carries positive rate diff (+1.41%) — institutional conviction flipping contradicts fundamental support.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 185.50
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (185.2295) would confirm shift from uptrend to downtrend; 4H H&S neckline confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### SCORING DETAIL
+
+**TECHNICAL_SCORE: 4/10**
+- **D1 RSI=57.6 (uptrend context):** In confirmed uptrend (price > SMA50 > SMA200, golden cross), RSI 57.6 falls in neutral zone (45–65 SELL not scored

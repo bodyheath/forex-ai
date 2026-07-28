@@ -1,0 +1,23 @@
+```
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought at 68.3 in daily uptrend with MACD divergence and partial oscillator SELL signal, but MTF severely misaligned (M:BUY vs D:SELL) blocks high-confidence trade.
+RISK_FACTORS: [1] MTF conflict: Monthly bullish, Daily/Weekly neutral-to-sell creates directional confusion (conf=1/3) — violates MTF rule requiring weekly+daily agreement; trade fails gate. [2] Ribbon fully aligned bull (5/5) and price above SMA50 (golden cross) contradicts SELL thesis — trend structure intact despite overbought RSI.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Monthly BUY + Daily SELL + Weekly NEUTRAL fail requirement for both weekly AND daily agreement. Overbought RSI (68.3) + PARTIAL_SELL oscillator (2/3) insufficient to override misaligned timeframes. Aligned bull ribbon (5/5) also contradicts SELL direction.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**ANALYSIS:**
+
+**Technical (5/10)
