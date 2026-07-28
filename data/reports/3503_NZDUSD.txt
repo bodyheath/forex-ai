@@ -1,0 +1,23 @@
+```
+PAIR: NZD/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 38.2% Fib support + bullish engulfing on 4H provides localized reversal signal, but confirmed downtrend (price below SMA50 below SMA200) and MTF disagreement (D1 neutral, 4H alone bullish) severely limit conviction.
+RISK_FACTORS: [1. Death-cross structure (SMA50 < SMA200) remains in force; reversal requires break above 0.5793 SMA50 to confirm trend change. 2. MTF contradiction: D1 neutral + W neutral + M neutral + only 4H bullish (0/3 MTF agreement) fails multi-timeframe confirmation rule.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.5793
+ENTRY_TRIGGER_REASON: Break and close above D1 SMA50 + D1 RSI confirm momentum shift above neutral zone, invalidating death-cross and enabling continuation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+1. **TECHNICAL_SCORE = 5**: D1 T_sig = NEUTRAL_3 (baseline). RSI 49 is dead-center neutral (

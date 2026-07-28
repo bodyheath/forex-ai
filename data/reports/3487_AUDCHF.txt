@@ -1,0 +1,35 @@
+I need to carefully evaluate this setup before finalizing.
+
+**MTF Check:** M:SELL W:SELL D:SELL 4H:NEUTRAL — conf=2/3 per the data line. The rules state "Weekly AND daily must both agree" — W:SELL and D:SELL DO both agree. The 2/3 conf rating in the data refers to the 4H not confirming, but the mandatory condition (W+D agreement) IS met. TRADE_THIS can be YES if other conditions met.
+
+**RSI Trend Context — CRITICAL:** MTF is W:SELL + D:SELL = confirmed downtrend context... BUT the ribbon is ALIGNED_BULL fan 5/5 and price > SMA50 > SMA200. This is a confirmed UPTREND structurally. RSI=71.1 in an uptrend — apply uptrend shift: SELL zones shift higher (65-77=4-5SELL). T_sig=SELL_7. The uptrend RSI rule says 65-77=4-5SELL, not 7-8. However T_sig=SELL_7 is the Python anchor — I can adjust ±1 for strong contradictory factor. The aligned bull ribbon + golden cross = strong contradictory factor → adjust down to 6. But HARD RULE: TECHNICAL_SCORE>=3 when RSI+MACD present. Score: 6.
+
+**TRIPLE_SELL OSC:** +2 confidence. **Near Fib resistance (8p):** confluence. **DIV=none.** **Ribbon ALIGNED_BULL fan** = major conflict with SELL thesis → caution.
+
+**Fundamental CONFLICT:** Rate diff +4.50% AUD rising, CHF falling = AUD bullish. This opposes SELL. FUNDAMENTAL_SCORE: 4 (opposes direction).
+
+**Confidence:** Base 5, +2 TRIPLE_SELL OSC, +1 W+D MTF agreement, -1 ribbon conflict, -1 fundamental opposition = 6. Conf=6 → TRADE_THIS: NO per rules (conf≤6=NO always).
+
+**Entry/SL/Target math:** Entry 0.5730 (near Fib 127.2% resistance), SL above 0.5760 (ATR-based buffer above resistance), Target = 0.5730 − (0.5760−0.5730)×2.0 = 0.5670.
+
+---
+
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 0.5730
+TARGET: 0.5670
+STOP_LOSS: 0.5760
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 3:00–5:00 PM Auckland time
+NEWS_WARNING: AUD employment/RBA commentary and CHF CPI within 48h — check calendar before entry
+KEY_THESIS: D1 RSI 71.1 at 127.2% Fib resistance with triple oscillator SELL confluence (Stoch 91.4 + CCI 130.7) and W+D MTF SELL alignment suggest near-term exhaustion pullback, but fully aligned bull ribbon and +4.50% AUD rate advantage cap conviction.
+RISK_FACTORS: 1) EMA ribbon ALIGNED_BULL fan 5/5 with golden-cross structure — strong uptrend continuation risk means any pullback may be shallow and SELL entry easily stopped out. 2) Fundamental tailwind (AUD rates rising, CHF falling, rate diff +4.50%) directly opposes SELL thesis — a risk-on catalyst could accelerate upside through the Fib resistance level.
+TRADE_THIS: NO

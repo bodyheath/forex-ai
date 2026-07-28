@@ -1,0 +1,40 @@
+I need to carefully resolve several conflicts before scoring.
+
+**MTF CHECK:** W:BUY + D:BUY → both agree BUY ✓. MTF condition met.
+
+**RIBBON CONFLICT:** RIB=ALIGNED_BEAR fan 5/5 — this is a strong bearish structural signal contradicting the BUY direction. Price < SMA50 < SMA200 death-cross. This is a significant risk factor but MTF (W+D+4H all BUY) overrides for trade direction.
+
+**RSI TREND CONTEXT:** MTF shows W:BUY + D:BUY — confirmed UPTREND context for RSI scoring. Shift SELL zones higher. RSI 40.9 → in uptrend context, RSI 35-45 = standard BUY zone (5-6). T_sig=BUY_4 anchor. With MACD confirms (MACDh=+0.0002 positive), RSI oversold zone → T_sig=4, +1 MACD bonus = 5. Inside bar neutral pattern doesn't adjust. TECHNICAL_SCORE=5.
+
+**DIV:** bullish:moderate confirmed → CONFIDENCE +1.
+
+**OSC:** RSI<35? No (40.9). Stoch%K=13.6<20 ✓, Stoch%D not given but %K<20 → partial. CCI=-152.5<-100 ✓. conf=BUY(2/3) → PARTIAL_BUY → CONFIDENCE +1.
+
+**POSITIONING:** EUR net SHORT REVERSING = bullish lean (+1 above neutral). Score 6.
+
+**FIB:** range=471p, SL=1.13254, SH=1.17966. Key levels: 23.6%=1.14367, 38.2%=1.15055, 50%=1.15610, 61.8%=1.16165. Price 1.1380 is below the 23.6% fib (1.14367) — near the SL anchor. No "near=" flag so no direct pip confluence bonus.
+
+**ENTRY/SL/TARGET:** Current price 1.1380. ATR=0.0052. SL = 1.1380 - 1.5×ATR = 1.1380 - 0.0078 = 1.1302. Risk = 0.0078. TARGET = 1.1380 + (0.0078×2) = 1.1380 + 0.0156 = 1.1536. R:R = 2.0:1 ✓.
+
+**CONFIDENCE BASE:** 6 (MTF 3/3 agree BUY, W+D both BUY, inverse H&S 4H) +1 DIV +1 OSC PARTIAL = 8. Ribbon ALIGNED_BEAR conflict is serious — cap at 7.
+
+---
+
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 7/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+ENTRY: 1.1380
+TARGET: 1.1536
+STOP_LOSS: 1.1302
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 15:00–17:00 NZST
+NEWS_WARNING: EUR/USD highly sensitive to any Fed or ECB commentary within 48h — monitor USD CPI or Fed speaker events; check economic calendar before entry
+KEY_THESIS: W+D+4H MTF all confirm BUY, bullish RSI divergence and inverse H&S on 4H signal reversal from oversold Fibonacci anchor zone, with EUR short positioning reversing providing a contrarian tailwind despite bearish EMA ribbon structure.
+RISK_FACTORS: (1) EMA ribbon ALIGNED_BEAR fan 5/5 with price below

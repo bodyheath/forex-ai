@@ -1,0 +1,59 @@
+I need to carefully evaluate this before finalizing.
+
+**MTF CHECK (critical gate):**
+- W: NEUTRAL, D: SELL, 4H: SELL
+- Rule: Weekly AND Daily must BOTH agree for TRADE_THIS YES
+- W is NEUTRAL — does not agree with SELL direction
+- This means the weekly/daily agreement condition FAILS → TRADE_THIS NO regardless of other scores
+
+**TECHNICAL_SCORE review:**
+- Confirmed UPTREND (W:NEUTRAL/D:SELL — mixed, not confirmed downtrend, so standard tiers apply)
+- RSI=66.4 → standard tier 62-70 = SELL score 4-5
+- T_sig anchor = SELL_6
+- MACD histogram barely positive (+0.0004) — minimal confirmation
+- BB at/above upper band → confirms SELL (+1)
+- Price > SMA50 → against SELL (-1 consideration, but bonuses are directional)
+- ALIGNED_BULL ribbon (fan 5/5) — strongly contradicts SELL
+- PAT=double_bottom:bul — contradicts SELL direction
+- T_sig=6, with double_bottom:bul and ALIGNED_BULL ribbon both contradicting, justified at 6
+
+**OSCILLATOR:** TRIPLE_SELL → +2 confidence
+**DIVERGENCE:** NONE
+**FIB:** near lines not specified as "near=" so no triple confluence bonus
+
+**Confidence:**
+- Base: 5
+- MTF 60% weight, conf=2/3: +1
+- TRIPLE_SELL OSC: +2
+- RIBBON ALIGNED_BULL contradicts: -1
+- PAT double_bottom:bul contradicts: -1
+- = 6/10 → TRADE_THIS NO (conf≤6 = NO always)
+
+**Scores:**
+- TECHNICAL: 6 (T_sig=6, ribbon/double_bottom contradict SELL)
+- FUNDAMENTAL: 6 (rate diff +3.67% favors USD, CHF rate falling = USD bullish — actually works against SELL)
+- SENTIMENT: 6 (both neutral/art)
+- POSITIONING: 4 (COT unwinding CHF shorts = mild USD bearish)
+- MACRO: 5 (VIX 18.6 moderate, curve positive = mild risk-on, slightly USD supportive)
+
+---
+
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 0.8200
+TARGET: 0.7958
+STOP_LOSS: 0.8321
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 5:00–7:00 PM Auckland time
+NEWS_WARNING: Monitor USD data releases and SNB commentary within 48h; CHF pairs sensitive to safe-haven flows given VIX 18.6
+KEY_THESIS: Triple oscillator confluence (RSI 66.4, Stoch 93.7, CCI 175.4) and BB upper band tag signal overbought exhaustion, but ALIGNED_BULL ribbon and double_bottom pattern strongly contradict the SELL thesis, and the weekly timeframe is only NEUTRAL — not confirming SELL direction.
+RISK_FACTORS: [1] ALIGNED_BULL EMA ribbon (fan 5/5, all EMAs stacked bullish) and double_bottom:bul pattern on D1 directly oppose the SELL setup — a breakout continuation rather than reversal remains the higher-probability structural outcome; [2] W:NEUTRAL fails the weekly+daily agreement gate, meaning trend alignment is insufficient for high-conviction directional trade.
+TRADE_THIS: NO

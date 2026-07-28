@@ -1,0 +1,25 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: Double-top bearish pattern on D1 with 4H pin bar rejection, but MTF conflict (D1/W NEUTRAL vs 4H BUY) and misaligned RSI (D1:46 NEUTRAL, 4H:43 NEUTRAL) prevent high-confidence trade.
+RISK_FACTORS: [1. MTF disagreement — D1 NEUTRAL + W NEUTRAL + 4H BUY = no consensus directional bias; trade confidence capped at 4/10 hard stop. 2. GBP positioning unwinding while CAD building — institutional flip risk; GBP shorts covering could trigger reversal against bearish thesis.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — W:NEUTRAL, D:NEUTRAL, 4H:BUY do NOT both agree (conf=0/3 <2/3 threshold). Double-top pattern + pin bar are reversal signals, but lack directional confluence from weekly+daily consensus blocks execution.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 4/

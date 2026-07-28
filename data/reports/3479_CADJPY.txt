@@ -1,0 +1,23 @@
+```
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 62 in uptrend (neutral zone, not overbought) conflicts with T_sig=SELL_3 and weekly SELL; bullish divergence + aligned ribbon favor continuation, but MTF agreement weak (1/3) undermines signal reliability.
+RISK_FACTORS: [1] MTF disagreement — only W:SELL confirms; D1/4H/M neutral weakens directional conviction. [2] Bullish divergence (13p/6pt) + ALIGNED_BULL ribbon (5/5 stacked) contradict SELL bias — reversal risk if price holds above SMA50 (114.87).
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF conf=1/3 (<2/3 threshold) fails mandatory multi-timeframe agreement rule; bullish structural signals (ribbon aligned, divergence bullish) conflict with T_sig SELL. Avoid until weekly + daily align or price breaks below SMA50 with OSC confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**REASONING:**
+
+1. **MTF RULE VIOLATION (HARD STOP):** Weekly=SELL
