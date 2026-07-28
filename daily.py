@@ -604,8 +604,13 @@ def _check_pair_cooldown(pair: str, direction: str, hours: int = 48, log_fn=None
             return True
         return False
     except Exception as _cd_e:
-        _log(f"[cooldown] check error: {_cd_e}")
-        return False
+        # Fail closed: a read/parse failure must not be silently treated as "no
+        # losses found, safe to trade" — that's the wrong direction for a loss-
+        # protection mechanism. Block, and say clearly this is the error path,
+        # not a genuine cooldown-clear result (reliability review fix #3).
+        _log(f"[cooldown] check error ({_cd_e}) — defaulting to BLOCK (fail-closed), "
+             f"not a genuine cooldown-clear result")
+        return True
 
 
 def _validate_trade_data(
@@ -5190,8 +5195,14 @@ def _send_telegram_summary(
     movement_alert_data: dict = None,
     threshold_data: dict = None,
     log=None,
-) -> None:
-    """Build and send Telegram notifications with format tailored to each scan mode."""
+) -> bool:
+    """Build and send Telegram notifications with format tailored to each scan mode.
+
+    Returns False if an unhandled exception occurred anywhere during fund-candidate
+    evaluation (per-candidate or whole-loop) — see reliability review fix #1. The
+    caller uses this to make run()'s exit code correctly reflect a disrupted scan
+    instead of always exiting 0.
+    """
     if log is None:
         import sys as _sys_log
         log = _sys_log.stdout
@@ -5287,8 +5298,11 @@ def _send_telegram_summary(
     # so it can be applied in the yes_trades filter immediately.
     _dd_mode: str = (risk_data or {}).get("risk_state", {}).get("drawdown_mode", "normal")
 
-    # Hard block: compute not-viable pairs (net R:R after costs < 1.3:1)
-    _not_viable_pairs: dict = {}   # pair -> computed net_rr, for logging/notes below
+    # Hard block: compute not-viable pairs (net R:R after costs below check_viability()'s
+    # own min_net_rr, currently 1.5 — using its own "viable" field rather than a separately
+    # hardcoded cutoff here, since a previous 1.3 cutoff in this exact spot silently diverged
+    # from the 1.5 the same function uses everywhere else it's called (reliability review fix #2).
+    _not_viable_pairs: dict = {}   # pair -> not_viable_reason string, for logging/notes below
     try:
         from src import trade_costs as _tc_nv
         for _r_nv in deep_results:
@@ -5302,16 +5316,18 @@ def _send_telegram_summary(
                     _viab_nv = _tc_nv.check_viability(
                         _r_nv["pair"], _dir_nv, _entry_nv, _stop_nv, _tgt_nv
                     )
-                    _net_rr_nv = _viab_nv.get("net_rr", 999)
-                    if _net_rr_nv < 1.3:
-                        _not_viable_pairs[_r_nv["pair"]] = _net_rr_nv
+                    if not _viab_nv.get("viable", True):
+                        _not_viable_pairs[_r_nv["pair"]] = _viab_nv.get(
+                            "not_viable_reason",
+                            f"net R:R {_viab_nv.get('net_rr', 0):.2f} not viable after costs",
+                        )
             except Exception:
                 pass
     except Exception:
         pass
 
     # Immediately correct the CSV row for every not-viable YES trade.
-    # net R:R < 1.3 after spread/overnight costs disqualifies the trade, but
+    # Not viable after spread/overnight costs disqualifies the trade, but
     # tracker.log_recommendation() already wrote status=OPEN — leave it ghost
     # without this write-back.
     for _r_nv_sk in deep_results:
@@ -5322,14 +5338,11 @@ def _send_telegram_summary(
             continue
         try:
             from src import tracker as _trk_nv
-            _nv_rr = _not_viable_pairs[_r_nv_sk["pair"]]
-            _log_line(log, (
-                f"[not_viable] {_r_nv_sk['pair']} — net R:R {_nv_rr:.2f} "
-                f"below 1.3 minimum after spread/overnight costs"
-            ))
+            _nv_reason = _not_viable_pairs[_r_nv_sk["pair"]]
+            _log_line(log, f"[not_viable] {_r_nv_sk['pair']} — {_nv_reason}")
             _trk_nv.update_outcome(
                 int(_nv_id), "SKIPPED",
-                notes=f"Not viable: net R:R {_nv_rr:.2f} after spread/overnight costs < 1.3",
+                notes=f"Not viable: {_nv_reason}",
             )
         except Exception as _nv_exc:
             print(
@@ -5624,21 +5637,31 @@ def _send_telegram_summary(
                 _yt_pair   = _yt.get("pair", "")
                 _yt_parsed = (_yt.get("parsed") or {})
                 # ── CIRCUIT BREAKER — FIRST check, reads fresh from disk every trade ──
+                _cb_read_failed = False
                 try:
                     with open("data/fund_state.json", encoding="utf-8") as _cb_f:
                         _cb_st   = json.load(_cb_f)
                     _cb_losses = int(_cb_st.get("consecutive_losses", 0) or 0)
-                except Exception:
-                    _cb_losses = 0
+                except Exception as _cb_read_exc:
+                    # Fail closed: an unreadable state file must not be silently treated
+                    # as "zero losses, safe to trade" — that's the wrong direction for a
+                    # loss-protection mechanism. Force the block path below and say so
+                    # explicitly, so a future reader isn't misled into thinking this is a
+                    # genuine 0-loss reading (reliability review fix #3).
+                    _cb_read_failed = True
+                    _cb_losses = 3
+                    _log_line(log, (
+                        f"[circuit] fund_state.json unreadable ({_cb_read_exc}) — "
+                        f"defaulting to BLOCK (fail-closed) — not a genuine loss count"
+                    ))
                 if _cb_losses >= 3:
                     _cb_reason = (
+                        "Circuit breaker active: fund_state.json unreadable — "
+                        "failing closed until resolved"
+                        if _cb_read_failed else
                         f"Circuit breaker active: {_cb_losses} consecutive losses"
                     )
-                    _log_line(
-                        log,
-                        f"[circuit] BLOCKED {_yt_pair} — {_cb_losses} consecutive "
-                        f"losses — no new trades until a win",
-                    )
+                    _log_line(log, f"[circuit] BLOCKED {_yt_pair} — {_cb_reason}")
                     _yt_parsed["trade_this"] = "NO"
                     _yt_parsed["block_reason"] = _cb_reason
                     _fund_st_blocked.append((_yt, _cb_reason))
@@ -5648,7 +5671,7 @@ def _send_telegram_summary(
                             "pair":      _yt_pair,
                             "direction": (_yt_parsed.get("direction") or "").upper(),
                             "conf":      _yt_conf_cb,
-                            "reason":    f"Circuit breaker ({_cb_losses} losses)",
+                            "reason":    _cb_reason,
                         })
                     try:
                         from src import tracker as _trk_cb
@@ -9971,6 +9994,8 @@ def _send_telegram_summary(
     ]
     _send_in_parts(all_sections, urgent_alerts=_urgent_pre)
 
+    return _fund_loop_ok
+
 
 # ── Daily run ──────────────────────────────────────────────────────────────────
 
@@ -10347,6 +10372,13 @@ def _scan_all_pairs_movement(
 def run() -> int:
     # ── Determine run environment first — affects guard and data-write behaviour ─
     IS_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
+
+    # Reliability fix #1: set True if _send_telegram_summary() reports (via return
+    # value or a crash) that fund-candidate evaluation hit an unhandled exception.
+    # Checked at the very end of run() so a disrupted scan actually exits non-zero
+    # instead of always returning 0 — a caught exception must never look identical
+    # to a clean run from the outside.
+    _scan_had_critical_failure = False
 
     # Reset this-scan silent-failure tally (feeds the scan report's System Health
     # section). Each GitHub Actions run is a fresh process so this is normally a
@@ -12210,7 +12242,7 @@ def run() -> int:
         # 11. Send Telegram summary
         if _should_notify:
             try:
-                _send_telegram_summary(
+                _tg_summary_ok = _send_telegram_summary(
                     date=date,
                     universe_size=universe_size,
                     total_scanned=len(analysed_pairs),
@@ -12236,9 +12268,12 @@ def run() -> int:
                     threshold_data=_threshold_data,
                     log=log,
                 )
+                if _tg_summary_ok is False:
+                    _scan_had_critical_failure = True
             except Exception as _tg_exc:
                 print(f"[telegram] _send_telegram_summary CRASHED: {_tg_exc}", file=sys.stderr)
                 traceback.print_exc(file=sys.stderr)
+                _scan_had_critical_failure = True
                 _telegram(
                     f"⚠️ <b>{scan_mode.upper()} scan complete but summary build failed</b>\n"
                     f"{type(_tg_exc).__name__}: {str(_tg_exc)[:200]}"
@@ -12934,6 +12969,12 @@ def run() -> int:
             pass
 
     _timeout_timer.cancel()
+    if _scan_had_critical_failure:
+        _log_line(log, (
+            "[run] Exiting non-zero — fund-candidate evaluation hit an unhandled "
+            "exception during this scan (see [fund-loop]/[FUND_STATE] entries above)"
+        ))
+        return 1
     return 0
 
 
