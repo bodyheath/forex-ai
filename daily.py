@@ -5270,7 +5270,7 @@ def _send_telegram_summary(
     _dd_mode: str = (risk_data or {}).get("risk_state", {}).get("drawdown_mode", "normal")
 
     # Hard block: compute not-viable pairs (net R:R after costs < 1.3:1)
-    _not_viable_pairs: set = set()
+    _not_viable_pairs: dict = {}   # pair -> computed net_rr, for logging/notes below
     try:
         from src import trade_costs as _tc_nv
         for _r_nv in deep_results:
@@ -5284,8 +5284,9 @@ def _send_telegram_summary(
                     _viab_nv = _tc_nv.check_viability(
                         _r_nv["pair"], _dir_nv, _entry_nv, _stop_nv, _tgt_nv
                     )
-                    if _viab_nv.get("net_rr", 999) < 1.3:
-                        _not_viable_pairs.add(_r_nv["pair"])
+                    _net_rr_nv = _viab_nv.get("net_rr", 999)
+                    if _net_rr_nv < 1.3:
+                        _not_viable_pairs[_r_nv["pair"]] = _net_rr_nv
             except Exception:
                 pass
     except Exception:
@@ -5303,9 +5304,14 @@ def _send_telegram_summary(
             continue
         try:
             from src import tracker as _trk_nv
+            _nv_rr = _not_viable_pairs[_r_nv_sk["pair"]]
+            _log_line(log, (
+                f"[not_viable] {_r_nv_sk['pair']} — net R:R {_nv_rr:.2f} "
+                f"below 1.3 minimum after spread/overnight costs"
+            ))
             _trk_nv.update_outcome(
                 int(_nv_id), "SKIPPED",
-                notes="Not viable: net R:R after spread/overnight costs < 1.3",
+                notes=f"Not viable: net R:R {_nv_rr:.2f} after spread/overnight costs < 1.3",
             )
         except Exception as _nv_exc:
             print(
