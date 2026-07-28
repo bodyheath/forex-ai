@@ -69,7 +69,7 @@ _OUT_COLUMNS = [
 def _to_float(val):
     try:
         v = float(val)
-        return v
+        return v if v == v else None  # reject NaN (NaN != NaN)
     except (TypeError, ValueError):
         return None
 
