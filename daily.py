@@ -6222,6 +6222,7 @@ def _send_telegram_summary(
                 _fund_st,
                 _cur_bal_fs or float(config.ACCOUNT_BALANCE),
                 _eff_conf(_yt),
+                log_fn=lambda m: _log_line(log, m),
             )
             if _szg_pct is None:
                 # Drawdown tier quality requirement not met — block this trade
