@@ -5439,7 +5439,8 @@ def _send_telegram_summary(
     # Drawdown tier + grade filtering: stricter tiers require higher grade / more confirmation.
     yes_trades = [
         r for r in _yes_raw
-        if _dd_allows_trade(r, _dd_mode, _quality_grades, _trade_conf_thr)
+        if _dd_allows_trade(r, _dd_mode, _quality_grades, _trade_conf_thr,
+                            log_fn=lambda m: _log_line(log, m))
     ]
     # Immediately correct CSV rows for trades blocked by drawdown-mode tier filtering.
     # These pairs passed conf threshold (_yes_raw) but _dd_allows_trade rejected them;
@@ -5453,9 +5454,10 @@ def _send_telegram_summary(
             continue
         try:
             from src import tracker as _trk_dd
+            _dd_sk_grade = (_quality_grades.get(_dd_sk["pair"]) or {}).get("grade", "F")
             _trk_dd.update_outcome(
                 int(_dd_sk_id), "SKIPPED",
-                notes=f"Drawdown filter: excluded by _dd_allows_trade (mode={_dd_mode})",
+                notes=f"Drawdown filter: grade={_dd_sk_grade} rejected by mode={_dd_mode} tier",
             )
         except Exception as _dd_sk_exc:
             print(
