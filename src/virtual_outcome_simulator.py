@@ -461,7 +461,7 @@ def backfill(log=print, limit: int = None) -> pd.DataFrame:
                 "opened_at": c["opened_at"],
                 "entry": c["entry"], "stop_loss": c["stop_loss"],
                 "target_raw": c["target"], "t2_price": res.get("t2_price"),
-                "blocked_by_gate": gate, "block_notes_raw": str(c["notes"])[:200],
+                "blocked_by_gate": gate, "block_notes_raw": notes_str[:200],
                 "virtual_outcome": res["virtual_outcome"],
                 "virtual_close_price": res["virtual_close_price"],
                 "virtual_exit_reason": res["virtual_exit_reason"],
