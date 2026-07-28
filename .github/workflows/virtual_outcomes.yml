@@ -1,0 +1,114 @@
+name: Virtual Outcome Backfill
+
+# Keeps data/virtual_outcomes.csv up to date: simulates WIN/LOSS/EXPIRED for
+# newly-added NO_TRADE/SKIPPED candidates and re-checks any still-PENDING
+# rows from previous runs, using src/virtual_outcome_simulator.py.
+#
+# Native GitHub Actions schedule (not cron-job.org, unlike the trading
+# workflows) so this runs automatically with no external setup. 09:00 UTC
+# sits in the gap between the London-open (07:05 UTC) and pre-NY (11:05 UTC)
+# intraday scans, away from the busiest TD-quota windows.
+#
+# TD quota: fully incremental (only new/PENDING candidates trigger a fetch,
+# grouped one call per pair) and self-limiting — capped at 25 pairs/run
+# (src/virtual_outcome_simulator.py::_MAX_PAIRS_PER_RUN) and skips the run
+# outright if the shared data/api_usage.json counter already reads >700.
+# Contributes its own calls back to that same shared counter.
+
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: virtual-outcomes-backfill
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run virtual outcome backfill
+        env:
+          TWELVE_DATA_KEY: ${{ secrets.TWELVE_DATA_KEY }}
+        run: |
+          python -c "
+          from src import virtual_outcome_simulator as vos
+          vos.backfill()
+          "
+
+      - name: Commit and push results
+        run: |
+          git config user.name "forex-ai[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/virtual_outcomes.csv data/api_usage.json 2>/dev/null || true
+          git diff --staged --quiet && { echo "No changes to commit."; exit 0; }
+          git commit -m "chore: virtual outcome backfill $(date -u +'%Y-%m-%d %H:%M UTC')"
+          PUSHED=false
+          for i in 1 2 3; do
+            if ! git pull --rebase -X ours origin main 2>&1; then
+              git rebase --abort 2>/dev/null || true
+              git pull --no-rebase -X ours origin main 2>&1 || true
+            fi
+            if git push origin HEAD:main 2>&1; then
+              echo "Push succeeded on attempt $i"
+              PUSHED=true
+              break
+            fi
+            echo "Push attempt $i failed — waiting 10 seconds"
+            sleep 10
+          done
+          if [ "$PUSHED" = "false" ]; then
+            echo "All 3 push attempts failed"
+            exit 1
+          fi
+
+  notify-failure:
+    needs: backfill
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send failure alert via Telegram
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID_2: ${{ secrets.TELEGRAM_CHAT_ID_2 }}
+          TELEGRAM_CHAT_ID_3: ${{ secrets.TELEGRAM_CHAT_ID_3 }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 - <<'EOF'
+          import os, urllib.request, urllib.parse
+          token = os.environ.get("TELEGRAM_TOKEN", "")
+          chat_ids = [c for c in [
+              os.environ.get("TELEGRAM_CHAT_ID", ""),
+              os.environ.get("TELEGRAM_CHAT_ID_2", ""),
+              os.environ.get("TELEGRAM_CHAT_ID_3", ""),
+          ] if c]
+          if not token or not chat_ids:
+              exit(0)
+          msg = f"⚠️ Virtual Outcome Backfill (virtual_outcomes.yml) failed\n{os.environ.get('RUN_URL', '')}"
+          url = f"https://api.telegram.org/bot{token}/sendMessage"
+          for chat_id in chat_ids:
+              try:
+                  data = urllib.parse.urlencode({"chat_id": chat_id, "text": msg}).encode()
+                  urllib.request.urlopen(url, data=data, timeout=10)
+              except Exception as e:
+                  print(f"Failed to send to {chat_id}: {e}")
+          EOF
