@@ -84,7 +84,7 @@ def _classify_block_reason(source: str, notes: str) -> str:
     (all fund vetoes) reuses scripts/veto_reason_report.classify_veto so
     labels stay identical to the existing veto-reporting tool.
     """
-    n = (notes or "").strip()
+    n = "" if notes is None or notes != notes else str(notes).strip()  # notes != notes catches NaN
     if source == "research" and n.lower().startswith("duplicate"):
         return "Research dedup (duplicate pair/direction, same scan date)"
     try:
