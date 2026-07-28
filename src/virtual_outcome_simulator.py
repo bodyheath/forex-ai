@@ -88,6 +88,37 @@ _OUT_COLUMNS = [
 ]
 
 
+def _get_td_calls_today() -> int:
+    """Read the shared TD call counter (same file/schema as monitor.py /
+    selector.py / daily.py). See the module-level note above on why this is
+    treated as a floor, not a true count."""
+    try:
+        usage = json.loads(_API_USAGE_FILE.read_text(encoding="utf-8")) if _API_USAGE_FILE.exists() else {}
+        from datetime import date as _date
+        return int(usage.get("calls", 0)) if usage.get("date") == str(_date.today()) else 0
+    except Exception:
+        return 0
+
+
+def _increment_td_usage(n: int = 1) -> None:
+    """Contribute this module's real TD calls to the shared daily counter."""
+    try:
+        from datetime import date as _date
+        usage: dict = {}
+        if _API_USAGE_FILE.exists():
+            try:
+                usage = json.loads(_API_USAGE_FILE.read_text(encoding="utf-8"))
+            except Exception:
+                usage = {}
+        today = str(_date.today())
+        if usage.get("date") != today:
+            usage = {"date": today, "calls": 0}
+        usage["calls"] = int(usage.get("calls", 0)) + n
+        _API_USAGE_FILE.write_text(json.dumps(usage), encoding="utf-8")
+    except Exception:
+        pass
+
+
 def _to_float(val):
     try:
         v = float(val)
