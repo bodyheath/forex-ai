@@ -1,0 +1,24 @@
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: D1 BUY signal + 4H uptrend alignment with partial oscillator support, but double-top pattern and MTF mix (M:SELL override) create conflicting directional bias.
+RISK_FACTORS: [1] MTF monthly SELL conflicts with weekly NEUTRAL + D1 BUY (2/3 agreement insufficient for high-conviction setup); [2] GBP COT unwinding conviction while double-top warns of reversal rejection at 1.8757 SMA50 resistance.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.8680
+ENTRY_TRIGGER_REASON: Pullback to FIB support zone (SL=1.83015 swing low) with RSI <35 (7-8 BUY tier in mixed trend) + confirmation of D1 SMA50 rejection.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1 RSI=44.1 (neutral zone 45–62, score 3–4) + T_sig baseline BUY_4 = +1 adjustment for

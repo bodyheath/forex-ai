@@ -1,0 +1,30 @@
+```
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 SELL signal conflicts with intraday 4H bullish pin bar at key level; ribbon converging signals trend weakening, but MTF agreement insufficient (1/3 confidence) to trigger trade.
+
+RISK_FACTORS: (1) MTF weakness — only D1 SELL, W/M both NEUTRAL; 4H shows pin_bar_at_key_level:bul (bullish reversal pattern) contradicts D1 bias, risking whipsaw. (2) Ribbon converging indicates trend exhaustion and high reversal probability; price at 94.617 is 127p below recent swing high (95.419 SH) but still 359p above swing low (91.01 SL) — confluence zone poorly defined, stop-loss placement ambiguous.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 93.85
+ENTRY_TRIGGER_REASON: Break below SMA50 (93.3694) to confirm D1 SELL signal and invalidate 4H bullish pattern; entry only if D1 + W both turn SELL.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**REASONING:**
+
+**MTF Rule Violation (Hard
