@@ -12,6 +12,7 @@ def analyse_and_log(
     shared_macro=None,
     sonnet_threshold: int = 6,
     pair_threshold_override: "float | None" = None,
+    max_open_id: "int | None" = None,
 ) -> dict:
     result = pipeline.run(
         pair,
