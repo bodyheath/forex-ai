@@ -1,66 +1,68 @@
 {
-  "timestamp": 1785323846.338579,
+  "timestamp": 1785349378.7521658,
   "watchlist_pairs": [
-    "GBP/USD",
-    "AUD/JPY",
-    "EUR/JPY",
     "GBP/JPY",
     "NZD/JPY",
     "EUR/AUD",
+    "AUD/CHF",
     "GBP/CAD",
-    "USD/CAD",
+    "USD/CHF",
     "EUR/GBP",
-    "CHF/JPY",
     "EUR/USD",
-    "GBP/AUD"
+    "AUD/NZD",
+    "EUR/CAD",
+    "AUD/USD",
+    "GBP/AUD",
+    "NZD/CAD",
+    "GBP/USD"
   ],
   "near_miss": {
-    "GBP/USD": 5,
-    "AUD/JPY": 5,
-    "USD/CAD": 5,
+    "GBP/JPY": 5,
+    "NZD/JPY": 5,
+    "EUR/AUD": 5,
+    "AUD/CHF": 5,
+    "USD/CHF": 5,
     "EUR/GBP": 5,
-    "GBP/AUD": 5
+    "EUR/USD": 5,
+    "GBP/AUD": 5,
+    "GBP/USD": 5
   },
   "near_miss_dirs": {
-    "GBP/USD": "BUY",
-    "AUD/JPY": "BUY",
-    "USD/CAD": "BUY",
+    "GBP/JPY": "SELL",
+    "NZD/JPY": "SELL",
+    "EUR/AUD": "SELL",
+    "AUD/CHF": "SELL",
+    "USD/CHF": "SELL",
     "EUR/GBP": "SELL",
-    "GBP/AUD": "SELL"
+    "EUR/USD": "BUY",
+    "GBP/AUD": "SELL",
+    "GBP/USD": "SELL"
   },
   "momentum_counts": {
-    "GBP/USD": 11,
+    "GBP/JPY": 2,
+    "NZD/JPY": 21,
+    "EUR/AUD": 6,
+    "AUD/CHF": 2,
+    "GBP/CAD": 5,
+    "USD/CHF": 2,
+    "EUR/GBP": 3,
+    "EUR/USD": 6,
+    "AUD/NZD": 29,
+    "EUR/CAD": 4,
+    "AUD/USD": 2,
+    "GBP/AUD": 5,
+    "NZD/CAD": 1,
+    "GBP/USD": 12,
     "AUD/JPY": 9,
     "EUR/JPY": 12,
-    "GBP/JPY": 1,
-    "NZD/JPY": 20,
-    "EUR/AUD": 5,
-    "GBP/CAD": 4,
     "USD/CAD": 2,
-    "EUR/GBP": 2,
-    "CHF/JPY": 2,
-    "EUR/USD": 5,
-    "GBP/AUD": 4,
-    "NZD/USD": 1,
-    "USD/JPY": 1,
-    "AUD/CHF": 1,
-    "GBP/CHF": 2,
-    "NZD/CHF": 6,
-    "USD/CHF": 1,
-    "AUD/NZD": 28,
-    "EUR/CAD": 3,
-    "AUD/USD": 1
+    "CHF/JPY": 2
   },
   "momentum_grace": {
-    "NZD/USD": 1,
-    "USD/JPY": 1,
-    "AUD/CHF": 1,
-    "GBP/CHF": 1,
-    "NZD/CHF": 1,
-    "USD/CHF": 1,
-    "AUD/NZD": 1,
-    "EUR/CAD": 1,
-    "AUD/USD": 1
+    "AUD/JPY": 1,
+    "EUR/JPY": 1,
+    "USD/CAD": 1,
+    "CHF/JPY": 1
   },
   "watchlist_weekly_stats": {
     "week_start": "2026-07-27",
@@ -68,7 +70,5 @@
     "promoted_to_deep": 4,
     "became_trade_alerts": 0
   },
-  "priority_for_next_scan": [
-    "GBP/USD"
-  ]
+  "priority_for_next_scan": []
 }
