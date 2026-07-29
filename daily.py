@@ -11260,6 +11260,7 @@ def run() -> int:
                     shared_macro=_shared_macro,
                     sonnet_threshold=sonnet_thresh,
                     pair_threshold_override=_pth_override,
+                    max_open_id=_scan_baseline_max_id,
                 )
                 if result is None:
                     failed_pairs.append(pair)
