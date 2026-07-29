@@ -383,11 +383,25 @@ def update_mfe_mae(rec_id: int, current_price: float) -> dict:
     return target
 
 
-def check_inverse_open(pair: str, direction: str) -> str | None:
+def check_inverse_open(pair: str, direction: str, max_id: int = None) -> str | None:
     """Return a warning string if an open fund trade is the inverse of this pair/direction.
 
     "AUD/CAD" BUY is equivalent to "CAD/AUD" SELL — same directional bet.
     Returns warning string if such an inverse trade is already open, None otherwise.
+
+    max_id: when given, only rows with id <= max_id count as "already open".
+    log_recommendation() writes status=OPEN to disk the instant a candidate's
+    trade_this is YES — before Devil's Advocate, drawdown-tier, not-viable, or
+    demoted-threshold corrections run later in the same scan. Those write back
+    to SKIPPED if the candidate doesn't survive, but any other pair evaluated
+    earlier in that same scan's loop, before the correction pass runs, would
+    otherwise see the still-OPEN row and get blocked by a candidate that was
+    never actually confirmed open. Passing the id-ceiling captured at scan
+    start (before any candidate this scan was written) excludes exactly those
+    same-scan, not-yet-corrected rows while still counting every genuinely
+    pre-existing open trade — including ones re-analysed (and thus timestamp-
+    refreshed) this same scan, since re-analysis keeps the row's original id.
+    Omitting max_id preserves the original unrestricted behaviour.
     """
     try:
         cleaned = pair.upper().replace("/", "")
@@ -399,6 +413,12 @@ def check_inverse_open(pair: str, direction: str) -> str | None:
         for row in rows:
             if row.get("status") != "OPEN":
                 continue
+            if max_id is not None:
+                try:
+                    if int(row.get("id", 0)) > max_id:
+                        continue
+                except (TypeError, ValueError):
+                    continue
             rp = (row.get("pair") or "").upper().replace("/", "")
             rd = (row.get("direction") or "").upper()
             rp_slash = rp[:3] + "/" + rp[3:6] if len(rp) >= 6 else rp
@@ -413,8 +433,14 @@ def check_inverse_open(pair: str, direction: str) -> str | None:
     return None
 
 
-def check_currency_concentration(pair: str, direction: str, max_per_ccy: int = 1) -> str | None:
-    """Return warning string if opening this trade would exceed max_per_ccy open trades on any one currency."""
+def check_currency_concentration(pair: str, direction: str, max_per_ccy: int = 1,
+                                 max_id: int = None) -> str | None:
+    """Return warning string if opening this trade would exceed max_per_ccy open trades on any one currency.
+
+    max_id: see check_inverse_open() docstring — same same-scan-phantom-OPEN
+    guard, same semantics. Omitting it preserves the original unrestricted
+    behaviour.
+    """
     try:
         cleaned = pair.upper().replace("/", "").replace("-", "")
         if len(cleaned) < 6:
@@ -422,6 +448,15 @@ def check_currency_concentration(pair: str, direction: str, max_per_ccy: int = 1
         base, quote = cleaned[:3], cleaned[3:6]
         rows = load()
         open_rows = [r for r in rows if r.get("status") == "OPEN"]
+        if max_id is not None:
+            _filtered = []
+            for r in open_rows:
+                try:
+                    if int(r.get("id", 0)) <= max_id:
+                        _filtered.append(r)
+                except (TypeError, ValueError):
+                    pass
+            open_rows = _filtered
         for ccy in [base, quote]:
             count = sum(
                 1 for r in open_rows
