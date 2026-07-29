@@ -11206,6 +11206,17 @@ def run() -> int:
         _ml_fund_state: dict = {}
         _ml_open_count: int  = 0
         _ml_regime:     str  = "ranging_low_vol"
+        # Highest trade id that existed BEFORE this scan wrote anything. Passed
+        # to every _analyse_pair() call this scan as max_open_id so the
+        # currency-concentration/inverse-open checks only count trades that
+        # were genuinely already open going into this scan — not another
+        # candidate from this same scan's own loop that log_recommendation()
+        # already wrote as OPEN but hasn't reached DA/drawdown-tier/not-viable
+        # correction yet. Captured once, before the first pair is analysed, and
+        # reused for the whole scan (not re-captured per batch) so a phantom
+        # OPEN row from an earlier _process_batch() call in this same run can't
+        # leak into a later batch's checks either.
+        _scan_baseline_max_id: int = 0
         try:
             from src import fund_state as _fs_ml
             _ml_fund_state = _fs_ml.load()
@@ -11213,7 +11224,12 @@ def run() -> int:
             pass
         try:
             from src import tracker as _trk_ml
-            _ml_open_count = sum(1 for _r in _trk_ml.load() if _r.get("status") == "OPEN")
+            _trk_rows_ml = _trk_ml.load()
+            _ml_open_count = sum(1 for _r in _trk_rows_ml if _r.get("status") == "OPEN")
+            _scan_baseline_max_id = max(
+                (int(_r["id"]) for _r in _trk_rows_ml if str(_r.get("id", "")).isdigit()),
+                default=0,
+            )
         except Exception:
             pass
         try:
