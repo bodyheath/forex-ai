@@ -62,11 +62,15 @@ def analyse_and_log(
         except (TypeError, ValueError):
             pass
 
-    # Check for inverse pair conflict before logging fund trade — BLOCK if detected
+    # Check for inverse pair conflict before logging fund trade — BLOCK if detected.
+    # max_open_id (the highest trade id that existed before this scan started)
+    # excludes phantom OPEN rows from other candidates already written earlier
+    # in this same scan but not yet corrected by DA/drawdown-tier/not-viable —
+    # see check_inverse_open()'s docstring in tracker.py.
     if parsed.get("trade_this") == "YES":
         try:
             _inv_warn = tracker.check_inverse_open(
-                result["pair"], parsed.get("direction") or ""
+                result["pair"], parsed.get("direction") or "", max_id=max_open_id
             )
             if _inv_warn:
                 log(f"[service] BLOCKING trade — {_inv_warn}")
@@ -80,7 +84,7 @@ def analyse_and_log(
     if parsed.get("trade_this") == "YES":
         try:
             _conc_warn = tracker.check_currency_concentration(
-                result["pair"], parsed.get("direction") or ""
+                result["pair"], parsed.get("direction") or "", max_id=max_open_id
             )
             if _conc_warn:
                 log(f"[service] CONCENTRATION BLOCK — {_conc_warn}")
