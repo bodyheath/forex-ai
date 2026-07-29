@@ -12023,6 +12023,7 @@ def run() -> int:
                             shared_fundamental=_shared_fund.get(_sp),
                             shared_macro=_shared_macro,
                             sonnet_threshold=99,
+                            max_open_id=_scan_baseline_max_id,
                         )
                         if _sr and not _sr.get("screened_out") and _conf(_sr) >= 4:
                             if _log_one_research(_sr, src_override="haiku_sweep",
