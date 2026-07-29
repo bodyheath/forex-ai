@@ -1814,7 +1814,8 @@ def _validate_entry_prices(
 def _analyse_pair(pair: str, log, force_deep: bool = False,
                   shared_fundamental=None, shared_macro=None,
                   sonnet_threshold: int = 6,
-                  pair_threshold_override=None) -> dict | None:
+                  pair_threshold_override=None,
+                  max_open_id=None) -> dict | None:
     try:
         return service.analyse_and_log(
             pair,
@@ -1824,6 +1825,7 @@ def _analyse_pair(pair: str, log, force_deep: bool = False,
             shared_macro=shared_macro,
             sonnet_threshold=sonnet_threshold,
             pair_threshold_override=pair_threshold_override,
+            max_open_id=max_open_id,
         )
     except Exception as exc:
         _log_line(log, f"FAILED {pair}: {exc}")
