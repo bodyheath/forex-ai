@@ -1,0 +1,25 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 bearish engulfing + ribbon converging + JPY rate rising vs GBP flat suggest weakening uptrend, but MTF signals clash (M:SELL vs W/D:NEUTRAL) and 4H shows strength, creating low-confidence pullback zone rather than conviction SELL.
+RISK_FACTORS: [1] MTF conflict: Monthly bearish vs Weekly/Daily neutral (conf=0/3) violates MTF rule — TRADE_THIS NO threshold not met. [2] GBP COT unwinding (institutions reducing long conviction) while JPY stable — reduces positioning edge and increases reversal risk if GBP shorts cover.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 217.00
+ENTRY_TRIGGER_REASON: Bearish engulfing near recent high (217.35) + ribbon convergence suggest pullback to 217.00 support before any downtrend confirmation; wait for price rejection.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**ANALYSIS NOTES:**
+
+1. **MTF RULE VIOLATION (Critical):** W:NEUTRAL + D:NEUTRAL + 4H:BUY vs M:SELL = conf 0/

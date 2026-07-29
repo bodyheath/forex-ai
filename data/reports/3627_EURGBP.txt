@@ -1,0 +1,26 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 neutral in confirmed downtrend with 4H overbought reversal pattern, but MTF disagreement and EUR positioning reversal undermine conviction.
+RISK_FACTORS: [1. MTF conflict: Weekly BUY vs Daily NEUTRAL vs 4H SELL (conf=1/3, <2/3 threshold) — no clear directional alignment across timeframes, violates MTF rule. 2. EUR COT REVERSING from long to short while GBP unwinding shorts — institutional conviction mixed and EUR positioning just flipped against proposed direction.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.8545
+ENTRY_TRIGGER_REASON: Break below 38.2% Fib support at 0.85679 (current 5p above) would confirm 4H double-bottom bearish continuation into D1 downtrend.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### SCORING RATIONALE:
+
+**TECHNICAL_SCORE: 5/10**
+- D1 T_sig=NEUTRAL_3 is baseline (no RSI/MACD adjustment needed — RSI 54.7 is neutral zone, MAC

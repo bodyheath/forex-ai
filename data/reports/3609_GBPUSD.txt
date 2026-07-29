@@ -1,0 +1,23 @@
+PAIR: GBP/USD
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: RSI oversold (44.3) in confirmed downtrend with 4H/D1 inside bars signals potential reversal attempt, but ribbon fully bearish and COT GBP unwinding undermines conviction.
+RISK_FACTORS: [1] Ribbon ALIGNED_BEAR (5/5 EMAs stacked bearish) + death-cross structure (price < SMA50 < SMA200) = strong continuation bias; reversal may fail into lower lows. [2] GBP COT UNWINDING = institutional SHORT conviction weakening but not yet reversing; if shorts exit without price rallying, downtrend resumes.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.3180
+ENTRY_TRIGGER_REASON: Break of FIB SL (1.3143) + RSI recovery above 50 confirms downtrend termination; safer entry below current if reversal confirmed.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS:**
+
+**MTF Rule Check:** M:NEUTRAL, W:NEUTRAL, D:NEUTRAL, 4H:BUY → conf=1/4 (4H alone is insufficient; weekly AND daily must

@@ -1,0 +1,31 @@
+```
+PAIR: USD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 pin bar at key level with bullish pattern + USD rate advantage and CAD rate falling support upside, but MTF neutral and 4H death-cross create mixed directional conviction.
+
+RISK_FACTORS: [1] MTF conf=0/3 — all timeframes neutral, no multi-frame alignment; [2] 4H death-cross (price < SMA50 < SMA200) contradicts D1 uptrend, creating conflicting signals.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.4115
+ENTRY_TRIGGER_REASON: Break above D1 pin bar high at key resistance; confluence with nearest Fib level (SH=1.42478 target zone).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 5/10**
+- D1 T_sig=NEUTRAL_3 baseline; RSI=49.9 neutral zone (45–62) → no directional shift.
+- 4H RSI=45.9 also neutral, but 4H death-cross (price < SMA50 < SMA200) creates downtrend structure → conflicts

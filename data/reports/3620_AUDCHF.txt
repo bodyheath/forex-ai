@@ -1,0 +1,17 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at resistance (0.5687, 4p away) with T_sig=SELL_3 and confirmed weekly+monthly downtrend, but daily RSI 58.5 is neutral-bullish; 4H uptrend and aligned ribbon create conflicting signals — low-conviction setup.
+RISK_FACTORS: [1] MTF misalignment — weekly/monthly SELL vs daily NEUTRAL vs 4H BUY creates conf=1/3; uptrend structure (price > SMA50 > SMA200, ribbon ALIGNED_BULL) contradicts sell thesis. [2] COT divergence — AUD SHORT positioning BUILDING (institutional conviction to short AUD = bearish for AUD/CHF pair) but CHF SHORT positioning UNWINDING (less conviction on CHF weakness = headwind for CHF sell), conflicting momentum.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5687
+ENTRY_TRIGGER_REASON: Pin bar at 100% Fibonacci (resistance at key swing high 0.56867); break below D1 SMA50 (0.5625) would confirm sell, but await pullback to this level first given mixed MTF and ribbon bullish alignment.
+ENTRY

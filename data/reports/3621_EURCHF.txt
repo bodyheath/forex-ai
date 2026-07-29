@@ -1,0 +1,21 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: Bearish RSI divergence (12p/2pt) + triple oscillator sell signal (Stoch 88.5/CCI 148.3) confirm momentum exhaustion at 0.9317, but uptrend structure (4H golden cross, ribbon aligned bull 5/5) and MTF weakness (D:SELL alone, W/M/4H neutral = 1/3 agreement) limit conviction.
+
+RISK_FACTORS: [1] MTF conflict — daily SELL isolated, weekly/monthly/4H neutral (1/3 agreement; MTF rule requires 2/3+); uptrend structure on 4H (golden cross SMA50>SMA200) contradicts sell thesis. [2] COT EUR reversing (net SHORT from long) + CHF unwinding (reducing short) = momentum loss in both legs; EUR positioning flip from prior conviction = institutional conviction fading.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.9335
+ENTRY_TRIGGER_REASON: Await retest of recent high or break above SMA200 (0.9216) failure + RSI >70 rejection; triple sell signal + bearish div valid only if price rejects upper structure without breaking 4H

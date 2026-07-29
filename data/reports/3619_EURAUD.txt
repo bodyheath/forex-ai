@@ -1,0 +1,26 @@
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H overbought (RSI 75) + aligned bearish ribbon conflict with weekly/monthly bullish bias; MTF disagreement (1/3 conf) + reversing EUR positioning undermine conviction.
+RISK_FACTORS: [1] MTF conflict: weekly BUY vs 4H SELL with daily neutral—only 1/3 MTF agreement; insufficient directional alignment to meet TRADE_THIS threshold. [2] EUR COT reversal from long to short contradicts SELL direction; institutional positioning flipped against trade thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.6310
+ENTRY_TRIGGER_REASON: Break below daily SMA50 (1.6373) with 4H RSI overbought confirmation and bearish ribbon alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF REJECTION (CRITICAL):** Weekly BUY + 4H SELL + Daily NEUTRAL = 1/3 agreement. Hard rule: TRADE_THIS requires weekly AND daily both agree. Confidence capped at 4 due to MTF fragmentation.
+
+**TECHNICAL (4/10):**
+- D1 RSI 51.

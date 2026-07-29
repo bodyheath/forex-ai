@@ -1,0 +1,16 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 oversold RSI in confirmed uptrend (W:SELL + M:SELL conflict with D1 golden-cross structure); T_sig=SELL_3 contradicts price structure and ribbon alignment, signaling early reversal warning rather than continuation.
+RISK_FACTORS: [1] MTF fragmentation: Weekly + Monthly both SELL but D1 shows golden-cross (SMA50 > SMA200, price > SMA50) + ALIGNED_BULL ribbon — D1 uptrend structure intact despite weekly bearish view; weekly-daily disagreement kills confidence. [2] RSI 63.9 on D1 is at upper-neutral zone in an uptrend (standard tier 45-65=NEUTRAL(3-4), not overbought); MACD histogram slightly positive (0.0507) — both neutral-to-mildly-bullish on daily, contradicting T_sig=SELL_3.
+TRADE_THIS: NO
+ENTRY_TYPE: HOLD / MONITOR
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule fails — Weekly and Daily do NOT both agree on direction (W:SELL, D:NEUTRAL with bullish structure). Confidence = 1/3 < 2/3

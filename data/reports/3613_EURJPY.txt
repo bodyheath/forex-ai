@@ -1,0 +1,26 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 T_sig=SELL_3 with partial oscillator confluence (Stochastic+CCI overbought), but uptrend structure and aligned ribbon create conflicting signals; MTF conf only 1/3 (W:SELL vs D:NEUTRAL vs 4H:NEUTRAL) blocks high-conviction trade.
+RISK_FACTORS: [1] Ribbon fully aligned bullish (5/5 EMA fan) contradicts SELL thesis — trend continuation risk. [2] COT EUR reversing from long → reduces directional conviction; JPY stable but EUR positioning flip creates uncertainty.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 186.305
+ENTRY_TRIGGER_REASON: Break below FIB 100% level (4p above current, acting as immediate resistance/pivot); if price holds, wait for close below 185.75 (SMA50 break) to confirm uptrend failure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **RATIONALE:**
+
+**TECHNICAL (4/10):**
+- **D1 T_sig baseline = SELL_3:** RSI=59.1 in uptrend context (price >
