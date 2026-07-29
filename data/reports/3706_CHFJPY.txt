@@ -1,0 +1,24 @@
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Morning star pattern + double bottom at 4H suggest potential bounce, but MTF misalignment (M:SELL vs W/D:NEUTRAL), weak RSI momentum (49.9/58.1 mid-range), and deteriorating CHF positioning (unwinding short) create conflicting signals in a choppy range.
+
+RISK_FACTORS: 
+1. MTF disagreement (monthly bearish vs weekly/daily neutral) violates MTF consensus rule; confidence artificially capped below 7 due to conf=0/3 (only 4H aligns with direction).
+2. COT UNWINDING in CHF shorts reduces conviction—if CHF shorts close, buyers may emerge, reversing the SELL thesis; price pinned mid-SMA50/SMA200 range offers no clear breakout direction.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL and D:NEUTRAL do NOT agree with proposed SELL direction (only M:SELL + 4H:SELL = 2/4 timeframes); confidence 4/10 << 7 threshold. Candle patterns (morning star, double bottom) are bullish-biased, contradicting SELL

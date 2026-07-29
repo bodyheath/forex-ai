@@ -1,0 +1,23 @@
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: T_sig baseline SELL_3 conflicts with daily uptrend structure (price > SMA50 > SMA200); ribbon convergence signals trend weakening into potential reversal, but MTF all-NEUTRAL (conf=0/3) breaks entry rule.
+
+RISK_FACTORS: (1) MTF multiple timeframes all NEUTRAL — no directional agreement across W/D/4H; rule requires W+D both agree for TRADE_THIS=YES. (2) Daily uptrend intact (golden cross) contradicts SELL signal — RSI 60.9 in uptrend zone is normal, not overbought; T_sig SELL_3 lacks confluence support (OSC=NONE, DIV=none, 4H mixed/range).
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated (M:NEUTRAL, W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL) — conf=0/3 fails the requirement that weekly AND daily must both agree on direction. Ribbon CONVERGING is a warning of trend fatigue, not a confirmed reversal signal in the absence of MTF alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS:

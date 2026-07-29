@@ -1,0 +1,25 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern on D1 with 4H overbought RSI (68.7) suggests weakening momentum, but MTF misalignment (W:NEUTRAL, D:NEUTRAL, 4H:SELL) and neutral oscillator confluence prevent high-conviction short.
+RISK_FACTORS: [1] MTF agreement fails (conf=0/3): weekly and daily both neutral blocks TRADE_THIS gate regardless of pattern. [2] GBP COT positioning UNWINDING while short — institutions reducing conviction in GBP weakness, conflicting with bearish setup.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule veto: weekly and daily do not both agree (both NEUTRAL, 4H:SELL isolated). Pattern + overbought 4H are supporting but insufficient without W+D confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI=54.2 (NEUTRAL zone, standard tier 45–62 = 3–4), baseline T_sig=NEUTRAL_3 confirmed.
+- D1

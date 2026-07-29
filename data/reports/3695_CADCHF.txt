@@ -1,0 +1,27 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Evening star reversal at resistance with D1 SELL signal, but 4H uptrend and aligned ribbon create conflicting directional bias; MTF conf=1/3 (only M:BUY agrees) blocks high-conviction trade.
+RISK_FACTORS: [1] MTF disagreement (W:NEUTRAL, D:SELL vs 4H:NEUTRAL, M:BUY) — no clear 2/3 consensus, violates MTF rule. [2] CAD positioning unwinding while CHF also unwinding — institutional conviction declining on both legs, reducing conviction in any direction.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree on direction (W=NEUTRAL, D=SELL vs 4H=NEUTRAL). Confidence=1/3 threshold breached. Do not trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**RATIONALE:**
+
+**MTF Conflict (Critical Blocker):**
+- **Weekly:** NEUTRAL (no clear direction)
+- **Daily:** SELL (T_sig=SELL_4, evening_star pattern, RSI=

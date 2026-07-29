@@ -1,0 +1,30 @@
+```
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Weekly and monthly both signal SELL, but daily is NEUTRAL and 4H is BUY—MTF agreement is only 1/3 (20% weight), blocking a high-conviction trade despite D1 T_sig=SELL_3.
+
+RISK_FACTORS: 
+1. MTF conflict: Weekly+Monthly SELL vs. Daily NEUTRAL + 4H BUY (1/3 agreement = insufficient consensus; hard rule blocks TRADE_THIS when MTF <2/3).
+2. Technical contradiction: D1 RSI 63.0 in confirmed uptrend (price > SMA50 > SMA200) sits in neutral zone (45–65 in uptrend); ribbon is ALIGNED_BULL (5/5), price above all EMAs—momentum structure favors continuation, not reversal.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement insufficient (1/3 = 20% < 67% threshold). Weekly+Monthly SELL conflicts with Daily NEUTRAL + 4H BUY. Hard rule: do NOT trade when W and D disagree on direction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**

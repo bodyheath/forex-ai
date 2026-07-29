@@ -1,0 +1,24 @@
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Daily bearish setup (RSI 57.9, MACD negative, price below SMA50) conflicts with weekly bullish context; ribbon converging signals trend weakness and reversal risk; MTF split (W:BUY vs D:SELL, conf=2/3 <3/3) fails confluence threshold.
+RISK_FACTORS: [1] MTF disagreement (weekly BUY vs daily SELL) at only 60% confidence — insufficient MTF alignment to trade this direction with conviction. [2] EUR COT reversing from long positioning while AUD building shorts — directional conflict suggests institutional uncertainty; selling into AUD shorts may face squeeze.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule: weekly and daily do not agree strongly enough (conf=2/3, threshold=3/3). W:BUY + D:SELL with only 60% weighting fails the requirement that both MTF legs confirm direction. Ribbon converging adds reversal risk. Insufficient confluence to initiate.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1 T_sig =
