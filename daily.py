@@ -8091,8 +8091,9 @@ def _send_telegram_summary(
         # COT reversal warning
         if _cot_reversal_penalty(r) < 0:
             block.append(
-                "🔄 <b>COT REVERSAL WARNING — institutional positioning just flipped against "
-                "this trade direction — confidence penalised −1</b>"
+                "🔄 <b>COT REVERSAL WARNING — institutional positioning has flipped or "
+                "unwound sharply from a recent extreme against this trade direction — "
+                "confidence penalised −1</b>"
             )
         # Smart Money Divergence (Layer 10) — plain English
         _smd_tb   = _smd_score(r)
