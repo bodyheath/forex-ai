@@ -1,0 +1,17 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with T_sig=SELL_3 and 4H range; MTF neutral consensus (0/3) blocks high-confidence trade; CHF COT unwinding adds weakness to CHF shorts.
+RISK_FACTORS: (1) MTF agreement is 0/3 (M/W/D all NEUTRAL) — per rule, TRADE_THIS must have weekly+daily both agree; neutral does not satisfy BUY or SELL agreement. (2) CHF positioning unwinding mid-move — reduces conviction on USD longs; if CHF buyers step in, USD/CHF could retest 0.8150 support (2p away, at 100% Fib).
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily both NEUTRAL; no directional consensus. T_sig=SELL_3 contradicts D1 uptrend (price > SMA50 > SMA200, ALIGNED_BULL ribbon 5/5). Conflicting signals + COT CHF unwinding + OSC conf=NONE = below confidence threshold (4 < 7).
+ENTRY_TRIGGER_EXPIRY_HOURS:

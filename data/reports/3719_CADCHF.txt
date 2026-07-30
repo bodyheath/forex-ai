@@ -1,0 +1,31 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: D1 RSI 66.6 + MACD positive + SELL signal conflict with 4H uptrend structure; MTF weekly+daily both SELL (2/3 conf threshold met); ribbon aligned bull suggests uptrend continuation but price overbought on daily.
+
+RISK_FACTORS: [1] MTF confidence 2/3 is exactly at threshold—4H neutral weakens conviction; weekly SELL vs monthly BUY creates mixed macro bias. [2] Ribbon fully aligned bull + 4H uptrend + price > SMA50 on 4H suggests continuation risk; CAD SHORT momentum building while CHF unwinding = potential reversal risk on tight positioning.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.5795
+ENTRY_TRIGGER_REASON: Break below D1 T_sig support at daily price action; await confirmation of weekly downtrend with D1 close < 0.5795 to elevate to TRADE_THIS: YES (requires conf ≥ 7)
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS DETAIL:**
+
+**MTF Rule Application (CRITICAL):**
+- Weekly: SELL | Daily

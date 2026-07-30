@@ -1,0 +1,23 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with price>SMA50>SMA200 uptrend; MTF conf=1/3 (only W:SELL) fails 2/3 agreement rule; converging ribbon signals trend exhaustion, not continuation.
+RISK_FACTORS: [1. MTF fails trading rule — weekly SELL but daily NEUTRAL; only 1/3 agreement vs. required 2/3 consensus. 2. Fundamental tailwind (+3.78% GBP-CHF spread, CHF declining) contradicts SELL bias — interest-rate differential supports GBP strength.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:SELL + D:NEUTRAL + 4H:NEUTRAL = 1/3 agreement. Requires ≥2/3 MTF consensus (Weekly AND Daily both agree). No trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Reasoning:**
+
+1. **MTF Rejection (HARD RULE):** Weekly=SELL, Daily=NEUTRAL, 4H=NEUTRAL. Only 1 of 3 time

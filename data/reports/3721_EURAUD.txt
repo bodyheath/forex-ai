@@ -1,0 +1,27 @@
+```
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Oversold 4H (RSI 76.7) and overbought D1 (RSI 59.1 near 62 threshold) with converging ribbon and mixed MTF alignment (W:NEUTRAL + D:SELL) suggest near-term pullback risk; EUR positioning reversing while AUD building creates conflicting institutional signals.
+RISK_FACTORS: ['MTF conf=2/3 (only 2 of 3 timeframes agree on direction; W is NEUTRAL, not SELL) — fails MTF_RULE threshold for conviction', 'EUR COT reversing (institutions flipping SHORT) contradicts SELL direction bias — potential institutional unwind into weakness']
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+### **ANALYSIS RATIONALE:**
+
+**MTF RULE FAILURE (Critical):**
+- Weekly = BUY, Daily = SELL, 4H = SELL → only 2 of 3 agree (D + 4H)
+- Confidence = 2/3 (66%) **below the 2/3 agreement threshold for

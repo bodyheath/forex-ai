@@ -1,0 +1,27 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly shows SELL bias but Weekly+Daily neutral creates MTF conflict; double-top pattern with ribbon leaning bearish offers weak bearish structure, but RSI 49 neutral and CHF COT unwinding reduces conviction.
+RISK_FACTORS: [1] MTF conf=0/3 (W and D both NEUTRAL)—no daily/weekly agreement on direction, violates core trade rule. [2] CHF positioning UNWINDING (institutions reducing short conviction) while JPY stable—conflicting signals on JPY strength realization.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation—Weekly and Daily do not both agree on direction. Confidence cannot reach 7 with 0/3 MTF confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+### DETAILED SCORING RATIONALE
+
+**TECHNICAL_SCORE: 3/10**
+- **D1 RSI=49.1** → Standard tier: 45–62 = 3–4 NEUTRAL. Confirmed by T_sig=NEUTRAL_3. No shift applied (MTF: W NEUTRAL + D NEUTRAL = no confirmed trend context).
+-

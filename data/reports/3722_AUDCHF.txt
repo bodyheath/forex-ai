@@ -1,0 +1,31 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: MTF conflict (M+W=SELL vs D=NEUTRAL, 4H=BUY) breaks trade rule; D1 pin bar at 78.6% Fib support + rising AUD rates support downside, but ribbon fully bullish and price above SMA50 create conflicting signals.
+
+RISK_FACTORS: 
+1. MTF agreement fails (only 1/3 timeframes aligned; Weekly + Daily do NOT both agree on direction) — violates core TRADE_THIS rule.
+2. Ribbon fully aligned bullish (5/5 EMA stack) contradicts SELL direction; AUD COT building conviction while CHF unwinding creates directional uncertainty.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade rejected — MTF rule failure. Weekly=SELL + Daily=NEUTRAL + Monthly=SELL + 4H=BUY = insufficient agreement. Confidence 5/10 below 7.0 threshold. Conflicting ribbon alignment (bullish) vs price structure (neutral D1) adds execution risk.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS DETAIL:**
+
+**MTF Verdict:** M=SELL

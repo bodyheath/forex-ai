@@ -1,0 +1,24 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 6/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Multi-timeframe sell setup (M/W/D aligned) conflicts with daily uptrend structure; pin bar at key level suggests potential reversal, but RSI 63.4 + bullish ribbon prevents high-confidence short.
+RISK_FACTORS: [1] D1 trend remains uptrend (price > SMA50 > SMA200, golden cross); RSI 63.4 in confirmed uptrend = normal, not overbought signal — shifts SELL zone to >76. [2] 4H:BUY disagrees (conf=2/3 MTF); ribbon ALIGNED_BULL in 5/5 fan = trend continuation bias, not reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 162.85
+ENTRY_TRIGGER_REASON: Break below pin bar low at near-term support; requires fresh lower-low confirmation to override daily uptrend structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical Layer (5/10):**
+- D1 T_sig baseline = SELL_4, but context is critical: USD/JPY is in confirmed **UPTREND** (price 163.47 >> SMA
