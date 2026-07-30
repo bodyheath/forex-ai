@@ -2548,6 +2548,19 @@ def _trade_quality_grade(r: dict) -> dict:
     else:
         grade = "D"
 
+    # ── Devil's Advocate fold-in: objections downgrade one tier ────────────
+    # DA no longer mutates confidence directly (see the DA evaluation loop in
+    # _send_telegram_summary, which now only records second_opinion and does
+    # not touch parsed["confidence"]) — its verdict is read here instead, as
+    # one more grade input alongside the existing MTF/ribbon/R:R/fundamental-
+    # tailwind checks above. Only ever downgrades, never upgrades: absence of
+    # objections isn't treated as positive evidence of quality, only presence
+    # of objections as negative evidence — DA-demoted candidates showed 0/6
+    # real decisive wins in the historical investigation that motivated this
+    # (n=6, thin, but directionally consistent; see conversation history).
+    if (r.get("second_opinion") or {}).get("has_objections"):
+        grade = {"A": "B", "B": "C", "C": "D", "D": "F", "F": "F"}.get(grade, grade)
+
     return {
         "grade":        grade,
         "label":        _GRADE_LABELS[grade],
