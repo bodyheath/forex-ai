@@ -70,7 +70,7 @@ computation is well under a second.
 from datetime import datetime, timezone
 
 MIN_BUCKET = 20
-MIN_BUCKET_WEEKS = 4   # distinct close-date calendar weeks required, not just count
+MIN_BUCKET_SPAN_DAYS = 21   # earliest-to-latest close date must span this many days
 _DECISIVE = {"WIN", "LOSS", "PARTIAL_WIN", "FULL_WIN"}
 _WIN_STATUSES = {"WIN", "PARTIAL_WIN", "FULL_WIN"}
 
