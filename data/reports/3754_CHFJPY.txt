@@ -1,0 +1,27 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern at 204.091 with monthly SELL bias, but MTF alignment broken (weekly/daily neutral) and RSI neutral—weak setup lacking conviction.
+RISK_FACTORS: [1. MTF disagree: monthly SELL vs. weekly/daily NEUTRAL = 0/3 MTF confidence, fails dual-MTF rule—reversal risk if daily turns bullish. 2. COT CHF unwinding (institutions reducing short conviction) while price targets lower—momentum fading into decline, classic trap risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 199.85
+ENTRY_TRIGGER_REASON: Break below SMA50 at 201.0755 and confirmation near double-top neckline invalidation
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **Scoring Rationale:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 T_sig=NEUTRAL_3 baseline (RSI 48.9 = 3–4 neutral tier, standard mixed MTF)
+- Double-top bearish pattern (PAT) = −1 context (requires price to break neckline at ~199.85 to

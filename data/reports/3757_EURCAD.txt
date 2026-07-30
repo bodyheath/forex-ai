@@ -1,0 +1,28 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-bottom bullish pattern conflicts with monthly sell signal; neutral MTF alignment and oscillator confluence absence limit conviction despite CAD rate falling supporting downside.
+RISK_FACTORS: [1. MTF conf=0/3 (M:SELL vs W/D:NEUTRAL) violates multi-timeframe agreement rule — no directional consensus across timeframes. 2. COT EUR reversing from long to short while trade direction is SELL creates alignment but reduces confidence (institutions dumping EUR supports bearish case but signals potential exhaustion).] 
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.6095
+ENTRY_TRIGGER_REASON: Break below 50% Fibonacci level (1.6106) + monthly sell confirmation would strengthen setup if weekly/daily align bearish.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI=49.2 → NEUTRAL zone (45–62), standard tier = 3–4 base score
+- MTF context: M:SELL but W:NEUTRAL + D:NEUTRAL → mixed signal, no confirmed trend
+- T_sig

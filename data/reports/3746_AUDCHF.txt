@@ -1,0 +1,27 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: MTF conflict (W:SELL + M:SELL vs D:NEUTRAL + 4H:BUY, conf=1/3) undermines conviction despite D1 uptrend structure and ALIGNED_BULL ribbon.
+RISK_FACTORS: [1. MTF disagreement: Daily is neutral while Weekly/Monthly are sell — entry signal is weak (conf=1/3, threshold is 2/3 minimum). 2. CHF COT unwinding short exposure mid-position — institutional conviction on short CHF is fading, reducing tailwind for AUD/CHF sell.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confluence fails (Daily neutral conflicts Weekly/Monthly sell); requires Daily to shift SELL for valid 2/3+ agreement.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### ANALYSIS BREAKDOWN
+
+**MTF Rule (Critical Blocker):**
+- Weekly: **SELL** | Daily: **NEUTRAL** | Monthly: **SELL** | 4H: **BUY**
+- Consensus direction: 2/3 (W + M) vs 1/3 agree → **conf=1

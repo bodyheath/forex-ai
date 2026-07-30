@@ -1,0 +1,17 @@
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 suggests downside, but MTF is completely neutral (M/W/D all NEUTRAL, 4H lone outlier at SELL with conf=0/3), creating directional ambiguity and low conviction.
+RISK_FACTORS: (1) MTF alignment failure—no agreement between timeframes (Monthly/Weekly/Daily neutral, only 4H bearish)—violates core MTF rule requiring weekly+daily agreement; (2) RSI 57.0 (D1) in neutral zone post-golden-cross on 4H suggests uptrend momentum still active despite D1 T_sig=SELL_3, risking false signal.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF conf=0/3 fails minimum threshold. Weekly and Daily must both agree on direction for entry; neither is currently bearish. 4H SELL signal is isolated and low-weight (wt=80% favours higher TFs). T_sig=SELL_3 is only moderately bearish and contradicted by 4H bullish double_bottom pattern and golden-cross structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0

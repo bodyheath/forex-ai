@@ -1,0 +1,23 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 2/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fib 78.6% resistance with 4H SELL signal and GBP COT unwinding suggests weak bearish edge, but MTF disagreement (M:BUY vs W/D:NEUTRAL vs 4H:SELL, conf=0/3) kills conviction.
+RISK_FACTORS: [1] MTF conf=0/3 (no alignment) — trade fails critical MTF rule regardless of other signals. [2] GBP COT unwinding while AUD building creates cross-momentum conflict; AUD strength may support GBP/AUD upside despite local pin bar.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.9145
+ENTRY_TRIGGER_REASON: Break below Fib 78.6% pivot (1.91859) to confirm bearish pin bar; only if MTF conf improves.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Rationale:**
+
+1. **MTF Rule VIOLATION**: W:NEUTRAL + D:NEUTRAL + 4H:SELL + M:BUY = conf=0/3 (no 2/3 agreement). **Trade blocked** — MTF must align

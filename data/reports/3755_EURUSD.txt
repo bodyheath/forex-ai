@@ -1,0 +1,26 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 with price below SMA50 in confirmed downtrend, but 4H overbought RSI (65.4) and converging ribbon signal weakening momentum; COT EUR reversing from long adds execution risk.
+RISK_FACTORS: [1] MTF agreement weak (1/3 conf): W:BUY conflicts with D:NEUTRAL and 4H:SELL — no clean directional alignment; [2] COT EUR REVERSING: institutions reducing conviction in EUR shorts exactly when this trade targets lower — contradicts positioning momentum and lowers conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence <2/3 (only 4H:SELL aligns with direction); COT momentum conflict; ribbon converging signals reversal risk, not continuation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL [4/10]:**
+- D1 T_sig baseline = 3 (NEUTRAL), adjusted +1 for head-and-shoulders bearish pattern confirmation = **4**
+- D1 RSI 53.3: in mixed/neutral MT
