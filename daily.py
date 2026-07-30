@@ -1238,9 +1238,7 @@ def _eff_conf(result: dict) -> float:
             adj -= 1
     except Exception:
         pass
-    # Devil's advocate boost: +0.5 when second opinion raised no objections
-    da_boost = float(result.get("_da_boost", 0.0) or 0.0)
-    return max(1.0, raw + adj + da_boost)
+    return max(1.0, raw + adj)
 
 
 def _conf_bar(conf) -> str:
