@@ -11462,6 +11462,24 @@ def run() -> int:
             f"meaningful(conf>=5)={len(meaningful)} · failed={len(failed_pairs)}",
         )
 
+        # COT-reversal-penalty observability: tallies how often this scan's widened
+        # UNWINDING-from-extreme trigger fires vs the original REVERSING trigger, with
+        # GBP broken out specifically. Added after the 2026-07 GBP short-squeeze fix
+        # (large speculators covered 47% of a 1-year-extreme net-short GBP position over
+        # 4 weeks while GBP/USD rallied +2.7% and the system kept recommending SHORT GBP)
+        # so GBP-pair performance can be rechecked in a few weeks to confirm the widened
+        # trigger actually helped, not just that it fires as designed.
+        try:
+            _cot_pen_hits = [r for r in deep_results if _cot_reversal_penalty(r) < 0]
+            _cot_pen_gbp  = [r for r in _cot_pen_hits if "GBP" in r.get("pair", "").upper()]
+            _log_line(log, (
+                f"[cot_reversal_penalty] fired={len(_cot_pen_hits)}/{passed} "
+                f"gbp={len(_cot_pen_gbp)} "
+                f"pairs={','.join(r.get('pair', '') for r in _cot_pen_hits) or 'none'}"
+            ))
+        except Exception as _cot_pen_exc:
+            _log_line(log, f"[cot_reversal_penalty] observability failed (non-fatal): {_cot_pen_exc}")
+
         # Update movement alert stats for priority-swept pairs
         if _movement_priority_set and _MOVEMENT_ALERTS_FILE.exists():
             try:
