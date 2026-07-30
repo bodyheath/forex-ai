@@ -4328,7 +4328,7 @@ def _build_open_trades_section(open_trades: list, px_cache: dict, now_ak, compac
 # ── Drawdown-aware trade filter ───────────────────────────────────────────────
 
 def _dd_allows_trade(r: dict, dd_mode: str, quality_grades: dict,
-                     conf_threshold: int, log_fn=None) -> bool:
+                     calibration_table: dict, log_fn=None) -> bool:
     """Return True if the active drawdown protection tier permits this trade.
 
     Tier rules:
@@ -4336,8 +4336,27 @@ def _dd_allows_trade(r: dict, dd_mode: str, quality_grades: dict,
       preservation — A-grade only + all 3 core timeframes aligned
       defensive    — A-grade only
       caution      — A or B grade only
-      normal       — A, B, or (C with effective confidence >= threshold)
+      normal       — A, B, or (C with recalibrated confidence >= 0.70),
+                     or (D with recalibrated confidence >= 0.90)
+
+    Grade F is an absolute hard floor in every tier, including normal — no
+    confidence level, raw or recalibrated, overrides it. F only triggers on
+    rib_strongly_against / w_d_conflict / rr<1.5 (structural facts, not
+    matters of conviction) or a DA downgrade landing on an existing D.
+
+    The normal-tier D path is new: raw confidence was previously irrelevant
+    to D (always blocked regardless), but raw confidence itself was shown to
+    have ~zero correlation with real outcomes (r=0.045) — using it to gate
+    D would have been arbitrary. Recalibrated confidence (see
+    src/confidence_calibration.py) is an empirically-grounded win
+    probability instead; simulated against historical data this narrow
+    override raised the win rate of passing candidates (26.1% -> 44.4%)
+    while also being slightly *more* selective overall (3.4% -> 2.7% pass
+    rate), not looser. The 0.70/0.90 bars and the underlying calibration
+    table were fit on a still-thin sample (see conversation history) and
+    should be revisited as more live data accumulates, not treated as fixed.
     """
+    from src import confidence_calibration as _cc
     _log = log_fn or print
     grade = (quality_grades.get(r["pair"]) or {}).get("grade", "F")
     if dd_mode == "halt":
