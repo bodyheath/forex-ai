@@ -1,0 +1,23 @@
+```
+PAIR: AUD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key 61.8% Fib level + aligned bull ribbon + rising AUD rates support upside, but MTF conflict (M:SELL vs 4H:BUY) and OSC divergence (no confluence) prevent high conviction.
+RISK_FACTORS: [1] MTF disagreement (D1:NEUTRAL + M:SELL) fails 2/3 agreement rule — uptrend structure weakening at monthly scale. [2] AUD positioning BUILDING short — if momentum reverses, shorts cover for rally, but trend exhaustion risk present; JPY shorts are minimal hedge.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF weekly+daily do not both agree on direction (conf=0/3, rule requires >=2/3). Monthly SELL flag contradicts D1 uptrend — system rejects TRADE_THIS per hard rule.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**Reasoning:**
+
+1. **Technical (5/10):** D1 T_sig=NEUTRAL_3 is baseline. Price above SMA50 + SMA200 (golden cross) + aligned bull ribbon (5/

@@ -1,0 +1,17 @@
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 bearish engulfing + T_sig SELL_3 offset by bullish RSI divergence and ribbon alignment; MTF disagreement (W:SELL vs D:NEUTRAL vs 4H:BUY, conf 1/3) blocks conviction.
+RISK_FACTORS: [1] MTF conflict — weekly SELL vs 4H BUY with only 1/3 agreement kills trade confidence; [2] Bullish divergence (13p/6pt) contradicts bearish candle signal — reversal risk if DIV plays out.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (W:SELL, D:NEUTRAL, 4H:BUY). Confidence = 1/3 (20% weight) = insufficient for trade execution. D1 bearish engulfing + T_sig SELL_3 are overshadowed by bullish RSI divergence (conflict flag) and fully aligned ribbon (ALIGNED_BULL, 5/5 pairs), signaling potential continuation/reversal trap. Await clearer MTF alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS

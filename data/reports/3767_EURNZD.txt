@@ -1,0 +1,24 @@
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Confirmed downtrend (D1+4H both below SMA50<SMA200) with bearish engulfing pattern, but weak technicals (RSI neutral, MACD flat, OSC no confluence) and critical MTF conflict (Weekly BUY vs Daily NEUTRAL) block high-conviction entry.
+RISK_FACTORS: [1] MTF disagreement (Weekly bullish, Daily/4H neutral) violates MTF rule — confidence capped at 4; [2] COT EUR positioning reversing from long while trend is down — institutional conviction flipping against trade direction increases reversal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly=BUY but Daily=NEUTRAL means conf < 2/3 agreement. TRADE_THIS blocked regardless of technicals.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED BREAKDOWN:**
+
+**Technical Score (3/10):**
+- **RSI D1=41.2**: In confirmed downtrend (D1 price < SMA50 < SMA200), RSI 41.2 falls in neutral zone (42–62=NEUTRAL per downtrend-adjusted

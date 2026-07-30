@@ -1,0 +1,26 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top pattern on 4H with RSI 62 neutral zone and mixed MTF (W:NEUTRAL + D:NEUTRAL) creates weak bearish setup conflicted by ribbon alignment and institutional CAD shorts unwinding.
+RISK_FACTORS: MTF agreement failure—Weekly and Daily both neutral, violating 2/3 MTF consensus rule; ribbon fully aligned bullish contradicts SELL signal and suggests continuation risk.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree on direction (conf=0/3, below 2/3 threshold). Trade rejected at system level despite bearish technicals.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS DETAIL:**
+
+**Technical (4/10):**
+- D1 T_sig=SELL_3 provides baseline (score 3), but **mixed/neutral MTF context** (W:NEUTRAL, D:NEUTRAL) removes directional conviction.
+- RSI 62.0 on D1 sits in neutral zone (45–62 for mixed MTF) → no +1 bonus.
+- D1 RSI 62 (SELL tiers

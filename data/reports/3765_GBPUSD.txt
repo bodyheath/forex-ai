@@ -1,0 +1,25 @@
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H trend shows weakness with T=7 (mixed), ALIGNED_BEAR ribbon suggests downside bias, but D1 NEUTRAL MTF (0/3 agreement) and RSI 52.3 (mid-range) prevent high-confidence directional trade.
+RISK_FACTORS: (1) MTF misalignment — weekly, daily, monthly all NEUTRAL; only 4H leans SELL (conf 0/3, below 2/3 threshold). (2) GBP positioning unwinding (institutions reducing short conviction) conflicts with SELL thesis; USD neutral removes offsetting support.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF weekly + daily do not both agree on direction (conf=0/3 < 2/3 threshold). Trade rule blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 5/10**
+- D1 RSI=52.3 is mid-range NEUTRAL (45–62 zone) per standard tiers → baseline 3–4.
+- D1 T_sig=NEUTRAL_3 confirms neutral baseline

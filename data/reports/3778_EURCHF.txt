@@ -1,0 +1,22 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: D1 RSI 69.5 overbought with bearish divergence (12p/2pt) + triple oscillator SELL (Stoch 84.1, CCI 145.8) + FIB 127.2% resistance (price 1p away) conflict the bullish ribbon and double-bottom pattern — reversal risk high but MTF disagreement (D:SELL vs W/M/4H:NEUTRAL, conf=1/3) caps conviction.
+
+RISK_FACTORS: 1) MTF conf only 1/3 (D:SELL isolated; W/M/4H neutral) — lacks weekly confirmation, reducing trade reliability. 2) EUR COT REVERSING from long → short positioning while ribbon is ALIGNED_BULL — institutional conviction flipping contradicts technical setup, risk of false signal.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.9330
+ENTRY_TRIGGER_REASON: Limit sell at 127.2% Fibonacci resistance (0.93275) + RSI 69.5 overbought + triple oscillator SELL confluence; wait for price to reject slightly above current level before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS:
