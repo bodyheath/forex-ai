@@ -5289,7 +5289,42 @@ def _send_telegram_summary(
                 file=sys.stderr,
             )
 
-    # Grade all results — used by display helpers and filtering below
+    # ── SECOND OPINION: devil's advocate for all 7+ raw-confidence pairs ─────────
+    # Moved ahead of grade computation (was previously after) so each
+    # candidate's second_opinion is available for _trade_quality_grade() to
+    # read — grade now folds DA's verdict in directly instead of DA mutating
+    # confidence afterward. This evaluation only needs each candidate's own
+    # parsed/bundle state (both already fully populated by the per-pair loop
+    # above), not grade itself, so moving it earlier introduces no circular
+    # dependency: DA -> grade -> _dd_allows_trade is a straight line.
+    for _da_r in deep_results:
+        if _conf(_da_r) >= 7:
+            try:
+                from src import analyst as _da_analyst
+                _da = _da_analyst.devil_advocate(
+                    _da_r["pair"],
+                    _da_r["parsed"],
+                    _da_r.get("bundle", {}),
+                )
+                _da_r["second_opinion"] = _da
+                if _da.get("has_objections"):
+                    if _da.get("reasons"):
+                        _existing_rf = (_da_r["parsed"].get("risk_factors") or "").strip()
+                        _new_rf = "; ".join(_da["reasons"])
+                        _da_r["parsed"]["risk_factors"] = (
+                            _new_rf + ("; " + _existing_rf if _existing_rf else "")
+                        )
+                    _log_line(log, (
+                        f"[devil-advocate] {_da_r['pair']} objections found — "
+                        f"reasons: {'; '.join(_da.get('reasons') or []) or 'none given'} — "
+                        f"grade will be downgraded one tier"
+                    ))
+            except Exception:
+                pass
+
+    # Grade all results — used by display helpers and filtering below.
+    # _trade_quality_grade() reads second_opinion (set just above) as one of
+    # its inputs, alongside MTF/ribbon/R:R/fundamental-tailwind.
     _quality_grades: dict = {r["pair"]: _trade_quality_grade(r) for r in deep_results}
 
     # Log pairs excluded due to zero ATR
