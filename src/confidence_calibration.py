@@ -31,13 +31,19 @@ and closed inside the system's initial ~10-day unsustainable hot streak
 (2026-06-25 to 2026-07-06). The following two weeks that same bucket lost
 11/11 live. A count minimum cannot tell "35 trades spread across two
 months" from "35 trades from one anomalous week" apart — only a time-span
-requirement can. MIN_BUCKET_WEEKS=3 fixes this: a bucket is trusted only
-when its decisive trades' close dates span at least 3 distinct calendar
-weeks *in addition to* clearing MIN_BUCKET. Verified against the exact
-failing case: as of 2026-07-07 that bucket's 35 trades spanned only 2
-distinct close-weeks (06-23 and 06-30) — under the 3-week floor, so it
-now correctly falls back to the overall population rate instead of
-reporting a false 100%.
+requirement can. MIN_BUCKET_WEEKS=4 fixes this: a bucket is trusted only
+when its decisive trades' close dates span at least 4 distinct calendar
+weeks (Monday-anchored) *in addition to* clearing MIN_BUCKET. Verified
+against the exact failing case: as of 2026-07-07 that bucket's 35 trades
+spanned only 3 distinct close-weeks (2026-06-22, 06-29, 07-06 starts) —
+under the 4-week floor, so it now correctly falls back to the overall
+population rate instead of reporting a false 100%. 4 was chosen, not 3, as
+the tightest value that still excludes the known-bad case: a ~10-14 day
+contamination window can straddle 3 Monday boundaries by luck alone, so 3
+was not a safe margin; checked against today's full clean-window history,
+4 still leaves most currently-mature buckets usable (they range 4-6 weeks
+once the whole ~6-week window is available) while denying anything drawn
+from a single short burst.
 
 Walk-forward discipline, preserved going forward: build_calibration_table()
 only ever counts a research trade if it had *already closed* strictly
