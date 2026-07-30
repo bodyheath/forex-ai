@@ -5418,77 +5418,13 @@ def _send_telegram_summary(
     except Exception:
         pass
 
-    # ── SECOND OPINION: devil's advocate for all 7+ raw-confidence pairs ─────────
-    # Runs BEFORE _yes_raw assembly so a confidence reduction (7→6) correctly
-    # removes the pair from trade alerts.
-    for _da_r in deep_results:
-        if _conf(_da_r) >= 7:
-            try:
-                from src import analyst as _da_analyst
-                _da = _da_analyst.devil_advocate(
-                    _da_r["pair"],
-                    _da_r["parsed"],
-                    _da_r.get("bundle", {}),
-                )
-                _da_r["second_opinion"] = _da
-                if _da.get("has_objections"):
-                    _da_conf_before = _da_r["parsed"].get("confidence")
-                    try:
-                        _da_r["parsed"]["confidence"] = max(1, int(_da_r["parsed"]["confidence"]) - 1)
-                    except (TypeError, ValueError):
-                        pass
-                    if _da.get("reasons"):
-                        _existing_rf = (_da_r["parsed"].get("risk_factors") or "").strip()
-                        _new_rf = "; ".join(_da["reasons"])
-                        _da_r["parsed"]["risk_factors"] = (
-                            _new_rf + ("; " + _existing_rf if _existing_rf else "")
-                        )
-                    _log_line(log, (
-                        f"[devil-advocate] {_da_r['pair']} objections found — "
-                        f"conf {_da_conf_before}→{_da_r['parsed'].get('confidence')} — "
-                        f"reasons: {'; '.join(_da.get('reasons') or []) or 'none given'}"
-                    ))
-                else:
-                    _da_r["_da_boost"] = 0.5
-            except Exception:
-                pass
-
-    # Second pass after DA: pairs whose eff_conf dropped below threshold during DA
-    # (but were NOT already in _demoted_pairs because they passed the pre-DA check)
-    # also need their CSV row corrected to SKIPPED.
-    for _da_sk in deep_results:
-        if _da_sk["pair"] in _demoted_pairs:
-            continue  # already handled by the demotion write-back above
-        if _da_sk["pair"] in _not_viable_pairs:
-            continue  # already handled by the not-viable write-back above
-        if _da_sk["parsed"].get("trade_this") != "YES":
-            continue
-        if _eff_conf(_da_sk) < _trade_conf_thr:
-            _da_sk_id = _da_sk.get("id")
-            if not _da_sk_id:
-                continue
-            try:
-                from src import tracker as _trk_da
-                _eff_da = _eff_conf(_da_sk)
-                _da_reasons_sk = "; ".join(
-                    (_da_sk.get("second_opinion") or {}).get("reasons") or []
-                ) or "no objections recorded"
-                _log_line(log, (
-                    f"[da_demoted] {_da_sk['pair']} — eff_conf={_eff_da:.1f} below "
-                    f"threshold {_trade_conf_thr:.1f} — DA reasons: {_da_reasons_sk}"
-                ))
-                _trk_da.update_outcome(
-                    int(_da_sk_id), "SKIPPED",
-                    notes=(
-                        f"DA-demoted: eff_conf={_eff_da:.1f} below threshold "
-                        f"{_trade_conf_thr:.1f} after devil's advocate — {_da_reasons_sk}"
-                    ),
-                )
-            except Exception as _da_sk_exc:
-                print(
-                    f"[da_demoted] Failed to mark {_da_sk['pair']} #{_da_sk_id} SKIPPED: {_da_sk_exc}",
-                    file=sys.stderr,
-                )
+    # DA now evaluated earlier (before grade computation, above) and folded
+    # into grade directly instead of mutating confidence — see that block's
+    # comment. A candidate DA downgrades to D or F and that _dd_allows_trade
+    # then rejects is caught by the existing drawdown-tier write-back below
+    # (it already diffs _yes_raw against yes_trades and writes SKIPPED with
+    # the candidate's grade in the note), so no separate "DA demoted this
+    # after the fact" write-back is needed anymore.
 
     # Issue 1: overall confidence is the deciding factor, not individual layer scores.
     # Any pair with 7+ effective confidence qualifies for a trade alert regardless of
