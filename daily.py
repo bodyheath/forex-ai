@@ -1185,14 +1185,16 @@ def _smd_score(result: dict) -> int:
 
 
 def _eff_conf(result: dict) -> float:
-    """Confidence after MA ribbon, COT momentum, Smart Money Divergence,
-    and devil's advocate adjustments.
+    """Confidence after MA ribbon, COT momentum, and Smart Money Divergence
+    adjustments.
 
     Ribbon:         −1 when ALIGNED ribbon is fully against trade direction.
     COT reversal:   −1 when institutions just flipped away from the direction.
-    Devil's adv:    +0.5 when second opinion raises no objections (allows a
-                    conf-5 trade to qualify at the 5.5 risk-on threshold).
-    All adjustments can stack (max −2 penalty, +0.5 boost).
+    All adjustments can stack (max −2 penalty).
+
+    Devil's Advocate no longer adjusts this — its verdict now feeds
+    _trade_quality_grade() as a grade downgrade instead of a confidence
+    mutation (see the DA evaluation loop in _send_telegram_summary).
     """
     raw = _conf(result)
     if raw == 0:
