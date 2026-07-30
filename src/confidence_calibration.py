@@ -31,19 +31,30 @@ and closed inside the system's initial ~10-day unsustainable hot streak
 (2026-06-25 to 2026-07-06). The following two weeks that same bucket lost
 11/11 live. A count minimum cannot tell "35 trades spread across two
 months" from "35 trades from one anomalous week" apart — only a time-span
-requirement can. MIN_BUCKET_WEEKS=4 fixes this: a bucket is trusted only
-when its decisive trades' close dates span at least 4 distinct calendar
-weeks (Monday-anchored) *in addition to* clearing MIN_BUCKET. Verified
-against the exact failing case: as of 2026-07-07 that bucket's 35 trades
-spanned only 3 distinct close-weeks (2026-06-22, 06-29, 07-06 starts) —
-under the 4-week floor, so it now correctly falls back to the overall
-population rate instead of reporting a false 100%. 4 was chosen, not 3, as
-the tightest value that still excludes the known-bad case: a ~10-14 day
-contamination window can straddle 3 Monday boundaries by luck alone, so 3
-was not a safe margin; checked against today's full clean-window history,
-4 still leaves most currently-mature buckets usable (they range 4-6 weeks
-once the whole ~6-week window is available) while denying anything drawn
-from a single short burst.
+requirement can.
+
+First attempt at that requirement counted distinct Monday-anchored
+calendar weeks (>=4) touched by a bucket's close dates, and had a real
+loophole: by 2026-07-14 the same bucket had grown to 48 trades and picked
+up a 4th distinct week — satisfying that check — but 47 of those 48 (98%)
+were still the exact same original burst; the "4th week" was a single new
+trade that happened to land after a Monday boundary. A week-*count* can be
+satisfied by one lucky boundary crossing without any real dilution.
+
+MIN_BUCKET_SPAN_DAYS=21 replaces the week-count check with the thing it
+was actually trying to measure: the calendar-day gap between the bucket's
+earliest and latest close date. This is immune to boundary-crossing luck —
+picking up one trade the day after a Monday doesn't move a day-count span
+much, where it could flip a week-count from 3 to 4 outright. Verified
+against the exact failing case: span was 11 days as of 2026-07-07 and 17
+days as of 2026-07-14 (both correctly still excluded); by 2026-07-21 the
+span reached 25 days with 22 of the bucket's 57 trades (39%) now postdating
+the original burst — genuinely diluted, so it starts being trusted from
+there. 21 days was chosen as the tightest value that still excludes the
+known-bad case through 07-14; checked against today's full clean-window
+history, mature/legitimate buckets range 22-34 days of span once enough
+time has passed, so 21 does not meaningfully hold back a genuinely
+diversified bucket once one exists.
 
 Walk-forward discipline, preserved going forward: build_calibration_table()
 only ever counts a research trade if it had *already closed* strictly
