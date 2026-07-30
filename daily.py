@@ -5466,10 +5466,21 @@ def _send_telegram_summary(
         and r["pair"] not in _demoted_pairs
         and r["pair"] not in _not_viable_pairs
     ]
+    # Recalibrated-confidence lookup table — built once per scan (like
+    # _quality_grades above) rather than per candidate. Walk-forward: only
+    # ever counts research trades that had already closed before this exact
+    # moment, so it can't be scored using outcomes that didn't exist yet.
+    try:
+        from src import confidence_calibration as _cc_scan
+        _calibration_table = _cc_scan.build_calibration_table()
+    except Exception as _cc_exc:
+        _log_line(log, f"[confidence_calibration] table build failed: {_cc_exc} — "
+                       f"D-grade override path disabled this scan, C-grade uses fallback 0.0")
+        _calibration_table = {}
     # Drawdown tier + grade filtering: stricter tiers require higher grade / more confirmation.
     yes_trades = [
         r for r in _yes_raw
-        if _dd_allows_trade(r, _dd_mode, _quality_grades, _trade_conf_thr,
+        if _dd_allows_trade(r, _dd_mode, _quality_grades, _calibration_table,
                             log_fn=lambda m: _log_line(log, m))
     ]
     # Immediately correct CSV rows for trades blocked by drawdown-mode tier filtering.
@@ -5485,9 +5496,14 @@ def _send_telegram_summary(
         try:
             from src import tracker as _trk_dd
             _dd_sk_grade = (_quality_grades.get(_dd_sk["pair"]) or {}).get("grade", "F")
+            _dd_sk_recal = _cc_scan.recalibrated_confidence(
+                _calibration_table, _dd_sk.get("parsed", {}).get("confidence"),
+                _dd_sk.get("parsed", {}).get("direction", ""), _dd_sk.get("pair", ""),
+            )
             _trk_dd.update_outcome(
                 int(_dd_sk_id), "SKIPPED",
-                notes=f"Drawdown filter: grade={_dd_sk_grade} rejected by mode={_dd_mode} tier",
+                notes=(f"Drawdown filter: grade={_dd_sk_grade} recal_conf={_dd_sk_recal:.2f} "
+                       f"rejected by mode={_dd_mode} tier"),
             )
         except Exception as _dd_sk_exc:
             print(
