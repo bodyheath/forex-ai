@@ -4384,11 +4384,23 @@ def _dd_allows_trade(r: dict, dd_mode: str, quality_grades: dict,
             _log(f"[dd-tier] {r['pair']} BLOCKED — mode=caution requires grade A/B, got {grade}")
         return _ok
     # normal
-    _eff = _eff_conf(r)
-    _ok = (grade in ("A", "B") or (grade == "C" and _eff >= conf_threshold))
+    if grade == "F":
+        _log(f"[dd-tier] {r['pair']} BLOCKED — mode=normal, grade=F is an absolute "
+             f"floor regardless of confidence")
+        return False
+    _recal = _cc.recalibrated_confidence(
+        calibration_table, r.get("parsed", {}).get("confidence"),
+        r.get("parsed", {}).get("direction", ""), r.get("pair", ""),
+    )
+    _ok = (
+        grade in ("A", "B")
+        or (grade == "C" and _recal >= 0.70)
+        or (grade == "D" and _recal >= 0.90)
+    )
     if not _ok:
-        _log(f"[dd-tier] {r['pair']} BLOCKED — mode=normal requires grade A/B or "
-             f"(C with eff_conf>={conf_threshold}), got grade={grade} eff_conf={_eff:.1f}")
+        _log(f"[dd-tier] {r['pair']} BLOCKED — mode=normal requires grade A/B, "
+             f"(C with recal_conf>=0.70), or (D with recal_conf>=0.90), "
+             f"got grade={grade} recal_conf={_recal:.2f}")
     return _ok
 
 
