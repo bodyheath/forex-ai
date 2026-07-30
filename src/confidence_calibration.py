@@ -145,10 +145,11 @@ def recalibrated_confidence(table: dict, confidence, direction: str, pair: str) 
     """Look up the calibrated win probability (0.0-1.0) for one candidate.
 
     Falls back to the table's overall population mean if this exact
-    (confidence, direction, has_gbp) bucket has fewer than MIN_BUCKET
-    decisive trades behind it, and to 0.0 if the table itself is empty
-    (no history yet, e.g. a fresh deployment) — callers should treat 0.0 as
-    "no evidence to grant an override", not as an active penalty signal.
+    (confidence, direction, has_gbp) bucket doesn't clear both MIN_BUCKET
+    decisive trades and MIN_BUCKET_WEEKS distinct close-weeks, and to 0.0 if
+    the table itself is empty (no history yet, e.g. a fresh deployment) —
+    callers should treat 0.0 as "no evidence to grant an override", not as
+    an active penalty signal.
     """
     if not table:
         return 0.0
