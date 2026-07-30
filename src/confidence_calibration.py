@@ -68,6 +68,14 @@ def _has_gbp(pair: str) -> bool:
     return "GBP" in (pair or "").upper().split("/")
 
 
+def _week_key(dt: datetime):
+    """Monday of dt's calendar week, as a date — a cheap, dependency-free
+    stand-in for pandas' W-MON period start, used only to count how many
+    distinct weeks a bucket's evidence is spread across."""
+    from datetime import timedelta
+    return (dt - timedelta(days=dt.weekday())).date()
+
+
 def build_calibration_table(as_of: datetime = None) -> dict:
     """Return a lookup table: {(confidence:int, direction, has_gbp:bool): win_rate}.
 
@@ -75,8 +83,9 @@ def build_calibration_table(as_of: datetime = None) -> dict:
     and (b) had already closed strictly before `as_of` — so a table built
     for "now" never includes an outcome that resolved after "now". Always
     includes an "_overall" key (the population mean) as the fallback for
-    buckets with fewer than MIN_BUCKET decisive trades, and as the return
-    value when there isn't enough history at all yet.
+    buckets that don't clear MIN_BUCKET decisive trades AND MIN_BUCKET_WEEKS
+    distinct close-weeks, and as the return value when there isn't enough
+    history at all yet.
 
     Returns {} only if research trade history is unavailable/unreadable —
     callers should treat that the same as "no evidence", not as an error.
@@ -88,7 +97,8 @@ def build_calibration_table(as_of: datetime = None) -> dict:
     except Exception:
         return {}
 
-    buckets: dict = {}
+    buckets: dict = {}       # key -> [wins, n]
+    bucket_weeks: dict = {}  # key -> set of week-start dates
     total_wins = 0
     total_n = 0
 
@@ -117,6 +127,7 @@ def build_calibration_table(as_of: datetime = None) -> dict:
         b = buckets.setdefault(key, [0, 0])  # [wins, n]
         b[0] += int(is_win)
         b[1] += 1
+        bucket_weeks.setdefault(key, set()).add(_week_key(closed_dt))
         total_wins += int(is_win)
         total_n += 1
 
@@ -125,7 +136,7 @@ def build_calibration_table(as_of: datetime = None) -> dict:
 
     table = {"_overall": total_wins / total_n}
     for key, (wins, n) in buckets.items():
-        if n >= MIN_BUCKET:
+        if n >= MIN_BUCKET and len(bucket_weeks.get(key, ())) >= MIN_BUCKET_WEEKS:
             table[key] = wins / n
     return table
 
