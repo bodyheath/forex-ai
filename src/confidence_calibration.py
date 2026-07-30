@@ -24,6 +24,21 @@ decisive trades for the identical reason). A bucket with fewer than 20
 decisive trades is not trusted on its own; it falls back to the overall
 population's win rate instead of reporting an unstable estimate.
 
+min_bucket alone was not enough. A live re-verification found the
+(confidence=7, BUY, non-GBP) bucket at 35 decisive trades — comfortably
+over min_bucket=20 — reading 100% as of 2026-07-07, because all 35 opened
+and closed inside the system's initial ~10-day unsustainable hot streak
+(2026-06-25 to 2026-07-06). The following two weeks that same bucket lost
+11/11 live. A count minimum cannot tell "35 trades spread across two
+months" from "35 trades from one anomalous week" apart — only a time-span
+requirement can. MIN_BUCKET_WEEKS=3 fixes this: a bucket is trusted only
+when its decisive trades' close dates span at least 3 distinct calendar
+weeks *in addition to* clearing MIN_BUCKET. Verified against the exact
+failing case: as of 2026-07-07 that bucket's 35 trades spanned only 2
+distinct close-weeks (06-23 and 06-30) — under the 3-week floor, so it
+now correctly falls back to the overall population rate instead of
+reporting a false 100%.
+
 Walk-forward discipline, preserved going forward: build_calibration_table()
 only ever counts a research trade if it had *already closed* strictly
 before the `as_of` timestamp (defaults to the real clock at call time). A
@@ -38,6 +53,7 @@ computation is well under a second.
 from datetime import datetime, timezone
 
 MIN_BUCKET = 20
+MIN_BUCKET_WEEKS = 3   # distinct close-date calendar weeks required, not just count
 _DECISIVE = {"WIN", "LOSS", "PARTIAL_WIN", "FULL_WIN"}
 _WIN_STATUSES = {"WIN", "PARTIAL_WIN", "FULL_WIN"}
 
