@@ -1,0 +1,23 @@
+PAIR: USD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: USD strengthening on +3.67% rate differential and aligned ribbon, but MTF conflict (weekly/daily NEUTRAL vs monthly BUY) and weak oscillator confluence limit conviction.
+RISK_FACTORS: [1] MTF disagreement: weekly and daily both NEUTRAL while monthly and 4H suggest upside — creates conflicting bias and signals trend weakness at D1 level; [2] CHF positioning unwinding (MOmentum reversing from short conviction) combined with stale USD neutral positioning suggests institutional uncertainty, risking reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 0.8022
+ENTRY_TRIGGER_REASON: Pullback to SMA50 support during aligned ribbon confirmation; wait for daily RSI to rise above 45 and MACD histogram to turn positive before committing.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS RATIONALE:**
+
+**MTF Rule Violation (Critical):** Weekly=NEUTRAL + Daily=NEUTRAL does NOT both agree on direction. Although Monthly=BUY and 4H=BUY, the MTF confidence is 0/3 (zero of the two primary timeframes [W+D] agree). Per your rule: *"if weekly AND daily don

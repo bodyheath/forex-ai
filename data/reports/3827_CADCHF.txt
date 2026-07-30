@@ -1,0 +1,32 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Double-top bearish pattern at resistance (78.6% Fib) conflicts with bullish ribbon alignment; MTF shows critical weakness (0/3 agreement) and D1 neutral stance prevents conviction.
+
+RISK_FACTORS: 
+1. MTF structure broken — Monthly BUY vs Weekly/Daily NEUTRAL (0/3 agreement = TRADE_THIS NO override candidate); ribbon ALIGNED_BULL contradicts bearish pattern signal.
+2. CAD positioning BUILDING (institutions adding shorts) while CHF positioning UNWINDING (reducing shorts) — structural CAD weakness but CHF conviction fading; RSI 4H oversold (30.4) at double-top may spark mean-reversion bounce, not follow-through.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: [CONDITIONAL_WAIT]
+ENTRY_TRIGGER_PRICE: 0.5743
+ENTRY_TRIGGER_REASON: Only pursue SELL if price breaks below 78.6% Fib support at 0.5743 AND RSI 4H rises above 40 to confirm double-top rejection (not immediate oversold bounce).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**Technical (Score=4):**
+- D1 T_sig=

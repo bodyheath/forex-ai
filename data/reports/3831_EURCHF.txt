@@ -1,0 +1,24 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (12p/2pt) at Fibonacci resistance (0.92778) conflicts with bullish ribbon alignment and double-bottom pattern—mixed signals require confluence before entry.
+RISK_FACTORS: [1. MTF CONFLICT: 4H:BUY vs D:NEUTRAL creates directional ambiguity (conf=0/3); no weekly/daily agreement triggers TRADE_THIS=NO per MTF rule. 2. COT POSITIONING REVERSAL: EUR positioning flipped from long to short (REVERSING); trade direction (SELL) aligns with new SHORT positioning but reversal itself signals institutional conviction loss—monitor unwinding risk on CHF SHORT (47.0%, UNWINDING).] 
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.9270
+ENTRY_TRIGGER_REASON: Break below 4H support at 0.9270 after bearish divergence confirmation at Fib 100% resistance; RSI falling into 30-35 zone (7-8 SELL tier) would validate downside.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL [5/10]:**
+- D1 T_

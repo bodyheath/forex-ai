@@ -1,0 +1,29 @@
+```
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 SELL signal (RSI 65.2 overbought in uptrend context, MACD flat, price extended above SMA50) conflicts with intraday 4H bullish pin bar and overall uptrend structure, creating ambiguous MTF alignment (M:BUY + W:NEUTRAL + D:SELL = 1/3 agreement).
+
+RISK_FACTORS: 
+1. MTF conflict: only 1/3 timeframes aligned (D:SELL); M is BUY and W is NEUTRAL — no clear directional consensus.
+2. COT unwinding on CHF (net SHORT positioning reducing) reduces conviction on SELL; NZD neutral positioning offers no support.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: WAIT_FOR_CLARITY
+ENTRY_TRIGGER_PRICE: 0.4750 (breakout above pin bar high) OR 0.4610 (D1 support retest)
+ENTRY_TRIGGER_REASON: MTF alignment currently insufficient (40% conf < 66% threshold); await either breakout above 4H pin bar resistance or D1 retest of SMA200 support to clarify direction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+ANALYSIS DETAIL

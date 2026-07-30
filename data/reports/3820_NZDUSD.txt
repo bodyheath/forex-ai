@@ -1,0 +1,17 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H bearish engulfing + RSI overbought (73.3) conflict with D1 mixed regime and weak MTF consensus (only 4H aligns SELL), limiting conviction.
+RISK_FACTORS: [1. MTF disagreement: M/W/D all NEUTRAL, only 4H signals SELL (conf=0/3 wt=80%) — insufficient multi-timeframe agreement for high-confidence trade], [2. D1 T_sig=SELL_3 contradicted by D1 trend=mixed/range — price 0.5876 between SMA50 0.5792 and SMA200 0.5823, no directional bias; D1 RSI 62.7 is upper-neutral, not overbought enough to justify SELL with confidence]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (conf <2/3). 4H bearish engulfing at RSI 73 is a reversal signal only in isolation; lack of D1 confirmation and neutral fundamental differential (-0.95%, both rates stable/falling) prevent execution. OSC=NONE
