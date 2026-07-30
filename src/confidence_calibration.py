@@ -85,14 +85,6 @@ def _has_gbp(pair: str) -> bool:
     return "GBP" in (pair or "").upper().split("/")
 
 
-def _week_key(dt: datetime):
-    """Monday of dt's calendar week, as a date — a cheap, dependency-free
-    stand-in for pandas' W-MON period start, used only to count how many
-    distinct weeks a bucket's evidence is spread across."""
-    from datetime import timedelta
-    return (dt - timedelta(days=dt.weekday())).date()
-
-
 def build_calibration_table(as_of: datetime = None) -> dict:
     """Return a lookup table: {(confidence:int, direction, has_gbp:bool): win_rate}.
 
@@ -100,9 +92,9 @@ def build_calibration_table(as_of: datetime = None) -> dict:
     and (b) had already closed strictly before `as_of` — so a table built
     for "now" never includes an outcome that resolved after "now". Always
     includes an "_overall" key (the population mean) as the fallback for
-    buckets that don't clear MIN_BUCKET decisive trades AND MIN_BUCKET_WEEKS
-    distinct close-weeks, and as the return value when there isn't enough
-    history at all yet.
+    buckets that don't clear both MIN_BUCKET decisive trades and
+    MIN_BUCKET_SPAN_DAYS between their earliest and latest close date, and
+    as the return value when there isn't enough history at all yet.
 
     Returns {} only if research trade history is unavailable/unreadable —
     callers should treat that the same as "no evidence", not as an error.
@@ -115,7 +107,7 @@ def build_calibration_table(as_of: datetime = None) -> dict:
         return {}
 
     buckets: dict = {}       # key -> [wins, n]
-    bucket_weeks: dict = {}  # key -> set of week-start dates
+    bucket_span: dict = {}   # key -> [earliest_closed_dt, latest_closed_dt]
     total_wins = 0
     total_n = 0
 
@@ -144,7 +136,11 @@ def build_calibration_table(as_of: datetime = None) -> dict:
         b = buckets.setdefault(key, [0, 0])  # [wins, n]
         b[0] += int(is_win)
         b[1] += 1
-        bucket_weeks.setdefault(key, set()).add(_week_key(closed_dt))
+        span = bucket_span.setdefault(key, [closed_dt, closed_dt])
+        if closed_dt < span[0]:
+            span[0] = closed_dt
+        if closed_dt > span[1]:
+            span[1] = closed_dt
         total_wins += int(is_win)
         total_n += 1
 
@@ -153,7 +149,8 @@ def build_calibration_table(as_of: datetime = None) -> dict:
 
     table = {"_overall": total_wins / total_n}
     for key, (wins, n) in buckets.items():
-        if n >= MIN_BUCKET and len(bucket_weeks.get(key, ())) >= MIN_BUCKET_WEEKS:
+        earliest, latest = bucket_span[key]
+        if n >= MIN_BUCKET and (latest - earliest).days >= MIN_BUCKET_SPAN_DAYS:
             table[key] = wins / n
     return table
 
@@ -163,10 +160,10 @@ def recalibrated_confidence(table: dict, confidence, direction: str, pair: str) 
 
     Falls back to the table's overall population mean if this exact
     (confidence, direction, has_gbp) bucket doesn't clear both MIN_BUCKET
-    decisive trades and MIN_BUCKET_WEEKS distinct close-weeks, and to 0.0 if
-    the table itself is empty (no history yet, e.g. a fresh deployment) —
-    callers should treat 0.0 as "no evidence to grant an override", not as
-    an active penalty signal.
+    decisive trades and MIN_BUCKET_SPAN_DAYS of close-date spread, and to
+    0.0 if the table itself is empty (no history yet, e.g. a fresh
+    deployment) — callers should treat 0.0 as "no evidence to grant an
+    override", not as an active penalty signal.
     """
     if not table:
         return 0.0
