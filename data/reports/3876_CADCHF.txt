@@ -1,0 +1,26 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern at resistance conflicts with bullish ribbon alignment; mixed MTF (W:SELL vs 4H:BUY) prevents high-confidence trade entry.
+RISK_FACTORS: [1. MTF disagreement (W:SELL, 4H:BUY, D:NEUTRAL) = conf only 1/3 — trend direction unclear. 2. CAD COT positioning unwinding while trade is SELL — institutional conviction is declining on the bearish side.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5760
+ENTRY_TRIGGER_REASON: Sell break below double-top neckline at ~0.5760 if MTF alignment clarifies (W confirmation required).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**ANALYSIS:**
+
+**TECHNICAL (4/10):**
+- D1 T_sig=SELL_3 baseline, but data conflicts:
+  - D1 RSI=56.2 (mid-neutral zone, 45–62 = 3–4 neutral in mixed trend) → no directional bias.
+  - D1 MACD h=+0.0003 (positive, weakly

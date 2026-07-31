@@ -1,0 +1,25 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD weakening on rate divergence, but D1/W/M all neutral MTF creates conflicting signals; technicals show overbought on 4H with morning star, but D1 golden cross and T_sig=SELL_3 lacks conviction.
+RISK_FACTORS: (1) MTF rule violation: D1+W both NEUTRAL, 4H alone showing SELL — no cross-timeframe agreement to trigger trade; confidence below 7 threshold. (2) Oscillator confluence missing (Stoch 88.8 overbought, CCI extreme +158, but RSI 58 neutral on D1) — conflicting momentum signals weaken reliability.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule requires both Weekly AND Daily agreement on direction; W=NEUTRAL + D=NEUTRAL fails gate. 4H SELL signal (T=5, morning star) is insufficient without D1 confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS DETAIL:**
+
+**MTF Conflict (Critical Gate):**
+- Weekly: NEUTRAL (no directional bias)
+- Daily: NEUTRAL (price > SMA50 > S
