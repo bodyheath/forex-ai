@@ -1,0 +1,23 @@
+```
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 57.9 in confirmed uptrend signals overbought-neutral zone (not a sell signal); 4H RSI 68 + Stoch 96.7 extremes suggest pullback risk, but MTF conflict (W/D NEUTRAL vs 4H SELL, conf=0/3) breaks trade rule.
+RISK_FACTORS: [1. MTF disagreement: Daily neutral while 4H is oversold — no consensus directional bias; 2. T_sig=SELL_3 contradicts D1 uptrend structure (price > SMA50 > SMA200, golden cross) — likely reversal signal, not continuation]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not both agree on direction (W:NEUTRAL, D:NEUTRAL, 4H:SELL = 0/3 consensus). Confidence 4 falls below 7-minimum threshold and fails ≥4 fundamental layers agreement (only 1 layer: FUND_RATE_DIFF).
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **

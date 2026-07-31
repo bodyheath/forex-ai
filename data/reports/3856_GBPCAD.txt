@@ -1,0 +1,33 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Double-top bearish pattern conflicts with daily uptrend structure; MTF misalignment (M:SELL vs D/W:NEUTRAL) and GBP positioning unwinding create downside risk but lack conviction.
+
+RISK_FACTORS: 
+1. MTF disagreement (0/3 agreement; D1+W both NEUTRAL) = TRADE_THIS barrier; daily price still above SMA50 in uptrend structure contradicts sell thesis.
+2. GBP COT UNWINDING (conviction loss) while CAD BUILDING creates headwind for GBP short; oscillator confluence missing (Stoch/CCI/RSI show no alignment).
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.8940
+ENTRY_TRIGGER_REASON: Limit order at double-top neckline (SH=1.90406) with tight stop; wait for monthly trend confirmation before scaling.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+### DETAILED ANALYSIS
+
+**TECHNICAL_SCORE: 3/10**
+- D1 RSI=52.0 = NEUTRAL(3-4) under mixed MTF (D:NEUTRAL trend line) → base score 3

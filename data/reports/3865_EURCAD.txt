@@ -1,0 +1,24 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly downtrend context supports SELL, but daily/weekly neutrality and inside bars indicate consolidation; weak technical setup with RSI neutral and no oscillator confluence.
+RISK_FACTORS: [1) MTF confidence critical-low (0/3 — only monthly aligns SELL; weekly and daily both NEUTRAL means no daily/weekly agreement required by rule, but this severely limits conviction); 2) COT EUR reversing (institutions flipped from long to short) while CAD building — directional conviction fragile; risk of reversal if EUR institutions re-accumulate.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade fails MTF rule: Weekly NEUTRAL and Daily NEUTRAL do not both agree on SELL direction; Monthly SELL alone is insufficient without W+D alignment. CONFIDENCE 4/10 falls below 7.0 threshold. Inside bar neutral patterns + no oscillator confluence + RSI 53.1 (dead center neutral) provide no edge.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS DETAIL:**
+
+**Technical (3/10):**
+- D1 T_sig=NEUTRAL_3 (baseline): RSI 53.1 = neutral mid

@@ -1,0 +1,23 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Daily reversal signal at 50% Fib with overbought RSI (59.4) in mixed trend; COT EUR positioning reversing from long to short supports downside, but weak daily-weekly MTF agreement (2/3) limits conviction.
+RISK_FACTORS: [1] COT EUR reversal reduces positioning confidence and creates institutional unwind risk—if institutions covering shorts, price bounce likely. [2] Weekly chart NEUTRAL contradicts daily SELL signal; MTF confidence only 60% threshold—breakout may fail without weekly confirmation.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.1490
+ENTRY_TRIGGER_REASON: Break below 50% Fib support at 1.15055 + D1 SMA50 at 1.1484, targeting 4H lower-band continuation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+**Rationale:**
+
+1. **MTF Rule Failure (Critical):** Daily=SELL, Weekly=NEUTRAL → only 2/3 agreement. **TRADE_THIS must = NO** per MTF enforcement (requires weekly AND daily both agree, or ≥2/3 with 60%+ confidence). Your 60%
