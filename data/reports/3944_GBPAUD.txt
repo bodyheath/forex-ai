@@ -1,0 +1,25 @@
+```
+PAIR: GBP/AUD
+DIRECTION: NEUTRAL
+CONFIDENCE: 3/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed timeframe signals with no directional consensus; neutral RSI, negative MACD, and bearish candle pattern conflict with flat technicals; GBP unwinding shorts while AUD building creates conflicting institutional momentum.
+RISK_FACTORS: [1. MTF misalignment: M:BUY vs W/D/4H:NEUTRAL fails 2/3 weekly+daily agreement threshold — no trade setup validity. 2. GBP COT unwinding reduces positioning conviction; AUD building long exposure creates divergent institutional commitment.]
+TRADE_THIS: NO
+ENTRY_TYPE: NEUTRAL_HOLD
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF conf=0/3 (M:BUY isolated; W/D/4H all NEUTRAL) fails MTF rule — weekly AND daily must both agree on direction. No trade trigger valid.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+**MTF Analysis (HARD BLOCK):**
+- Weekly: NEUTRAL | Daily: NEUTRAL | 4H: NEUTRAL | Monthly: BUY (outlier, no weight)
+- **Confidence 0/3** — weekly and daily both NEUTRAL = **no directional consensus**

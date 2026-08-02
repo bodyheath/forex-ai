@@ -1,0 +1,26 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level in confirmed downtrend (W+D both SELL) with converging ribbon warns of trend exhaustion; RSI 61 elevated in uptrend structure creates reversal risk despite technical sell signal.
+RISK_FACTORS: [1] Converging ribbon signals weakening trend — reversal likely imminent, violating premise of SELL continuation. [2] Both GBP and CHF positions unwinding (COT momentum negative) — institutional conviction collapsing; reduced conviction = lower probability on any directional trade.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.0810
+ENTRY_TRIGGER_REASON: Pin bar reversal confirmation below 1.0810 support zone (near 4H SMA50 cluster) with RSI drop below 55 to confirm downtrend continuation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+### SCORING RATIONALE:
+
+**TECHNICAL_SCORE: 6/10**
+- D1 T_sig=SELL_5 is baseline (5); pin bar at key level is already factored in.
+- MTF confirms W:SELL + D:SELL (2/3 confidence, 80% weight) →

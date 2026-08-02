@@ -1,0 +1,32 @@
+```
+PAIR: USD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at 78.6% Fib resistance + USD rate advantage supports upside, but weak MTF alignment (D:NEUTRAL, W:NEUTRAL) and oscillator silence limit conviction.
+
+RISK_FACTORS: 
+1. MTF disagree — daily and weekly both NEUTRAL, only 4H confirms BUY; MTF rule requires 2/3 agreement minimum, failing at 1/3 (4H only). Confidence capped <7.
+2. CHF COT UNWINDING — institutions reducing short CHF exposure, opposing the BUY thesis; adds -1 to POSITIONING_SCORE and signals institutional doubt.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.80751
+ENTRY_TRIGGER_REASON: Confluence: pin bar at 78.6% Fib level (0.80751), 9p resistance, RSI 46.5 neutral-to-bullish in uptrend context, LEANING_BULL ribbon. Wait for pullback confirmation into Fib support.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**RATIONALE:**
+
+**MTF VETO (Hard Rule):** Weekly=NEUTRAL, Daily
