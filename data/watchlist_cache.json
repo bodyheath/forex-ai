@@ -1,58 +1,70 @@
 {
-  "timestamp": 1785496621.84791,
+  "timestamp": 1785694706.832464,
   "watchlist_pairs": [
-    "NZD/USD",
+    "EUR/CHF",
     "AUD/CAD",
     "CAD/CHF",
-    "EUR/AUD",
+    "EUR/GBP",
     "AUD/CHF",
-    "EUR/CHF",
-    "USD/CAD",
-    "GBP/CHF",
-    "USD/CHF",
-    "CHF/JPY",
+    "GBP/CAD",
     "EUR/USD",
-    "AUD/NZD",
-    "AUD/USD"
+    "GBP/CHF",
+    "USD/CAD",
+    "GBP/AUD",
+    "GBP/NZD",
+    "EUR/NZD",
+    "NZD/USD",
+    "NZD/CAD",
+    "GBP/USD"
   ],
   "near_miss": {
+    "AUD/CAD": 5,
     "CAD/CHF": 5,
-    "EUR/AUD": 5,
+    "EUR/GBP": 5,
     "AUD/CHF": 5,
-    "EUR/CHF": 5,
-    "USD/CHF": 5,
-    "EUR/USD": 5,
-    "AUD/USD": 5
+    "GBP/AUD": 5,
+    "GBP/NZD": 5,
+    "NZD/USD": 5,
+    "NZD/CAD": 5
   },
   "near_miss_dirs": {
+    "AUD/CAD": "BUY",
     "CAD/CHF": "SELL",
-    "EUR/AUD": "BUY",
+    "EUR/GBP": "SELL",
     "AUD/CHF": "SELL",
-    "EUR/CHF": "SELL",
-    "USD/CHF": "BUY",
-    "EUR/USD": "SELL",
-    "AUD/USD": "SELL"
+    "GBP/AUD": "SELL",
+    "GBP/NZD": "BUY",
+    "NZD/USD": "SELL",
+    "NZD/CAD": "SELL"
   },
   "momentum_counts": {
-    "NZD/USD": 5,
-    "AUD/CAD": 4,
-    "CAD/CHF": 1,
+    "EUR/CHF": 3,
+    "AUD/CAD": 5,
+    "CAD/CHF": 2,
+    "EUR/GBP": 6,
+    "AUD/CHF": 10,
+    "GBP/CAD": 1,
+    "EUR/USD": 4,
+    "GBP/CHF": 7,
+    "USD/CAD": 2,
+    "GBP/AUD": 1,
+    "GBP/NZD": 1,
+    "EUR/NZD": 1,
+    "NZD/USD": 6,
+    "NZD/CAD": 1,
+    "GBP/USD": 1,
     "EUR/AUD": 3,
-    "AUD/CHF": 9,
-    "EUR/CHF": 2,
-    "USD/CAD": 1,
-    "GBP/CHF": 6,
     "USD/CHF": 9,
     "CHF/JPY": 2,
-    "EUR/USD": 3,
     "AUD/NZD": 2,
-    "AUD/USD": 9,
-    "AUD/JPY": 1,
-    "EUR/GBP": 5
+    "AUD/USD": 9
   },
   "momentum_grace": {
-    "AUD/JPY": 1,
-    "EUR/GBP": 1
+    "EUR/AUD": 1,
+    "USD/CHF": 1,
+    "CHF/JPY": 1,
+    "AUD/NZD": 1,
+    "AUD/USD": 1
   },
   "watchlist_weekly_stats": {
     "week_start": "2026-07-27",
@@ -60,9 +72,5 @@
     "promoted_to_deep": 18,
     "became_trade_alerts": 0
   },
-  "priority_for_next_scan": [
-    "USD/CHF",
-    "EUR/AUD",
-    "AUD/CHF"
-  ]
+  "priority_for_next_scan": []
 }
