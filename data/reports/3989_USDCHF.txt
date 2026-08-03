@@ -1,0 +1,26 @@
+```
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: USD rate flat + CHF falling rates support USD strength, but pin bar bearish pattern at key level conflicts with weekly context; ribbon converging signals weakening trend.
+RISK_FACTORS: [1. MTF decisively NEUTRAL (0/3 agreement): W/D/4H all disagree on direction — TRADE_THIS rule violated (conf<2/3). 2. COT USD unwinding + CHF short unwinding = institutional conviction fading both ways; ribbon CONVERGING = trend exhaustion risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated: weekly, daily, and 4H do not align (0/3 agreement). SELL signal rejected. Pin bar bearish at 0.8089 is notable but insufficient without MTF agreement.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 3/10**
+- D1 RSI=49.5 (neutral zone 45–62) → base score 3–4. No trend context shift (W:NEUTRAL, D:NEUTRAL) so standard tier applies.
+- MACDh D1=-0

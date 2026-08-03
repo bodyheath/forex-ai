@@ -1,0 +1,23 @@
+```
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with MTF (W+D both NEUTRAL); mixed ribbon (3/5) and GBP COT unwinding undermine conviction.
+RISK_FACTORS: [1] MTF agreement failure—Weekly and Daily both NEUTRAL contradicts SELL signal; D1 RSI=57.8 is mid-range neutral (not oversold), weakening reversal case. [2] GBP COT unwinding (institutions reducing SHORT conviction) while trade aligns with existing SHORT positioning; USD neutral and curve flat offer no macro tailwind.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: —
+ENTRY_TRIGGER_REASON: MTF rule violation: W and D do not both agree on direction (both NEUTRAL); confidence 5/10 < 7 threshold; R:R and fundamental confluence insufficient to override.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF CONFLICT (HARD RULE):** W=NEUTRAL + D=NEUTRAL + M=SELL + 4H=SELL → conf=0/3. Weekly and Daily both neutral means no momentum consensus on lower timeframes. The rule states: *if weekly

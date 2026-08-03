@@ -1,0 +1,24 @@
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with bearish D1 signal conflicts with bullish 4H pattern; MTF shows only 2/3 agreement (D:SELL + 4H:SELL vs W:NEUTRAL), reducing conviction despite SELL_6 technical score.
+RISK_FACTORS: (1) MTF conf=2/3 fails the 2/3+ rule threshold for directional alignment—W is NEUTRAL, weakening trade signal. (2) GBP COT unwinding positions mid-cycle while AUD building—conflicting institutional momentum adds uncertainty; fundamental diff=-0.73% is minor.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.9150
+ENTRY_TRIGGER_REASON: Pullback to SMA50 (1.9067) + confluence with lower Fibonacci support near 1.9100 zone would strengthen 3-point MTF confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**Technical (5/10):**
+- D1 T_sig=SELL_6 baseline; RSI=55.6 is neutral-to-slightly-bullish (standard tier 45–62=3–4 NEUTRAL

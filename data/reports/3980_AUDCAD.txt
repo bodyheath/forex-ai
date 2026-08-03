@@ -1,0 +1,25 @@
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish pattern setup (pin bar + double top at key level) conflicts with neutral MTF alignment; fundamental AUD strength (+2.19%, rising rates) and building AUD short positioning create conflicting signals requiring confirmation.
+RISK_FACTORS: [1] MTF misalignment — Monthly SELL but Weekly/Daily NEUTRAL means no directional consensus; bearish setup lacks multi-timeframe confirmation. [2] Fundamental headwind — AUD rate rising + CAD rate falling (2.19% diff) supports AUD strength, contradicting SELL thesis; COT building on AUD shorts risks whipsaw if rate differential persists.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.9824
+ENTRY_TRIGGER_REASON: Break below Fibonacci 38.2% support (0.98238) + pin bar close confirmation; requires RSI <40 on retest for institutional strength signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- D1 T_sig = NEUTRAL_3 (baseline); RSI 49.5 = neutral zone (45–62), no directional bias.
+- 4H shows mixed setup: double_
