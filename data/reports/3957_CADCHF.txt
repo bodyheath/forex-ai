@@ -1,0 +1,28 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at resistance (0.5771) with converging ribbon and CHF institutional unwinding creates weak short bias, but MTF disagreement and RSI neutral severely limit conviction.
+RISK_FACTORS: [1. MTF multi-timeframe conflict — Monthly shows BUY while D1/W/4H all NEUTRAL; confidence cannot exceed neutral (0/3 MTF agreement); [2. Converging ribbon signals weakening trend and reversal risk — price may consolidate or pivot unpredictably rather than follow through.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5771
+ENTRY_TRIGGER_REASON: Sell at the pin bar resistance (100% Fib near level, 9p away) only if price breaks below 0.5750 to confirm rejection.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+```
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 3/10**
+- D1 RSI=53.5 (neutral zone 45–62) → base=3
+- T_sig=NEUTRAL_3 (pre-computed baseline) → confirm 3
+- MACD: D1 h=−0.0001

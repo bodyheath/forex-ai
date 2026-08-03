@@ -1,0 +1,18 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with T_sig=SELL_3 and 4H overbought (RSI 69.6); MTF misalignment (M:SELL vs W/D:NEUTRAL) blocks high-confidence entry.
+RISK_FACTORS: [1. MTF breakdown: Weekly and Daily both NEUTRAL, Monthly SELL signal carries insufficient agreement (0/3 MTF confidence); uptrend structure (price > SMA50 > SMA200) contradicts sell bias. 2. Oscillator failure: Stochastic at 97 and CCI at 93.5 show extreme overbought but conf=NONE (no agreement across three oscillators); no divergence confirmation; 4H inside_bar suggests consolidation, not reversal commitment.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree on direction (both NEUTRAL); confidence 0/3. Uptrend structure (golden cross D1) and morning_star:bul pattern conflict with sell signal. Requires breakout below SMA50 (1.6133) with weekly confirmation before reconsidering.
+ENTRY_TRIGGER_EXPIRY_

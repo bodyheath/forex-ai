@@ -1,0 +1,17 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 downtrend structure (price < SMA50 < SMA200) conflicts with bullish engulfing candle; MTF disagreement (W:BUY vs D:NEUTRAL) + GBP unwinding from net short creates ambiguity, but SMD=-5 (institutions bearish vs retail bullish) offers contrarian edge.
+RISK_FACTORS: [1) MTF only 1/3 agreement (conf<67%) — W:BUY contradicts D1 downtrend, violating MTF rule; 2) GBP positioning unwinding (MOM=UNWINDING) while EUR MOM=BUILDING creates institutional conflict — EUR short conviction rising into a bullish engulfing setup is high-reversal-risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF conf=1/3 (W:BUY + D:NEUTRAL + M:NEUTRAL + 4H:NEUTRAL) fails dual-agreement rule. W/D must both agree for valid setup. Bullish engulfing on D1 is overshadowed by death-cross structure (SMA50 < SMA200) and D1 T_sig=NEUTRAL
