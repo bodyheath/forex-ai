@@ -1,0 +1,25 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish engulfing on D1 + CAD rate falling + GBP shorts unwinding suggests downside risk, but weak technicals and MTF disagreement (W/D neutral vs M sell) limit conviction.
+RISK_FACTORS: [1: MTF conflict — Weekly and Daily both NEUTRAL, monthly alone SELL; no multi-timeframe confirmation of downtrend. 2: OSC_conf=NONE and RSI=52.3 (neutral zone) — no momentum confluence to support reversal; price still above SMA50 (uptrend structure intact).]
+TRADE_THIS: NO
+ENTRY_TYPE: [N/A — do not trade]
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W and D do not both agree on direction (both NEUTRAL, M alone SELL). Confidence 4 < 7 threshold. R:R and fundamental layers insufficient to override.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL_SCORE: 3/10**
+- D1 RSI=52.3 → standard tier 45–62 = 3–4 NEUTRAL (no trend context bonus; MTF shows no

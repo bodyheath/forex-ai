@@ -1,0 +1,25 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at resistance (100% Fib) with converging ribbon and CHF unwinding short positions suggests mean reversion bounce risk outweighs directional conviction in a mixed-trend range.
+RISK_FACTORS: [1. MTF conf=0/3 (no agreement W/D/4H) — TRADE_THIS blocker: MTF rule requires weekly+daily both agree; zero alignment kills setup. 2. CHF positioning unwinding mid-range = institutional de-risking into resistance, not conviction, reduces POSITIONING_SCORE to 3.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL + D:NEUTRAL + 4H:NEUTRAL = 0/3 agreement. No valid direction even though price touches 100% Fib res at 0.5771. Ribbon CONVERGING confirms trend exhaustion — setup is choppy/mean-reversion, not tradeable directional bias.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical (3/10):**
+- D1 RSI 54.4 = neutral midrange (no edge).
+- MA

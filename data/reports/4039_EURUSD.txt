@@ -1,0 +1,25 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 50% Fib + upper BB rejection + T_sig=SELL_6 suggests pullback rejection, but weak MTF alignment (D:SELL vs W/4H:NEUTRAL) and mixed RSI context prevent high-confidence entry.
+RISK_FACTORS: [1. MTF disagree — only 1/3 timeframes confirm SELL direction (D only); W and 4H neutral undermines conviction. 2. OSC confluence absent (Stoch 76.3 overbought but CCI 225 extreme; no RSI+MACD+Stoch agreement) — reversal setup incomplete.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1510
+ENTRY_TRIGGER_REASON: Break below pin bar low (key level support at 50% Fib 1.15055) to confirm D1 rejection; wait for daily close below SMA50 (1.1482) to trigger SELL on W/D confluence upgrade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL_SCORE: 6/10**
+- T_sig=SELL_6 is your baseline (solid).

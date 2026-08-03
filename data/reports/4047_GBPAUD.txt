@@ -1,0 +1,24 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish engulfing on D1 with RSI neutral and price below SMA50 support suggest downside risk, but mixed MTF (D:NEUTRAL + 4H:SELL vs M:BUY) and institutional AUD unwinding conviction limit high-probability setup.
+RISK_FACTORS: [1. MTF conflict: monthly uptrend contradicts daily/4H downside — trade confidence capped at 4/10 per MTF rule (conf=0/3 — neither weekly nor daily confirm direction). 2. GBP COT unwinding (conviction declining) + AUD rate rising (headwind to AUD SHORT) creates conflicting institutional pressure.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.9065
+ENTRY_TRIGGER_REASON: Break below SMA50 (current support) would confirm bearish engulfing and establish lower-low — wait for daily close below 1.9065 with RSI <45.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+```
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- D1 T_sig=NEUTRAL_3 baseline held; bearish engulfing is directional but RSI at
