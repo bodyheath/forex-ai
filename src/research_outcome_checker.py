@@ -332,7 +332,6 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                             f"excluded from win-rate calculations."
                         ),
                     )
-                    updated["notes"] = "Data integrity: STOP_HIT produced a non-losing result"
                     closed.append(updated)
                     # Deliberately not fed to _online_learn() — this outcome's own stop label
                     # was wrong, so it's not a trustworthy training signal either.
