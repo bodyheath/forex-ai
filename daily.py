@@ -12030,6 +12030,38 @@ def run() -> int:
                 except Exception:
                     pass
 
+                # Data-integrity gate — catch malformed entry/stop/target before logging a
+                # research trade. Mirrors the fund-side _validate_trade_data() gate (~daily.py
+                # 5830), which research trades never went through since they're logged from a
+                # separate code path. Found via a real live case: research trade #1859
+                # (AUD/JPY BUY, 2026-08-03) had a Sonnet-generated STOP_LOSS sitting *above*
+                # ENTRY for a BUY — the price data was not code-computed, Sonnet's own raw
+                # response already contained the inversion — and the outcome-checker later
+                # resolved this to a false STOP_HIT/LOSS despite the price move being
+                # profitable (see #1642 GBP/CHF, same signature, 2026-07-27).
+                #
+                # Only the *critical* failures gate here (zero/NaN price, wrong-side stop or
+                # target, degenerate/oversized stop, invalid direction, zero confidence,
+                # ATR-cap breach) — not the informational ones (RSI missing, R:R<1.0).
+                # Research logging deliberately tracks weaker/marginal setups than the fund
+                # pipeline ever would (that's what "indicative_borderline" is for); gating on
+                # the same full `valid` flag the fund side uses would additionally discard
+                # otherwise-legitimate low-R:R or missing-RSI research candidates, which is a
+                # different, unrelated behavior change from fixing this data-integrity gap.
+                _rt_data_val = _validate_trade_data(
+                    parsed=_rp,
+                    pair=r_result["pair"],
+                    direction=_rdir,
+                    bundle=_bundle_rt,
+                    log_fn=lambda m: _log_line(log, m),
+                )
+                if _rt_data_val["critical_failure"]:
+                    _log_line(log, (
+                        f"[research_tracker] BLOCKING — data-integrity failure(s): "
+                        f"{_rt_data_val['failures']}"
+                    ))
+                    return False  # skip log_research_trade() — malformed entry/stop/target
+
                 # Check for inverse pair conflict — BLOCK research trade if inverse already open
                 _rt_inv_blocked = False
                 try:
