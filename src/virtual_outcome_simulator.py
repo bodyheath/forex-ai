@@ -314,11 +314,15 @@ def simulate_row(row: dict, source: str, bars: list, now_utc: datetime) -> dict:
 
         if hit_target and hit_stop:
             # Both crossed within one hourly bar — intrabar order unknown.
-            # Conservative convention: stop wins the tie.
+            # Conservative convention: stop wins the tie — unless the stop itself
+            # is malformed, in which case there's no sane "loss" to report here.
             result.update({
-                "virtual_outcome": "LOSS",
+                "virtual_outcome": "SKIPPED" if stop_is_malformed else "LOSS",
                 "virtual_close_price": stop_loss,
-                "virtual_exit_reason": "STOP_HIT_SAME_BAR_TIEBREAK",
+                "virtual_exit_reason": (
+                    "STOP_HIT_DATA_INTEGRITY" if stop_is_malformed
+                    else "STOP_HIT_SAME_BAR_TIEBREAK"
+                ),
                 "virtual_closed_at": bar["dt"].strftime("%Y-%m-%d %H:%M:%S"),
                 "same_bar_tiebreak": "TRUE",
                 "bars_used": n_used,
@@ -335,9 +339,11 @@ def simulate_row(row: dict, source: str, bars: list, now_utc: datetime) -> dict:
             break
         if hit_stop:
             result.update({
-                "virtual_outcome": "LOSS",
+                "virtual_outcome": "SKIPPED" if stop_is_malformed else "LOSS",
                 "virtual_close_price": stop_loss,
-                "virtual_exit_reason": "STOP_HIT",
+                "virtual_exit_reason": (
+                    "STOP_HIT_DATA_INTEGRITY" if stop_is_malformed else "STOP_HIT"
+                ),
                 "virtual_closed_at": bar["dt"].strftime("%Y-%m-%d %H:%M:%S"),
                 "bars_used": n_used,
             })
