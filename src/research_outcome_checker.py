@@ -320,6 +320,11 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                         rec_id, "SKIPPED",
                         close_price=_cp,
                         exit_reason="STOP_HIT_DATA_INTEGRITY",
+                    )
+                    # update_outcome() (research_tracker.py) has no notes= param — unlike the
+                    # fund-side tracker.py — so it's set as a separate field update.
+                    research_tracker.update_fields(
+                        rec_id,
                         notes=(
                             f"Data integrity: STOP_HIT close_price {_cp} is on the profitable "
                             f"side of entry {_entry_v} for {direction} — stop_loss "
@@ -327,6 +332,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                             f"excluded from win-rate calculations."
                         ),
                     )
+                    updated["notes"] = "Data integrity: STOP_HIT produced a non-losing result"
                     closed.append(updated)
                     # Deliberately not fed to _online_learn() — this outcome's own stop label
                     # was wrong, so it's not a trustworthy training signal either.
