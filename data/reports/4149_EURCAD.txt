@@ -1,0 +1,24 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Multi-timeframe overbought (D1 RSI 61.4, 4H RSI 68.8) with partial oscillator confluence (Stoch+CCI bearish 2/3) in uptrend creates high-probability pullback entry, but weak MTF agreement (W:SELL, D:NEUTRAL, 4H:SELL = 2/3) and bullish pattern bias limit conviction to 6/10.
+
+RISK_FACTORS: 
+1. MTF confidence only 65% (2/3 agreement: D1 NEUTRAL breaks unanimous sell signal) — if daily closes above 1.6210, uptrend resumes with risk to 1.63+.
+2. D1 structure remains bullish (price > SMA50 > SMA200, golden cross intact, LEANING_BULL ribbon 4/5 aligned) — pullback into SMA50 (1.6135) is target, not reversal; fundamental neutral (diff=-0.02%, no rate differentials driving move) reduces macro conviction.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.6230
+ENTRY_TRIGGER_REASON: Sell limit 2pp above current price targets overb

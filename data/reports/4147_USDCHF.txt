@@ -1,0 +1,31 @@
+```
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: USD strength (+3.67% rate diff) conflicts with weakening CHF positioning unwind and mixed technicals; neutral MTF alignment (W:NEUTRAL, D:NEUTRAL) bars conviction despite monthly BUY context.
+
+RISK_FACTORS: [1] MTF neutrality (W+D both neutral = 0/3 agreement) breaks TRADE_THIS rule requiring both weekly AND daily agreement — confidence capped at 4 despite fundamentals. [2] COT CHF UNWINDING reduces positioning conviction: institutions reducing CHF shorts into falling rates = reversal risk if CHF stabilizes; USD neutral positioning (50%) offers no directional anchor.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF alignment failure (W:NEUTRAL + D:NEUTRAL = conf 0/3 < 2/3 threshold). Cannot trade without weekly AND daily agreement per MTF rule.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical (3/10):**
+- D1 T_sig=NEUTRAL_3 baseline confirmed: RSI 49.7 squarely in 45–62 neutral zone (score 3–4

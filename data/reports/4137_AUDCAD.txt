@@ -1,0 +1,25 @@
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Overbought D1 RSI (56.8 in uptrend, neutral zone) + partial oscillator sell (Stoch 91.3 overbought, CCI extreme) conflicts with bullish structure (ribbon fully aligned, golden cross, pin bar bullish); MTF shows no agreement (W/D both NEUTRAL, only M/4H SELL) — confidence insufficient.
+
+RISK_FACTORS: 
+1. MTF disagree: Weekly and Daily both NEUTRAL breaks 2/3 MTF rule — TRADE_THIS blocked regardless of technicals. 
+2. Bullish ribbon fully aligned (5/5 EMA fan) + price above SMA50 + pin bar at key level contradicts SELL conviction; AUD rate rising + CAD rate falling supports AUD strength.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily must both agree on direction for trade execution. Current state W:NEUTRAL + D:NEUTRAL + M:SELL + 4H:SELL (conf=0/3, wt=80%) fails the ≥2/3 agreement threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS

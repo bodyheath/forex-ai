@@ -1,0 +1,23 @@
+PAIR: CAD/CHF
+DIRECTION: NEUTRAL
+CONFIDENCE: 3/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Price trapped in range with converging ribbon, flat technicals, and conflicting MTF signals (M:BUY vs W/D:NEUTRAL) — no directional edge.
+RISK_FACTORS: [1] MTF disagreement (conf=0/3): Weekly and Daily both neutral despite 4H/Monthly divergence; risk of whipsaw on breakout without clear bias. [2] CHF positioning UNWINDING at 51% short — institutional risk-off signal conflicts with CAD fundamental +2.31% rate differential; positioning could reverse sharply if risk sentiment shifts.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do NOT both agree on direction (conf 0/3, threshold 2/3 fails). NEUTRAL bias insufficient for trade execution.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF Failure (Critical):** W:NEUTRAL + D:NEUTRAL + 4H:BUY = conf 0/3 (only 4H bullish). Weekly and Daily must BOTH agree; they don't. TRADE_THIS defaults to **NO** per MTF rule, regardless of

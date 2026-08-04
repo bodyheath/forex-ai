@@ -1,0 +1,23 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 SELL signal conflicts with 4H uptrend; mixed MTF alignment (1/3) and neutral ribbon prevent conviction entry.
+RISK_FACTORS: [1] MTF disagreement — D1:SELL vs 4H:NEUTRAL+uptrend structure undermines directional confidence; [2] Ribbon neutral (3/5 aligned) + price range-bound between SMA50 (1.1481) and SMA200 (1.1630) signals trend weakness, reversal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — D1:SELL + 4H:NEUTRAL do NOT both confirm direction (conf=1/3 << 2/3 threshold). Mixed range structure + neutral ribbon + stochastic overbought (88.1) without bearish divergence = no high-probability setup. Wait for 4H to confirm SELL or price to break below SMA50 (1.1481) on daily close.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Analysis Summary:**
+
+- **MTF Conflict (Critical):** Daily shows SELL (T_sig=5, RS
