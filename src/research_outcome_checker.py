@@ -293,18 +293,57 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
 
             elif _casc.stop_hit(row, price):
                 _cp = _to_float(row.get("stop_loss")) or price
-                updated = research_tracker.update_outcome(
-                    rec_id, "LOSS",
-                    close_price=_cp,
-                    exit_reason="STOP_HIT",
+                # Data-integrity backstop: a genuine stop-hit must land on the losing side of
+                # entry. cascade.stop_hit() only checks price against the stored stop_loss
+                # value — it never validates that stop_loss is sanely positioned relative to
+                # entry, so a malformed row (stop placed on the wrong side of entry, e.g. a
+                # Sonnet-output error — see research trade #1859 AUD/JPY 2026-08-03 and #1642
+                # GBP/CHF 2026-07-27) gets "stop hit" almost immediately and would otherwise
+                # be silently mislabeled LOSS despite the price move being profitable. This
+                # check is independent of the entry-time validation gate added in
+                # daily.py (log_research_trade path) — it exists so a malformed row that
+                # somehow still gets through, from any code path, doesn't get mislabeled here.
+                _entry_v = _to_float(row.get("entry"))
+                _stop_is_profitable_side = (
+                    _entry_v is not None and _cp is not None and (
+                        (_cp > _entry_v) if direction == "BUY" else (_cp < _entry_v)
+                    )
                 )
-                log(
-                    f"  Research #{rec_id} {pair} {direction}: LOSS at {_cp} "
-                    f"[MFE={updated.get('mfe_pips', '?')}p MAE={updated.get('mae_pips', '?')}p]"
-                )
-                closed.append(updated)
-                _online_learn(updated)
-                _closed_this = True
+                if _stop_is_profitable_side:
+                    log(
+                        f"[data-integrity] Research #{rec_id} {pair} {direction}: STOP_HIT at "
+                        f"{_cp} is on the profitable side of entry {_entry_v} — stop_loss "
+                        f"({row.get('stop_loss')}) appears misplaced relative to entry; "
+                        f"excluding from win-rate stats instead of mislabeling as LOSS"
+                    )
+                    updated = research_tracker.update_outcome(
+                        rec_id, "SKIPPED",
+                        close_price=_cp,
+                        exit_reason="STOP_HIT_DATA_INTEGRITY",
+                        notes=(
+                            f"Data integrity: STOP_HIT close_price {_cp} is on the profitable "
+                            f"side of entry {_entry_v} for {direction} — stop_loss "
+                            f"({row.get('stop_loss')}) appears misplaced relative to entry; "
+                            f"excluded from win-rate calculations."
+                        ),
+                    )
+                    closed.append(updated)
+                    # Deliberately not fed to _online_learn() — this outcome's own stop label
+                    # was wrong, so it's not a trustworthy training signal either.
+                    _closed_this = True
+                else:
+                    updated = research_tracker.update_outcome(
+                        rec_id, "LOSS",
+                        close_price=_cp,
+                        exit_reason="STOP_HIT",
+                    )
+                    log(
+                        f"  Research #{rec_id} {pair} {direction}: LOSS at {_cp} "
+                        f"[MFE={updated.get('mfe_pips', '?')}p MAE={updated.get('mae_pips', '?')}p]"
+                    )
+                    closed.append(updated)
+                    _online_learn(updated)
+                    _closed_this = True
 
             if _closed_this:
                 continue
