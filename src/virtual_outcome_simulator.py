@@ -270,6 +270,16 @@ def simulate_row(row: dict, source: str, bars: list, now_utc: datetime) -> dict:
         return result
 
     stop_pips = _casc.pips_at(entry, stop_loss, pair, direction)  # negative (unfavourable)
+    # Data-integrity guard: a sane stop_loss is always unfavourable (stop_pips < 0).
+    # If it's >= 0, stop_loss sits on the *profitable* side of entry — a malformed
+    # row (e.g. a Sonnet-output error, same signature as research trades #1642
+    # GBP/CHF and #1859 AUD/JPY, both of which have a source_id match in this exact
+    # candidate pool: trades.csv #3362 and #3948). Simulating a "stop hit" against
+    # such a row would land on the profitable side and get mislabeled LOSS despite
+    # a positive pip outcome — mirrors the same bug already fixed in
+    # research_outcome_checker.py, independently present here since this module
+    # has its own separate resolution logic.
+    stop_is_malformed = stop_pips is not None and stop_pips >= 0
 
     if source == "fund":
         base_expiry = _oc._compute_expiry_days(row)
