@@ -1,0 +1,23 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 SELL signal with price near 50% Fib support, but MTF structure is mixed (only 1/3 agreement) and 4H uptrend contradicts daily, creating directional conflict.
+RISK_FACTORS: [1. MTF confidence only 40% — W/M/4H neutral vs D SELL creates low conviction setup; breakout of D trend likely invalidates trade. 2. OSC shows no confluence (Stoch overbought 77.5 but CCI elevated 154.3 = conflicting oscillators) — reversal signal unreliable.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Daily SELL (T_sig=5) contradicted by 4H uptrend (price > SMA50 > SMA200); only 1/3 MTF agreement fails threshold. Do NOT trade mixed MTF structures regardless of technical score.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF CRITICAL FAILURE**: W:NEUTRAL, M:NEUTRAL, D:SELL, 4H:NEUTRAL = only **1/3 agreement** (

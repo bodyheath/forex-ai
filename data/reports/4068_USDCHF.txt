@@ -1,0 +1,32 @@
+```
+PAIR: USD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key level + golden-cross uptrend structure supports USD strength, but weak MTF confluence (M:BUY vs W/D:NEUTRAL) and oscillator indecision limit conviction.
+
+RISK_FACTORS: [1. MTF disagreement (monthly alone cannot drive a high-confidence trade; weekly/daily neutrality fails 2/3 MTF rule). 2. CHF COT positioning unwinding — institutional shorts reducing conviction while CHF rates falling = potential USD/CHF correction risk.]
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.8047
+ENTRY_TRIGGER_REASON: Pullback to SMA50 (0.8038) + nearest Fibonacci support confluence; pin bar pattern + golden cross structure confirmation on D1 retest.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **Scoring Rationale:**
+
+**TECHNICAL (5/10):**
+- D1 T_sig baseline = 3 (NEUTRAL) from RSI 51.5 (standard tier 45–62 = 3–4) + MACDh marginally negative
+- **MTF rule violation**: W:NEUTRAL + D:NEUTRAL +

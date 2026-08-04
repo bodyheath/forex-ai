@@ -1,0 +1,23 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 127.2% Fib resistance with RSI 63.6 (upper-neutral in uptrend) creates a directional ambiguity — uptrend structure conflicts with T_sig=SELL_3 and overbought oscillators; MTF unanimity absent weakens conviction.
+RISK_FACTORS: [1] MTF conf=0/3 (all neutral) — no multi-timeframe agreement on direction; uptrend structure (ribbon ALIGNED_BULL, price > SMA50 > SMA200) contradicts sell signal. [2] OSC shows no confluence (Stoch 81.3 + CCI 99.1 both extreme but no MACD confirmation) — reversal signal incomplete; CHF positioning UNWINDING reduces short-covering edge.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.93320
+ENTRY_TRIGGER_REASON: Limit order at Fib 127.2% resistance pin-bar high if price recycles; wait for MTF confirmation (weekly or daily trend shift to SELL) before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):** T_sig=

@@ -1,0 +1,23 @@
+```
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 67.6 + bearish engulfing at 100% Fib (resistance) signals exhaustion despite aligned ribbon, but MTF conflict (W:NEUTRAL vs D:SELL) and UNWINDING CHF positioning undermine conviction.
+RISK_FACTORS: [1. MTF disagreement: Weekly is NEUTRAL, not confirming downside — only 1/3 timeframes align on direction, failing MTF rule. 2. ALIGNED_BULL ribbon (5/5 EMAs fanning bullish) contradicts T_sig=SELL_5 and supports continuation risk above 0.4752.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated — D:SELL but W:NEUTRAL fails 2/3 minimum agreement. Ribbon fully aligned bullish conflicts with bearish engulfing setup. Insufficient confluence to reach confidence >=7.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF CONFLICT (FATAL):** Weekly is NEUTRAL, Daily is SELL, 4H is NEUTRAL = 1/3 agreement. MTF rule demands

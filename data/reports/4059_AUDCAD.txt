@@ -1,0 +1,23 @@
+PAIR: AUD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 50% Fib support + AUD rate rising vs CAD falling + COT building conviction in AUD shorts creates contrarian long setup, but MTF and ribbon convergence signal weakening momentum and reversal risk.
+RISK_FACTORS: [1. MTF neutral/monthly sell conflict — no weekly or daily directional confirmation; ribbon CONVERGING suggests uptrend fatigue and potential reversal.] [2. RSI 52.3 + MACD near zero + T_sig=3 baseline neutral — insufficient momentum confirmation; oscillator conf=NONE; inside bar on 4H is continuation neutral, not bullish.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.9849
+ENTRY_TRIGGER_REASON: Bounce confirmation at 50% Fib + pin bar support (if RSI holds >50 on retest)
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):** T_sig baseline=3, pin bar at key level (+1 bullish candle), price exactly on 50% Fib support (+1 confluence) = **5 baseline**. However, RSI 52.3 is neutral

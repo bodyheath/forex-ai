@@ -1,0 +1,18 @@
+```
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H downtrend structure (price<SMA50<SMA200) conflicts with D1 pin bar bullish signal; mixed MTF alignment and neutral positioning offer no conviction.
+RISK_FACTORS: ['MTF agreement 0/3 (M/W/D all NEUTRAL, 4H isolated SELL); pin bar at key level contradicts 4H downtrend structure — unclear reversal confirmation', 'CAD rate falling + USD diff +1.36% support USD strength, but OSC shows no oscillator confluence (Stoch 36.1 weak, CCI -64.7 divergent); price at 1.4047 between SMA50 (1.4057) and SMA200 (1.3855) indicates choppy range with no directional bias']
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated — W:NEUTRAL + D:NEUTRAL + 4H:SELL = only 1/3 timeframes aligned. Confidence 4/10 < 7 threshold. Pin bar bullish at D1 conflicts with 4H death-cross; insufficient confluence to execute.
+ENTRY_TRIGGER_EXPIRY_HOURS

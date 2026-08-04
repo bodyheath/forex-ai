@@ -1,0 +1,33 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Weak daily SELL signal (T_sig=4) offset by MTF disagreement (D:SELL vs W:NEUTRAL, conf=1/3); ribbon converging suggests trend weakening, not reversal confirmation.
+
+RISK_FACTORS: [1] MTF conflict: Weekly neutral + Daily sell + 4H neutral = insufficient multi-timeframe alignment (1/3 = 33%, well below 67% threshold); reversal risk high. [2] CHF positioning unwinding (COT reversal from long conviction): institutional SHORT conviction collapsing weakens bias for CAD/CHF SELL.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do NOT both agree (conf=1/3 < 2/3). W:NEUTRAL + D:SELL fails dual-timeframe gate. Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Detailed Scoring Rationale:**
+
+**TECHNICAL [4/10]:**
+- **T_sig baseline = SELL_4** (pre-computed)
+- **D1 RSI=55.1** (neutral tier 45–62
