@@ -368,9 +368,11 @@ def simulate_row(row: dict, source: str, bars: list, now_utc: datetime) -> dict:
             # determine_fn's own stop check agrees — should be unreachable
             # since hit_stop above already covers it, but kept for parity.
             result.update({
-                "virtual_outcome": "LOSS",
+                "virtual_outcome": "SKIPPED" if stop_is_malformed else "LOSS",
                 "virtual_close_price": stop_loss,
-                "virtual_exit_reason": "STOP_HIT",
+                "virtual_exit_reason": (
+                    "STOP_HIT_DATA_INTEGRITY" if stop_is_malformed else "STOP_HIT"
+                ),
                 "virtual_closed_at": bar["dt"].strftime("%Y-%m-%d %H:%M:%S"),
                 "bars_used": n_used,
             })
