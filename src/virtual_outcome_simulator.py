@@ -397,7 +397,7 @@ def simulate_row(row: dict, source: str, bars: list, now_utc: datetime) -> dict:
             result["virtual_outcome"] = "PENDING"
         result["bars_used"] = n_used
 
-    if result["virtual_outcome"] in ("WIN", "LOSS", "EXPIRED", "STALE_EXIT") \
+    if result["virtual_outcome"] in ("WIN", "LOSS", "EXPIRED", "STALE_EXIT", "SKIPPED") \
             and result["virtual_close_price"] is not None:
         pips = _casc.pips_at(entry, result["virtual_close_price"], pair, direction)
         result["virtual_pips"] = pips
