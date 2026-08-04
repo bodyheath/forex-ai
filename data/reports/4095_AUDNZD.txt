@@ -1,0 +1,27 @@
+```
+PAIR: AUD/NZD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 RSI oversold (37.7) + 4H double-bottom pattern + rising AUD rates vs falling NZD rates support a bounce, but MTF conflict (M:SELL vs D:BUY, conf=1/3) and 4H downtrend structure prevent high-conviction entry.
+
+RISK_FACTORS: [1] MTF disagreement (monthly selling, daily buying) weakens directional alignment — trade violates 2/3 MTF consensus rule. [2] AUD positioned net SHORT at 33%, building conviction: if positioning reverses, rally may cap; 4H remains in downtrend despite pattern.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.1927
+ENTRY_TRIGGER_REASON: Limit buy at swing low (SL=1.1927) where double-bottom pattern confirms and RSI oversold can bounce; wait for price to reclaim SMA50 on 4H before scaling.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+NOTES:
+• **MTF FAILURE:** Confidence capped at 5 — monthly is SELL, daily is BUY, 4H is NEUTRAL. Only 1 of

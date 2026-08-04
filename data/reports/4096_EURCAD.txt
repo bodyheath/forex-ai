@@ -1,0 +1,26 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: T_sig=SELL_3 conflicts with D1 uptrend structure (price>SMA50>SMA200); MTF agreement is 0/3 (M:SELL vs W/D:NEUTRAL), killing trade conviction despite institutional EUR short-building.
+
+RISK_FACTORS: 
+1. MTF agreement at 0/3 (monthly SELL isolated; weekly+daily NEUTRAL) — violates MTF rule requiring both W and D alignment.
+2. D1 price 1.6175 > SMA50 1.6135 > SMA200 1.6109 is textbook uptrend structure, contradicting T_sig=SELL_3 baseline.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule failure: weekly and daily do not both agree on direction (W:NEUTRAL + D:NEUTRAL vs M:SELL). Golden-cross D1 structure (price above both MAs) reinforces uptrend bias. OSC shows no confluence (stoch 90.5, CCI 94.4 extreme but isolated — no RSI+MACD+Stochastic triple). Do not trade.
+ENTRY_TRIGGER_

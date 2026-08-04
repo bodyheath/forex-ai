@@ -1,0 +1,26 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly SELL signal conflicts with daily/4H neutrality; ribbon converging signals trend weakness despite golden-cross structure; both GBP and CHF COT unwinding creates uncertainty.
+RISK_FACTORS: [1. MTF disagreement (W:SELL vs D:NEUTRAL+4H:NEUTRAL) fails 2/3 confirmation rule — trade lacks multi-timeframe consensus], [2. COT momentum UNWINDING on both currencies reduces institutional conviction; positioning already short (GBP 39%, CHF 51%) leaves limited room for further selling]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.0850
+ENTRY_TRIGGER_REASON: Limit order placed at support near SMA50 (1.0739) + Fib retracement if price pulls back; allows wait for stronger confluence before entry
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+---
+
+**DETAILED REASONING:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI=61.5 in confirmed **uptrend** (W:SELL + price above both SMAs). In uptrend context, RSI 61.5 falls in neutral zone (45–65=

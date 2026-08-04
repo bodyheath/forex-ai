@@ -1,0 +1,23 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Converging ribbon + mixed MTF + CHF institutional unwinding creates weak reversal setup; pin bar at resistance offers tactical sell but insufficient confluence for conviction trade.
+RISK_FACTORS: [1. MTF alignment 0/3 — no directional consensus across timeframes (M:BUY conflicts D/W:NEUTRAL), invalidating trade signal.] [2. CHF positioning unwinding mid-range — institutions reducing short conviction, potential short-squeeze risk if price breaks above 0.5771 resistance.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5771
+ENTRY_TRIGGER_REASON: Pin bar at 100% Fibonacci resistance (0.5771, 6p away); sell rejection at key level if price touches and reverses.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**MTF Rule Failure (HARD STOP):** MTF conf=0/3 (M:BUY vs. W/D:NEUTRAL) — Weekly and Daily do NOT both agree on direction. **This alone triggers TRADE_THIS: NO** per your MTF rule: *"if weekly AND daily don't both agree on direction (conf<2/3), TRADE

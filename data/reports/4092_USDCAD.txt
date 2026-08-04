@@ -1,0 +1,23 @@
+```
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H bearish pin bar at key level (1.4046) with downtrend structure conflicts with D1 double bottom and neutral MTF consensus, creating low-conviction mixed signal.
+RISK_FACTORS: [1] D1 double_bottom:bul contradicts 4H downtrend and bearish pin—conflicting patterns across timeframes reduce setup reliability. [2] MTF conf=0/3 (all timeframes neutral or split) — no confluence; neither weekly nor daily confirm SELL direction per MTF rule.
+TRADE_THIS: NO
+ENTRY_TYPE: AVOID
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule blocks trade: Weekly=NEUTRAL, Daily=NEUTRAL, 4H=SELL — consensus is 0/3 agreement. D1 pattern (double_bottom:bul) contradicts 4H bearish pin. Fundamental diff favors USD (+1.36%), opposing SELL thesis. OSC conf=NONE (Stoch 35.3 + CCI -59.9 unaligned).
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+1. **MTF Rule Violation (Critical):** Weekly and Daily are both NEUTRAL;

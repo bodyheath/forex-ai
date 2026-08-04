@@ -1,0 +1,17 @@
+```
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Conflicting technical signals (D1 pin bar bullish vs 4H double top bearish; D1 T_sig=SELL_3 offset by RSI=55.1 neutral zone; MTF disagrees 0/3) limit conviction despite GBP COT unwinding and USD sentiment elevated.
+RISK_FACTORS: [1. MTF alignment critical rule violated: W/D both NEUTRAL fails >=2/3 agreement threshold — chart structure ambiguous (price 1.3443 trapped between SMA50=1.3364 and SMA200=1.3398 with mixed trend tag)]. [2. COT GBP unwinding institutional conviction + D1 pin bar at key level (bullish candle pattern) directly conflict SELL direction — retail positioning (SENT GBP=6art) also less convinced than USD=8art, suggesting contrarian BUY risk if unwinding accelerates].
+TRADE_THIS: NO
+ENTRY_TYPE: AVOID
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule enforces NO TRADE when W and D do not both agree on direction. Here W=NEUTRAL and D=NEUTRAL (conf=0/3 wt=100%), failing the >=2/3 requirement

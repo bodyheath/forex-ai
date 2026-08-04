@@ -1,0 +1,23 @@
+```
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar rejection at 50% Fib + Stochastic overbought + AUD short-building COT provides contrarian SELL, but uptrend structure and D1 golden cross limit conviction.
+RISK_FACTORS: [1. MTF all-NEUTRAL (M/W/D/4H) = no directional confluence — violates TRADE_THIS rule (≥2/3 agreement required). 2. D1 price > SMA50 > SMA200 + uptrend in force — pin bar at 50% Fib is pullback noise, not reversal confirmation; RSI 57.7 is mid-range NEUTRAL (45-62), not overbought.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement 0/3 (all NEUTRAL). Trade fails MTF weekly+daily confirmation rule. Pin bar + Stochastic overbought insufficient without MTF alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Scoring Detail:**
+
+- **TECHNICAL (5/10):** D1 T_sig=SELL_3 anchors baseline at 5. No bonus applied

@@ -1,0 +1,24 @@
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 SELL signal with Stochastic overbought (82.2) conflicts with 4H uptrend structure; mixed MTF alignment (only 1/3 agreement) and neutral ribbon (3/5) prevent confident directional conviction.
+RISK_FACTORS: [1. MTF disagreement — Daily SELL vs 4H uptrend + golden-cross SMA structure creates directional conflict; only 1/3 MTF agreement (40% weighting) below threshold for trade conviction. 2. COT BUILDING momentum on EUR shorts suggests institutional accumulation of short positions — if reversal occurs, positioning will unwind sharply against your SELL entry.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF confidence 1/3 (40% wt) << 2/3 threshold required. SELL direction fails MTF rule: D1:SELL conflicts with 4H:uptrend (price > SMA50 > SMA200). Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Why NO:**
+1. **MTF Rule Violation (CRITICAL):** Weekly and Daily must both agree on
