@@ -1,0 +1,32 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar rejection at key level on D1 with D:SELL conflicts uptrend structure and aligned ribbon, creating ambiguous reversal signal; MTF lacks agreement (D:SELL vs W:NEUTRAL, conf=1/3 <2/3 threshold).
+
+RISK_FACTORS: 
+1. MTF disagreement (W:NEUTRAL + D:SELL conf=45% <66%) — violates MTF rule; no consensus direction across weekly+daily.
+2. GBP COT unwinding while pair in uptrend structure (price>SMA50>SMA200, ribbon ALIGNED_BULL) — institutional conviction fading into technical setup, execution risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: REJECTED
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence 45% fails ≥66% threshold; weekly is NEUTRAL, daily SELL lacks multi-timeframe confirmation. Aligned ribbon + golden cross = uptrend context contradicts D1 pin bar signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1 T_sig=SELL_6 baseline, but RSI=56.9

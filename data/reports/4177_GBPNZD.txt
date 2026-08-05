@@ -1,0 +1,17 @@
+# GBP/NZD ANALYSIS
+
+## LAYER-BY-LAYER SCORES
+
+**TECHNICAL_SCORE: 5**
+- D1: T_sig=BUY_6 baseline + pin_bar_at_key_level:bul (bullish reversal pattern at support zone)
+- RSI=40.3 (mid-range, mixed MTF context: W:NEUTRAL, D:BUY, 4H:NEUTRAL) = neutral-to-slightly-bullish, no oversold edge
+- MACD D1 negative (−0.0022) conflicts with BUY signal → no MACD confirmation bonus
+- 4H: downtrend structure (price < SMA50 < SMA200, death-cross) + H&S bearish pattern + T=3 contradicts D1 BUY
+- SMA50=2.3074 > price=2.2913 (price below 50MA, neutral-to-bearish structure)
+- No ribbon alignment (3/5 = NEUTRAL), no strong directional EMA structure
+- **MTF CRITICAL ISSUE: W:NEUTRAL, D:BUY, 4H:NEUTRAL = 1/3 agreement** (only daily bullish, weekly and 4H neutral) → **MTF confidence <2/3, fails cohesion test**
+- **Adjustment: T_sig=6 reduced to 5 due to MTF fragmentation and 4H bearish pattern conflict**
+
+**FUNDAMENTAL_SCORE: 6**
+- GBP diff=+1.05% (supports GBP strength, +1 fundamental layer ✓)
+- GBP_rate=flat (no directional

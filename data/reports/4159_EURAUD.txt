@@ -1,0 +1,24 @@
+PAIR: EUR/AUD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + 4H upside alignment + weekly BUY context offer bounce setup, but daily NEUTRAL and downtrend structure (price < SMA50 < SMA200) limit conviction.
+RISK_FACTORS: [1] Death-cross structure (price 1.6367 < SMA50 1.6388 < SMA200 1.6835) — major downtrend context overrides short-term bounce signals; [2] Daily RSI 48.6 lacks oversold confirmation — pin bar is at midline, not extreme, reducing reversal probability.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF weekly+daily do not both agree (W:BUY + D:NEUTRAL = 2/3 confidence, <2/3 threshold). TRADE_THIS NO per MTF rule. Setup lacks confluence needed to override downtrend structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL (5/10):**
+- D1 RSI 48.6 in NEUTRAL zone (45–62) = baseline score 3–4. No trend-shift adjustment (daily is

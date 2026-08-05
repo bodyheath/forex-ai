@@ -1,0 +1,27 @@
+```
+PAIR: GBP/AUD
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 2/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level (1.9359) with RSI 46.5 (neutral zone) offers potential bounce off SH, but MTF conflict (M:BUY vs W/D/4H:NEUTRAL) and COT unwinding in GBP undermine conviction.
+RISK_FACTORS: [1] COT MOM=UNWINDING in GBP (primary currency) signals institutional conviction declining — aligns with SELL, conflicts with BUY thesis. [2] 4H downtrend structure (price < SMA50 < SMA200) and OSC=NONE (no oscillator confluence) mean bounce is range-play, not trend-resumption — limited upside if fails.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.9110
+ENTRY_TRIGGER_REASON: Break above pin_bar high confirmation + RSI cross above 50 (neutral → BUY threshold).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **SCORING BREAKDOWN**
+
+**TECHNICAL [4/10]:**
+- D1 T_sig=NEUTRAL_3 (baseline)
+- RSI=46.5 (NEUTRAL tier

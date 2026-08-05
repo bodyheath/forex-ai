@@ -1,0 +1,34 @@
+```
+PAIR: USD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key level + uptrend structure + USD rate advantage supports long setup, but weak MTF agreement (0/3) and oscillator flatness limit conviction.
+
+RISK_FACTORS: 
+1. MTF conflict: Monthly bullish but Weekly and Daily both NEUTRAL—no directional confirmation at key timeframes; trade lacks multi-frame conviction.
+2. CHF COT unwinding short positioning mid-week suggests potential institutional buying into CHF strength—headwind for USD/CHF longs.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.8097
+ENTRY_TRIGGER_REASON: Breakout above D1 pin bar high (0.8097) with close above SMA50 (0.8042); wait for Weekly RSI to confirm >50 before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+### SCORING DETAIL:
+
+**TECHNICAL_SCORE: 5/10**
+- D1 T_sig = NEUTRAL_3 (baseline).
+- RSI 48.8 (D1) = 45–62 range → score 3–4 NEUTRAL (standard tier, no trend confirmation).
+- MACD histogram –0.

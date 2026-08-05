@@ -1,0 +1,32 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: D1 downtrend structure (price < SMA50 < SMA200) with partial oscillator confluence (Stochastic + CCI overbought on 4H) conflicts with W:BUY and D1 bullish engulfing, creating low-conviction SELL setup weakened by MTF disagreement.
+
+RISK_FACTORS: 
+1. MTF conflict: Weekly BUY vs Daily NEUTRAL (conf=1/3) violates 2/3 agreement rule — directional conviction insufficient for trade execution.
+2. GBP positioning unwinding (39% short reducing) while EUR building short — asymmetric conviction and potential short-squeeze risk on GBP rebound.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement <2/3 (W:BUY + D:NEUTRAL = 1/3 consensus) blocks execution regardless of technical setup. Weekly uptrend contradicts daily downtrend bias.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+**Technical (4/10):** 
+- D1 T_sig=NEUTRAL_3 is baseline. D1

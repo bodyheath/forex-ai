@@ -1,0 +1,31 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: EUR/CAD at upper band in overbought state with 4H/M/W confluence on SELL despite aligned ribbon suggesting trend persistence—conflicting signals warrant caution.
+
+RISK_FACTORS: (1) MTF daily neutral (only 2/3 agreement W+4H vs D) weakens TRADE_THIS confidence; (2) Aligned bullish ribbon (5/5 EMAs stacked) contradicts SELL bias and signals trend continuation risk—potential whipsaw if price holds above SMA50.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.6285
+ENTRY_TRIGGER_REASON: Sell limit above recent high to catch potential reversal from resistance cluster (upper BB + FIB SH 1.62662) if price overextends into 1.6285 zone.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (6/10):**
+- **RSI D1=62.9:** Uptrend context (W:SELL + D:NEUTRAL) = mixed MTF. In standard uptrend zones, 62.9 is neutral-leaning SELL (65-77 range
