@@ -1,0 +1,24 @@
+PAIR: AUD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with RSI 38.5 (neutral-BUY zone) and rising AUD rates support a bounce from 111.17 support, but conflicted MTF structure (M:SELL vs D:BUY, conf=1/3) and 4H downtrend limit conviction.
+RISK_FACTORS: MTF disagreement (Monthly SELL vs Daily BUY) creates directional ambiguity; 4H price below SMA50 in active downtrend signals structural weakness despite D1 pin bar signal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 111.171
+ENTRY_TRIGGER_REASON: Retest of swing low (SL) and Fibonacci base support; pin bar rejection confirms key level
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF Veto (Critical):**
+MTF conf=1/3 (only D:BUY agrees; M:SELL + 4H:NEUTRAL oppose). Weekly missing but Monthly is SELL. This fails the MTF rule: *"if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless."* → **

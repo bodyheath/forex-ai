@@ -1,0 +1,26 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Fundamental divergence (AUD rising, CHF falling) supports long-term bullish bias, but D1 T_sig=SELL_3 conflicts with price structure; MTF agreement <50% (1/3) and converging ribbon signal weakening trend — near-term correction likely before continuation.
+RISK_FACTORS: MTF agreement only 45% (M:SELL vs D:NEUTRAL/4H:NEUTRAL) creates low-confidence entry zone; AUD COT BUILDING conviction while CHF unwinding suggests institutional disagreement on pair direction.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**Rationale:**
+
+1. **MTF Conflict (Critical):** W:SELL + D:NEUTRAL + 4H:NEUTRAL = only 1/3 agreement. MTF rule enforces: conf<2/3 = TRADE_THIS NO. Cannot proceed regardless of other scores.
+
+2. **TECHNICAL_SCORE = 4/10:**
+   - D1: RSI=57.0 (45-62 neutral zone, uptrend context). Price >

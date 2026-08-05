@@ -1,0 +1,30 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: T_sig SELL_3 conflicts with D1 uptrend structure (price>SMA50>SMA200); MTF conf=0/3 (M:SELL vs W/D:NEUTRAL) blocks trade; RSI 59.1 neutral in uptrend context; no oscillator confluence.
+
+RISK_FACTORS: [1] MTF disagreement (Monthly SELL vs Weekly/Daily NEUTRAL) = conf<2/3 threshold — MTF rule blocks entry. [2] D1 shows golden-cross bullish structure + RSI 59.1 (neutral-to-bullish in uptrend) contradicts T_sig SELL_3 signal — likely false signal.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree on direction (W:NEUTRAL, D:NEUTRAL vs M:SELL). Trade blocked regardless of technical setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+**EXPLANATION:**
+
+1. **MTF RULE (HARD BLOCK):** W:NEUTRAL + D:NEUTRAL means MTF confidence = 0/3. The rule states

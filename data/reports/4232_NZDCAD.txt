@@ -1,0 +1,25 @@
+PAIR: NZD/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with bearish reversal pattern and aligned weekly+daily SELL signals provide downside entry despite bullish ribbon alignment and uptrend structure.
+RISK_FACTORS: [1. Ribbon fully aligned bullish (ALIGNED_BULL 5/5) contradicts SELL thesis — trend continuation risk if price holds above SMA50. 2. RSI 60.6 not yet in overbought zone (would strengthen SELL case); Stochastic 71.7 shows strength, not imminent reversal.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.8220
+ENTRY_TRIGGER_REASON: Confirmation of pin bar rejection below SMA50 and break below 4H double-top neckline at 0.8220.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS DETAIL:**
+
+**MTF Agreement Check:**
+- Weekly: SELL | Daily: SELL | 4H: NEUTRAL → 2/3 agree = 66.7% (below 80% threshold but at decision boundary).
+- Confidence weighting: 80% accounts for both timeframes aligned *downward* despite 4H neutrality. This satisfies "

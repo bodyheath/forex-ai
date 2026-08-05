@@ -1,0 +1,25 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: D1 downtrend (death-cross) with 4H uptrend creates MTF conflict (conf=1/3); OSC partial SELL (Stoch 90.4 + CCI 115.8 overbought) + SMD -5 (institutional bearish vs retail bullish) + GBP unwinding suggests weakness, but bullish engulfing pattern and W:BUY create mixed signals — low-conviction setup.
+
+RISK_FACTORS: 
+1. MTF conflict: W:BUY vs D:NEUTRAL + 4H:NEUTRAL breaks MTF rule (conf<2/3) — directional alignment insufficient.
+2. Contradictory candle: D1 bullish engulfing contradicts downtrend thesis and partial SELL oscillator signal — reversal risk if price holds above 0.8575.
+
+TRADE_THIS: NO
+
+RATIONALE:
+- **MTF Rule Violation**: Weekly BUY vs Daily NEUTRAL + 4H NEUTRAL = conf 1/3 (well below 2/3 threshold). Mandate: TRADE_THIS=NO regardless of other factors.
+- **Technical Score = 4**: D1 T_sig=NEUTRAL_3 + PAT bullish_engulfing conflicts with OSC

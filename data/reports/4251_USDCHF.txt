@@ -1,0 +1,29 @@
+```
+PAIR: USD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + golden-cross structure + USD rate advantage signal weak upside, but mixed MTF (W:NEUTRAL + D:NEUTRAL) fails MTF confluence rule; position unwinding caps conviction.
+RISK_FACTORS: MTF confluence broken (W and D both neutral, 4H:BUY insufficient); CHF COT UNWINDING reduces positioning momentum and contradicts BUY direction.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.8075
+ENTRY_TRIGGER_REASON: Reclaim D1 SMA50 (0.8042) + nearest Fib support (0.80226) confluence; pin bar confirmation above key level.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **ANALYSIS SUMMARY**
+
+**Why NO despite technical setup?**
+
+1. **MTF RULE FAILURE (Hard Stop):** Weekly and Daily both NEUTRAL = MTF conf = 0/3. The hard rule states *"MTF weekly+daily both agree"* — they don't. Monthly BUY alone is insufficient context. 4H:BUY cannot compensate for W+D misalignment at 80% weight.
+
+2. **COT
