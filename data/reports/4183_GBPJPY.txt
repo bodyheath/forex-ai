@@ -1,0 +1,16 @@
+PAIR: GBP/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: D1 oversold RSI(33.5) + lower BB + MACD negative divergence setup conflicts with 4H downtrend and weak MTF alignment (D:BUY but W/M/4H:NEUTRAL), creating low-conviction mean-reversion opportunity heavily undermined by COT unwinding in GBP longs.
+RISK_FACTORS: [1] GBP COT positioning UNWINDING conviction while JPY BUILDING — institutional flow favors JPY strength, opposing BUY thesis. [2] 4H downtrend (price<SMA50<SMA200 death-cross) contradicts D1 BUY signal; MTF agreement only 1/3 (D:BUY alone insufficient — W and M neutral, 4H neutral) — TRADE_THIS rule requires both weekly AND daily agreement.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do NOT both agree on direction (W:NEUTRAL, D:BUY, 4H:NEUTRAL, M:NEUTRAL = conf 1/3 << 2/3 threshold). Head-and-shoulders bearish pattern on D1

@@ -1,0 +1,25 @@
+PAIR: USD/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: RSI deep oversold (24.9) at lower BB band with D1+4H both BUY aligns to +2.79% USD/JPY rate differential favoring USD strength, but W/M neutrality and ribbon misalignment limit conviction.
+RISK_FACTORS: Weekly and monthly neutral MTF conflict reduces edge — setup lacks full multi-timeframe confirmation; JPY positioning near zero with only BUILDING USD momentum creates asymmetric risk if USD conviction stalls.
+TRADE_THIS: YES
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 157.25
+ENTRY_TRIGGER_REASON: Price bounce from lower Bollinger Band at oversold RSI (24.9) with support at 4H structure; enter 10p below current to confirm reversal off lower band.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (7/10):**
+- T_sig baseline = BUY_9 (pre-computed) → start at 9
+- RSI 24.9 is deeply oversold; no confirmed downtrend (MTF shows W:NEUTRAL, D:BUY, 4H:BUY) → standard tier applies → RSI

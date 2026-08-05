@@ -1,0 +1,17 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD rate rising + NZD rate falling supports structural AUD strength, but weak technical setup (RSI neutral, no confluence, mixed MTF) limits entry conviction; 4H double_bottom offers pullback bounce risk.
+RISK_FACTORS: [1] MTF critical failure: W/D both NEUTRAL — no trend agreement (MTF conf=0/3). Hard rule triggers: TRADE_THIS rejected unless fundamental+COT overwhelms. [2] Ribbon LEANING_BEAR (4/5 aligned downtrend) conflicts with fundamental AUD bullish structure — technical momentum weak despite macro tailwinds. Ribbon + ribbon converging risk suggest trend may reverse.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: HOLD_OBSERVATION
+ENTRY_TRIGGER_REASON: MTF rule failure blocks trade: Weekly and Daily both NEUTRAL, not aligned BUY or SELL. Fundamental (AUD rate +1.78%, NZD falling) + COT AUD SHORT@33% BUILDING provide macro edge, but technical framework (T_sig=3, RSI 45.4 neutral, OSC=NONE, Ribbon leaning bear) lacks entry momentum. Wait for Daily to confirm BUY breakout above SMA50=1.
