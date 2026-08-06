@@ -1,0 +1,17 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Partial oscillator sell signal (Stoch overbought at 87.0) conflicts with intact uptrend structure and neutral MTF alignment, creating low-confidence divergence between momentum and trend.
+RISK_FACTORS: [1] MTF all neutral (0/3 agreement) — no directional conviction across any timeframe; [2] Price in uptrend (>SMA50>SMA200, golden cross) with RSI 58.0 (neutral zone, not overbought) — selling into strength risks stop-hunt; AUD COT building short at 33% creates unfunded reversal risk if institutional buying resumes.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated — W:NEUTRAL + D:NEUTRAL = no >2/3 agreement required for trade authorization. Oscillator confluence (PARTIAL_SELL, 2/3) insufficient to override MTF veto when trend structure remains bullish and RSI is neutral (58.0), not extreme. T_sig=SELL_3 is weak momentum-only signal; inside_bar neutral pattern adds no directional bias. Confidence floor at 4/10 < 7 threshold.
+ENTRY_

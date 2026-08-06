@@ -1,0 +1,26 @@
+```
+PAIR: NZD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with aligned bullish ribbon and uptrend structure; MTF conf only 1/3 (W:SELL vs D:NEUTRAL) fails 2/3 agreement rule—high rejection probability despite bearish technicals.
+RISK_FACTORS: [1. MTF disagreement (Weekly SELL vs Daily NEUTRAL) violates core MTF consensus rule—no valid confluence], [2. Aligned bullish ribbon (5/5 EMAs fanned) and price > SMA50 > SMA200 contradict SELL signal; T_sig=3 is weak baseline in bullish structure context]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily timeframes do not both agree on direction (W:SELL, D:NEUTRAL, conf=1/3 < 2/3 threshold). Trade rejected per hard rule regardless of technical score.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**MTF Rejection (Hard Rule):**  
+Weekly = SELL, Daily = NEUTRAL → only 1/3 agreement.

@@ -1,0 +1,27 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern conflicts with bullish ribbon alignment; mixed MTF (M:SELL vs W/D:NEUTRAL) and RSI neutral-biased create low-confidence setup.
+RISK_FACTORS: [1. MTF disagreement: Monthly bearish but weekly+daily neutral — weak directional conviction, may be false signal. 2. GBP COT unwinding long positioning while trend macro neutral — potential whipsaw if institutions stop reducing; ribbon ALIGNED_BULL contradicts double-top rejection.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.8950
+ENTRY_TRIGGER_REASON: Sell limit above double-top resistance (SH=1.90406); await retest of neckline confirmation before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**ANALYSIS RATIONALE:**
+
+**Technical (3/10 — NEUTRAL):**
+- **MTF Rule Failure**: Monthly:SELL but Weekly+Daily both NEUTRAL → conf=0/3. Trade rule requires both W AND D agreement; this fails. MTF confidence <2/3 = **TRADE_THIS NO regardless of other factors**.
+- **D1 T_sig=3

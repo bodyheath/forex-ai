@@ -1,0 +1,31 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 downtrend structure + PARTIAL_SELL oscillators + GBP positioning unwind conflict with W:BUY signal; mixed MTF agreement (1/3) blocks high-confidence trade.
+RISK_FACTORS: MTF conflict—Weekly BUY vs Daily SELL (only 1/3 agreement) breaks primary entry rule; GBP COT UNWINDING reduces positioning conviction while EUR building SHORT.
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence 1/3 < 2/3 threshold; weekly-daily disagreement disqualifies entry regardless of oscillator or technical score.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**ANALYSIS DETAIL:**
+
+**MTF Rule Breach (Hard Stop):**
+- W:BUY + D:SELL + 4H:NEUTRAL = 1/3 alignment (< 2/3 required)
+- **TRADE_THIS automatic NO** per MTF rule, even though D1 T_sig=SELL_5 and oscillators show PARTIAL_SELL
+
+**Technical (Score: 5/10):**
+- D1

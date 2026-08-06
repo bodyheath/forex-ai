@@ -1,0 +1,31 @@
+```
+PAIR: EUR/AUD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Double bottom + pin bar at key level suggest reversal attempt, but downtrend structure (death-cross) and MTF disagreement (W:BUY vs D:NEUTRAL) limit conviction — neutral RSI and mixed ribbon alignment reduce reliability.
+
+RISK_FACTORS: 
+1. Death-cross structure (price < SMA50 < SMA200) remains intact; reversal unconfirmed until price clears SMA50 at 1.6390.
+2. MTF conf=1/3 (only M:BUY; W:BUY but D:NEUTRAL); weekly-daily disagreement violates MTF rule — trade confidence capped at 5 regardless of pattern confluence.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.6390
+ENTRY_TRIGGER_REASON: Break and close above SMA50 (1.6390) + weekly support confluence confirms death-cross break; escalate only if daily RSI > 55 and MACD turns positive on D1.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+```
+
+**REASONING:**
+
+**TECHNICAL (5/10):**
+- T_sig baseline=3 (NEUTRAL), adjusted for pattern confluence:

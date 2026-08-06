@@ -1,0 +1,30 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 T_sig=SELL_3 conflicts sharply with fully aligned bullish ribbon (5/5 EMA stack) and golden-cross structure; MTF shows M:SELL but W/D/4H all NEUTRAL, failing the 2/3 agreement threshold for trade conviction.
+
+RISK_FACTORS: [1] MTF momentum is split (monthly bearish, but weekly/daily/4H neutral) — confidence cannot exceed 4 without weekly+daily alignment. [2] ALIGNED_BULL ribbon with price > SMA50 > SMA200 and double-bottom pattern suggests continuation upside potential; D1 T_sig=SELL_3 is a pre-computed signal likely based on RSI 56.6 (upper-neutral zone in uptrend context) and minor MACD positivism — but ribbon alignment heavily contradicts this bearish lean.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**ANALYSIS RATIONALE:**
+
+1. **MTF FAILURE**: Monthly=SELL but Weekly=NEUTRAL, Daily=NEUTRAL, 4H=NEUTRAL
