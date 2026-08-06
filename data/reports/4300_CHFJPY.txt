@@ -1,0 +1,23 @@
+PAIR: CHF/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 4/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: RSI oversold at 30.2 with partial oscillator support, but conflicting MTF signals (monthly SELL vs weekly/daily BUY) and bearish ribbon alignment severely limit conviction.
+RISK_FACTORS: [1] MTF conflict: monthly is SELL while weekly+daily are BUY — trend hierarchy contradiction lowers confidence below 7; [2] RIBBON=ALIGNED_BEAR (5/5 EMAs fanned bearish) contradicts BUY direction — strong structural downtrend remains intact despite D1 oversold RSI.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — monthly SELL + weekly BUY + daily BUY = conf 2/3 (does not meet ≥2/3 agreement threshold for both weekly AND daily to align). Bearish ribbon alignment (5/5 EMAs fanned down) is primary structural headwind. Double-top pattern on D1/4H is bearish confirmation, not bullish setup despite RSI oversold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED REASONING:**
+
+1. **MTF RULE VIOLATION (

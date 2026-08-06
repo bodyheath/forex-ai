@@ -1,0 +1,30 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Fundamental AUD strength (+4.50% rate diff, rising RBA) conflicts with technical weakness (T_sig=SELL_3, converging ribbon, MTF misalignment); uptrend structure intact but reversal risk present.
+
+RISK_FACTORS: [1] MTF disagrees — daily neutral contradicts weekly/monthly SELL; only 1 of 3 MTF layers agree (45% confidence threshold), violating MTF rule. [2] Ribbon converging = trend weakening into reversal zone; RSI 57-58 neutral in confirmed uptrend context, not overbought enough to justify SELL in structural uptrend.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do NOT both agree on direction. Daily is NEUTRAL (RSI 57, price above SMA50), while weekly is SELL. Confidence = 1/3 (only monthly agrees with weekly). System requires BOTH weekly AND daily agreement; this setup fails the gate.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF RULE ENFORCEMENT (CRITICAL FAIL):**  
+   -

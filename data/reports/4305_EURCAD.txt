@@ -1,0 +1,17 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts sharply with bullish candle patterns (double_bottom, inverse_H&S) and fully-aligned bullish ribbon; MTF shows no consensus (M:SELL vs W/D:NEUTRAL vs 4H:BUY, conf=0/3), creating false signal risk.
+RISK_FACTORS: [1] MTF disagreement: Weekly and Daily both NEUTRAL — does NOT satisfy MTF rule (requires W+D agreement); 4H diverges BUY, breaking consensus. [2] Pattern-signal conflict: Double bottom + inverse H&S (both bullish, PAT line) directly contradict SELL_3 call; aligned ribbon (5/5) confirms bullish structure, not bearish.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly NEUTRAL + Daily NEUTRAL + 4H BUY = no directional consensus (conf 0/3, threshold 2/3). Bullish ribbon alignment and dual bullish patterns override T_sig=SELL_3. RSI=55.8 is mid-range neutral, MACD histogram flat (+0.0016), no oscillator confluence.

@@ -1,0 +1,25 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: RSI overbought in uptrend signals pullback risk, but MTF neutral and ribbon alignment weaken conviction; T_sig=SELL_3 conflicts with bullish technicals.
+RISK_FACTORS: [1. MTF all NEUTRAL (M/W/D/4H) = zero directional conviction; TRADE_THIS rule requires weekly+daily both agree — they don't, confidence floor is strict.] [2. Ribbon ALIGNED_BULL (5/5 stacked) contradicts SELL signal — trend continuation structure still intact despite RSI 65 overbought.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF fails confluence rule (all 4 timeframes NEUTRAL = conf 0/3, <2/3 threshold). Directional agreement required but not present.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**Technical Layer (4/10):**
+- D1 RSI=65 in confirmed uptrend (price > SMA50 > SMA200, golden cross) → standard tier: 65 = 4–5 SELL. However, **uptrend context rule applies**:

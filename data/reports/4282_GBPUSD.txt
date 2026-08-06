@@ -1,0 +1,24 @@
+```
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 SELL signal conflicts with 4H uptrend structure; mixed MTF alignment (1/3 conf) and neutral ribbon prevent high-conviction entry.
+RISK_FACTORS: [1. MTF disagreement: D1+M:SELL vs 4H:NEUTRAL creates directional ambiguity — breakout above 1.3470 invalidates thesis. 2. COT unwinding GBP shorts while price sits at D1 resistance (78.6% Fib@1.3459) — institutions reducing conviction as retail sentiment (6art) lags — reversal risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.3475
+ENTRY_TRIGGER_REASON: Sell only if price breaks above 1.3470 intrabar then rejects below Fib 78.6% resistance + closes D1 below 1.3450 with fresh MACD histogram negative.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**Technical (5/10):**  
+T_sig=SELL_5 anchors baseline. D1 RSI=56 (neutral tier, mixed trend context—no trend confirmation bias applies).

@@ -1,0 +1,23 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H downtrend with death-cross structure and AUD institutional buying provide marginal SELL bias, but mixed MTF and neutral technicals prevent conviction.
+RISK_FACTORS: [1) MTF all lower timeframes neutral — no directional agreement (W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL) violates multi-timeframe confluence rule; 2) GBP positioning unwinding while AUD building creates crossflow risk — GBP shorts covering could trigger squeeze into resistance at 1.9359 (SH)]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence 0/3 — weekly and daily do not both agree on direction. SELL signal requires W:SELL + D:SELL MTF alignment per rule; current MTF is M:BUY / W:NEUTRAL / D:NEUTRAL / 4H:NEUTRAL. Trade fails MTF gating rule.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Scoring Detail:**
+
+- **TECHNICAL_SCORE: 3/10** — D1 T_sig=NEUTRAL_3 baseline; RSI 48.6 (neutral zone
