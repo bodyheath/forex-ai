@@ -1,0 +1,28 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Confirmed downtrend (W:SELL + D:SELL) with RSI 66.1 in overbought zone, pin bar at key level, and ribbon converging signals trend exhaustion and reversal risk.
+RISK_FACTORS: [1] Both GBP and CHF COT positions UNWINDING — institutional conviction weakening on both sides, reducing follow-through probability. [2] 4H trend neutral and inside bar (accumulation) — price may not follow through lower immediately; breakout direction unclear.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.0910
+ENTRY_TRIGGER_REASON: Break below pin bar low and 4H inside bar range; confirm bearish breakout below 1.0910 support.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+---
+
+### Rationale:
+
+**MTF Alignment (2/3 confidence = 80% wt):**
+- Weekly: SELL | Daily: SELL | 4H: NEUTRAL  
+- **MTF Rule Met:** W + D both SELL = confirmed downtrend direction; 4H neutral is acceptable (not a conflict).  
+- **Confidence floor: 2

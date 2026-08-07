@@ -1,0 +1,26 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 SELL signal conflicts with 4H bullish double-bottom; MTF agreement insufficient (2/3) and ribbon converging signals trend exhaustion — mixed setup with elevated reversal risk.
+RISK_FACTORS: [1. MTF disagreement: D1:SELL vs 4H:SELL + M:BUY creates conflicting directional bias; only 2/3 timeframes align (insufficient for high-confidence trade). 2. Ribbon CONVERGING: EMA collapse indicates trend weakening and imminent reversal risk — entry into SELL on ribbon breakdown is vulnerable to whipsaw.]
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT_CONFIRMATION
+ENTRY_TRIGGER_PRICE: 0.5770
+ENTRY_TRIGGER_REASON: Await daily close below SMA50 (0.5722) to confirm trend reversal and resolve MTF conflict; current price rejection at D1 RSI 60 insufficient for entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- D1 T_sig=SELL_4 is pre-computed baseline, BUT:
+  - D1 RSI=60 is NEUTRAL (45–62 range in

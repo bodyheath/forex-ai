@@ -1,0 +1,23 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Rate differential supports AUD, but MTF conflict (M:SELL vs D:NEUTRAL) and RSI 60.7 in confirmed uptrend (ribbon ALIGNED_BULL) create directional ambiguity; T_sig=SELL_3 is weak signal in bullish structure.
+RISK_FACTORS: [1] MTF low confluence (1/3 agreement, 45% confidence threshold) — D1 and 4H neutral contradicts M1 SELL, invalidates SELL thesis; [2] AUD positioning BUILDING (institutions increasing long conviction) directly conflicts with SELL trade — COT momentum favors continuation of uptrend, not reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**Rejection Rationale:**
+
+1. **MTF Rule Violation**: Weekly AND daily must both agree on direction. You have M:SELL, W:SELL, but **D:NEUTRAL and 4H:NEUTRAL**. Confidence = 1/3 (only M agrees on SELL direction). Rule requires conf ≥ 2/3 for

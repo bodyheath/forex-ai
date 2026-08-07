@@ -1,0 +1,24 @@
+```
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + aligned ribbon supports bounce, but RSI neutral and mixed MTF (W/D neutral vs 4H buy) prevent high conviction; D1 uptrend structure intact but lacks momentum confirmation.
+RISK_FACTORS: [1] MTF disagreement (weekly/daily neutral, monthly sell): MTF confidence only 0/3 (33%), fails ≥2/3 threshold — directional conviction weak. [2] Oscillator confluence absent (Stoch 63.1 + CCI 71.8 = NONE) — no RSI+Stoch+CCI triple agreement; Stoch at 63 is overbought-zone without confirmation.
+TRADE_THIS: NO
+
+RATIONALE:
+─────────────────────────────────────────────────────────────────
+
+**MTF RULE VIOLATION (HARD STOP):**
+Weekly=NEUTRAL, Daily=NEUTRAL, 4H=BUY, Monthly=SELL (context).
+Confidence = 1/3 (only 4H agrees with BUY direction).
+MTF threshold requires ≥2/3 agreement → **FAILS**.
+Per strict rule: "if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless."
+**

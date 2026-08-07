@@ -1,0 +1,44 @@
+I need to carefully evaluate this setup, particularly the ALIGNED_BULL ribbon conflict with the SELL signal.
+
+**Key analysis:**
+
+**MTF:** W:SELL + D:SELL — both agree SELL ✓. 4H:SELL bonus. MTF conf=3/3 — qualifies for TRADE_THIS directionally.
+
+**TECHNICAL:** RSI=68.5 in a confirmed UPTREND (W:BUY+D:BUY would shift zones) — BUT wait, MTF shows W:SELL+D:SELL. So this is a CONFIRMED DOWNTREND context. In downtrend, shift BUY zones lower; RSI 68.5 is still in SELL territory (62-70=4-5SELL standard, and in downtrend context this is a bearish retest). T_sig=SELL_7. Bearish pin bar at key level confirms. Triple oscillator SELL. Score: 7, with TRIPLE_SELL adding +2 confidence → but T_sig=7 is the anchor. I'll keep TECHNICAL_SCORE=7.
+
+**RIBBON CONFLICT:** ALIGNED_BULL fan=5/5 is a MAJOR red flag for a SELL. This directly contradicts the MTF SELL signals. The ribbon shows all 6 EMAs stacked bullishly — this means the trend structure is bullish on the price action side even though oscillators are screaming overbought. This is a significant risk factor and should suppress confidence.
+
+**FUNDAMENTAL:** Rate diff +2.29% favors EUR (SELL CHF = buy EUR side... wait, EUR/CHF SELL means selling EUR, buying CHF). CHF rate falling = CHF weakening = headwind for CHF strength = headwind for EUR/CHF SELL. This is mixed/slightly negative for SELL. Score: 4.
+
+**FIB:** SH=0.92778, SL=0.9095, range=183p. Price at 0.9363 is well above the SH (0.92778) — price has broken above the 3-month high. No nearby fib resistance identified. No near= tag. This is actually bearish context — extended above range.
+
+**POSITIONING:** CHF net SHORT 51% unwinding = CHF shorts being covered = CHF strengthening = supports EUR/CHF SELL. EUR net SHORT building = EUR weakening = supports SELL. Score: 7.
+
+**SENTIMENT:** EUR=7art, CHF=8art — moderate news flow, slight CHF positive. Score: 6.
+
+**MACRO:** VIX=15.8 (low, risk-on), oil=82 (moderate), curve=0.5 (slight positive). Risk-on typically supports CHF weakness (EUR/CHF up), which is AGAINST the SELL. Score: 4.
+
+**RIBBON WARNING:** ALIGNED_BULL is a serious contradiction. Downgrade confidence by 1 for this conflict.
+
+**Calculations:**
+- Entry: 0.9363
+- Stop: above pin bar high + ATR buffer. ATR=0.0037. Pin bar at key level — stop ~0.9363 + 0.0037 + small buffer = 0.9405 (round to 0.9405)
+- Stop distance: 0.9405 - 0.9363 = 0.0042
+- Target (2R): 0.9363 - (0.0042 × 2) = 0.9363 - 0.0084 = 0.9279
+
+**Confidence:** Base T_sig=7, TRIPLE_SELL +2 → capped consideration. W+D agree +. RIBBON conflict −1. ALIGNED_BULL is serious risk. Net confidence: 7. Conf=7 meets threshold but ribbon conflict is noted.
+
+**R:R:** 2.0:1 exactly ✓
+
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 7/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 4/10
+DIVERGENCE: NONE
+OSCILLATOR_
+KEY_THESIS: Bearish pin bar at key resistance with RSI 68.5 in confirmed uptrend (W:SELL + D:SELL), triple oscillator confluence (Stoch 93.5, CCI 141.3, RSI SELL), and institutional CHF positioning unwinding = high-probability mean reversion short.
+RISK_FACTORS: [1. Ribbon fully aligned bullish (ALIGNED_BULL 5/5 fans) suggests trend continuation risk — price may accelerate higher despite technical overbought; 2. EUR rate flat + CHF rate falling narrows fundamental support for short — differential +2.29% favors EUR, reducing conviction on 4-6H hold]

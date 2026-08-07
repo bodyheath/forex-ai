@@ -1,0 +1,23 @@
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 58.2 + T_sig=SELL_3 suggest mild downward pressure, but inverse H&S pattern + LEANING_BULL ribbon conflict this signal; no MTF confirmation (all NEUTRAL) blocks any trade.
+RISK_FACTORS: [1. MTF alignment 0/3 — no weekly or daily directional agreement; trade forbidden by MTF rule regardless of technicals. 2. Pattern conflict: inverse H&S (bullish reversal) contradicts T_sig SELL, creating ambiguity; price between SMA50 (0.5790) and SMA200 (0.5826) indicates no trend.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule blocks entry — weekly AND daily must both agree on direction. Current MTF: M/W/D/4H all NEUTRAL (conf=0/3). No directional consensus exists.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF Enforcement (Hard Block):** W:NEUTRAL + D:NEUTRAL = conf <2/3 → **TRADE_THIS = NO** per MTF rule,

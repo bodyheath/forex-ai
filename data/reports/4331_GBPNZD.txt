@@ -1,0 +1,23 @@
+PAIR: GBP/NZD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 double-bottom bullish pattern + RSI 43.4 (neutral) + T_sig=6 suggests upside bias, but MTF alignment weak (D:BUY vs 4H:SELL vs M:SELL) and GBP COT unwinding reduces conviction.
+RISK_FACTORS: MTF conflict (daily BUY but 4H/monthly SELL; conf=1/3 fails 2/3 threshold) undermines directional conviction. GBP net SHORT positioning unwinding signals institutional exit from long bets, conflicting with proposed BUY direction.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+**ANALYSIS RATIONALE:**
+
+**MTF Failure (Hard Stop):** MTF rule requires weekly AND daily both agree on direction. Here, D1=BUY but W=NEUTRAL and M=SELL; 4H=SELL. Confluence is 1/3 (only daily). This fails the ≥2/3 threshold. **Trade direction cannot be confirmed across timeframes.**
+
+**Technical Layer (5/10):**

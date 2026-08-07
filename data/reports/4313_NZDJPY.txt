@@ -1,0 +1,23 @@
+PAIR: NZD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 BUY signal (T_sig=4) supported by rate differential (+1.84% NZD carry advantage), but weak MTF alignment (1/3 conf) and 4H downtrend structure limit conviction.
+RISK_FACTORS: MTF agreement only 1/3 (D1 BUY vs W/M/4H NEUTRAL/downtrend) — no trending confluence above D1; JPY rate rising + NZD rate falling creates headwind to NZD strength despite carry spread.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 92.50
+ENTRY_TRIGGER_REASON: Confluence at D1 SMA50 (93.3248) retracement if price pulls back to near Fibonacci support zone (SL=91.01), allowing lower-risk entry with better R:R.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+- **MTF Rule Breach:** Weekly + Daily MTF agreement required for TRADE_THIS=YES. Here, Weekly=NEUTRAL, Daily=BUY, 4H=NEUTRAL, Monthly=NEUTRAL → only 1/3 = 40% < threshold (need
