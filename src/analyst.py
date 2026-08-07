@@ -221,7 +221,18 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
     for side in ("base", "quote"):
         p = pos.get(side, {})
         if p.get("status") == "ok":
-            flag     = (p.get("extreme_flag") or "")[:20]
+            # extreme_flag has 3 possible values (positioning.py), longest is 79
+            # chars ("...BOTTOM of its ~1y range (crowded short, reversal risk)").
+            # Was truncated to [:20] here, which cuts every string off before any
+            # of its actual content ("net positioning nea") — silently destroying
+            # the one piece of interpretive context (crowded/reversal-risk) that
+            # explains what the raw percentile number means, for every candidate,
+            # including the JPY case that motivated this fix (percentile=0.0,
+            # 2026-07-28, right before that pair's crater). 90 is the tightest
+            # round bound that fits all 3 strings with a little headroom; this
+            # module is deliberately token-conscious (~200 input tokens/pair) so
+            # the cap stays bounded rather than removed outright.
+            flag     = (p.get("extreme_flag") or "")[:90]
             momentum = p.get("cot_momentum", "")
             mom_str  = f" MOM={momentum}" if momentum else ""
             pos_parts.append(
