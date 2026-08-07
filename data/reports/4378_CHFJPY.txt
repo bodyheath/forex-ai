@@ -1,0 +1,26 @@
+```
+PAIR: CHF/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+
+KEY_THESIS: D1 RSI oversold (31.5) near 61.8% Fib support at entry price with 4H double-bottom setup conflicts with aligned bearish ribbon and multi-timeframe disagreement (M:SELL vs W/D:BUY).
+
+RISK_FACTORS: 
+1. Multi-timeframe conflict (Monthly SELL vs Weekly/Daily BUY) — only 2/3 agreement fails hard MTF rule threshold; bearish ribbon (ALIGNED_BEAR 5/5) contradicts BUY thesis and signals potential continuation of downtrend.
+2. CHF positioning unwinding (institutions reducing long conviction) while JPY building shorts — institutional flow favors JPY strength, opposing CHF/JPY upside.
+
+TRADE_THIS: NO
+
+RATIONALE:
+- **MTF Rejection (Hard Rule)**: Weekly + Daily BUY vs Monthly SELL = only 2/3 agreement. Confidence 2/3 (67%) fails the ≥80% multi-timeframe consensus requirement. **TRADE_THIS must be NO** per hard rule.
+- **Technical Contradiction**: T_sig=BUY_6 is undermined by:
+  - D1 PAT=double_top:bea (bearish, not bullish

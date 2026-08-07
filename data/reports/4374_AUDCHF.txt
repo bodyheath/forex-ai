@@ -1,0 +1,24 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly downtrend + rising AUD rates support SELL, but D1 uptrend structure, ALIGNED_BULL ribbon, and neutral daily RSI create conflicting signals with only 1/3 MTF agreement.
+RISK_FACTORS: [1] MTF disagree (M:SELL vs D:NEUTRAL vs W:SELL) — only 45% confidence threshold; entry risks early reversal on daily breakout. [2] ALIGNED_BULL ribbon (5/5 EMA stack) contradicts monthly bearish bias — trend continuation signal conflicts with monthly downside thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5720
+ENTRY_TRIGGER_REASON: Sell only if price breaks above D1 SMA50 (0.5635) fails and RSI rejects 62+ zone; await pullback confirmation into resistance cluster near FIB SH (0.5728) for higher-probability reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- T_sig=SELL_3 provides baseline, but RSI 59.2 is neutral-to-rising (45–62 zone)

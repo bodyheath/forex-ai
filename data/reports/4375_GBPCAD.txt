@@ -1,0 +1,17 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish double-top on D1 and head-and-shoulders on 4H conflict with aligned ribbon, while MTF disagreement (M:SELL vs W:NEUTRAL vs D:NEUTRAL vs 4H:BUY) and neutral RSI (50.3) block high-confidence entry.
+RISK_FACTORS: [1. MTF framework fails (conf=0/3)—D1 and W both NEUTRAL, no directional agreement; system rule: TRADE_THIS NO if MTF <2/3 alignment regardless of patterns. 2. GBP COT UNWINDING institutional conviction while CAD unchanged—reduces positioning confidence and suggests GBP sellers may be covering, removing downside momentum.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation—Weekly and Daily do not both agree on direction (W:NEUTRAL, D:NEUTRAL, M:SELL, 4H:BUY; conf=0/3). Bearish patterns (double_top D1, head_and_shoulders 4H) are contradicted by aligned ribbon (ALIGNED_BULL 5/5 EMA fan) and neutral RSI (50.3 = no
