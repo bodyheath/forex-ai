@@ -1,0 +1,24 @@
+PAIR: NZD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 BUY signal (RSI 42.8 neutral, MACD negative) conflicts with bearish double-top pattern and MTF weakness (only D1 agrees), limiting conviction despite JPY crowded short positioning.
+RISK_FACTORS: [1. MTF disagreement — W and M both NEUTRAL, only D1 BUY; trade lacks multi-timeframe confluence (conf=1/3 wt=40%). 2. Double-top bearish candle pattern contradicts D1 T_sig=BUY_4; price below SMA50 (92.92 < 93.33) confirms downside bias despite oscillator neutrality.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 91.50
+ENTRY_TRIGGER_REASON: Retest of FIB SL=91.01 support zone; if price bounces with RSI oversold + MACD bottoming, 2/3 confluence triggers BUY.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 T_sig=BUY_4 baseline, but RSI 42.8

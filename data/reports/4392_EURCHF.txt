@@ -1,0 +1,26 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level + RSI overbought in uptrend + partial oscillator confirmation supports D1 SELL signal, but MTF disagrees (W:NEUTRAL, D only) and EUR positioning reversal risk constrains conviction.
+RISK_FACTORS: [1. MTF weakness — only D1:SELL agrees; W and 4H neutral undermines signal strength (conf 1/3 = 40% agreement). 2. EUR crowded short positioning near 1-year low + COT BUILDING suggests institutional reversal trap — SELL into a EUR bounce risks counter-trend reversal.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.9310
+ENTRY_TRIGGER_REASON: Break below pin bar low (0.9310) confirms bearish rejection from overbought D1 RSI 65.4 in uptrend context.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL [6/10]:**
+- D1: RSI 65.4 in **confirmed uptrend** (price > SMA50 > SMA200, ribbon aligned 5/5). Standard tier would be 4
