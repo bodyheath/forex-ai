@@ -11480,6 +11480,40 @@ def run() -> int:
         except Exception as _cot_pen_exc:
             _log_line(log, f"[cot_reversal_penalty] observability failed (non-fatal): {_cot_pen_exc}")
 
+        # extreme_flag delivery observability: this fix (2026-08-07) only repairs
+        # what reaches the AI's prompt (analyst.py's extreme_flag was truncated to
+        # [:20] chars, cutting every string off before its actual content — see the
+        # JPY case, percentile=0.0 on 2026-07-28, right before that pair's crater).
+        # It does NOT guarantee the AI weighs the now-complete text any differently
+        # — that can only be checked by revisiting real cases, not by a backtest.
+        # This tally exists so a real extreme-positioning candidate can be found
+        # and its POSITIONING_SCORE / RISK_FACTORS inspected in a few weeks to see
+        # whether the fix actually changed anything, or the gap wasn't the
+        # truncation after all.
+        try:
+            _RISK_KEYWORDS = ("crowded", "extreme", "squeeze", "reversal risk")
+            _extreme_hits = []
+            for _r in deep_results:
+                _pos_b = (_r.get("bundle", {}).get("positioning", {}) or {})
+                for _side in ("base", "quote"):
+                    _p = _pos_b.get(_side, {}) or {}
+                    _ef = (_p.get("extreme_flag") or "")
+                    if _ef and "not extreme" not in _ef:
+                        _ps = (_r.get("parsed", {}) or {}).get("positioning_score")
+                        _rf = ((_r.get("parsed", {}) or {}).get("risk_factors") or "").lower()
+                        _mentioned = any(k in _rf for k in _RISK_KEYWORDS)
+                        _extreme_hits.append(
+                            f"{_r.get('pair','')}:{_p.get('currency','')}"
+                            f"@{_p.get('percentile_in_range','?')}pct"
+                            f"(pos_score={_ps},risk_factors_mentions_it={_mentioned})"
+                        )
+            _log_line(log, (
+                f"[extreme_flag] candidates_with_extreme_positioning="
+                f"{len(_extreme_hits)}/{passed} — {'; '.join(_extreme_hits) or 'none'}"
+            ))
+        except Exception as _ef_exc:
+            _log_line(log, f"[extreme_flag] observability failed (non-fatal): {_ef_exc}")
+
         # Update movement alert stats for priority-swept pairs
         if _movement_priority_set and _MOVEMENT_ALERTS_FILE.exists():
             try:
