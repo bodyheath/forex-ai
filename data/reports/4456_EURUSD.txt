@@ -1,0 +1,24 @@
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level + partial oscillator SELL (2/3) + D1 T_sig=6 suggest downside, but MTF conf=1/3 (only D1 agrees), 4H uptrend, and EUR crowded shorts create mean-reversion risk.
+RISK_FACTORS: [1. MTF misalignment — only D1 SELL, 4H/W/M NEUTRAL; signal fails hard rule if weekly + daily must both agree. 2. EUR positioning BUILDING reversal risk — net SHORT at 6.0% crowded near 1y bottom; institutional momentum flipping contradicts SELL thesis.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1510
+ENTRY_TRIGGER_REASON: Rejection below pin bar high at 1.1569; confirm D1 close <SMA50 (1.1473) as structural break.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 T_sig=SELL_6 anchors baseline at 6, but RSI=61.8 (mid-range, not overbought) in a **mixed
