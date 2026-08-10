@@ -1,0 +1,24 @@
+```
+PAIR: EUR/AUD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Double-bottom reversal pattern at 38.2% Fibonacci confluence with crowded EUR short positioning (reversal risk) and uptrend initiation on M/W, but daily remains neutral and ribbon converging signals weakening conviction.
+
+RISK_FACTORS: 
+1. MTF_WEAK_AGREEMENT: Only monthly+weekly align BUY; daily+4H neutral → conf only 1/3 (45% MTF weight). Price currently in downtrend structure (below SMA50 < SMA200), though early reversal setup.
+2. RIBBON_CONVERGING: EMA ribbon tightening (5/5 aligned but convergent) indicates trend weakening/reversal risk; combined with SMD=-7 (institutional bearish vs retail bullish contrarian signal), institutional positioning may be positioning for further downside despite crowded EUR short.
+
+TRADE_THIS: NO
+
+RATIONALE:
+MTF rule violation: W:BUY + D:NEUTRAL = insufficient agreement (2/3 minimum required; you have 1/3 effective consensus given D neutral). Daily does not confirm weekly, and 4H is also neutral/range-bound. Confidence = 6 is above 7 threshold but MTF conf < 2/3 → automatic TRADE_THIS: NO per hard rule.

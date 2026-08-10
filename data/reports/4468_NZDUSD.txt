@@ -1,0 +1,20 @@
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level with partial oscillator confluence (Stochastic+CCI bearish 2/3) suggests reversal risk, but MTF disagreement (D:SELL vs 4H:NEUTRAL, conf=1/3 <2/3 threshold) and uptrend structure in 4H prevent high-conviction entry.
+RISK_FACTORS: [1] MTF conflict — Daily suggests SELL but 4H is in uptrend; only 1/3 agreement across M/W/D/4H fails MTF rule. [2] Fundamental headwind weak — NZD rate falling supports SELL but USD flat provides no tailwind; diff=-0.95% is marginal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5865
+ENTRY_TRIGGER_REASON: Await pullback to upper Fibonacci near resistance (SH=0.5995 zone); re-enter on break below 0.5865 if 4H also flips to SELL and MTF agreement strengthens to ≥2/3.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+**RATIONALE:**
+- **Technical fails MTF rule:** D1=SELL but

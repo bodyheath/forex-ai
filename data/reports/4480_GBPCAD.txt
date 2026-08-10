@@ -1,0 +1,24 @@
+```
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend (price>SMA50>SMA200) with aligned bull ribbon and GBP rate advantage conflicts with 4H downtrend and neutral RSI 49.4; crowded CAD short positioning creates reversal risk.
+RISK_FACTORS: [1] MTF conflict: D1 uptrend vs 4H downtrend + monthly sell context = no clear directional agreement (conf=0/3), violates safe-entry standard. [2] CAD positioning at extreme crowded short (~1y bottom) = high institutional reversal risk; GBP unwinding suggests weakening conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule breach — W:NEUTRAL + D:NEUTRAL + 4H:NEUTRAL + M:SELL fail 2/3 agreement threshold. D1 uptrend (T_sig=3, inside bar neutral) and aligned-bull ribbon insufficient to overcome cross-timeframe disagreement.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS:**
+
+**MTF Rejection (Disqualifying):**
+- Weekly=NEUTRAL, Daily=NEUTRAL, 4H
