@@ -1,0 +1,28 @@
+```
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed-MTF setup with D1 SELL signal conflicting 4H uptrend structure; GBP COT unwinding reduces conviction.
+RISK_FACTORS: [1. MTF agreement only 2/3 (D:SELL + 4H:SELL vs W:NEUTRAL) — insufficient consensus; 2. 4H double-bottom pattern + golden-cross uptrend contradicts D1 SELL_5, creating directional ambiguity.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.3520
+ENTRY_TRIGGER_REASON: Rejection at swing high (SH=1.35446); wait for price to reclaim 1.3520 resistance before confirming D1 SELL bias.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+---
+
+### **Analysis Breakdown:**
+
+**TECHNICAL_SCORE: 5/10**
+- D1 RSI=58.8 in **neutral zone (45–62)** → score 3–4 base
+- D1 T_sig=SELL_5 = pre-computed baseline (5/10)
+- **MTF conflict**: D1:SELL + 4H:

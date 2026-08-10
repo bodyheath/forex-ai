@@ -1,0 +1,29 @@
+```
+PAIR: GBP/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + bullish double-bottom pattern on 4H offers mean-reversion entry, but weak MTF alignment and neutral RSI(D1:45) limit conviction.
+RISK_FACTORS: MTF disagreement (M:SELL vs W/D:NEUTRAL) = no clear directional consensus; COT unwinding on both pairs = institutional conviction fading, reversal risk if price breaks below SL 209.596.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 212.8
+ENTRY_TRIGGER_REASON: Retest of lower Fibonacci support (209.6) + RSI oversold confirmation before fresh BUY; avoid false breakout on weak MTF.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### SCORING BREAKDOWN:
+
+**TECHNICAL_SCORE: 5/10**
+- D1 T_sig=NEUTRAL_3 (baseline)
+- D1 RSI=45.0 (standard tier: 45–62=NEUTRAL, score 3–4) → score 3
+- D1 MACD=-0.5663 (negative, slight SELL bias) → no bonus
+- 4
