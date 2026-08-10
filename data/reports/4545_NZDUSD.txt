@@ -1,0 +1,33 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Pin bar at key resistance + partial oscillator sell signal offset by conflicting 4H uptrend structure and leaning-bull ribbon alignment — weak directional conviction.
+
+RISK_FACTORS: [1. MTF agreement only 1/3 (D:SELL vs W/4H:NEUTRAL) — no clear multi-timeframe consensus, increasing whipsaw risk. 2. 4H price > SMA50 > SMA200 with inside bar suggests bullish structure contradicting D1 SELL; ribbon LEANING_BULL (4/5) signals momentum may extend higher.]
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5920
+ENTRY_TRIGGER_REASON: Sell limit at upper Fibonacci resistance (SH 0.5995 zone) if price retests after pin bar rejection; D1 RSI 60.9 approaching 62 (SELL tier boundary) adds confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+---
+
+### SCORING RATIONALE:
+
+**TECHNICAL (5/10):**
+- D1 T_sig=SELL_5 is baseline.
+- RSI 60.9 on D1
