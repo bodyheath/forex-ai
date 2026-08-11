@@ -1,0 +1,18 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: MTF conflict (M:SELL + W:SELL vs D:NEUTRAL + 4H:NEUTRAL) severely limits conviction; D1 neutral RSI (48.4) + uptrend structure contradicts weekly/monthly downtrend signal.
+RISK_FACTORS: [1. MTF agreement only 1/3 (weekly+daily must both agree; here D disagrees) — TRADE_THIS fails MTF rule regardless of score. 2. CAD positioning near 1y short crowding bottom creates reversal risk into falling CAD rates; GBP COT unwinding reduces institutional conviction on the SHORT.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly (SELL) and daily (NEUTRAL) do not both agree on direction. Monthly context (SELL) insufficient without D1 confirmation. Ribbon ALIGNED_BULL on D1 and price > SMA50 > SMA200 (golden cross) reinforce D1 neutrality vs lower timeframe downtrend — conflicting signals. Confidence 4/10 < 7 threshold; R:R not calculable without clear setup.
+ENTRY_TRIGGER_EXPIRY_HOURS:

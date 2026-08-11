@@ -1,0 +1,25 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 78.6% Fib resistance + MACD bearish divergence + converging ribbon signals weakening uptrend, but mixed MTF and neutral oscillators limit conviction.
+RISK_FACTORS: [1. CAD positioning crowded short near 1y bottom = reversal risk if institutions unwind; 2. D1/W/4H all NEUTRAL on MTF = no directional agreement, fails MTF rule for high-conviction trade]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5800
+ENTRY_TRIGGER_REASON: Pin bar rejection at 78.6% Fib resistance (0.57837) with close below midpoint confirms bearish candle pattern.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+### Rationale:
+
+**TECHNICAL_SCORE: 4/10**
+- D1 T_sig=SELL_3 (baseline 3, pin bar at key level +1) = 4
+- RSI 55.2 in uptrend context = neutral (45–65 range in confirmed uptrend = 3–4 per rules; uptrend is present D1+4H both >SMA50)

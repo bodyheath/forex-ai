@@ -1,0 +1,23 @@
+```
+PAIR: NZD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (22p/6pt) conflicts with bullish ribbon alignment and uptrend structure; MTF agreement fails (only 1/3 layers agree on SELL).
+RISK_FACTORS: [1] MTF conf=1/3 fails TRADE_THIS rule (requires >=2/3 weekly+daily agreement); D1 only SELL while W/M neutral. [2] EMA ribbon ALIGNED_BULL (5/5 fanned) contradicts SELL signal — trend structure intact, reversal premature.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement insufficient (D:SELL vs W:NEUTRAL, M:NEUTRAL). Bearish divergence is valid, but ribbon alignment + price > SMA50 > SMA200 (golden cross) + inside_bar (neutral candle) suggest trend continuation, not reversal. CAD crowded short positioning is reversal risk IF price breaks higher; insufficient confluence to override.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS SUMMARY:**
+
+- **TECHNICAL (4/10):** D1 T_sig=SELL_4

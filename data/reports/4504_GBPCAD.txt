@@ -1,0 +1,26 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed MTF signals (M:SELL vs W/D:NEUTRAL vs 4H:BUY) fail convergence rule; CAD crowded-short reversal risk conflicts with GBP fundamental weakness.
+RISK_FACTORS: [1. MTF disagreement (conf 0/3) — no directional alignment across timeframes blocks TRADE_THIS. 2. CAD positioning near 1y range floor with STABLE momentum suggests institutional capitulation reversal risk — shorting CAD into crowded short is high-risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated: Weekly and Daily do not both agree on direction (W:NEUTRAL + D:NEUTRAL fail to confirm M:SELL and 4H:BUY). Confidence 0/3 << 2/3 threshold. Cannot execute.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### SCORING DETAIL:
+
+**TECHNICAL_SCORE: 4/10**
+- D1: RSI=48.2 (neutral zone 45–62) → base score 3–4. T_sig=NEUTRAL_3 is baseline.

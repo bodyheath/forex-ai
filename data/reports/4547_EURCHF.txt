@@ -1,0 +1,21 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + RSI 64 (overbought in neutral MTF context) + crowded EUR short positioning at reversal risk = mean-reversion SELL setup, but weak conviction due to MTF neutrality and aligned bullish ribbon conflicting the signal.
+RISK_FACTORS: [1] MTF completely neutral (M/W/D/4H all NEUTRAL, conf=0/3) — no directional agreement across timeframes, severely undermining trade thesis. [2] Ribbon fully ALIGNED_BULL (5/5 EMA pairs) signals continuation, directly contradicting SELL signal; EUR positioning is crowded short near range bottom (reversal risk), but CHF unwinding reduces conviction.
+TRADE_THIS: NO
+
+**Rationale:**
+
+1. **MTF RULE FAILURE**: MTF line shows conf=0/3 (all timeframes NEUTRAL). The MTF rule is hard: "if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless." With 0/3, there is zero agreement. This alone disqualifies the trade.
+
+2. **TECHNICAL_SCORE = 4**: 
+   - T_sig baseline = SELL_3 → anchor at 3
+   - RSI 64 in neutral MTF context: standard tier =

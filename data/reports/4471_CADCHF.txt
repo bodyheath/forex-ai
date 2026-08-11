@@ -1,0 +1,18 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with uptrend structure suggests bullish rejection, but T_sig=SELL_3 conflicts, RSI at 60.3 in uptrend is neutral (not overbought), and ribbon converging signals trend weakening — hold for confirmation before shorting.
+RISK_FACTORS: [1. MTF conf=0/3 (M:BUY vs W:NEUTRAL vs D:NEUTRAL) violates cohesion rule — no directional agreement across timeframes; this alone blocks TRADE_THIS=YES. 2. CAD positioning at crowded short (~0% net but at 1-year range bottom) + COT UNWINDING on CHF creates reversal risk if institutions flush stops — shorts vulnerable to squeeze.]
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT_CONFIRMATION
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF signal agreement required before entry — Weekly and Daily must both align BUY or SELL (currently neutral/conflicted with only Monthly bullish). Pin bar suggests potential bottom, but T_sig=SELL_3 is contradicted by uptrend structure and RSI not yet oversold in context of uptrend (60.3 is neutral, not 70+).
+ENTRY_TRIGGER

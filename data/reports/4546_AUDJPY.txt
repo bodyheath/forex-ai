@@ -1,0 +1,25 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H pin bar at key level + MTF bearish lean (M:SELL, 4H:SELL, RIB:LEANING_BEAR) conflicts with D1 morning star and neutral RSI; low conviction setup with mixed technical agreement.
+RISK_FACTORS: [1] MTF only 2/3 aligned (W:NEUTRAL, D:NEUTRAL weaken signal; conf=0/3 insufficient), [2] JPY COT unwinding reduces institutional conviction; AUD rate rising contradicts SELL thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 111.8100
+ENTRY_TRIGGER_REASON: Break below nearest support (Fib SL swing at ~111.82) with 4H pin bar confirmation at key level.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+**Rationale:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI=48.1 (neutral zone 45–62) = baseline +3; T_sig=NEUTRAL_3 confirms.
+- 4H RSI=79.0 (severely overbought, >76) = +2 toward SELL, BUT this is

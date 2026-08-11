@@ -1,0 +1,23 @@
+PAIR: GBP/NZD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double bottom at 2.2444 with RSI 41 and T_sig=BUY_4 suggests bullish setup, but weak MTF alignment (1/3 agreement) and leaning-bear ribbon severely limit conviction.
+RISK_FACTORS: [1] MTF critical failure — W/M both NEUTRAL, only D agrees BUY; MTF confidence 1/3 (well below 2/3 threshold for multi-timeframe confirmation). [2] GBP positioning unwinding: net SHORT at 46% with MOM=UNWINDING signals institutional reduction of conviction; ribbon LEANING_BEAR (4/5 aligned downward) contradicts BUY thesis and indicates structural bearish bias.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not both agree on direction (W:NEUTRAL + D:BUY = 1/3 confidence < 2/3 threshold). Trade blocked per hard rule regardless of technical pattern.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**RATIONALE:**
+
+- **TECHNICAL_SCORE = 5**: RSI 41 is neutral

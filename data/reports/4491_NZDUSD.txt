@@ -1,0 +1,23 @@
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level with RSI 62 (upper-neutral) and partial oscillator SELL signal, but weak MTF confluence (D:SELL only; W/4H:NEUTRAL) and bullish ribbon structure create conflicting directional signals.
+RISK_FACTORS: [1] MTF agreement failure — only 1/3 timeframes confirm SELL direction (D:SELL vs W:NEUTRAL, 4H:NEUTRAL, M:NEUTRAL); confluence confidence <2/3 threshold triggers NO-TRADE rule. [2] Ribbon LEANING_BULL (4/5 EMA alignment) contradicts SELL setup and suggests underlying uptrend structure remains intact despite pin bar formation.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violated — Weekly and Daily do not both confirm direction (W:NEUTRAL + D:SELL ≠ agreement). Trade confidence cannot exceed 5/10 under conflicting MTF structure; TRADE_THIS threshold requires ≥7 confidence AND weekly+daily agreement.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYST RATIONALE:**
+
+**MTF Failure (Critical Blocker

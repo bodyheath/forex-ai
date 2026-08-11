@@ -1,0 +1,27 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 SELL signal conflicts with 4H bullish pattern; MTF disagreement (1/3 conf) + converging ribbon + crowded CAD short positioning = mixed-risk setup with reversal risk.
+RISK_FACTORS: [1] MTF conflict—D1 SELL (RSI 57.4, T_sig=4) vs. 4H inverse H&S bull pattern + uptrend; only 1/3 MTF agreement fails trade rule. [2] Crowded CAD short at range bottom + ribbon converging = institutional reversal risk; UNWINDING CHF adds uncertainty.
+TRADE_THIS: NO
+
+REASONING:
+
+**MTF Rule Violation (Hard Stop):**
+MTF conf = 1/3 (M:BUY, W:NEUTRAL, D:SELL, 4H:NEUTRAL). Weekly and Daily do NOT both agree on direction → **TRADE_THIS = NO** per mandate, regardless of other scores.
+
+---
+
+**Layer-by-layer scoring (for reference):**
+
+**1. TECHNICAL_SCORE = 4/10:**
+- D1 T_sig = SELL_4 (baseline)
+- RSI 57.4 (D1) = neutral-to-mixed zone (45–62 = 3–

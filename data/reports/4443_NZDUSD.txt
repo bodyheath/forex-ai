@@ -1,0 +1,24 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level + RSI overbought (62.9) + MACD rolling over on D1 signal SELL, but MTF conf only 2/3 (D:SELL + 4H:SELL vs W:NEUTRAL) and ribbon leaning bull limits downside conviction.
+RISK_FACTORS: [1. MTF confluence only 60% — weekly neutral breaks the 2/3 rule threshold; sell signal weakens if daily reverses. 2. Ribbon LEANING_BULL (4/5 aligned) contradicts sell thesis — suggests uptrend continuation bias despite overbought RSI.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5870
+ENTRY_TRIGGER_REASON: Wait for retracement to SMA50 (0.5789) confluence + RSI <60 confirmation before shorting into the lean bull structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Analysis Summary:**
+
+**Why NO despite 6/10 confidence:**
+- **MTF rule violation (critical):** conf=2/3 (60%) is below the **≥2/3 threshold (~67%)** required for TRADE_THIS

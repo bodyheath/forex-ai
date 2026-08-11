@@ -1,0 +1,31 @@
+PAIR: USD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: USD strength (+3.67% rate diff, falling CHF rates) and pin bar at key level provide long-bias setup, but MTF alignment failure (weekly/daily neutral vs monthly BUY) and RSI neutrality (51.3) prevent high-conviction entry.
+
+RISK_FACTORS: (1) MTF disagreement: monthly BUY but weekly+daily both NEUTRAL (conf=0/3) — fails MTF rule requiring ≥2/3 agreement; (2) CHF positioning UNWINDING (institutions reducing shorts) removes COT tailwind and introduces reversal risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.8115
+ENTRY_TRIGGER_REASON: Breakout above pin bar high (0.8115) with RSI confirmation >55 would trigger weekly uptrend confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- T_sig=NEUTRAL_3 baseline applied; RSI 51.3 = pure NEUTRAL (3-4 in mixed MTF).
+- D1 uptrend structure (price > SMA50 > SMA200) suggests bullish context, but

@@ -1,0 +1,16 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with bullish pattern setup conflicts with monthly downtrend and T_sig=SELL_3; MTF misalignment (M:SELL vs D:NEUTRAL) prevents high-confidence entry despite aligned ribbon and positive rate differentials.
+RISK_FACTORS: [1] MTF disagree — only monthly is SELL, daily/4H are NEUTRAL; true confidence is 1/3 (45% weighted agreement) — insufficient for high-conviction trade. [2] T_sig=SELL_3 baseline contradicted by D1 RSI=61.6 in confirmed uptrend (price > SMA50 > SMA200, golden cross) — in uptrend, RSI 60-70 is NEUTRAL (3-4), not SELL; ribbon ALIGNED_BULL (5/5) confirms uptrend continuation, not reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — W and D do not both agree on direction (M:SELL vs D:NEUTRAL). Confidence 1/3 fails minimum 2/3 threshold. Pin bar is bullish pattern, not bearish; T_sig=SELL_3 is contrad
