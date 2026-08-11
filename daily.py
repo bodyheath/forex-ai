@@ -11498,7 +11498,7 @@ def run() -> int:
                 for _side in ("base", "quote"):
                     _p = _pos_b.get(_side, {}) or {}
                     _ef = (_p.get("extreme_flag") or "")
-                    if _ef and "not extreme" not in _ef:
+                    if _ef and "not extreme" not in _ef and "permanently stale" not in _ef:
                         _ps = (_r.get("parsed", {}) or {}).get("positioning_score")
                         _rf = ((_r.get("parsed", {}) or {}).get("risk_factors") or "").lower()
                         _mentioned = any(k in _rf for k in _RISK_KEYWORDS)
