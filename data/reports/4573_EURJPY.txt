@@ -1,0 +1,24 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weak bearish setup hampered by MTF disagreement (M:SELL vs W/D:NEUTRAL), crowded EUR short positioning near reversal threshold, and neutral oscillator confluence.
+RISK_FACTORS: [1] EUR net SHORT at 6.0% crowded near 1-year bottom with MOM=BUILDING reversal risk — institutional unwind could spike pair upward, trapping shorts. [2] MTF conf=0/3 (weekly and daily both NEUTRAL, only monthly bearish) violates core MTF rule — no directional agreement across higher timeframes weakens signal validity.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade fails MTF requirement (weekly + daily must both agree; here D:NEUTRAL + W:NEUTRAL = no agreement despite M:SELL). Crowded EUR short positioning at reversal risk also disqualifies.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**SCORING BREAKDOWN:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI=46.7 → standard neutral zone (45–62) = base score 3–4; T_sig=NEUTRAL_3 confirms.

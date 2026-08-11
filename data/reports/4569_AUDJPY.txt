@@ -1,0 +1,24 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weak SELL setup: 4H overbought (RSI 74.8) conflicts with D1 neutral; ribbon leaning bear but D1+W both neutral; pin bar at key level offers minor reversal signal but insufficient conviction.
+RISK_FACTORS: [1] MTF consensus weak (M:SELL vs W/D:NEUTRAL) — direction disagreement lowers conviction; [2] JPY COT unwinding reduces institutional support for AUD/JPY bearish thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 111.95
+ENTRY_TRIGGER_REASON: Break below pin bar low (111.95) + RSI divergence confirmation on lower timeframe to lock 4H overbought fade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Rationale:**
+
+- **MTF Rule Violation (Primary)**: W:NEUTRAL + D:NEUTRAL fail the BUY/SELL agreement threshold (0/3 ≠ 2/3+). M:SELL conflicts with weekly/daily neutrality. Confidence capped at ≤5 per MTF rule. **TRADE_THIS = NO**.
+- **Technical Score = 4**: D

@@ -1,0 +1,17 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Bearish head-and-shoulders pattern on 4H and stochastic overbought (89.2) conflict with D1 uptrend structure; MTF alignment weak (W:SELL vs D:NEUTRAL) blocks high-confidence trade.
+RISK_FACTORS: [1. MTF disagreement — weekly sell signal contradicted by daily neutral/uptrend invalidates MTF rule (conf=1/3 << 2/3 threshold); 2. D1 T_sig=SELL_3 conflicts with D1 trend=uptrend and price above SMA50/SMA200 — technical score artificially depressed by pre-computed signal despite bullish structure]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF alignment fails: weekly SELL + daily NEUTRAL do not meet dual-timeframe agreement threshold (1/3 confidence << 2/3 required). D1 golden-cross structure (price > SMA50 > SMA200) contradicts SELL direction. RSI 58.5 in confirmed uptrend = neutral zone (not overbought). Head-and-shoulders on 4H is isolated signal without D1 confirmation.
+ENTRY_

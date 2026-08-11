@@ -1,0 +1,24 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Weekly and monthly alignment to SELL conflicts with Daily neutral stance and strong bullish technicals (ribbon aligned, pin bar bullish, engulfing), creating ambiguous signal with only 2/3 MTF agreement.
+
+RISK_FACTORS: (1) Daily is NEUTRAL while W+M confirm SELL — MTF conf=2/3 fails hard rule threshold; ribbon fully aligned BULL contradicts short thesis. (2) RSI 61.6 D1 + 62.8 4H in uptrend context (price > SMA50 > SMA200) reads as continuation zone (3-4 neutral), not SELL signal; pin bar marked bullish + engulfing bullish on 4H but T_sig says SELL_3 — conflicting technical signals reduce conviction.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: [N/A — TRADE REJECTED]
+ENTRY_TRIGGER_PRICE: [N/A]
+ENTRY_TRIGGER_REASON: [MTF agreement insufficient (2/3, <3/3 required) and directional conflict between D1 NEUTRAL + W:SELL undermines confidence. Ribbon ALIGNED_BULL favors continuation long, contradicting SELL thesis.]
+ENTRY_TRIGGER_EXPIRY_HOURS: [0]

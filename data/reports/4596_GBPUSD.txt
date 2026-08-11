@@ -1,0 +1,23 @@
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level + partial oscillator SELL confluence (Stoch+CCI) suggests reversal rejection, but weak MTF alignment (D:SELL vs 4H:NEUTRAL, conf 1/3) and conflicting ribbon (LEANING_BULL) prevent high-conviction trade.
+RISK_FACTORS: [1] MTF disagreement: D1 SELL conflicts with 4H NEUTRAL uptrend structure (double bottom), violating MTF rule — trade confidence capped at 5. [2] COT UNWINDING on GBP shorts (46% net SHORT) reduces conviction; if GBP reverses sharply, short position may be squeezed.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.3480
+ENTRY_TRIGGER_REASON: If price rallies into resistance near 1.3480 (near FIB nearest_above level) and RSI confirms rejection (>70), limit SELL entry valid; otherwise await clearer D:SELL + 4H:SELL alignment (confidence <7 fails trade rule).
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**DETAILED REASONING:**
+
+**TECHNICAL (5/10):**

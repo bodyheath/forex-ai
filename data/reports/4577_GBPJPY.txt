@@ -1,0 +1,26 @@
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Price trapped in range with weak technicals and mixed MTF signals; 4H overbought (RSI 76.7) offers tactical short, but daily neutral bias and unwinding institutional positioning limit conviction.
+RISK_FACTORS: [1] MTF conflict—monthly SELL vs weekly/daily NEUTRAL (conf=0/3) violates MTF agreement rule; [2] COT unwinding on both GBP and JPY reduces positioning conviction and increases reversal risk if either currency reprices.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**RATIONALE:**
+
+**MTF Failure (Critical):** Weekly=NEUTRAL, Daily=NEUTRAL, Monthly=SELL (wt=80%), 4H=SELL → conf=0/3 means weekly AND daily do NOT agree on direction. Hard rule enforced: TRADE_THIS=NO regardless of other factors.
+
+**Technical Detail:**
+- D1 T_sig=NEUTRAL_3 (baseline, confirmed: RSI 48.9 is mid-range neutral, MACD h=-0.4223 negative but weak, price below
