@@ -1,0 +1,22 @@
+```
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key resistance combined with falling NZD rates vs rising JPY rates creates mild bearish setup, but neutral RSI(50.9), mixed 4H trend, and all-NEUTRAL MTF severely limit conviction.
+RISK_FACTORS: [1. All timeframes NEUTRAL with conf=0/3 — no directional MTF agreement violates core TRADE_THIS rule. 2. D1 RSI at midpoint (50.9) with no oscillator confluence (OSC=NONE, CCI=-31.5 weak) — insufficient reversal confirmation; pin bar alone insufficient without RSI + MACD + Fib alignment.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF conf=0/3 (all NEUTRAL) fails mandatory weekly+daily agreement rule. Confidence 4/10 < 7 threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS SUMMARY:**
+- **MTF FAILURE (HARD STOP):** Weekly, Daily, and Monthly all score NEUTRAL — zero directional alignment. Rule states: *"if weekly AND daily don't both agree on direction (conf<2/3),

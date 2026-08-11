@@ -1,0 +1,25 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with 4H double bottom offers structural support, but D1 neutral RSI, mixed MTF (M:SELL vs W/D:NEUTRAL), and COT unwinding in both pairs limit conviction.
+RISK_FACTORS: [1. MTF disagreement: Monthly SELL vs Weekly/Daily NEUTRAL — no aligned directional bias (conf=0/3); 2. Both GBP and JPY COT unwinding — institutions reducing conviction, reduces positioning edge and increases reversal risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 213.85
+ENTRY_TRIGGER_REASON: Break below the 4H double-bottom neckline and D1 pin bar low (209.596 FIB SL is target) with RSI 4H cooling below 60 and MACD D1 turning negative.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (4/10):**
+- D1 RSI=47.6 → NEUTRAL tier (45–62 = 3–4), baseline T_sig=NEUTRAL_3 confirmed.
+- D1 MACD negative (−

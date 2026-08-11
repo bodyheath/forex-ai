@@ -1,0 +1,26 @@
+```
+PAIR: AUD/NZD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 8/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 6/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Strong bullish divergence + pin bar at key level + rising AUD rates vs falling NZD rates support a BUY, but MTF neutrality and ribbon lean-bear limit conviction.
+RISK_FACTORS: [1. MTF shows 0/3 agreement (M:SELL conflicts with D/4H:NEUTRAL) — no clear directional confluence across timeframes. 2. Ribbon LEANING_BEAR (4/5 aligned bearish) contradicts BUY thesis — trend structure is weakening.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.2088
+ENTRY_TRIGGER_REASON: Confluence of SMA50 (1.2088), bullish divergence confirmation, and pin bar — wait for price to reclaim the 50-MA on a pullback to reduce risk given MTF weakness.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### RATIONALE
+
+**MTF GATING RULE APPLIED:**  
+Weekly=NEUTRAL, Daily=NEUTRAL, 4H=NEUTRAL. Confidence agreement = 0/3. **Hard rule: Both weekly AND daily must agree on direction for TRADE_THIS=YES.** Neither is
