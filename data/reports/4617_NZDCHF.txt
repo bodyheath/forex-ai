@@ -1,0 +1,33 @@
+```
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+
+KEY_THESIS: RSI overbought (68.3) in confirmed uptrend with triple-oscillator SELL confluence (Stoch 97.9, CCI 127.4) and pin bar at key level create mean-reversion sell setup, but weak MTF agreement (1/3) and bullish ribbon alignment limit conviction.
+
+RISK_FACTORS: 
+1. MTF CONFLICT — Daily SELL but Weekly/Monthly NEUTRAL; only 40% MTF confidence fails 2/3 rule, creates false-signal risk.
+2. RIBBON CONTRADICTION — ALIGNED_BULL (5/5 EMA stack) directly opposes SELL thesis; bullish structure intact suggests momentum continuation, not reversal.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.4800
+ENTRY_TRIGGER_REASON: Await rally completion to key resistance at 0.48 (upper Bollinger band proximity) for stronger reversal confirmation before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 6/10**
+- **T_sig baseline = SELL_5** (pre-computed) → start at

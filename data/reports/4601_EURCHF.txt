@@ -1,0 +1,24 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (23p/7pt) and strong 4H SELL signal conflict with aligned bullish ribbon and uptrend structure; MTF disagreement (D1/W neutral vs 4H SELL) fails confidence threshold.
+
+RISK_FACTORS: 
+1. MTF conf=0/3 (D1, W, M all NEUTRAL) — no directional agreement across major timeframes; T_sig=SELL_3 contradicted by D1 RSI=63.9 in confirmed uptrend (should not score SELL in uptrend unless RSI>87).
+2. RIBBON=ALIGNED_BULL (5/5 EMAs fanned bullish) + price above SMA50>SMA200 = strong trend continuation setup; divergence is noise in established uptrend, not reversal confirmation.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: STANDBY
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF conf<2/3 blocks trade; D1 uptrend structure + ALIGNED_BULL ribbon override bearish div — await D1 trend break (price below SMA50=0.9247) or W/D agreement on SELL before entry.
+ENTRY_TRIGGER_EXP

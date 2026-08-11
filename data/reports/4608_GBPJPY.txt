@@ -1,0 +1,30 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: 4H overbought RSI (75.6) + pin bar at key level + monthly SELL context create weak short edge, but MTF misalignment (W/D neutral vs 4H/M sell) and neutral ribbon severely limit conviction.
+
+RISK_FACTORS: (1) MTF conflict — weekly and daily both neutral contradicts 4H:SELL signal; conf=0/3 fails MTF rule. (2) Positioning unwinding in both currencies removes institutional conviction and increases reversal risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly + Daily must BOTH agree on direction for trade validity. Here W:NEUTRAL + D:NEUTRAL conflicts with 4H:SELL. Confidence ceiling = 4/10, below 7.0 threshold. Also POSITIONING_SCORE lowered due to COT unwinding in both GBP and JPY — institutional conviction is fading, not building.
+
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+1. **MTF Failure (Critical):** The MTF rule requires **both weekly AND daily to agree** on direction. Here: W=NEUTRAL

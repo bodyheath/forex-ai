@@ -1,0 +1,24 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: 4H bearish engulfing + overbought RSI (71.7) + JPY rate rising support downside, but weak MTF alignment (D/W neutral) and crowded EUR short positioning create reversal risk.
+
+RISK_FACTORS: 
+1. MTF misalignment: monthly SELL vs daily NEUTRAL (conf=0/3, wt=80%) — no cross-timeframe confirmation; trade fails MTF rule.
+2. EUR crowded short at 1y bottom (6.0% net SHORT, BUILDING) — institutional reversal risk; COT UNWINDING JPY contradicts SELL thesis.
+
+TRADE_THIS: NO
+
+REASONING:
+• **MTF HARD FAIL**: Weekly NEUTRAL + Daily NEUTRAL = no agreement on direction. Monthly SELL alone is insufficient (conf=0/3, wt=80%). MTF rule requires weekly AND daily both agree — they do not. Trade is blocked.
+• **Technical**: D1 RSI 46.5 (NEUTRAL_3 baseline, correct) + 4H RSI 71.7 (overbought, +1 bonus for bearish engulfing pattern) = 4/10. T_sig=NEUTRAL_3 stands. MACD on D1 negative (-0.2696) is weak;

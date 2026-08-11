@@ -1,0 +1,27 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level in overbought 4H (RSI 69.2) with monthly bearish bias, but D1 neutral and JPY COT unwinding reduce conviction.
+RISK_FACTORS: [1] MTF agreement is weak (M:SELL vs W/D:NEUTRAL; conf=0/3 fails MTF gate); [2] JPY COT momentum unwinding institutional shorts—potential reversal risk into strength.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 111.85
+ENTRY_TRIGGER_REASON: Confirmation of pin bar rejection below 112.50 + RSI pullback below 60 on D1 would align daily with 4H/monthly bearish.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF Gate (CRITICAL FAIL):**  
+Monthly is SELL, but Weekly and Daily are both NEUTRAL. Confidence = 0/3 (0% agreement on same direction). This fails the mandatory "weekly+daily both agree" gate. TRADE_THIS must be NO.
+
+**Technical Scoring:**
+- **D1 RSI 47.2** (mixed trend context): Standard tier → 45–62 =

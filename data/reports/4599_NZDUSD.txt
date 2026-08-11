@@ -1,0 +1,17 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_5 supported by inside bar neutrality, but MTF disagreement (D:SELL vs 4H:uptrend neutral) and leaning-bull ribbon conflict the bearish case; lack of RSI/MACD confluence limits conviction.
+RISK_FACTORS: [1] MTF conflict: only D1 aligns with SELL direction while 4H shows uptrend structure (price > SMA50 > SMA200) — 40% weighting on D1 insufficient for high-confidence trade. [2] 4H head-and-shoulders pattern is bearish-labeled but price not yet confirming breakdown; RSI at 61.6 on D1 is neutral-leaning-bullish in mixed context (not overbought), and ribbon LEANING_BULL suggests upside bias despite T_sig.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL + D:SELL + 4H:NEUTRAL = 1/3 agreement (D1 only). Confidence 4/10 < 7 threshold. Conflicting ribbon (leaning bull) and 4H uptrend
