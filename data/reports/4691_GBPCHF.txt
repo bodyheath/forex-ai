@@ -1,0 +1,35 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: RSI overbought (65) in confirmed weekly+daily downtrend with partial oscillator sell signal (Stoch+CCI), but uptrend structure (price>SMA50>SMA200, aligned ribbon) creates conflicting directional signals—sell is mean-reversion in an uptrend, not trend continuation.
+
+RISK_FACTORS: 
+1. Ribbon fully aligned bullish (5/5 EMA fan) directly contradicts SELL—reversal risk if price breaks above 1.0942.
+2. COT unwinding on both GBP and CHF reduces positioning conviction; GBP rate flat while CHF falling limits fundamental edge.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**MTF Validation:** Weekly=SELL, Daily=SELL → **2/3 agreement (80% weight).** ✓ Passes MTF rule.
+
+**Technical Score Breakdown (6/10):**
+- **RSI=65.0 in confirmed DOWNTREND (W:SELL + D:SELL):**

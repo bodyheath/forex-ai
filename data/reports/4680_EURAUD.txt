@@ -1,0 +1,23 @@
+PAIR: EUR/AUD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 4/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-bottom pattern at swing lows with crowded EUR short positioning near 1-year lows signals institutional reversal risk, but conflicting MTF alignment (W:BUY vs D:NEUTRAL) and bearish ribbon structure limit conviction.
+RISK_FACTORS: [1] MTF disagreement: Weekly bullish but Daily neutral fails MTF rule (conf=1/3, <2/3 threshold) — trade confidence capped at 5 regardless of pattern setup. [2] Fundamental headwind: AUD rate rising (+2.21% diff against EUR flat) favors AUD strength; EUR short crowding is reversal *risk*, not confirmation of upside.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.6450
+ENTRY_TRIGGER_REASON: Break above SMA50 (1.6397) + weekly trend confirmation would validate W:BUY; requires Daily to flip to BUY for MTF alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS NOTES:**
+
+1. **MTF Failure (Critical):** Weekly BUY + Daily NEUTRAL = 1/3 agreement. MTF rule states "if weekly AND daily don't both agree on direction (

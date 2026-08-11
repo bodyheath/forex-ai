@@ -1,0 +1,20 @@
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 conflicts with leaning-bull ribbon alignment and neutral MTF consensus (1/3 agreement); mixed technical signals lack conviction.
+RISK_FACTORS: [1] MTF conf=1/3 (only D1:SELL vs M/W/D4H neutral) — insufficient directional agreement to meet TRADE_THIS threshold. [2] RSI 60.1 on D1 in mixed trend zone (not trending down) — not oversold; H&S pattern alone insufficient without confirming oscillator confluence (OSC=NONE, Stoch 82.3 overbought contradicts SELL).
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5810
+ENTRY_TRIGGER_REASON: Break below neckline of head-and-shoulders pattern near SMA50 (0.5787) with D1 RSI pullback below 50 to confirm downtrend conviction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE:**
+- **MTF Rule Violation**: Weekly + Daily must both agree for trade approval. Here, D1=SELL but W=NEUTRAL and M=NEUTRAL (conf=1/3, w

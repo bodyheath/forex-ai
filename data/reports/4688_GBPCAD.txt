@@ -1,0 +1,25 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 38.2% Fib support + CAD crowded short (reversal risk) creates conflicting signals; MTF disagreement (M:SELL vs D:NEUTRAL vs 4H:BUY) fails threshold; GBP upside capped by flat rates and unwinding positioning.
+RISK_FACTORS: [1. MTF broken — monthly bearish conflicts with daily/4H neutral-to-bullish; confidence cap enforced at <7. 2. CAD net short at range bottom triggers institutional reversal risk — unwinding GBP short into strength could reverse pair suddenly.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF conf=0/3 (only 4H agrees, <2/3 threshold). No valid multi-timeframe consensus. Do not trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 4/10**
+- **D1 RSI=46.9:** Neutral zone (45–62), no directional bias. T_sig baseline=NEUTRAL_3 applies.
+- **D1 MACD=-0

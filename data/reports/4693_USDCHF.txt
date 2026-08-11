@@ -1,0 +1,27 @@
+```
+PAIR: USD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-bottom bullish pattern with 4/5 ribbon alignment and +3.67% rate diff favour USD, but MTF weekly+daily both NEUTRAL breaks mandatory dual-agreement requirement.
+RISK_FACTORS: [1] MTF conf=0/3 — weekly and daily both NEUTRAL means no multi-timeframe trend confirmation, violating trade rule (requires both W+D aligned); [2] CHF COT unwinding from net SHORT posture introduces reversal risk as institutional conviction weakens.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily must both agree on direction (both currently NEUTRAL); monthly BUY is insufficient.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1 T_sig baseline = NEUTRAL_3; RSI 51.3 = **neutral zone (45–62)** → standard tier score 3–4
+- D1 trend is confirmed UPTREND (price > SMA50 > SMA200 golden cross); **however**, W:NEUTRAL + D:NEUTRAL in MTF

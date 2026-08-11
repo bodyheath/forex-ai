@@ -1,0 +1,25 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish bias from monthly SELL + 4H SELL + leaning bear ribbon + SMD moderate sell, but MTF weekly/daily neutrality and price pinned at key level create conflicting signals with reversal risk in crowded EUR short.
+RISK_FACTORS: [1] EUR net SHORT positioning at 6.0% (crowded short near 1-year bottom) + COT BUILDING = institutional conviction but extreme retail crowding increases whipsaw risk. [2] MTF weekly + daily both NEUTRAL (fail 2/3 MTF rule threshold) — no strong directional confluence; price at pin_bar_at_key_level suggests potential reversal rather than continuation.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 182.95
+ENTRY_TRIGGER_REASON: Break and hold below pin bar low (~182.95) with 4H close below SMA20 would confirm bearish breakdown; currently price is range-bound at key level.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL [4/10]:**
+— D1 T_sig baseline = NEUTRAL_3. RSI 46.7 (mixed MTF context — W:

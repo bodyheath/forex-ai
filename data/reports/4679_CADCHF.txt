@@ -1,0 +1,18 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 63.5 in confirmed uptrend should not trigger SELL; MTF conflict (W:SELL vs D:NEUTRAL) + crowded CAD short positioning create reversal risk but insufficient confluence for high-conviction trade.
+RISK_FACTORS: MTF disagreement fails 2/3 threshold (W:SELL, D:NEUTRAL, 4H:SELL = 2/3 but D is neutral, not confirming); CAD at extreme short crowding near 1-year positioning bottom creates sharp whipsaw/squeeze risk if shorts cover.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade fails MTF rule: weekly and daily do not both agree on direction (D1 is NEUTRAL, not SELL). Additionally, T_sig=SELL_3 contradicts the standard uptrend RSI rule: RSI 63.5 in a confirmed uptrend (W:BUY context from monthly, D1 golden cross) should score 4–5 neutral or lean into continuation, not SELL. The morning_star:bul candle pattern on D1 also conflicts with SELL thesis.
+ENTRY_TRIGGER_EXPIRY_

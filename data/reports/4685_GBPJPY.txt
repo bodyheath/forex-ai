@@ -1,0 +1,25 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with 4H overbought RSI (72.3) conflicts with D1 neutral structure; MTF disagreement (M:SELL vs W/D:NEUTRAL) breaks entry confidence threshold.
+RISK_FACTORS: [1. MTF conflict — monthly bearish but weekly+daily neutral creates directional ambiguity; [2. COT UNWINDING on both pairs — institutional conviction collapsing on both sides, volatility risk]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (W:NEUTRAL + D:NEUTRAL ≠ SELL). Confidence 4/10 fails threshold ≥7. No valid entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**RATIONALE:**
+
+1. **MTF RULE FAIL (CRITICAL):** W:NEUTRAL + D:NEUTRAL = conf 0/3. Monthly shows SELL, but weekly and daily don't confirm. Per strict MTF rule: *"if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless."* → **

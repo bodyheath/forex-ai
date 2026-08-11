@@ -1,0 +1,23 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H bearish engulfing + leaning bear ribbon + 4H RSI overbought (71.2) suggest downside pressure, but D1 neutral RSI (48.9) and mixed MTF alignment (M:SELL vs W/D:NEUTRAL, conf=0/3) prevent high-confidence trade.
+RISK_FACTORS: MTF disagreement—weekly and daily both neutral despite monthly sell signal limits conviction (conf 0/3 fails MTF rule threshold); JPY positioning unwinding reduces institutional conviction for the downside despite net short.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 111.80
+ENTRY_TRIGGER_REASON: Break below 50-SMA (112.7439) with confluent support near 111.80 (within FIB support zone SL=109.237, upper half).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+1. **MTF Alignment Fails Trade Rule**: W:NEUTRAL + D:NEUTRAL + M:SELL (conf=0/3 out of 3). The rule requires **weekly AND daily both agree**; they don't. TRADE_THIS must be **NO** regardless of other signals.
