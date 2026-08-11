@@ -11490,6 +11490,13 @@ def run() -> int:
         # and its POSITIONING_SCORE / RISK_FACTORS inspected in a few weeks to see
         # whether the fix actually changed anything, or the gap wasn't the
         # truncation after all.
+        #
+        # 2026-08-11: excludes "permanently stale ... neutral score applied" too —
+        # positioning.py's stale-COT fallback (>365d old, e.g. USD/NZD) returns a
+        # non-empty extreme_flag with percentile_in_range=50.0 that isn't a real
+        # extremity reading. It doesn't contain "not extreme" so it was slipping
+        # through and inflating this count (14/35 = 40% of hits in one live scan
+        # were this fallback, not real positioning extremes).
         try:
             _RISK_KEYWORDS = ("crowded", "extreme", "squeeze", "reversal risk")
             _extreme_hits = []
