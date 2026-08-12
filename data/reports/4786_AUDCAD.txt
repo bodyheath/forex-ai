@@ -1,0 +1,27 @@
+```
+PAIR: AUD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bullish patterns (engulfing, IHS) + rising AUD rates + CAD crowded short positioning create BUY bias, but price-MA misalignment and MTF neutrality (0/3 agreement) prevent high conviction.
+RISK_FACTORS: [1] MTF conf=0/3 (M:SELL conflicts with W/D NEUTRAL) — no weekly+daily agreement required for TRADE_THIS YES; trade fails the MTF rule. [2] Ribbon CONVERGING signals trend weakness/reversal risk — pattern confirmation at risk if momentum stalls.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.9846
+ENTRY_TRIGGER_REASON: Price bounce into 50% Fib (0.98462) + RSI oversold recovery (49→55+) + pattern confirmation. Wait for weekly AND daily both BUY-aligned before execution.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+```
+
+---
+
+### **Analysis Summary**
+
+**Why NO on TRADE_THIS despite bullish setup:**
+
+1. **MTF Rule Violation (CRITICAL):** Weekly=NEUTRAL, Daily=NEUTRAL. You need **both W AND D to agree on direction** (both

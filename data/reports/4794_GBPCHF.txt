@@ -1,0 +1,50 @@
+I need to carefully evaluate this trade before finalizing.
+
+**Critical tension analysis:**
+
+**SELL case:** W:SELL + D:SELL both agree ✓, Triple oscillator SELL (3/3) ✓, RSI 67.9 at upper BB ✓, Stoch 90.2 + CCI 269.5 extreme ✓
+
+**BULL case (major concerns):**
+- RIB=ALIGNED_BULL fan 5/5 — this is a powerful trend continuation signal
+- Price > SMA50 > SMA200 golden cross structure on D1 AND 4H
+- PAT=inverse_head_and_shoulders:bul (bullish pattern) on D1
+- PAT=hammer:bul on 4H
+- FUND: rate diff +3.78% GBP over CHF, CHF_rate=falling (GBP-positive)
+- T_sig=SELL_6 — baseline is SELL but only 6, not high conviction
+
+**RSI trend context:** Confirmed DOWNTREND (W:SELL+D:SELL) — RSI 67.9 doesn't hit shifted SELL zones (need >77 for 7-8SELL in uptrend structure... but wait, MTF says W:SELL+D:SELL so it IS a downtrend context). In downtrend, standard tiers apply. RSI 67.9 = 62-70 zone = 4-5SELL range. The ribbon ALIGNED_BULL and golden cross contradict the MTF SELL signal, suggesting price action trend vs MTF momentum divergence.
+
+**Technical score:** T_sig=SELL_6. Ribbon ALIGNED_BULL is a strong contradictory factor — the ribbon is fully bullish while MTF says SELL. The bullish candlestick patterns (IH&S + hammer) further conflict. I'll keep TECHNICAL_SCORE at 6 but this is borderline.
+
+**Entry/Stop/Target calculation:**
+- Entry: 1.0970
+- Stop: Above recent resistance. ATR=0.0052, so 1.5×ATR = 0.0078 → Stop at 1.1048
+- Risk = 1.1048 - 1.0970 = 0.0078
+- Target (2R): 1.0970 - (0.0078 × 2) = 1.0970 - 0.0156 = 1.0814
+
+**FIB context:** SL=1.0495, SH=1.092, range=425p. Price at 1.0970 is near the swing high (1.092). Target 1.0814 is reasonable pullback territory. No near= Fibonacci level specified.
+
+**Confidence check:** Start at 6 (Haiku said 7). Triple SELL OSC = +2 → 8. DIV=NONE = 0. But ribbon ALIGNED_BULL is a significant conflict — the single most reliable trend indicator contradicts direction. Bullish candlestick patterns on both D1 and 4H conflict. I'll apply -1 for ribbon conflict. Final: 7.
+
+**TRADE_THIS check:** Conf=7 ✓, R:R=2:1 ✓, W:SELL+D:SELL both agree ✓, fundamentals partially support (CHF rate falling = GBP positive, slightly undermines SELL). Meets threshold but ribbon risk is real.
+
+---
+
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 7/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 1.0970
+TARGET: 1.0814
+STOP_LOSS: 1.1048
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 18:00–20:00 NZST
+NEWS_WARNING: Monitor GBP
+KEY_THESIS: Overbought RSI (67.9) in confirmed downtrend (W:SELL + D:SELL) with triple-oscillator SELL confluence (RSI + Stoch + CCI all bearish) and price at/above upper BB creates high-probability reversal setup, despite bullish ribbon alignment (contrarian strength signal).
+RISK_FACTORS: [1] Ribbon fully ALIGNED_BULL (5/5 fan) contradicts SELL thesis — suggests underlying trend continuation strength; trend-following buyers may defend. [2] Both GBP and CHF COT unwinding reduces institutional conviction; if unwinding accelerates into stop-run, reversal may stall below key support.

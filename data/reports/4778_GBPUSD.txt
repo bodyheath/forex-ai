@@ -1,0 +1,27 @@
+```
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level on D1 with D1 SELL signal and institutional GBP unwinding, but MTF alignment poor (1/3 — only M and D agree SELL) and 4H uptrend conflict reduce conviction.
+RISK_FACTORS: MTF disagreement (W and 4H neutral vs M/D sell) prevents high-confidence trade; GBP positioning unwinding into a SELL setup may signal institutional exit rather than conviction entry, reducing follow-through probability.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated: weekly and daily do not both agree on direction (conf=1/3, below 2/3 threshold). W:NEUTRAL + D:SELL + 4H:NEUTRAL = only 50% consensus minimum. Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL_SCORE: 5/10**
+- D1 RSI=58.0 → standard tier 45–62 = 3–4 NEUTRAL (mixed trend per D1 data; price/MAs not aligned).
+- D1 T_sig

@@ -1,0 +1,28 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 with 4H SELL alignment conflicts neutral weekly/daily MTF, weakening conviction despite short-term technical warning.
+RISK_FACTORS: [1] MTF conf=0/3 (M:SELL vs W:NEUTRAL vs D:NEUTRAL) violates MTF agreement rule — no directional consensus across timeframes. [2] COT UNWINDING on both GBP and JPY reduces positioning conviction; D1 price (215.047) is near SMA50 (215.432) with no clean trend, increasing whipsaw risk.
+TRADE_THIS: NO
+ENTRY_TYPE: AVOID
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction; monthly SELL conflicts with neutral daily bias. Confidence cannot meet 7/10 threshold without MTF alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **REASONING:**
+
+**MTF CRITICAL FAILURE:**
+- **Monthly:** SELL (bearish context)
+- **Weekly:** NEUTRAL (no directional bias)
+- **Daily:** NEUTRAL (mixed/range, price 215.047 vs SMA50
