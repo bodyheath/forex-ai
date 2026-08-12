@@ -1,0 +1,27 @@
+```
+PAIR: EUR/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Inverse H&S pattern + crowded EUR short positioning at range bottom + rising JPY rate differential creates contrarian BUY setup, despite mixed MTF and weakening ribbon.
+
+RISK_FACTORS: 
+1. MTF conf=0/3 (M:SELL, W:NEUTRAL, D:NEUTRAL, 4H:SELL) — no weekly/daily agreement required by MTF rule; monthly weakness and 4H sell signals contradict BUY direction.
+2. Ribbon leaning bear (4/5) and MACD histogram negative on both D1 (-0.1714) and 4H (-0.0147) — momentum structure does not support upside conviction.
+
+TRADE_THIS: NO
+
+RATIONALE:
+---
+**MTF Rule Violation:** W:NEUTRAL + D:NEUTRAL technically satisfies "both agree" (both are NOT selling), but M:SELL + 4H:SELL create a 0/3 multi-timeframe consensus. The 80% monthly weight + 4H agreement on downside momentum indicates medium-to-long-term structural weakness. TRADE_THIS defaults to NO when MTF conf < 2/3 **regardless of technical setup**.
+
+**Technical Score Breakdown (6/10):**
+- D1 RSI=45.6

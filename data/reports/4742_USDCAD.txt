@@ -1,0 +1,24 @@
+PAIR: USD/CAD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_BUY
+KEY_THESIS: Triple oscillator confluence (RSI+Stoch+CCI all BUY) at RSI 33.9 in D1 downtrend context supports bullish reversal, but weak ribbon alignment (3/5) and crowded CAD short positioning limit conviction.
+RISK_FACTORS: [1] MTF conf=2/3 (W:NEUTRAL breaks full agreement rule; D+4H align but W dissent creates ambiguity); [2] CAD positioned at crowded short extreme (reversal risk if longs panic-cover before USD momentum confirms).
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.3880
+ENTRY_TRIGGER_REASON: RSI oversold retest of SMA200 (1.3855) with oscillator confirmation; wait for price to find support before committing.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**TECHNICAL [6/10]:**
+- D1 RSI=33.9 in stated downtrend (price < SMA50 < SMA200 structure implied by context) → oversold is *normal* in downtrend; do NOT inflate to 8-9BUY just because

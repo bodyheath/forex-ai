@@ -1,0 +1,24 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Evening star pattern + D1 SELL signal at resistance near 61.8% Fib, but MTF misalignment (4H:BUY vs D1:SELL) and mixed trend structure limit conviction.
+RISK_FACTORS: [1: MTF only 1/3 agreement (D1:SELL vs 4H:BUY) — reversal risk if 4H momentum persists above 0.5864] [2: Fundamental support weak (NZD rate falling but RSI 56.2 neutral, not oversold) — potential for range-bound consolidation rather than sharp selloff]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5870
+ENTRY_TRIGGER_REASON: Reject at 61.8% Fib resistance (0.58544) + evening star confirmation; wait for price to pull back to 0.5870 before shorting to reduce MTF conflict risk.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**REASONING:**
+
+**TECHNICAL (6/10):**
+- D1 T_sig=SELL_6 (baseline); evening star bearish candlestick pattern at resistance confirms directional bias.
