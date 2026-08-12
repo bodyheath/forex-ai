@@ -1,0 +1,23 @@
+```
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Weekly+Daily both SELL with partial oscillator confluence (Stoch overbought) conflicts with D1 uptrend structure; risk-managed short on technicals with AUD rate strength as hedge.
+RISK_FACTORS: [1. D1 price>SMA50>SMA200 golden-cross and LEANING_BULL ribbon (4/5 aligned) contradict SELL signal — trend structure remains bullish despite oversold oscillators; 2. AUD rate rising (+0.83% differential) + FUND score 6 = fundamental support; RSI 57.8 mid-range not extreme overbought — reversal timing risky]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.7090
+ENTRY_TRIGGER_REASON: Confirmation of lower high above FIB nearest_above (~0.7090); if MTF 4H flips to SELL, escalate to YES with confidence 7.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**ANALYST NOTES:**
+
+**MTF CONFLICT DETECTED:** W:SELL + D:SELL = 2/3 agreement (80% threshold). However, **4H:NEUTRAL breaks the

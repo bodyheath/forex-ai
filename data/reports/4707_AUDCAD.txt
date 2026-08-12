@@ -1,0 +1,23 @@
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD rate differential (+2.19%) supports strength, but MTF misalignment (M:SELL vs W/D:NEUTRAL vs 4H:BUY) and converging ribbon signal trend exhaustion; CAD crowded short positioning creates reversal risk.
+RISK_FACTORS: [1. MTF conflict (M:SELL vs 4H:BUY) means no clear directional consensus — confidence capped below 7 regardless of setup strength] [2. CAD net short at ~0% positioning near 1-year lows signals crowded short — any CAD strength triggers shorts covering, reversing AUD/CAD lower — contradicts SELL thesis]
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT_FOR_CLARITY
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL and D:NEUTRAL do not both agree with M:SELL or 4H:BUY; no valid 2/3 MTF consensus. Converging ribbon + inside-bar neutrality + oscillator NONE = no trigger.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF FAILURE (HARD RULE)**: Weekly and Daily are

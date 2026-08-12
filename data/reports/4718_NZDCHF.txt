@@ -1,0 +1,26 @@
+```
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 RSI 66.1 in uptrend context (W:NEUTRAL, D:SELL) signals overbought but MTF weekly non-confirmation and bullish ribbon structure create conflicting signals limiting conviction.
+RISK_FACTORS: MTF agreement <2/3 (only D:SELL, W/M neutral) violates multi-timeframe confirmation rule; CHF COT UNWINDING reduces institutional conviction for shorts.
+TRADE_THIS: NO
+
+REASONING:
+
+**MTF RULE VIOLATION (Critical):**
+- Weekly: NEUTRAL | Daily: SELL | 4H: NEUTRAL | Monthly: NEUTRAL
+- Confidence = 1/3 timeframes agree on direction
+- **Hard Rule: W and D must BOTH agree for TRADE_THIS=YES**
+- Only D is SELL; W is NEUTRAL → **MTF rule fails** → TRADE_THIS = NO regardless of other factors
+
+**TECHNICAL SCORE = 5 (Neutral with conflicting signals):**
+- D1 RSI 66.1 in uptrend context: Price > SMA50 > SMA200 (golden cross), 4H also uptrend
+- **Uptrend RSI Context Applied:** In confirmed uptrend, RSI 65-77

@@ -1,0 +1,24 @@
+PAIR: GBP/AUD
+DIRECTION: NEUTRAL
+CONFIDENCE: 3/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed trend structure with neutral technicals across all timeframes and conflicting MA alignment prevents directional conviction; range-bound price action dominates.
+RISK_FACTORS: [1] MTF conf=0/3 — weekly, daily, 4H all neutral; no directional agreement across timeframes. [2] GBP COT unwinding while AUD stable — GBP institutional conviction weakening, reducing bullish case.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: No valid entry — trade criteria fail: MTF agreement <2/3 (0/3), TECHNICAL_SCORE 3 (neutral baseline), insufficient fundamental/positioning confluence. Price 1.9141 sits within 666p range (SH 1.9359–SL 1.8693) with no pattern confirmation (inside bar neutral) or oscillator confluence to justify directional bias.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYST NOTES:**
+
+1. **MTF VETO:** Weekly=NEUTRAL, Daily=NEUTRAL, 4H=NEUTRAL → conf=0/3. Hard rule triggered: TRADE_THIS=NO regardless of other factors.
+2. **TECHNICAL
