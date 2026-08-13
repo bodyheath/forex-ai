@@ -1,0 +1,26 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weak bearish setup with ribbon leaning bear and monthly SELL, but weekly+daily both NEUTRAL breaks MTF agreement rule — insufficient confluence for high-confidence trade.
+RISK_FACTORS: [1] MTF neutral misalignment: weekly and daily do not confirm monthly/4H bearish bias, reducing directional conviction below 66% threshold. [2] JPY unwinding institutional shorts signals potential mean-reversion rally into weekly/daily support, conflicting with SELL thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: M:SELL + 4H:SELL (conf=0/3, wt=80%) but W:NEUTRAL + D:NEUTRAL fail to provide 2/3 MTF agreement. Trade_confidence cannot exceed 6 when weekly OR daily disagree with overall direction — this setup scores only 4/10 and does not meet >=7 threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**ANALYSIS NOTES:**
+
+**MTF Rejection (Critical):**
+- Monthly (M:SELL) + 4H (4H:SELL) align bearish, but **Weekly (W

@@ -1,0 +1,24 @@
+```
+PAIR: USD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: USD supported by rate differential (+2.79%) and D1 RSI 42.2 at neutral zone, but conflicting MTF signals (D1 BUY vs 4H SELL) and bearish head-and-shoulders pattern create low-conviction setup.
+RISK_FACTORS: [1] MTF conflict: Daily BUY but 4H SELL (conf=1/3, <2/3 threshold) undermines conviction; [2] Bearish pattern (H&S) contradicts T_sig=BUY_6, reducing technical reliability; JPY COT unwinding long positions adds near-term selling risk.
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement <2/3 (D1 BUY vs 4H SELL conflict) violates mandatory MTF rule. TRADE_THIS=NO regardless of other scores.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS SUMMARY:**
+
+**Hard Block:** MTF rule enforced. Daily=BUY, 4H=SELL, Weekly/Monthly=NEUTRAL → directional agreement only 1/3, well below 2/3 threshold

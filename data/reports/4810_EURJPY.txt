@@ -1,0 +1,26 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weak technicals (inside bars, RSI neutral, MACD negative) conflict with crowded EUR short positioning at reversal risk levels; downside bias exists but lacks conviction.
+RISK_FACTORS: [1] EUR net short at 6.0% crowded near 1y bottom with BUILDING momentum = reversal trap risk if longs squeeze. [2] MTF conf=0/3 (M:SELL vs W/D:NEUTRAL) violates multi-timeframe agreement rule; mixed trend weakens probability.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**DETAILED SCORING:**
+
+**TECHNICAL (4/10):**
+- D1 RSI=45.9 (neutral zone 45–62 = 3–4 base)
+- MTF context: M:SELL + D:NEUTRAL = *mixed*, no confirmed downtrend → use standard RSI tiers, no shift
+- MACD negative (D1: −0.0825, 4H: −0.0715) = bearish signal (+0 bonus, already embedded in T_sig=

@@ -1,0 +1,24 @@
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 with 4H confirmation, but mixed MTF alignment and neutral RSI (48.5) weaken conviction; rate differential (+2.89% GBP favor) and unwinding COT positions add conflicting signals.
+RISK_FACTORS: [1] MTF disagreement (M:SELL vs W/D:NEUTRAL, conf=0/3) violates multi-timeframe consensus rule — NO clear directional agreement. [2] COT UNWINDING on both pairs reduces institutional conviction and increases reversal risk; GBP rate advantage contradicts bearish thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade fails MTF rule (weekly and daily do NOT both agree on direction). H&S pattern is present but lacks oscillator/divergence confirmation and contradicted by GBP rate differential. Confidence 4/10 << 7 threshold; R:R data unavailable but setup quality insufficient.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL (4/10):**
+- D1 T_sig baseline = 3 (NEUTRAL) — RSI

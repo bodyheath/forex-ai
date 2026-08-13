@@ -1,0 +1,20 @@
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + RSI 59 in confirmed uptrend signals overbought reversal risk, but weak MTF confluence and conflicting ribbon alignment create low-conviction setup.
+RISK_FACTORS: [1. MTF conflict: Monthly BUY vs Weekly/Daily NEUTRAL leaves directional agreement at 0/3 (MTF rule violation); 2. Ribbon ALIGNED_BULL contradicts SELL signal — trend continuation structure active despite overbought RSI]
+TRADE_THIS: NO
+
+**RATIONALE:**
+
+**MTF Rule Failure (Critical):** Weekly=NEUTRAL, Daily=NEUTRAL, 4H=BUY → only 1/3 agree on direction (4H BUY). Monthly=BUY is context but does not override. MTF rule requires W+D both agree for entry — they don't. **This alone blocks TRADE_THIS=YES**.
+
+**Technical Scoring (4/10):**
+- D1 RSI=59.0 in **confirmed uptrend** (price>SMA50>SMA200, golden cross): standard tier 45–62=NEUTRAL(3–4). No shift applied because uptrend overbought rule applies at RSI>65–77 range; RSI 59 is within neutral band for uptrend context.
