@@ -1,0 +1,26 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish head-and-shoulders pattern on 4H in confirmed downtrend, but MTF confusion (M:SELL vs W/D:NEUTRAL) and conflicting institutional signals (CAD short crowding + GBP unwinding) create low-confidence setup.
+RISK_FACTORS: [1] CAD positioning at 1-year short extreme — reversal risk if crowded short unwinds (historically high reversal probability). [2] MTF disagreement (monthly SELL vs weekly/daily NEUTRAL) fails 2/3 confirmation rule; price inside range, not trending — chop risk.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.8750
+ENTRY_TRIGGER_REASON: Breakdown below 4H H&S neckline (~1.8750) with daily RSI falling through 45 to confirm lower leg.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**ANALYSIS RATIONALE:**
+
+**TECHNICAL (4/10):**  
+- D1: T_sig=3 (NEUTRAL), RSI 47.7 = neutral zone, MACD h slightly negative but weak, price 1.8808 trades between SMA

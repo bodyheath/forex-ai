@@ -1,0 +1,24 @@
+```
+PAIR: GBP/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key level (2.3534) with bearish candle pattern and D1 SELL signal, but MTF misalignment (weekly NEUTRAL vs daily SELL at conf=1/3) and RSI 55.2 in neutral zone limit conviction; range-bound structure (1090p FIB range, price vs MA conflict) creates mean-reversion risk.
+
+RISK_FACTORS: 
+1. MTF DISAGREEMENT: Weekly is NEUTRAL while Daily is SELL (45% confidence threshold) — does not satisfy 2/3 MTF agreement rule; trade lacks institutional alignment.
+2. RSI 55.2 NEUTRAL in mixed MTF context — no overbought signal; Stochastic 80.7 is overbought BUT CCI +143.8 extreme, creating OSC=NONE (mixed signals, no triple confluence); range-bound structure suggests bounce risk into 2.3106 SMA50.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 2.3065
+ENTRY_TRIGGER_REASON: Break below D1 support (SMA50 2.3106 / pin bar low cluster) to confirm downtrend and resolve MTF ambiguity.

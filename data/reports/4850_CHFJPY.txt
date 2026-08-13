@@ -1,0 +1,25 @@
+```
+PAIR: CHF/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with RSI 38.7 in oversold zone supports reversal bounce, but aligned-bear ribbon and MTF weakness (M:SELL vs W/D:BUY) create significant directional conflict.
+RISK_FACTORS: [1] MTF agreement only 2/3 (monthly sell vs weekly/daily buy) — breakout above 199.37 SMA200 required to confirm uptrend; [2] Ribbon fully aligned bearish (5/5 fan) contradicts BUY thesis — risk of false pin bar into continuation lower.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 199.67
+ENTRY_TRIGGER_REASON: Break above D1 SMA50 at 199.67 + weekly confirmation closes above 199.37 SMA200 resolves MTF conflict and validates BUY.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**SCORING DETAIL:**
+
+**TECHNICAL (6/10):**
+- D1 T_sig baseline = BUY_7; however, ribbon ALIGNED_BEAR (5/5) is a -2 penalty (contradicts BUY).
+- RSI

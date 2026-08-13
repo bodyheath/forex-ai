@@ -1,0 +1,23 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with T_sig SELL_3 signal and weak MTF alignment (W:SELL vs D:NEUTRAL); RSI 57.5 mid-neutral zone in uptrend context shows no directional urgency, while 4H mixed trend offers no confirmation—setup lacks conviction.
+RISK_FACTORS: [1] MTF disagreement (Weekly SELL vs Daily NEUTRAL) violates MTF rule—confidence capped at <7 regardless of other factors. [2] Double-bottom pattern is bullish-biased but T_sig forces SELL into existing uptrend structure (SMA50/SMA200 golden cross intact), creating thesis conflict that lowers edge.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule breach: Weekly and Daily do not both agree on direction (conf=1/3, requires ≥2/3). Trade declined per protocol.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Detailed Rationale:**
+
+1. **MTF Validation (HARD RULE):** Weekly=SELL, Daily=NEUTRAL, 4H=NEUTRAL. Only 1 of 3 agree on direct
