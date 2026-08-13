@@ -1,0 +1,44 @@
+I need to carefully evaluate this setup before finalizing.
+
+**Key tension:** ALIGNED_BULL ribbon (fan, 5/5) vs SELL signals. Let me work through this systematically.
+
+**MTF:** W:SELL + D:SELL = both agree SELL ✓ → TRADE_THIS eligible
+
+**RSI context:** Confirmed uptrend (W:BUY? No — W:SELL, D:SELL). Wait — MTF shows W:SELL D:SELL = confirmed DOWNTREND context. But price > SMA50 > SMA200 golden cross. This is contradictory. The MTF momentum signal (W:SELL, D:SELL) means recent momentum is bearish/rolling over even within the longer structural uptrend. Apply DOWNTREND RSI tiers? No — the price structure is still bullish (golden cross). Use standard tiers for mixed structural context. RSI=68.5 → standard: 62-70 = SELL 4-5. But T_sig=SELL_8 is the anchor.
+
+**TECHNICAL_SCORE:** T_sig=SELL_8. Bonuses: MACD 4H negative (partial), BB at upper band (SELL +1), price vs SMA50 (price above = BUY, conflicts SELL, no bonus), D1+4H both SELL ✓ (+1). But ribbon is ALIGNED_BULL — this is a strong contradictory factor. Ribbon ALIGNED_BULL in an uptrend structure argues against a strong SELL score. Adjust T_sig anchor down by 1 → **TECHNICAL_SCORE: 7**
+
+**RIBBON:** ALIGNED_BULL fan = trend continuation bias. This is a meaningful caution for SELL entries — not impossible (bearish pin at upper BB can produce pullbacks) but ribbon alignment reduces conviction.
+
+**OSCILLATOR:** TRIPLE_SELL → +2 CONFIDENCE
+
+**FUNDAMENTAL:** Rate diff +3.78% favors GBP. CHF rate falling = GBP/CHF bullish structurally. This works AGAINST the SELL. FUNDAMENTAL_SCORE: 5 (rate diff supports GBP, but CHF weakness is also CHF-short = unwinding could help CHF = mixed)
+
+**Entry/Stop/Target:**
+- Entry: 1.0974
+- Stop: Above recent high/ATR buffer. Pin bar high + ATR = ~1.0974 + 0.0051 = 1.1025 → Stop: 1.1030
+- Risk: 1.1030 - 1.0974 = 56 pips
+- Target (2R): 1.0974 - (0.0056 × 2) = 1.0974 - 0.0112 = 1.0862
+
+**CONFIDENCE baseline:** Start 6. MTF W+D both SELL +1=7. TRIPLE_SELL OSC +2=9. DIV=NONE. Ribbon ALIGNED_BULL is a conflict — reduce 1 → **8**. Rate diff against SELL — holds at 8.
+
+---
+
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 8/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 6/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 1.0974
+TARGET: 1.0862
+STOP_LOSS: 1.1030
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 5:00–7:00 PM Auckland time (NZST)
+NEWS_WARNING: Monitor GBP CPI/BoE speakers and SNB commentary within 48h — CHF rate-falling narrative can shift on surprise SNB jawboning
+KEY_THESIS: Triple-sell oscillator confluence (RSI 68.5, Stoch 92.6, CCI 209.7) with bearish pin bar at upper Bollinger Band and W+D both SELL
+RISK_FACTORS: [1] Aligned ribbon (5/5) and golden-cross structure (price > SMA50 > SMA200) indicate strong uptrend structure — any sell may be only a pullback/correction, not a trend break; price must hold above SMA50 (1.0789) to confirm this is a correction. [2] GBP/CHF both unwinding positions mid-range (not extreme) — no institutional conviction yet; if unwind reverses to building, momentum may resume up; low SMD (0) = no contrarian edge.

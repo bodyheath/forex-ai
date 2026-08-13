@@ -1,0 +1,23 @@
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 with 4H bearish engulfing and rising JPY rates provide downside bias, but mixed MTF alignment (M:SELL vs W/D:NEUTRAL) and mid-range oscillators prevent high-conviction entry.
+RISK_FACTORS: [1] MTF conflict—Monthly shows SELL but Weekly and Daily are NEUTRAL, violating the dual-MTF confirmation rule (conf=0/3); reversal risk if weekly breaks above 215.44. [2] COT UNWINDING on both pairs reduces institutional conviction; GBP net SHORT at 46% is not extreme, limiting momentum follow-through.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 213.50
+ENTRY_TRIGGER_REASON: Breakdown below D1 support near FIB SL=209.596 lower band (213.50 = intermediate confluence zone); only enter if Weekly confirms SELL direction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL (5/10):** D1 T_sig=NEUTRAL_3 anchors the baseline at 5. Head-and-shoulders pattern (bearish) + 4H bear

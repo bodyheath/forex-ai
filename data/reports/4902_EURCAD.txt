@@ -1,0 +1,33 @@
+```
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Double-bottom pattern at FIB 23.6% support with D1+4H aligned bullish, RSI in neutral zone supports bounce, but crowded short positioning and mixed weekly trend create reversal risk.
+
+RISK_FACTORS: 
+1. MTF weekly is NEUTRAL (conflicts with D1 BUY) — conf=2/3 fails strict MTF agreement rule, reduces directional conviction.
+2. Both EUR and CAD positioned crowded short near 1-year range bottom — institutional BUILDING momentum on EUR suggests contrarian setup, but EUR short already deep; mean-reversion whipsaw risk if positioning unwinds violently.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.6065
+ENTRY_TRIGGER_REASON: Price already 6p above FIB 23.6% support (1.6065) — wait for retest of FIB level or confirmation break above 1.6140 SMA50 resistance for stronger confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (6/10):**  
+- D1 T_sig=BUY_6 is baseline (6).
