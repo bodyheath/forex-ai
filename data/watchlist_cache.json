@@ -1,60 +1,70 @@
 {
-  "timestamp": 1786619834.6371279,
+  "timestamp": 1786645225.32393,
   "watchlist_pairs": [
-    "GBP/USD",
-    "EUR/CHF",
-    "CAD/CHF",
+    "AUD/JPY",
     "EUR/AUD",
     "EUR/JPY",
     "AUD/CAD",
-    "AUD/CHF",
+    "EUR/GBP",
+    "GBP/JPY",
     "USD/JPY",
-    "GBP/CAD",
-    "EUR/USD",
     "NZD/CHF",
     "EUR/CAD",
     "AUD/NZD",
     "GBP/NZD",
-    "AUD/USD"
+    "GBP/AUD",
+    "EUR/NZD",
+    "NZD/CAD",
+    "GBP/USD"
   ],
   "near_miss": {
-    "GBP/CAD": 5,
-    "EUR/USD": 5,
-    "NZD/CHF": 5,
-    "AUD/USD": 5
+    "AUD/JPY": 5,
+    "EUR/AUD": 5,
+    "EUR/JPY": 5,
+    "GBP/JPY": 5,
+    "USD/JPY": 5,
+    "GBP/AUD": 5,
+    "EUR/NZD": 5
   },
   "near_miss_dirs": {
-    "GBP/CAD": "SELL",
-    "EUR/USD": "BUY",
-    "NZD/CHF": "SELL",
-    "AUD/USD": "SELL"
+    "AUD/JPY": "SELL",
+    "EUR/AUD": "BUY",
+    "EUR/JPY": "SELL",
+    "GBP/JPY": "SELL",
+    "USD/JPY": "BUY",
+    "GBP/AUD": "SELL",
+    "EUR/NZD": "SELL"
   },
   "momentum_counts": {
-    "GBP/USD": 4,
+    "AUD/JPY": 1,
+    "EUR/AUD": 3,
+    "EUR/JPY": 2,
+    "AUD/CAD": 8,
+    "EUR/GBP": 1,
+    "GBP/JPY": 2,
+    "USD/JPY": 15,
+    "NZD/CHF": 7,
+    "EUR/CAD": 2,
+    "AUD/NZD": 19,
+    "GBP/NZD": 8,
+    "GBP/AUD": 1,
+    "EUR/NZD": 1,
+    "NZD/CAD": 1,
+    "GBP/USD": 5,
     "EUR/CHF": 11,
     "CAD/CHF": 1,
-    "EUR/AUD": 2,
-    "EUR/JPY": 1,
-    "AUD/CAD": 7,
     "AUD/CHF": 1,
-    "USD/JPY": 14,
     "GBP/CAD": 4,
     "EUR/USD": 1,
-    "NZD/CHF": 6,
-    "EUR/CAD": 1,
-    "AUD/NZD": 18,
-    "GBP/NZD": 7,
-    "AUD/USD": 11,
-    "NZD/USD": 28,
-    "CAD/JPY": 2,
-    "GBP/JPY": 1,
-    "USD/CHF": 3
+    "AUD/USD": 11
   },
   "momentum_grace": {
-    "NZD/USD": 1,
-    "CAD/JPY": 1,
-    "GBP/JPY": 1,
-    "USD/CHF": 1
+    "EUR/CHF": 1,
+    "CAD/CHF": 1,
+    "AUD/CHF": 1,
+    "GBP/CAD": 1,
+    "EUR/USD": 1,
+    "AUD/USD": 1
   },
   "watchlist_weekly_stats": {
     "week_start": "2026-08-10",
@@ -62,7 +72,5 @@
     "promoted_to_deep": 5,
     "became_trade_alerts": 0
   },
-  "priority_for_next_scan": [
-    "GBP/CAD"
-  ]
+  "priority_for_next_scan": []
 }
