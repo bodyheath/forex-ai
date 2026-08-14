@@ -1,0 +1,44 @@
+I need to carefully assess this trade before finalizing.
+
+**KEY CONFLICTS TO RESOLVE:**
+
+**MTF Check:** M:SELL W:SELL D:SELL 4H:NEUTRAL — conf=2/3 stated, but W:SELL and D:SELL **both agree** on SELL direction. The 4H:NEUTRAL is the non-agreeing timeframe. W+D both SELL = MTF agreement satisfied for TRADE_THIS eligibility.
+
+**RSI in Confirmed Downtrend (W:SELL + D:SELL):** Apply downtrend RSI shift. RSI 66.4 in a downtrend = standard tier 62-70 would be 4-5SELL, but in confirmed downtrend context, RSI 66.4 is in the 42-62 NEUTRAL zone shifted... actually 66.4 is above 62, so it's above the neutral ceiling. Downtrend shift says overbought signals are more meaningful (not suppressed) — RSI 66.4 in a downtrend = legitimate SELL signal. T_sig=SELL_5, confirmed.
+
+**Ribbon conflict:** ALIGNED_BULL fan 5/5 is a major contradiction to SELL thesis. This is significant risk.
+
+**Fundamentals:** Rate diff +4.50% AUD rising, CHF falling = strongly favors AUD (BUY AUD/CHF). This is a hard fundamental headwind against SELL. FUNDAMENTAL_SCORE should reflect this conflict — Haiku's 3/10 is appropriate.
+
+**PAT:** pin_bar_at_key_level:bul — bullish pattern also conflicts with SELL.
+
+**OSC:** TRIPLE_SELL +2 confidence.
+
+**FIB:** SH=0.57281, SL=0.5547, range=181p. No "near=" line so price not at a specific fib level. FIB nearest_above ~0.5728 (recent swing high) = resistance zone near current price 0.5745 — price has broken above SH, which is actually bullish breakout signal.
+
+**Price vs SH:** Price 0.5745 > SH 0.5728 — price has broken ABOVE the swing high used for fib. This is bullish, not bearish.
+
+**CONFIDENCE assessment:** Start base ~6. TRIPLE_SELL +2 = 8. DIV:NONE. But ribbon conflict (major) -1, fundamental conflict (strong) -1, bullish pin bar conflict -1, price above swing high (bullish breakout) -1 = 4. That's too low. Let me weight properly: TRIPLE_SELL is strong (+2), but ribbon ALIGNED_BULL fan is a major contradiction, fundamentals strongly oppose, pin bar is bullish, price breaking above SH is bullish. Net confidence: 5/10 — below threshold for YES.
+
+**TRADE_THIS:** Confidence 5 ≤ 6 = NO regardless.
+
+---
+
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 0.5745
+TARGET: 0.5613
+STOP_LOSS: 0.5811
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 15:00–17:00 NZST
+NEWS_WARNING: Monitor AUD employment data and SNB/RBA commentary within 48h
+KEY_THESIS: Triple oscillator confluence (RSI 66.4 + Stoch 92.9 + CCI 161.5) in a confirmed M/W/D SELL downtrend provides a technical sell signal, but is fatally undermined by a fully aligned bullish EMA ribbon (5/5 fan), strongly AUD-favoring rate differential (+4.50%), a bullish pin bar pattern, and price breaking above the swing high — too many high-weight factors contra
+RISK_FACTORS: (1) Ribbon fully aligned bullish (5/5 fan) contradicts sell thesis—trend continuation risk if price breaks above 0.5780; (2) Fundamental headwind: AUD rate rising + CHF rate falling = directional carry favors AUD, fundamentals conflict with technical sell.

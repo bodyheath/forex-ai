@@ -1,0 +1,35 @@
+```
+PAIR: CHF/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Weekly and daily align on BUY with RSI 37.5 in neutral zone, but converging ribbon and UNWINDING institutional positioning reduce conviction; entry justified only if break above 199.53 SMA50 confirmed.
+
+RISK_FACTORS: 
+1. Converging ribbon signals weakening trend — reversal risk if price fails to hold above SMA50 (199.53).
+2. COT UNWINDING on both CHF and JPY reduces institutional conviction; positioning momentum is eroding support for sustained move.
+
+TRADE_THIS: YES
+
+ENTRY_TYPE: BREAKOUT_BUY
+
+ENTRY_TRIGGER_PRICE: 199.53
+
+ENTRY_TRIGGER_REASON: Break above SMA50 at 199.53 with daily RSI 37.5 confirming entry signal; confluence with weekly BUY direction.
+
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Rationale:**
+
+- **MTF Check:** W:BUY + D:BUY = 2/3 agreement → **PASS** (>=2/3); 4H neutral does not break consensus.
+- **TECHNICAL_SCORE = 6:** T_sig baseline=BUY_6 stands. RSI 37.5 in

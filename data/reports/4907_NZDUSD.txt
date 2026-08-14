@@ -1,0 +1,20 @@
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level with T_sig=SELL_6 conflicts with 4/5 bullish ribbon alignment; MTF agreement is weak (1/3), reducing trade conviction despite technical setup.
+RISK_FACTORS: [1] MTF confluence insufficient (only D:SELL; W/M/4H NEUTRAL) — signal lacks multi-timeframe confirmation. [2] Ribbon LEANING_BULL (4/5 aligned) contradicts SELL thesis; price above SMA50 (0.5786) despite T_sig — conflicting technical narratives reduce reliability.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5910
+ENTRY_TRIGGER_REASON: Resistance at Fibonacci nearest_above (swing high confluencel); await pullback to SMA50 (0.5786) to confirm trend rejection if D1 closes below pin bar low.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE:**
+- **TECHNICAL_SCORE = 5**: T_sig=SELL_6 is baseline, but D1 pin bar (bullish context) + RSI=56.5 (neutral, standard tier) + MACD flat (+0
