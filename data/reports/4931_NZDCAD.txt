@@ -1,0 +1,24 @@
+```
+PAIR: NZD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 61.8% Fib + bullish engulfing offer reversal setup, but bearish RSI divergence and neutral MTF agreement create conflicting signals in a choppy range.
+RISK_FACTORS: [1. Bearish RSI divergence (strong, 22p/6pt) conflicts with bullish candle patterns — high whipsaw risk in neutral MTF environment. 2. CAD crowded short positioning near 1y bottom creates reversal risk; if short shorts cover, NZD/CAD could spike against trade direction.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.81741
+ENTRY_TRIGGER_REASON: Confluence of pin bar at Fib 61.8% resistance level + bullish engulfing pattern + D1 price confirmation above SMA50 golden cross.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**Confidence = 5** (borderline, no trade):
+- **MTF VETO**: M/W/D/4H all NEUTRAL → conf=0/3. System requires **both weekly AND daily to agree on direction**; all four timeframes are neutral. This alone triggers
