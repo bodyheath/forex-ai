@@ -49,12 +49,22 @@ def _read_regime() -> str:
 
 
 def _parse_dt(s: str):
-    """Parse a closed_at string (naive, matches research_outcome_checker._parse_dt)."""
+    """Parse a closed_at string (naive datetime).
+
+    NOTE: research_outcome_checker._parse_dt uses a superficially similar
+    s[:len(fmt)] truncation pattern that is actually broken — len(fmt) is the
+    length of the format *specifier* string (e.g. "%Y-%m-%d %H:%M:%S" is 17
+    chars), not the length of the rendered value (19 chars for that format),
+    so the slice always cuts the string short and strptime always raises,
+    silently returning None for every input. Not fixed here (out of scope —
+    a separate module) but flagged; this implementation tries the full
+    string against each format instead of pre-truncating it.
+    """
     if not s:
         return None
     for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
         try:
-            return datetime.strptime(s[:len(fmt)], fmt)
+            return datetime.strptime(s, fmt)
         except (ValueError, TypeError):
             continue
     return None
