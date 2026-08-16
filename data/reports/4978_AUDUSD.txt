@@ -1,0 +1,24 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought (62) in uptrend context with PARTIAL oscillator sell signal (Stochastic+CCI), but conflicting candle patterns and neutral MTF prevent high-conviction trade.
+RISK_FACTORS: [1) MTF completely neutral (M/W/D/4H all NEUTRAL, conf=0/3) — no directional MTF agreement required for TRADE_THIS=YES, but removes trend confirmation; 2) D1 T_sig=SELL_3 conflicts with 4H pin_bar_at_key_level:bullish — candle patterns mixed, suggesting consolidation rather than directional breakout]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.7120
+ENTRY_TRIGGER_REASON: Sell limit at local resistance (Fibonacci nearest_above inferred from SH=0.72004) if price breaks above current level, then retraces to this zone with fresh RSI weakness confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1 RSI=62 in uptrend context (price > SMA50 > SMA200, golden

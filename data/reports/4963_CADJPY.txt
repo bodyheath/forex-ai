@@ -1,0 +1,23 @@
+```
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with 4H bearish reversal pattern (pin bar at key level) and leaning-bear ribbon; crowded CAD short positioning creates reversal risk despite fundamental tailwind.
+RISK_FACTORS: ['MTF misalignment: D1 neutral/uptrend but 4H decisively SELL (conf=0/3) — no weekly/daily agreement, violates MTF rule'; 'CAD short positioning near 1-year bottom — institutional unwinding on JPY side and crowded retail shorts on CAD increase whipsaw risk']
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule blocks: weekly and daily do not both agree on direction (W:NEUTRAL + D:NEUTRAL vs 4H:SELL). Confidence 5/10 below 7.0 threshold. Crowded positioning dynamics (CAD short reversal risk) conflict with bearish setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF Failure (Critical):** Weekly=NEUTRAL, Daily=NEUTRAL, 4H=SELL → conf=0/3 (only 4

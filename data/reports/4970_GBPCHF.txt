@@ -1,0 +1,47 @@
+I need to carefully evaluate this trade.
+
+**MTF Check:** W:SELL + D:SELL + 4H:SELL — all three agree SELL. ✅ MTF condition met.
+
+**TECHNICAL_SCORE anchor:** T_sig=SELL_8. Now check RSI trend context.
+
+Confirmed UPTREND (W:BUY+D:BUY would shift zones) — BUT MTF shows W:SELL+D:SELL, so this is actually a **confirmed DOWNTREND signal** on momentum despite price structure being bullish. The RSI trend context rule uses MTF direction: W:SELL+D:SELL = confirmed downtrend context. In downtrend context, RSI 71.5 is NOT shifted — standard tiers apply for SELL: RSI 70-76 = 7-8 SELL. T_sig=8 is valid.
+
+**RIBBON conflict:** RIB=ALIGNED_BULL fan 5/5 — this is a significant counter-signal. Price above SMA50>SMA200, golden cross. The ribbon is bullish. This is a mean-reversion SELL against a strong uptrend ribbon. This raises reversal risk but T_sig already accounts for SELL_8.
+
+**TRIPLE_SELL oscillators** → +2 confidence
+**DIV=NONE** → no adjustment
+**No Fibonacci near= level** noted — FIB SH=1.092 is above current price 1.1003, so price is above the swing high reference. BB at/above upper band confirms overbought.
+
+**Confidence build:**
+- Base: 6
+- MTF 3/3 SELL: +1
+- TRIPLE_SELL OSC: +2
+- ALIGNED_BULL ribbon (counter-signal, caution): -1
+- Result: 8/10
+
+**Entry/SL/Target:**
+- Entry: 1.1003
+- SL: above recent high + ATR buffer = 1.1003 + (1.5 × 0.0048) = ~1.1075
+- Target: 1.1003 − (0.0072 × 2) = 1.0859
+
+---
+
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 8/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 1.1003
+TARGET: 1.0859
+STOP_LOSS: 1.1075
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 15:00–17:00 NZST
+NEWS_WARNING: Monitor UK macro releases and SNB commentary within 48h — CHF pairs volatile on central bank signals
+KEY_THESIS: RSI 71.5 at upper Bollinger Band with triple oscillator SELL confluence (Stoch 98.8, CCI 179.4, RSI overbought) across fully aligned W:SELL+D:SELL+4H:SELL MTF stack signals high-probability mean-reversion despite bullish price structure, with rate differential and CHF short unwinding adding fundamental support for CHF recovery.
+RISK_FACTORS: 1) EMA ribbon fully aligned bullish (5/5 fan) with price above SMA50>SMA200 golden-cross structure — breakout continuation could invalidate mean-reversion thesis rapidly. 2) CHF net short positioning unwinding (MOM:UNWINDING) may be slower than anticipated, and GBP flat rates with positive rate differential (+3.78%) could sustain GBP bid pressure against the SELL.
+TRADE_THIS: YES

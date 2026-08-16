@@ -1,0 +1,30 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Weak short setup conflicted by bullish patterns (inverse H&S, double bottom) and neutral MTF; EUR crowded short positioning creates reversal risk despite 4H momentum fade.
+
+RISK_FACTORS: [1] MTF agreement critical for trade confidence — Monthly SELL vs Weekly/Daily both NEUTRAL = only 1/3 agreement (conf=0.33 << 2/3 threshold); trade confidence capped at ~4. [2] EUR positioning at 1-year crowded short BOTTOM with BUILDING momentum = institutional reversal trap risk — if EUR reverses, this EUR/JPY short will be caught; JPY MOM unwinding further reduces conviction.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — only 1/3 of (M,W,D) agree on SELL direction; Weekly and Daily both NEUTRAL = MTF consensus <67%, blocks trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**NOTES:**
+
+1. **MTF Rejection (Hard Rule):** M:SELL / W:NEUTRAL / D:NEUTRAL = 1 agree out of 3 = 33% agreement. Threshold is

@@ -1,0 +1,24 @@
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + head-and-shoulders pattern + D1/4H aligned SELL, but ribbon lean-bull and RSI 60 in mixed trend create conflicting signals — moderate risk trade.
+RISK_FACTORS: [1] RSI 60.3 is neutral-to-overbought in mixed trend; not oversold, limiting upside conviction. [2] Ribbon LEANING_BULL (4/5 pairs aligned) contradicts SELL direction — potential for continued upside if ribbon flips fully bullish.
+TRADE_THIS: YES
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.5870
+ENTRY_TRIGGER_REASON: Break below pin bar low (0.5870) confirms bearish reversal; targets FIB SL at 0.56276 (367p range).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**NOTES:**
+
+- **MTF Alignment:** D1:SELL + 4H:SELL = 2/3 agreement (weekly and monthly neutral). Meets minimum MTF threshold (≥2/3 for trade validity).
+- **Technical Score (6/10):** T_sig=SELL_6 is baseline. RSI 60

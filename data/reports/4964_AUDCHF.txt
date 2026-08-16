@@ -1,0 +1,32 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+
+KEY_THESIS: Triple oscillator sell signal (RSI 68.1 + Stoch 97 + CCI 171) in confirmed downtrend (MTF M:SELL/W:SELL/D:SELL) overrides uptrend structure; CHF unwinding provides entry risk but AUD rate strength and T_sig SELL_5 support shorting into overbought.
+
+RISK_FACTORS: 
+1. RIBBON CONFLICT: All 6 EMAs remain ALIGNED_BULL (fanning) — structural uptrend intact; oscillator reversal can fail in strong trends.
+2. POSITIONING RISK: CHF is already net SHORT 55% with UNWINDING momentum — thin conviction; short squeeze possible if risk sentiment shifts.
+
+TRADE_THIS: YES
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5775
+ENTRY_TRIGGER_REASON: Sell limit 21p above current price at recent swing high; allows oscillator-driven retracement into resistance before shorting (reduces whipsaw risk in overbought, ribbon-bullish environment).
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**ANALYSIS NOTES:**
+
+**Technical (6/10):**
+- RSI 68
