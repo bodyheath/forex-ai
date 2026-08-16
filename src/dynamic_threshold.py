@@ -78,24 +78,81 @@ def compute(
     # Factor 2: Win rate adjustment (last 50 decisive research trades)
     # 50-trade window (~2-3 months at normal cadence) gives a stable signal;
     # the old 20-trade window swung the threshold ±1.0 from a single bad week.
+    #
+    # Population: source=sonnet only — the real, Claude-vetted candidates this
+    # gate is meant to judge — not the blended (sonnet + indicative +
+    # indicative_borderline) population research_tracker.load() returns by
+    # default. The indicative tiers exist for a different, unrelated purpose
+    # (research_analyst.py's 30-day threshold study) and ended up feeding this
+    # gate only because compute() reused the same general-purpose loader, not
+    # from any deliberate decision — confirmed via backtest to have been
+    # ~80% synthetic-tier in the live window as of 2026-08-14, dragging the
+    # reported win rate far below the real sonnet-tier population's.
+    #
+    # Two fallbacks, both routing to the pre-existing blended calculation
+    # (no new logic path) rather than inventing a new default:
+    #   - thin-sample: sonnet-only decisive n < _MIN_SONNET_SAMPLE — not
+    #     enough signal yet (only genuinely binding in the system's first
+    #     few days; backtested as never triggering since 2026-07-06).
+    #   - stale: the newest sonnet-only decisive trade closed more than
+    #     _STALENESS_DAYS ago — the window is real but no longer "recent"
+    #     (confirmed live-active as of 2026-08-14: only 1 sonnet-tier
+    #     decisive trade closed in the preceding 7 days).
+    def _decisive_bucket(rows, limit=50):
+        bucket = []
+        for r in reversed(rows):
+            st = (r.get("status") or "").upper()
+            if st in ("WIN", "PARTIAL_WIN", "FULL_WIN"):
+                bucket.append(True)
+            elif st == "LOSS":
+                bucket.append(False)
+            else:
+                continue
+            if len(bucket) >= limit:
+                break
+        return bucket
+
     n_decisive = 0
     n_wins = 0
     win_rate = None
     win_rate_adj = 0.0
+    win_rate_source = "no_data"
     if research_trades:
-        decisive = []
-        for r in reversed(research_trades):
-            st = (r.get("status") or "").upper()
-            if st in ("WIN", "PARTIAL_WIN", "FULL_WIN"):
-                decisive.append(True)
-            elif st == "LOSS":
-                decisive.append(False)
-            if len(decisive) >= 50:
-                break
-        n_decisive = len(decisive)
-        if n_decisive >= 20:
-            n_wins = sum(decisive)
-            win_rate = n_wins / n_decisive
+        sonnet_rows = [r for r in research_trades if (r.get("source") or "").lower() == "sonnet"]
+        sonnet_decisive = _decisive_bucket(sonnet_rows)
+        n_sonnet = len(sonnet_decisive)
+
+        newest_dt = None
+        if n_sonnet:
+            for r in reversed(sonnet_rows):
+                st = (r.get("status") or "").upper()
+                if st in ("WIN", "LOSS", "PARTIAL_WIN", "FULL_WIN"):
+                    newest_dt = _parse_dt(r.get("closed_at", ""))
+                    break
+        is_stale = True  # unknown age (unparseable/missing) is treated as stale — safer default
+        if newest_dt is not None:
+            now_naive = datetime.now(timezone.utc).replace(tzinfo=None)
+            is_stale = (now_naive - newest_dt).total_seconds() / 86400.0 > _STALENESS_DAYS
+
+        if n_sonnet < _MIN_SONNET_SAMPLE:
+            blended_decisive = _decisive_bucket(research_trades)
+            n_decisive = len(blended_decisive)
+            if n_decisive >= 20:
+                win_rate = sum(blended_decisive) / n_decisive
+            win_rate_source = "blended_thin_sample"
+        elif is_stale:
+            blended_decisive = _decisive_bucket(research_trades)
+            n_decisive = len(blended_decisive)
+            if n_decisive >= 20:
+                win_rate = sum(blended_decisive) / n_decisive
+            win_rate_source = "blended_stale"
+        else:
+            n_decisive = n_sonnet
+            win_rate = sum(sonnet_decisive) / n_sonnet
+            win_rate_source = "sonnet_only"
+
+        if win_rate is not None:
+            n_wins = round(win_rate * n_decisive)
             if win_rate > 0.55:
                 win_rate_adj = -0.5
             elif win_rate >= 0.45:
