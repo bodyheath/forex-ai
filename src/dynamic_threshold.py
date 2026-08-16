@@ -181,6 +181,7 @@ def compute(
         "decisive_trades_sample":  n_decisive,
         "win_rate_recent":         round(win_rate, 3) if win_rate is not None else None,
         "win_rate_adjustment":     win_rate_adj,
+        "win_rate_source":         win_rate_source,
         "data_quality_pct":        round(quality_pct),
         "data_quality_adjustment": dq_adj,
         "final_threshold":         final,
