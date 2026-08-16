@@ -11688,6 +11688,19 @@ def run() -> int:
                 f"wr_adj {_threshold_data.get('win_rate_adjustment', 0):+.1f}, "
                 f"dq_adj {_threshold_data.get('data_quality_adjustment', 0):+.1f})",
             )
+            _wr_src = _threshold_data.get("win_rate_source", "no_data")
+            if _wr_src == "sonnet_only":
+                _log_line(log, (
+                    f"[win_rate_source] sonnet_only — n={_threshold_data.get('decisive_trades_sample')} "
+                    f"wr={_threshold_data.get('win_rate_recent')}"
+                ))
+            elif _wr_src in ("blended_thin_sample", "blended_stale"):
+                _log_line(log, (
+                    f"[win_rate_source] FALLBACK={_wr_src} — sonnet-only window not usable this scan, "
+                    f"using blended (sonnet+indicative) population instead — "
+                    f"n={_threshold_data.get('decisive_trades_sample')} "
+                    f"wr={_threshold_data.get('win_rate_recent')}"
+                ))
         except Exception as _thr_exc:
             _log_line(log, f"Dynamic threshold computation failed: {_thr_exc}")
 
