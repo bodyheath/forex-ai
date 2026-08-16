@@ -2,7 +2,7 @@
 
 Three factors adjust the threshold each scan:
   1. Market regime  — read from data/regime_state.json (written by market_regime.py)
-  2. Recent win rate — last 20 decisive research trades
+  2. Recent win rate — last 50 decisive research trades, source=sonnet only
   3. Data quality   — overall_pct from data_quality.assess_scan()
 
 Does NOT run regime detection itself; only reads regime_state.json.
@@ -12,6 +12,21 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import config
+
+_MIN_SONNET_SAMPLE = 20   # below this, the sonnet-only signal isn't trustworthy yet
+_STALENESS_DAYS     = 14  # oldest an "as of right now" window's newest trade may be
+
+
+def _parse_dt(s: str):
+    """Parse a closed_at string (naive, matches research_outcome_checker._parse_dt)."""
+    if not s:
+        return None
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(s[:len(fmt)], fmt)
+        except (ValueError, TypeError):
+            continue
+    return None
 
 _REGIME_STATE_FILE      = config.DATA_DIR / "regime_state.json"
 _THRESHOLD_HISTORY_FILE = config.DATA_DIR / "threshold_history.json"
