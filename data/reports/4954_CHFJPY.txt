@@ -1,0 +1,30 @@
+```
+PAIR: CHF/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key level with RSI 37.5 in mixed trend and daily BUY alignment offers confluence entry, but ribbon convergence and unwinding positioning limit conviction.
+
+RISK_FACTORS: [1] Ribbon converging signals weakening trend and reversal risk — price may retrace into 192.6–194.0 zone before resuming. [2] Both CHF and JPY unwinding (COT MOM=UNWINDING) reduces institutional conviction; if unwinding accelerates, support may fail.
+
+TRADE_THIS: YES
+
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 196.4
+ENTRY_TRIGGER_REASON: Break above pin bar high (inferred ~196.4) confirms bullish reversal off key level and daily BUY alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (6/10):**
+- **RSI 37.5:** Standard tier = 6 BUY (mixed trend, not in confirmed downtrend shift).
+- **T_sig baseline = BUY_7** but MTF conf=2/3 (W+D agree BUY, M contradicts) → daily+weekly BOTH agree

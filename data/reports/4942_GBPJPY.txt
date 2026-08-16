@@ -1,0 +1,24 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 + 4H inverse H&S creating conflicting signals in mixed/range market; MTF weak (M:SELL vs W/D:NEUTRAL) prevents high-confidence trade.
+RISK_FACTORS: [1] MTF disagreement (monthly bearish but weekly+daily neutral) = conf<2/3; trade violates MTF rule. [2] Positioning unwinding on both GBP and JPY = institutional conviction declining; oscillators show no confluence (stoch neutral, CCI near zero).
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (W:NEUTRAL + D:NEUTRAL vs M:SELL). Confidence = 0/3 MTF layers aligned.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS SUMMARY:**
+
+**Technical Rejection (TECHNICAL_SCORE=4):**
+- D1 T_sig=NEUTRAL_3 (baseline); RSI=50.4 (mid-range, no directional bias). MACD histograms negative on both D1 and 4H

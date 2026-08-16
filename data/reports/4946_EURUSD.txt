@@ -1,0 +1,23 @@
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts sharply with 4H uptrend structure and bullish double-bottom pattern; crowded EUR short positioning creates reversal risk that overshadows weak technicals.
+RISK_FACTORS: [1] MTF disagreement: 4H in uptrend (price>SMA50>SMA200) contradicts D1 SELL signal — MTF rule triggers NO (only 1/3 agreement; conf=0/3 wt=80% = agreement failure). [2] COT reversal risk: EUR net SHORT at 6.0% near 1-year range bottom with BUILDING momentum = classic institutional unwinding setup; trade conflicts with positioning flip.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**RATIONALE:**
+
+1. **MTF VETO (Critical Rule):** Weekly, Daily, and Monthly all NEUTRAL; 4H is the only directional signal (SELL per T_sig), but MTF rule demands **both Weekly AND Daily agree**. They do not (both=NEUTRAL). Confidence on MTF agreement = 0/3
