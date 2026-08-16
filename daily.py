@@ -2585,11 +2585,33 @@ def _trade_quality_grade(r: dict) -> dict:
     elif rib_against or rr < 2.0 or (not w_d_agree and conf <= 6):
         grade = "D"
     # ── Grade A — take immediately ────────────────────────────────────────
-    elif (conf >= 8 and rr > 2.5 and all3_agree and
+    # R:R gate is rr>=2.0, not rr>2.5 — cascade.py's trade-construction system
+    # ("Pure 2:1 risk:reward target system", TARGET_RR=2.0 constant) has only
+    # ever produced exactly 2.0 R:R for any trade since 2026-06-30. The 2.5
+    # bar here was written 2026-06-25 against cascade.py's then-current 2.5R
+    # ceiling (a 3-tier design with a T3_MIN_MULT=2.5 floor); when cascade.py
+    # was twice simplified (06-28, 06-30) down to today's flat 2.0R system,
+    # this threshold was never revisited — making A and B mathematically
+    # unreachable (confirmed: zero B-grade rows since 2026-07-09, and the 5
+    # that exist anywhere in history all predate it with real rr 2.31-3.60).
+    # Backtested before shipping: a naive rr>=2.5->rr>=2.0 change produces a
+    # newly-reachable B-tier that is the WORST-performing grade of all five
+    # (PF=0.02 on real historical data) — because B's other distinguishing
+    # conditions (conf>=7, MTF agreement) select on confidence, which is
+    # itself negatively correlated with outcome in this system right now.
+    # Shipping anyway, on correctness grounds only (a top grade tier that can
+    # never be reached is a real defect independent of whether it currently
+    # predicts anything) — NOT expected to change trade volume or validate
+    # as a meaningful quality signal until the separately-tracked confidence-
+    # calibration problem is addressed. Watch real B/A occurrences going
+    # forward (see the new [grade_ba_observability] scan log line) rather
+    # than assuming either the backtest's negative result or a real-world
+    # surprise in the other direction.
+    elif (conf >= 8 and rr >= 2.0 and all3_agree and
           atr_cal and fib_near and no_news and rib_aligned and div_confirmed):
         grade = "A"
     # ── Grade B — take if no A ────────────────────────────────────────────
-    elif conf >= 7 and rr >= 2.5 and w_d_agree:
+    elif conf >= 7 and rr >= 2.0 and w_d_agree:
         grade = "B"
     # ── Grade C — watch only ──────────────────────────────────────────────
     elif conf >= 6 and rr >= 2.0:
