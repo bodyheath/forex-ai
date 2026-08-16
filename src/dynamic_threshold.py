@@ -13,21 +13,6 @@ from pathlib import Path
 
 import config
 
-_MIN_SONNET_SAMPLE = 20   # below this, the sonnet-only signal isn't trustworthy yet
-_STALENESS_DAYS     = 14  # oldest an "as of right now" window's newest trade may be
-
-
-def _parse_dt(s: str):
-    """Parse a closed_at string (naive, matches research_outcome_checker._parse_dt)."""
-    if not s:
-        return None
-    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
-        try:
-            return datetime.strptime(s[:len(fmt)], fmt)
-        except (ValueError, TypeError):
-            continue
-    return None
-
 _REGIME_STATE_FILE      = config.DATA_DIR / "regime_state.json"
 _THRESHOLD_HISTORY_FILE = config.DATA_DIR / "threshold_history.json"
 _MAX_HISTORY = 90
@@ -49,6 +34,9 @@ _REGIME_DISPLAY = {
     "RANGING_HIGH_VOL":  "Ranging high-vol",
 }
 
+_MIN_SONNET_SAMPLE = 20   # below this, the sonnet-only signal isn't trustworthy yet
+_STALENESS_DAYS     = 14  # oldest an "as of right now" window's newest trade may be
+
 
 def _read_regime() -> str:
     try:
@@ -58,6 +46,18 @@ def _read_regime() -> str:
     except Exception:
         pass
     return ""
+
+
+def _parse_dt(s: str):
+    """Parse a closed_at string (naive, matches research_outcome_checker._parse_dt)."""
+    if not s:
+        return None
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(s[:len(fmt)], fmt)
+        except (ValueError, TypeError):
+            continue
+    return None
 
 
 def _round_half(v: float) -> float:
