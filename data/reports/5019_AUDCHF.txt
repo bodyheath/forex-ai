@@ -1,0 +1,18 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at 100% Fib level (key resistance) with RSI 63.6 and stochastic overbought (81.3) signals pullback risk, but MTF conflict (W:SELL vs D:NEUTRAL vs 4H:NEUTRAL) undermines conviction; uptrend structure (aligned ribbon, SMA50>SMA200) favors continuation over reversal.
+RISK_FACTORS: [1. MTF disagreement: only 1 of 3 timeframes confirms SELL (weekly); daily and 4H both neutral breaks the 2/3 MTF rule, capping confidence at 5. This is a TRADE_THIS NO trigger.] [2. Positioned against trend: AUD net SHORT 33% and CHF net SHORT 55% suggest shorts are already crowded; CHF momentum unwinding adds supply-side risk if retail shorts panic-cover.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5728
+ENTRY_TRIGGER_REASON: Pin bar confirmation + break below 100% Fib level (0.57281) would align D1 with W:SELL; wait for daily close below pin bar low to confirm rejection at resistance.
+ENTRY_TRIGGER

@@ -1,0 +1,26 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with bullish double-bottom pattern; 4H uptrend and MTF neutral (0/3 agreement) prevent high-confidence setup; crowded EUR short positioning creates reversal risk despite technical bearish bias.
+RISK_FACTORS: [1. MTF disagreement (M/W/D all NEUTRAL, 4H SELL alone insufficient for 2/3 rule — trade fails MTF gate), 2. Crowded EUR short at 5.0% positioning + MOM=BUILDING reversal risk undercuts SELL thesis]
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: only 1/4 timeframes (4H) agrees on direction; W+D both NEUTRAL. Requires ≥2/3 agreement. D1 T_sig=SELL_3 conflicts with bullish candle pattern (double_bottom). EUR positioning crowded short near 1y range bottom signals institutional accumulation risk.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **DETAILED SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1

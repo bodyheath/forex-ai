@@ -1,0 +1,23 @@
+PAIR: NZD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (22p/6pt) conflicts with D1 uptrend structure; CAD crowded short positioning creates reversal risk, offsetting sell signal.
+RISK_FACTORS: [1. MTF all-neutral (M/W/D/4H conf=0/3) violates trade rule — no directional agreement across timeframes, making any entry low-probability. 2. CAD positioning near 1-year short extreme = crowded short reversal risk; if CAD bounces, NZD/CAD likely rallies counter to SELL bias.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: Trade rejected — MTF rule violation: weekly, daily, and monthly all NEUTRAL; 4H downtrend conflicts with D1 uptrend. Confidence 4/10 falls below 7.0 threshold and does not meet ≥2/3 MTF agreement requirement.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF FAILURE (Critical):** M/W/D all NEUTRAL + 4H NEUTRAL = 0/3 agreement. Rule states "if weekly AND daily

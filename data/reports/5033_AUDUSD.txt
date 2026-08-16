@@ -1,0 +1,17 @@
+```
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought (62.2) with stochastic+CCI sell signal in uptrend context conflicts with bullish technicals (golden cross, double-bottom pattern); AUD fundamental strength and leaning-bull ribbon suggest caution on SELL.
+RISK_FACTORS: [1) MTF all NEUTRAL (0/3 agreement) — no directional confirmation across timeframes; 2) Price structure bullish (golden cross, SMA50>SMA200, double-bottom pattern, ribbon leaning bull 4/5) — SELL signal conflicts with trend continuation setup]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly, daily, and 4H all show NEUTRAL directional bias; system requires >=2/3 MTF agreement. T_sig=SELL_3 is overshadowed by bullish price structure (golden cross intact, double-bottom reversal pattern, ribbon leaning bull). OSC shows only PARTIAL_SELL (2/3 oscillators), insufficient for high-conviction short in uptrend. AUD rate rising + USD flat = fundamental support for AUD strength. Confidence 5 falls below TRADE_THIS threshold of >=7
