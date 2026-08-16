@@ -5418,6 +5418,24 @@ def _send_telegram_summary(
     # its inputs, alongside MTF/ribbon/R:R/fundamental-tailwind.
     _quality_grades: dict = {r["pair"]: _trade_quality_grade(r) for r in deep_results}
 
+    # grade_ba_observability: A/B became reachable again 2026-08-14 (rr>2.5/>=2.5
+    # -> rr>=2.0, see the comment above the A/B branches). No B or A grade has
+    # occurred in the live system since 2026-07-09, and the backtest that
+    # justified this fix found a naively-reachable B-tier performs WORSE than
+    # every other grade on historical data (PF=0.02) — so whether real B/A
+    # occurrences validate or contradict that backtest is genuinely unknown.
+    # This exists purely to make each occurrence easy to find later.
+    try:
+        _ba_hits = [
+            f"{pair}:{qg.get('grade')}(conf={qg.get('conf')},rr={qg.get('rr')})"
+            for pair, qg in _quality_grades.items()
+            if qg.get("grade") in ("A", "B")
+        ]
+        if _ba_hits:
+            _log_line(log, f"[grade_ba_observability] A/B grade occurred — {'; '.join(_ba_hits)}")
+    except Exception as _ba_exc:
+        _log_line(log, f"[grade_ba_observability] failed (non-fatal): {_ba_exc}")
+
     # Log pairs excluded due to zero ATR
     _atr_zero_pairs = [
         pair for pair, qg in _quality_grades.items()
