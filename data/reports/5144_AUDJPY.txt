@@ -1,0 +1,17 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with morning_star reversal pattern and 4H overbought RSI (70.8), but MTF agreement is only 2/3 (W+4H SELL vs D1 NEUTRAL), blocking high-confidence entry.
+RISK_FACTORS: [1] MTF conf=2/3 fails >=2/3 threshold for TRADE_THIS; D1 remains in uptrend (price>SMA50>SMA200) with T_sig=SELL_3 as contrarian signal, not confirmation. [2] OSC shows NONE confluence (Stoch overbought at 79.5 but CCI=27.5 neutral) — no oscillator triple/partial — weakens technical conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: only 2 of 3 higher timeframes (W, D, 4H) agree on SELL direction. D1 remains NEUTRAL within an uptrend structure; morning_star pattern is bullish-reversal-to-upside in context of D1 uptrend, conflicting with SELL thesis. Oscillator confluence absent. Wait for D

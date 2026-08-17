@@ -1,0 +1,23 @@
+PAIR: USD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level + aligned ribbon supports uptrend structure, but MTF misalignment (W:NEUTRAL, D:NEUTRAL vs M:BUY) and neutral RSI/MACD prevent high-conviction entry.
+RISK_FACTORS: [1] MTF disagree — W and D both neutral contradicts M:BUY signal; conf=0/3 violates MTF rule (need ≥2/3 agreement). [2] CHF COT unwinding reduces positioning conviction; RSI at midpoint (50.1) offers no technical edge.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 0.8120
+ENTRY_TRIGGER_REASON: Break above recent pin bar high + SMA50 resistance to confirm alignment of weekly/daily with monthly uptrend bias.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Veto (Critical):** W:NEUTRAL + D:NEUTRAL = 0/3 agreement with BUY. System rule is strict: *"MTF weekly+daily both agree"* is mandatory for TRADE_THIS=YES. Monthly M:BUY is context only; it does not override

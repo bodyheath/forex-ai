@@ -1,0 +1,24 @@
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 RSI 69.3 in uptrend + pin bar at key level + head-and-shoulders on 4H create reversal risk despite bullish ribbon alignment; partial oscillator SELL (2/3) supports pullback, but weak MTF agreement (1/3) limits conviction.
+RISK_FACTORS: [1. MTF signal weak (D:SELL vs W/4H:NEUTRAL) — only 40% weighting, lacks daily+weekly confluence for high-confidence trade. 2. Ribbon fully bullish (ALIGNED_BULL 5/5) contradicts technical reversal signals and may sustain uptrend; CHF COT unwinding reduces directional conviction.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.4760
+ENTRY_TRIGGER_REASON: Pullback to FIB SH (0.47574) + RSI <70 confirmation for lower-risk entry alignment with pin bar signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL_SCORE = 7/10:**
+- D1 T_sig = SELL_8 (baseline). RSI 69.3

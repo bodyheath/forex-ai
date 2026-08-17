@@ -1,0 +1,25 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Head-and-shoulders pattern at D1 with 4H overbought RSI (70.0) suggests bearish setup, but MTF misalignment (W:NEUTRAL, D:NEUTRAL vs M:SELL, 4H:SELL) and D1 uptrend structure (price > SMA50 > SMA200) create conflicting signals.
+
+RISK_FACTORS: 
+1. MTF agreement failure — Weekly and Daily both NEUTRAL while Monthly and 4H show SELL: trend direction unconfirmed, violates MTF rule (conf=0/3, requires 2/3 minimum).
+2. D1 golden-cross uptrend (price > SMA50 > SMA200) contradicts bearish H&S pattern; overbought 4H RSI (70.0) is normal in uptrend context — not a reliable SELL signal without D1 confirmation.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not both agree on direction (0/3 agreement). Trade requires ≥2/3 MTF consensus (W+D same direction). Confidence 4/10 < 7
