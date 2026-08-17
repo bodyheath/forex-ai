@@ -1226,6 +1226,53 @@ def _cot_reversal_penalty(result: dict) -> int:
     return 0
 
 
+def _gbp_chf_converging_ribbon_penalty(result: dict) -> int:
+    """Return -1 for GBP/CHF SELL when the daily EMA ribbon is CONVERGING, else 0.
+
+    Scoped, temporary patch — 2026-08-17 diagnosis. GBP/CHF's full recorded
+    history is 100% SELL calls (0 BUY, ever) on a persistent, real
+    GBP-favouring rate differential (+3.78–4.50%, repeatedly cited in
+    Devil's Advocate objections) that has kept the pair in a genuine,
+    sustained uptrend. The only two instances that ever reached grade C
+    (the tier where a candidate can become a real trade) both occurred
+    specifically when ribbon_state == "CONVERGING" — a state
+    _trade_quality_grade() treats the same as neutral/favourable, when it
+    structurally still means "has not yet inverted" (prior trend intact,
+    just decelerating). Both candidates' own RISK_FACTORS text named this
+    exact risk before it happened ("daily uptrend structure remains
+    intact — converging ribbon has not yet inverted"; "4H trend mixed/BUY
+    creates near-term counter-pressure") — the model's own analysis
+    identified the problem; nothing downstream weighted it.
+
+    Deliberately NOT a change to _trade_quality_grade() or to any other
+    pair/direction/ribbon-state: a cross-pair check (ribbon=CONVERGING at
+    grade C-or-better, all pairs, n=5) did not show a broadly
+    generalisable problem (1 win, 1 partial-win, 1 loss on other pairs,
+    2 losses here) — this is a market-condition-specific patch for GBP/CHF
+    specifically, not a general ribbon-calibration fix.
+
+    REVISIT by 2026-11-15 (90 days) or immediately if GBP/CHF ever
+    produces a BUY candidate (would indicate the one-directional pattern
+    has broken) — whichever comes first. This patches a specific,
+    currently-observed market condition, not a permanent structural rule.
+    """
+    try:
+        pair = (result.get("pair") or "").upper()
+        direction = (result.get("parsed", {}).get("direction") or "").upper()
+        if pair != "GBP/CHF" or direction != "SELL":
+            return 0
+        rib_status = (
+            result.get("bundle", {})
+            .get("technical", {})
+            .get("daily", {}) or {}
+        ).get("ribbon", {}).get("status", "")
+        if rib_status == "CONVERGING":
+            return -1
+    except Exception:
+        pass
+    return 0
+
+
 def _smd_score(result: dict) -> int:
     """Extract pre-computed Smart Money Divergence score from the bundle (−10 to +10)."""
     try:
