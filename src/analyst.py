@@ -562,9 +562,20 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
 def devil_advocate(pair: str, parsed: dict, bundle: dict) -> dict:
     """Devil's advocate second opinion for 7+ confidence trades.
 
-    Asks Sonnet to find the top 3 reasons the proposed trade could fail right
-    now. Returns dict: has_objections (bool), n_compelling (int),
-    reasons (list[str], max 2 for display), verdict (str).
+    Asks Sonnet for 0-3 genuine reasons the proposed trade could fail right
+    now — the model is explicitly told that returning fewer than 3, or none,
+    is correct when the thesis is sound (not forced to fill every slot; see
+    2026-08-17 redesign note below). Returns dict: has_objections (bool),
+    n_compelling (int), reasons (list[str], max 2 for display), verdict (str).
+
+    2026-08-17: previously always demanded exactly 3 objections with no way
+    to say "none" and no calibration anchor, which produced a 96-99% CONCERNING
+    fire rate in the live system (395+ firings swept, virtually every 7+
+    confidence candidate downgraded) — confirmed via investigation that the
+    forced-3-objections format was structurally biased toward finding
+    problems regardless of real severity. This redesign lets the model return
+    0-3 objections and anchors "most well-formed setups have 0-1 compelling
+    objections" directly in the prompt.
     """
     direction  = (parsed.get("direction") or "?").upper()
     entry      = parsed.get("entry") or "?"
@@ -576,8 +587,11 @@ def devil_advocate(pair: str, parsed: dict, bundle: dict) -> dict:
 
     system_prompt = (
         "You are a risk-focused devil's advocate for forex trading. "
-        "Your sole task is to find the strongest reasons a proposed trade could fail right now. "
-        "Be specific and data-driven. Output only the structured format requested — nothing else."
+        "Your task is to find genuine, data-backed reasons a proposed trade could fail right now — "
+        "not to manufacture objections to fill a quota. Most well-formed setups have 0-1 compelling "
+        "objections; returning fewer than 3 objections, or none at all, is correct and expected when "
+        "the thesis holds up. Be specific and data-driven. Output only the structured format requested "
+        "— nothing else."
     )
     user_message = (
         f"Proposed trade: {pair} {direction}\n"
@@ -585,15 +599,21 @@ def devil_advocate(pair: str, parsed: dict, bundle: dict) -> dict:
         f"Thesis: {thesis}\n"
         f"Known risks: {risk_known}\n"
         f"Data: {data_line}\n\n"
-        "List the top 3 reasons this trade could fail RIGHT NOW. "
-        "Rate each COMPELLING (genuine problem) or MINOR (worth noting but not deal-breaking). "
-        "OVERALL_VERDICT must be CONCERNING if 2 or more reasons are COMPELLING, else ACCEPTABLE.\n\n"
-        "OBJECTION_1: [one plain-English sentence]\n"
-        "SEVERITY_1: COMPELLING or MINOR\n"
-        "OBJECTION_2: [one plain-English sentence]\n"
-        "SEVERITY_2: COMPELLING or MINOR\n"
-        "OBJECTION_3: [one plain-English sentence]\n"
-        "SEVERITY_3: COMPELLING or MINOR\n"
+        "List up to 3 genuine reasons this trade could fail RIGHT NOW — only if they're real. "
+        "Most well-formed setups should have 0-1 compelling objections. If the thesis is sound, "
+        "write NONE for any objection slot that has nothing genuine to add — do not invent a weak "
+        "objection just to fill the slot.\n\n"
+        "Rate each real objection COMPELLING or MINOR. Reserve COMPELLING for objections backed by "
+        "concrete conflicting data — a specific number, level, or reading that contradicts the "
+        "thesis — not generic trend/risk boilerplate. Use MINOR for anything worth noting but not "
+        "deal-breaking.\n"
+        "OVERALL_VERDICT must be CONCERNING if 2 or more objections are COMPELLING, else ACCEPTABLE.\n\n"
+        "OBJECTION_1: [one plain-English sentence, or NONE]\n"
+        "SEVERITY_1: COMPELLING, MINOR, or NONE\n"
+        "OBJECTION_2: [one plain-English sentence, or NONE]\n"
+        "SEVERITY_2: COMPELLING, MINOR, or NONE\n"
+        "OBJECTION_3: [one plain-English sentence, or NONE]\n"
+        "SEVERITY_3: COMPELLING, MINOR, or NONE\n"
         "OVERALL_VERDICT: CONCERNING or ACCEPTABLE"
     )
 
