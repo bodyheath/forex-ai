@@ -1282,12 +1282,15 @@ def _smd_score(result: dict) -> int:
 
 
 def _eff_conf(result: dict) -> float:
-    """Confidence after MA ribbon, COT momentum, and Smart Money Divergence
-    adjustments.
+    """Confidence after MA ribbon, COT momentum, GBP/CHF-specific, fundamental,
+    and Smart Money Divergence adjustments.
 
-    Ribbon:         −1 when ALIGNED ribbon is fully against trade direction.
-    COT reversal:   −1 when institutions just flipped away from the direction.
-    All adjustments can stack (max −2 penalty).
+    Ribbon:           −1 when ALIGNED ribbon is fully against trade direction.
+    COT reversal:     −1 when institutions just flipped away from the direction.
+    GBP/CHF SELL:     −1 when ribbon is CONVERGING — scoped, temporary patch,
+                      see _gbp_chf_converging_ribbon_penalty(), revisit by
+                      2026-11-15.
+    All adjustments can stack.
 
     Devil's Advocate no longer adjusts this — its verdict now feeds
     _trade_quality_grade() as a grade downgrade instead of a confidence
