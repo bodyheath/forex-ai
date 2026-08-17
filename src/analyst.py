@@ -630,6 +630,11 @@ def devil_advocate(pair: str, parsed: dict, bundle: dict) -> dict:
     _cost["sonnet_output"] += getattr(resp.usage, "output_tokens", 0)
     text = "".join(block.text for block in resp.content if block.type == "text")
 
+    # NONE is a genuine, expected answer now (see docstring) — an objection or
+    # severity line whose value is NONE/N/A means "nothing real at this slot"
+    # and is deliberately left out of objections/severities, not stored as a
+    # blank placeholder. Only real, filled-in slots ever contribute to
+    # n_compelling or the displayed reasons.
     objections: dict = {}
     severities: dict = {}
     verdict = ""
@@ -638,13 +643,17 @@ def devil_advocate(pair: str, parsed: dict, bundle: dict) -> dict:
         if line.startswith("OBJECTION_") and ":" in line:
             try:
                 idx = int(line[10])
-                objections[idx] = line.split(":", 1)[1].strip()
+                val = line.split(":", 1)[1].strip()
+                if val and val.upper() not in ("NONE", "N/A"):
+                    objections[idx] = val
             except (IndexError, ValueError):
                 pass
         elif line.startswith("SEVERITY_") and ":" in line:
             try:
                 idx = int(line[9])
-                severities[idx] = line.split(":", 1)[1].strip().upper()
+                val = line.split(":", 1)[1].strip().upper()
+                if val in ("COMPELLING", "MINOR"):
+                    severities[idx] = val
             except (IndexError, ValueError):
                 pass
         elif line.startswith("OVERALL_VERDICT:"):
@@ -656,7 +665,7 @@ def devil_advocate(pair: str, parsed: dict, bundle: dict) -> dict:
     compelling = [objections[i] for i in range(1, 4)
                   if objections.get(i) and severities.get(i) == "COMPELLING"]
     minor      = [objections[i] for i in range(1, 4)
-                  if objections.get(i) and severities.get(i) != "COMPELLING"]
+                  if objections.get(i) and severities.get(i) == "MINOR"]
     reasons    = (compelling + minor)[:2]
 
     return {
