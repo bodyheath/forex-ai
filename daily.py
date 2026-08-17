@@ -1311,6 +1311,7 @@ def _eff_conf(result: dict) -> float:
     except Exception:
         pass
     adj += _cot_reversal_penalty(result)
+    adj += _gbp_chf_converging_ribbon_penalty(result)
     # Fundamental alignment adjustment
     _fa = result.get("_fundamental_alignment")
     if _fa is None:
