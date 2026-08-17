@@ -1,0 +1,31 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key resistance + RSI overbought in uptrend context + crowded EUR short positioning creates conflicting signals (technical SELL vs positioning reversal risk).
+
+RISK_FACTORS: [1] MTF conf=2/3 (only D+4H agree SELL; W+M neutral) — does not meet strict MTF consensus rule. [2] EUR positioned crowded SHORT near 1y low with COT BUILDING (institutional buyers entering) — reversal risk if institutions are covering shorts.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: [N/A — trade rejected]
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement insufficient (2/3 < 3/3 required). Positioning conflict: technical SELL signal contradicts institutional COT BUILDING + crowded short setup — high probability of squeeze/reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 5/10**
+- **RSI=63.5 in 4H uptrend context:** Price is in uptrend (4H: price > SMA50 > SMA200, golden cross). RSI 63.5 in confirmed uptrend = normal

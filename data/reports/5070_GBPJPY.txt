@@ -1,0 +1,25 @@
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly SELL signal conflicts with D1/Weekly neutrality; D1 uptrend structure intact but 4H range-bound weakness and JPY unwinding positioning create mixed directional bias.
+RISK_FACTORS: MTF disagreement (M:SELL vs W/D:NEUTRAL) violates MTF buy rule — confidence capped despite any single-layer strength. JPY COT unwinding reduces conviction in carry trade unwind thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not both agree on direction (conf=0/3, only Monthly suggests SELL). Cannot trade directional thesis when higher-conviction timeframes (W+D at 80% weight) are neutral.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS DETAIL:**
+
+**Technical Score = 4:**
+- D1 RSI 51.7 = neutral zone (45–62) → baseline 3. D1 in confirmed uptrend (price > SMA50 > SMA200, golden cross) but RSI mid-range does not trigger BUY shift; remains neutral (3–4).
+- T_sig=NEUTRAL_3

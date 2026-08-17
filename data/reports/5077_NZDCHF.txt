@@ -1,0 +1,30 @@
+I need to carefully re-evaluate this before finalizing.
+
+**Critical RSI Rule Check:**
+MTF shows W:SELL + D:SELL — this is a confirmed DOWNTREND context per MTF line. Wait — but price > SMA50 > SMA200 with golden cross. The MTF conf line says W:SELL D:SELL which means the *momentum* is bearish on those timeframes. For RSI scoring in confirmed downtrend (W:SELL+D:SELL), shift BUY zones lower. But we're scoring SELL here — RSI 73.1 in a downtrend context: standard tiers apply for SELL direction. RSI 70-76 = 7-8 SELL. T_sig=SELL_10 is the Python baseline anchor.
+
+**Ribbon conflict:** ALIGNED_BULL fan — this is a strong contradiction to SELL. However triple oscillator SELL + RSI 73+ + BB upper band + pin bar + W+D+4H all SELL = overwhelming evidence.
+
+**RSI in uptrend rule:** The structural trend (price>SMA50>SMA200) is uptrend, but MTF momentum signals are W:SELL D:SELL. The MTF line is the authoritative directional input. Using downtrend RSI context is appropriate here given W+D both SELL.
+
+**Haiku scored TECHNICAL=9** — T_sig=SELL_10 anchor, no strong contradictory factor to deviate more than ±1. TECHNICAL_SCORE=9 is justified (ribbon bullish prevents 10).
+
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 8/10
+TECHNICAL_SCORE: 9/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 0.4798
+TARGET: 0.4682
+STOP_LOSS: 0.4856
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 08:00–10:00 NZST (UTC+12)
+NEWS_WARNING: NZD and CHF event risk within 48h — monitor RBNZ commentary and SNB-related flows; elevated sentiment (8art each) suggests active news environment
+KEY_THESIS: RSI 73.1 at BB upper band with pin bar at key level, triple oscillator SELL confluence (Stoch 98.6, CCI 159.3), and unanimous W+D+4H SELL alignment signal a high-probability exhaustion reversal despite bullish ribbon structure.
+RISK_FACTORS: [1] Fully aligned bullish EMA ribbon (ALIGNED_BULL 5/5 fan) poses significant trend-continuation risk — close immediately if price consolidates above 0.4810 on volume. [2] Positive NZD rate differential (+2.73%) and high sentiment (8art NZD) provide fundamental tailwind that could overwhelm technical exhaustion signals.
+TRADE_THIS: YES

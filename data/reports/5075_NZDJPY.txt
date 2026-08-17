@@ -1,0 +1,26 @@
+```
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar rejection at key level (95.419) on D1 aligns with 4H oversold (RSI 74.8) and D1 SELL signal, but conflicting MTF structure (D1 uptrend vs. D1 signal) and weak confluence limit conviction.
+
+RISK_FACTORS: 
+1. MTF conflict — daily price structure remains in uptrend (price > SMA50 > SMA200, golden cross), contradicting D1 SELL_6 signal and creating false-signal risk.
+2. Fundamental headwind insufficient — NZD rate falling and JPY rising support SELL, but differential only +1.84% is modest; JPY positioning unwinding (institutional exit) weakens conviction further.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: WAIT_CONFLUENCE
+ENTRY_TRIGGER_PRICE: 94.5500 (SMA50 retest with 4H reversal confirmation)
+ENTRY_TRIGGER_REASON: Confluence requires: daily break below SMA50 (94.24) + 4H close below RSI 50 + return of bearish MACD histogram, confirming downtrend shift rather than corrective pullback in uptrend.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48

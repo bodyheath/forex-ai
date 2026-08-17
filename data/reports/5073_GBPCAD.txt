@@ -1,0 +1,24 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: GBP strength (+1.46% rate diff) conflicts with mixed technicals and CAD's crowded short setup (reversal risk); neutral ribbon and RSI fail to confirm conviction in either direction.
+RISK_FACTORS: [1] MTF agreement is 0/3 (monthly SELL vs. weekly/daily/4H NEUTRAL) — no multi-timeframe confluence; [2] CAD positioned at extreme short level (3.0% net SHORT, crowded) — institutional reversal risk could trigger sharp CAD bounce, negating GBP sell thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: AVOID
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (conf < 2/3: 0/3 agreement). Neutral ribbon (3/5 aligned) + neutral oscillators + no divergence = low-probability setup. CAD positioning crowded at bottom of range signals institutional accumulation risk.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF Fail (Critical):**  
+   - Monthly = SELL, but Weekly = NEUTRAL, Daily = NEUTRAL, 4H = NEUTRAL
