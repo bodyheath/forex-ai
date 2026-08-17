@@ -1,0 +1,38 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 2/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Downtrend structure (price < SMA50 < SMA200) with bearish pin bar at key level, but weak technicals and mixed MTF prevent high-confidence short.
+
+RISK_FACTORS: [1] MTF conf=0/3 — Weekly NEUTRAL + Daily NEUTRAL + 4H BUY = no MTF agreement on direction; TRADE_THIS rule requires MTF weekly+daily both agree. [2] Sentiment strongly bullish (GBP=7art, AUD=8art) — retail positioning conflicts with technical bearish setup; reversal risk if sentiment momentum accelerates.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+### Analysis Summary
+
+**Why NO?**
+
+1. **MTF RULE FAILURE** (hard veto):  
+   - Weekly: NEUTRAL  
+   - Daily: NEUTRAL  
+   - 4H: BUY  
+   - **Confidence = 0/3** — neither weekly nor daily both agree on SELL direction.  
+   - System rule: *"if weekly AND daily don't both agree on direction (

@@ -1,0 +1,24 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: D1 RSI 69.5 overbought in confirmed uptrend + TRIPLE oscillator sell signal + price at upper BB band = mean-reversion SELL, but MTF conflict (W:SELL + D:SELL vs 4H:NEUTRAL, conf=2/3) and crowded CAD short positioning limit conviction.
+RISK_FACTORS: [1] MTF disagreement (4H neutral breaks 2/3 MTF rule threshold; entry validity weakened by intraday bullish structure). [2] CAD short positioning near 1-year bottom creates reversal risk — if UNWINDING accelerates, crowded shorts may squeeze; RIBBON fully ALIGNED_BULL favours trend continuation, not reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5875
+ENTRY_TRIGGER_REASON: Sell limit 22p above current price at upper BB resistance to confirm rejection; wait for candle close above 0.5870 (upper band midpoint) followed by reversal candle.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS RATIONALE:**
+
+**Technical (6/10):**
+- D1 RSI=69.5

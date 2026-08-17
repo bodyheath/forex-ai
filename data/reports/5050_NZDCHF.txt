@@ -1,0 +1,46 @@
+I need to carefully review this before confirming Haiku's output.
+
+**MTF Check:** W:SELL + D:SELL + 4H:SELL — both weekly and daily agree SELL. ✅ MTF condition met for TRADE_THIS consideration.
+
+**RSI in UPTREND context:** Confirmed uptrend (W:BUY+D:BUY)? No — MTF shows W:SELL+D:SELL. This is a SELL signal pair despite ribbon being bullish. MTF is the authority. So standard RSI tiers apply for mixed/sell context. RSI=72.9 in W:SELL+D:SELL = standard tier: 70-76 = 7-8 SELL. ✅
+
+**T_sig=SELL_10** — Python baseline is 10. Strong anchor.
+
+**TECHNICAL_SCORE:** T_sig=10 (anchor). Uptrend context per ribbon vs MTF SELL conflict — but W+D both SELL. BB at/above upper band (+1 SELL confirm). Price above SMA50 (-1, doesn't confirm SELL). MACD h=-0.0000 (neutral). Net: T_sig=10 is the anchor, slight drag from SMA50, keep at 9.
+
+**OSC:** TRIPLE_SELL (3/3) → +2 CONFIDENCE
+
+**DIV:** NONE
+
+**Ribbon ALIGNED_BULL:** This is a significant conflict — all 5/5 EMAs stacked bullish. This is a major risk factor but doesn't override MTF or RSI/OSC signals. Note as risk.
+
+**PAT:** pin_bar_at_key_level:bul — this is BULLISH, conflicting with SELL direction. This reduces conviction slightly.
+
+**FIB:** SH=0.47574, SL=0.45514. Price=0.4796 is ABOVE the swing high of 0.47574 — price has broken out above the measured range. No clear fib resistance level nearby shown. This is actually bullish price action context.
+
+**CONFIDENCE:** Base from MTF (3/3 SELL) = strong. T_sig=10 SELL. Triple OSC SELL +2. PAT=bullish pin bar = CONFLICT -1. Ribbon ALIGNED_BULL = risk but not a confidence deduction per rules. Start ~7, +2 OSC, -1 PAT conflict = 8. Cap at 10. → **8/10**
+
+**FUNDAMENTAL:** Rate diff +2.73% favors NZD — conflicts with SELL NZD/CHF. Both rates falling. Neutral-ish. Score: 4 (slightly against SELL).
+
+**SENTIMENT:** NZD=8art, CHF=8art — both equal, neutral for direction. Score: 5.
+
+**POSITIONING:** CHF net SHORT unwinding (reducing CHF shorts = CHF strengthening = supports SELL NZD/CHF slightly). NZD=neutral. Score: 6.
+
+**MACRO:** VIX=14.6 (risk-on, favors NZD over CHF — against SELL). Oil=84.8 (moderate). Curve=0.5. Score: 4.
+
+**Entry/Stop/Target:** Entry=0.4796, ATR=0.0029. Stop above recent high: 0.4796 + 1.5×ATR = 0.4796 + 0.0044 = 0.4840. Target = entry − (stop−entry)×2 = 0.4796 − 0.0044×2 = 0.4796 − 0.0088 = 0.4708.
+
+**TRADE_THIS:** Confidence=8 ✅, R:R=2:1 ✅, W+D both SELL ✅, technical+OSC strong ✅ → **YES**
+
+---
+
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 8/10
+TECHNICAL_SCORE: 9/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_
+KEY_THESIS: RSI 72.9 overbought in confirmed uptrend (W:SELL+D:SELL+4H:SELL) with triple oscillator sell confluence (Stoch 99, CCI 155.5) and pin bar at key level signals immediate pullback/reversal despite ribbon still bullish.
+RISK_FACTORS:

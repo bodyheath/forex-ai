@@ -1,0 +1,29 @@
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar rejection at key level + 4H double-bottom reversal + D1 SELL signal conflict with conflicting MTF structure (M/W neutral, only D+4H agree SELL at 60% confidence).
+
+RISK_FACTORS: [1] MTF alignment fails minimum threshold — only 2/3 timeframes align on SELL (M and W neutral); confidence capped at 5 despite individual signals. [2] D1 RSI 55.8 neutral-zone + uptrend structure (price > SMA50 > SMA200) contradicts SELL_6 bias; fundamentals support NZD strength (rate falling = easing support, but diff favors NZD). JPY unwinding short positioning reduces conviction.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 93.50
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (93.2380) to confirm SELL rejection at pin bar; requires weekly/daily both SELL to lift confidence to 7+.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**ANALYSIS SUMMARY:**
+
+Your MTF rule fires **NO** — weekly and daily do **not** both agree on direction:

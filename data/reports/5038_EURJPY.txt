@@ -1,0 +1,30 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weak downside pressure from 4H SELL + rising JPY rates + crowded EUR shorts creates reversal risk rather than continuation signal.
+RISK_FACTORS: [1] EUR net short crowding at ~1y low creates flash-reversal risk if momentum breaks; [2] MTF confidence only 0/3 (M:SELL vs W/D:NEUTRAL) means no directional agreement — mixed trend invalidates confidence.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+**ANALYSIS SUMMARY:**
+
+1. **MTF CONFLICT (HARD STOP):** Monthly shows SELL, but Weekly and Daily both NEUTRAL. Confidence = 0/3 — fails the rule "weekly+daily both agree." This alone triggers TRADE_THIS=NO.
+
+2. **TECHNICAL (4/10):**
+   - D1 RSI=50.7 (neutral midpoint) + T_sig=NEUTRAL_3 baseline
+   - 4H RSI=60.9 (approaching sell tier 62–70, but mixed trend) — no confirmation yet
+   - MA
