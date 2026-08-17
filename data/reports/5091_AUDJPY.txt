@@ -1,0 +1,23 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed MTF structure (W+4H:SELL vs D:NEUTRAL) + D1 overbought RSI(58) in uptrend conflicts with T_sig=SELL_3, morning star pattern vs double-bottom pattern creates directional ambiguity.
+RISK_FACTORS: [1] MTF agreement is 2/3 only (conf=65%); D1 is NEUTRAL while W and 4H lean SELL — insufficient consensus to trigger trade rule. [2] JPY COT UNWINDING institutional longs reduces conviction; D1 uptrend structure (price > SMA50 > SMA200) contradicts intraday SELL signals.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confluence insufficient (2/3, <0.667 threshold). D1 NEUTRAL + MACD positive momentum + uptrend structure override intraday SELL pressure. Await D1 trend confirmation (close below SMA50) or 4H break below 113.0 support before executing.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF Rule Violation:** W:SELL +

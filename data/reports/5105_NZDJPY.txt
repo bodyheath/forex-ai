@@ -1,0 +1,24 @@
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level with T_sig=SELL_6 and 4H overbought (RSI 80.5) suggest downside rejection, but weak MTF alignment (2/3) and D1 uptrend structure create directional ambiguity.
+RISK_FACTORS: [1] MTF conf=2/3 fails TRADE_THIS threshold (requires both W+D agreement or 3/3); D1 uptrend golden-cross structure conflicts with SELL bias. [2] JPY positioning unwinding (institutional conviction fading) + NZD rate falling (fundamental support weakening) = conflicting fundamental headwinds; MACD on D1 still negative but weak.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 94.50
+ENTRY_TRIGGER_REASON: Pullback to 4H supply zone near D1 SMA50 (93.24); wait for D1 MACD cross below zero and W confirmation before entering.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS DETAIL:**
+
+**Technical (6/10):**
+- D1 T_sig=SELL_6 is baseline, supported by pin bar at

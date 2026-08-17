@@ -1,0 +1,31 @@
+```
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Double-bottom reversal pattern at 23.6% Fib with D1 BUY alignment, but MTF disagreement (M:SELL) and weakened institutional EUR conviction limit conviction.
+
+RISK_FACTORS: (1) MTF conflict — Monthly trend SELL contradicts D1 BUY; only 1/3 timeframes aligned (conf=40%), reducing reversal probability. (2) OSC baseline neutral (Stochastic oversold at 18.7 but CCI negative at -48.5 = no confluence) — lack of oscillator confirmation weakens entry reliability.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.6050
+ENTRY_TRIGGER_REASON: Await pullback to double-bottom base support; confluence of D1 pattern + Fib 23.6% + oversold Stochastic improves setup validity if monthly SELL breaks.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL (6/10):**
+- D1 T_sig baseline = BUY_6 → start at 6
+- RSI 42.9 (D1, mixed MTF): standard tier

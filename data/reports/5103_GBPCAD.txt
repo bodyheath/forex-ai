@@ -1,0 +1,26 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed technicals with conflicting MTF signals (M:SELL vs W/D:NEUTRAL) and crowded CAD short positioning create reversal risk; weak institutional momentum offers no conviction.
+RISK_FACTORS: [1. MTF disagreement (0/3 conf): Weekly and Daily both NEUTRAL contradicts Monthly SELL — no directional consensus. TRADE_THIS NO trigger. 2. CAD COT reversal risk: CAD net SHORT at 3.0% (extreme crowding, near 1yr bottom) with STABLE momentum — institutional longs may be covering, triggering squeeze against GBP shorts.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree on direction (conf=0/3 < 2/3 threshold). Monthly SELL is overruled. No trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**Technical (3/10 — NEUTRAL):**
+- D1 T_sig=3 (NEUTRAL) stands; RSI 46.1 is mid-range neutral, no oversold/overbought edge.
+-

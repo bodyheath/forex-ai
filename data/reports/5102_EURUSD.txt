@@ -1,0 +1,24 @@
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level with overbought RSI (63.9) and 2/3 oscillator confirmation signals downside, but crowded EUR shorts and mixed MTF (W:NEUTRAL breaks consensus) limit confidence.
+RISK_FACTORS: [1. Crowded EUR short positioning near 1yr range bottom creates reversal risk if liquidation cascade triggers; 2. Weekly NEUTRAL MTF breaks D1+4H SELL consensus—only 2/3 timeframes aligned, reducing directional conviction below 7/10 threshold]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1550
+ENTRY_TRIGGER_REASON: Pullback to SMA50 (1.1467) resistance with fresh RSI reset below 60 would provide lower-risk entry; current setup lacks sufficient MTF confluence (W neutral) to justify immediate entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Analysis (CRITICAL):**
+- Weekly=NEUTRAL, Daily=SELL, 4H=SELL → **conf=2/3 only** (65% weighted). Hard rule: MTF must show ≥2/3 agreement AND weekly cannot be neutral for
