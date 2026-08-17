@@ -4507,11 +4507,45 @@ def _dd_allows_trade(r: dict, dd_mode: str, quality_grades: dict,
             _log(f"[dd-tier] {r['pair']} BLOCKED — mode=caution requires grade A/B, got {grade}")
         return _ok
     # normal
+    # 2026-08-17: grade B now also requires eff_conf>=conf_threshold, the same
+    # bar C already had to clear — it previously traded unconditionally on
+    # grade alone, same as A. B became reachable again on 2026-08-16 (rr>=2.5
+    # -> rr>=2.0, see the comment above the A/B branches in
+    # _trade_quality_grade) on a correctness fix whose shipping comment cited
+    # an unverified performance claim (PF=0.02 for the newly-reachable
+    # population). An independent reconstruction from research_trades.csv
+    # could not reproduce that number — proxies at three strictness levels
+    # landed at PF 0.55-2.50 on n=14-30, i.e. genuinely unresolved, not
+    # confirmed-bad or confirmed-good. Live-scan check (2026-08-17) found one
+    # confirmed real B-grade firing since deploy (EUR/NZD, conf=7, eff_conf=7,
+    # rr=2.38) — never became a real trade, blocked by the unrelated
+    # weekly-trend-hard gate, so zero real exposure so far. But B had no other
+    # gate protecting it, unlike C, so this closes that specific bypass until
+    # more live B-grade occurrences accumulate. Applying the same
+    # eff_conf>=threshold bar to the reconstructed newly-reachable-B
+    # population would have blocked exactly 2/30 real historical candidates —
+    # both real losses (the GBP/CHF SELL+CONVERGING pair; see
+    # _gbp_chf_converging_ribbon_penalty) — while passing all 28 winners/
+    # breakevens untouched (surviving-population PF 1.06 -> 1.21).
+    #
+    # Grade A is deliberately NOT included here: it has zero occurrences
+    # anywhere in recorded history (before or after the same rr>=2.5->2.0
+    # change), so there is no backtest population to contradict or confirm —
+    # a different situation from B's specific, contradicted PF claim. A's own
+    # bar is also categorically stricter (8 simultaneous conditions —
+    # conf>=8, rr>=2.0, all3_agree, atr_cal, fib_near, no_news, rib_aligned,
+    # div_confirmed — vs B's 3), so unlike B it doesn't lean on
+    # confidence+MTF-agreement alone as its differentiator. Revisit A the
+    # same way (log-check, don't assume) the first time it ever actually
+    # fires.
+    #
+    # Revisit this guard once [grade_ba_observability] has logged enough real
+    # B occurrences (suggest n>=15-20) to evaluate live performance directly.
     _eff = _eff_conf(r)
-    _ok = (grade in ("A", "B") or (grade == "C" and _eff >= conf_threshold))
+    _ok = (grade == "A" or (grade in ("B", "C") and _eff >= conf_threshold))
     if not _ok:
-        _log(f"[dd-tier] {r['pair']} BLOCKED — mode=normal requires grade A/B or "
-             f"(C with eff_conf>={conf_threshold}), got grade={grade} eff_conf={_eff:.1f}")
+        _log(f"[dd-tier] {r['pair']} BLOCKED — mode=normal requires grade A or "
+             f"(B/C with eff_conf>={conf_threshold}), got grade={grade} eff_conf={_eff:.1f}")
     return _ok
 
 
