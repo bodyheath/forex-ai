@@ -1,0 +1,20 @@
+```
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Crowded EUR/CAD short positioning near 1y lows + bearish pin bar at key level creates reversal edge, but neutral MTF (D/W/4H) and range-bound price structure limit conviction.
+RISK_FACTORS: [1. MTF disagreement: M:SELL vs D/W/4H:NEUTRAL blocks high-confidence directional alignment; range structure (price between SMA50=1.6139 and SMA200=1.6103) offers no clear breakout bias. 2. OSC shows no confluence (Stoch K=20.7 oversold but CCI=-36.7 diverging); pin bar is bearish-biased, contradicting BUY thesis — potential trap if price reverses lower to SL=1.60028.]
+TRADE_THIS: NO
+ENTRY_TYPE: [CONDITIONAL_LIMIT_BUY]
+ENTRY_TRIGGER_PRICE: 1.6028
+ENTRY_TRIGGER_REASON: Only pursue if price holds SL support at 1.60028 (range bottom) AND Stochastic K crosses above 30 with RSI <45 on D1 close, confirming institutional short-squeeze reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---

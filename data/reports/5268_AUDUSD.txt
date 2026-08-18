@@ -1,0 +1,25 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar rejection at key level + RSI overbought in context of W+D dual SELL alignment creates short-term pullback risk despite uptrend structure.
+RISK_FACTORS: [1. Ribbon fully bull-aligned (5/5 EMA fan) contradicts SELL thesis — strong uptrend continuation bias remains. 2. Price above SMA50 golden-cross (0.6992) — structural uptrend intact; SELL setup is tactical reversal, not trend break.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.7120
+ENTRY_TRIGGER_REASON: Sell on retest of pin bar high (0.7120 = swing resistance near SH=0.72004) only if RSI breaks below 55 on intraday pull.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS DETAIL:**
+
+**TECHNICAL_SCORE = 5/10** (justification):
+- **T_sig baseline (D1):** SELL_4 → starts at 4
+- **RSI evaluation (uptrend context):** RSI=61.8 in confirmed uptrend (W:SELL + D:SELL = downtrend for weekly

@@ -1,0 +1,24 @@
+```
+PAIR: USD/CAD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+
+KEY_THESIS: Pin bar at support (1.3883 Fib 23.6%) + RSI 33.5 oversold + partial oscillator alignment (Stoch 20.2 + CCI -120.8) establishes low-risk BUY entry, but MTF conflict (D:BUY vs 4H:SELL, conf=1/3) and CAD crowded short positioning limit confidence to 6.
+
+RISK_FACTORS: 
+1. MTF disagreement (Daily BUY vs 4H SELL, only 1/3 confluence) breaks MTF rule threshold — trade is NOT high-conviction; 4H death-cross + pin_bar_at_key_level:bea undermines D1 strength.
+2. CAD positioning at year-low short crowding creates reversal risk: if USD weakness accelerates (rate cut cycle), crowded shorts will unwind violently AGAINST this BUY.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.3883
+ENTRY_TRIGGER_REASON: Fib 23.6% support + RSI oversold (33.5) + pin bar pattern — but DO NOT EXECUTE until Weekly aligns BUY

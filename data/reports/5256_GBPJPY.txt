@@ -1,0 +1,23 @@
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with M:SELL and 4H:SELL signals; bearish divergence between timeframes offers contrarian SELL at resistance, but weak MTF agreement (0/3) and NEUTRAL oscillator confluence limit conviction.
+RISK_FACTORS: [1] MTF disagreement: W:NEUTRAL + D:NEUTRAL do NOT align with intended SELL direction — M:SELL alone insufficient for TRADE_THIS approval. [2] D1 T_sig=NEUTRAL_3 with inverse H&S (bullish pattern) + price >SMA50>SMA200 (golden cross) contradicts SELL thesis; RSI 54.1 is mid-range neutral, offering no directional edge.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 217.50
+ENTRY_TRIGGER_REASON: Fibonacci nearest_above (~217.50 area) + 4H:SELL confluence with M:SELL; wait for price to extend to upper resistance before shorting.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS DETAIL:**
+
+1. **MTF RULE VIOLATION (Critical):** Weekly=NEUTRAL + Daily=NEUTRAL → conf=0
