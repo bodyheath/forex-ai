@@ -5892,27 +5892,47 @@ def _send_telegram_summary(
                 )
                 _wt_hard  = str(_trend_align.get("weekly_trend", "")).upper().strip()
                 _dir_hard = _yt_dir_ta
+                # 2026-08-18: NEUTRAL no longer hard-blocks here. It used to
+                # (see git history), contradicting _get_trend_alignment()'s
+                # own aligned=True treatment of NEUTRAL (weekly/monthly
+                # branches above, and the identical pattern used everywhere
+                # else in this system) — two functions in the same pipeline
+                # disagreed about whether NEUTRAL should count as a pass.
+                # Backtested against 1921 real in-universe decisive
+                # candidates (research_trades.csv; weekly trend reconstructed
+                # via yfinance daily->weekly resampling fed through the exact
+                # get_weekly_trend() formula, since the live TD cache has no
+                # historical as-of lookup): NEUTRAL (n=245) scored 44.1% win
+                # rate / PF=0.887 — statistically indistinguishable from
+                # ALIGNED (n=425, 43.0% / PF=0.813), the population this gate
+                # has always passed unconditionally. No basis for blocking
+                # NEUTRAL specifically while passing ALIGNED, so the hard
+                # block was removed; _get_trend_alignment()'s aligned=True
+                # was the correct read, not this filter's separate check.
+                #
+                # NOT acted on here — a separate, much bigger question found
+                # in the same investigation: the *opposes* check just below
+                # compares weekly trend against the literal strings
+                # "UP"/"DOWN", but get_weekly_trend() only ever returns
+                # "BUY"/"SELL"/"NEUTRAL" — that branch is dead code and has
+                # never actually fired live. In the same backtest, real
+                # OPPOSED-direction candidates (n=1251) scored 54.3% WR /
+                # PF=1.258 — meaningfully BETTER than ALIGNED, driven by this
+                # system's many counter-trend/mean-reversion setups, not a
+                # fluke (GBP/CHF is a known, separately-penalized outlier
+                # within OPPOSED — PF=0.113, n=59 — see
+                # _gbp_chf_converging_ribbon_penalty; excluding it, the rest
+                # of OPPOSED is PF=1.355, n=1192). "Fixing" the dead string
+                # comparison to actually block opposed trades would, on this
+                # data, block the system's best-performing population. Left
+                # exactly as-is on purpose — do not "fix" the UP/DOWN strings
+                # without a dedicated investigation into why opposed setups
+                # are winning here.
                 if _wt_hard in ("", "NEUTRAL", "NONE", "NULL", "UNKNOWN", "0"):
-                    _blk_wt_n = "Weekly trend neutral — no clear directional bias"
-                    _log_line(log, f"[trend-hard] BLOCKED {_yt_pair} — weekly trend={_wt_hard!r}")
-                    _yt_parsed["trade_this"] = "NO"
-                    _yt_parsed["block_reason"] = _blk_wt_n
-                    _fund_st_blocked.append((_yt, _blk_wt_n))
-                    _blocked_setups.append({
-                        "pair":      _yt_pair,
-                        "direction": _dir_hard,
-                        "conf":      float(_yt_parsed.get("confidence", 0) or 0),
-                        "reason":    "Weekly trend neutral",
-                    })
-                    try:
-                        from src import tracker as _trk_wtn
-                        if _yt.get("id"):
-                            _trk_wtn.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                    notes=f"Blocked: {_blk_wt_n}")
-                    except Exception:
-                        pass
-                    continue
-                if (_dir_hard == "BUY" and _wt_hard == "DOWN") or \
+                    _log_line(log, f"[trend-hard] {_yt_pair} {_dir_hard} weekly=NEUTRAL — "
+                                   f"no hard block (2026-08-18 backtest: NEUTRAL~=ALIGNED, "
+                                   f"see comment above)")
+                elif (_dir_hard == "BUY" and _wt_hard == "DOWN") or \
                         (_dir_hard == "SELL" and _wt_hard == "UP"):
                     _blk_wt_o = f"Opposes weekly trend: {_wt_hard}"
                     _log_line(log, f"[trend-hard] BLOCKED {_yt_pair} {_dir_hard} opposes weekly {_wt_hard}")
