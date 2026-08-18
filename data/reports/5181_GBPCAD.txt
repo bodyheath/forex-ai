@@ -1,0 +1,25 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Evening star bearish reversal pattern at resistance (38.2% Fib) in mixed trend, but weak technicals and MTF disagreement prevent high-confidence short.
+RISK_FACTORS: [1] MTF conflict — monthly shows SELL but W/D/4H all NEUTRAL; confidence rule requires weekly+daily agreement and only 0/3 MTF layers aligned; [2] CAD positioning crowded short at 1y lows creates reversal risk if institutions unwind, contradicting SELL thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violated — only 1/3 (monthly) aligns with SELL direction; weekly and daily both NEUTRAL, blocking trade despite pattern. Confidence 4 < 7 minimum threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Reasoning:**
+
+1. **TECHNICAL_SCORE = 3/10:**
+   - D1 RSI 45.4 = NEUTRAL tier (3–4), T_sig baseline NEUTRAL_3 confirms.
+   - Evening star pattern (PAT=bea) is bearish *context* but does **not** override RSI in a

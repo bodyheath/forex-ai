@@ -1,0 +1,23 @@
+```
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H shows early bearish lean (RSI 67.7, T=7, LEANING_BEAR ribbon 4/5) but D1 neutrality, no oscillator confluence, and price pinned near 50% Fib support (159.618) prevents conviction entry.
+RISK_FACTORS: [1. MTF conflict: D1=NEUTRAL + W=NEUTRAL contradicts 4H=SELL (only 0/3 agreement, <2/3 threshold); MTF rule blocks entry. 2. JPY COT UNWINDING mid-range positioning reduces momentum confidence despite rising JPY rates.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement <2/3 (D1 and W both NEUTRAL, only 4H SELL). Hard rule: both weekly AND daily must agree on direction for TRADE_THIS=YES.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+1. **MTF Rule Violation (HARD BLOCK):** W=NEUTRAL + D=NEUTRAL + 4H=SELL = 1/3 agreement. Threshold requires ≥2/3

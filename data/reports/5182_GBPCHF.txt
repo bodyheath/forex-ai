@@ -1,0 +1,60 @@
+I need to carefully evaluate this trade before finalizing.
+
+**Key factors to reconcile:**
+
+**MTF Check:** W:SELL + D:SELL = both agree SELL → MTF condition MET for TRADE_THIS YES consideration.
+
+**Technical Score Review:**
+- D1 RSI = 67.2. MTF is W:SELL + D:SELL = confirmed DOWNTREND context → apply downtrend RSI shifts: RSI 42-62 = NEUTRAL(3-4). But RSI 67.2 is above 62, so in standard tiers this is 62-70 = SELL(4-5). In downtrend context, RSI 67.2 is elevated overbought → confirms SELL. T_sig=SELL_5 is the anchor.
+- MACD histogram positive (+0.0005) → slight conflict with SELL direction (no MACD bonus)
+- Price > SMA50 → conflicts with SELL (no SMA bonus)
+- Triple SELL oscillator → supports SELL
+- RIB=ALIGNED_BULL → this is a significant conflict. Fully aligned bull ribbon with price well above all EMAs in a golden-cross uptrend fighting against a SELL signal. This raises reversal risk substantially.
+- Pin bar at key level = bullish PAT → conflicts with SELL direction
+- T_sig=SELL_5, no upward adjustment warranted given MACD+SMA conflicts. Technical = 5.
+
+**Fundamental:** Rate diff +3.78% favors GBP (SELL GBP/CHF = negative). CHF rate falling = CHF weakening = GBP/CHF bullish = SELL headwind. Fundamental leans against SELL → score ~4.
+
+**Sentiment:** GBP=7art, CHF=8art. More CHF articles could suggest CHF strength concerns, slight SELL support → 5.
+
+**Positioning:** Both net SHORT (GBP 48%, CHF 55% unwinding). CHF shorts unwinding = CHF strengthening = supports SELL slightly. GBP net short = potential squeeze risk against SELL. → 5.
+
+**Macro:** VIX=14.2 (low, risk-on), oil=84.8 (moderate), curve=0.5 (slight risk-on). Risk-on = GBP/CHF bullish = SELL headwind → 4.
+
+**Divergence:** NONE.
+
+**Oscillator:** TRIPLE_SELL → +2 confidence.
+
+**Confidence calculation:**
+- Base: MTF W+D both SELL = valid direction
+- ALIGNED_BULL ribbon = major risk factor, reduces conviction
+- Pin bar = bullish pattern = conflicts
+- MACD positive = conflicts
+- Triple SELL oscillator = +2
+- Fundamental headwinds against SELL
+- Starting ~5, +2 OSC = 7, -1 ribbon conflict = 6
+
+**Confidence = 6 → TRADE_THIS: NO** (conf ≤6 = NO always per rules)
+
+**Levels:** D1 price=1.0988, ATR=0.0049. Stop above recent high ~1.1010. Entry ~1.0988. Target 2R below.
+
+---
+
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 4/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 1.0988
+TARGET: 1.0922
+STOP_LOSS: 1.1021
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 18:00–20:00 NZST
+NEWS_WARNING: GBP sensitive to UK economic data releases; CHF sensitive to SNB commentary — check 48h calendar
+KEY_THESIS: W+D both SELL with triple oscillator confluence (Stoch 89.6, CCI 125.3, RSI 67.2 overb
+RISK_FACTORS: (1) Ribbon fully aligned bullish (5/5 pairs) with price > SMA50 golden cross = strong uptrend structure; SELL from overbought is pullback, not reversal — stop must be tight or position size reduced. (2) CHF positioning unwinding (institutional selling conviction weakening) reduces conviction in further CHF strength; GBP net short at 48% (mild, not extreme) = limited short squeeze catalyst.

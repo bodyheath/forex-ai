@@ -1,0 +1,23 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level with bearish MACD divergence and RSI 57.9 (neutral-to-sell bias) suggests weakness, but MTF disagreement (4H:BUY vs D:SELL) and mixed ribbon alignment undermine conviction.
+RISK_FACTORS: [1) MTF conflict — 4H bullish while D1 bearish (conf=1/3, wt=20%) creates whipsaw risk; 2) Ribbon leaning bull (4/5 aligned) contradicts SELL signal and suggests uptrend continuation risk]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5865
+ENTRY_TRIGGER_REASON: Limit sell at resistance near D1 pin bar high; wait for confirmation of bearish break below SMA50 (0.5790) before committing.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Rationale:**
+
+**Technical (6/10):** T_sig=SELL_7 is the baseline. D1 RSI=57.9 falls in neutral zone (45–62); in mixed MTF (neither confirmed uptrend nor downtrend), standard tiers apply → 57.

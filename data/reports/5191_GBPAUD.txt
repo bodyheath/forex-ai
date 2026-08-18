@@ -1,0 +1,30 @@
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key level suggests reversal, but confirmed downtrend structure (death-cross), RSI neutral in downtrend context, and weak oscillator confluence prevent high-conviction entry.
+
+RISK_FACTORS: (1) MTF weekly/daily both NEUTRAL—fails MTF agreement rule (only 4H bullish, 0/3 agreement); (2) OSC conf=NONE (Stochastic oversold at 21.2 but CCI diverges at -118.4, indicating oscillator conflict rather than triple confluence).
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF weekly and daily do not both agree on direction. Rule: TRADE_THIS NO if weekly AND daily don't both align on same direction (conf<2/3 agreement). Here W:NEUTRAL + D:NEUTRAL + 4H:BUY = 0/3 MTF consensus.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+### SCORING RATIONALE:
+
+**TECHNICAL_SCORE: 3/10**
+- **RSI=45.0 (D1)**: In confirmed downtrend (price < SMA50 < SMA200), RS

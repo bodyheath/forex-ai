@@ -1,0 +1,26 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 SELL signal (T_sig=4) + 4H uptrend overbought (RSI 67.8) + rising AUD rates vs falling NZD rates create a fundamental-driven shorting opportunity into topside resistance near 1.2280 Fib SH.
+
+RISK_FACTORS: 
+1. MTF confidence only 2/3 (D:SELL + 4H:SELL align, but W:NEUTRAL weakens conviction; price still above D1 SMA50 at 1.2078, suggesting upside bias in D1 mixed structure).
+2. 4H is in confirmed uptrend (price > SMA50 > SMA200) with RSI 67.8 overbought but NOT yet >77 (partial sell zone); inverse H&S on D1 is bullish candle pattern, conflicting with SELL thesis.
+
+OSCILLATOR_CONFLUENCE: NONE (Stoch K=85.0 and CCI=73.1 are both elevated but do not meet 2/3 BUY/SELL threshold for OSC scoring; RSI data incomplete for triple-check).
+
+TRADE_THIS: YES
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1
