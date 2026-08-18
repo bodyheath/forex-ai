@@ -1,0 +1,24 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 downtrend with aligned bearish ribbon and pin bar at support conflicts with 4H uptrend and crowded EUR short positioning creating mean-reversion risk; no clear directional edge.
+RISK_FACTORS: MTF conflict (W:BUY vs 4H:SELL) fails 2/3 agreement rule; EUR net short positioning near 1y bottom with BUILDING momentum signals institutional capitulation and high reversal risk.
+TRADE_THIS: NO
+
+**Reasoning:**
+
+**MTF Rule Violation (Hard Stop):**
+- Weekly = BUY, Daily = NEUTRAL, 4H = SELL → only 1/3 agree on direction (conf=40% < 2/3 threshold).
+- MTF rule mandates TRADE_THIS=NO if weekly AND daily don't both agree. They don't. **Trade rejected.**
+
+**Technical Score = 4:**
+- D1 RSI=50.5 (neutral, 45–62 band) = 3–4 baseline. D1 trend = confirmed DOWNTREND (price < SMA50 < SMA200).
+- In a downtrend, RSI 45–62 = normal, not overbought—no SELL bias; stays 3–4.
+- 4H RSI=59.1

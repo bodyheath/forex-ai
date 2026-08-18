@@ -1,0 +1,24 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at resistance with overbought RSI and MACD rollover in uptrend conflicts with fully-aligned bullish ribbon—mixed signal favours sell setup but weak conviction due to D+4H disagreement with W+M neutrality.
+RISK_FACTORS: [1] MTF consensus only 2/3 (D:SELL + 4H:SELL vs W:NEUTRAL + M:NEUTRAL)—insufficient multi-timeframe agreement to meet TRADE_THIS threshold. [2] Ribbon fully aligned bullish (5/5 fanning) contradicts SELL direction and suggests trend continuation risk; price well above SMA50/SMA200 in structural uptrend.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.71150
+ENTRY_TRIGGER_REASON: Pullback to D1 pin bar neckline and 4H double-bottom invalidation level; RSI <60 on retest would confirm overbought exhaustion.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 RSI=65 in **confirmed uptrend** (W:NEUTRAL + D:SELL mixed
