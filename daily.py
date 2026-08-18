@@ -5953,7 +5953,8 @@ def _send_telegram_summary(
                     except Exception:
                         pass
                     continue
-                _log_line(log, f"[trend-hard] {_yt_pair} {_dir_hard} aligned ({_wt_hard}) OK")
+                else:
+                    _log_line(log, f"[trend-hard] {_yt_pair} {_dir_hard} aligned ({_wt_hard}) OK")
                 # ── PAIR FILTER — block banned exotic pairs ────────────────────────
                 _pair_upper = _yt_pair.upper()
                 if _pair_upper in FUND_BANNED_PAIRS:
