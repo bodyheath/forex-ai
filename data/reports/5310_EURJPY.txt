@@ -1,0 +1,32 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key resistance (187.41 SH) with JPY rate rising and EUR crowded short creates mean-reversion setup, but mixed MTF alignment and neutral ribbon limit conviction.
+
+RISK_FACTORS: [1] MTF disagreement (W:NEUTRAL + D:NEUTRAL vs M:SELL + 4H:SELL) — only 0/3 confirmation; [2] EUR positioning extremely crowded short (5.0%) with MOM=BUILDING suggests potential squeeze higher, contradicting SELL.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 184.30
+ENTRY_TRIGGER_REASON: Break below recent consolidation low to confirm downside continuation; SMA50 (184.7464) overhead provides resistance.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+### REASONING:
+
+**TECHNICAL_SCORE: 4/10**
+- D1 T_sig=NEUTRAL_3 is baseline (3).
+- RSI 53.1 = NEUTRAL zone (45–62), standard tier → no directional edge.
+- MACD D1 positive (+0.1709), 4H negative (−0.0339) = mixed, no confirmation.

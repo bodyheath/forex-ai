@@ -1,0 +1,31 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 uptrend structure conflicts with T_sig=SELL_3, 4H double-top bearish pattern, and MTF disagreement (W:SELL vs D:NEUTRAL vs 4H:BUY) creates low-confidence mixed signal despite aligned ribbon.
+
+RISK_FACTORS: 
+1. MTF conflict: Weekly and daily do NOT both agree (W:SELL, D:NEUTRAL) — conf=1/3 fails ≥2/3 threshold; ribbon ALIGNED_BULL contradicts SELL thesis.
+2. CHF COT UNWINDING reduces conviction; D1 RSI=60.3 neutral-to-overbought in uptrend context shifts SELL zones higher (does NOT justify 4/10 SELL).
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not both agree on direction (conf 1/3 << 2/3 required). Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**REASONING:**
+
+1. **MTF RULE VIOLATION (FATAL):** Weekly=SELL, Daily=NEUTRAL, 4H
