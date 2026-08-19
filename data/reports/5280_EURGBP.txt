@@ -1,0 +1,30 @@
+PAIR: EUR/GBP
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: EUR oversold at 38.2% Fib support with crowded institutional shorts near 1-year lows and pin bar reversal pattern, but conflicting MTF structure (W:BUY vs D:NEUTRAL vs 4H:NEUTRAL) and bearish ribbon alignment limit conviction.
+
+RISK_FACTORS: [1] MTF disagreement — Weekly bullish but Daily/4H neutral; only 1/3 MTF agreement fails TRADE_THIS rule (requires both weekly AND daily to align). [2] Ribbon fully bearish (5/5 aligned bear) contradicts BUY thesis; EUR COT positioning at crowded short extreme creates binary reversal risk — if reversal stalls, sharp drop to SL 0.8468 (-88p).
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.85495
+ENTRY_TRIGGER_REASON: Confluence of 38.2% Fibonacci support (6p away) + pin bar at key level + RSI neutral (50.1) at support zone — wait for price to kiss this level before entering.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- T_

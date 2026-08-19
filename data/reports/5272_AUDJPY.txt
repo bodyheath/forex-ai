@@ -1,0 +1,27 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and monthly both signal SELL; D1 neutral with pin bar at key level and price below SMA50 suggests consolidation breakout downside, but 4H conflicts upward, weakening conviction below threshold.
+RISK_FACTORS: [1. MTF disagreement: 4H BUY vs W/M SELL (conf=1/3) prevents high-conviction trade; 2. JPY COT UNWINDING reduces institutional commitment despite net short positioning.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 112.00
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 at 112.6441 with confirmation of weekly SELL trend and retest of upper Fibonacci resistance zone (114.903 swing high) rejected.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+### DETAILED SCORING RATIONALE:
+
+**TECHNICAL_SCORE: 4/10**
+- D1 T_sig baseline = NEUTRAL_3; no upward adjustment justified.
+- D1 RSI=50.4 (midpoint, truly neutral) + MACD h=+0.1076 (weak positive momentum, not convincing). No bonus.
+- 4
