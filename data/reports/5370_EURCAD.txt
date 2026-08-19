@@ -1,0 +1,25 @@
+```
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Crowded institutional short positioning near 1-year lows + double-bottom pattern + bullish PAT create reversal setup, but weak MTF alignment (M:SELL vs W/D:NEUTRAL) and RSI neutral prevent high-confidence trade.
+
+RISK_FACTORS: 
+1. MTF conflict: Monthly still SELL (conf=0/3, wt=80% dominance) — weekly + daily NEUTRAL means NO confirmed uptrend agreement; reversal risk if M:SELL reasserts.
+2. Oscillator anemia: stoch_k=36.3 (below 50, not oversold) + CCI=11 (neutral band) + no triple confluence — technical setup is weak despite pattern; RSI=51 is dead-center NEUTRAL.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do NOT both agree on direction (both NEUTRAL). Monthly is SELL at 80% weight. Double-bottom + crowded short positioning suggest reversal *risk*, but confirmation requires W+D alignment (currently missing). Wait for weekly to flip BUY or daily RSI to decisively break above 62 with MACD cross.
+ENTRY

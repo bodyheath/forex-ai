@@ -1,0 +1,26 @@
+```
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish sentiment (SMD -5) and JPY rate rise support a SELL, but weak technicals (neutral D1 RSI, mixed 4H, leaning-bear ribbon) and crowded CAD short positioning create conflicting signals with high reversal risk.
+RISK_FACTORS: ['Crowded CAD short positioning near 1y bottom—institutional unwinding could trigger sharp reversal against SELL', 'MTF agreement is 0/3 (all neutral/mixed)—no directional conviction across timeframes; pin bar at key level is bullish-biased, contradicting SELL thesis']
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**RATIONALE:**
+
+1. **MTF FAILURE (0/3 agreement):** M, W, D all NEUTRAL; only 4H is BUY. Weekly + daily must both agree per mandate — they don't. This alone vetoes TRADE_THIS=YES.
+
+2. **TECHNICAL_SCORE = 4/10:**
+   - D1 RSI=51.0 → standard tier = 3–4

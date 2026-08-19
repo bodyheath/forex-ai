@@ -1,0 +1,27 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: Triple oscillator sell confluence (RSI overbought + Stochastic at 100 + CCI extreme) at resistance, but mixed MTF context (W:NEUTRAL) and crowded EUR short positioning create reversal risk.
+RISK_FACTORS: [1] Crowded institutional EUR short at ~1y positioning floor with BUILDING momentum signals potential capitulation/squeeze higher; [2] Weekly MTF neutral undermines daily/4H sell setup — only 2/3 timeframes aligned (below 67% threshold).
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL + D:SELL = 2/3 timeframe agreement (conf<67%). Mandatory NO trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+### **Detailed Scoring Rationale:**
+
+**TECHNICAL_SCORE: 8/10**
+- D1 T_sig baseline = SELL_9 (system pre-computed)
+- RSI=71.9 → UPTREND context check: D:SELL + W:NEUTRAL (mixed, not confirmed uptrend) → use standard tier: 70-

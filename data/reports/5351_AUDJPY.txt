@@ -1,0 +1,27 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and monthly confirm downtrend structure, but daily neutrality and conflicting 4H upside create low-conviction zone; pin bar bearish rejection at key level offers limited edge.
+RISK_FACTORS: [1: MTF conflict — only 1/3 timeframes agree (W:SELL + M:SELL, but D:NEUTRAL + 4H:BUY); daily RSI 49.9 is neutral-biased, not oversold. 2: JPY COT unwinding reduces institutional conviction; price trapped in 567p range with no clear breakout structure yet.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 111.83
+ENTRY_TRIGGER_REASON: Break below FIB SL support at 109.237 (range low) with daily RSI <30 confirmation needed; currently no confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**RATIONALE:**
+
+1. **MTF RULE VIOLATION** → TRADE_THIS = NO  
+   - W:SELL + M:SELL align, but D:NEUTRAL + 4H:BUY conflict.  
+   - Confidence = 1/3 (33%)

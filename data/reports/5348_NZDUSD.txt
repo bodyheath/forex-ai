@@ -1,0 +1,24 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought (65.3) with pin bar at key level and partial oscillator confirmation (Stoch+CCI), but bullish ribbon alignment and 4H uptrend structure create directional conflict requiring pullback confirmation.
+RISK_FACTORS: MTF agreement is 2/3 (D+4H both SELL, but W/M neutral) — below 3/3 threshold, increasing whipsaw risk. Ribbon fully aligned bullish (5/5 EMA stack) contradicts SELL signal — trend continuation may override reversal setup.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5960
+ENTRY_TRIGGER_REASON: Await pullback to SMA50 (0.5793) or daily resistance retest at 0.5960 to confirm pin bar reversal before shorting into bullish ribbon.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**TECHNICAL (6/10):**
+- T_sig baseline = SELL_8 (assigned); however, **ribbon is ALIGNED_BULL (5/5)**, which normally adds +2 to uptrend thesis — this directly conflicts with SELL_8
