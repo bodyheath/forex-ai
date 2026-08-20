@@ -5361,6 +5361,11 @@ def _send_telegram_summary(
     # above), not grade itself, so moving it earlier introduces no circular
     # dependency: DA -> grade -> _dd_allows_trade is a straight line.
     for _da_r in deep_results:
+        # 2026-08-20: skip candidates the fail-fast check in service.py already
+        # flagged (missing/corrupt entry/stop/target etc.) — no real trade is
+        # possible for them regardless of confidence, so don't spend a DA call.
+        if (_da_r.get("parsed") or {}).get("_early_reject"):
+            continue
         if _conf(_da_r) >= 7:
             try:
                 from src import analyst as _da_analyst
