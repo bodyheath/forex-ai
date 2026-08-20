@@ -5518,11 +5518,17 @@ def _send_telegram_summary(
     # Issue 1: overall confidence is the deciding factor, not individual layer scores.
     # Any pair with 7+ effective confidence qualifies for a trade alert regardless of
     # what the analyst's trade_this field says — confidence overrides individual layers.
+    # 2026-08-20: early-rejected candidates (missing/corrupt entry/stop/target,
+    # caught immediately post-parse in service.py) are excluded here too —
+    # "confidence overrides trade_this" above is exactly the mechanism that
+    # used to let these reach the fund loop on a consensus-bumped confidence
+    # alone, with no real price levels to trade.
     _yes_raw = [
         r for r in deep_results
         if _eff_conf(r) >= _trade_conf_thr
         and r["pair"] not in _demoted_pairs
         and r["pair"] not in _not_viable_pairs
+        and not (r.get("parsed") or {}).get("_early_reject")
     ]
     # Recalibrated-confidence table — observability only, not wired into any
     # pass/fail decision (see _dd_allows_trade's docstring for why the
