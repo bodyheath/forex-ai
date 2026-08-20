@@ -1,0 +1,26 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Price trapped in range below SMA50/SMA200 death-cross with weak technicals and mixed MTF; AUD rate rise vs GBP flat supports mild downside bias but lacks conviction.
+RISK_FACTORS: [1] MTF confidence 0/3 (M:BUY conflicts W/D:NEUTRAL) — no directional agreement; trade fails TRADE_THIS rule. [2] Oscillator confluence NONE (Stoch 43.7, CCI 10.9 = neutral, no RSI divergence) — no edge signal.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do not both agree on direction (W:NEUTRAL, D:NEUTRAL, M:BUY = conflicted 1/3). Confidence 4 << 7 threshold. Oscillator_confluence NONE. Insufficient confluence for tradeable setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Detailed Scoring Breakdown:**
+
+**TECHNICAL_SCORE: 3/10**
+- D1 RSI=49.8 (zone 45–62 = **3

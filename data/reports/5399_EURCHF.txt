@@ -1,0 +1,27 @@
+```
+PAIR: EUR/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fib 161.8% + aligned ribbon support conflicted by strong bearish RSI divergence and crowded EUR short positioning at reversal risk.
+RISK_FACTORS: (1) Bearish RSI divergence (23p/7pt) contradicts bullish price pattern — reversal signal may be false; (2) EUR net short crowded near 1-year bottom with COT BUILDING — institutional positioning flip could trigger squeeze against shorts, but entry here risks being stopped by divergence breakdown.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.9315
+ENTRY_TRIGGER_REASON: Await pullback to SMA50 (0.9270) or Fib support (0.9278) with RSI <35 and divergence confirmation of higher low.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **Analysis Summary**
+
+**CRITICAL ISSUE: MTF AGREEMENT FAILED**
+- **MTF conf = 0/3**: Monthly, Weekly, and Daily are all NEUTRAL. Only 4H is BUY.
+- **MTF rule enforcement**: "if weekly AND daily don't both agree on direction (conf<2/3), TRADE

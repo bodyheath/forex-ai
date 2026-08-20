@@ -1,0 +1,30 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and monthly downtrends conflict with daily neutral RSI and uptrend structure; pin bar at key level provides reversal signal but insufficient MTF alignment (1/3 agreement) blocks high-confidence entry.
+RISK_FACTORS: (1) MTF disagreement — only 1 of 3 timeframes (monthly) confirms SELL direction; daily and 4H neutral undermine conviction. (2) COT JPY unwinding reduces positioning strength for short AUD/JPY while AUD rate rising adds fundamental headwind to bearish thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+**RATIONALE:**
+
+1. **MTF Consensus Failure (Confidence Floor):**  
+   - Monthly: SELL | Weekly: SELL | Daily: NEUTRAL | 4H: NEUTRAL  
+   - MTF confidence = 1/3 (only monthly agrees with SELL signal)  
+   - **Hard Rule**: MTF weekly + daily must BOTH agree for TRADE_THIS=YES. Here, daily is neutral (not SELL), blocking trade regardless of other factors.
+
+2.

@@ -1,0 +1,25 @@
+PAIR: EUR/AUD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 50% Fib (1p away) + crowded EUR short positioning near 1y lows suggests contrarian long setup, but weak MTF agreement (1/3) and bearish ribbon alignment create structural headwinds.
+RISK_FACTORS: [1] MTF conflict: 4H selling (RSI 68, inside bar) while D/W suggest reversal — entry timing poor with only 45% confidence threshold reached. [2] Bearish ribbon (5/5 aligned bear) contradicts upside thesis — trend structure favours continuation of weakness, not reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.6403
+ENTRY_TRIGGER_REASON: Await close above D1 SMA50 (1.6400) + 4H RSI drop below 50 to confirm pullback completion and ribbon trend reversal signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1 RSI 54 = neutral zone (mixed MTF context, no trend bias shift applied)
+- T_sig baseline = NEUTRAL_3; pin bar at key level (50% Fib @

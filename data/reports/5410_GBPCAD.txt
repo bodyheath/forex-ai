@@ -1,0 +1,34 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: GBP structural weakness (rate differential +1.46%, CAD oversold positioning) offers weak SELL, but MTF neutrality and price indecision prevent conviction.
+
+RISK_FACTORS: [1. MTF conflicted (M:SELL vs W/D:NEUTRAL) — no directional agreement across weekly+daily; [2. CAD crowded short near 1y bottom creates sharp reversal risk despite rate setup]
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule fail — W:NEUTRAL + D:NEUTRAL do NOT agree with M:SELL; conf=0/3 (0 pairs agree). Trade flagged UNAVAILABLE per MTF rule: weekly AND daily must both align on direction. Confidence 4/10 < threshold 7.0.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+## Analysis Summary
+
+**MTF Rule Violation (HARD STOP):**
+- **Weekly:** NEUTRAL (no directional signal)
+- **Daily:** NEUTRAL (price mixed vs MAs; RSI 45.1 = no bias)
+- **4H:** NEUTRAL (inside bar, neutral pattern)
+-

@@ -1,0 +1,27 @@
+```
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (44p/6pt) + pin bar at key level contradicts bullish D1 structure; MTF all-neutral + converging ribbon signals trend exhaustion; SELL on weakness confirmation.
+RISK_FACTORS: [1] D1 price above SMA50 (golden-cross uptrend intact — reversal not yet confirmed structurally). [2] OSC=NONE (no oscillator confluence) and all MTF timeframes neutral — conviction is low despite strong DIV signal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.4738
+ENTRY_TRIGGER_REASON: Limit sell at SMA50 rejection (0.4683) + 5p buffer on pin bar wick; await price retest to confirm divergence and D1 bearish candle close below 0.476.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### Rationale:
+
+**TECHNICAL (4/10):**
+- **T_sig baseline = 3** (SELL signal), adjusted to **4** for strong bearish DIV confirmation.
+- **RSI 59.6** in D1 uptrend = neutral-to-warm
