@@ -1,0 +1,26 @@
+PAIR: EUR/GBP
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fib 50% + crowded EUR short positioning near 1y bottom creates contrarian long-EUR setup despite D1 downtrend weakness.
+RISK_FACTORS: MTF conf only 1/3 (W:BUY vs D/4H:NEUTRAL) fails robust 2/3 agreement rule — trade lacks directional alignment across timeframes. D1 death-cross structure (price < SMA50 < SMA200) contradicts BUY conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.85746
+ENTRY_TRIGGER_REASON: Confluence of pin bar at Fib 50% level + EUR positioning reversal signal if price holds above 50% retracement.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF Rule Violation (Critical):**
+W=BUY, D=NEUTRAL, 4H=NEUTRAL → conf=1/3. System requires ≥2/3 MTF agreement (weekly AND daily both agree). This trade fails the hard MTF filter — **TRADE_THIS must be NO** regardless of other factors.
+
+**Technical (5/10 — Neutral)

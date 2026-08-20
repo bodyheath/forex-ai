@@ -1,0 +1,24 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 2/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weak technicals (inside bar, neutral RSI, negative MACD) and crowded short positioning in both currencies create reversal risk; monthly SELL signal conflicts with weekly/daily neutrality, blocking entry.
+RISK_FACTORS: [1] Both EUR and CAD heavily short with positioning near 1-year lows — institutional reversal highly probable, especially if oil rallies or curve steepens. [2] MTF disagreement (M:SELL vs W/D:NEUTRAL) violates multi-timeframe confirmation rule; entry into crowded short into a data conflict is high-risk.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule failure — monthly and weekly/daily do not align (conf=0/3, <2/3 threshold). Crowded short positioning with BUILDING momentum creates structural reversal risk. Wait for weekly or daily confirmation of monthly SELL before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS SUMMARY:**
+
+**Technical (3/10):**  
+- T_sig baseline = NEUTRAL_3 (inside bar, price 1.6093 vs SMA50 1.6138, misaligned).
