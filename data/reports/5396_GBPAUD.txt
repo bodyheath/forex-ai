@@ -1,0 +1,23 @@
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Confirmed D1 downtrend (price < SMA50 < SMA200 death-cross) with bullish engulfing pattern suggests potential support test near SL, but weak MTF alignment (M:BUY vs W/D:NEUTRAL) and neutral oscillators prevent high-conviction entry.
+RISK_FACTORS: (1) MTF disagreement — only monthly bullish while weekly and daily neutral severely constrains trade logic; MTF rule requires weekly+daily agreement for YES. (2) Oscillator void (OSC=NONE) and no MACD confirmation on 4H (MACDh=+0.0004 is flat) — lack of directional confluence reduces setup reliability.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.9065
+ENTRY_TRIGGER_REASON: Break below SL support at 1.8693 (Fib swing low); confirm if price closes below with RSI <40 in downtrend zone.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Failure:** W:NEUTRAL + D:NEUTRAL = 0/3 MTF agreement. Monthly BUY alone cannot override the requirement that weekly

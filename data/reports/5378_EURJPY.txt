@@ -1,0 +1,24 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with price structure (uptrend, IHS pattern, RSI neutral 55.9); MTF misalignment (M:SELL vs W/D:NEUTRAL) and crowded EUR short positioning create reversal risk, not sell conviction.
+RISK_FACTORS: [1] MTF disagreement (0/3 conf): Weekly and Daily both NEUTRAL while Monthly SELL — no consensus directional support; trade fails MTF rule (require ≥2/3 agreement). [2] Crowded EUR short at 5.0% net positioning + BUILDING momentum near 1-year bottom reversal zone — if EUR longs re-enter, EUR short squeeze crushes the SELL case.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated: W and D both NEUTRAL (not SELL). TECHNICAL_SCORE 4 is below minimum for directional bias. Positioning (crowded short + BUILDING) contradicts reversal risk thesis.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**EXPLANATION:**
+
+1. **MTF Rule Failure (Critical):** W:NEUTRAL + D:

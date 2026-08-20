@@ -1,0 +1,25 @@
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 4/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Price at 61.8% Fib support with pin bar setup, but MTF conflict (M:SELL vs W/D:NEUTRAL) and weak oscillator confluence prevent high conviction.
+RISK_FACTORS: MTF disagreement (weekly and daily do NOT both confirm downtrend direction — monthly bias alone insufficient); JPY COT unwinding reduces conviction on the JPY leg of the short.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 216.50
+ENTRY_TRIGGER_REASON: Rejection above pin bar high + retest of 61.8% Fib at 215.727 would confirm bearish confluence; wait for price to rally into resistance zone before shorting.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Why NO on TRADE_THIS:**
+1. **MTF Rule Failure (Critical):** Weekly and Daily are both NEUTRAL — they do NOT agree on direction. Monthly is SELL, but the MTF requirement mandates weekly AND daily both agree. Confidence drops below trade threshold (4/10 < 7/10).
+2. **Weak Technical Setup:** T_sig=3 (NEUTRAL); RSI=52.3 is mid-

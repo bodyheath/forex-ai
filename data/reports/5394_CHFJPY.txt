@@ -1,0 +1,21 @@
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly downtrend structure (death cross) conflicts with weekly/daily neutrality and converging ribbon—reversal risk dominates, low-conviction short only.
+RISK_FACTORS: [1] MTF CONFLICT: M:SELL but W:NEUTRAL + D:NEUTRAL = conf 0/3 (less than 2/3 required); ribbon CONVERGING signals trend weakness/imminent reversal. [2] COT UNWINDING: both CHF and JPY unwinding positions = institutional conviction dropping; D1 RSI 52.6 (mid-range neutral) offers no confirmation; 4H inside_bar (neutral pattern) = compression before breakout direction unclear.
+TRADE_THIS: NO
+ENTRY_TYPE: [CONDITIONAL_REJECT]
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement rule violated (W:NEUTRAL + D:NEUTRAL = 0/3 agreement with M:SELL). Converging ribbon + unwinding COT + neutral oscillators = high reversal probability. Wait for daily break above SMA50 (199.30) to confirm uptrend OR close below SL (192.64) to confirm downtrend before entering.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**
