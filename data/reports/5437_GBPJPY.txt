@@ -1,0 +1,24 @@
+PAIR: GBP/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + bullish double bottom on 4H setup potential BUY, but MTF conflict (Monthly SELL vs D1/W NEUTRAL) and ribbon divergence (only 3/5 aligned) prevent high conviction.
+RISK_FACTORS: [1. MTF disagreement: Monthly shows SELL while Daily/Weekly are NEUTRAL — mixed directional bias reduces confidence below 7. 2. JPY COT UNWINDING: institutions reducing JPY short positions suggests momentum may fade; GBP rate flat while JPY rate rising creates headwind for pair appreciation.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 216.75
+ENTRY_TRIGGER_REASON: Break above recent pin bar high + confluence with SMA50 (215.58) and lower Fibonacci resistance near 217.25 (nearest_above from SH 219.516).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1 RSI 54.8 = NEUTRAL tier (45–62) = baseline 3–4. Price > SMA50 > SMA200 (golden cross) is bullish structure → +

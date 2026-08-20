@@ -1,0 +1,25 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Daily uptrend structure conflicts with monthly downtrend; pin bar at key level offers limited reversal edge given mixed MTF signals and neutral oscillators.
+RISK_FACTORS: [1. MTF conflict: M:SELL vs D:NEUTRAL (conf=1/3 <2/3 threshold) — no clear directional alignment across timeframes. 2. JPY COT unwinding suggests institutional confidence fading in short positioning — reversal risk if momentum breaks.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF confidence (1/3 wt=45%) falls below 2/3 requirement — daily and weekly do not both agree. Pin bar + uptrend D1 setup cannot overcome M:SELL conflict without D:BUY or W:BUY confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI=52.5 (uptrend context: 45–65=NEUTRAL, score 3–4). T_sig=NEUTRAL_3 baseline.
+- MACD D1=+0.1215 (

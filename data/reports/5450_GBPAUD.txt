@@ -1,0 +1,29 @@
+PAIR: GBP/AUD
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Bullish engulfing + double bottom patterns offer directional bias, but weak MTF alignment (M:BUY vs W/D:NEUTRAL), neutral RSI (52.8), and divergent rate environment (GBP flat vs AUD rising) severely limit conviction.
+
+RISK_FACTORS: (1) MTF disagreement — only monthly bullish; weekly and daily both neutral, violating core MTF rule (need weekly+daily agreement for HIGH confidence). (2) Fundamental headwind — AUD rate rising while GBP rate flat creates structural sell pressure on GBP/AUD; interest rate differential tightening/shifting bearish.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 1.9200
+ENTRY_TRIGGER_REASON: Breakout above recent resistance and bullish pattern completion confirmation; requires weekly+daily reversal to align.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS NOTES:**
+
+- **MTF Failure:** Monthly bullish (M:BUY) does NOT override the requirement that weekly AND daily must both agree. Here, W:NEUTRAL + D:NEUTRAL = **conf=0/3 (fails MTF rule)**. This alone blocks TRADE

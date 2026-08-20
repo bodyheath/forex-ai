@@ -1,0 +1,25 @@
+```
+PAIR: NZD/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level + RSI overbought (71.2) + D1 SELL signal + MACD positive divergence (0.0007) creates a mean-reversion short setup, but bullish ribbon alignment and MTF mixed context (W:NEUTRAL, only D+4H agree SELL at 2/3) limits edge.
+RISK_FACTORS: [1] MTF confidence only 2/3 (W:NEUTRAL breaks the rule; D+4H SELL but monthly neutral = disagreement reduces conviction), [2] Ribbon fully bullish (ALIGNED_BULL 5/5) contradicts SELL thesis — continuation risk if price breaks above 0.59946 SH.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5985
+ENTRY_TRIGGER_REASON: Sell into pin bar rejection at resistance; limit order allows entry on retest of key level without chasing into overbought RSI.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+**DETAILED SCORING:**
+
+**TECHNICAL [8/10]:**
+- T_sig=SELL_9 baseline → baseline 9
+- D1 RSI=65.3
