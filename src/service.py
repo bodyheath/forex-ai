@@ -180,6 +180,35 @@ def analyse_and_log(
 
     parsed = recparse.parse(result["report"])
 
+    # 2026-08-20: fail-fast data check, immediately after parsing — before any
+    # candidate becomes eligible for DA (a real Sonnet-tier API call) or
+    # grading in daily.py's scan pipeline. Only the CRITICAL subset gates
+    # here (missing/corrupt entry, stop, target, direction, confidence) —
+    # this is deliberately the same check and the same critical/non-critical
+    # split validate_trade_data() has always used, just run far earlier.
+    # Root cause this closes: Haiku never emits ENTRY/STOP_LOSS/TARGET (only
+    # Sonnet does, gated on raw pre-consensus confidence); a candidate whose
+    # raw confidence misses that gate can still get consensus-bumped above
+    # the fund threshold later and reach DA/grading carrying no real price
+    # levels, only to fail at the fund-loop's terminal validate_trade_data()
+    # call — after already paying for a DA call. Does NOT reconcile
+    # ENTRY_TYPE/ENTRY_TRIGGER_PRICE into entry/stop/target (a separate,
+    # more consequential decision, deliberately not made here) — a
+    # conditional-entry candidate with no plain price fields is simply
+    # excluded early, same outcome as before, just cheaper to reach.
+    _early_val = validate_trade_data(
+        parsed, result["pair"], parsed.get("direction") or "",
+        bundle=result.get("bundle", {}), log_fn=log,
+    )
+    if _early_val["critical_failure"]:
+        parsed["trade_this"]   = "NO"
+        parsed["block_reason"] = f"Data validation: {_early_val['failures'][0]}"
+        parsed["_early_reject"] = True
+        log(
+            f"[early-reject] {result['pair']} — {_early_val['failures'][0]}, "
+            f"excluded before DA/grading (raw_conf={parsed.get('confidence')})"
+        )
+
     # Graduated MTF gate: block trades where weekly actively opposes daily+4H,
     # or neither weekly nor daily show a directional signal.
     # If MTF data is unavailable (qualifies defaults to True) we don't block.
