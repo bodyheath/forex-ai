@@ -5393,7 +5393,10 @@ def _send_telegram_summary(
     # Grade all results — used by display helpers and filtering below.
     # _trade_quality_grade() reads second_opinion (set just above) as one of
     # its inputs, alongside MTF/ribbon/R:R/fundamental-tailwind.
-    _quality_grades: dict = {r["pair"]: _trade_quality_grade(r) for r in deep_results}
+    _quality_grades: dict = {
+        r["pair"]: _trade_quality_grade(r) for r in deep_results
+        if not (r.get("parsed") or {}).get("_early_reject")
+    }
 
     # grade_ba_observability: A/B became reachable again 2026-08-14 (rr>2.5/>=2.5
     # -> rr>=2.0, see the comment above the A/B branches). No B or A grade has
