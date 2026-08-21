@@ -1,0 +1,24 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: Overbought RSI (73+) at upper BB with triple oscillator sell confirmation and pin bar rejection, but MTF agreement only 2/3 and crowded EUR short positioning create reversal risk.
+RISK_FACTORS: [1] Crowded institutional EUR short at ~1y range bottom signals potential short-squeeze reversal; [2] MTF conf only 2/3 (W:NEUTRAL weakens daily/4H alignment), pin bar at key level is ambiguous (bearish at supply, but 4H shows bullish context).
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1680
+ENTRY_TRIGGER_REASON: Reclaim below pin bar high; wait for momentum fade confirmation below 1.1700 before shorting into crowded positioning.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+**RATIONALE:**
+
+1. **TECHNICAL_SCORE: 8/10**
+   - RSI 73.2 D1 = SELL_9 (confirmed overbought, standard tier — no uptrend context override needed; 4H uptrend context shifts it to SELL_7, but D1 trend=mixed/range keeps standard zones active

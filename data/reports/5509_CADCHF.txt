@@ -1,0 +1,29 @@
+```
+PAIR: CAD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: CAD strength (+2.32% diff, falling CAD rate) and pin bar confluence at key level support a bounce, but bearish RSI divergence, converging ribbon (trend weakening), and weak MTF agreement (0/3 weekly+daily) severely limit conviction.
+
+RISK_FACTORS: 
+1. MTF FAIL: Weekly and Daily both NEUTRAL — trade violates core MTF rule (need both BUY or both SELL for confidence ≥7). 0/3 agreement blocks TRADE_THIS=YES.
+2. Bearish RSI divergence (38p/4pt) conflicts with directional bias; ribbon converging signals reversal risk; CAD positioning crowded short at range bottom (reversal relief-bounce possible but fragile).
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.5822
+ENTRY_TRIGGER_REASON: Fib SH (swing high) at range top; pin bar at key level + RSI oversold (54 neutral-to-sell edge) = potential cap, but only if price reclaims above 0.5822 with fresh MTF weekly confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE
