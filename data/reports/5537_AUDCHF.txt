@@ -1,0 +1,25 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence and ribbon convergence signal trend weakening, but D1 uptrend structure and mixed MTF prevent high-conviction trade.
+RISK_FACTORS: [1. MTF disagreement: W:SELL + D:NEUTRAL (1/3 conf = 33% < 67% threshold) violates MTF rule — cannot achieve sufficient directional alignment.] [2. MACD histogram near-zero on both D1 (+0.0003) and 4H (+0.0003) indicates momentum is neutral/exhausted, reducing signal reliability.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical Scoring Rationale:**
+- **D1 RSI=54.6** in an **uptrend context** (W:SELL + D:NEUTRAL = mixed MTF) → use standard tiers: RSI 45–62 = NEUTRAL(3–4). Score: **3**.
+- **MACD histogram** negligible on both D1 and 4H (±0.0003) → no momentum confirmation

@@ -1,0 +1,24 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 78.6% Fib resistance + D1 SELL signal, but uptrend structure intact and crowded EUR short positioning creates reversal risk that undermines conviction.
+RISK_FACTORS: [1) EUR net SHORT at 5.0% with MOM=BUILDING (crowded short near 1y range bottom — institutional reversal risk if EUR rallies]; [2) MTF conf=2/3 (D:SELL + 4H:SELL agree, but W:NEUTRAL breaks consensus — weekly chart not confirming downside, weakens signal)]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 185.69
+ENTRY_TRIGGER_REASON: Breach below 78.6% Fib support at 185.69 (8p away, near current price) with RSI <60 confirmation on D1 close.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1 RSI=60.5 in confirmed UPTREND (price>SMA50>SMA200, golden cross): neutral zone (45–65), do NOT score as SELL just because RSI is 60

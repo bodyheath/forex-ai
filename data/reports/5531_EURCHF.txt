@@ -1,0 +1,31 @@
+```
+PAIR: EUR/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key level + converging ribbon + crowded EUR short positioning near reversal zone suggests potential bounce, but weak MTF alignment and neutral RSI limit conviction.
+
+RISK_FACTORS: [1. MTF agreement missing — M/W/D all NEUTRAL, only 4H:BUY (33% agreement, well below 80% threshold); ribbon converging signals trend weakening/reversal risk rather than continuation. 2. SMD=-5 (moderate retail bullish/institutional bearish divergence) + EUR COT BUILDING short at 5% (crowded, but momentum direction unclear relative to price intent) = conflicting institutional sentiment.]
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.93600
+ENTRY_TRIGGER_REASON: Break above pin bar high (0.9360) with daily close confirm and RSI >60 to align 4H + D1.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL_SCORE: 5/10**
+- D1 RSI=54.4 (uptrend zone, neutral 45-62 per context): baseline 3–4. D1 T_sig=NEUTRAL

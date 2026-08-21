@@ -1,0 +1,22 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Multiple bearish patterns (H&S, double-top) and 4H downtrend conflict with D1 BUY signal and weak MTF alignment (1/3), creating high uncertainty despite CAD positioning reversal risk.
+RISK_FACTORS: (1) MTF severely misaligned—only 1/3 timeframes agree (D1 BUY vs M/4H bearish); SELL confidence capped at 4. (2) CAD positioning crowded short near 1-year low—reversal catalyst possible, undermining SELL thesis despite momentum=STABLE.
+TRADE_THIS: NO
+
+**RATIONALE:**
+
+**MTF Rule Violation:** Weekly=SELL, Daily=BUY, 4H=NEUTRAL, Monthly=SELL → only 1/3 agree on direction (40% weight). MTF confidence=1/3 fails the threshold (need ≥2/3 both weekly AND daily agreement). TRADE_THIS defaults to NO.
+
+**Technical Scoring (4/10):**
+- D1 T_sig=BUY_4 is your baseline, but:
+  - RSI=43.4 (neutral zone 45–62) = 3–4 NEUTRAL in mixed trend
+  - MACDh negative (−0.0009
