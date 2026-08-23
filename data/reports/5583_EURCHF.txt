@@ -1,0 +1,24 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with bearish setup on D1, but weak MTF confluence (D:SELL only, 1/3) and converging ribbon signal trend weakening and potential reversal risk.
+RISK_FACTORS: [1. MTF agreement only 1/3 (D1 SELL, but W and 4H neutral) — insufficient directional conviction; 2. EUR positioning crowded short and unwinding — institutional exit of short positions contradicts SELL signal and raises reversal risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated: weekly and daily do not both agree on direction (conf 1/3 < 2/3 threshold). Positioning momentum (EUR unwinding from crowded short) conflicts with SELL thesis. Converging ribbon indicates trend weakening, not continuation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Why NO despite D1 T_sig=SELL_5:**
+1. **MTF Failure (Hard Rule):** W:NEUTRAL, D:SELL, 4H:NEUTRAL = conf 1/3 (only daily agrees). Hard rule requires weekly AND daily to both

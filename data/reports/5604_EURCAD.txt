@@ -1,0 +1,33 @@
+```
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at 50% Fib + crowded EUR/CAD short positioning unwinding creates mild reversal potential, but MTF misalignment (M:SELL vs W/D:NEUTRAL) and neutral ribbon prevent high-conviction entry.
+
+RISK_FACTORS: 
+1. MTF conflict — Monthly bearish (SELL) contradicts Weekly/Daily neutral; 0/3 timeframe agreement fails MTF rule threshold (conf<2/3).
+2. COT unwinding on both pairs near crowded extremes creates reversal risk, but D1 RSI=53.9 neutral + MACD flat provide no directional momentum confirmation.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not both agree (W:NEUTRAL, D:NEUTRAL vs M:SELL). Confidence 5/10 < 7 threshold. No valid setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- D1 T_sig=NEUTRAL_3 is baseline; no strong adjustment justified.
+- RSI=53.9 (D1

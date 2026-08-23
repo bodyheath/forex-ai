@@ -1,0 +1,23 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: D1 RSI overbought (70.8) + triple oscillator sell confluence + daily downtrend align on shorts, but 4H uptrend and crowded EUR short positioning create mean-reversion risk.
+RISK_FACTORS: [1) COT EUR net SHORT unwinding at 1-year range bottom—institutional profit-taking or reversal likely within 48-72h, reducing confidence in sustained downside] [2) 4H uptrend contradicts D1 SELL signal; MTF confidence only 2/3 (W:NEUTRAL breaks agreement)—entry too early risks breakout above 1.1715]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1715
+ENTRY_TRIGGER_REASON: Wait for 4H close above this level to confirm breakout rejection; enter short only on reversal candle (pin bar/engulfing) below 1.1715 with RSI>75 (double confirmation).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+1. **Technical (7/10):** D1 T_sig=SELL_8 is baseline. RSI 70.8 is overbought (

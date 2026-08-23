@@ -1,0 +1,23 @@
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 2/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 death-cross downtrend conflicts with 4H uptrend; MTF conf=0/3 (no two timeframes agree), RSI neutral-high across both frames, MACD weakly negative on 4H — insufficient directional conviction.
+RISK_FACTORS: [1] MTF disagreement (M:SELL vs W+D:NEUTRAL) breaches core MTF rule; no reliable entry signal. [2] CHF rate falling + JPY rate rising + both COT positions unwinding = fundamental headwinds for a SHORT; positioning momentum is reversing, reducing conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF conf=0/3 fails mandatory rule (require weekly+daily agreement); neither BUY nor SELL meets confidence threshold ≥7.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF CONFLICT (critical):** Monthly shows SELL, but Weekly and Daily are both NEUTRAL. Confidence = 0/3 (less than 2/3 agreement required). This breaches the hard rule: *"if weekly AND daily don't both agree on direction, TRADE_THIS NO

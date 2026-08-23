@@ -1,0 +1,23 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 confirmed by 4H alignment and Fib 78.6% resistance at 185.69, but MTF conflict (M:SELL vs W:NEUTRAL vs D:NEUTRAL) and overbought RSI 59.2 in confirmed uptrend reduce conviction to LOW probability.
+RISK_FACTORS: (1) MTF disagreement (0/3 conf) — Weekly and Daily both NEUTRAL contradicts Monthly SELL, invalidating TRADE_THIS rule requiring both weekly+daily agreement. (2) EUR positioning reversal risk — net SHORT at 5% with UNWINDING momentum creates contrarian long bias; COT flip from long to short would trap short-covering buyers.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated: Weekly=NEUTRAL + Daily=NEUTRAL do not both agree on SELL direction. Confidence 4/10 < 7 threshold. D1 T_sig=SELL_3 alone insufficient without MTF confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**REASONING:**
+
+1. **MTF VETO (HARD RULE):** W:NEUTRAL
