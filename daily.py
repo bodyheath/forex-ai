@@ -6586,6 +6586,18 @@ def _send_telegram_summary(
                         _log_line(log, f"[ML] Fund trade #{_ol_tid} features stored")
                 except Exception as _ol_err:
                     _log_line(log, f"[ML] Feature store error: {_ol_err}")
+                # 2026-08-21: stamp gated_at_open once, here, at the exact moment
+                # this candidate clears every gate above. The GHOST-TRADE
+                # reconciliation below reads this instead of re-deriving
+                # membership from _yt_pass, which structurally never contains
+                # a trade opened on a prior scan — see that block's comment.
+                try:
+                    from src import tracker as _trk_gate
+                    _yt_gate_id = _yt.get("id")
+                    if _yt_gate_id:
+                        _trk_gate.update_fields(int(_yt_gate_id), gated_at_open="YES")
+                except Exception as _gate_err:
+                    _log_line(log, f"[ghost-trade] gated_at_open stamp failed for #{_yt.get('id')}: {_gate_err}")
                 _yt_pass.append(_yt)
                 if _cap.get("is_override"):
                     _override_pairs[_yt_pair] = _cap["tier"]
