@@ -1,0 +1,24 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 6/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed MTF alignment (W:SELL + 4H:SELL vs D:NEUTRAL) with D1 overbought RSI 54.7 and pin bar at resistance, but CAD crowded short creates reversal risk.
+RISK_FACTORS: [1) MTF confidence only 2/3 (D1 neutral disagrees; MTF rule requires both weekly AND daily to agree strongly — this trade flirts with the threshold); 2) CAD positioning at 1-year short extreme with UNWINDING momentum — institutional repositioning could trigger sharp bounce against SELL thesis]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.8820
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (1.8835) to confirm downtrend resumption; W:SELL + 4H:SELL alignment requires price confirmation below support.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 4/10**
+- **D1 RSI 54.7:** In confirmed uptrend (price > SMA50 > SMA200), RSI 54.7 sits in neutral

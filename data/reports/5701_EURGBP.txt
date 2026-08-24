@@ -1,0 +1,30 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: EUR/GBP in confirmed downtrend (price<SMA50<SMA200 death-cross); double-top pattern + bearish engulfing on 4H suggest further weakness, but MTF conflict (W:BUY + D:NEUTRAL) and EUR short crowding create reversal risk.
+
+RISK_FACTORS: 
+1. MTF disagreement — Weekly bullish while Daily neutral prevents strong directional conviction; fails MTF rule (conf=2/3 <2/3 threshold).
+2. EUR COT UNWINDING from net short crowding near 1-year low — institutional unwind into EUR short reversal could snap price higher abruptly, trapping fresh shorts.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: [NOT APPLICABLE — TRADE_THIS=NO]
+ENTRY_TRIGGER_PRICE: [N/A]
+ENTRY_TRIGGER_REASON: [MTF rule violation: W:BUY + D:NEUTRAL do not both agree on direction. Additional block: confidence 5 < 7 floor, positioning risk (EUR crowded short unwind)]
+ENTRY_TRIGGER_EXPIRY_HOURS: [0]
+```
+
+**RATIONALE:**
+
+1. **TECHNICAL (4/10):** T_sig=NEUTRAL_3

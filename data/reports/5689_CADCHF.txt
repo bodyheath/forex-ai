@@ -1,0 +1,32 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Bearish RSI divergence (38p/4pt) conflicts with D1 uptrend structure; MTF misalignment (M:BUY vs W/D:NEUTRAL, conf=0/3) and converging ribbon signal weakening conviction despite golden cross.
+
+RISK_FACTORS: 
+1. MTF disagreement fails entry rule (W and D both NEUTRAL = no directional confluence; 4H:BUY isolated); TRADE_THIS requires >=2/3 MTF agreement.
+2. CAD positioning deeply crowded short with UNWINDING momentum = reversal trap risk; D1 T_sig=NEUTRAL_3 + RSI=50 (midpoint) provide no conviction anchor.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BLOCKED_MTF_RULE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Weekly and Daily both NEUTRAL — MTF rule requires >=2/3 agreement (weekly+daily). Cannot trade. Converging ribbon + bearish DIV conflict with D1 uptrend; no valid setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS DETAIL:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1

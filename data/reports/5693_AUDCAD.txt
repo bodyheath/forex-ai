@@ -1,0 +1,24 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with bearish reversal setup, but MTF disagreement (W:NEUTRAL + D:SELL, conf=1/3) and uptrend ribbon alignment severely undermine conviction.
+RISK_FACTORS: [1. MTF conflict: Weekly neutral contradicts daily sell signal — only 1/3 timeframes aligned, fails MTF rule threshold (2/3 required). 2. CAD positioning unwinding into crowded short creates reversal risk — institutional capitulation signal often precedes rallies.]
+TRADE_THIS: NO
+
+---
+
+**REASONING:**
+
+**MTF VIOLATION (Critical):** Weekly=NEUTRAL + Daily=SELL gives only 1/3 agreement (Monthly:SELL context only, 4H:NEUTRAL bonus null). MTF rule requires BOTH weekly AND daily same direction — this fails. TRADE_THIS must be NO regardless of other factors.
+
+**TECHNICAL_SCORE: 5/10**
+- D1 RSI=55.9 (uptrend zone, not overbought): 3–4 NEUTRAL baseline
+- T_sig=SELL_5 provided; but in confirmed UPTREND (price > SMA50 > SMA200, ALIGNED_BULL ribbon 5/5), RSI 55.9 is normal —
