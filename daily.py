@@ -6651,8 +6651,28 @@ def _send_telegram_summary(
 
         # ── SAFETY NET: reconcile OPEN v2 fund trades against loop survivors ──
         # Closes the exact gap that let #2843, #2964, #2909, and 7 other trades
-        # run unrisked for weeks: any OPEN v2 row NOT in _yt_pass bypassed every
-        # capacity/correlation/sizing gate above and was never actually risk-gated.
+        # run unrisked for weeks: any OPEN v2 row that never passed the loop
+        # bypassed every capacity/correlation/sizing gate above and was never
+        # actually risk-gated.
+        #
+        # 2026-08-21: fixed a false-positive that fired on EVERY open position
+        # from its second scan onward (real case: #5468, USD/CAD, opened
+        # cleanly 2026-08-20 18:18:42, flagged 3h later and every scan since).
+        # Root cause: this used to compare against `_yt_pass` directly, but
+        # `_yt_pass` is rebuilt empty every scan (see its declaration above)
+        # and only ever holds *today's freshly re-analysed* candidates — a
+        # trade opened on a prior day structurally can never appear in it
+        # again, gated or not. That made the check indistinguishable from
+        # "opened on a prior day," which is normal, from "never gated at
+        # all," which is the real bug it exists to catch.
+        #
+        # Fixed by checking the gated_at_open flag (src/tracker.py FIELDS),
+        # stamped once, above, at the exact moment a candidate clears
+        # _yt_pass — a per-trade fact that doesn't decay with time, unlike
+        # same-scan list membership. _yt_pass_ids is kept as a same-scan
+        # belt-and-suspenders check (covers the rare case where the flag
+        # write itself failed for a trade that otherwise legitimately
+        # passed this exact scan).
         try:
             _yt_pass_ids = {str(r.get("id")) for r in _yt_pass if r.get("id")}
             import pandas as _pd_recon
@@ -6665,6 +6685,7 @@ def _send_telegram_summary(
             _ghost_trades = [
                 row for _, row in _recon_open_v2.iterrows()
                 if str(row.get("id")) not in _yt_pass_ids
+                and str(row.get("gated_at_open", "")).strip().upper() != "YES"
             ]
             if _ghost_trades:
                 _ghost_lines = [
