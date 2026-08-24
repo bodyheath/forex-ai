@@ -85,6 +85,14 @@ FIELDS = [
     # ── Live excursion tracking ───────────────────────────────────────────────
     "mfe_pips",   # max favourable excursion — furthest price moved in trade direction
     "mae_pips",   # max adverse excursion — furthest price moved against trade direction
+    # ── Ghost-trade reconciliation (2026-08-21) ───────────────────────────────
+    "gated_at_open",  # "YES" once this id has passed _yt_pass — set once, never
+                       # re-derived from a same-scan check again. Lets the
+                       # reconciliation safety net (daily.py) tell "opened
+                       # cleanly on a prior day" apart from "never gated at
+                       # all" without depending on _yt_pass containing trades
+                       # older than the current scan, which it structurally
+                       # never will.
 ]
 
 # status values: NO_TRADE | PENDING | OPEN | WIN | LOSS | BREAKEVEN | SKIPPED | EXPIRED | CANCELLED | PARTIAL_WIN | FULL_WIN
