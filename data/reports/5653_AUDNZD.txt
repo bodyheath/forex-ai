@@ -1,0 +1,23 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: AUD strength from rising rates + rate diff +1.78% fundamentally supports AUD, but technical structure is mixed (price 1.2009 between SMA50=1.2072 and SMA200=1.1903), MTF alignment is weak (M:SELL vs W/D:NEUTRAL conf=0/3), and RSI neutral zones across all timeframes prevent high-confidence entry.
+
+RISK_FACTORS: [1] MTF disagree critically — monthly SELL vs weekly/daily NEUTRAL (conf 0/3, wt 80%) violates MTF rule: weekly AND daily must both agree for TRADE_THIS=YES. [2] Price in middle of range (1.2009 vs SH=1.22561 SL=1.1909); no clear directional break; RSI D1=48, 4H=60.1 both in neutral zones (45–62 standard, or 45–65 in mixed MTF) — no oversold/overbought edge.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated (W and D both required to agree; currently W:NEUTRAL, D:NEUTRAL ≠

@@ -1,0 +1,30 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 2/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: EUR/JPY shows technical exhaustion (RSI 60 in uptrend, MACD histogram rolling over, T_sig SELL) and crowded EUR short positioning unwinding, but weak MTF alignment and flat fundamentals prevent high-conviction setup.
+
+RISK_FACTORS: (1) MTF conflict: Monthly SELL vs. Weekly/Daily NEUTRAL — no directional consensus across timeframes; (2) Positioning paradox: EUR crowded short near reversal threshold creates contrarian BUY pressure despite SELL signal; crowded shorts often precede squeeze rallies.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 185.30
+ENTRY_TRIGGER_REASON: Pullback to lower Bollinger Band or 20-SMA confirmation below 185.69 Fib 78.6% support (3p away); wait for MACD histogram to cross below zero on D1 to confirm momentum flip.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+### **RATIONALE:**
+
+**TECHNICAL (4/10):**
+- T_sig baseline = SELL_3 (conservative), justified by: RSI 60.2 in confirmed uptrend (price > SMA50 > SMA200)

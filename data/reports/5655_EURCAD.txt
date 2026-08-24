@@ -1,0 +1,16 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend with pin bar at resistance + 4H overbought RSI 72.9 suggests pullback risk, but MTF neutrality (W and D both NEUTRAL) and D1 T_sig=SELL_3 conflict with price structure (>SMA50>SMA200), making conviction weak.
+RISK_FACTORS: [1] MTF agreement critical but W+D both NEUTRAL—no directional MTF confirmation; trade fails hard rule. [2] COT unwinding on both EUR and CAD crowded shorts creates reversal risk into USD strength; positioning momentum conflicts with SELL thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree on direction (W:NEUTRAL, D:NEUTRAL, 4H:SELL, M:SELL = 0/3 consensus). Hard rule requires ≥2/3 MTF agreement for TRADE_THIS=YES. Additionally, D1 price structure (1.6148 > SMA50 1.6136 > SMA200 1.6101) confirms uptrend, contradicting T_sig=SELL_3 baseline. COT unwinding on both pairs near
