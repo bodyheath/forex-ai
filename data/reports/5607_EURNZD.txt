@@ -1,0 +1,48 @@
+I need to carefully review this before finalizing.
+
+**Key checks:**
+
+**MTF:** W:BUY + D:BUY — both agree BUY ✓. 4H:BUY bonus. MTF condition met.
+
+**RSI in DOWNTREND context:** Wait — the overall price structure says "downtrend (price < SMA50 < SMA200, death-cross)" BUT MTF shows W:BUY + D:BUY. This is a CONFIRMED UPTREND context per MTF (W:BUY+D:BUY), so I apply UPTREND RSI tiers: RSI 39.9 falls in 45-65=NEUTRAL(3-4). But T_sig=BUY_6 is the Python baseline anchor — I can adjust ±1 max. The ribbon is ALIGNED_BEAR (5/5) which is a strong contradictory factor. I'll adjust down by 1 to T_sig-1 = BUY_5.
+
+**OSC:** Stoch_k=16 (BUY), CCI=-181.4 (BUY), RSI=39.9 — in uptrend RSI threshold is <35 for BUY. RSI=39.9 doesn't qualify. So 2/3 = PARTIAL_BUY, CONFIDENCE +1.
+
+**DIV:** NONE.
+
+**Ribbon:** ALIGNED_BEAR — this is a strong contradictory factor (cautionary).
+
+**Positioning:** EUR crowded short unwinding (near bottom of 1y range) = bullish for EUR. +1.
+
+**FIB:** SL=1.94371 is the Fib low. Price at 1.9551 — nearest_below support near 1.9437. Pin bar at key level confirms.
+
+**Confidence build:** Base ~6, OSC PARTIAL_BUY +1 = 7. Ribbon ALIGNED_BEAR is cautionary but MTF overrides. Confidence = 7.
+
+**Entries/levels:**
+- Entry: 1.9551 (current price, pin bar confirmation)
+- Stop: below pin bar low / Fib SL = 1.9420 (ATR buffer below 1.9437)
+- Risk = 1.9551 - 1.9420 = 131 pips
+- Target = 1.9551 + (131 × 2) = 1.9813
+- R:R = 2.0:1 ✓
+
+---
+
+PAIR: EUR/NZD
+DIRECTION: BUY
+CONFIDENCE: 7/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+ENTRY: 1.9551
+TARGET: 1.9813
+STOP_LOSS: 1.9420
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 15:00–17:00 NZST
+NEWS_WARNING: EUR and NZD CPI/central bank commentary possible within 48h — check ECB speakers and RBNZ data releases before entry
+KEY_THESIS: Pin bar at Fibonacci support (1.9437) with W:BUY + D:BUY MTF alignment and crowded EUR short positioning unwinding near 1-year extremes creates a high-probability mean-reversion BUY setup despite the bear-aligned EMA ribbon.
+RISK_FACTORS: 1) EMA ribbon fully bear-aligned (5/5 fan) — underlying structural downtrend remains intact and could overwhelm the short-term reversal signal if EUR sentiment deteriorates. 2) Oscillator confluence is only partial (2/3) — CCI at -181 and Stoch at 16 are extreme but RSI at 39.9 does not clear the uptrend-adjusted BUY threshold, reducing conviction in the bounce signal.
+TRADE_THIS: YES

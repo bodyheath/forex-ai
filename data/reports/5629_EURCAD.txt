@@ -1,0 +1,31 @@
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Crowded short positioning (both EUR and CAD at ~1y lows, unwinding) + pin bar at support (1.61034 Fib 38.2%) + neutral technicals create reversal setup, but weak MTF alignment (M:SELL vs D/W:NEUTRAL) and leaning bear ribbon limit conviction.
+
+RISK_FACTORS: 
+1. MTF disagreement: monthly SELL conflicts with daily/weekly NEUTRAL (0/3 agreement = no MTF confluence; MTF rule triggers TRADE_THIS=NO threshold risk).
+2. Leaning bear ribbon (4/5 aligned down) signals trend weakness but not yet fully broken; RSI 51 is indecisive midpoint with no directional push.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.6103
+ENTRY_TRIGGER_REASON: Confluence of Fib 38.2% support (1.61034), pin bar at key level, and COT unwinding (reversal setup) — but wait for daily/weekly to confirm upside direction before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical (5/10):** T_sig=
