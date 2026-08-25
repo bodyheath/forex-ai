@@ -1194,8 +1194,9 @@ def _eff_conf(result: dict) -> float:
     Ribbon:           −1 when ALIGNED ribbon is fully against trade direction.
     COT reversal:     −1 when institutions just flipped away from the direction.
     GBP/CHF SELL:     −1 when ribbon is CONVERGING — scoped, temporary patch,
-                      see _gbp_chf_converging_ribbon_penalty(), revisit by
-                      2026-11-15.
+                      see _gbp_chf_converging_ribbon_penalty() for the current
+                      revisit condition (a real live test case, not a date —
+                      updated 2026-08-25).
     All adjustments can stack.
 
     Devil's Advocate no longer adjusts this — its verdict now feeds
