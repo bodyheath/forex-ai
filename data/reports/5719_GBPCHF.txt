@@ -1,0 +1,25 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 2/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: GBP/CHF shows uptrend structure with D1 T_sig=SELL_3 but MTF weak (W:SELL only, D:NEUTRAL, 4H:NEUTRAL = 1/3 conf), ribbon converging signals weakening momentum, and both GBP/CHF COT unwinding — contradictory signal unsuitable for high-conviction trade.
+
+RISK_FACTORS: 
+1. MTF agreement failure — only weekly agrees on SELL direction; daily and 4H neutral breaks MTF rule (conf=1/3 << 2/3 threshold). 
+2. Ribbon converging + RSI 56.2 (D1 neutral zone) + double-bottom pattern bullish bias conflict with T_sig SELL — ambiguous momentum direction increases reversal risk.
+
+TRADE_THIS: NO
+
+RATIONALE:
+• **MTF RULE VIOLATION (HARD STOP):** Weekly=SELL, Daily=NEUTRAL, 4H=NEUTRAL → conf=1/3 wt=40% fails the 2/3 threshold. MTF must agree; this does not. Veto overrides all other factors.
+• **TECHNICAL (4/10):** T_sig=SELL_3 is baseline, but contradicted by D1

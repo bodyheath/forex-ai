@@ -1,0 +1,25 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H SELL alignment + rising JPY rates + ribbon leaning bearish offer weak structural support for downside, but D1/W neutral and mixed price/MA relationship limit conviction.
+RISK_FACTORS: (1) MTF conf=0/3 (D1/W/M all NEUTRAL) — no multi-timeframe agreement required by TRADE_THIS rule; (2) D1 RSI=46 neutral + MACD flat (0.0783) offer no directional momentum; price trapped 158.34–160.99 (SMA200–SMA50 zone) lacks breakout structure.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF consensus fails (weekly + daily both NEUTRAL) — TRADE_THIS rule requires both agree on direction for conf≥7 entry. 4H SELL alone insufficient without D1 confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Violation (Hard Stop):**
+- Weekly: NEUTRAL | Daily: NEUTRAL | 4H: SELL | confidence = 0/3 agreement
+- Rule: "**if weekly AND daily don't both agree on

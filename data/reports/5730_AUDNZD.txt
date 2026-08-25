@@ -1,0 +1,30 @@
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Fundamental AUD strength (rising rates, +1.78% differential) conflicts with mixed technicals and weak MTF agreement (M:SELL vs D:NEUTRAL), creating a low-conviction setup that favours patience over immediate entry.
+
+RISK_FACTORS: (1) MTF conflict — Monthly bearish but Daily/Weekly neutral, only 0/3 agreement; MTF rule enforces TRADE_THIS=NO despite direction conviction. (2) D1 double-bottom pattern suggests reversal potential (bullish signal), contradicting the short thesis and compressing risk/reward.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1909
+ENTRY_TRIGGER_REASON: Sell limit at swing low (FIB SL) only if price breaks below 1.1950 to confirm breakdown from current range 1.2002; requires daily close below SMA50 (1.2069) first to validate MTF confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**RATIONALE:**
+
+**Technical (Score 4/10):**
+- D1 RSI=47.2 (neutral zone 45–62, standard tiers, no trend context adjustment needed since MTF is mixed) =
