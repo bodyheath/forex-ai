@@ -1,0 +1,16 @@
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Fundamental divergence (AUD rising rates vs CAD falling) supports downside, but intraday technicals show conflicting signals—RSI overbought on 4H vs neutral D1, ribbon fully bullish, and D/W MTF disagreement prevents high-confidence entry.
+RISK_FACTORS: [1] MTF conflict: Weekly NEUTRAL contradicts D1 SELL and 4H SELL (only 2/3 agreement; conf=65% below 75% threshold for strong multi-timeframe alignment). [2] CAD positioning reversal risk: net SHORT crowded at ~1y bottom with UNWINDING momentum signals institutional cover-buying, which could trigger sharp AUD/CAD rally against your SELL thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF conf=2/3 does not meet the ≥3/3 (or 75%+) requirement to override ribbon's ALIGNED_BULL structure. T_sig baseline=SELL_4 is undermined by full ribbon alignment (5/5 EMA stack bullish fan) and missing oscillator confluence (stoch_k=93.5 is extreme but CCI=174.8 and RSI not synchronized

@@ -1,0 +1,16 @@
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Price in uptrend with neutral MTF confluence, but ribbon converging signals weakening trend; D1 T_sig=SELL_3 conflicts with double-bottom bullish pattern and neutral RSI(55), creating ambiguous setup.
+RISK_FACTORS: [1] MTF conf=0/3 (all timeframes neutral) eliminates directional conviction — trade lacks multi-timeframe agreement required for high-confidence entry. [2] Double-bottom bullish pattern on D1 contradicts SELL_3 signal; evening_star on 4H is ambiguous (weak bearish at 54.1 RSI); no clear pattern confluence on direction.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly, Daily, and 4H all NEUTRAL; multi-timeframe agreement requirement not met (conf 0/3, threshold ≥2/3). SELL_3 baseline contradicted by D1 double-bottom bullish setup and mid-range RSI(55). Ribbon converging indicates trend exhaustion but lacks oscillator confluence (OSC=NONE) or divergence confirmation. GBP COT unwinding adds uncertainty. Setup fails TRADE_THIS gating: no valid MT

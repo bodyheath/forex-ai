@@ -1,0 +1,59 @@
+I need to carefully evaluate this before finalizing.
+
+**Key checks:**
+
+**MTF:** M:BUY W:BUY D:BUY 4H:NEUTRAL — conf=2/3 (W+D both BUY ✓). Weekly AND daily agree BUY. MTF condition met.
+
+**RSI trend context:** MTF is W:BUY + D:BUY = confirmed UPTREND bias for RSI scoring. Uptrend-shifted tiers: RSI 45-65 = NEUTRAL(3-4). D1 RSI=44.6 is just below 45, borderline — call it neutral-to-slight buy (4-5). T_sig=BUY_5, use 5 as anchor.
+
+**Evening star:bea on D1** — this is a bearish pattern conflicting with the BUY direction. This is a significant conflict. However, instructions say patterns are already factored into T_sig and not to re-adjust TECHNICAL_SCORE for patterns. T_sig=BUY_5 stands.
+
+**Bonuses:** MACD histogram = -0.0002 (negative, does NOT confirm BUY). BB not provided. SMA50=1.6392 > price=1.6303 (price below SMA50, does NOT confirm BUY). 4H:NEUTRAL (no D1+4H same direction bonus). No bonuses apply. TECHNICAL_SCORE = 5.
+
+**RIB=CONVERGING** — weakening trend, higher reversal risk noted.
+
+**OSC:** RSI=44.6 (not <35, no BUY signal), Stoch_k=23.7 (<20? No, 23.7 — borderline, not <20), CCI=-104.5 (<-100, BUY). Only CCI qualifies = 1/3 = NONE.
+
+**DIV:** NONE.
+
+**FUNDAMENTAL:** Rate diff=-2.21% favors AUD (EUR flat, AUD rising) = bearish for EUR/AUD. FUNDAMENTAL_SCORE = 4 (Haiku correct).
+
+**POSITIONING:** EUR crowded short at bottom of 1y range with UNWINDING momentum = reversal risk UP. +1 for BUY thesis. Score 7.
+
+**SENTIMENT:** Both 8art = neutral/positive. Score 5-6.
+
+**MACRO:** VIX=15.1 (low, risk-on → AUD positive, slight headwind for EUR/AUD BUY). Oil=86.5 (moderate, AUD-supportive). Score 4-5.
+
+**Confidence assessment:**
+- MTF W+D agree BUY ✓
+- Evening star bearish pattern on D1 is a significant conflict with BUY
+- CONVERGING ribbon = caution for trend entries
+- No oscillator confluence, no divergence
+- Fundamentals against (AUD rate rising)
+- Evening star at current price level is a real concern
+- Positioning supports reversal
+
+Base confidence: MTF 85% weight W+D agree = start at 6. Positioning crowded short unwind +1 = 7. Evening star conflict -1 = 6. CONVERGING ribbon -0 (already reflected). No DIV bonus, no OSC bonus.
+
+**CONFIDENCE: 6/10** — This triggers TRADE_THIS: NO (conf ≤6 = NO always).
+
+**Entry/stops for output** (compute even if NO):
+Entry: ~1.6210 (near FIB SL support 1.61928)
+Stop: 1.6130 (below FIB SL with buffer)
+Risk: 1.6210 - 1.6130 = 80 pips
+Target: 1.6210 + (80×2) = 1.6370
+R:R = 2.0:1
+
+---
+
+PAIR: EUR/AUD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 4/10
+DIVERGENCE
+KEY_THESIS: MTF alignment (M+W+D all BUY at 85% confidence) + crowded EUR short unwind creates reversal setup; evening star bearish on D1 conflicts with uptrend structure, but ribbon convergence signals trend exhaustion and entry on pullback to support.
+RISK_FACTORS: [1] Evening star pattern on D1 contradicts BUY thesis — price may continue lower before reversal; [2] Ribbon converging (trend weakening) and 4H neutral reduces MTF confluence below critical 2/3 threshold on daily timeframe — reversal may fail if support breaks.

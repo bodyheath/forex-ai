@@ -1,0 +1,17 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Uptrend structure (D1 golden-cross, aligned ribbon) conflicts sharply with T_sig SELL_3 and MTF consensus (M:SELL, W:SELL vs D:NEUTRAL), creating low-confidence setup despite bullish candles (morning star, inverse H&S).
+RISK_FACTORS: [1. MTF conflict — weekly and daily disagree (conf=1/3 << 2/3 threshold); D1 RSI 61.3 is neutral-to-overbought in uptrend (no valid SELL trigger in uptrend context), while candles signal continuation. 2. Ribbon fully aligned bullish and price above SMA50>SMA200 — trend structure favours BUY, not SELL; T_sig SELL_3 contradicts structure, suggesting model noise or reversal risk that is not yet confirmed.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly (SELL) and daily (NEUTRAL) do not both agree on direction (conf=1/3). D1 uptrend structure (golden-cross, aligned ribbon 5/5) contradicts SELL signal. Conflicting signals

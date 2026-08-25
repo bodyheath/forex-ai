@@ -1,0 +1,33 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Head-and-shoulders bearish pattern at 78.6% Fib resistance (185.69) confirms downtrend reversal signal, but overbought RSI(60.2) in uptrend context + D1:SELL vs W:NEUTRAL MTF conflict limits conviction to medium-confidence short.
+
+RISK_FACTORS: 
+1. MTF disagreement — Weekly NEUTRAL conflicts with Daily SELL; only 2/3 MTF confluence (conf<67%) reduces reliability; golden-cross structure (price > SMA50 > SMA200) still intact.
+2. EUR positioning crowded short (5.0%) + MOM=UNWINDING creates reversal risk; if EUR shorts unwind, pair rallies against short thesis.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 185.69
+ENTRY_TRIGGER_REASON: Price to break below 78.6% Fibonacci level (185.69) where H&S neckline projects; confirmation required due to W:NEUTRAL conflict.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (6/10):**  
+T_sig=SELL_4 is baseline. RSI=

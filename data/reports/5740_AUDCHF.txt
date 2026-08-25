@@ -1,0 +1,23 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish divergence (RSI 58.3 vs lower high on price) + ribbon convergence signal trend exhaustion despite bullish technicals; MTF conflict (M:SELL vs D:NEUTRAL) undermines trade confidence.
+RISK_FACTORS: (1) MTF disagreement: monthly bearish but daily neutral breaks 2/3 MTF agreement rule — TRADE_THIS invalidation threshold. (2) Ribbon converging signals weakening trend; D1 bullish engulfing + 4H inverse H&S are contrarian to divergence and macro strength (AUD rising, CHF unwinding).
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5715
+ENTRY_TRIGGER_REASON: Bounce into ribbon convergence zone + nearest Fib support (0.5715 = 50% retracement of SH-SL swing); only escalate to SELL if price breaks below SMA50 (0.5662) with D1 RSI >70 confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+1. **MTF VETO:** W:SELL + D:NEUTRAL = 1/3 agreement =

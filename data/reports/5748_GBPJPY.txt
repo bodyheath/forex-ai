@@ -1,0 +1,17 @@
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with bullish technicals (price > SMA50 > SMA200, aligned ribbon, uptrend MTF); MTF neutral (W:NEUTRAL + D:NEUTRAL) blocks trade conviction.
+RISK_FACTORS: [1] MTF conflict: Weekly and Daily both NEUTRAL — MTF rule requires both to agree on direction for valid trade; no directional consensus blocks execution. [2] RSI 59–60 in confirmed uptrend (aligned ribbon 5/5, golden-cross structure): normal overbought compression in uptrend — D1 T_sig=SELL_3 undershoots; no reversal confluence (OSC=NONE, DIV=none, no pattern support).
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — W and D both NEUTRAL (conf=0/3 <2/3 threshold); bullish technicals (ribbon aligned 5/5, price > SMA50 > SMA200) contradict D1 T_sig=SELL_3. Trade setup lacks confluence and directional MTF agreement.
+ENTRY_TRIGGER_EXPIRY_HOURS:
