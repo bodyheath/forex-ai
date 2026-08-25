@@ -1116,10 +1116,10 @@ def _cot_reversal_penalty(result: dict) -> int:
 def _gbp_chf_converging_ribbon_penalty(result: dict) -> int:
     """Return -1 for GBP/CHF SELL when the daily EMA ribbon is CONVERGING, else 0.
 
-    Scoped, temporary patch — 2026-08-17 diagnosis. GBP/CHF's full recorded
-    history is 100% SELL calls (0 BUY, ever) on a persistent, real
-    GBP-favouring rate differential (+3.78–4.50%, repeatedly cited in
-    Devil's Advocate objections) that has kept the pair in a genuine,
+    Scoped, temporary patch — 2026-08-17 diagnosis. At the time this shipped,
+    GBP/CHF's full recorded history was 100% SELL calls (0 BUY, ever) on a
+    persistent, real GBP-favouring rate differential (+3.78–4.50%, repeatedly
+    cited in Devil's Advocate objections) that had kept the pair in a genuine,
     sustained uptrend. The only two instances that ever reached grade C
     (the tier where a candidate can become a real trade) both occurred
     specifically when ribbon_state == "CONVERGING" — a state
@@ -1138,10 +1138,29 @@ def _gbp_chf_converging_ribbon_penalty(result: dict) -> int:
     2 losses here) — this is a market-condition-specific patch for GBP/CHF
     specifically, not a general ribbon-calibration fix.
 
-    REVISIT by 2026-11-15 (90 days) or immediately if GBP/CHF ever
-    produces a BUY candidate (would indicate the one-directional pattern
-    has broken) — whichever comes first. This patches a specific,
-    currently-observed market condition, not a permanent structural rule.
+    STALE AS OF 2026-08-20: the "100% SELL, 0 BUY, ever" premise above no
+    longer holds. A real ~140-pip one-day price shock on 2026-08-20 (verified
+    directly against price data, not just report text) broke the clean
+    uptrend; GBP/CHF started producing BUY candidates that same day, and the
+    daily ribbon reclassified to CONVERGING on 2026-08-21 and has stayed
+    there through every scan checked since (2026-08-21 through 2026-08-25,
+    8 consecutive confirmed readings) — already the longest CONVERGING
+    episode on record, versus two brief prior ones (2026-06-22, reverted
+    same day; 2026-07-27 id #1642, resolved by 2026-08-06 at the latest).
+    Every BUY and SELL candidate during this episode has stayed low-
+    confidence (4-6/10) with no Sonnet-confirmed price data and TRADE_THIS=NO
+    — the pattern this function targets has not yet been tested live in
+    either direction under the new regime, so the penalty is left exactly
+    as-is (SELL-only, unchanged) pending a real test case. See conversation
+    history (2026-08-25 investigation) for the full price/ribbon trace.
+
+    REVISIT (supersedes the original 2026-11-15 calendar date): the first
+    time a GBP/CHF candidate — BUY or SELL — gets Sonnet-confirmed real
+    entry/stop/target and reaches grade C or better during this CONVERGING
+    episode. That is the first point this pattern would face an actual live
+    risk decision; nothing checked so far has reached it. This patches a
+    specific, currently-observed market condition, not a permanent
+    structural rule.
     """
     try:
         pair = (result.get("pair") or "").upper()
