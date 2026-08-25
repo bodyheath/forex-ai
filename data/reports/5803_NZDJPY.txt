@@ -1,0 +1,24 @@
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought in uptrend + MACD rolling over + weak JPY positioning unwinding creates short-term pullback risk despite bullish structure.
+RISK_FACTORS: [1) MTF alignment fails — W:SELL contradicts D:NEUTRAL and 4H:NEUTRAL (conf=1/3); ribbons remain fully aligned bull, supporting continuation. 2) NZD rate falling + JPY rate rising support bearish case, but positioning is neutral/unwinding (not building conviction), limiting momentum.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 95.42
+ENTRY_TRIGGER_REASON: Sell into resistance at swing high (FIB SH=95.419); RSI 64.6 is elevated in uptrend but not yet overbought (standard tier 62-70=4-5SELL, uptrend shift 65-77=4-5SELL); wait for mean reversion or break of SMA50 support.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 T_sig=SELL_3 (baseline) is contradicted by uptrend structure

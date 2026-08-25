@@ -1,0 +1,23 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Conflicting signals: D1 T_sig=SELL_3 but MTF shows W:SELL + D:NEUTRAL (not both agree), ribbon fully aligned bullish, and price in uptrend structure — momentum overbought (RSI 62-64) suggests pullback risk, not conviction sell.
+RISK_FACTORS: [1] MTF rule violation: Weekly SELL but Daily NEUTRAL = insufficient agreement (conf=1/3 <2/3 threshold) — TRADE_THIS rule blocks execution. [2] Ribbon fully aligned bullish (fan=5/5) + price > SMA50 > SMA200 contradicts SELL signal; overbought RSI in uptrend is normal, not reversal confirmation.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule failure: Daily trend is NEUTRAL, Weekly is SELL — both timeframes must agree on direction (current conf=1/3, required ≥2/3). Additionally, TECHNICAL_SCORE=4 is below minimum threshold for trade consideration.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**RATIONALE:**
+
+1. **MTF

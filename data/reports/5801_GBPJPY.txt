@@ -1,0 +1,24 @@
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level + Stochastic overbought signal a pullback in an uptrend, but ribbon alignment and MTF disagreement create conflicting signals.
+RISK_FACTORS: [1. MTF misalignment: W:NEUTRAL + D:NEUTRAL conflict with M:SELL + 4H:SELL (conf=0/3) — trade setup violates MTF consensus rule; 2. Ribbon ALIGNED_BULL (5/5) contradicts SELL direction — trend continuation risk outweighs reversal signal]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily must both agree on direction. Current setup: W:NEUTRAL + D:NEUTRAL (60% of weight) vs M:SELL + 4H:SELL fails consensus threshold. Ribbon fully aligned bullish further contradicts SELL thesis. Confidence 5/10 < 7/10 minimum.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 RSI=59.8 (45–62 zone = neutral 3–4

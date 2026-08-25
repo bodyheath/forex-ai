@@ -1,0 +1,23 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double top bearish pattern + pin bar at key level on 4H confirms downtrend continuation, but D1 NEUTRAL + conflicting MTF (W:BUY vs D:NEUTRAL) and crowded EUR short with UNWINDING momentum create reversal risk.
+RISK_FACTORS: [1] MTF alignment broken: Weekly BUY conflicts with Daily NEUTRAL — only 2/3 agreement (below 3/3 threshold); trend validity uncertain. [2] COT reversal risk: EUR positioned net SHORT at 5% (historically extreme crowded short) with UNWINDING momentum — institutional de-risking into bearish signal increases whipsaw probability.
+TRADE_THIS: NO
+ENTRY_TYPE: AVOID
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:BUY + D:NEUTRAL does not satisfy W AND D agreement (requires both same direction). Confidence 5/10 < 7 threshold. Crowded short EUR with unwinding COT = high reversal risk despite bearish candle setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF Violation (Critical):** W:BUY + D:NEUTRAL = 2/

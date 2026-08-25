@@ -1,0 +1,17 @@
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 2/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Downtrend structure on D1 (death-cross, price below SMA50/200) conflicts with 4H uptrend and neutral MTF alignment (W+D neutral, only M+4H lean SELL at 0/3 conf), creating choppy risk; CHF rate falling while JPY rising supports structural weakness but positioning already unwinding both pairs.
+RISK_FACTORS: MTF conflict — weekly and daily both NEUTRAL (conf=0/3), violating MTF rule; D1 T_sig=NEUTRAL_3 contradicts SELL direction, and 4H is in uptrend (golden-cross) with inside_bar neutrality. Position unwinding in both CHF and JPY reduces conviction in new short — institutional exit undermines entry.
+TRADE_THIS: NO
+
+**RATIONALE:**
+- **MTF Rule Violation (CRITICAL):** Weekly + Daily must both agree on direction. Here, W:NEUTRAL + D:NEUTRAL = conf=0/3 (fail). MTF wt=80% means this is the dominant signal. Although Monthly=SELL and 4H=SELL, the 2 primary timeframes (W+D) do NOT align, triggering automatic TRADE_THIS=NO.
+- **Technical Conflict:** D1 T_sig=NEUTRAL_3
