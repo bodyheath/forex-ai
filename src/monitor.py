@@ -3164,6 +3164,50 @@ def run(log=print) -> dict:
     except Exception as _oa_exc:
         log(f"Monitor: outcome analysis hook failed: {_oa_exc}")
 
+    # ── Fund state reconciliation for trades closed this run ─────────────────
+    # 2026-08-26: monitor.py closes most fund trades (30-min cycle) but never
+    # updated fund_state.json's streak/sizing/balance fields -- that only
+    # happened via daily.py's scan-time outcome-check step, which never sees
+    # trades monitor.py already closed (they're no longer OPEN by the time a
+    # scan looks). Confirmed live drift before this fix: cached
+    # fund_total_trades=194 vs a fresh recompute's 197, sizing_mode
+    # 'win_streak' vs the correct 'NORMAL' -- meaning a new fund trade opened
+    # between scans could be sized off a stale win-streak bonus it no longer
+    # qualified for. Mirrors daily.py's own reconciliation exactly (same
+    # shared fund_state.reconcile_from_trades() helper).
+    if fund_closed:
+        try:
+            from src import fund_state as _fs_mon
+            _fs_mon_st = _fs_mon.load()
+            for _fc in fund_closed:
+                _fc_status = (_fc.get("status") or "").upper()
+                if _fc_status in ("WIN", "LOSS", "BREAKEVEN", "FULL_WIN", "PARTIAL_WIN"):
+                    _fs_mon_st, _fs_mon_alert = _fs_mon.update_after_close(_fs_mon_st, _fc_status)
+                    if _fs_mon_alert and _ta:
+                        try:
+                            _ta.send(_fs_mon_alert)
+                        except Exception:
+                            pass
+            try:
+                import pandas as _pd_mon_s
+                from src import tracker as _trk_mon_s
+                _df_mon_s = _pd_mon_s.read_csv(
+                    str(_trk_mon_s.config.TRADES_CSV), encoding="utf-8-sig"
+                )
+                _fs_mon_st = _fs_mon.reconcile_from_trades(
+                    _fs_mon_st, _df_mon_s, prices, log_fn=log,
+                )
+            except Exception as _mon_calc_exc:
+                log(f"Monitor: fund state recalc failed: {_mon_calc_exc}")
+            _fs_mon.save(_fs_mon_st)
+            log(
+                f"Monitor: fund state updated: {len(fund_closed)} trade(s) closed — "
+                f"bal=${_fs_mon_st.get('balance', 0):,.2f} "
+                f"consecutive_losses={_fs_mon_st.get('consecutive_losses', 0)}"
+            )
+        except Exception as _fs_mon_exc:
+            log(f"Monitor: fund state trade-close update failed: {_fs_mon_exc}")
+
     result["last_prices"]    = {p: prices[p] for p in all_pairs if p in prices}
     result["previously_hot"] = sorted(current_hot_keys)
     _append_to_monitor_history(result)
