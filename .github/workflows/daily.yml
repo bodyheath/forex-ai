@@ -14,6 +14,11 @@ concurrency:
 jobs:
   analyse:
     runs-on: ubuntu-latest
+    # 2026-08-26: no workflow in this repo had an explicit timeout before this
+    # audit -- every job defaulted to GHA's 6-hour platform maximum. 60m is
+    # comfortably above the internal 45-minute run-time warning already in
+    # daily.py (_MAX_RUN_SECS) and drastically below the 6h default.
+    timeout-minutes: 60
     permissions:
       contents: write # needed to push updated dashboard and data back to the repo
 
