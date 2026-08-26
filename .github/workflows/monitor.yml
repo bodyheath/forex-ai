@@ -60,6 +60,15 @@ jobs:
 
       - name: Commit monitor state
         id: commit_monitor
+        # 2026-08-26: if: always() -- same rationale as daily.yml/intraday.yml.
+        # Previously a crash or a deliberate _scan_had_critical_failure exit
+        # in `python daily.py` above would skip this step entirely (GHA's
+        # implicit if: success()), discarding this run's trade/outcome data.
+        # Safe because trades.csv/research_trades.csv are atomically written
+        # (os.replace()-based temp-file-then-rename) -- a crash can only ever
+        # leave the last successfully-written version on disk, never a
+        # partial one.
+        if: always()
         run: |
           git config user.name "forex-ai[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
