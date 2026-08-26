@@ -1,0 +1,26 @@
+```
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (strong, 44p/6pt) + MACD momentum failure + ribbon converging confirm trend exhaustion despite price remaining above SMAs in uptrend structure.
+RISK_FACTORS: [1. MTF conf=0/3 — all timeframes NEUTRAL, no directional agreement; trade lacks multi-timeframe confluence. 2. D1 T_sig=SELL_3 is weak baseline; 4H inverse H&S pattern contradicts SELL bias and introduces reversal uncertainty.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.4750
+ENTRY_TRIGGER_REASON: Break below 4H inverse H&S neckline (~0.4750) + close below SMA50 (0.4694) to confirm trend failure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **Rationale:**
+
+**TECHNICAL_SCORE = 4/10**  
+- **RSI 61.6 in uptrend context:** Standard tier 62–70 = 4–5 SELL, but D1 uptrend (price > SMA50 > SMA200) means overbought is normal;

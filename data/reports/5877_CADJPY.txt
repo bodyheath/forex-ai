@@ -1,0 +1,24 @@
+PAIR: CAD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: CAD short positioning near 1-year lows + JPY unwinding creates reversal risk, but D1 bearish engulfing and neutral RSI/MACD weigh against immediate bullish conviction.
+RISK_FACTORS: [1] MTF alignment broken (D/W/M all NEUTRAL; only 4H:BUY at 0/3 confidence — insufficient for 2/3 rule]; [2] T_sig=3 + bearish engulfing candle on D1 contradicts reversal narrative despite COT crowded-short setup
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 114.0500
+ENTRY_TRIGGER_REASON: Retest of SMA50 (114.49) with RSI <30 on D1 would confirm institutional long accumulation in crowded short zone
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**RATIONALE:**
+
+**Why NO despite COT reversal signal:**
+- **MTF rule violation:** D1, W, M all output NEUTRAL; 4H:BUY does *not* satisfy "weekly AND daily both agree" (0/3 confidence). Trade triggers only at ≥7 CONFIDENCE *

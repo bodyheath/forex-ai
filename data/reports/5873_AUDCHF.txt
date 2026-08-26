@@ -1,0 +1,23 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (52p/3pt) in uptrend + converging ribbon signals trend exhaustion; MTF alignment weak (2/3 only) limits conviction despite AUD rate premium.
+RISK_FACTORS: [1. MTF conf=2/3 (D:NEUTRAL breaks weekly+daily agreement rule — trade invalidated unless D confirms SELL within 24h); 2. Price still 98p above SMA50 in golden cross; T_sig=SELL_3 conflicts with bullish candle patterns (engulfing + double bottom) — mixed signal risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly (SELL) + Daily (NEUTRAL) do NOT both agree on direction. Confidence 5/10 < 7 threshold. Oscillator has no confluence (stoch/CCI overextended but no RSI confirmation). Ribbon converging = trend weakening but not reversing yet. Await daily confirmation to SELL or weekly flip to BUY before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF Failure:** W:SELL +

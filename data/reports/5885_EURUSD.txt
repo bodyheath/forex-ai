@@ -1,0 +1,23 @@
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought (68.6) + MACD divergence in D1 SELL_6 signal suggests pullback, but 4H uptrend structure and crowded EUR short positioning create significant reversal risk.
+RISK_FACTORS: [1] COT EUR net SHORT at 5.0% with UNWINDING momentum = institutional derisking into crowded positioning — classic setup for short-squeeze reversal; [2] MTF alignment failure (M:SELL, W:NEUTRAL, D:SELL, 4H:NEUTRAL = 1/3 conf, <2/3 threshold) violates MTF rule — no directional consensus across timeframes.
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT
+ENTRY_TRIGGER_PRICE: 1.1590
+ENTRY_TRIGGER_REASON: Do NOT trade; MTF rule violated (W and D do not both agree on direction). Wait for 4H to confirm SELL below golden-cross SMA50 (1.1478) or hold for W confirmation of sustained downtrend.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF RULE BLOCKS TRADE:** Weekly = NEUTRAL, Daily = SELL, 4H = NEUTRAL
