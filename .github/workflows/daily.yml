@@ -67,6 +67,19 @@ jobs:
           cp data/trades.csv docs/trades.csv
 
       - name: Commit and push results
+        # 2026-08-26: if: always() so that a crash or a deliberate
+        # _scan_had_critical_failure exit (daily.py returns 1) doesn't
+        # discard this run's trade/outcome data. Safe specifically because
+        # data/trades.csv and data/research_trades.csv are both written via
+        # os.replace()-based atomic temp-file-then-rename (src/tracker.py,
+        # src/research_tracker.py) -- a crash can never leave either in a
+        # partially-written state, only ever the last successfully-written
+        # version. The JSON state files staged below (fund_state.json etc.)
+        # are NOT written atomically and could in principle be caught
+        # mid-write by a crash -- a narrow, pre-existing risk this change
+        # does not worsen (it existed under if: success() too, just for a
+        # different trigger), tracked separately.
+        if: always()
         run: |
           git config user.name "forex-ai[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
