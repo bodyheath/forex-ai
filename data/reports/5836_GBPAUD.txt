@@ -1,0 +1,33 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Confirmed downtrend structure (price < SMA50 < SMA200) with bearish double-top pattern conflicts with strong bullish RSI divergence and rising AUD rates; MTF disagreement (M:BUY vs W/D/4H:NEUTRAL) and mixed oscillator signals create low-conviction setup.
+
+RISK_FACTORS: 
+1. MTF conflict: Monthly showing BUY while daily/4H neutral creates directional ambiguity — invalidates confidence threshold for entry.
+2. Bullish RSI divergence (73p/7pt strong) directly conflicts with SELL direction — reversal risk if support at 1.8815 (SL) breaks and RSI closes above 50.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF conf=0/3 fails rule (weekly + daily must both agree). Bullish divergence contradicts bearish thesis. Insufficient confluence for 7+ confidence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### DETAILED SCORING RATIONALE:
+
+**TECHNICAL_SCORE: 4/10**
+- **D1 RSI=45.0 in confirmed

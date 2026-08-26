@@ -1,0 +1,17 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought in uptrend with SELL signal conflicts uptrend structure; CAD crowded short unwind risk undermines conviction.
+RISK_FACTORS: [1. MTF disagreement: W:NEUTRAL + D:NEUTRAL reject SELL despite M:SELL; D1 T_sig=SELL_3 contradicts golden-cross uptrend and ALIGNED_BULL ribbon. 2. CAD positioning reversal risk: net SHORT@10% unwinding near 1y low = institutional covering likely, directional bias weakening.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL + D:NEUTRAL do not both agree on SELL direction (conf=0/3 << 2/3 threshold). Uptrend structure (price>SMA50>SMA200, ALIGNED_BULL ribbon, golden cross) dominates. RSI=59.1 is neutral-to-bullish in uptrend context (standard zone 45–65=3–4 NEUTRAL, not SELL zone). T_sig=SELL_3 is contradicted by candle pattern (double_bottom:bul suggests reversal

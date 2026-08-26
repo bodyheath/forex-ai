@@ -1,0 +1,31 @@
+```
+PAIR: CAD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Inverse H&S bullish pattern + crowded CAD short unwind + rate diff supports CAD, but bearish RSI divergence and conflicted MTF (W/D neutral vs M/4H buy) prevent high conviction.
+
+RISK_FACTORS: [1. MTF disagreement (W+D NEUTRAL, not both BUY—only 0/3 conf)—fails MTF rule for entry. 2. Bearish RSI divergence (38p/4pt)—price higher but RSI lower—contradicts bullish thesis and lowers DIVERGENCE to CONFLICT.]
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation—weekly and daily must both be BUY or SELL to trade; W:NEUTRAL + D:NEUTRAL do not meet threshold (0/3 agreement, <2/3 required). Bearish divergence adds conflict.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 T_sig = NEUTRAL_3 (baseline: RSI 50.1 = neutral zone, MACD slightly negative).

@@ -1,0 +1,32 @@
+```
+PAIR: NZD/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Strong bearish RSI divergence (22p price vs 6pt RSI) + D/4H SELL alignment + overbought RSI 63-70 context confirms reversal despite bullish ribbon structure and COT unwinding risk.
+
+RISK_FACTORS: 
+1. MTF confidence 2/3 (W:NEUTRAL weakens conviction; D+4H agree SELL but M:NEUTRAL signals no macro trend conviction)
+2. CAD COT unwinding near crowded-short bottom = reversal risk (institutions reducing short exposure may reverse, contradicting SELL)
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8240
+ENTRY_TRIGGER_REASON: Sell limit at recent pin_bar_at_key_level support; strong bearish divergence + overbought RSI 63-70 justify wait for pullback to confirm reversal rather than immediate entry given MTF confidence only 60%.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **DETAILED SCORING RATIONALE:**
+
+#### **TECHNICAL_SCORE: 6/10**
+- **D1 RSI=63.0**: In uptrend context (W:

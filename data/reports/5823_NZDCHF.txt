@@ -1,0 +1,22 @@
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL(2/3: Stoch+CCI confirm; RSI does not)
+KEY_THESIS: Strong bearish RSI divergence (44p/6pt) and Stochastic overbought (84.1) suggest pullback risk in uptrend, but RSI 63.6 + converging ribbon + neutral MTF alignment undermine conviction.
+
+RISK_FACTORS: 
+1. MTF conf=0/3 — all timeframes neutral, no directional agreement; T_sig=SELL_3 contradicted by D1 uptrend structure (price > SMA50 > SMA200).
+2. Divergence conflicts with rising price — pin bar is bullish (bul), contradicting SELL signal; CHF unwinding COT reduces short edge; RSI 63.6 in uptrend is neutral-to-mild overbought, not critical.
+
+TRADE_THIS: NO
+
+**REASONING:**
+- **MTF HARD RULE VIOLATION**: W/D/M all NEUTRAL; 4H NEUTRAL. Confidence=0/3 means trade fails MTF requirement (weekly+daily must both agree). TRADE_THIS defaults to NO.
+- **TECHNICAL_SCORE=5**: T_sig=SELL_3 overridden by uptrend context. RSI

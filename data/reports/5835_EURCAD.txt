@@ -1,0 +1,16 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: T_sig=SELL_3 conflicts with uptrend structure (price>SMA50>SMA200, golden cross) and MTF neutral consensus (W:NEUTRAL, D:NEUTRAL); institutional unwinding from crowded shorts creates reversal risk.
+RISK_FACTORS: [1] MTF rule violation — W and D both NEUTRAL, not aligned on SELL direction; T_sig baseline contradicts price structure (golden cross intact). [2] COT reversal risk — both EUR and CAD net SHORT at ~1y range lows with UNWINDING momentum; crowded short positioning + institutional reduction = high probability of mean reversion BUY, not SELL.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade fails MTF rule (weekly and daily must both agree for TRADE_THIS=YES). Weekly is NEUTRAL, daily is NEUTRAL — no directional consensus. Additionally, despite T_sig=SELL_3, price structure (golden cross SMA50>SMA200) and RSI (57.9, neutral-bullish) contradict the signal. Most critically, both EUR and CAD positioning sits at 1-year lows with institutions actively UNWINDING shorts — this is a classic reversal setup favoring

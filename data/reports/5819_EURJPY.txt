@@ -1,0 +1,24 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Mixed MTF signals (W:NEUTRAL breaks 2/3 consensus) conflict with D1 T_sig=SELL_4, while crowded EUR short positioning + UNWINDING momentum creates reversal risk despite overbought oscillators.
+RISK_FACTORS: [1. MTF conf=2/3 fails TRADE_THIS rule (requires both W+D agree); W:NEUTRAL contradicts D:SELL, reducing directional conviction. 2. EUR net SHORT at 5% with UNWINDING momentum = institutional pivot risk; crowded short near bottom of range = contrarian bounce setup, not continuation.]
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly=NEUTRAL, Daily=SELL, 4H=SELL does not meet W+D consensus requirement (only 2/3 agree). Institutional EUR short unwinding during crowded positioning is a red flag for reversal, not breakout confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS RATIONALE:**
+
+**MTF Rejection (CRITICAL):**
+- W:NEUTRAL + D:SELL + 4H:SELL = only 2/

@@ -1,0 +1,26 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: Pin bar at resistance + RSI overbought + triple oscillator confluence signal sell, but mixed MTF structure (W:NEUTRAL, D:SELL, 4H:NEUTRAL = 1/3 agreement) and crowded EUR short positioning undermine conviction.
+RISK_FACTORS: [1. MTF misalignment: weekly neutral + 4H neutral conflict daily sell signal (only 1/3 agreement, below 2/3 threshold); reversal risk if price bounces from pin bar setup. 2. EUR positioning heavily short near 1-year range bottom with UNWINDING momentum — institutional unwind could trigger short squeeze before sell completes.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: W and 4H do not agree with D:SELL (confidence 1/3 < 2/3 threshold). Trade blocked despite technical confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Why NO despite technical alignment:**
+- **MTF Rule Violation (Critical):** Weekly=NEUTRAL + Daily=SELL + 4H=NEUTRAL = only 1/3 agreement (45

@@ -1,0 +1,30 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Daily downtrend (death-cross) conflicts with 4H uptrend; MTF agreement fails (0/3), oscillators unaligned, and both currencies unwinding positions — setup lacks conviction and directional clarity.
+RISK_FACTORS: ['MTF conflict: D1 NEUTRAL + 4H NEUTRAL + M:SELL create no majority signal; trade lacks MTF consensus', 'COT unwinding on both sides: CHF and JPY institutions reducing conviction simultaneously — positioning momentum unfavorable for directional conviction']
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (conf=0/3 < 2/3 threshold). Monthly is SELL but D/W/4H are all NEUTRAL or conflicting. Setup fails MTF alignment requirement regardless of other scores.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Analysis Summary:**
+
+**MTF Alignment Failure (Critical):**
+- **Monthly:** SELL  
+- **Weekly:** NEUTRAL  
+- **Daily:** NEUTRAL  
+- **4H:** NEUTRAL (inside bar, no directional conviction)  
+- **

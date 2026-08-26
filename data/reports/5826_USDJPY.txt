@@ -1,0 +1,25 @@
+PAIR: USD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with RSI neutral (44.6) and D1 BUY signal conflict with weak MTF alignment (only D:BUY, W/M/4H neutral = 1/3 conf), limiting edge.
+RISK_FACTORS: [1] MTF alignment fails MTF rule (only 1/3 timeframes agree; requires W+D both BUY); [2] JPY COT unwinding adds downside risk despite USD rate neutral — institutional conviction weakening.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 158.50
+ENTRY_TRIGGER_REASON: Pullback to SMA50 (160.97 zone) or FIB support (nearest_below ≈ 157.5p based on SL=155.256) offers better risk/reward if MTF confluence improves.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Violation (HARD STOP):**
+- W:NEUTRAL, D:BUY, M:NEUTRAL, 4H:NEUTRAL = 1/3 agreement (40% conf)
+- Threshold requires W+D **both** agree in same direction
