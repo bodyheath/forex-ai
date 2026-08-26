@@ -1,0 +1,27 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 SELL signal conflicts with mixed MTF alignment (W:NEUTRAL blocks strong conviction) and crowded EUR short positioning at range bottom creates reversal risk despite overbought RSI.
+RISK_FACTORS: ['EUR COT unwinding from net SHORT (5% → lower) near 1y positioning floor = institutional reversal risk', 'MTF weak (W:NEUTRAL + 4H:BUY disagree with D:SELL) = only 1/3 timeframes aligned, <2/3 threshold for trade confidence']
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly is NEUTRAL (not SELL), blocking trade execution. Crowded short positioning unwinding adds reversal risk to D1 SELL.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical (5/10):**
+- D1 T_sig=SELL_6 baseline, RSI=65.4 in overbought zone (standard tier: 62-70 = 4-5SELL)
+- Mixed MTF trend (W:NEUTRAL, D:SELL, 4

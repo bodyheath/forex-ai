@@ -1,0 +1,26 @@
+```
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (44p/6pt) + strong weekly SELL signal + converging ribbon (trend weakening) conflict with D1 double-bottom bullish pattern and neutral RSI — low-confidence setup requiring breakout confirmation.
+RISK_FACTORS: [1. MTF alignment failure: W:SELL + D:NEUTRAL only (conf=1/3, <2/3 threshold) — mixed signal reduces conviction. 2. D1 double-bottom pattern + price above SMA50/SMA200 (golden-cross) contradicts bearish thesis — uptrend structure intact despite divergence.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.4693
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (0.4693) + weekly SELL confirmation would validate bearish divergence and converging ribbon as reversal signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL (4/10):**
+- T_sig=NEUTRAL_3 baseline, but bearish RSI divergence (strong, 44p/6pt) **confirms direction** → DIVERGENCE: CONFIRMED (+

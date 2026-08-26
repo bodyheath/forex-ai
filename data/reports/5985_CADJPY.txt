@@ -1,0 +1,26 @@
+```
+PAIR: CAD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Crowded CAD short unwind + JPY rate rise creates mean-reversion BUY setup, but bearish engulfing and MTF disagreement limit conviction.
+RISK_FACTORS: [1] MTF fracture: 4H bullish isolated vs M/W/D neutral (conf 0/3); breakout into failed rally is high-probability trap. [2] Bearish engulfing on D1 + RSI 52 (peak neutral zone) signals exhaustion into D1 resistance; 4H range structure offers no trend anchor.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence <2/3 (4H:BUY isolated; M/W/D all NEUTRAL). System rule: MTF disagreement = TRADE_THIS NO regardless of other confluences.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### Detailed Rationale:
+
+**TECHNICAL_SCORE: 4/10**
+- **RSI 52.0**: Neutral zone (45–62 standard tier = 3–4 NEUTRAL). No trend context override applies (MTF all NEUTRAL/mixed = standard tiers

@@ -1,0 +1,31 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Price extended into overbought territory (RSI 62.8, Stoch 93.1) within confirmed uptrend, but MTF conflict (M:SELL vs D:NEUTRAL) and T_sig=SELL_3 suggest exhaustion and pullback risk rather than trend continuation.
+
+RISK_FACTORS: (1) MTF disagreement — monthly bearish but daily neutral creates directional ambiguity; MTF confidence only 1/3, violating the 2/3 threshold needed for high-conviction trade. (2) Ribbon ALIGNED_BULL (5/5 EMA fan) strongly favors continuation over reversal — SELL setup fights the dominant trend structure.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 113.9000
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (112.71) confluence with nearest Fib level near 113.65; confirm with RSI drop below 55 on daily close
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**DETAILED REASONING:**
+
+**Technical (5/10):**
+- T_sig=SELL_3 is baseline, but context is critical.
+- RSI

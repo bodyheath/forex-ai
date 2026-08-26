@@ -1,0 +1,29 @@
+```
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern at D1 with W+D agreement on SELL, but ALIGNED_BULL ribbon and 4H BUY create conflicting MTF signals (conf=2/3) — weakened conviction setup.
+RISK_FACTORS: [1] MTF conflict: 4H uptrend contradicts W/D SELL consensus; ribbon fully aligned bullish suggests continuation risk. [2] JPY COT unwinding positioning reduces conviction; NZD rate still falling but lack of extreme divergence limits edge.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 94.20
+ENTRY_TRIGGER_REASON: Confirm double-top breakdown below 4H support; wait for RSI D1 to drop below 50 to align with weekly SELL thesis.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**Reasoning:**
+
+**MTF Hierarchy (80% weight, conf=2/3):**
+- Weekly: SELL ✓
+- Daily: SELL ✓
+- 4H: BUY ✗
+- Result: 2/3 agreement on SELL direction, but 4H conflict lowers conviction from 7+ → 6

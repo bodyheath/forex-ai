@@ -1,0 +1,25 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + RSI overbought in uptrend + EUR rate flat vs CHF falling creates tactical SELL setup, but MTF disagreement (1/3 conf) and ribbon convergence signal weakening conviction.
+RISK_FACTORS: [1. MTF critical rule violation: W:NEUTRAL + D:SELL + 4H:NEUTRAL = only 1/3 MTF agreement (conf<2/3) — trade fails mandatory MTF dual-confirm gate. 2. COT EUR crowded short near bottom of 1yr range with UNWINDING momentum — institutional reversal risk directly conflicts with SELL signal.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule enforced: weekly and daily do not both agree on direction (1/3 < 2/3 threshold). Despite D1 T_sig=SELL_5 and pin bar setup, M:NEUTRAL + W:NEUTRAL block trade. Confidence 5/10 < 7.0 minimum.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**DETAILED REASONING:**
+
+**MTF GATE (HARD RULE — BLOCKS TRADE)

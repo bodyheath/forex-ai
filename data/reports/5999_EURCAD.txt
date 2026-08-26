@@ -1,0 +1,21 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with bullish price structure (golden cross, morning star pattern, price >SMA50); MTF shows 0/3 agreement (M:SELL vs W/D/4H:NEUTRAL) — weak conviction trade with reversal risk from crowded short positioning.
+RISK_FACTORS: (1) MTF breakdown: Weekly and Daily both NEUTRAL contradicts Monthly SELL signal — lacks directional confluence required for high-confidence entry. (2) COT reversal risk: Both EUR and CAD net SHORT positions unwinding near 1-year lows (crowded short = institutional cover-buying likely) — conflicts with SELL thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+**REASONING:**
+- **MTF Rule Violation**: W:NEUTRAL + D:NEUTRAL do NOT agree with M:SELL. Confidence = 0/3 (fails 2/3 minimum threshold). Trade blocked regardless of other signals.
+- **Technical Contradiction**: T_sig=SELL_3 baseline is undermined by: (i) D1 golden-cross structure

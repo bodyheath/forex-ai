@@ -1,0 +1,26 @@
+```
+PAIR: USD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + USD rate support vs CHF rate falling provides directional edge, but mixed MTF and range-bound price structure limit conviction.
+RISK_FACTORS: [1) MTF conf=0/3 (M:BUY but W/D/4H all NEUTRAL) — no multi-timeframe agreement, violates MTF rule for trade; 2) CHF COT UNWINDING + ribbon only 3/5 aligned = trend weakening, reversal risk in sideways market]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.8065
+ENTRY_TRIGGER_REASON: Break above pin bar high at key level; confluence with SMA50 (0.8090) and FIB nearest_below support for pullback confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**MTF Rule Violation (TRADE_THIS = NO):** W:NEUTRAL + D:NEUTRAL + 4H:NEUTRAL = 0/3 agreement. Monthly BUY is insufficient; weekly AND daily must both agree. This fails the mandatory MTF rule regardless of other scores.
+
+**Technical (4/10):**
+- D1 T
