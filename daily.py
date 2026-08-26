@@ -10793,6 +10793,7 @@ def run() -> int:
             "morning":   [8, 9, 10],
             "prelondon": [16, 17, 18],
             "preny":     [22, 23, 0],
+            "london":    [19, 20],
             "gap":       [5, 6, 7, 8],
             "saturday":  [5, 6, 7, 8],
         }
