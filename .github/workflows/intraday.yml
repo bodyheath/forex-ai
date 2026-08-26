@@ -77,9 +77,20 @@ jobs:
           cp data/trades.csv docs/trades.csv
 
       - name: Commit and push results
+        # 2026-08-26: if: always() -- same rationale as daily.yml (crash-safe
+        # commit; trades.csv/research_trades.csv are atomically written, so
+        # whatever's on disk after a crash is always a valid prior version).
+        # Also added the absorb_remote_trades.py pre-merge call this workflow
+        # was missing entirely (daily.yml and monitor.yml already had it,
+        # for trades.csv only -- the script itself was generalized the same
+        # day to also cover research_trades.csv in all three workflows).
+        if: always()
         run: |
           git config user.name "forex-ai[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Absorb any rows added to origin/main by a concurrent scan or monitor
+          # run before staging, so the -X ours rebase below doesn't discard them.
+          python scripts/absorb_remote_trades.py
           git add data/ docs/ 2>/dev/null || true
           # ML model files are managed exclusively by retrain_ml.yml — never commit from intraday
           # scans. This prevents modify/delete conflicts if a reset moves origin while the runner
