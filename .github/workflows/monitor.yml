@@ -181,6 +181,7 @@ jobs:
     needs: monitor
     if: failure()
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Send failure alert via Telegram
         env:
