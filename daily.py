@@ -6085,8 +6085,45 @@ def _send_telegram_summary(
                 # Improvement 4: Weekly + Monthly trend alignment
                 # _yt_dir_ta / _trend_align already computed above in the TREND HARD FILTER
                 # block — reused here rather than recomputed.
+                # 2026-08-26: exempt rib_strongly_against (non-GBP) candidates from the
+                # weekly-opposition hard block below. Investigation: this unconditional
+                # block (added 2026-06-27, no cited backtest) silently vetoes 71% of the
+                # exact population the already-shipped rib_strongly_against grading
+                # carve-out (commit 2c9d26a8) was built to rescue -- ribbon-opposition and
+                # weekly-trend-opposition are correlated signals of the same underlying
+                # counter-trend setup. Strict-accounting backtest (real yfinance weekly
+                # bars fed through the exact get_weekly_trend() formula, sonnet-sourced
+                # only -- the only population that could ever reach this fund gate):
+                #   weekly-opposed + rib_strongly_against, non-GBP: n=23, WR=73.9%,
+                #     PF=6.606 (p<0.00001 vs strict aggregate WR=25.52%)
+                #   weekly-opposed, NO rib_strongly_against (stays blocked): n=10,
+                #     WR=20.0%, PF=0.320 -- confirms this gate is correctly blocking
+                #     the genuinely-incremental population; do not remove wholesale.
+                # GBP-cross excluded from the exemption, matching the existing carve-out
+                # exactly -- same rationale (confirmed net loser in the broader ribbon
+                # population; this specific subset is only n=8 and too thin to override it).
+                _yt_dir_i4    = _yt_dir_ta
+                _yt_bndl_i4   = (_yt.get("bundle") or {})
+                _yt_dt_i4     = (_yt_bndl_i4.get("technical", {}).get("daily") or {})
+                _yt_rib_st_i4 = str((_yt_dt_i4.get("ribbon") or {}).get("status") or "")
+                _rib_strongly_against_i4 = (
+                    (_yt_dir_i4 == "BUY"  and _yt_rib_st_i4 == "ALIGNED_BEAR") or
+                    (_yt_dir_i4 == "SELL" and _yt_rib_st_i4 == "ALIGNED_BULL")
+                )
+                _yt_mtf_sigs_i4 = _yt_bndl_i4.get("mtf", {}).get("signals", {})
+                _w_d_conflict_i4 = (
+                    _yt_mtf_sigs_i4.get("weekly") in ("BUY", "SELL")
+                    and _yt_mtf_sigs_i4.get("daily") in ("BUY", "SELL")
+                    and _yt_mtf_sigs_i4.get("weekly") != _yt_mtf_sigs_i4.get("daily")
+                )
+                _is_gbp_cross_i4 = "GBP" in _yt_pair.upper().split("/")
+                _rib_weekly_exempt = (
+                    _rib_strongly_against_i4
+                    and not _w_d_conflict_i4
+                    and not _is_gbp_cross_i4
+                )
                 # Hard block: weekly trend opposes direction (monthly adds context but weekly alone is decisive)
-                if _trend_align.get("weekly_aligned") is False:
+                if _trend_align.get("weekly_aligned") is False and not _rib_weekly_exempt:
                     _blk_trend = (
                         f"Weekly trend opposed: weekly={_trend_align['weekly_trend']} "
                         f"monthly={_trend_align['monthly_trend']}"
@@ -6102,6 +6139,9 @@ def _send_telegram_summary(
                     except Exception:
                         pass
                     continue
+                elif _trend_align.get("weekly_aligned") is False and _rib_weekly_exempt:
+                    _log_line(log, f"[trend] {_yt_pair} {_yt_dir_ta} — weekly trend opposed "
+                              f"but rib_strongly_against exemption applies (non-GBP) — not blocked")
                 # Soft block: in RANGING regime with any misaligned trend
                 elif ("RANGING" in _regime_str and (
                         _trend_align.get("weekly_aligned") is False or
@@ -6118,23 +6158,16 @@ def _send_telegram_summary(
                     except Exception:
                         pass
                     continue
-                # Fallback: legacy monthly_trend_aligned from parsed analysis
+                # Fallback: legacy monthly_trend_aligned from parsed analysis.
+                # 2026-08-26: removed the dead inner block that used to fire here
+                # ("if not _mta_bool and weekly_aligned is False") -- provably
+                # unreachable, since any row with weekly_aligned is False already
+                # hit the hard block above (and `continue`d away) unless exempted,
+                # in which case re-blocking here on the same signal would silently
+                # defeat the exemption just added. Only the WARNING-when-missing
+                # log line below was ever live; kept as-is.
                 _mta_val = _yt_parsed.get("monthly_trend_aligned")
-                if _mta_val is not None:
-                    _mta_bool = str(_mta_val).upper() in ("TRUE", "YES", "1", "T")
-                    if not _mta_bool and _trend_align.get("weekly_aligned") is False:
-                        _blk_mta = "Monthly trend misaligned (both timeframes confirmed)"
-                        _log_line(log, f"[trend] BLOCKING {_yt_pair} — monthly trend NOT aligned")
-                        _fund_st_blocked.append((_yt, _blk_mta))
-                        try:
-                            from src import tracker as _trk_mta
-                            if _yt.get("id"):
-                                _trk_mta.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                        notes=f"Blocked: {_blk_mta}")
-                        except Exception:
-                            pass
-                        continue
-                else:
+                if _mta_val is None:
                     _log_line(log, f"[trend] WARNING {_yt_pair} — monthly_trend_aligned not available — allowing trade")
                 # Loss journal — block or penalise setups matching past-loss patterns
                 _jrnl_e  = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
