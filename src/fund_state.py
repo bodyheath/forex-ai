@@ -251,6 +251,44 @@ def update_after_close(state: dict, outcome: str,
     return state, alert
 
 
+def reconcile_from_trades(state: dict, df=None, prices: dict | None = None,
+                          log_fn=None) -> dict:
+    """Refresh balance/streak/sizing/drawdown fields in `state` from a fresh
+    calculate_fund_state() pass over trades.csv, preserving every operational
+    field (pause_until, circuit_breaker_active, daily_trades_count,
+    observation_mode, weekly_opening_balance, etc.) that
+    calculate_fund_state() does not compute.
+
+    2026-08-26: extracted from daily.py's scan-time outcome-check step (the
+    only place this ever ran) so monitor.py can call the identical logic.
+    Root cause this closes: fund_state.json's consecutive_wins/losses/
+    sizing_mode were only ever updated via update_after_close(), which had
+    exactly one call site (daily.py, inside the scan's own outcome-check
+    loop) -- monitor.py, which closes most fund trades on its 30-minute
+    cycle, never triggered it and never triggered this reconciliation
+    either, since daily.py's version only runs `if closed_today` from the
+    *scan's own* outcome detection (trades already closed by a prior
+    monitor cycle are no longer OPEN by the time the next scan looks, so
+    they were never seen as "newly closed" by anything). Confirmed live:
+    cached fund_total_trades=194 vs a fresh recompute's 197, sizing_mode
+    'win_streak' vs 'NORMAL', before this fix.
+    """
+    _log = log_fn or print
+    try:
+        from src.trading import financials as _fin_recon
+        fresh = _fin_recon.calculate_fund_state(df, prices)
+        if fresh.get("error"):
+            _log(f"[fund_state] reconcile skipped: {fresh['error']}")
+            return state
+        state = dict(state)
+        for _k, _v in fresh.items():
+            if _k != "open_trades":
+                state[_k] = _v
+    except Exception as exc:
+        _log(f"[fund_state] reconcile_from_trades failed: {exc}")
+    return state
+
+
 def check_circuit_breaker(state: dict, current_balance: float) -> tuple:
     """Check daily P&L and weekly loss limits.
 
