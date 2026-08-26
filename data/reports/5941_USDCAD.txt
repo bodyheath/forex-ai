@@ -1,0 +1,30 @@
+```
+PAIR: USD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 RSI(40.8) in neutral zone with BUY_4 signal and pin bar pattern offer modest upside, but MTF disagreement (D:BUY vs 4H:SELL, conf=1/3) and LEANING_BEAR ribbon block conviction.
+
+RISK_FACTORS: [1] MTF conflict: Daily BUY contradicted by 4H SELL and neutral Weekly/Monthly — only 33% agreement, trade confidence capped below 7. [2] CAD positioning reversal risk: net SHORT at extreme (10% long), UNWINDING near 1y range bottom — crowded short can squeeze higher, but also signals institutional ambivalence.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.3750
+ENTRY_TRIGGER_REASON: Pull back to FIB support (SL=1.4001, range midpoint ~1.3950) — wait for confluence: RSI<35 (oversold confirmation) + D1 close above SMA50(1.4058) rejection to signal sustained reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+RATIONALE:
+
+**TECHNICAL (5/10):**
+- D

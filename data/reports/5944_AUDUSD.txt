@@ -1,0 +1,29 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: Overbought RSI (68.8) in confirmed uptrend triggers triple oscillator SELL confluence, but ribbon alignment and positive AUD rate differential create conflicting bullish structure.
+RISK_FACTORS: MTF conf=2/3 (only D+4H agree; W neutral) fails strict 3/3 requirement; ribbon fully bullish (ALIGNED_BULL 5/5) contradicts SELL directional bias and increases reversal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Violation (Primary Blocker):**
+- W=NEUTRAL, D=SELL, 4H=SELL → conf=2/3 (only D+4H aligned)
+- Strict rule: "MTF weekly + daily BOTH agree" — Weekly is neutral, so MTF agreement fails
+- **TRADE_THIS forced NO** despite other signals
+
+**Technical Layer (Score 6):**
+- RSI 68.8 in **confirmed UPTREND** (W+D both show price > SMA50 > SMA

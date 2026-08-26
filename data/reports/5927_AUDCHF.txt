@@ -1,0 +1,31 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Bearish RSI divergence at 52p/3pt confirms top formation; ribbon converging signals trend weakening despite D1 uptrend structure; CHF unwinding reduces downside conviction.
+
+RISK_FACTORS: [1] MTF conf=2/3 (only W:SELL + 4H:SELL agree; D:NEUTRAL breaks majority rule — trade sits at hard boundary). [2] D1 T_sig=SELL_3 conflicts with price structure (>SMA50>SMA200 golden cross, RSI 63 mid-neutral zone, MACD near zero) — baseline SELL is marginal, not strong.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+### Rationale:
+
+**MTF Rule Violation (Hard Stop):**
+- W:SELL + D:NEUTRAL + 4H:SELL = 2/3 agreement.
+- Mandate: *weekly + daily both agree* for TRADE_THIS=YES.
+- Daily is **NEUTRAL** → MTF rule fails. Confidence capped at ≤6

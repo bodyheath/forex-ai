@@ -1,0 +1,28 @@
+```
+PAIR: USD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + positive rate differential supports USD strength, but mixed MTF alignment and neutral oscillators limit conviction.
+RISK_FACTORS: [1. MTF conf=0/3 — no weekly or daily agreement; upside rejection likely if Monthly BUY reverses. 2. CHF positioning UNWINDING — institutions reducing shorts; potential squeeze if USD momentum fails.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.8110
+ENTRY_TRIGGER_REASON: Break and close above SMA50 (0.8090) with RSI >50 confirmation — establishes Weekly/Daily alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- D1 T_sig=NEUTRAL_3 baseline; RSI 45.1 = neutral zone (mixed MTF context).
+- Pin bar at key level is *supporting evidence* for potential reversal, but **MTF conf=0/3** (M:BUY, W:NEUTRAL, D:NEUTRAL) = no directional agreement. Critical rule violation: Weekly AND Daily must both confirm direction for TRADE_THIS=YES.
+- MACD both
