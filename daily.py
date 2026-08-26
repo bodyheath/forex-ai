@@ -11042,18 +11042,18 @@ def run() -> int:
                 # win/loss counts, and drawdown in fund_state.json.
                 # Operational fields (pause_until, circuit_breaker, daily_trades_count,
                 # etc.) come from _fs_oc_st and are preserved through the merge.
+                # 2026-08-26: now via the shared fund_state.reconcile_from_trades()
+                # helper (identical logic, extracted so monitor.py can call it too --
+                # see that function's docstring for why this mattered).
                 try:
                     import pandas as _pd_oc_s
-                    from src.trading import financials as _fin_oc_s
                     _df_oc_s  = _pd_oc_s.read_csv(
                         str(config.TRADES_CSV), encoding="utf-8-sig"
                     )
-                    _fs_fresh = _fin_oc_s.calculate_fund_state(
-                        _df_oc_s, _open_trade_prices
+                    _fs_oc_st = _fs_oc.reconcile_from_trades(
+                        _fs_oc_st, _df_oc_s, _open_trade_prices,
+                        log_fn=lambda m: _log_line(log, m),
                     )
-                    for _k, _v in _fs_fresh.items():
-                        if _k != "open_trades":
-                            _fs_oc_st[_k] = _v
                 except Exception as _oc_calc_exc:
                     _log_line(log, f"Fund state recalc failed: {_oc_calc_exc}")
                 _fs_oc.save(_fs_oc_st)
