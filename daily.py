@@ -10457,6 +10457,8 @@ def _next_scan_footer(scan_mode: str, now_ak: datetime) -> str:
         return "⏰ Next scan tonight at 11pm Auckland — Pre-New York check"
     if scan_mode == "preny":
         return "⏰ Next scan tomorrow 6am Auckland — have a good night."
+    if scan_mode == "london" and is_weekday:
+        return "⏰ Next scan tomorrow 6am Auckland — full market analysis"
     return f"⏰ Next full scan {nxt_short} at 6am Auckland"
 
 
