@@ -10334,6 +10334,26 @@ _SCAN_MODES: dict = {
     "gap":       ("Sunday Gap Scan",        set()),
     "saturday":  ("Saturday Gap Check",     set()),
     "monitor":   ("Between-Scan Monitor",   set()),
+    # 2026-08-26: completes a scan slot intraday.yml's own header comment
+    # already documented as planned ("← ADD") but never wired up. Closes a
+    # confirmed structural gap, not a new idea: the unconditional London/NY
+    # session gate (see the "Unconditional session gate" block further down
+    # this file) blocks 21 of the 28-pair universe for the entire UTC
+    # 21:00-06:59 window, in every regime, regardless of confidence or
+    # grade -- pure clock-time exclusion, unrelated to setup quality. The
+    # existing 4 scans land at 05:05 UTC (prelondon) and 21:05 UTC (morning)
+    # -- both INSIDE that window -- leaving an ~17-hour gap (18:05 UTC one
+    # day to 11:05 UTC the next) with zero fund-eligible opportunity for
+    # those 21 pairs, confirmed via real GitHub Actions run timestamps
+    # (empirical, not the Auckland-hour formula alone). Backtest, strict/v2/
+    # post-fix: real sonnet-confirmed non-asia_fx candidates that existed
+    # during the two dead-zone-timed scans (n=26) show WR=46.2%, PF=1.376,
+    # p=0.019 vs the strict aggregate -- these are not low-quality setups,
+    # they're timing-excluded good ones. This scan slot lands at 07:05 UTC,
+    # immediately after the dead zone ends, cutting the blackout to two
+    # shorter gaps (07:05->11:05 = 4h, 18:05->07:05 next day = 13h). Purely
+    # additive: no grading/confidence/session-gate logic touched anywhere.
+    "london":    ("7am London Open Check",  set()),
 }
 
 # All 4 scans select from the full universe by 8-factor merit score — no mode filtering
@@ -10341,7 +10361,7 @@ _SCAN_TOP_N   = 20   # pairs selected and analysed from the full universe
 _TD_CACHE_MAX = 35   # pairs to pre-warm in Twelve Data cache (research sweep uses the extras)
 
 # Sonnet escalation threshold: 6 for 6am (higher quality), 7 for intraday (cheaper)
-_SONNET_THRESH = {"full": 6, "morning": 7, "prelondon": 7, "preny": 7}
+_SONNET_THRESH = {"full": 6, "morning": 7, "prelondon": 7, "preny": 7, "london": 7}
 
 
 def _get_scan_mode() -> str:
