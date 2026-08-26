@@ -2520,15 +2520,27 @@ def _trade_quality_grade(r: dict) -> dict:
                 and bool(_fib.get("near_levels")))
 
     # ATR calibration (stop ≈ 0.7–1.5× ATR, target ≈ 1.5–3.0× ATR)
+    # 2026-08-26: target distance now derived the same way rr is (real
+    # cascade target = TARGET_RR x stop distance) when entry/stop are
+    # valid, instead of the same stale parsed["target"] field the rr fix
+    # above stopped using — keeps this check consistent with what "rr"
+    # now means for the same candidate rather than validating stop
+    # distance against ATR but target distance against a display-only
+    # placeholder. Falls back to the raw target field only when entry/stop
+    # are unavailable (mirrors the rr fallback exactly).
     atr14   = float(_dt.get("atr14") or 0) if isinstance(_dt, dict) else 0
     atr_cal = False
     if atr14 > 0:
         try:
             e2 = float(p.get("entry")     or 0)
             s2 = float(p.get("stop_loss") or 0)
-            t2 = float(p.get("target")    or 0)
             sd = abs(e2 - s2)
-            td = abs(t2 - e2)
+            if e2 and s2 and sd > 0:
+                from src import cascade as _casc_atr
+                td = sd * _casc_atr.TARGET_RR
+            else:
+                t2 = float(p.get("target") or 0)
+                td = abs(t2 - e2)
             if sd > 0 and td > 0:
                 atr_cal = (0.7 <= sd / atr14 <= 1.5) and (1.5 <= td / atr14 <= 3.0)
         except (TypeError, ValueError, ZeroDivisionError):
