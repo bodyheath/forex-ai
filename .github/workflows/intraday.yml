@@ -65,7 +65,7 @@ jobs:
           HAIKU_MODEL: ${{ secrets.HAIKU_MODEL || 'claude-haiku-4-5-20251001' }}
           ACCOUNT_BALANCE: ${{ secrets.ACCOUNT_BALANCE || '10000' }}
           ACCOUNT_CURRENCY: ${{ secrets.ACCOUNT_CURRENCY || 'USD' }}
-          SCAN_MODE: ${{ inputs.scan_mode }}
+          SCAN_MODE: ${{ github.event_name == 'schedule' && 'london' || inputs.scan_mode }}
           DISCORD_WEBHOOK_FUND: ${{ secrets.DISCORD_WEBHOOK_FUND }}
           DISCORD_WEBHOOK_RESEARCH: ${{ secrets.DISCORD_WEBHOOK_RESEARCH }}
           DISCORD_WEBHOOK_MONITOR: ${{ secrets.DISCORD_WEBHOOK_MONITOR }}
