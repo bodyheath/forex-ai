@@ -2403,30 +2403,61 @@ def _trade_quality_grade(r: dict) -> dict:
     except (TypeError, ValueError):
         conf_raw = 0
 
-    # R:R from parsed price levels (use Claude's field as fallback)
+    # R:R — 2026-08-26: grade against the REAL tradeable R:R, not the AI's
+    # raw parsed "target" field. cascade.py's pure TP-or-SL design (commit
+    # history: "Pure 2:1 risk:reward target system", TARGET_RR=2.0) fixes
+    # the actual traded/tracked exit at entry ± TARGET_RR x stop_distance,
+    # unconditionally, whenever entry/stop are known — the AI's own target
+    # never determines what's actually traded. For indicative-priced
+    # research signals specifically (source="indicative", ~92% of research
+    # volume), parsed["target"] is a DELIBERATELY tightened ~1R placeholder
+    # ("so research trades resolve as WIN/LOSS faster", _calc_indicative_
+    # levels' research_mode docstring) that was never the real exit level
+    # even before EXIT_LOGIC_FIX_UTC changed WIN/LOSS classification to
+    # match. Grading R:R off that stale field produced a confirmed
+    # inversion under strict accounting: F-grade trades outperforming D
+    # and C (PF 1.730 / 0.476 / 0.348) because ~92% of F/D/C population
+    # was scored against a target that was never real. Using the real,
+    # constant 2R value instead fixes the ladder (strict PF becomes
+    # C=1.616 > F=1.199 > D=0.469 -- see 2026-08-26 investigation) and
+    # supersedes the narrower rib_strongly_against+rr<1.5 relief designed
+    # the same day (that population is entirely subsumed by this fix via
+    # the existing rr>=2.0 ribbon carve-out, once rr is computed correctly
+    # -- the narrower patch was deliberately never shipped).
+    # Falls back to the original AI-target/reward_risk/indicative-levels
+    # chain only when entry/stop_loss themselves are unavailable (this
+    # constant can't be derived without a real stop distance to scale).
     rr = 0.0
     try:
         e = float(p.get("entry")     or 0)
         s = float(p.get("stop_loss") or 0)
-        t = float(p.get("target")    or 0)
-        if e and s and t and abs(e - s) > 0:
-            rr = abs(t - e) / abs(e - s)
-    except (TypeError, ValueError, ZeroDivisionError):
-        pass
-    if not rr:
+    except (TypeError, ValueError):
+        e, s = 0.0, 0.0
+
+    if e and s and abs(e - s) > 0:
+        from src import cascade as _casc_grade
+        rr = _casc_grade.TARGET_RR
+    else:
         try:
-            rr = float(p.get("reward_risk") or 0)
-        except (TypeError, ValueError):
-            rr = 0.0
-    if not rr:
-        try:
-            _fb_e, _fb_s, _fb_t, _ = _calc_indicative_levels(
-                r["pair"], p, r.get("bundle", {})
-            )
-            if _fb_e and _fb_s and _fb_t and abs(_fb_e - _fb_s) > 0:
-                rr = abs(_fb_t - _fb_e) / abs(_fb_e - _fb_s)
-        except Exception:
+            t = float(p.get("target") or 0)
+            if e and s and t and abs(e - s) > 0:
+                rr = abs(t - e) / abs(e - s)
+        except (TypeError, ValueError, ZeroDivisionError):
             pass
+        if not rr:
+            try:
+                rr = float(p.get("reward_risk") or 0)
+            except (TypeError, ValueError):
+                rr = 0.0
+        if not rr:
+            try:
+                _fb_e, _fb_s, _fb_t, _ = _calc_indicative_levels(
+                    r["pair"], p, r.get("bundle", {})
+                )
+                if _fb_e and _fb_s and _fb_t and abs(_fb_e - _fb_s) > 0:
+                    rr = abs(_fb_t - _fb_e) / abs(_fb_e - _fb_s)
+            except Exception:
+                pass
 
     if not rr and p.get("trade_this") == "YES":
         # Only log R:R=0 for YES trades — NO_TRADE pairs without levels are expected
