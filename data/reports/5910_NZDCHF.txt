@@ -1,0 +1,28 @@
+```
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (44p/6pt) conflicts with uptrend structure; ribbon converging signals trend exhaustion; MTF neutral removes directional conviction.
+
+RISK_FACTORS: 
+1. MTF completely neutral (M/W/D/4H all NEUTRAL) — no timeframe agreement; TRADE_THIS rule requires weekly+daily both agree.
+2. Ribbon CONVERGING + RSI 61.8 in overbought zone of uptrend = reversal risk; price still above SMA50 but momentum fading (MACD near-zero).
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+RATIONALE:
+— **MTF Rule Violation**: Weekly=NEUTRAL, Daily=NEUTRAL, 4H=NEUTRAL, Monthly=NEUTRAL. Confidence=0/3. **TRADE_THIS rule mandates weekly+daily both agree on direction.** This pair fails the gate; output is NO regardless of other signals.
+— **TECHNICAL_SCORE=4**: RSI 61.8 in confirmed uptrend (price > SMA50 > S

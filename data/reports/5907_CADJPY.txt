@@ -1,0 +1,21 @@
+```
+PAIR: CAD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Crowded CAD short unwind + rate differential favor long CAD/JPY, but D1 bearish engulfing and neutral MTF consensus (0/3 agreement) create reversal risk; 4H inside bar suggests breakout pending.
+RISK_FACTORS: [1] D1 bearish engulfing at uptrend resistance conflicts with unwind thesis — reversal could trap longs. [2] MTF conf=0/3 (all timeframes neutral) violates MTF rule: W/D/M all NEUTRAL means no directional agreement; system strictly requires weekly AND daily BOTH agree on direction for TRADE_THIS=YES.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 114.35
+ENTRY_TRIGGER_REASON: Hold for pullback to 4H MA support (~SMA50=114.49) or 38.2% Fib retrace (114.35 from SH=116.477 vs SL=110.853); enter only if 4H breaks above inside_bar high with RSI >50 confirmation and D1 daily chart reverses to BUY signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE

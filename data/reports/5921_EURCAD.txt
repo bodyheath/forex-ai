@@ -1,0 +1,23 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 59 in uptrend is neutral-to-bullish (not yet overbought), but T_sig=SELL_3 conflicts with price structure, MTF disagrees (W/D both NEUTRAL, only M/4H bearish), and positioning unwinding reduces conviction.
+RISK_FACTORS: [1] MTF conflict — Weekly and Daily both NEUTRAL (0/3 agreement), violating hard MTF rule: TRADE_THIS must be NO when MTF conf <2/3. [2] Positioning reversal risk: both EUR and CAD showing crowded short unwind near 1-year range bottoms — institutional reversal likely imminent, contradicting SELL signal.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily disagree on direction (both NEUTRAL). Confidence 4/10 < 7 threshold. Positioning momentum UNWINDING signals institutional long entry imminent, not short.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**REASONING:**
+
+1. **MTF Enforcement (HARD RULE):** Weekly=NEUTRAL, Daily=NEUTRAL, Monthly=SELL, 4H=

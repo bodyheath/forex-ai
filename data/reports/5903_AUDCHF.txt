@@ -1,0 +1,30 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (52p/3pt) at elevated RSI 62.5 in uptrend + converging ribbon signals momentum exhaustion, but W:SELL + D:NEUTRAL MTF split (2/3 conf) and bullish engulfing pattern create conflicting signals.
+
+RISK_FACTORS: [1] MTF agreement weak (W:SELL vs D:NEUTRAL = 2/3 confidence only; hard rule requires >=2/3 for TRADE_THIS YES, met but marginal). [2] CHF positioning unwinding (institutions reducing conviction) conflicts with SELL direction; AUD short positioning at 30% is not extreme, limiting downside institutional support.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.5747
+ENTRY_TRIGGER_REASON: Break below 4H support at SMA50 (approx 0.5747) with confirmation of divergence failure + ribbon convergence invalidation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **Detailed Scoring Rationale:**
+
+**TECHNICAL_SCORE: 5/10**
+- **RSI=62.5 in uptrend context:** Standard tier

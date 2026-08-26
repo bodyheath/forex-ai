@@ -1,0 +1,47 @@
+Looking at this data carefully before finalizing:
+
+**Key observations:**
+- MTF M:BUY W:BUY D:BUY 4H:BUY — all agree BUY ✓ (W+D both agree = TRADE_THIS eligible)
+- BUT RIB=ALIGNED_BEAR fan 5/5 — serious contradiction. Ribbon is the actual price structure; MTF here may reflect oscillator-based signals rather than trend direction
+- RSI=40.1 in a downtrend context (death cross, price < SMA50 < SMA200, ribbon fully bearish) → apply downtrend RSI adjustment: 30-42 = 5-6 BUY. RSI 40.1 = 5-6 range. T_sig=BUY_6, so TECHNICAL_SCORE=6
+- 4H RSI=32.1 in downtrend → 30-42 range = 5-6 BUY, not extreme oversold by downtrend-adjusted standards
+- PAT=inverse_head_and_shoulders:bul — strong reversal pattern. Near 0.0% Fib (9p from SL=1.62539) = at major support
+- BB at/below lower band = BUY confirmation
+- FIB: price near 0.0% level (9p) — strong Fib support confluence
+- OSC: Stoch%K=7.4 (extreme), CCI=-166.5 — PARTIAL_BUY (2/3, RSI 40 not <35)
+- DIV=none
+- FUND: rate diff=-2.21% against EUR = headwind. EUR rate flat, AUD rising = structural AUD strength
+- POS: EUR crowded short unwinding (BOTTOM of range) = contrarian reversal fuel ✓
+- MACRO: VIX=15.8 (benign), oil=86.5 (moderate risk-on), curve=0.5 (slightly positive) = mild supportive
+- ATR=0.0084 → stop below 0.0% Fib support at 1.62539, use ~1.5×ATR below = 1.6128
+
+**R:R check:**
+- Entry: 1.6310 (neckline breakout trigger)
+- Stop: 1.6128 (below 0% Fib, ~1.82 × ATR buffer)
+- Risk: 1.6310 - 1.6128 = 0.0182
+- Target (2R): 1.6310 + 0.0364 = 1.6674
+- R:R = 2.0:1 ✓
+
+**Confidence assessment:**
+- Haiku: 7/10. The aligned bear ribbon (5/5) is a real risk but IHS + Fib 0% + BB lower + crowded short unwinding + MTF all BUY + Stoch extreme = meaningful confluence. Confidence 7 is fair. TRADE_THIS threshold met (conf≥7, R:R≥2.0, W+D agree BUY).
+
+---
+
+PAIR: EUR/AUD
+DIRECTION: BUY
+CONFIDENCE: 7/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+ENTRY: 1.6310
+TARGET: 1.6674
+STOP_LOSS: 1.6128
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open breakout window, 08:00–10:00 NZST
+NEWS_WARNING: ECB speakers and Australian employment data within 48h — size accordingly
+KEY_THESIS: Inverse head-and-shoulders at 0% Fibonacci support with extreme Stochastic oversold and EUR crowded-short unwinding provides a high-probability contrarian reversal trigger on neckline breakout at 1.6310, despite bearish ribbon structure
+RISK_FACTORS: [1] Ribbon fully bearish-aligned (5/5) conflicts with buy signal — trend structure weakening but not yet reversed; [2] Fundamental headwind: EUR rate flat while AUD rising (diff=-2.21%) supports AUD strength, opposing EUR long thesis.

@@ -1,0 +1,25 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Strong MTF sell alignment (M/W/D/4H all SELL, conf 3/3) with RSI overbought on D1 (58.2, neutral-lean) and 4H (65.8, approaching overbought), but ALIGNED_BULL ribbon contradicts and supports uptrend continuation—mixed signal requires caution.
+
+RISK_FACTORS: 
+1. Ribbon fully aligned bullish (5/5 EMA stack) directly contradicts D1 T_sig=SELL_4 and MTF sell consensus; uptrend structure (price > SMA50 > SMA200, golden cross) remains intact—reversal risk if price holds above 1.8839 SMA50.
+2. CAD net SHORT at 10% (crowded short near 1y range bottom) with MOM=UNWINDING suggests institutional short-covering rally imminent; GBP SHORT also unwinding—both could reverse into buys, negating SELL thesis.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: [CONDITIONAL: IF BREAKOUT_SELL]
+ENTRY_TRIGGER_PRICE: 1.8760 (break below SMA50 at 1.8839 with confirmation close)
+ENTRY_TRIGGER_REASON: D1 sell
