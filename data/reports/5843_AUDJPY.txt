@@ -1,0 +1,23 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: MTF agreement weak (W:SELL + D:NEUTRAL = 2/3, below 3/3 threshold) conflicts with aligned bullish ribbon and uptrend structure; RSI 62.7 elevated in uptrend context (shift SELL zone higher — only 60-77 zone scores 4-5SELL, not 6-7), limiting technical conviction despite T_sig=SELL_3.
+
+RISK_FACTORS: [1] D1 golden-cross uptrend + ALIGNED_BULL ribbon (5/5 EMA stack) contradicts SELL thesis — reversal setup has weak foundation when trend structure is bullish. [2] MTF conf=2/3 (only W:SELL + 4H:SELL agree; D:NEUTRAL dissents) falls below 3/3 hard rule — daily timeframe refuses the sell, raising whipsaw risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 113.5000
+ENTRY_TRIGGER_REASON: Break below daily SMA50 (112.7081) + daily cloud to confirm bearish reversal from overbought zone; only valid if daily RSI falls <60 to align with weekly bearish intent.

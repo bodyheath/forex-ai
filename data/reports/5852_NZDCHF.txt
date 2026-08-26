@@ -1,0 +1,28 @@
+```
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (44p/6pt) + MACD negative + ribbon converging signals trend exhaustion despite uptrend structure; D1 T_sig=SELL_3 baseline confirmed.
+RISK_FACTORS: MTF all NEUTRAL (0/3 agreement) = no directional conviction; CHF positioning unwinding mid-range reduces SELL edge.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.4750
+ENTRY_TRIGGER_REASON: Break below 4H resistance confluence (SMA50 zone ~0.475) + RSI divergence confirmation at lower highs.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**REASONING:**
+
+1. **MTF RULE VIOLATION (HARD STOP):** MTF shows M:NEUTRAL, W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL → **conf=0/3, wt=100%**. Neither weekly AND daily both agree on direction. **TRADE_THIS must be NO** per system rule, regardless of other signals.
+
+2. **TECHNICAL_SCORE: 4/10**
+   - D1 RSI=62.6 (up

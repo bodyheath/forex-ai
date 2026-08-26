@@ -1,0 +1,23 @@
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: RSI overbought (67.8) with triple oscillator confirmation (Stoch/CCI/RSI all SELL signals) at Fib resistance (9p from 127.2%), but ribbon aligned bullish and D1 trend mixed weaken conviction.
+RISK_FACTORS: [1) MTF confidence only 1/3 (W:NEUTRAL, D:SELL, 4H:NEUTRAL) — weak directional alignment across timeframes undermines SELL case. 2) ALIGNED_BULL ribbon (5/5 EMAs stacked) signals trend continuation up; conflicting with SELL setup.]
+TRADE_THIS: NO
+ENTRY_TYPE: [CONDITIONAL LIMIT_SELL]
+ENTRY_TRIGGER_PRICE: 1.3654
+ENTRY_TRIGGER_REASON: Break below inside bar low at Fib resistance confluence (127.2% @ 1.36539); only enter if ribbon alignment breaks or D1 trend confirms downtrend.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**RATIONALE:**
+
+- **TECHNICAL_SCORE: 6/10** — T_sig baseline is SELL_6. RSI 67.8 is elevated (approaching 70 sell-zone) and oscillator

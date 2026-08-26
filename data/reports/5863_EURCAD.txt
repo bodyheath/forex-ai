@@ -1,0 +1,25 @@
+```
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Crowded EUR/CAD short positioning (both currencies unwinding near 1y lows) creates contrarian long bias despite mixed technicals and T_sig=SELL_3, but MTF misalignment and overbought oscillators (Stoch 88.6) prevent high-confidence entry.
+
+RISK_FACTORS: 
+1. MTF rejection: M:SELL conflicts with W/D/4H:NEUTRAL (conf=0/3) — T_sig=SELL_3 baseline contradicts trade direction; reversal risk if monthly downtrend reasserts.
+2. Oscillator saturation: Stochastic K=88.6 (overbought), CCI=65.2 (extended); no oscillator confluence (conf=NONE); pullback or breakout required to avoid fakeout.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 1.6200
+ENTRY_TRIGGER_REASON: Break above 61.8% Fib resistance (1.61656) + 4H pin_bar_at_key_level confirmation + institutional unwinding capitulation; wait for close above 1.6200 to confirm breakout and reduce oscillator overbought risk.
+ENTRY_

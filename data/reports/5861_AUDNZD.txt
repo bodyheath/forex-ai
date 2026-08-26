@@ -1,0 +1,24 @@
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: AUD rate rise + NZD rate fall support structural SELL bias, but mixed MTF alignment (M:SELL vs W/D:NEUTRAL) and neutral technicals (RSI 49.7, T_sig=3, no oscillator confluence) prevent high-confidence entry.
+RISK_FACTORS: [1] MTF disagreement: monthly and 4H lean SELL but weekly and daily are NEUTRAL — only 0/3 confluence means price could consolidate or reverse without warning; [2] Double-bottom bullish pattern on D1/4H contradicts SELL thesis, risking early stop-loss if pattern completes.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1950
+ENTRY_TRIGGER_REASON: Confluence of FIB support (SL zone 1.1909–1.1950), ribbon LEANING_BEAR, and D1 SMA50 rejection (price below 1.2067) — wait for pull into this zone to confirm SELL intent with better R:R.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL_SCORE = 4/10:**
+- D1 RSI=49.
