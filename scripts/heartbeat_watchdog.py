@@ -101,6 +101,16 @@ def _send_discord(msg: str) -> None:
 
 
 def main() -> int:
+    # Make stdout/stderr safe for the emoji in the alert text regardless of
+    # the runner's default console encoding (caught by a smoke test failing
+    # under Windows cp1252 -- GHA's Ubuntu runners default to UTF-8, but
+    # there's no reason to depend on that rather than just being explicit).
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
     now = datetime.now(timezone.utc).replace(tzinfo=None)
 
     if not HEARTBEAT_FILE.exists():
