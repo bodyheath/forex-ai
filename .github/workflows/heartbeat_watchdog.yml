@@ -1,0 +1,82 @@
+name: Heartbeat Watchdog (GHA-native)
+
+# 2026-08-26: closes the last remaining single point of failure found in the
+# system audit. Every other check-in mechanism in this repo (the scans, and
+# daily.py's own >120-minute heartbeat check inside a scan) is triggered by
+# cron-job.org calling workflow_dispatch. If cron-job.org has a full outage,
+# nothing would ever notice or alert, since the thing that would normally
+# catch a monitor.py gap never gets a chance to run either.
+#
+# This workflow uses GitHub Actions' own native `schedule:` cron trigger,
+# which does not depend on cron-job.org at all -- see scripts/
+# heartbeat_watchdog.py for the staleness threshold and alert-dedup design.
+#
+# Known GHA scheduled-workflow quirks, factored into the design:
+#   - GitHub explicitly documents that scheduled workflows "may be delayed
+#     during periods of high loads of GitHub Actions workflow runs" and in
+#     extreme cases can be skipped entirely -- this is why the staleness
+#     threshold in the script (150 min) is deliberately looser than the
+#     existing 120-minute check, not just matching it.
+#   - Scheduled workflows only run on the default branch, and GitHub disables
+#     them after 60 days with no commits to the repo -- not a practical
+#     concern here given the constant auto-commit activity, and keepalive.yml
+#     already exists for exactly this reason for the repo's other cron jobs.
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:   # manual trigger for testing
+
+concurrency:
+  group: heartbeat-watchdog
+  cancel-in-progress: false
+
+jobs:
+  watchdog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+
+      - name: Run heartbeat watchdog
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID_2: ${{ secrets.TELEGRAM_CHAT_ID_2 }}
+          TELEGRAM_CHAT_ID_3: ${{ secrets.TELEGRAM_CHAT_ID_3 }}
+          DISCORD_WEBHOOK_CRITICAL: ${{ secrets.DISCORD_WEBHOOK_CRITICAL }}
+        run: python scripts/heartbeat_watchdog.py
+
+      - name: Commit dedup state if changed
+        run: |
+          git config user.name "forex-ai[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/heartbeat_watchdog_state.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No dedup-state change — skipping commit"
+            exit 0
+          fi
+          git commit -m "chore: heartbeat watchdog state $(date -u +'%Y-%m-%d %H:%M UTC')"
+          for i in 1 2 3; do
+            if ! git pull --rebase -X ours origin main 2>&1; then
+              git rebase --abort 2>/dev/null || true
+              git pull --no-rebase -X ours origin main 2>&1 || true
+            fi
+            if git push origin HEAD:main 2>&1; then
+              echo "Push succeeded on attempt $i"
+              exit 0
+            fi
+            echo "Push attempt $i failed — waiting 10 seconds"
+            sleep 10
+          done
+          echo "All 3 push attempts failed — dedup state not persisted this run (non-fatal, will retry next cycle)"
