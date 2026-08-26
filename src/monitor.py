@@ -3190,9 +3190,8 @@ def run(log=print) -> dict:
                             pass
             try:
                 import pandas as _pd_mon_s
-                from src import tracker as _trk_mon_s
                 _df_mon_s = _pd_mon_s.read_csv(
-                    str(_trk_mon_s.config.TRADES_CSV), encoding="utf-8-sig"
+                    str(config.TRADES_CSV), encoding="utf-8-sig"
                 )
                 _fs_mon_st = _fs_mon.reconcile_from_trades(
                     _fs_mon_st, _df_mon_s, prices, log_fn=log,
