@@ -25,6 +25,9 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    # 2026-08-26: see daily.yml for rationale (60m vs. the 45m internal warning
+    # and the 6h GHA platform default no workflow here had set explicitly).
+    timeout-minutes: 60
     permissions:
       contents: write
 
