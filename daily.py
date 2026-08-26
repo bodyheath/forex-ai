@@ -5757,31 +5757,29 @@ def _send_telegram_summary(
         _REGIME_BLOCK = ["RANGING_LOW_VOL", "RANGING_LOW_VOLATILITY", "RISK_OFF"]
         _consec_losses_fs = int(_fund_st.get("consecutive_losses", 0) or 0)
         MAX_CONSECUTIVE_LOSSES = 3
-        # 2026-08-26: lowered 7.0 -> 6.0. This is a separate, hard-coded floor on
-        # top of (not instead of) the dynamic per-day threshold (_trade_conf_thr,
-        # which has been observed as low as 5.5 this session) and the dd-tier
-        # grade/eff_conf check — meaning candidates in the 6.0-6.9 eff_conf band
-        # were being blocked here even on days the dynamic system would have
-        # allowed them. Backed by a full-history sweep of research_trades.csv:
-        # conf==6 candidates that were never included before this change,
-        # n=492, win rate 49.2%, PF=1.180 on that population specifically (not
-        # blended) -- real, net-positive on their own, not just diluting a
-        # profitable average. Blended with the existing conf>=7 population
-        # (n=649, PF=1.599): n=1141, PF=1.396. conf==5 was checked in the same
-        # sweep and found net-negative (n=648, PF=0.809) -- deliberately NOT
-        # included; do not lower this past 6.0 on this evidence.
-        # Checked for interaction with the rib_strongly_against grade fix
-        # (2026-08-26, same day): of the 492 conf==6 candidates, only 1 is also
-        # affected by that fix (a LEANING_BULL rib_against case that isn't
-        # reduced below the fix's own conf>=6 bar by the separate ALIGNED-only
-        # -1 ribbon penalty) -- and that one row is USD/NOK, already excluded
-        # from the live universe via FUND_BANNED_PAIRS regardless. The other 23
-        # ribbon-against conf==6 candidates are all ALIGNED (rib_strongly_
-        # against), whose existing -1 penalty drops effective confidence to 5,
-        # below even the rib fix's own bar -- they stay F under both changes,
-        # unrescued. The two fixes are functionally independent populations;
-        # neither inflates the other's measured benefit.
-        FUND_TRADE_MIN_CONF = 6.0
+        # 2026-08-26: lowered 7.0 -> 6.0, then REVERTED back to 7.0 same day
+        # after a strict-accounting re-check. The original 6.0 case (below,
+        # kept for history) was built on "decisive" data, which reclassifies
+        # EXPIRED trades as wins/losses by pip sign at timeout. A follow-up
+        # strict-only re-audit (WIN/FULL_WIN/LOSS exits only, v2, post
+        # EXIT_LOGIC_FIX_UTC) found conf==6 trades are PF=0.947 -- still a net
+        # loser -- vs conf==7 at PF=1.156, the first bucket that clears
+        # breakeven under strict accounting. The decisive-population PF=1.180
+        # that justified the drop does not survive strict verification, so
+        # the floor is restored to 7.0 pending any future strict-confirmed
+        # case for lowering it again.
+        #
+        # Original 2026-08-26 rationale (superseded by the above, kept for
+        # context): backed by a full-history "decisive" sweep of
+        # research_trades.csv showing conf==6 candidates at n=492, WR=49.2%,
+        # PF=1.180 standalone, blended PF=1.396 with conf>=7 (n=1141). Checked
+        # for interaction with the rib_strongly_against grade fix (2026-08-26,
+        # same day): only 1/492 rows overlapped (USD/NOK, already banned via
+        # FUND_BANNED_PAIRS) -- the two changes were functionally independent
+        # populations. That interaction analysis still holds; it's the
+        # underlying "decisive" evidence base for lowering the floor that
+        # didn't hold up.
+        FUND_TRADE_MIN_CONF = 7.0
         FUND_MIN_RR = 2.0
         _log_line(log, (
             f"[fund] Filters: min_conf={FUND_TRADE_MIN_CONF} "
