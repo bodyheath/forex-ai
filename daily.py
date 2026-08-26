@@ -2533,8 +2533,52 @@ def _trade_quality_grade(r: dict) -> dict:
             "atr_zero": True,
         }
 
+    # 2026-08-27: rib_strongly_against/rib_against, statistically backwards for
+    # non-GBP pairs. Full-history breakdown of every F-grade row by which
+    # condition fired (n=814): the population where ribbon-opposition was the
+    # SOLE reason for F (rr>=1.5, no MTF conflict — n=203) beat the whole
+    # research population's aggregate win rate, p=0.00094 (excluding GBP-
+    # crosses, p=0.00016, PF 2.291 vs 0.749 for GBP-crosses in the same
+    # bucket). The rr<1.5 trigger, checked the same way, was NOT backwards
+    # (p=0.56) and is untouched here. GBP-crosses (pair contains "GBP") are
+    # deliberately excluded from this relief, not because GBP-specific logic
+    # wasn't examined — it was, at length — but because GBP-crosses in this
+    # exact bucket are a confirmed net loser (n=73, PF=0.749) with no other
+    # mechanism protecting against it. This is a broader, pair-family-level
+    # effect, distinct from (and not replacing) the narrower GBP/CHF
+    # SELL+CONVERGING penalty in _gbp_chf_converging_ribbon_penalty(), which
+    # targets a different ribbon state entirely (CONVERGING never triggers
+    # rib_strongly_against/rib_against, which only match ALIGNED_*/LEANING_*)
+    # and remains in effect unchanged.
+    #
+    # Structural note: ribbon-opposition alone previously forced F (via
+    # rib_strongly_against) or D (via rib_against, a strict superset that
+    # also matches LEANING_*) — and D/F are functionally identical in
+    # _dd_allows_trade() (both hard-blocked in every drawdown mode). Capping
+    # at C rather than letting the ladder run further is deliberate: C still
+    # has to clear the same eff_conf>=threshold bar B does (see the B-tier
+    # guard comment on _dd_allows_trade, 2026-08-17) — this does not bypass
+    # any existing risk control, it only stops ribbon-opposition from being
+    # an automatic, unconditional disqualifier for pairs where the data says
+    # it isn't one. Whether any of this population would have reached B/A
+    # under a fuller ladder walk is unknown — w_d_agree/all3_agree/atr_cal/
+    # fib_near/no_news/div_confirmed aren't reconstructable from historical
+    # data, so this deliberately caps at C rather than assuming better.
+    _pair_up_grade = (r.get("pair") or "").upper()
+    _is_gbp_cross = "GBP" in _pair_up_grade.split("/")
+    _ribbon_only_f_or_d = (
+        (rib_strongly_against or rib_against)
+        and not w_d_conflict
+        and rr >= 2.0
+        and (w_d_agree or conf > 6)
+        and conf >= 6
+        and not _is_gbp_cross
+    )
+
     # ── Grade F — never trade ─────────────────────────────────────────────
-    if rib_strongly_against or w_d_conflict or rr < 1.5:
+    if _ribbon_only_f_or_d:
+        grade = "C"
+    elif rib_strongly_against or w_d_conflict or rr < 1.5:
         grade = "F"
         # Issue 3 floor: 3/3 fundamental tailwind + conf>=6 cannot be Grade F
         if _has_fund_tailwind and conf >= 6:
