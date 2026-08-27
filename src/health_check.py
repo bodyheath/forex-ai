@@ -64,7 +64,10 @@ _GATE_BLOCK_PATTERNS = {
 
 _WARN_LINE_RE   = re.compile(r"\[([\w-]+)\]\s*WARNING\s*(.*)")
 _PAIR_TOKEN_RE  = re.compile(r"\b[A-Z]{3}/[A-Z]{3}\b")
-_NUM_TOKEN_RE   = re.compile(r"-?\d+(\.\d+)?")
+# Word-boundary on both sides so a digit embedded in an identifier (t1_price,
+# t2_hit) is left alone -- only standalone numeric values (3/10, 0.50, -1.2)
+# get collapsed. "_" counts as \w, so "t1_price" has no boundary before "1".
+_NUM_TOKEN_RE   = re.compile(r"\b-?\d+(\.\d+)?\b")
 
 
 def _normalize_warning(tag: str, rest: str) -> str:
