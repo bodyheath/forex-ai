@@ -273,6 +273,38 @@ def check_fund_state_staleness() -> list:
     return flags
 
 
+def check_outcome_analysis_gap() -> list:
+    """Same ground-truth-vs-cache reconciliation shape as
+    check_fund_state_staleness() — flags any closed fund trade missing from
+    win_analysis.json/loss_analysis.json. Confirmed this can happen
+    silently even with the pending-retry queue in place (#2059, #2257,
+    #2446, #2484, #2909), since that queue only helps a trade that was
+    attempted at least once; a trade never passed to run_outcome_analysis()
+    at all leaves no trace anywhere.
+
+    run_outcome_analysis() now self-heals this on every call (daily.py scan
+    + monitor.py cycle) via find_unanalyzed_closed_trades(), so this check
+    should always read empty in normal operation. If it ever fires, that
+    means the self-healing itself is failing (e.g. Claude API persistently
+    erroring) — investigate directly, don't just wait for the next scan.
+    """
+    flags = []
+    try:
+        from src import outcome_analyst
+        missing = outcome_analyst.find_unanalyzed_closed_trades()
+        if missing:
+            ids = [str(m.get("id")) for m in missing]
+            flags.append(
+                f"🚨 Outcome-analysis gap — {len(missing)} closed fund trade(s) "
+                f"missing from win/loss analysis despite self-healing "
+                f"reconciliation: {ids} — the reconciliation itself may be "
+                f"failing, investigate directly rather than waiting"
+            )
+    except Exception as e:
+        flags.append(f"⚠️ Outcome-analysis gap check itself failed to run: {e}")
+    return flags
+
+
 def check_dispatch(records: list) -> list:
     """Flag 2+ consecutive dispatch failures on either channel (ignoring
     scans where that channel wasn't attempted at all)."""
