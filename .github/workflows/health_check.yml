@@ -1,0 +1,91 @@
+name: Standing Health Check
+
+# 2026-08-27: standing regression tripwire requested after a live-scan review
+# turned up two silent, log-noise-only bugs (a stale t1_price warning firing
+# on every trade, and a dead _SONNET_THRESH dict) that nothing was watching
+# for. This workflow runs src/health_check.py's checks on a schedule so the
+# same *class* of bug (a warning/gate/state field quietly going wrong or
+# silent) gets caught automatically instead of waiting for a manual read-
+# through of a pasted log.
+#
+# Pure log/data parsing against files already committed to the repo by the
+# scan/monitor workflows (data/scan_telemetry.jsonl, trades.csv,
+# research_trades.csv, fund_state.json) plus static checks against the code
+# itself -- zero API calls, same low-cost shape as heartbeat_watchdog.yml.
+#
+# Cadence: every 6 hours, independent of scan timing -- the checks work off
+# rolling windows already persisted in scan_telemetry.jsonl, so they don't
+# need to be tightly synced to when a scan actually ran. Same GHA-native
+# `schedule:` trigger as heartbeat_watchdog.yml (not cron-job.org), same
+# documented delay-under-load caveat applies but matters less here since nothing
+# time-critical depends on this workflow firing exactly on the hour.
+#
+# Alert dedup: state persisted in data/health_check_state.json, keyed on the
+# exact set of currently-flagged messages (see scripts/health_check.py) --
+# alerts once when the flag set changes, stays silent on repeat runs with the
+# same flags, same "don't spam an already-reported condition" shape as
+# heartbeat_watchdog.py.
+
+on:
+  schedule:
+    - cron: '15 */6 * * *'
+  workflow_dispatch:   # manual trigger for testing
+
+concurrency:
+  group: health-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run health check
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID_2: ${{ secrets.TELEGRAM_CHAT_ID_2 }}
+          TELEGRAM_CHAT_ID_3: ${{ secrets.TELEGRAM_CHAT_ID_3 }}
+          DISCORD_WEBHOOK_HEALTH: ${{ secrets.DISCORD_WEBHOOK_HEALTH }}
+          DISCORD_WEBHOOK_CRITICAL: ${{ secrets.DISCORD_WEBHOOK_CRITICAL }}
+        run: python scripts/health_check.py
+
+      - name: Commit dedup state if changed
+        run: |
+          git config user.name "forex-ai[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/health_check_state.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No dedup-state change — skipping commit"
+            exit 0
+          fi
+          git commit -m "chore: health check state $(date -u +'%Y-%m-%d %H:%M UTC')"
+          for i in 1 2 3; do
+            if ! git pull --rebase -X ours origin main 2>&1; then
+              git rebase --abort 2>/dev/null || true
+              git pull --no-rebase -X ours origin main 2>&1 || true
+            fi
+            if git push origin HEAD:main 2>&1; then
+              echo "Push succeeded on attempt $i"
+              exit 0
+            fi
+            echo "Push attempt $i failed — waiting 10 seconds"
+            sleep 10
+          done
+          echo "All 3 push attempts failed — dedup state not persisted this run (non-fatal, will retry next cycle)"
