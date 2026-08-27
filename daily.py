@@ -2675,7 +2675,10 @@ def _trade_quality_grade(r: dict) -> dict:
     # of objections as negative evidence — DA-demoted candidates showed 0/6
     # real decisive wins in the historical investigation that motivated this
     # (n=6, thin, but directionally consistent; see conversation history).
-    if (r.get("second_opinion") or {}).get("has_objections"):
+    _grade_before_da = grade
+    _second_opinion  = r.get("second_opinion") or {}
+    _da_fired        = bool(_second_opinion.get("has_objections"))
+    if _da_fired:
         grade = {"A": "B", "B": "C", "C": "D", "D": "F", "F": "F"}.get(grade, grade)
 
     return {
@@ -2693,6 +2696,14 @@ def _trade_quality_grade(r: dict) -> dict:
         "rib_aligned":  rib_aligned,
         "rib_against":  rib_against,
         "div_confirmed": div_confirmed,
+        # 2026-08-27: persist the DA fold-in decision itself (not just its effect
+        # on the final grade) so it's queryable — the n=6 informal check behind
+        # this rule (see comment above) can't be revisited without it. Additive
+        # only; not read by any decision path.
+        "da_fired":         _da_fired,
+        "da_downgraded":    _da_fired and (grade != _grade_before_da),
+        "da_grade_before":  _grade_before_da,
+        "da_reasons":       "; ".join(_second_opinion.get("reasons") or []),
     }
 
 
