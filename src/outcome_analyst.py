@@ -263,6 +263,22 @@ def run_outcome_analysis(closed_trades: list, log=print) -> list:
                 closed_trades = list(closed_trades) + [row]
                 log(f"  Retrying pending analysis for #{row.get('id')} {row.get('pair', '?')}")
 
+    # 2026-08-27: ground-truth reconciliation — catch any closed fund trade
+    # that was never passed here at all, not even attempted, no trace in
+    # pending_analysis.json either. See find_unanalyzed_closed_trades()'s
+    # docstring for the confirmed real cases (#2446, #2484, #2909) this
+    # backstops. Runs every call (daily.py scan + monitor.py cycle), so any
+    # future instance self-heals on the very next one.
+    try:
+        existing_ids = {str(t.get("id")) for t in closed_trades}
+        for row in find_unanalyzed_closed_trades():
+            if str(row.get("id")) not in existing_ids:
+                closed_trades = list(closed_trades) + [row]
+                existing_ids.add(str(row.get("id")))
+                log(f"  Reconciliation found unanalysed closed trade #{row.get('id')} {row.get('pair', '?')}")
+    except Exception as _recon_exc:
+        log(f"  Outcome-analysis reconciliation scan failed: {_recon_exc}")
+
     for trade in closed_trades:
         rec_id = trade.get("id")
         pair   = trade.get("pair", "?")
