@@ -224,7 +224,17 @@ def check_gate_silence(records: list) -> list:
 def check_fund_state_staleness() -> list:
     """Compare fund_state.json against a fresh recompute from trades.csv.
     Same class of bug as the fund-state staleness fix shipped earlier —
-    catches a future regression of the same shape."""
+    catches a future regression of the same shape.
+
+    Only compares fields daily.py actually reads off _fund_st to make a
+    sizing decision (consecutive_losses, consecutive_wins,
+    current_drawdown_pct — confirmed via grep, these are the only
+    `_fund_st.get(...)` calls in the file). fund_total_trades and
+    sizing_mode are NOT read anywhere for a live decision and legitimately
+    drift between a trade opening and the next reconcile-on-close — flagging
+    those would be a permanent, meaningless false positive rather than a
+    real staleness signal.
+    """
     flags = []
     try:
         import pandas as pd
@@ -239,8 +249,7 @@ def check_fund_state_staleness() -> list:
         disk = _fs.load()
 
         stable_fields = [
-            "fund_total_trades", "sizing_mode", "consecutive_losses",
-            "consecutive_wins", "win_rate", "profit_factor",
+            "consecutive_losses", "consecutive_wins", "current_drawdown_pct",
         ]
         mismatches = []
         for field in stable_fields:
