@@ -1,0 +1,25 @@
+PAIR: USD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at -61.8% Fib + RSI 39 (oversold) + USD rate advantage in mixed trend supports BUY, but MTF weak (D:BUY vs 4H:SELL, conf=1/3) and LEANING_BEAR ribbon prevent conviction.
+
+RISK_FACTORS: (1) MTF disagreement: Daily BUY conflicts with 4H SELL; confidence below 2/3 threshold severely limits trade validity. (2) CAD crowded short unwinding — institutional reversal risk; if CAD shorts cover aggressively, USD/CAD will sell off hard, negating the setup.
+
+TRADE_THIS: NO
+
+**REASONING:**
+
+**MTF VETO:** D1=BUY, 4H=SELL, conf=1/3 (only 1 of 3 timeframes agree on direction). Rule: *if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless.* Here, Daily agrees but 4H opposes; MTF confidence is 40% weighted and falls far short of 2/3 (67%). This is a **hard block**.
+
+**Technical decomposition:**
+- D1 T_sig=BUY_4 (baseline); RSI 39.1

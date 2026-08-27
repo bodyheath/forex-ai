@@ -48,7 +48,16 @@
   "weekly_start_date": "2026-08-24",
   "observation_mode": false,
   "observation_mode_until": null,
-  "missed_opportunities": [],
+  "missed_opportunities": [
+    {
+      "pair": "AUD/NZD",
+      "direction": "SELL",
+      "confidence": 8.0,
+      "checklist_score": 5.0,
+      "blocked_reason": "currency_exposure",
+      "timestamp": "2026-08-28T06:29:02"
+    }
+  ],
   "sizing_reason": "4 consecutive wins \u2014 streak bonus +0.10%",
   "weekend_alert_sent_date": null,
   "drawdown_paused": false,

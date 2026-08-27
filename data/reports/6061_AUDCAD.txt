@@ -1,0 +1,24 @@
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Strong MTF consensus SELL (M/W/D/4H all aligned) with RSI overbought in confirmed uptrend, pin bar at key level, and BB upper-band rejection, but ribbon remains ALIGNED_BULL and CAD positioning crowded-short creates reversal risk.
+RISK_FACTORS: [1] CAD COT momentum UNWINDING from crowded short — institutional positioning flip risk undermines SELL conviction; [2] EMA ribbon fully aligned bullish (5/5) contradicts sell signal — trend continuation threat if price holds above SMA50 (0.9844).
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.9990
+ENTRY_TRIGGER_REASON: Sell limit at recent swing high; wait for confirmed rejection of upper BB and RSI pullback below 70 before entry to reduce false-breakout risk.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**ANALYSIS RATIONALE:**
+
+**TECHNICAL (6/10):**
+- D1 T_sig baseline = SELL_6, justified by RSI 64.3 in confirmed **uptrend context** (W:SELL + D:SELL MTF). In an uptrend

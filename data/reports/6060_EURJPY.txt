@@ -1,0 +1,24 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 78.6% Fib + D1 T_sig SELL_4 conflict with uptrend structure and crowded EUR short positioning unwinding, creating uncertain directional conviction.
+RISK_FACTORS: [1. MTF disagreement (M:SELL, W:NEUTRAL, D:SELL) = only 1/3 consensus — below 2/3 threshold, TRADE_THIS blocked. 2. EUR net SHORT at 5.0% with UNWINDING momentum suggests institutional reversal risk — trade opposing crowded short is contrarian but poorly timed given uptrend structure.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not both agree on direction (W:NEUTRAL + D:SELL = 1/3 agreement, <2/3 threshold). Trade blocked regardless of technical or fundamental scores.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS SUMMARY:**
+
+**Technical Layer (4/10 — CONFLICTED):**
+- D1 T_sig=SELL_4 (baseline technical recommendation) BUT price in confirmed **uptrend** (price > SMA50

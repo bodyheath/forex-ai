@@ -1,0 +1,22 @@
+PAIR: EUR/NZD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + crowded EUR short positioning near reversal zone offers contrarian bounce, but downtrend structure and misaligned MTF (W:BUY vs D:NEUTRAL) limit confidence.
+RISK_FACTORS: [1] MTF disagree — weekly alone does not override daily neutral; D1 below SMA50 in death-cross structure still favors downside continuation. [2] OSC confluence absent (Stoch oversold at 24.2, CCI -68.3 bearish, no agreement) — isolated RSI at 43.9 (neutral) lacks oscillator support.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.9437
+ENTRY_TRIGGER_REASON: Await retest of FIB SL support (1.94371); pin bar pattern + Fibonacci confluence justify entry only if price holds this level with RSI+Stoch oversold confirmation on next impulse lower.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE:**
+
+**MTF Conflict (40% weighting):**
+Weekly BUY vs Daily NEUTRAL = 1/3 agreement. Hard rule: TRADE_THIS requires both W+D to agree.
