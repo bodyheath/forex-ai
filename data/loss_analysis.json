@@ -88,5 +88,14 @@
     "analysis": "## What Went Wrong\n\nThe most critical error was underweighting the **ALIGNED_BEAR ribbon with fan structure** \u2014 this was explicitly flagged as a dominant downtrend signal yet the trade still received a BUY rating, meaning the counter-trend bias overrode a structurally bearish environment. The **EUR net long positioning unwinding** (Fundamental: 5, Positioning: 5) confirmed institutional momentum was moving *against* the trade, yet both scores were treated as neutral rather than directional warnings. The setup relied almost entirely on oscillator confluence (triple buy, RSI oversold) which is a notoriously unreliable signal in strong trending markets \u2014 oversold conditions in a downtrend simply mean price is falling hard, not reversing. The **NEWS_WARNING about UK/EU releases and GBP net short volatility** was acknowledged but not acted upon with a reduced position size or skipped entry, and the trade closing on July 8 suggests a macro release within the 48-hour window likely accelerated the stop hit.\n\n---\n\nPATTERN: Never BUY counter-trend against an aligned bear ribbon + unwinding institutional longs; oscillator signals fail in strong trends.",
     "pattern_rule": "Never BUY counter-trend against an aligned bear ribbon + unwinding institutional longs; oscillator signals fail in stron",
     "analysed_at": "2026-07-15 19:05:30"
+  },
+  {
+    "id": "2446",
+    "pair": "GBP/CHF",
+    "status": "EXPIRED",
+    "r_multiple": "-0.35",
+    "analysis": "## What Went Wrong\n\nThe weakest scores in this trade \u2014 Positioning (5/10) and Macro (5/10) \u2014 flagged meaningful uncertainty that was underweighted against the technical conviction, suggesting the short setup lacked the multi-layer confirmation needed for a high-confidence sell on GBP/CHF. The pair rallied 96 pips to the stop (1.0924) within 5 days, indicating CHF weakness or GBP strength driven by macro/fundamental forces that overrode the bearish technical pattern \u2014 likely risk-on flows or a CHF-negative SNB narrative that the fundamental score of 6 failed to fully price in. The Sentiment score of 6 was a warning that crowd positioning wasn't sufficiently extreme to support a contrarian short, meaning there was no clear sentiment exhaustion catalyst confirming the sell. The critical warning sign was the cluster of mid-range scores (5-6) across three independent layers \u2014 when more than two layers are below 7, the setup does not have genuine confluence and the stop is likely undersized relative to the actual uncertainty.\n\nPATTERN: Don't sell if 3+ layer scores are \u22646 \u2014 weak multi-layer confluence signals insufficient conviction; skip or reduce size.",
+    "pattern_rule": "Don't sell if 3+ layer scores are \u22646 \u2014 weak multi-layer confluence signals insufficient conviction; skip or reduce size.",
+    "analysed_at": "2026-08-27 21:13:36"
   }
 ]

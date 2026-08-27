@@ -15,19 +15,29 @@
     "outcome": "Mixed results - fundamentals tend to win over weeks. Lower confidence on such conflicts."
   },
   {
-    "source": "outcome",
-    "pattern": "Never BUY into a fully fanned bearish EMA ribbon (5/5); oversold oscillators in strong downtrends are traps, not reversa",
-    "outcome": "[LOSS] NZD/HKD closed 2026-06-24 09:22:33"
+    "source": "auto",
+    "pattern": "Overall track record to date (n=14)",
+    "outcome": "Win rate 50%, expectancy -0.08R."
   },
   {
-    "source": "outcome",
-    "pattern": "When D1 RSI <30 AND 4H RSI <20 AND triple oscillator confluence align, fade the trend for mean-reversion with 2:1+ RR.",
-    "outcome": "[EXPIRED] NZD/USD closed 2026-06-30 05:12:46"
+    "source": "auto",
+    "pattern": "Setups taken at confidence >= 7 (n=9 closed trades)",
+    "outcome": "Win rate 44%, expectancy -0.08R. This segment has underperformed - reduce confidence here."
   },
   {
-    "source": "outcome",
-    "pattern": "Don't BUY if 3+ analysis layers score \u22645.0 \u2014 technical-only setups on illiquid crosses require broad confluence.",
-    "outcome": "[EXPIRED] CAD/HKD closed 2026-07-01 21:12:47"
+    "source": "auto",
+    "pattern": "Setups taken at confidence < 7 (n=5 closed trades)",
+    "outcome": "Win rate 60%, expectancy -0.09R. This segment has performed well - a point in its favour, but still demand full confluence."
+  },
+  {
+    "source": "auto",
+    "pattern": "BUY setups (n=6 closed trades)",
+    "outcome": "Win rate 33%, expectancy +0.48R. This segment has underperformed - reduce confidence here."
+  },
+  {
+    "source": "auto",
+    "pattern": "SELL setups (n=8 closed trades)",
+    "outcome": "Win rate 62%, expectancy -0.29R. This segment has performed well - a point in its favour, but still demand full confluence."
   },
   {
     "source": "outcome",
@@ -115,28 +125,18 @@
     "outcome": "[EXPIRED] USD/CAD closed 2026-08-24 21:10:59"
   },
   {
-    "source": "auto",
-    "pattern": "Overall track record to date (n=14)",
-    "outcome": "Win rate 50%, expectancy -0.08R."
+    "source": "outcome",
+    "pattern": "Don't sell if 3+ layer scores are \u22646 \u2014 weak multi-layer confluence signals insufficient conviction; skip or reduce size.",
+    "outcome": "[EXPIRED] GBP/CHF closed 2026-07-19 18:10:47"
   },
   {
-    "source": "auto",
-    "pattern": "Setups taken at confidence >= 7 (n=9 closed trades)",
-    "outcome": "Win rate 44%, expectancy -0.08R. This segment has underperformed - reduce confidence here."
+    "source": "outcome",
+    "pattern": "MTF-aligned bounces from Fibonacci confluence + RSI <30 win directionally but cap gains when fundamentals oppose \u2014 size ",
+    "outcome": "[EXPIRED] EUR/AUD closed 2026-07-19 18:10:47"
   },
   {
-    "source": "auto",
-    "pattern": "Setups taken at confidence < 7 (n=5 closed trades)",
-    "outcome": "Win rate 60%, expectancy -0.09R. This segment has performed well - a point in its favour, but still demand full confluence."
-  },
-  {
-    "source": "auto",
-    "pattern": "BUY setups (n=6 closed trades)",
-    "outcome": "Win rate 33%, expectancy +0.48R. This segment has underperformed - reduce confidence here."
-  },
-  {
-    "source": "auto",
-    "pattern": "SELL setups (n=8 closed trades)",
-    "outcome": "Win rate 62%, expectancy -0.29R. This segment has performed well - a point in its favour, but still demand full confluence."
+    "source": "outcome",
+    "pattern": "Extreme RSI (<30) + pin bar at Fibonacci low + triple oscillator confluence + MTF alignment = high-probability mean-reve",
+    "outcome": "[WIN] EUR/NZD closed 2026-07-23 13:01:29"
   }
 ]
