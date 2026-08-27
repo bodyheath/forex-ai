@@ -10360,10 +10360,6 @@ _SCAN_MODES: dict = {
 _SCAN_TOP_N   = 20   # pairs selected and analysed from the full universe
 _TD_CACHE_MAX = 35   # pairs to pre-warm in Twelve Data cache (research sweep uses the extras)
 
-# Sonnet escalation threshold: 6 for 6am (higher quality), 7 for intraday (cheaper)
-_SONNET_THRESH = {"full": 6, "morning": 7, "prelondon": 7, "preny": 7, "london": 7}
-
-
 def _get_scan_mode() -> str:
     """Return scan mode from SCAN_MODE env var (cron-job.org input) or Auckland hour fallback."""
     import os as _os_
