@@ -95,6 +95,50 @@ def _already_analysed(rec_id) -> bool:
     return False
 
 
+# ---------------------------------------------------------------------------
+# Reconciliation — ground-truth backstop for the event-driven callers
+# ---------------------------------------------------------------------------
+
+def find_unanalyzed_closed_trades() -> list:
+    """Scan trades.csv directly for every closed fund trade that should have
+    an outcome analysis but doesn't, regardless of how or when it closed or
+    whether the closing event ever reached run_outcome_analysis() at all.
+
+    2026-08-27: the 2026-07-15 fix (monitor hook + pending-retry queue)
+    closed two gaps but left a third: run_outcome_analysis() only ever sees
+    a trade if it's in the closed_trades list a caller happens to pass, or
+    in pending_analysis.json from a prior *attempted* Claude call. A trade
+    that's never passed in at all — no exception anywhere, nothing to catch
+    — leaves zero trace and is silently lost forever. Confirmed real via a
+    full historical scan: #2446 (GBP/CHF LOSS), #2484 (EUR/AUD, WIN by
+    r-sign), and #2909 (EUR/NZD WIN, this fund's single largest win) all
+    closed *after* the 2026-07-15 fix shipped and were never analysed —
+    win_analysis.json/loss_analysis.json show no attempt, and
+    pending_analysis.json has never contained their IDs. This function
+    re-derives ground truth from trades.csv itself instead of trusting any
+    caller to have remembered every trade, the same shape of fix as
+    fund_state.reconcile_from_trades().
+    """
+    rows = tracker.load()
+    missing = []
+    for row in rows:
+        if str(row.get("trade_this", "")).upper() != "YES":
+            continue
+        status = (row.get("status") or "").upper()
+        if status not in ("WIN", "LOSS", "FULL_WIN", "PARTIAL_WIN", "EXPIRED"):
+            continue
+        try:
+            r_val = float(row.get("r_multiple") or 0)
+        except (TypeError, ValueError):
+            r_val = 0.0
+        if r_val == 0.0:
+            continue  # breakeven — legitimately skipped, matches existing rule
+        if _already_analysed(row.get("id")):
+            continue
+        missing.append(row)
+    return missing
+
+
 def _is_near_duplicate(new_pattern: str) -> bool:
     prefix = new_pattern[:_DEDUP_CHARS].lower()
     for r in memory.load():
