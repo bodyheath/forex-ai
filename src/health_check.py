@@ -466,6 +466,7 @@ def run_all_checks() -> dict:
     flags += check_universe_coverage(records)
     flags += check_gate_silence(records)
     flags += check_fund_state_staleness()
+    flags += check_outcome_analysis_gap()
     flags += check_dispatch(records)
     flags += check_grade_ordering()
     flags += check_audit_fixes_present()
