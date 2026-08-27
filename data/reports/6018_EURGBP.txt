@@ -1,0 +1,23 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 50% Fib + D/4H SELL alignment offset by crowded EUR short positioning and RSI 56.8 (neutral) creates mixed-conviction setup with reversal risk.
+RISK_FACTORS: EUR COT UNWINDING from crowded short creates whipsaw risk; D1 RSI neutral (56.8) lacks conviction despite pin bar pattern — vulnerable to BUY trap if price retests 0.8574 support.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8545
+ENTRY_TRIGGER_REASON: Break below Fib 50.0% support at 0.8574 to confirm D1 bearish pin bar + D/4H SELL alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**REASONING:**
+
+**MTF GATE FAIL (BORDERLINE):** W:NEUTRAL + D:SELL = only 1/2 agree → conf = 2/3 = 60%. System requires **both weekly AND daily to agree for TRADE_THIS YES**. You pass the 2/3 threshold by 1% and 4H reinforces SELL, so TRADE_THIS NO is

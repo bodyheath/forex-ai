@@ -1,0 +1,21 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Price at 78.6% Fib retracement with pin bar pattern in uptrend, but T_sig=SELL_4 conflicts with D1 uptrend structure; MTF alignment poor (1/3 conf) creates execution risk.
+RISK_FACTORS: [1] MTF conflict — D1 shows uptrend (price>SMA50>SMA200) but T_sig=SELL_4 and MTF only 1/3 agreement (W:NEUTRAL, D:SELL, 4H:NEUTRAL); selling into golden-cross is counter-trend. [2] COT positioning reversal risk — EUR at crowded short extreme with MOM=UNWINDING; selling into institutional unwinding of shorts inverts your edge and signals potential bounce.
+TRADE_THIS: NO
+ENTRY_TYPE: [BLOCKED]
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (conf=1/3 << 2/3 threshold). D1 golden-cross uptrend contradicts T_sig=SELL_4. COT EUR short unwinding further reduces conviction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS SUMMARY:**

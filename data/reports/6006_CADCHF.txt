@@ -1,0 +1,30 @@
+```
+PAIR: CAD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Crowded CAD short positioning unwinding + bullish engulfing on D1 provide contrarian reversal signal, but weak MTF confluence (W:NEUTRAL, D:NEUTRAL) and bearish RSI divergence limit conviction.
+RISK_FACTORS: (1) MTF alignment failure — weekly and daily both neutral (0/3 conf); reversal can stall if weekly stays NEUTRAL. (2) Bearish RSI divergence (38p/4pt) conflicts with BUY direction — price made higher high on D1 but RSI lower — suggests momentum weakness into resistance.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+### RATIONALE
+
+**MTF Rule Violation (Hard Stop):**
+- **W:NEUTRAL + D:NEUTRAL** → conf=0/3 (neither weekly nor daily confirm direction).
+- Rule: "if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless."
+- This trade fails the MTF gating rule automatically.
+
+**TECHNICAL_SCORE = 4/10** (

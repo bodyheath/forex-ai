@@ -1,0 +1,23 @@
+```
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: Pin bar at key level with partial oscillator sell signal conflicts sharply with fully aligned bullish ribbon and uptrend structure; MTF weakly split (W:SELL vs D:NEUTRAL) undermines conviction.
+
+RISK_FACTORS: [1] RSI 59.8 in confirmed uptrend (D:NEUTRAL + ribbon ALIGNED_BULL) is neutral-to-bullish, not oversold; T_sig=SELL_3 contradicted by ribbon alignment. [2] MTF confidence only 1/3 (W:SELL but D:NEUTRAL, 4H:NEUTRAL, M:NEUTRAL); weak multi-timeframe agreement violates core TRADE_THIS rule.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: INVALID
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade fails MTF rule (weekly SELL + daily NEUTRAL = 1/3 agreement, <2/3 threshold). Confidence 5/10 below 7.0 minimum. Additionally, T_sig=SELL_3 contradicted by fully aligned bullish ribbon (5/5 EMA fan) and price structure (>SMA50>SMA200, golden cross). Pin bar is ambiguous at resistance; no valid entry

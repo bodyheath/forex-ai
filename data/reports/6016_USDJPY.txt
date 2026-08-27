@@ -1,0 +1,25 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weak 4H downside bias within a D1 mixed range, with JPY rate-rise support and ribbon leaning bearish, but no MTF agreement (W+D both NEUTRAL) blocks high-conviction trade.
+RISK_FACTORS: [1] MTF conf=0/3 — weekly and daily both NEUTRAL, violating MTF rule (weekly+daily must both agree on direction to trade); [2] Oscillators unaligned (Stochastic overbought 77.4 / CCI neutral 58.0 / RSI neutral 46.4) — no confluence support.
+TRADE_THIS: NO
+ENTRY_TYPE: STANDBY
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule blocks trade — W:NEUTRAL + D:NEUTRAL do not both agree on direction. 4H SELL signal alone (conf=0/3) is insufficient; require W or D confirmation to enter.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- D1 T_sig=NEUTRAL_3 is baseline; 4H T=5 leans slightly bearish.
+- RSI D1=46.4 (neutral mid-

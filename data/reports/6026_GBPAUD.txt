@@ -1,0 +1,22 @@
+PAIR: GBP/AUD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: Pin bar at key level with RSI oversold (36.7) and 4H T=9 signal reversal entry in downtrend, but bearish RSI divergence and LEANING_BEAR ribbon create conflicting structure — low-probability setup.
+
+RISK_FACTORS: 
+1. Bearish RSI divergence (7p price swing vs 4pt RSI) conflicts with BUY direction — price making lower highs while oscillator stalls, classic false-break risk in death-cross downtrend.
+2. MTF confidence only 2/3 (W:NEUTRAL + D:BUY + 4H:BUY) — weekly neutrality breaks the MTF rule threshold (requires both weekly AND daily agreement); ribbon LEANING_BEAR (4/5 aligned) opposes upside conviction.
+
+TRADE_THIS: NO
+
+**REASON FOR NO:**
+- **MTF RULE VIOLATION**: Weekly is NEUTRAL; only Daily and 4H agree BUY. System requires **weekly AND daily both agree on direction** — this setup fails the gate (conf=2/3 < 2/3 threshold for TRADE_THIS YES). W:NEUTRAL = veto.
+- **DIVERGENCE CONFLICT**: Bearish RSI divergence (7p swing

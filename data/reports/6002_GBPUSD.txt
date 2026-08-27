@@ -1,0 +1,25 @@
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with bearish 4H double-top and monthly sell signal, but MTF alignment conflict (M:SELL vs W/D:NEUTRAL) and bullish ribbon prevent high-conviction trade.
+RISK_FACTORS: [1] MTF disagreement — weekly and daily both NEUTRAL contradicts monthly SELL; no directional agreement across 2/3 timeframes. [2] GBP COT UNWINDING — institutions reducing short conviction while already net short 49%, suggests potential positioning squeeze or trend exhaustion.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.3530
+ENTRY_TRIGGER_REASON: Wait for pullback to form lower high near 1.3530 before entering; confirms double-top pattern on 4H and provides better R:R setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**SCORE RATIONALE:**
+
+**TECHNICAL (4/10):**
+- D1 RSI 58.9 = upper-neutral zone (45–62), standard tier → score 3–4. Mixed/neutral MTF trend (W:NEUTRAL, D:NEUTRAL) = use standard RSI tiers, not trend-shifted.
+- T_sig baseline

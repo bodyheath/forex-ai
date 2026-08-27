@@ -1,0 +1,32 @@
+```
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at 50% Fib + CHF unwinding shorts + USD rate advantage creates weak bearish setup, but multi-timeframe neutrality and conflicting technicals prevent conviction.
+
+RISK_FACTORS: [1. MTF misalignment: M:BUY contradicts D/W:NEUTRAL — no directional consensus above weekly; 2. OSC NONE: Stochastic neutral (53.8) + CCI divergent (−48.0) = no oscillator confirmation for entry]
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.80350
+ENTRY_TRIGGER_REASON: Break below pin bar low (bearish engulfment pattern) + close below D1 SMA50 (0.8091) to confirm range breakout to downside.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL_SCORE: 3/10**
+- D1 T_sig = NEUTRAL_3 (baseline)
+- RSI 47.6 (D1) = standard tier 45–62 = 3–4 NEUTRAL ✓
+- 4H RSI 63.9 = standard tier
