@@ -302,18 +302,109 @@ def check_circuit_breaker(state: dict, current_balance: float) -> tuple:
     pnl_pct = (current_balance - opening) / opening * 100
     pnl_usd = current_balance - opening
 
-    # Sanity check: if the calculated loss exceeds 50% of the current fund balance,
-    # the P&L calculation is almost certainly wrong (e.g. pips×lot_size passed instead
-    # of dollars, or daily_opening_balance is stale/wrong).  Skip the circuit breaker
-    # rather than fire a false alarm.
-    if abs(pnl_usd) > current_balance * 0.5:
-        print(
-            f"[FUND_STATE] ERROR: Daily P&L calculation appears wrong — "
-            f"${abs(pnl_usd):,.2f} loss on ${current_balance:,.2f} fund "
-            f"(opening balance used: ${opening:,.2f}) — skipping circuit breaker",
-            file=_sys_cb.stderr,
-        )
-        return state, None
+    # 2026-08-27: this guard used to just `return state, None` here — silently
+    # skipping the circuit breaker on the theory that a >50%-of-balance swing
+    # must be a calc bug (pips×lot_size passed instead of dollars, or a stale
+    # daily_opening_balance), never a real loss. That reasoning is exactly
+    # backwards for the one scenario this function exists to catch: a genuine
+    # catastrophic loss is the ONE input guaranteed to make it refuse to act.
+    #
+    # The >50% threshold itself is a reasonable trip-wire — with position
+    # sizing hard-capped at 0.25-2.0% per trade (_calculate_position_size)
+    # and capacity capped at 5 concurrent slots, the worst mathematically
+    # possible single-day realized loss under the system's own sizing rules
+    # is ~10%; anything past 50% genuinely is far more likely to be a units/
+    # staleness bug than 5 simultaneous max-loss trades. The bug was treating
+    # "probably a calc error" as "definitely safe to ignore" instead of
+    # verifying which one it actually is.
+    #
+    # Fix: only for a LOSS-direction extreme value (a gain-direction anomaly
+    # has nothing for the breaker to protect against), independently
+    # recompute today's P&L straight from trades.csv via calculate_fund_state()
+    # — a from-scratch summation of closed trades, structurally unable to
+    # inherit a stale/corrupted daily_opening_balance from fund_state.json,
+    # since it derives its own opening balance by walking trades.csv's own
+    # closed_at timestamps. Real loss and calc-bug now produce different,
+    # checkable signatures instead of being treated identically:
+    #   - fresh recompute agrees it's a real loss  -> trip the breaker for
+    #     real, using the independently-verified numbers.
+    #   - fresh recompute disagrees (small loss/breakeven/gain) -> the
+    #     original number was a bug, exactly as suspected; do NOT trip a
+    #     false breaker, but DO surface the discrepancy — a mismatch this
+    #     large means something in the accounting is genuinely broken and
+    #     that is worth a human's attention regardless of today's outcome.
+    #   - the independent recompute itself fails/can't be trusted -> fail
+    #     toward safety (halt as a precaution) rather than toward silence,
+    #     since "unverifiable" is not the same as "safe to ignore."
+    if pnl_usd < 0 and abs(pnl_usd) > current_balance * 0.5:
+        fresh_pct = fresh_usd = None
+        try:
+            from src.trading import financials as _fin_verify
+            _fresh = _fin_verify.calculate_fund_state()
+            if not _fresh.get("error"):
+                fresh_pct = _fresh.get("daily_pnl_pct")
+                fresh_usd = _fresh.get("daily_pnl_dollars")
+        except Exception as _verify_exc:
+            print(f"[FUND_STATE] Independent circuit-breaker verification failed: "
+                  f"{_verify_exc}", file=_sys_cb.stderr)
+
+        if fresh_pct is not None and fresh_pct <= CIRCUIT_BREAKER_PCT:
+            # Independently confirmed real loss — trust the fresh numbers
+            # (the cached-state ones are exactly what's in question), not
+            # the original suspect pnl_pct/pnl_usd.
+            print(
+                f"[FUND_STATE] Extreme daily P&L (${abs(pnl_usd):,.2f} on cached "
+                f"figures) independently CONFIRMED by fresh trades.csv recompute "
+                f"({fresh_pct:.1f}%, ${fresh_usd:,.2f}) — treating as a real loss.",
+                file=_sys_cb.stderr,
+            )
+            pnl_pct, pnl_usd = fresh_pct, fresh_usd
+        elif fresh_pct is not None:
+            # Independently disproven — the extreme cached-state figure was
+            # a calc/staleness bug, not a real loss. Don't trip a false
+            # breaker, but don't go silent either: a 50%+ mismatch between
+            # two ways of computing the same account is a real bug on its
+            # own, separate from today's actual P&L.
+            print(
+                f"[FUND_STATE] ERROR: cached daily P&L looked catastrophic "
+                f"(${abs(pnl_usd):,.2f} loss on ${current_balance:,.2f} fund, "
+                f"opening balance used: ${opening:,.2f}) but an independent "
+                f"trades.csv recompute shows {fresh_pct:.1f}% (${fresh_usd:,.2f}) "
+                f"— treating the cached figure as a calc/staleness bug, not "
+                f"tripping the circuit breaker, but this mismatch itself needs "
+                f"manual review.",
+                file=_sys_cb.stderr,
+            )
+            return state, (
+                f"⚠️ <b>Fund accounting mismatch detected</b>\n\n"
+                f"Cached daily P&L looked like a {pnl_pct:.0f}% loss, but an "
+                f"independent recompute from trades.csv shows {fresh_pct:.1f}% "
+                f"(${fresh_usd:,.2f}). Treating this as a calculation/staleness "
+                f"bug — circuit breaker NOT tripped, trading continues — but "
+                f"this discrepancy needs manual review; it means something in "
+                f"the fund accounting is wrong even though today isn't a real "
+                f"catastrophic loss."
+            )
+        else:
+            # Could not verify at all — fail toward safety, not silence.
+            state = dict(state)
+            state["circuit_breaker_active"] = True
+            state["circuit_breaker_reason"] = (
+                f"PRECAUTIONARY HALT — daily P&L calculation produced an "
+                f"implausible value (${abs(pnl_usd):,.2f} loss on "
+                f"${current_balance:,.2f} balance) and could not be "
+                f"independently verified against trades.csv."
+            )
+            alert = (
+                f"🚨 <b>Trading halted — fund P&L could not be verified</b>\n\n"
+                f"Calculated daily loss (${abs(pnl_usd):,.2f}, {pnl_pct:.0f}%) is "
+                f"implausibly large and an independent trades.csv cross-check "
+                f"failed, so this cannot be confirmed as either a real loss or "
+                f"a calculation bug.\n\n"
+                f"No new trades until this is manually reviewed and cleared.\n"
+                f"Existing trades remain open and monitored."
+            )
+            return state, alert
 
     state = dict(state)
     state["daily_pnl_dollars"] = round(pnl_usd, 2)
