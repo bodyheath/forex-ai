@@ -12727,10 +12727,12 @@ def run() -> int:
                 )
                 if _tg_summary_ok is False:
                     _scan_had_critical_failure = True
+                _log_line(log, f"[dispatch] telegram={'OK' if _tg_summary_ok is not False else 'FAILED'}")
             except Exception as _tg_exc:
                 print(f"[telegram] _send_telegram_summary CRASHED: {_tg_exc}", file=sys.stderr)
                 traceback.print_exc(file=sys.stderr)
                 _scan_had_critical_failure = True
+                _log_line(log, "[dispatch] telegram=FAILED")
                 _telegram(
                     f"⚠️ <b>{scan_mode.upper()} scan complete but summary build failed</b>\n"
                     f"{type(_tg_exc).__name__}: {str(_tg_exc)[:200]}"
