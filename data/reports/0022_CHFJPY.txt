@@ -1,0 +1,25 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key level (bullish candle pattern) conflicts with 4H double-top (bearish) and leaning-bear ribbon, creating ambiguous technicals; fundamental drift favors JPY strength, but CHF COT unwinding reduces conviction.
+
+RISK_FACTORS: 
+1. MTF disagreement (M:SELL vs W:NEUTRAL vs D:NEUTRAL) — no clear directional alignment; entering either direction violates MTF rule.
+2. Candle conflict: D1 pin_bar_at_key_level (bullish reversal signal) contradicts 4H double_top (bearish rejection) — pattern reliability compromised; COT unwinding on CHF reduces institutional conviction for SELL.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated — W:NEUTRAL + D:NEUTRAL do not confirm M:SELL (only 1/3 timeframes aligned). Candle patterns conflict (D1 bullish pin vs 4H bearish double-top). OSC=NONE (no oscillator confluence). CONFIDENCE=5 — neutral zone. Setup does not meet ≥7 confidence or ≥2/3 MTF agreement thresholds

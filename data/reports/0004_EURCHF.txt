@@ -1,0 +1,31 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at 78.6% Fib support + D1 SELL signal + bearish MACD divergence setup, but ribbon convergence and weak MTF agreement (1/3) limit conviction.
+
+RISK_FACTORS: [1] MTF conflict — only Daily agrees SELL; Weekly/Monthly neutral and 4H neutral = only 1/3 timeframes aligned, below 2/3 threshold. [2] Ribbon converging signals trend weakening; EUR COT unwinding from crowded short near range bottom = institutional reversal risk (long squeeze potential).
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.9350
+ENTRY_TRIGGER_REASON: Break below pin bar low at 78.6% Fib support (0.93596) to confirm bearish rejection
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+### DETAILED SCORING RATIONALE:
+
+**TECHNICAL_SCORE: 5/10**
+- **D1 RSI = 56.4:** In uptrend context (golden cross W/D both price > SMA50 > SMA200), this is neutral-to-slightly-bullish (45–65 zone = 3–4 in up

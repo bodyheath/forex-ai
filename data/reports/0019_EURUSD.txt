@@ -1,0 +1,27 @@
+```
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: EUR crowded short positioning unwinding + pin bar at key level + ribbon leaning bull = reversal setup, but mixed MTF and RSI overbought in neutral trend context limit conviction.
+RISK_FACTORS: ['MTF conf=0/3 (W:NEUTRAL, D:NEUTRAL, 4H:BUY misaligned) violates multi-timeframe agreement rule — trend direction unclear', 'RSI 64.5 elevated in mixed/range context with SMA50/200 divorced from price; risk of false breakout or consolidation break lower']
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 1.1678
+ENTRY_TRIGGER_REASON: Break above pin bar high at key level (1.16225 SH) with RSI >65 and 4H=BUY confirmation; EUR short unwinding would fuel move.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **SCORING RATIONALE**
+
+**TECHNICAL_SCORE: 5/10**
+- T_sig baseline = SELL_3, but D1 data contradicts:
+  - RSI 64.5: In **mixed MTF context** (W:NEUTRAL,
