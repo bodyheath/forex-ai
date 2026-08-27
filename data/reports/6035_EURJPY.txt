@@ -1,0 +1,23 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 78.6% Fib + D1 SELL signal conflict with uptrend structure; MTF disharmony (W/D/4H disagreement) and crowded EUR short positioning create reversal risk despite technical SELL alignment.
+RISK_FACTORS: [1] MTF conf=1/3 — only D1 confirms SELL; W and 4H neutral prevents high-conviction entry; [2] EUR short positioning at 1-year bottom unwinding — institutional reversal risk contradicts SELL thesis; crowded short squeeze could spike EUR higher despite technical weakness.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement <2/3 (only D1 SELL, W neutral, 4H neutral); confidence 5 falls below 7 threshold; positioning momentum UNWINDING on crowded short (EUR 5.0% net short) signals institutional exit, not continuation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF FAIL:** W:NEUTRAL + D:SELL + 4H:NEUTRAL = 1/3 agreement. Hard rule: TRADE_THIS=NO when MTF

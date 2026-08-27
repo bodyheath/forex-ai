@@ -1,0 +1,24 @@
+PAIR: USD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + D1 BUY signal + USD rate strength vs falling CAD offset by crowded CAD short positioning (reversal risk) and weak MTF alignment (D:BUY vs 4H:SELL conflict).
+RISK_FACTORS: MTF disagreement (4H:SELL vs D:BUY) — only 1/3 timeframes align, reducing entry conviction; CAD positioning near multi-year short crowding bottom — UNWINDING momentum signals institutional reversal, contradicting BUY thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: [NOT APPLICABLE]
+ENTRY_TRIGGER_PRICE: [NOT APPLICABLE]
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do not both agree on direction (W:NEUTRAL + D:BUY vs 4H:SELL = 1/3 agreement). Confidence 5/10 fails >=7 threshold. CAD COT reversal risk (unwinding from net short) undermines USD strength narrative.
+ENTRY_TRIGGER_EXPIRY_HOURS: [NOT APPLICABLE]
+
+---
+
+**Detailed Scoring Rationale:**
+
+**TECHNICAL_SCORE: 5/10**
+- D1 T_sig=BUY_4 → baseline

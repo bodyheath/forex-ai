@@ -1,0 +1,25 @@
+PAIR: EUR/GBP
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 50% Fib + EUR COT unwinding from crowded short creates mild reversal confluence, but weak MTF agreement (W:BUY vs D:NEUTRAL) and neutral ribbon limit conviction.
+RISK_FACTORS: [1] MTF conflict: weekly bullish but daily neutral; conf=1/3 (40% wt) fails MTF agreement rule — trade fails TRADE_THIS gate. [2] OSC NONE (Stoch 74.9 overbought, CCI 101.3 extreme) signals reversal fatigue, not continuation — no oscillator confluence to amplify entry.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.8574
+ENTRY_TRIGGER_REASON: Confluence: pin bar at 50% Fibonacci (0.8574, 3p away) + EUR COT unwinding from extreme short crowding + weekly uptrend support.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- T_sig baseline = NEUTRAL_3 (D1 mixed range, not aligned).
+- D1 RSI 54.8 = neutral zone (45–

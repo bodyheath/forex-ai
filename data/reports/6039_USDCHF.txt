@@ -1,0 +1,23 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 50% Fib support with CHF short unwinding creates weak bearish setup, but MTF misalignment (M:BUY vs D:NEUTRAL vs 4H:SELL, conf=0/3) blocks trade entry.
+RISK_FACTORS: [1. MTF fragmentation (0/3 agreement) violates multi-timeframe consensus rule — no directional conviction. 2. CHF positioning UNWINDING reduces bearish conviction; USD rate flat provides no tailwind for USD strength.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly, Daily, and 4H do not align (M:BUY, D:NEUTRAL, 4H:SELL = 0/3 agreement). Trade blocked regardless of technical setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING RATIONALE:**
+
+- **TECHNICAL (4/10):** D1 T_sig=NEUTRAL_3 is baseline. RSI 48.3 = NEUTRAL (3–4). 4H RSI 66.2 falls into SELL zone (4–5) but 4H trend is mixed/range

@@ -1,0 +1,32 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key level with RSI 62.4 and D1 T_sig=SELL_3 provides directional bias, but MTF conflict (M:SELL vs W/D:NEUTRAL) and weak OSC confluence (stoch 65.2, CCI 78.1 unconfirmed) limit conviction; crowded EUR short + COT UNWINDING = reversal risk.
+
+RISK_FACTORS: 
+1. MTF breakdown: Monthly SELL unsupported by weekly or daily (conf=0/3) — entry lacks multi-timeframe alignment; price may reverse into W/D neutral zones.
+2. COT institutional UNWINDING + crowded short positioning near 1y bottom creates sharp reversal risk; if EUR longs re-enter, stop-loss will be hit quickly.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1660
+ENTRY_TRIGGER_REASON: Break above pin bar high (1.1660 = recent swing resistance) would invalidate SELL thesis and trigger reversal into weekly/daily support; place limit below to await pullback confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+### ANALYSIS SUMMARY
+
+**Technical (4/10):**
