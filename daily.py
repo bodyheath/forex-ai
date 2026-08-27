@@ -12132,6 +12132,13 @@ def run() -> int:
                     "regime_base_at_entry":            _threshold_data.get("regime_base", ""),
                     "win_rate_adjustment_at_entry":    _threshold_data.get("win_rate_adjustment", ""),
                     "data_quality_adjustment_at_entry": _threshold_data.get("data_quality_adjustment", ""),
+                    # Devil's Advocate verdict — blank/False for sweep-sourced rows
+                    # (r_result never went through the DA loop, which only runs on
+                    # deep_results with conf>=7), same as any other DA-loop-only field.
+                    "da_fired":         _qg_rt.get("da_fired", False),
+                    "da_downgraded":    _qg_rt.get("da_downgraded", False),
+                    "da_grade_before":  _qg_rt.get("da_grade_before", ""),
+                    "da_reasons":       _qg_rt.get("da_reasons", ""),
                 }
                 # ─────────────────────────────────────────────────────────────
                 # Augment with OHLCV-based entry-context features (no new API calls)
