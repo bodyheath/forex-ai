@@ -129,6 +129,11 @@ FIELDS = [
     "cascading_total_pips",       # sum of pips across all hit portions
     "cascading_total_pips_weighted",  # 0.4×t1 + 0.3×t2 + 0.3×t3
     "system_version",             # v1 | v2 — used to filter ML training to v2-only
+    # ── Devil's Advocate (second opinion) verdict at entry ────────────────────
+    "da_fired",                   # TRUE/FALSE — did DA raise objections for this candidate?
+    "da_downgraded",              # TRUE/FALSE — did objections actually change the tier (false for e.g. F->F)?
+    "da_grade_before",            # grade before the DA fold-in (only differs from `grade` when da_downgraded=TRUE)
+    "da_reasons",                 # semicolon-joined DA objection text, blank if da_fired=FALSE
     # ── Administrative ───────────────────────────────────────────────────────
     "notes",                      # free-text; e.g. duplicate reason, manual override note
 ]
