@@ -642,7 +642,7 @@ def _ensure_trade_data_complete(
             rr = t1_pips / stop_pips if stop_pips > 0 else 0
             trade_row["rr_at_entry"] = round(rr, 2)
 
-    for _field in ("stop_loss", "entry", "confidence", "t1_price"):
+    for _field in ("stop_loss", "entry", "confidence"):
         _val = trade_row.get(_field)
         try:
             _f = float(_val or 0)
