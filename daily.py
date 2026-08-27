@@ -13399,11 +13399,13 @@ def run() -> int:
                     fund_checkpoint_target=30,
                 )
                 _log_line(log, "Discord scan report sent ✅")
+                _log_line(log, "[dispatch] discord=OK")
         except Exception as _dsc_exc:
             import traceback as _dsc_tb
             _log_line(log,
                 f"Discord scan report FAILED: {type(_dsc_exc).__name__}: {_dsc_exc}")
             _log_line(log, _dsc_tb.format_exc())
+            _log_line(log, "[dispatch] discord=FAILED")
 
     # FIX 12: Write scan completion marker AFTER all Discord/Telegram sends complete.
     # Uses same keys as the digest reader at line 7281 (completed, finished, mode).
