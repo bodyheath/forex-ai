@@ -13407,6 +13407,33 @@ def run() -> int:
             _log_line(log, _dsc_tb.format_exc())
             _log_line(log, "[dispatch] discord=FAILED")
 
+    # 2026-08-27: mine this run's own log file into a compact rolling telemetry
+    # record for the standing health-check system (src/health_check.py). Pure
+    # observability — reads a file this run already wrote, appends one JSON line
+    # to data/scan_telemetry.jsonl, never touches any trade/gate decision. Wrapped
+    # so a bug here can never affect a scan.
+    try:
+        from src import health_check as _hc
+        _hc_opened_pairs = []
+        try:
+            _hc_opened_pairs = [t["pair"] for t in _dsc_yes_raw]
+        except Exception:
+            pass
+        _hc_early_reject = sum(
+            1 for r in deep_results
+            if (r.get("parsed") or {}).get("_early_reject")
+        )
+        _hc.record_scan_telemetry(log_path, {
+            "mode":               scan_mode,
+            "universe_size":      universe_size,
+            "n_deep":             len(deep_results),
+            "all_ohlcv_failed":   bool(_all_ohlcv_failed),
+            "early_reject_count": _hc_early_reject,
+            "opened_pairs":       _hc_opened_pairs,
+        })
+    except Exception as _hc_exc:
+        print(f"[health-check] telemetry mining failed (non-fatal): {_hc_exc}", file=sys.stderr)
+
     # FIX 12: Write scan completion marker AFTER all Discord/Telegram sends complete.
     # Uses same keys as the digest reader at line 7281 (completed, finished, mode).
     if IS_GITHUB_ACTIONS:
