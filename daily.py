@@ -2607,8 +2607,20 @@ def _trade_quality_grade(r: dict) -> dict:
     # under a fuller ladder walk is unknown — w_d_agree/all3_agree/atr_cal/
     # fib_near/no_news/div_confirmed aren't reconstructable from historical
     # data, so this deliberately caps at C rather than assuming better.
+    # 2026-08-27: a second net-loser cluster within this same carve-out,
+    # found the same way GBP-crosses were — splitting the non-GBP
+    # rib_strongly_against population by pair. EUR/CHF, NZD/CHF, and AUD/CHF
+    # combined (n=61, strict/v2/post-exit-fix decisive) are a confirmed net
+    # loser (WR=16.4%, PF=0.397, p<0.0001 vs the rest of the same bucket),
+    # while the surviving population (n=114) improves from the bucket's
+    # blended PF=1.792 to PF=2.494. Not a general CHF effect — CAD/CHF and
+    # USD/CHF are strong performers in the same bucket (PF 0.58/0.71-ish WR)
+    # and are deliberately NOT excluded; this is specific to these 3 pairs,
+    # same as the GBP exclusion is specific to GBP-crosses, not "any pair
+    # with a risk-off quote currency."
     _pair_up_grade = (r.get("pair") or "").upper()
     _is_gbp_cross = "GBP" in _pair_up_grade.split("/")
+    _is_chf_cluster = _pair_up_grade in ("EUR/CHF", "NZD/CHF", "AUD/CHF")
     _ribbon_only_f_or_d = (
         (rib_strongly_against or rib_against)
         and not w_d_conflict
@@ -2616,6 +2628,7 @@ def _trade_quality_grade(r: dict) -> dict:
         and (w_d_agree or conf > 6)
         and conf >= 6
         and not _is_gbp_cross
+        and not _is_chf_cluster
     )
 
     # ── Grade F — never trade ─────────────────────────────────────────────
