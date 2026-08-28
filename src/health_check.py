@@ -305,6 +305,51 @@ def check_outcome_analysis_gap() -> list:
     return flags
 
 
+def check_duplicate_open_trades() -> list:
+    """Flag any currently-open/pending fund position that exists as more
+    than one row in trades.csv (same pair/direction/timestamp/entry/stop).
+
+    2026-08-28: confirmed real — a single open EUR/AUD position existed as
+    3 identical rows (2 with a corrupted blank id) after a BOM-introduced
+    id-wiping bug, which inflated _get_open_fund_count()/
+    check_currency_exposure() and could silently block new legitimate
+    trades on nothing but a data artifact. Both of those now dedupe
+    defensively at count-time, so this check is a read-only backstop:
+    it should stay empty; if it ever fires, a duplication bug has
+    recurred and needs investigating directly, the same as
+    check_fund_state_staleness()/check_outcome_analysis_gap().
+    """
+    flags = []
+    try:
+        import pandas as pd
+        path = config.DATA_DIR / "trades.csv"
+        if not path.exists():
+            return flags
+        df = pd.read_csv(path, encoding="utf-8-sig", dtype=str, keep_default_na=False)
+        open_df = df[
+            (df["trade_this"].astype(str) == "YES")
+            & (df["status"].isin(["OPEN", "PENDING"]))
+        ]
+        dedup_cols = [c for c in ("pair", "direction", "timestamp", "entry", "stop_loss")
+                      if c in open_df.columns]
+        if not dedup_cols:
+            return flags
+        dupe_mask = open_df.duplicated(subset=dedup_cols, keep=False)
+        dupes = open_df[dupe_mask]
+        if len(dupes):
+            groups = dupes.groupby(dedup_cols).size()
+            pairs = sorted(set(open_df.loc[dupe_mask, "pair"]))
+            flags.append(
+                f"🚨 Duplicate open trade rows — {len(dupes)} row(s) across "
+                f"{len(groups)} duplicate group(s) for {pairs} — capacity/"
+                f"concentration counting dedupes defensively, but the "
+                f"underlying duplication itself needs investigating"
+            )
+    except Exception as e:
+        flags.append(f"⚠️ Duplicate open-trade check itself failed to run: {e}")
+    return flags
+
+
 def check_dispatch(records: list) -> list:
     """Flag 2+ consecutive dispatch failures on either channel (ignoring
     scans where that channel wasn't attempted at all)."""
