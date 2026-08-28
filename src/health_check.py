@@ -512,6 +512,7 @@ def run_all_checks() -> dict:
     flags += check_gate_silence(records)
     flags += check_fund_state_staleness()
     flags += check_outcome_analysis_gap()
+    flags += check_duplicate_open_trades()
     flags += check_dispatch(records)
     flags += check_grade_ordering()
     flags += check_audit_fixes_present()
