@@ -1259,14 +1259,29 @@ def _conf_bar(conf) -> str:
 
 
 def _get_open_fund_count() -> int:
-    """Fresh CSV read for fund capacity. Counts OPEN + PENDING (pending will consume a slot)."""
+    """Fresh CSV read for fund capacity. Counts OPEN + PENDING (pending will consume a slot).
+
+    2026-08-28: deduplicates by trade content (pair/direction/timestamp/
+    entry/stop) before counting. Confirmed real: a BOM-corruption bug
+    (src/tracker.py, since fixed) caused the single currently-open EUR/AUD
+    position to exist as 3 identical rows in trades.csv, which this
+    function would otherwise have counted as 3 toward the 4-slot capacity
+    cap -- silently blocking new trades on nothing but a data artifact.
+    This dedup is defense-in-depth: it protects capacity counting even if
+    a similar duplication bug recurs for an unrelated reason in future.
+    """
     try:
         import pandas as _pd_cap
-        _df_cap = _pd_cap.read_csv("data/trades.csv")
-        return int(len(_df_cap[
+        _df_cap = _pd_cap.read_csv("data/trades.csv", encoding="utf-8-sig")
+        _open_cap = _df_cap[
             (_df_cap["trade_this"].astype(str) == "YES") &
             (_df_cap["status"].isin(["OPEN", "PENDING"]))
-        ]))
+        ]
+        _dedup_cols = [c for c in ("pair", "direction", "timestamp", "entry", "stop_loss")
+                       if c in _open_cap.columns]
+        if _dedup_cols:
+            _open_cap = _open_cap.drop_duplicates(subset=_dedup_cols)
+        return int(len(_open_cap))
     except Exception:
         return 0
 
