@@ -186,13 +186,29 @@ def is_trading_blocked(state: dict) -> tuple:
 
 
 def check_currency_exposure(new_pair: str, open_trades: list) -> tuple:
-    """Return (blocked, blocking_currency_str)."""
+    """Return (blocked, blocking_currency_str).
+
+    2026-08-28: deduplicates open_trades by content (pair/direction/
+    timestamp/entry) before counting exposure. Same defense-in-depth as
+    _get_open_fund_count() -- a confirmed BOM-corruption bug (since fixed)
+    made the single open EUR/AUD position appear as 3 duplicate rows,
+    which would have counted EUR and AUD exposure as 3 each against a
+    MAX_CURRENCY_EXPOSURE of 2, wrongly blocking new EUR/AUD-pair trades.
+    """
     parts = new_pair.upper().replace(" ", "").split("/")
     if len(parts) != 2:
         return False, ""
     new_ccys = set(parts)
+    seen_keys: set = set()
     exposure: dict = {}
     for row in open_trades:
+        _dedup_key = (
+            row.get("pair"), row.get("direction"),
+            row.get("timestamp"), row.get("entry"),
+        )
+        if _dedup_key in seen_keys:
+            continue
+        seen_keys.add(_dedup_key)
         pair = (row.get("pair") or "").upper().replace(" ", "")
         pp = pair.split("/")
         if len(pp) == 2:
