@@ -160,9 +160,17 @@ def analyse_and_log(
     )
     if result.get("screened_out"):
         screen = result.get("screen", {})
+        # 2026-08-28: screen.get("score") can be None (no numeric score
+        # produced by the screening step) -- confirmed this silently wrote
+        # a blank confidence field into trades.csv (69 real NO_TRADE rows,
+        # ongoing through 2026-08-26), which then crashes any unguarded
+        # int()/float() conversion downstream. 0 is a safe, meaningful
+        # default here: this is already a screened-out, non-tradeable
+        # candidate, so a floor confidence changes no decision.
+        _screen_conf = screen.get("score") if screen.get("score") is not None else 0
         parsed = {
             "trade_this": "NO",
-            "confidence": screen.get("score"),
+            "confidence": _screen_conf,
             "direction": None,
             "technical_score": None, "fundamental_score": None,
             "sentiment_score": None, "positioning_score": None, "macro_score": None,
@@ -175,7 +183,7 @@ def analyse_and_log(
             f"Stage-1 filtered: score {screen.get('score', '?')}/5 — {screen.get('reason', '')}",
         )
         result["id"]     = rec_id
-        result["parsed"] = {"trade_this": "FILTERED", "confidence": screen.get("score"), "direction": None}
+        result["parsed"] = {"trade_this": "FILTERED", "confidence": _screen_conf, "direction": None}
         return result
 
     parsed = recparse.parse(result["report"])
