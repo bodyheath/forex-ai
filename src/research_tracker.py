@@ -148,7 +148,9 @@ def _now() -> str:
 def load() -> list:
     if not RESEARCH_TRADES_CSV.exists():
         return []
-    with RESEARCH_TRADES_CSV.open("r", encoding="utf-8", newline="") as fh:
+    # 2026-08-28: utf-8-sig, not utf-8 -- see the identical fix + full
+    # explanation in src/tracker.py's load(). Same file, same bug, same fix.
+    with RESEARCH_TRADES_CSV.open("r", encoding="utf-8-sig", newline="") as fh:
         return list(csv.DictReader(fh))
 
 
