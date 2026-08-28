@@ -1,0 +1,28 @@
+```
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Double-bottom reversal setup with aligned bull ribbon and crowded short positioning offers contrarian long entry, but MTF disagreement (M:SELL vs 4H:BUY) and mixed D1/W trend limit conviction.
+
+RISK_FACTORS: 
+1. MTF conflict: monthly still in SELL mode while 4H pushes BUY — upside capped if D1/W fail to confirm; breakout risk if monthly invalidates reversal.
+2. Positioning unwinding on both pairs near crowded-short floor — reversal risk is real but liquidity pull-through uncertain; CAD 10pct short is structural headwind.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 1.6129
+ENTRY_TRIGGER_REASON: Break above D1 SMA50 (1.6129) with close >1.6140 would confirm double-bottom reversal and align W/D; requires MTF agreement at 2/3 before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+NOTES:
+- **Technical**: D1 T_sig=3 (NEUTRAL) is correct — RSI 48.5 is dead-center neutral, MACD near

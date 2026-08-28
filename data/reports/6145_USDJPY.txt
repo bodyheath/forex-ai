@@ -1,0 +1,25 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: 4H overbought RSI (69.8) + Stochastic/CCI partial SELL confluence with Ribbon leaning bearish suggests short-term pullback risk, but MTF neutral (0/3 agreement) and D1 mixed trend undermine conviction.
+RISK_FACTORS: MTF weekly/daily both NEUTRAL—no directional bias above 4H; USD rate flat + JPY unwinding positioning (risk of reversal before completion).
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 159.85
+ENTRY_TRIGGER_REASON: Pullback to SMA50 (160.9164) or FIB support (161.3–161.8 zone) before short entry; wait for RSI to cool below 65 on 4H.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+1. **MTF Check (CRITICAL FAIL):** W:NEUTRAL + D:NEUTRAL + M:NEUTRAL = **0/3 agreement**. Confidence floor immediately drops to ≤5 regardless of 4H signal. Rule enforced: *TRADE_THIS NO if MTF weekly+daily don't both agree on direction*.
+
+2.

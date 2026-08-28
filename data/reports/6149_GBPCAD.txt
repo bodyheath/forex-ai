@@ -1,0 +1,24 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: GBP weakness (CAD rate falling + GBP short unwinding) conflicts with bullish technicals (aligned ribbon, pin bar) — MTF misalignment (M:SELL, W:SELL vs D:NEUTRAL, 4H:BUY) blocks trade entry.
+RISK_FACTORS: [1] MTF conflict: weekly and daily do NOT both agree on direction (conf=1/3, <2/3 threshold) — violates core MTF rule, trade blocked. [2] CAD positioning crowded short near 1-year range bottom signals reversal risk if BoC shifts hawkish; GBP short unwinding adds uncertainty.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly SELL + daily NEUTRAL + 4-hour BUY = no clear consensus. Confidence 5/10 falls below 7/10 threshold AND R:R cannot be validated without directional alignment across W+D.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical (4/10):**
+- D1 T_sig=NEUTRAL_3 (baseline: mixed/range

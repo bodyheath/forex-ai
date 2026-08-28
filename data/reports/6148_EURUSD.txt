@@ -1,0 +1,23 @@
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H double-top bearish pattern conflicts with crowded EUR short positioning unwinding and ribbon lean-bull structure, creating reversal setup with high execution risk.
+RISK_FACTORS: [1) MTF alignment failure—all timeframes neutral, no weekly/daily confirmation forces TRADE_THIS=NO per MTF rule despite positioning edge; 2) COT reversal risk—EUR net short at 5.0% unwinding into crowded bottom, but technical confirmation absent (D1 RSI 53 neutral, 4H double-top bearish negates early reversal signal)]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule breach: weekly and daily both NEUTRAL (conf 0/3 < 2/3 threshold); insufficient directional agreement blocks trade regardless of positioning setup. 4H BUY signal (RSI 23.6 oversold + double-top at potential reversal) cannot override absent D1/W confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**EXPLANATION:**
+
+This setup illustrates the **hard MTF constraint**: even though EUR positioning is compelling (crowded short unwinding = classic reversal edge, POSITIONING_SCORE +1

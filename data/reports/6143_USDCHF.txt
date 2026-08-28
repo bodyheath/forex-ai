@@ -1,0 +1,23 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 neutral structure with overbought 4H RSI (71.2) and CHF unwinding shorts creates mixed risk; MTF disagreement (M:BUY vs W/D:NEUTRAL vs 4H:SELL) blocks high-conviction trade.
+RISK_FACTORS: [1] MTF conf=0/3 — no agreement across timeframes; weekly and daily both neutral blocks TRADE_THIS rule. [2] 4H RSI 71.2 overbought in mixed range invalidates double-bottom bullish setup; CHF unwinding positioning removes tail-wind for USD strength.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly NEUTRAL and Daily NEUTRAL = insufficient alignment (0/3 agree). Trade blocked regardless of technical setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+1. **MTF Enforcement (Critical):** Weekly=NEUTRAL, Daily=NEUTRAL, 4H=SELL, Monthly=BUY (context only). Confidence 0/3 timeframes agree on direction. Hard rule: "if weekly AND daily don't both agree on direction (conf<2/3

@@ -1,0 +1,17 @@
+```
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 bearish engulfing + T_sig SELL_3 conflict with aligned bullish ribbon and uptrend structure; MTF disagreement (W:SELL vs D:NEUTRAL vs 4H:BUY, conf=1/3) blocks conviction.
+RISK_FACTORS: [1. MTF consensus failure: weekly-daily-4H split across three directions; SELL signal lacks multi-timeframe confirmation required for TRADE_THIS threshold. 2. Ribbon ALIGNED_BULL (5/5 EMA stack) contradicts D1 bearish candle — trend structure remains intact despite T_sig; RSI 58 (mid-neutral zone in uptrend) + price >SMA50 >SMA200 suggest continuation risk, not reversal confirmation.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF conf=1/3 (<2/3 threshold); TECHNICAL_SCORE 4/10 below minimum; fundamental agreement only 1/5 layers (diff widening alone insufficient). Bearish engulfing + T_sig=SELL_3 are offset by golden-cross uptrend + aligned ribbon + JPY UNWINDING (risk

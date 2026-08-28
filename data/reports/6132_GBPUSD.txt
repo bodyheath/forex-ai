@@ -1,0 +1,25 @@
+PAIR: GBP/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level on D1+4H with ALIGNED_BULL ribbon offers structural support, but MTF disagreement (M:SELL vs D:NEUTRAL vs 4H:BUY, conf=0/3) and neutral RSI/MACD block conviction; GBP COT unwinding adds headwind.
+RISK_FACTORS: [1] MTF conflict — monthly sell signal contradicts 4H buy setup; upside capped until weekly confirms. [2] GBP COT unwinding — institutional positioning reducing conviction; USD neutral stance removes bullish carry edge.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.3560
+ENTRY_TRIGGER_REASON: Breach above pin bar high + D1 SMA50 (1.3417) confluence zone; weekly must flip to BUY first for MTF alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1 T_sig=NEUTRAL_3 baseline held (RSI 52.3 = neutral zone 45–62, no directional lean).
+- 4H RSI 25.8 = oversold-
