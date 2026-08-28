@@ -5,6 +5,7 @@ Active YES-trade setups are shown in prominent green alert cards at the very top
 """
 
 import html
+import sys
 from datetime import datetime
 
 import config
