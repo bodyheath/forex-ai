@@ -267,7 +267,7 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
         _ta_casc = None
 
     for row in open_trades:
-        rec_id    = int(row.get("id", 0))
+        rec_id    = int(row.get("id") or 0)
         pair      = row.get("pair", "")
         direction = (row.get("direction") or "").upper()
 
