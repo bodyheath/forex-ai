@@ -202,7 +202,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
     _last_api_t = 0.0  # timestamp of the last direct API call (for rate limiting)
 
     for row in open_trades:
-        rec_id    = int(row.get("id", 0))
+        rec_id    = int(row.get("id") or 0)
         pair      = row.get("pair", "")
         direction = (row.get("direction") or "").upper()
 
