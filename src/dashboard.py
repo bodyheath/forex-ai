@@ -397,7 +397,12 @@ def _rows_table(rows) -> str:
     out = ["<table><tr><th>ID</th><th>Date</th><th>Pair</th><th>Dir</th><th>Conf</th>"
            "<th>T</th><th>F</th><th>S</th><th>P</th><th>M</th><th>Entry</th><th>Stop</th>"
            "<th>Target</th><th>R:R</th><th>Trade</th><th>Status</th><th>R</th><th>Pips</th></tr>"]
-    for r in sorted(rows, key=lambda x: int(x.get("id", 0)), reverse=True):
+    def _id_sort_key(x):
+        try:
+            return int(x.get("id") or 0)
+        except (TypeError, ValueError):
+            return 0
+    for r in sorted(rows, key=_id_sort_key, reverse=True):
         d = (r.get("direction") or "").upper()
         dcls = "buy" if d == "BUY" else "sell" if d == "SELL" else ""
         status = r.get("status") or ""
