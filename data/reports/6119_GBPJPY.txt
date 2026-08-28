@@ -1,0 +1,24 @@
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with aligned bullish ribbon and uptrend structure; MTF disagreement (M:SELL vs W/D:NEUTRAL) weakens conviction; pin bar at key level suggests reversal risk to upside.
+RISK_FACTORS: [1) MTF conf=0/3 — no weekly/daily agreement on direction; trade confidence artificially suppressed by conflicting timeframes despite D1 SELL signal] [2) ALIGNED_BULL ribbon (5/5 EMA stack) + price > SMA50 > SMA200 contradicts SELL — reversal probability high if support holds]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — W:NEUTRAL and D:NEUTRAL do NOT both agree with M:SELL. Weekly and daily must both confirm direction for trade validity. Confidence 4/10 << 7/10 threshold. SELL signal rejected.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**EXPLANATION:**
+
+**Technical (4/10):**
+- D1 T_sig=SELL_3 provides baseline 3, but **RSI=56.

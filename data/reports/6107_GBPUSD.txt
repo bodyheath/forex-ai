@@ -1,0 +1,31 @@
+```
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key resistance with SELL signal conflicts sharply with ALIGNED_BULL ribbon and bullish engulfing on 4H; MTF disagreement (M:SELL vs W/D:NEUTRAL vs 4H:BUY) undermines conviction.
+
+RISK_FACTORS: 
+1. MTF conflict: Monthly SELL unsupported by weekly/daily agreement (conf=0/3); weekly and daily both NEUTRAL means no directional MTF alignment per rules — TRADE_THIS NO trigger violated.
+2. Ribbon ALIGNED_BULL (5/5 fanning) contradicts T_sig=SELL_3 and pin bar bearish interpretation; GBP COT UNWINDING (conviction weakening) reduces POSITIONING_SCORE.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule failure: weekly AND daily must both agree to trade. W:NEUTRAL and D:NEUTRAL do NOT agree with M:SELL. 4H:BUY adds further conflict. Confidence cannot reach 7+ threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**REJECTION RATIONALE:**
+
+- **MTF Rule Violation (

@@ -1,0 +1,23 @@
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 63.9 + T_sig=SELL_3 + SMA200 resistance (1.1631 above price) signal weak bearish bias, but MTF misalignment (W/D neutral vs 4H bullish) + crowded EUR short positioning + leaning-bull ribbon undermine conviction.
+RISK_FACTORS: [1] MTF conflict: weekly and daily both NEUTRAL (conf 0/3), blocking high-confidence trade entry; 4H bullish engulfing contradicts D1 SELL signal. [2] COT reversal risk: EUR positioning deeply short (~5.0% crowded) with UNWINDING momentum suggests institutional profit-taking into shorts — reversal could spike long into your sell entry.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1631
+ENTRY_TRIGGER_REASON: SMA200 resistance + D1 T_sig=SELL_3 confluence; confirm on break below 1.1620 candle close to validate bearish setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+1. **MTF failure (0/3 agreement):** Weekly=NEUTRAL, Daily=NEUTRAL,

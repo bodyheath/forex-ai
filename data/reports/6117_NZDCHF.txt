@@ -1,0 +1,24 @@
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (44p/6pt) conflicts with bullish ribbon alignment and double-bottom pattern; MTF neutral stance undermines conviction.
+RISK_FACTORS: [1) MTF conf=0/3 (all timeframes neutral) — no directional alignment across monthly/weekly/daily eliminates TRADE_THIS qualification regardless of technicals; 2) Ribbon fully aligned bull (5/5 EMA fan) directly contradicts SELL signal — trend continuation upward remains possible.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated — weekly AND daily must both agree on direction; neither confirms SELL. All three timeframes (M/W/D) are NEUTRAL; 4H is also NEUTRAL. Confidence cannot exceed 6/10 without MTF alignment (rule: "if weekly AND daily don't both agree on direction, TRADE_THIS NO regardless").
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS SUMMARY:**
+
+**Technical Conflict:** D1 shows T_sig=SELL_3 (baseline), but this is severely undermined by:
+- **Ribbon ALIGNED_BULL (5/5)** —

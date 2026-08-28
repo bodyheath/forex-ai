@@ -1,0 +1,26 @@
+```
+PAIR: USD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: USD strength supported by rate differential (+1.36%) and D1 BUY signal, but CAD crowded short positioning near reversal zone and weak ribbon alignment (LEANING_BEAR, 4/5) create conflicting bias.
+RISK_FACTORS: [1. MTF agreement weak (1/3: only D1 BUY; W/M/4H neutral) — insufficient confluence; 2. CAD positioning UNWINDING into crowded short (reversal risk) — institutions may flip, triggering sharp CAD rally against trade direction.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.3750
+ENTRY_TRIGGER_REASON: Confluence of FIB support (SL 1.37326 + 10p buffer), RSI 38.7 oversold in mixed trend, and D1 BUY signal — wait for pullback to Fib support before entering long.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### RATIONALE:
+
+**TECHNICAL (5/10):**
+- **D1 T_sig = BUY_4** → baseline 4, no RSI trend context adjustment (Mixed MTF means standard RSI t

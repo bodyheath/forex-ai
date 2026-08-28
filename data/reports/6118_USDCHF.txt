@@ -1,0 +1,23 @@
+```
+PAIR: USD/CHF
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: USD supported by +3.67% rate differential and CHF unwinding shorts, but weak technicals (double-top, RSI neutral, MTF disagreement) and stale positioning prevent high-conviction entry.
+RISK_FACTORS: [1] MTF conf=0/3 (Monthly BUY isolated; Weekly + Daily NEUTRAL): no intraweek consensus, trend fragile. [2] Double-top bearish pattern on both D1 and 4H with price stuck between SMA50 (0.8090 res) and SMA200 (0.7933 sup); breakout unclear, trapped range risk.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.8090
+ENTRY_TRIGGER_REASON: Break above D1 SMA50 (0.8090) would confirm upside breakout from double-top and align with USD rate premium thesis; wait for weekly close above this level to raise MTF conf.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+```
+
+**Analysis Notes:**
+
+1. **MTF Rejection (conf=0/3):** Monthly shows BUY, but Weekly and Daily both NEUTRAL → **MTF rule triggered: TRADE_THIS NO** regardless

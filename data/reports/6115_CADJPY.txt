@@ -1,0 +1,30 @@
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 T_sig=SELL_3 + RSI 57.4 (neutral uptrend context) conflicts with 4H BUY pattern (double_bottom); MTF shows W/D/M all NEUTRAL (0/3 agreement), preventing trade execution despite technical sell signal.
+
+RISK_FACTORS: [1] MTF rule violation — Weekly and Daily both NEUTRAL, not both agreeing on direction; confidence falls below 7 threshold and MTF weight=80% enforces NO trade. [2] COT positioning reversal risk — CAD crowded short near bottom of 1y range with UNWINDING momentum signals institutional conviction flip; JPY SHORT also unwinding mid-range, reducing directional bias.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule prevents trade — W:NEUTRAL + D:NEUTRAL fail both-agree requirement (conf=0/3). D1 T_sig=SELL_3 rejected by lack of weekly/daily directional confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS DETAIL:**
+
+**Technical Layer (4/10):**
+- D1 T_sig=SELL_3

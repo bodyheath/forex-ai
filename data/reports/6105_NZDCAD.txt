@@ -1,0 +1,27 @@
+```
+PAIR: NZD/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Strong bearish RSI divergence (22p/6pt) at pin bar key level confirms D1+W downtrend alignment despite aligned ribbon and uptrend structure; CAD crowded short near reversal floor presents competing risk.
+RISK_FACTORS: [1] CAD positioning UNWINDING from extended short — crowded short reversal risk could trigger sharp bounce into entry; [2] D1 ribbon fully ALIGNED_BULL (5/5) and price still above SMA50 creates friction with downtrend — trend structure conflicted, may truncate downside.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.8200
+ENTRY_TRIGGER_REASON: Break below D1 pin bar low (0.8200) confirms bearish divergence rejection and invalidates uptrend retry; 4H double-top neckline aligned.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**ANALYSIS NOTES:**
+
+**MTF Logic (conf=2/3, wt=80%):**
+- W:SELL + D:SELL = **matched downtrend** ✓ (TRADE_THIS threshold met, but confidence capped)
+- 4H:
