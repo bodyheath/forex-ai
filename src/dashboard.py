@@ -748,19 +748,42 @@ def _research_analytics_section() -> str:
     )
 
 
+def _safe_section(label: str, fn, *args, fallback: str = "") -> str:
+    """Run one dashboard section builder in isolation. A single malformed
+    row/candidate must degrade that one section, not take down the whole
+    dashboard rebuild -- confirmed real: generate() previously called every
+    section unguarded, so any one exception (e.g. an unparseable numeric
+    field on a single trade) propagated all the way to daily.py's outer
+    try/except, discarding the entire dashboard for that scan (confirmed:
+    data/dashboard.html went uncommitted for 14+ hours across multiple
+    scans following the 2026-08-27 CSV corruption, entirely silently)."""
+    try:
+        return fn(*args)
+    except Exception as exc:
+        print(f"[dashboard] section '{label}' failed, using fallback: {exc}", file=sys.stderr)
+        return fallback
+
+
 def generate() -> str:
     from src import learning
     rows = tracker.load()
     stats = learning.compute_stats()
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-    today = _most_recent_date(rows)
-    active_html    = _active_setups(rows)
-    watch_html     = _watch_list_section(rows, today)
-    best_html      = _best_opportunity_section(rows, today)
-    risk_html      = _risk_section()
-    learning_html  = _learning_feed_section()
-    analytics_html = _research_analytics_section()
+    today = _safe_section("most_recent_date", _most_recent_date, rows, fallback="")
+    active_html    = _safe_section("active_setups", _active_setups, rows)
+    watch_html     = _safe_section("watch_list", _watch_list_section, rows, today)
+    best_html      = _safe_section("best_opportunity", _best_opportunity_section, rows, today)
+    risk_html      = _safe_section("risk", _risk_section)
+    learning_html  = _safe_section("learning_feed", _learning_feed_section)
+    analytics_html = _safe_section("research_analytics", _research_analytics_section)
+    stat_cards_html = _safe_section("stat_cards", _stat_cards, stats)
+    equity_html    = _safe_section("equity_curve", _equity_curve, rows)
+    by_conf_html   = _safe_section("by_confidence", _by_confidence, rows)
+    rows_table_html = _safe_section(
+        "rows_table", _rows_table, rows,
+        fallback="<p style='color:var(--mut)'>Recommendations table unavailable this run.</p>",
+    )
 
     body = (
         f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
@@ -772,13 +795,13 @@ def generate() -> str:
         f'{active_html}'
         f'{watch_html}'
         f'{best_html}'
-        f'<div class="grid">{_stat_cards(stats)}</div>'
+        f'<div class="grid">{stat_cards_html}</div>'
         f'{risk_html}'
-        f'<section><h2>Equity curve</h2>{_equity_curve(rows)}</section>'
-        f'<section><h2>Win rate by confidence score</h2>{_by_confidence(rows)}</section>'
+        f'<section><h2>Equity curve</h2>{equity_html}</section>'
+        f'<section><h2>Win rate by confidence score</h2>{by_conf_html}</section>'
         f'{analytics_html}'
         f'{learning_html}'
-        f'<section><h2>All recommendations</h2>{_rows_table(rows)}</section>'
+        f'<section><h2>All recommendations</h2>{rows_table_html}</section>'
         f'<p class="foot">Columns T/F/S/P/M = technical, fundamental, sentiment, positioning, macro scores.'
         f' Record an outcome with: <code>python main.py --close ID WIN|LOSS [exit_price]</code></p>'
         f'</body></html>'
