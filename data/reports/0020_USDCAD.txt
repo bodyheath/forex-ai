@@ -1,0 +1,24 @@
+PAIR: USD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 BUY signal supported by RSI oversold (39.6) and positive rate diff (+1.36% USD), but MTF alignment weak (1/3 agreement) and CAD positioning reversal risk limit conviction.
+RISK_FACTORS: [1] MTF conf only 40% (D1:BUY vs W/M:NEUTRAL) — mixed trend invalidates TRADE_THIS rule requiring weekly+daily agreement. [2] CAD net SHORT unwinding near 1y crowded-short range floor — institutional reversal risk contradicts BUY direction.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (W:NEUTRAL + D:BUY = 1/3 conf, threshold <2/3). Ribbon LEANING_BEAR (4/5) adds trend weakness. CAD COT UNWINDING at positioning extreme signals institutional exit, not entry conviction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 5/10**
+- RSI 39.6 = tier 35–45

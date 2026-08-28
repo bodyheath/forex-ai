@@ -1,18 +1,19 @@
-```
 PAIR: AUD/JPY
 DIRECTION: SELL
-CONFIDENCE: 6/10
-TECHNICAL_SCORE: 6/10
-FUNDAMENTAL_SCORE: 5/10
+CONFIDENCE: 7/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 6/10
 SENTIMENT_SCORE: 5/10
-POSITIONING_SCORE: 4/10
+POSITIONING_SCORE: 5/10
 MACRO_SCORE: 5/10
 DIVERGENCE: NONE
 OSCILLATOR_CONFLUENCE: TRIPLE_SELL
-KEY_THESIS: RSI overbought (72.8H/66D) + triple oscillator confluence (Stoch/CCI/RSI all SELL) in confirmed uptrend context triggers mean-reversion sell at resistance (114.648 Fib 100%), but ribbon fully aligned bullish and price above SMA50 create conflicting continuation risk.
-RISK_FACTORS: [1] Ribbon ALIGNED_BULL (5/5 EMAs stacked bullish) + golden-cross structure + 4H double_bottom pattern signal trend continuation, directly contradicting SELL setup — uptrend strength may push price higher despite overbought RSI. [2] AUD COT STABLE + JPY UNWINDING reduces conviction; T_sig=5 (weak) indicates marginal sell signal; price only 4p from Fib 100% resistance leaves minimal risk/reward edge.
-TRADE_THIS: NO
-ENTRY_TYPE: LIMIT_SELL
-ENTRY_TRIGGER_PRICE: 114.70
-ENTRY_TRIGGER_REASON: Sell limit at resistance zone above Fib 100% (114.648) only if price breaks above spike and reverses; overbought RSI + triple SELL oscillator confluence may fade into uptrend continuation.
-ENTRY_TRIGGER_
+ENTRY: 114.7910
+TARGET: 112.1552
+STOP_LOSS: 115.1089
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: Tokyo open 09:00–11:00 NZST (UTC+12)
+NEWS_WARNING: RBA and BOJ minutes/speakers within 48h — monitor for rate surprise risk; JPY positioning unwinding adds volatility risk
+KEY_THESIS: Triple oscillator SELL confluence (RSI 67.3 D1, Stoch 96.7, CCI 139.6) with 4H RSI extreme overbought at 78.7 and full MTF SELL alignment (M/W/D/4H all SELL) signals high-probability mean reversion pullback despite intact golden-cross ribbon structure.
+RISK_FACTORS: 1) EMA ribbon fully aligned bullish (5/5) with fan spreading — trend continuation remains structurally dominant and any pullback may be shallow, invalidating 2R target before stop is threatened. 2) Morning star bullish candle pattern on D1 directly conflicts with SELL direction — if bulls defend 114.30 support the reversal thesis collapses rapidly.
+TRADE_THIS: YES

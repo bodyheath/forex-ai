@@ -1,0 +1,23 @@
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 head-and-shoulders reversal pattern with T_sig=SELL_3 conflicts with aligned bullish ribbon and golden-cross uptrend structure; MTF disagreement (M:SELL vs W/D:NEUTRAL) creates ambiguity.
+RISK_FACTORS: [1] MTF misalignment (0/3 conf) — weekly and daily both neutral while monthly signals sell, violating the MTF consensus rule; [2] Aligned bullish ribbon (5/5 EMAs) + price above SMA50 > SMA200 + RSI 55.8 (neutral-to-bullish zone) contradict the bearish H&S pattern — ribbon strength suggests uptrend continuation risk.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule fails (only 1 of 3 timeframes agree on direction); SELL signal does not meet confidence threshold ≥7. Weekly and daily are neutral, which overrides monthly sell signal per enforcement rules.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**Rationale:**
+
+1. **MTF Enforcement (CRITICAL):** W:NEUTRAL + D:NEUTRAL = consensus

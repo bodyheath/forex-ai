@@ -1,0 +1,35 @@
+I need to carefully assess this trade before finalizing.
+
+**Critical MTF Check:**
+W:NEUTRAL, D:SELL, 4H:SELL — Weekly is NEUTRAL, not SELL. The rule states "Weekly AND daily must both agree on direction for TRADE_THIS YES." Weekly is neutral, so this is a borderline case. However, W:NEUTRAL doesn't *conflict* — it's absent directional bias. The conf=2/3 at 60% weight is noted. This is a key risk factor.
+
+**Trend Context for RSI:**
+MTF shows W:NEUTRAL, D:SELL — this is NOT a confirmed downtrend (W:SELL+D:SELL). It's mixed/neutral MTF, so standard RSI tiers apply. RSI=70.3 falls in 70-76 range → 7-8 SELL. T_sig=SELL_9 is the anchor. Bearish pin bar already factored into T_sig. Score: 8/10.
+
+**Ribbon Conflict:** ALIGNED_BULL fan=5/5 strongly contradicts a SELL. This is the most significant risk — selling into a fully bull-aligned ribbon is low-probability continuation.
+
+**Fundamental headwind:** AUD rate rising, positive rate differential (+0.83%) — fundamentally favors AUD, works against SELL.
+
+**Confidence Assessment:** Triple oscillator sell (+2), but ribbon conflict, W:NEUTRAL (not confirming), fundamental headwind, sentiment neutral. Starting from Haiku's 7 — the ribbon conflict and W:NEUTRAL cap this. Confidence stays at 7 but TRADE_THIS must be assessed carefully. Weekly not confirming → rules say NO regardless.
+
+---
+
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 7/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 0.7165
+TARGET: 0.7075
+STOP_LOSS: 0.7210
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 3:00–5:00 PM Auckland time
+NEWS_WARNING: Monitor RBA communications and US macro releases within 48h; AUD highly sensitive to China/commodity data
+KEY_THESIS: RSI 70.3 with bearish pin bar rejection and triple oscillator sell confluence (Stoch 93.7, CCI 145.7) signals short-term overbought pullback, but the fully bull-aligned EMA ribbon and W:NEUTRAL (non-confirming) structure limit conviction for a sustained reversal.
+RISK_FACTORS: 1) EMA ribbon ALIGNED_BULL fan=5/5 strongly favors trend continuation — selling into this ribbon carries high stop-out risk if bulls maintain control above 0.7165. 2) AUD rate rising with +0.83% differential and positive news sentiment (8 articles bullish) creates fundamental tailwind against SELL — any hawkish RBA signal could accelerate upside.
+TRADE_THIS: NO
