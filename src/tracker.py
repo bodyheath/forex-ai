@@ -112,7 +112,14 @@ def _now() -> str:
 def load() -> list:
     if not config.TRADES_CSV.exists():
         return []
-    with config.TRADES_CSV.open("r", encoding="utf-8", newline="") as fh:
+    # 2026-08-28: utf-8-sig, not utf-8 -- tolerates a BOM if the file has one
+    # (harmless no-op if it doesn't). A BOM introduced elsewhere (e.g. a
+    # writer using utf-8-sig, like the pre-fix absorb_remote_trades.py)
+    # otherwise glues onto the first header field, turning "id" into
+    # "﻿id" -- every row.get("id") then silently returns None, and the
+    # next _write_all() permanently blanks every row's real id (confirmed:
+    # 66% of this file's rows this way as of 2026-08-28).
+    with config.TRADES_CSV.open("r", encoding="utf-8-sig", newline="") as fh:
         return list(csv.DictReader(fh))
 
 
