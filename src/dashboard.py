@@ -172,7 +172,7 @@ def _active_setups(rows) -> str:
         return ""
 
     cards = []
-    for r in sorted(open_yes, key=lambda x: int(x.get("id", 0)), reverse=True):
+    for r in sorted(open_yes, key=lambda x: int(x.get("id") or 0), reverse=True):
         pair      = r.get("pair", "")
         direction = (r.get("direction") or "").upper()
         dcls      = "buy" if direction == "BUY" else "sell"
