@@ -41,7 +41,15 @@ def _absorb_file(path: str) -> None:
 
     all_rows = sorted(local_rows + new_rows, key=lambda r: int(r.get("id") or 0))
     print(f"Pre-merge: absorbing {len(new_rows)} new row(s) into {path} from origin/main", flush=True)
-    with open(path, "w", newline="", encoding="utf-8-sig") as f:
+    # 2026-08-28: plain utf-8, NOT utf-8-sig, for the write. Writing with
+    # -sig prepends a BOM -- confirmed this is exactly what corrupted both
+    # CSVs' "id" columns starting 2026-08-27: tracker.py/research_tracker.py's
+    # load() used plain utf-8 (BOM-intolerant), so row.get("id") silently
+    # returned None for every row, and the next _write_all() permanently
+    # blanked every row's real id (66% of both files, by the time this was
+    # found). The read stays utf-8-sig -- tolerating a BOM on input is
+    # harmless; producing one on output was the actual bug.
+    with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)
         w.writeheader()
         w.writerows(all_rows)
