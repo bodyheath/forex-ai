@@ -2594,8 +2594,8 @@ def run(log=print) -> dict:
                                 _r0, _cur_p, _pair_str
                             )
                             if _spot_ms:
-                                _fund_ids_hot = {int(r.get("id", -1)) for r in _fund_open}
-                                if int(_r0.get("id", -2)) in _fund_ids_hot:
+                                _fund_ids_hot = {int(r.get("id") or -1) for r in _fund_open}
+                                if int(_r0.get("id") or -2) in _fund_ids_hot:
                                     _apply_fund_milestones(
                                         _r0, _spot_ms, _spot_state, log=log, ta=_ta,
                                         prices=prices,
