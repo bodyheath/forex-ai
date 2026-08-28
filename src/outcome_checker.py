@@ -160,7 +160,7 @@ def check_virtual_trades(log=print, price_cache: dict | None = None) -> int:
     _last_api_t = 0.0
 
     for row in candidates:
-        rec_id    = int(row.get("id", 0))
+        rec_id    = int(row.get("id") or 0)
         pair      = row.get("pair", "")
         direction = str(row.get("direction", "")).upper()
 
