@@ -12167,6 +12167,14 @@ def run() -> int:
                     "da_downgraded":    _qg_rt.get("da_downgraded", False),
                     "da_grade_before":  _qg_rt.get("da_grade_before", ""),
                     "da_reasons":       _qg_rt.get("da_reasons", ""),
+                    # 2026-08-28: persist the cross-pair currency consensus
+                    # adjustment itself (not just its effect on confidence) so
+                    # it's queryable -- same rationale as da_fired/etc above.
+                    # _apply_currency_consensus() only ever sets this key on a
+                    # candidate's parsed dict when it actually fires; 0 covers
+                    # both "conditions not met" and sweep-sourced rows (which
+                    # never pass through that step at all).
+                    "consensus_adj":    _rp.get("consensus_adj", 0),
                 }
                 # ─────────────────────────────────────────────────────────────
                 # Augment with OHLCV-based entry-context features (no new API calls)
