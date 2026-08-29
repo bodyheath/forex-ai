@@ -136,6 +136,10 @@ FIELDS = [
     "da_downgraded",              # TRUE/FALSE — did objections actually change the tier (false for e.g. F->F)?
     "da_grade_before",            # grade before the DA fold-in (only differs from `grade` when da_downgraded=TRUE)
     "da_reasons",                 # semicolon-joined DA objection text, blank if da_fired=FALSE
+    # ── Cross-pair currency consensus adjustment at entry ─────────────────────
+    "consensus_adj",              # -1/0/1 -- daily.py's _apply_currency_consensus() confidence
+                                   # nudge for this candidate; 0 if conditions weren't met or
+                                   # this row is sweep-sourced (never passes through that step)
 ]
 
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN", "FULL_WIN", "STALE_EXIT", "SKIPPED"}
