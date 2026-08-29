@@ -88,32 +88,68 @@ jobs:
         run: |
           git config user.name "forex-ai[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/trades.csv data/research_trades.csv data/fund_state.json 2>/dev/null || true
-          git add data/price_cache.json data/discord_dashboard.json data/pair_statistics.json 2>/dev/null || true
-          git add data/watchlist_cache.json data/loss_journal.json data/fund_feature_store.json 2>/dev/null || true
-          git add data/online_learner.json data/dashboard.html data/partial_profit_state.json 2>/dev/null || true
-          git add docs/ 2>/dev/null || true
-          # Absorb any rows added to origin/main by a concurrent monitor run.
-          # Must happen before the commit so that git pull --rebase -X ours below
-          # preserves these rows (it picks our version, which now includes them).
+
+          stage_files() {
+            git add data/trades.csv data/research_trades.csv data/fund_state.json 2>/dev/null || true
+            git add data/price_cache.json data/discord_dashboard.json data/pair_statistics.json 2>/dev/null || true
+            git add data/watchlist_cache.json data/loss_journal.json data/fund_feature_store.json 2>/dev/null || true
+            git add data/online_learner.json data/dashboard.html data/partial_profit_state.json 2>/dev/null || true
+            git add docs/ 2>/dev/null || true
+          }
+
+          # 2026-08-29: rewritten from git-pull-rebase (with a --no-rebase
+          # merge fallback on failure) to fetch+reset--soft+recommit. Two
+          # confirmed real problems with the old approach:
+          #   1. The --no-rebase fallback is exactly what caused the
+          #      2026-06/07 trades.csv/research_trades.csv triplication and
+          #      fired again as recently as 2026-08-28 (that time on
+          #      virtual_outcomes.csv) -- a generic line-based merge of two
+          #      divergent full-file rewrites can silently keep both
+          #      near-duplicate copies without ever flagging a conflict.
+          #   2. Directly reproduced in testing: even the *primary* rebase
+          #      path (no fallback involved) can silently DROP a genuinely
+          #      new row with exit code 0 -- if absorb_remote_trades.py has
+          #      already merged an origin-only row into the working tree
+          #      before commit, that row is bundled into the same diff hunk
+          #      as our own new row; rebasing that hunk onto a base that
+          #      already has the absorbed row makes the whole hunk look
+          #      like a conflict, and -X ours discards it whole, including
+          #      the genuinely new row. This is data loss, not duplication,
+          #      and doesn't even fail loudly.
+          # Fix: fetch + `git reset --soft origin/main` (moves the branch
+          # pointer, leaves the working tree/index untouched) BEFORE
+          # staging+absorbing+committing, so the commit's diff-from-parent
+          # is always purely additive relative to origin's current tip --
+          # nothing for a rebase to misinterpret as a conflict. On a push
+          # race, redo the same fetch+reset+restage+amend and retry --
+          # never git pull --rebase or git merge on these files.
+          git fetch origin main --quiet
+          git reset --soft origin/main
+          stage_files
           python scripts/absorb_remote_trades.py
           git diff --staged --quiet || git commit -m "chore: daily analysis $(date -u +'%Y-%m-%d %H:%M UTC')"
           PUSHED=false
           for i in 1 2 3; do
-            if ! git pull --rebase -X ours origin main 2>&1; then
-              git rebase --abort 2>/dev/null || true
-              git pull --no-rebase -X ours origin main 2>&1 || true
-            fi
             if git push origin HEAD:main 2>&1; then
               echo "Push succeeded on attempt $i"
               PUSHED=true
               break
             fi
-            echo "Push attempt $i failed — waiting 10 seconds"
+            echo "Push attempt $i failed — re-syncing to origin's current tip and retrying (no merge, no rebase)"
+            git fetch origin main --quiet
+            git reset --soft origin/main
+            stage_files
+            python scripts/absorb_remote_trades.py
+            # NOT --amend: after reset --soft, HEAD is origin's tip, so
+            # amend would replace THAT commit (inheriting its parent and
+            # message) instead of adding a new child commit -- producing a
+            # sibling that can never fast-forward push. A fresh commit here
+            # is correctly a child of the just-fetched origin tip.
+            git diff --staged --quiet || git commit -m "chore: daily analysis $(date -u +'%Y-%m-%d %H:%M UTC')"
             sleep 10
           done
           if [ "$PUSHED" = "false" ]; then
-            echo "All 3 push attempts failed"
+            echo "All 3 attempts failed — deliberately did not fall back to a raw git merge/rebase (see 2026-08-29 fix; the old fallback caused real CSV corruption twice, and the old rebase path itself could silently drop data). Manual review needed."
             exit 1
           fi
 

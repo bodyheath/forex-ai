@@ -579,7 +579,7 @@ def _research_analytics_section() -> str:
         rt_csv = config.DATA_DIR / "research_trades.csv"
         if not rt_csv.exists():
             return ""
-        with rt_csv.open("r", encoding="utf-8", newline="") as fh:
+        with rt_csv.open("r", encoding="utf-8-sig", newline="") as fh:
             rt_rows = list(_csv.DictReader(fh))
     except Exception:
         return ""

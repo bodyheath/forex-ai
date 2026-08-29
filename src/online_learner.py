@@ -196,7 +196,7 @@ def retrain_all_from_feature_store(log=None) -> dict:
     outcome_map: dict = {}  # trade_id (str) -> (status, closed_at)
     if rt_path.exists():
         try:
-            with rt_path.open("r", encoding="utf-8", newline="") as fh:
+            with rt_path.open("r", encoding="utf-8-sig", newline="") as fh:
                 for row in csv.DictReader(fh):
                     tid = str(row.get("id", ""))
                     if tid and row.get("system_version", "") == "v2":
@@ -212,7 +212,7 @@ def retrain_all_from_feature_store(log=None) -> dict:
     fund_outcome_map: dict = {}
     if fund_path.exists():
         try:
-            with fund_path.open("r", encoding="utf-8", newline="") as fh:
+            with fund_path.open("r", encoding="utf-8-sig", newline="") as fh:
                 for row in csv.DictReader(fh):
                     tid = str(row.get("id", ""))
                     if tid and row.get("system_version", "") == "v2":

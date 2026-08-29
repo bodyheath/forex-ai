@@ -151,7 +151,7 @@ def _count_decisive_trades() -> tuple:
     n_wins = n_losses = 0
     research_csv = config.DATA_DIR / "research_trades.csv"
     if research_csv.exists():
-        with research_csv.open("r", encoding="utf-8", newline="") as fh:
+        with research_csv.open("r", encoding="utf-8-sig", newline="") as fh:
             for r in csv.DictReader(fh):
                 s = r.get("status", "").upper()
                 if s in ("WIN", "PARTIAL_WIN", "FULL_WIN"):
@@ -159,7 +159,7 @@ def _count_decisive_trades() -> tuple:
                 elif s == "LOSS":
                     n_losses += 1
     if config.TRADES_CSV.exists():
-        with config.TRADES_CSV.open("r", encoding="utf-8", newline="") as fh:
+        with config.TRADES_CSV.open("r", encoding="utf-8-sig", newline="") as fh:
             for r in csv.DictReader(fh):
                 s = r.get("status", "").upper()
                 if s in ("WIN", "PARTIAL_WIN", "FULL_WIN"):
@@ -297,12 +297,12 @@ def _load_training_data():
 
     research_csv = config.DATA_DIR / "research_trades.csv"
     if research_csv.exists():
-        with research_csv.open("r", encoding="utf-8", newline="") as fh:
+        with research_csv.open("r", encoding="utf-8-sig", newline="") as fh:
             for r in csv.DictReader(fh):
                 _add(r.get("id"), "research", r, r.get("status", ""))
 
     if config.TRADES_CSV.exists():
-        with config.TRADES_CSV.open("r", encoding="utf-8", newline="") as fh:
+        with config.TRADES_CSV.open("r", encoding="utf-8-sig", newline="") as fh:
             for r in csv.DictReader(fh):
                 _add(r.get("id"), "main", r, r.get("status", ""))
 

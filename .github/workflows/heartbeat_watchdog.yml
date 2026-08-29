@@ -61,6 +61,12 @@ jobs:
         run: |
           git config user.name "forex-ai[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # 2026-08-29: rewritten from git-pull-rebase (with a --no-rebase
+          # merge fallback) to fetch+reset--soft+recommit -- see daily.yml
+          # for the full rationale.
+          git fetch origin main --quiet
+          git reset --soft origin/main
           git add data/heartbeat_watchdog_state.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No dedup-state change — skipping commit"
@@ -68,15 +74,19 @@ jobs:
           fi
           git commit -m "chore: heartbeat watchdog state $(date -u +'%Y-%m-%d %H:%M UTC')"
           for i in 1 2 3; do
-            if ! git pull --rebase -X ours origin main 2>&1; then
-              git rebase --abort 2>/dev/null || true
-              git pull --no-rebase -X ours origin main 2>&1 || true
-            fi
             if git push origin HEAD:main 2>&1; then
               echo "Push succeeded on attempt $i"
               exit 0
             fi
-            echo "Push attempt $i failed — waiting 10 seconds"
+            echo "Push attempt $i failed — re-syncing to origin's current tip and retrying (no merge, no rebase)"
+            git fetch origin main --quiet
+            git reset --soft origin/main
+            git add data/heartbeat_watchdog_state.json 2>/dev/null || true
+            # NOT --amend: see daily.yml -- after reset --soft, HEAD is
+            # origin's tip, so amend would replace that commit rather than
+            # add a new child commit, producing a sibling that can never
+            # fast-forward push.
+            git diff --staged --quiet || git commit -m "chore: heartbeat watchdog state $(date -u +'%Y-%m-%d %H:%M UTC')"
             sleep 10
           done
-          echo "All 3 push attempts failed — dedup state not persisted this run (non-fatal, will retry next cycle)"
+          echo "All 3 attempts failed — dedup state not persisted this run (non-fatal, will retry next cycle); deliberately did not fall back to a raw git merge/rebase (see 2026-08-29 fix)"
