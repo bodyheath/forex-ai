@@ -12254,6 +12254,7 @@ def run() -> int:
                     # both "conditions not met" and sweep-sourced rows (which
                     # never pass through that step at all).
                     "consensus_adj":    _rp.get("consensus_adj", 0),
+                    "consensus_eligible": _rp.get("consensus_eligible", False),
                     # 2026-08-30: fingerprint of the system-memory content
                     # actually delivered to this candidate's Sonnet prompt --
                     # see research_tracker.FIELDS for the full rationale
