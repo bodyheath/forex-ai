@@ -138,8 +138,16 @@ FIELDS = [
     "da_reasons",                 # semicolon-joined DA objection text, blank if da_fired=FALSE
     # ── Cross-pair currency consensus adjustment at entry ─────────────────────
     "consensus_adj",              # -1/0/1 -- daily.py's _apply_currency_consensus() confidence
-                                   # nudge for this candidate; 0 if conditions weren't met or
-                                   # this row is sweep-sourced (never passes through that step)
+                                   # nudge for this candidate. 0 is AMBIGUOUS on its own: it means
+                                   # both "evaluated, found neutral" and "never evaluated" (sweep-
+                                   # sourced, too-few-peers, or scan-wide <4-eligible). Always
+                                   # cross-reference consensus_eligible to disambiguate -- see
+                                   # project_learning_signals_analysis_plan.md.
+    "consensus_eligible",         # TRUE only if this candidate reached the decisive/neutral branch
+                                   # inside _apply_currency_consensus() (passed every eligibility
+                                   # and peer-count guard); FALSE/blank for sweep-sourced rows and
+                                   # any row the consensus step never evaluated. consensus_adj=0
+                                   # only means "genuinely neutral" when this is TRUE.
     # ── System-memory delivery fingerprint at entry ────────────────────────────
     # 2026-08-30: the pre-fix memory.render() -> Sonnet-prompt path had a
     # len(mem) < 500 gate that seed patterns alone (615 chars) already exceeded,
