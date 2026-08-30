@@ -24,6 +24,7 @@ check_fund_state_staleness()           -> list[str]
 check_dispatch(records)                -> list[str]
 check_grade_ordering()                 -> list[str]
 check_rib_strongly_against_edge_health() -> list[str]
+check_learning_signal_readiness()      -> list[str]
 check_audit_fixes_present()            -> list[str]
 check_warning_fire_rate(records)       -> list[str]
 build_opened_trade_digest(records, n=5) -> list[str]
@@ -48,6 +49,8 @@ _GRADE_ORDER          = ["A", "B", "C", "D", "F"]  # best to worst
 
 _RIB_EDGE_WINDOW      = 40   # trailing decisive-trade window checked against the older baseline
 _RIB_EDGE_MIN_N       = 15   # minimum size for EITHER the trailing window or the older baseline
+
+_LEARNING_SIGNAL_MIN_N = 15  # same n>=15 convention as _GRADE_MIN_N / learning.py's MIN_SAMPLES
 
 # Gates that leave a recognisable trace in the log whenever a fund-eligible
 # candidate is evaluated, regardless of outcome. Presence-only (not exact
@@ -506,6 +509,90 @@ def check_rib_strongly_against_edge_health(csv_path=None) -> list:
     return flags
 
 
+def check_learning_signal_readiness(csv_path=None) -> list:
+    """Standing tripwire for the Part 5.4 gap found in the 2026-08-30
+    structural audit: memory_hash, consensus_adj, and da_fired all had
+    pre-registered analysis plans (see project_learning_signals_analysis_
+    plan.md and project_da_downgrade_tracking.md) but nothing that would
+    ever tell a human when there's actually enough data to run them --
+    "learning from itself" depended entirely on someone remembering to
+    check back. This closes that gap: once a signal crosses its
+    pre-registered minimum n, flag it once.
+
+    "Meaningful" is NOT simply "non-blank" for two of these three fields,
+    and that's deliberate, not a shortcut:
+      - memory_hash: non-blank is the correct, unambiguous signal -- it is
+        only ever set when a candidate actually reached Stage-2 Sonnet.
+      - consensus_adj: non-blank would be USELESS here -- daily.py writes
+        the literal default 0 for every sweep-sourced/ineligible row too
+        (research_tracker.log_research_trade's `_rp.get("consensus_adj", 0)`
+        fallback), so "0" is never actually blank once the schema exists.
+        consensus_eligible (added 2026-08-30 specifically for this
+        ambiguity) is the real signal: True only when the candidate reached
+        the decisive/neutral branch inside _apply_currency_consensus().
+      - da_fired: same class of problem, NOT fixed this pass (out of scope
+        of the 2026-08-30 ambiguity fix, which only covered consensus_adj)
+        -- _trade_quality_grade() always returns a real True/False, so
+        non-blank would count nearly every decisive row, firing this
+        readiness flag long before there's actually enough
+        DA-genuinely-evaluated data. Using da_fired=="True" specifically
+        undercounts (misses "DA ran, found nothing" rows) but is the only
+        unambiguous non-blank signal available -- and undercounting means
+        this flag can only fire LATE, never prematurely, which is the safe
+        direction for a "wait until ready" gate.
+
+    Each flag's text is a static string (no live n/percentage baked in) so
+    it fires exactly once via the same flag-set dedup every other check in
+    this file already relies on -- once true, the underlying count only
+    grows, so the flag would otherwise never need to repeat, but a live
+    number in the text would make every run's message text "new" and
+    defeat the dedup.
+    """
+    flags = []
+    try:
+        import pandas as pd
+        path = csv_path or (config.DATA_DIR / "research_trades.csv")
+        if not Path(path).exists():
+            return flags
+        df = pd.read_csv(path)
+        decisive = df[df["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN", "LOSS"])]
+        if decisive.empty:
+            return flags
+
+        def _truthy(series):
+            return series.fillna("").astype(str).str.strip().str.lower().isin(("true", "1", "1.0"))
+
+        def _non_blank(series):
+            # pandas reads an empty CSV cell as NaN, and str(NaN) == "nan" --
+            # non-empty as a string, so a naive astype(str) check would
+            # miscount genuinely blank/missing cells as meaningful.
+            return series.fillna("").astype(str).str.strip() != ""
+
+        checks = []
+        if "memory_hash" in decisive.columns:
+            n = int(_non_blank(decisive["memory_hash"]).sum())
+            checks.append(("memory_hash", n,
+                            "see project_learning_signals_analysis_plan.md's before/after natural-experiment design"))
+        if "consensus_eligible" in decisive.columns:
+            n = int(_truthy(decisive["consensus_eligible"]).sum())
+            checks.append(("consensus_adj", n,
+                            "see project_learning_signals_analysis_plan.md — filter to consensus_eligible==True, compare within grade"))
+        if "da_fired" in decisive.columns:
+            n = int(_truthy(decisive["da_fired"]).sum())
+            checks.append(("da_downgraded", n,
+                            "see project_da_downgrade_tracking.md — compare within da_grade_before, n undercounts (da_fired=True only)"))
+
+        for label, n, pointer in checks:
+            if n >= _LEARNING_SIGNAL_MIN_N:
+                flags.append(
+                    f"📊 {label} has reached n>={_LEARNING_SIGNAL_MIN_N} decisive trades — "
+                    f"ready for the pre-registered analysis ({pointer})"
+                )
+    except Exception as e:
+        flags.append(f"⚠️ learning-signal readiness check itself failed to run: {e}")
+    return flags
+
+
 # Lightweight, static presence checks mirroring the session's 16-item final
 # verification pass. Each is (label, file, pattern) — file content only,
 # no execution. Kept intentionally small: this is a regression tripwire for
@@ -595,6 +682,7 @@ def run_all_checks() -> dict:
     flags += check_dispatch(records)
     flags += check_grade_ordering()
     flags += check_rib_strongly_against_edge_health()
+    flags += check_learning_signal_readiness()
     flags += check_audit_fixes_present()
     flags += check_warning_fire_rate(records)
     digest = build_opened_trade_digest(records)
