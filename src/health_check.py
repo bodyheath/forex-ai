@@ -23,6 +23,7 @@ check_gate_silence(records)            -> list[str]
 check_fund_state_staleness()           -> list[str]
 check_dispatch(records)                -> list[str]
 check_grade_ordering()                 -> list[str]
+check_rib_strongly_against_edge_health() -> list[str]
 check_audit_fixes_present()            -> list[str]
 check_warning_fire_rate(records)       -> list[str]
 build_opened_trade_digest(records, n=5) -> list[str]
@@ -44,6 +45,9 @@ _WARNING_MIN_STREAK   = 3    # consecutive high-fire-rate scans required to flag
 _WARNING_FIRE_RATE    = 0.80 # fires-per-candidate ratio considered "near-universal"
 _GRADE_MIN_N          = 15   # minimum decisive trades per grade bucket to compare
 _GRADE_ORDER          = ["A", "B", "C", "D", "F"]  # best to worst
+
+_RIB_EDGE_WINDOW      = 40   # trailing decisive-trade window checked against the older baseline
+_RIB_EDGE_MIN_N       = 15   # minimum size for EITHER the trailing window or the older baseline
 
 # Gates that leave a recognisable trace in the log whenever a fund-eligible
 # candidate is evaluated, regardless of outcome. Presence-only (not exact
@@ -427,6 +431,81 @@ def check_grade_ordering(csv_path=None) -> list:
     return flags
 
 
+def check_rib_strongly_against_edge_health(csv_path=None) -> list:
+    """Standing regression tripwire for the rib_strongly_against (non-GBP)
+    edge confirmed this session (docs/edge_hypotheses.md has the causal
+    hypothesis and its own invalidation condition for WHY this edge might
+    hold or break).
+
+    2026-08-30: a regime split of this exact population found it is NOT
+    uniform -- ranging_low_vol/trending_risk_off decisive trades win at
+    ~51-55% (PF 2.4+), while trending_risk_on decisive trades (the majority
+    of this population) win at ~31.5% (PF 0.93, effectively breakeven),
+    p=0.003. That's an already-known, currently-true structural fact, not
+    an anomaly to alert on every run -- alerting on it unconditionally would
+    be exactly the "known condition treated as permanent noise" anti-pattern
+    check_warning_fire_rate exists to catch elsewhere in this file.
+
+    What IS worth a standing tripwire: whether the edge's overall
+    performance is drifting away from its own established history, not
+    whether it's regime-dependent (already known, already reflected in the
+    Grade-C cap this population receives). Compares the most recent
+    _RIB_EDGE_WINDOW decisive trades in this population against the OLDER,
+    disjoint remainder as the baseline (not the whole population including
+    the recent window, which would compare a subset against a superset
+    containing itself) -- flags only if recent performance has fallen
+    significantly below that baseline.
+    """
+    flags = []
+    try:
+        import pandas as pd
+        path = csv_path or (config.DATA_DIR / "research_trades.csv")
+        if not Path(path).exists():
+            return flags
+        df = pd.read_csv(path)
+        decisive = df[df["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN", "LOSS"])].copy()
+        if decisive.empty:
+            return flags
+
+        direction = decisive["direction"].astype(str).str.upper()
+        ribbon    = decisive["ribbon_state"].astype(str)
+        rib_against = ((direction == "BUY")  & (ribbon == "ALIGNED_BEAR")) | \
+                      ((direction == "SELL") & (ribbon == "ALIGNED_BULL"))
+        non_gbp = ~decisive["pair"].astype(str).str.upper().str.contains("GBP")
+        pop = decisive[rib_against & non_gbp].copy()
+
+        if "closed_at" in pop.columns:
+            pop["_closed_dt"] = pd.to_datetime(pop["closed_at"], errors="coerce")
+            pop = pop.sort_values("_closed_dt")
+
+        n_total = len(pop)
+        recent = pop.tail(_RIB_EDGE_WINDOW)
+        older  = pop.iloc[: max(0, n_total - _RIB_EDGE_WINDOW)]
+        if len(recent) < _RIB_EDGE_MIN_N or len(older) < _RIB_EDGE_MIN_N:
+            return flags  # too little data on one side for a meaningful comparison
+
+        def _wins(d):
+            return int(d["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN"]).sum())
+
+        older_n, older_wins   = len(older), _wins(older)
+        recent_n, recent_wins = len(recent), _wins(recent)
+
+        result = _ztest_worse_beats_better(older_wins, older_n, recent_wins, recent_n)
+        if result is None:
+            return flags
+        p_value, recent_wr, older_wr = result
+        if recent_wr < older_wr and p_value < 0.05:
+            flags.append(
+                f"🚨 rib_strongly_against (non-GBP) edge drifting — most recent "
+                f"{recent_n} decisive trades WR={recent_wr*100:.1f}% vs the prior "
+                f"{older_n} decisive trades WR={older_wr*100:.1f}%, p={p_value:.4f}. "
+                f"See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
+            )
+    except Exception as e:
+        flags.append(f"⚠️ rib_strongly_against edge-health check itself failed to run: {e}")
+    return flags
+
+
 # Lightweight, static presence checks mirroring the session's 16-item final
 # verification pass. Each is (label, file, pattern) — file content only,
 # no execution. Kept intentionally small: this is a regression tripwire for
@@ -515,6 +594,7 @@ def run_all_checks() -> dict:
     flags += check_duplicate_open_trades()
     flags += check_dispatch(records)
     flags += check_grade_ordering()
+    flags += check_rib_strongly_against_edge_health()
     flags += check_audit_fixes_present()
     flags += check_warning_fire_rate(records)
     digest = build_opened_trade_digest(records)
