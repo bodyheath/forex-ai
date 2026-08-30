@@ -1985,6 +1985,66 @@ def _apply_currency_consensus(deep_results: list, log) -> int:
     return adjustments
 
 
+def _run_devils_advocate(deep_results: list, log) -> int:
+    """Run the devil's-advocate second opinion for every conf>=7 deep-analysis
+    candidate and attach the result as r["second_opinion"].
+
+    2026-08-30: extracted from _send_telegram_summary() (where this used to
+    run inline) and moved to be called here, right after deep_results is
+    finalized -- BEFORE research-trade logging. _send_telegram_summary() is
+    called much later (~line 12766), but research-trade logging
+    (_log_one_research(), called ~line 12045) runs before that, and
+    _trade_quality_grade() reads r["second_opinion"] to compute da_fired/
+    da_downgraded/da_grade_before/da_reasons. Because DA only ever ran inside
+    _send_telegram_summary, second_opinion was never set yet by the time
+    research-trade logging read it -- da_fired was False on every single
+    research trade since the field shipped 2026-08-27 (confirmed empirically:
+    0/2641 True across the full research_trades.csv history). Running DA
+    here fixes that for research logging while leaving the real fund-trade
+    decision path unaffected: _dd_allows_trade() reads _quality_grades, built
+    inside _send_telegram_summary() via this exact same _trade_quality_grade()
+    call, which already correctly read second_opinion once it was set (just
+    later than necessary) -- that call site is untouched, and now sees the
+    same second_opinion values, just computed earlier. Same eligibility
+    condition (conf>=7, not already _early_reject), same API call count,
+    same result -- only the timing changed.
+
+    Returns the count of candidates DA actually ran on.
+    """
+    n_run = 0
+    for _da_r in deep_results:
+        # Skip candidates the fail-fast check in service.py already flagged
+        # (missing/corrupt entry/stop/target etc.) — no real trade is
+        # possible for them regardless of confidence, so don't spend a DA call.
+        if (_da_r.get("parsed") or {}).get("_early_reject"):
+            continue
+        if _conf(_da_r) >= 7:
+            try:
+                from src import analyst as _da_analyst
+                _da = _da_analyst.devil_advocate(
+                    _da_r["pair"],
+                    _da_r["parsed"],
+                    _da_r.get("bundle", {}),
+                )
+                _da_r["second_opinion"] = _da
+                n_run += 1
+                if _da.get("has_objections"):
+                    if _da.get("reasons"):
+                        _existing_rf = (_da_r["parsed"].get("risk_factors") or "").strip()
+                        _new_rf = "; ".join(_da["reasons"])
+                        _da_r["parsed"]["risk_factors"] = (
+                            _new_rf + ("; " + _existing_rf if _existing_rf else "")
+                        )
+                    _log_line(log, (
+                        f"[devil-advocate] {_da_r['pair']} objections found — "
+                        f"reasons: {'; '.join(_da.get('reasons') or []) or 'none given'} — "
+                        f"grade will be downgraded one tier"
+                    ))
+            except Exception:
+                pass
+    return n_run
+
+
 # ── Telegram context helpers ───────────────────────────────────────────────────
 
 def _derive_market_context(deep_results: list, risk_data: dict) -> dict:
@@ -5499,46 +5559,30 @@ def _send_telegram_summary(
             )
 
     # ── SECOND OPINION: devil's advocate for all 7+ raw-confidence pairs ─────────
-    # Moved ahead of grade computation (was previously after) so each
-    # candidate's second_opinion is available for _trade_quality_grade() to
-    # read — grade now folds DA's verdict in directly instead of DA mutating
-    # confidence afterward. This evaluation only needs each candidate's own
-    # parsed/bundle state (both already fully populated by the per-pair loop
-    # above), not grade itself, so moving it earlier introduces no circular
-    # dependency: DA -> grade -> _dd_allows_trade is a straight line.
-    for _da_r in deep_results:
-        # 2026-08-20: skip candidates the fail-fast check in service.py already
-        # flagged (missing/corrupt entry/stop/target etc.) — no real trade is
-        # possible for them regardless of confidence, so don't spend a DA call.
-        if (_da_r.get("parsed") or {}).get("_early_reject"):
-            continue
-        if _conf(_da_r) >= 7:
-            try:
-                from src import analyst as _da_analyst
-                _da = _da_analyst.devil_advocate(
-                    _da_r["pair"],
-                    _da_r["parsed"],
-                    _da_r.get("bundle", {}),
-                )
-                _da_r["second_opinion"] = _da
-                if _da.get("has_objections"):
-                    if _da.get("reasons"):
-                        _existing_rf = (_da_r["parsed"].get("risk_factors") or "").strip()
-                        _new_rf = "; ".join(_da["reasons"])
-                        _da_r["parsed"]["risk_factors"] = (
-                            _new_rf + ("; " + _existing_rf if _existing_rf else "")
-                        )
-                    _log_line(log, (
-                        f"[devil-advocate] {_da_r['pair']} objections found — "
-                        f"reasons: {'; '.join(_da.get('reasons') or []) or 'none given'} — "
-                        f"grade will be downgraded one tier"
-                    ))
-            except Exception:
-                pass
+    # 2026-08-30: this used to run HERE, inline. Moved to _run_devils_advocate()
+    # (defined near _apply_currency_consensus), now called much earlier in
+    # run() -- right after deep_results is finalized, before research-trade
+    # logging. Reason: research-trade logging (_log_one_research(), called
+    # long before this function even runs) reads second_opinion via
+    # _trade_quality_grade() to compute da_fired/da_downgraded/da_grade_before/
+    # da_reasons. Since DA only ever ran in this function, and this function
+    # is called (~line 12766) AFTER research-trade logging (~line 12045),
+    # second_opinion was never set yet at the point research logging read it
+    # -- da_fired was False on every single research trade since the field
+    # shipped (confirmed empirically: 0/2641 True across the full
+    # research_trades.csv history; see the 2026-08-30 structural audit).
+    # second_opinion is already set on every eligible deep_results item by
+    # the time we reach this line -- nothing else needed here. This does NOT
+    # change _dd_allows_trade()'s real fund-decision path: it reads
+    # _quality_grades below, built the same way, from the same
+    # _trade_quality_grade() call, seeing the exact same second_opinion
+    # values -- just computed earlier, same eligibility condition, same API
+    # call count.
 
     # Grade all results — used by display helpers and filtering below.
-    # _trade_quality_grade() reads second_opinion (set just above) as one of
-    # its inputs, alongside MTF/ribbon/R:R/fundamental-tailwind.
+    # _trade_quality_grade() reads second_opinion (set by _run_devils_advocate,
+    # already called earlier in run()) as one of its inputs, alongside
+    # MTF/ribbon/R:R/fundamental-tailwind.
     _quality_grades: dict = {
         r["pair"]: _trade_quality_grade(r) for r in deep_results
         if not (r.get("parsed") or {}).get("_early_reject")
@@ -11754,6 +11798,20 @@ def run() -> int:
             meaningful = [r for r in deep_results if _conf(r) >= 5]
         except Exception as _cons_exc:
             _log_line(log, f"[CONSENSUS] Skipped: {_cons_exc}")
+
+        # 2026-08-30: devil's advocate now runs HERE, before research-trade
+        # logging further down (which reads second_opinion via
+        # _trade_quality_grade() to persist da_fired/etc) -- see
+        # _run_devils_advocate()'s docstring for why this moved from inside
+        # _send_telegram_summary(), which is called too late for research
+        # logging to see it. Order vs. _apply_currency_consensus above
+        # doesn't matter (independent computations, different parsed keys).
+        try:
+            _da_n = _run_devils_advocate(deep_results, log)
+            if _da_n:
+                _log_line(log, f"[devil-advocate] evaluated {_da_n} conf>=7 candidate(s)")
+        except Exception as _da_exc:
+            _log_line(log, f"[devil-advocate] Skipped: {_da_exc}")
 
         passed = len(deep_results)
         _log_line(
