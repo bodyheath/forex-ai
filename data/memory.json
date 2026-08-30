@@ -16,11 +16,6 @@
   },
   {
     "source": "outcome",
-    "pattern": "When D1 RSI >75 aligns with M+W+D sell confluence and an H4 reversal pattern, fade the trend even against bullish EMA st",
-    "outcome": "[EXPIRED] USD/CAD closed 2026-07-08 05:11:01"
-  },
-  {
-    "source": "outcome",
     "pattern": "Triple oscillator confluence (RSI+Stoch+CCI) at Bollinger lower band with MTF alignment signals high-probability mean-re",
     "outcome": "[WIN] EUR/HKD closed 2026-06-23 10:27:20"
   },
@@ -115,6 +110,11 @@
     "outcome": "[EXPIRED] USD/JPY closed 2026-06-15 08:14:17"
   },
   {
+    "source": "outcome",
+    "pattern": "Skip BUY on AUD pairs when Fundamental <5 and Macro <6 \u2014 weak fundamentals won't survive RBA/commodity shocks.",
+    "outcome": "[EXPIRED] EUR/AUD closed 2026-08-30 21:10:58"
+  },
+  {
     "source": "auto",
     "pattern": "Overall track record to date (n=14)",
     "outcome": "Win rate 50%, expectancy -0.08R."
@@ -122,21 +122,21 @@
   {
     "source": "auto",
     "pattern": "Setups taken at confidence >= 7 (n=9 closed trades)",
-    "outcome": "Win rate 44%, expectancy -0.08R. This segment has underperformed - reduce confidence here."
+    "outcome": "Win rate 44%, expectancy -0.08R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
   },
   {
     "source": "auto",
     "pattern": "Setups taken at confidence < 7 (n=5 closed trades)",
-    "outcome": "Win rate 60%, expectancy -0.09R. This segment has performed well - a point in its favour, but still demand full confluence."
+    "outcome": "Win rate 60%, expectancy -0.09R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
   },
   {
     "source": "auto",
     "pattern": "BUY setups (n=6 closed trades)",
-    "outcome": "Win rate 33%, expectancy +0.48R. This segment has underperformed - reduce confidence here."
+    "outcome": "Win rate 33%, expectancy +0.48R. This segment has been profitable overall (positive expectancy) - a point in its favour, but still demand full confluence."
   },
   {
     "source": "auto",
     "pattern": "SELL setups (n=8 closed trades)",
-    "outcome": "Win rate 62%, expectancy -0.29R. This segment has performed well - a point in its favour, but still demand full confluence."
+    "outcome": "Win rate 62%, expectancy -0.29R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
   }
 ]

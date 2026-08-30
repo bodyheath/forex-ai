@@ -1,0 +1,23 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Crowded CHF long positioning unwinding into falling CHF rates and rising JPY rates; downtrend structure on D1 offers bears a weak confluence, but W+D MTF agreement missing blocks high-confidence entry.
+RISK_FACTORS: (1) MTF conf=0/3 — W/D/4H all NEUTRAL, violates >=2/3 agreement rule; trade lacks directional conviction across timeframes. (2) CHF COT reversal risk — positioning at ~1y high unwinding suggests institutional capitulation may be near (potential rally into washout).
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction. Confidence 5/10 < 7 threshold; R:R not calculable without valid setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF FATAL FLAW**: M=SELL, but W=NEUTRAL and D=NEUTRAL. Confidence = 0/3, not ≥2/3. Per **MTF rule**: "if weekly AND daily don't both agree on direction (conf<2/3

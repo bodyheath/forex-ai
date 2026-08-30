@@ -1,0 +1,24 @@
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 shows uptrend structure with RSI 61.3 in neutral zone and T_sig=SELL_3 conflicting with bullish ribbon alignment; price near 100% Fib retracement creates reversal risk, but MTF disagreement (M:SELL vs W/D:NEUTRAL) undermines conviction.
+RISK_FACTORS: [1. MTF conflict: Monthly SELL vs Weekly/Daily NEUTRAL — insufficient alignment for high-confidence directional trade (conf=0/3); 2. Ribbon fully bullish (5/5 aligned) contradicts SELL bias — price structurally favors continuation, not reversal]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not both agree on SELL direction (only Monthly=SELL, W/D=NEUTRAL). Confidence=0/3 MTF agreement fails threshold. Ribbon alignment further conflicts with reversal setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1 RSI=61.3 in confirmed UPTREND (price >

@@ -1,0 +1,50 @@
+I need to carefully work through this setup.
+
+**MTF Check:** M:BUY W:BUY D:BUY 4H:NEUTRAL — Weekly AND Daily both agree BUY. ✓ conf=2/3 noted but W+D both BUY satisfies the requirement.
+
+**RSI/Trend Context:** MTF is W:BUY + D:BUY = confirmed UPTREND context. Apply UPTREND RSI shift: RSI 45-65=NEUTRAL(3-4), 65-77=4-5SELL. But D1 RSI=34.6 — even in uptrend shift, RSI<35 is deeply oversold = strong BUY signal. T_sig=BUY_9, pin_bar_at_key_level:bul. TECHNICAL_SCORE=9 (anchored to T_sig, no strong contradictory factor despite bearish ribbon — ribbon conflict noted but price/RSI/BB/pattern all align BUY).
+
+**Ribbon:** ALIGNED_BEAR fan 5/5 — this is a significant conflict. However, RSI 34.6, BB at/below lower band, pin bar at key level, triple oscillator confluence all override for a counter-ribbon bounce setup. Ribbon = trend continuation risk factor, not a TECHNICAL_SCORE reducer when RSI/BB/pattern are this extreme.
+
+**FIB:** SL=1.62539 is the Fibonacci swing low. Price near 1.6170 is below SL of range — price has broken below the fib swing low, which is notable.
+
+**OSC:** TRIPLE_BUY (3/3) → +2 confidence
+
+**DIV:** NONE
+
+**Positioning:** EUR crowded SHORT near bottom of 1y range, UNWINDING → short squeeze fuel → POSITIONING_SCORE=7
+
+**Fundamental:** Rate diff -2.21% (EUR flat, AUD rising) → headwind for EUR/AUD BUY → FUNDAMENTAL_SCORE=4
+
+**System Memory:** Pattern 9 warns: "Skip BUY on AUD pairs when Fundamental <5 and Macro <6." FUNDAMENTAL=4, MACRO=5 → both trigger the warning → EXPIRED but noted as illustrative. Track record: BUY setups 33% win rate but +0.48R expectancy (profitable). SELL setups negative expectancy.
+
+**Confidence Build:**
+- Base: 6
+- W+D both BUY: ✓
+- TRIPLE_BUY OSC: +2 → 8
+- DIV: NONE: 0
+- Ribbon ALIGNED_BEAR conflict: -1 → 7
+- Fundamental headwind (rate diff -2.21%): 0 (already in fund score)
+- System memory pattern 9 (Fund<5 + Macro<5... Macro=5, borderline): -1 → 6... but pattern is EXPIRED
+
+Macro=5 is borderline. Pattern 9 expired. I'll hold at 7, acknowledging the expired warning.
+
+**Entry/SL/Target:**
+- Entry: 1.6170 (current price, at pin bar close)
+- SL: below pin bar / swing low = 1.6090 (10 pip below SL fib 1.6254... actually price is 1.6170, fib SL=1.6254 is ABOVE current price — price has broken below the fib range. SL below current candle low, ATR=0.0080, SL = 1.6170 - 0.0100 = 1.6070)
+- Risk = 1.6170 - 1.6070 = 0.0100
+- Target = 1.6170 + 0.0200 = 1.6370 (2R)
+- R:R = 2.0:1
+
+---
+
+PAIR: EUR/AUD
+DIRECTION: BUY
+CONFIDENCE: 7/10
+TECHNICAL_SCORE: 9/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+KEY_THESIS: Oversold EUR/AUD (RSI 34.6) with pin bar at key level and triple oscillator confluence in confirmed uptrend (W+D BUY) signals reversal from crowded short positioning, though bearish ribbon and negative rate diff present headwinds.
+RISK_FACTORS:

@@ -1,0 +1,32 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: D1 SELL signal conflicts with uptrend structure and price above SMA50; fundamental AUD weakness (rate rising vs NZD falling) + COT SHORT buildup creates mean-reversion risk.
+
+RISK_FACTORS: [1] MTF weekly is NEUTRAL, not SELL — only D1 and Monthly align on SELL; conf=1/3 breaches trading rule. [2] Price sits 4p above 50% Fib support (1.20826) in uptrend; double-bottom pattern (D1 PAT) is bullish, contradicting SELL bias.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.2120
+ENTRY_TRIGGER_REASON: Break above 4H resistance at 1.2120 would invalidate SELL thesis; currently setup is ambiguous — wait for either upside rejection or D1 close below SMA50 to confirm.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **Rationale:**
+
+**TECHNICAL (5/10):**
+- D1 T_sig=SELL_4 is the baseline, but **MTF fails the trade rule**: Weekly is NEUTRAL, Daily

@@ -1,0 +1,27 @@
+```
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence + CHF crowded short unwinding creates reversal pressure despite aligned bull ribbon; MTF neutral alignment blocks high-conviction entry.
+RISK_FACTORS: [1. D1 T_sig=SELL_3 contradicted by uptrend structure (price > SMA50 > SMA200 golden cross) and aligned bull ribbon — trend continuation signal overrides divergence. 2. MTF conf=0/3 (all timeframes neutral) violates MTF rule: weekly AND daily must both agree on direction for TRADE_THIS=YES.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.4825
+ENTRY_TRIGGER_REASON: Stochastic cooling from overbought (82.5) near recent range resistance; wait for pullback to confirm divergence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### SCORING BREAKDOWN:
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI=60.8 in established uptrend → standard tier 45–62 = NEUTRAL(3–4). RSI at upper-neutral range, no overbought signal yet.
+- **Bearish divergence
