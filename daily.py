@@ -1956,12 +1956,34 @@ def _apply_currency_consensus(deep_results: list, log) -> int:
         else:  # SELL BASE/QUOTE
             net_support = (-base_excl) + quote_excl
 
+        # 2026-08-30: mark this candidate as genuinely evaluated -- reached
+        # this point past every eligibility/peer-count guard above -- BEFORE
+        # branching on decisive vs. neutral. consensus_eligible disambiguates
+        # "evaluated, found neutral" (consensus_adj=0, consensus_eligible=
+        # True) from "never evaluated at all" (consensus_adj defaults to 0
+        # via .get(), consensus_eligible absent/False): sweep-sourced,
+        # too-few-peers for this candidate's currencies, or the whole-scan
+        # <4-eligible short-circuit above. A future analysis grouping
+        # decisive win-rate by consensus_adj must exclude
+        # consensus_eligible=False rows, not lump them in as "0/neutral" --
+        # see project_learning_signals_analysis_plan.md.
+        pp["consensus_eligible"] = True
+
         if net_support > 4:
             adj = +1
         elif net_support < -4:
             adj = -1
         else:
+            pp["consensus_adj"] = 0
             continue
+
+        # Record the decisive signal as soon as it's known, before the confidence
+        # clamp below -- previously a decisive net_support that happened to land
+        # on an already-clamped confidence (1 or 10) silently lost consensus_adj
+        # entirely (the `continue` below skipped the assignment), indistinguishable
+        # from "never evaluated". A decisive signal is real information regardless
+        # of whether it could actually move confidence.
+        pp["consensus_adj"] = adj
 
         old_conf = _conf(r) or 5           # _conf() always returns int; handles str/None safely
         new_conf = max(1, min(10, old_conf + adj))
@@ -1969,7 +1991,6 @@ def _apply_currency_consensus(deep_results: list, log) -> int:
             continue
 
         pp["confidence"] = new_conf
-        pp["consensus_adj"] = adj
         adjustments += 1
         direction_str = "agrees" if adj > 0 else "contradicts"
         _log_line(log,
