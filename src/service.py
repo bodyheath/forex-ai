@@ -187,6 +187,11 @@ def analyse_and_log(
         return result
 
     parsed = recparse.parse(result["report"])
+    # 2026-08-30: fingerprint of the system-memory content actually delivered
+    # to this candidate's Sonnet prompt (blank/0 for pairs that never reached
+    # Stage-2 Sonnet) -- see research_tracker.FIELDS for why this exists.
+    parsed["memory_hash"]  = result.get("memory_hash", "")
+    parsed["memory_chars"] = result.get("memory_chars", 0)
 
     # 2026-08-20: fail-fast data check, immediately after parsing — before any
     # candidate becomes eligible for DA (a real Sonnet-tier API call) or

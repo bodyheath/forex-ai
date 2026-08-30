@@ -74,3 +74,83 @@ def render() -> str:
         lines.append(f"  {i}. [{tag}] PATTERN: {r.get('pattern')}")
         lines.append(f"     OUTCOME: {r.get('outcome')}")
     return "\n".join(lines)
+
+
+# ── Budget-aware render for the Sonnet prompt ──────────────────────────────────
+# 2026-08-30: render() above was gated at the Sonnet-prompt call site by
+# `if mem and len(mem) < 500`. Seed patterns alone (3 hand-written priors,
+# unchanged since the initial commit) already render to 615 chars -- over the
+# cap before a single outcome/auto record is added. git log -S confirms that
+# gate was introduced 2026-06-09 and never touched since, so it has never once
+# passed: no version of system memory (seed, auto, or outcome) has ever
+# actually reached a live Sonnet prompt. render_budgeted() replaces that
+# all-or-nothing gate with a selection that always includes the small,
+# bounded, statistically-grounded content (seed + auto + user) and only
+# truncates/limits the large, unvalidated bucket (up to 20 raw LLM-generated
+# "outcome" narratives from outcome_analyst.py) so it can never crowd out --
+# or by itself exceed -- the budget the way it silently has been.
+_OUTCOME_TRUNCATE_CHARS = 90   # per-record cap on the (raw LLM) pattern text
+_OUTCOME_BUDGET_CHARS   = 500  # total budget for the outcome section specifically
+
+
+def _truncate_outcome_pattern(pattern: str) -> str:
+    pattern = pattern or ""
+    if len(pattern) <= _OUTCOME_TRUNCATE_CHARS:
+        return pattern
+    return pattern[:_OUTCOME_TRUNCATE_CHARS].rstrip() + "..."
+
+
+def render_budgeted() -> str:
+    """Render system memory for the Sonnet prompt with a budget-aware split:
+
+    - seed / auto / user records are always included in full. This set is
+      small and bounded (3 seed + up to ~6 auto win-rate-segment patterns,
+      MIN_SAMPLES=4 in learning.py + any hand-added user notes), and each is
+      either a hand-written prior or a statistic computed directly from
+      closed-trade data -- worth the tokens unconditionally.
+    - "outcome" records (up to 20, FIFO-capped, raw LLM-generated one-sentence
+      narratives from outcome_analyst.py, unvalidated) are truncated per-record
+      and greedily packed most-recent-first into a fixed _OUTCOME_BUDGET_CHARS
+      sub-budget, so they add color without being able to dominate or exceed
+      the section on their own.
+
+    Returns "" if there is nothing to render (should not happen in practice --
+    the 3 seed priors always exist via memory.load()'s _DEFAULT fallback).
+    """
+    records = load()
+    if not records:
+        return ""
+
+    always  = [r for r in records if r.get("source") != "outcome"]
+    outcome = [r for r in records if r.get("source") == "outcome"]
+
+    lines = ["SYSTEM MEMORY - patterns learned from past outcomes (weight heavily):"]
+    idx = 0
+    for r in always:
+        idx += 1
+        tag = r.get("source", "user").upper()
+        lines.append(f"  {idx}. [{tag}] PATTERN: {r.get('pattern')}")
+        lines.append(f"     OUTCOME: {r.get('outcome')}")
+
+    if outcome:
+        # Most-recent-first: outcome_analyst.py appends new records and evicts
+        # from the front (FIFO), so the end of the list is the most recent.
+        header = "  OUTCOME NOTES (unvalidated LLM narratives, illustrative only):"
+        included = []
+        used = len(header) + 1
+        for r in reversed(outcome):
+            idx += 1
+            pattern_line = f"  {idx}. [OUTCOME] PATTERN: {_truncate_outcome_pattern(r.get('pattern'))}"
+            outcome_line = f"     OUTCOME: {r.get('outcome')}"
+            cost = len(pattern_line) + len(outcome_line) + 2
+            if used + cost > _OUTCOME_BUDGET_CHARS:
+                idx -= 1
+                break
+            included.append(pattern_line)
+            included.append(outcome_line)
+            used += cost
+        if included:
+            lines.append(header)
+            lines.extend(included)
+
+    return "\n".join(lines)

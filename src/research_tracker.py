@@ -140,6 +140,18 @@ FIELDS = [
     "consensus_adj",              # -1/0/1 -- daily.py's _apply_currency_consensus() confidence
                                    # nudge for this candidate; 0 if conditions weren't met or
                                    # this row is sweep-sourced (never passes through that step)
+    # ── System-memory delivery fingerprint at entry ────────────────────────────
+    # 2026-08-30: the pre-fix memory.render() -> Sonnet-prompt path had a
+    # len(mem) < 500 gate that seed patterns alone (615 chars) already exceeded,
+    # so no version of system memory ever reached a live Sonnet prompt. Now that
+    # delivery actually works (src/memory.py::render_budgeted()), persist which
+    # exact memory content reached THIS candidate's Sonnet call so a future
+    # analysis can check whether delivered memory correlates with better real
+    # outcomes -- and watch for the same inverted-signal failure mode already
+    # found in corr_agreement_count/monthly_trend_aligned. Blank/0 for
+    # sweep-sourced rows and any candidate that never reached Stage-2 Sonnet.
+    "memory_hash",                 # first 12 hex chars of sha256(rendered memory block)
+    "memory_chars",                # length of the memory block actually included
 ]
 
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN", "FULL_WIN", "STALE_EXIT", "SKIPPED"}

@@ -12175,6 +12175,16 @@ def run() -> int:
                     # both "conditions not met" and sweep-sourced rows (which
                     # never pass through that step at all).
                     "consensus_adj":    _rp.get("consensus_adj", 0),
+                    # 2026-08-30: fingerprint of the system-memory content
+                    # actually delivered to this candidate's Sonnet prompt --
+                    # see research_tracker.FIELDS for the full rationale
+                    # (the pre-fix delivery gate never once passed, so this
+                    # is the first data that can ever answer whether
+                    # delivered memory correlates with real outcomes).
+                    # Blank/0 for sweep-sourced rows and any candidate that
+                    # never reached Stage-2 Sonnet.
+                    "memory_hash":      _rp.get("memory_hash", ""),
+                    "memory_chars":     _rp.get("memory_chars", 0),
                 }
                 # ─────────────────────────────────────────────────────────────
                 # Augment with OHLCV-based entry-context features (no new API calls)

@@ -45,17 +45,37 @@ def _expectancy(rows):
 
 
 def _segment_pattern(label, rows):
-    """Build a remembered pattern for a segment, or None if too few samples."""
+    """Build a remembered pattern for a segment, or None if too few samples.
+
+    2026-08-30: the verdict used to key off win rate alone (wr < 0.5 ->
+    "reduce confidence", else "performed well"). That's backwards for an
+    R-multiple strategy: a segment can have a losing win rate but positive
+    expectancy (small frequent losses, larger rare wins) or a winning win
+    rate but negative expectancy (frequent small wins, rare large losses) --
+    confirmed live in this system's own data (BUY setups: WR 33%/expectancy
+    +0.48R; SELL setups: WR 62%/expectancy -0.29R), so the old logic was
+    telling the model to distrust a profitable segment and trust a losing
+    one. Expectancy is what actually answers "is this segment worth taking";
+    win rate now only drives the verdict when no r_multiple data exists to
+    compute expectancy from.
+    """
     wr, n = _winrate(rows)
     if wr is None or n < MIN_SAMPLES:
         return None
     exp = _expectancy(rows)
     exp_txt = f", expectancy {exp:+.2f}R" if exp is not None else ""
-    verdict = (
-        "This segment has underperformed - reduce confidence here."
-        if wr < 0.5 else
-        "This segment has performed well - a point in its favour, but still demand full confluence."
-    )
+    if exp is not None:
+        verdict = (
+            "This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
+            if exp < 0 else
+            "This segment has been profitable overall (positive expectancy) - a point in its favour, but still demand full confluence."
+        )
+    else:
+        verdict = (
+            "This segment has underperformed by win rate (no expectancy data available) - reduce confidence here."
+            if wr < 0.5 else
+            "This segment has performed well by win rate (no expectancy data available) - a point in its favour, but still demand full confluence."
+        )
     return {
         "pattern": f"{label} (n={n} closed trades)",
         "outcome": f"Win rate {wr*100:.0f}%{exp_txt}. {verdict}",

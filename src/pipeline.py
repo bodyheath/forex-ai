@@ -143,6 +143,10 @@ def run(pair: str, log=print, force_deep: bool = False,
     log(f"Sonnet: confirming (Haiku conf={haiku['confidence']}/10, threshold={sonnet_threshold}) ...")
     report = analyst.analyse(canonical, bundle, haiku_report=haiku["report"],
                              threshold_override=pair_threshold_override, log=log)
+    # Captured immediately after the call, same synchronous pipeline.run()
+    # invocation that made it -- safe against cross-pair overwrites of
+    # analyst.py's module-level "last call" state.
+    _mem_meta = analyst.get_last_memory_meta()
     return {
         "pair":         canonical,
         "bundle":       bundle,
@@ -151,6 +155,8 @@ def run(pair: str, log=print, force_deep: bool = False,
         "screened_out": False,
         "screen":       {"score": min(5, haiku["confidence"] // 2 + 1),
                          "reason": f"Sonnet confirmed (Haiku {haiku['confidence']}/10)"},
+        "memory_hash":  _mem_meta["hash"],
+        "memory_chars": _mem_meta["chars"],
     }
 
 

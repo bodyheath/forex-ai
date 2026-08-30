@@ -13,6 +13,7 @@ Fallback key: if primary ANTHROPIC_API_KEY fails, all remaining calls switch to
 ANTHROPIC_API_KEY_2 for the rest of the run.
 """
 
+import hashlib
 import json
 import re
 import time
@@ -25,6 +26,18 @@ from src import memory
 # ── API key fallback state ─────────────────────────────────────────────────────
 _using_fallback: bool     = False
 _fallback_triggered: bool = False
+
+# ── Memory-delivery fingerprint for the most recent Sonnet call ────────────────
+# Set by _build_sonnet_message() immediately before the Sonnet API call, read
+# right back out by pipeline.run() in the same synchronous call for the same
+# pair -- no cross-pair race, since analyse() is called once per pair,
+# sequentially. Lets daily.py persist which exact memory content reached each
+# candidate's Sonnet prompt (research_tracker.py's memory_hash/memory_chars).
+_last_memory_meta: dict = {"hash": "", "chars": 0}
+
+
+def get_last_memory_meta() -> dict:
+    return dict(_last_memory_meta)
 
 # ── Run-level cost tracker ─────────────────────────────────────────────────────
 _cost: dict = {
@@ -48,6 +61,8 @@ def reset_key_state() -> None:
     for k in _cost:
         _cost[k] = 0
     _analysis_cache.clear()
+    _last_memory_meta["hash"]  = ""
+    _last_memory_meta["chars"] = 0
 
 
 def key_status() -> str:
@@ -476,8 +491,17 @@ def _build_sonnet_message(pair: str, bundle: dict, haiku_report: str) -> str:
     """Compact Sonnet user message: compressed data + Haiku preliminary (~300-400 tokens)."""
     parts = []
 
-    mem = memory.render()
-    if mem and len(mem) < 500:
+    # 2026-08-30: replaced the old `if mem and len(mem) < 500` all-or-nothing
+    # gate -- seed patterns alone (615 chars) already exceeded it, so no
+    # version of system memory had ever actually reached a live Sonnet
+    # prompt since that gate was introduced. render_budgeted() always
+    # includes the small, bounded, statistically-grounded content (seed +
+    # auto + user) and only truncates the large unvalidated "outcome" bucket,
+    # so it can never silently zero out again.
+    mem = memory.render_budgeted()
+    _last_memory_meta["hash"]  = hashlib.sha256(mem.encode("utf-8")).hexdigest()[:12] if mem else ""
+    _last_memory_meta["chars"] = len(mem) if mem else 0
+    if mem:
         parts.append(mem)
         parts.append("")
 
