@@ -376,6 +376,13 @@ def update_mfe_mae(rec_id: int, current_price: float) -> dict:
     if target is None:
         return {}
 
+    # 2026-08-30: same fix as research_tracker.update_mfe_mae() -- see that
+    # function's comment and project_mfe_overaccumulation_bug.md. No caller
+    # has ever checked status==OPEN before writing here, letting MFE keep
+    # accumulating from price action after a trade already closed.
+    if (target.get("status") or "").upper() != "OPEN":
+        return target
+
     entry     = _to_float(target.get("entry"))
     direction = (target.get("direction") or "").upper()
     if entry is None or direction not in ("BUY", "SELL"):

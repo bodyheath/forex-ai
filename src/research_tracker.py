@@ -503,6 +503,22 @@ def update_mfe_mae(rec_id: int, current_price: float) -> dict:
     if target is None:
         return {}
 
+    # 2026-08-30: this used to write regardless of status. Confirmed via a
+    # real-money-adjacent R:R investigation that MFE kept accumulating using
+    # price action from AFTER a trade had already closed -- e.g. t2_hit_pips
+    # (recorded at the exact moment of a WIN) landed at exactly 2.000R on
+    # 185/185 real wins, while mfe_pips for those same rows averaged 3.00R,
+    # max 8.93R. Root cause: no caller of update_mfe_mae() has ever checked
+    # status==OPEN before calling it (they call it FOR open-filtered lists,
+    # but nothing stops a stale/duplicate call against an already-closed
+    # row). Concentrated in one large historical event (120 research rows,
+    # 2026-07-30, exact trigger not forensically reconstructable -- see
+    # project_mfe_overaccumulation_bug.md) plus smaller ongoing instances
+    # (a CHF-pair cluster on 2026-08-19), confirming this was still live,
+    # not a one-time historical accident.
+    if (target.get("status") or "").upper() != "OPEN":
+        return target
+
     entry     = _to_float(target.get("entry"))
     direction = (target.get("direction") or "").upper()
     if entry is None or direction not in ("BUY", "SELL"):
