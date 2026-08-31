@@ -6262,17 +6262,18 @@ def _send_telegram_summary(
                     except Exception:
                         pass
                     continue
-                # Fallback: legacy monthly_trend_aligned from parsed analysis.
-                # 2026-08-26: removed the dead inner block that used to fire here
-                # ("if not _mta_bool and weekly_aligned is False") -- provably
-                # unreachable, since any row with weekly_aligned is False already
-                # hit the hard block above (and `continue`d away) unless exempted,
-                # in which case re-blocking here on the same signal would silently
-                # defeat the exemption just added. Only the WARNING-when-missing
-                # log line below was ever live; kept as-is.
-                _mta_val = _yt_parsed.get("monthly_trend_aligned")
-                if _mta_val is None:
-                    _log_line(log, f"[trend] WARNING {_yt_pair} — monthly_trend_aligned not available — allowing trade")
+                # 2026-09-01: removed the legacy monthly_trend_aligned warning that
+                # used to sit here. Confirmed via full-codebase grep: _yt_parsed
+                # ("parsed" dict, the AI analysis output) never has this key set on
+                # it anywhere -- it's only ever written to _extra_rt, a separate
+                # dict built for research-CSV logging -- so _yt_parsed.get(
+                # "monthly_trend_aligned") was None on literally 100% of fund-trade
+                # evaluations, not occasionally. The blocking logic that once
+                # consumed this value was already found unreachable and removed on
+                # 2026-08-26 (see that date's comment history); only this always-
+                # firing, zero-information warning remained. No decision or gate
+                # depends on it -- real weekly/monthly trend enforcement is the
+                # separate _trend_align mechanism (_get_trend_alignment(), above).
                 # Loss journal — block or penalise setups matching past-loss patterns
                 _jrnl_e  = float(_yt_parsed.get("entry") or _yt_parsed.get("entry_price") or 0)
                 _jrnl_sl = float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0)
