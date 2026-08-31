@@ -52,6 +52,21 @@ _RIB_EDGE_MIN_N       = 15   # minimum size for EITHER the trailing window or th
 
 _LEARNING_SIGNAL_MIN_N = 15  # same n>=15 convention as _GRADE_MIN_N / learning.py's MIN_SAMPLES
 
+# project_ribbon_regime_carveout_threshold.md criterion 1 (n bar only --
+# criteria 2/3 there require actually running the direct z-test/PF check by
+# hand once n is reached, not something this tripwire auto-decides).
+_RIBBON_CARVEOUT_MIN_N_OFF = 40   # trending_risk_off
+_RIBBON_CARVEOUT_MIN_N_ON  = 100  # trending_risk_on
+
+# project_vix_regime_edge_threshold.md's promotion bar. Trades closing on or
+# before this freeze point are the discovery sample that found the effect --
+# permanently excluded from the promotion check, which must run on new data
+# alone or it would just re-confirm the same fitted sample.
+_VIX_DISCOVERY_FREEZE = "2026-08-31 23:59:59"  # UTC
+_VIX_MIN_N_PER_CELL   = 30    # vix_above AND vix_below, each, on new data only
+_VIX_MIN_PF_ABOVE     = 0.70  # anchored to the decayed (weaker) second half of the discovery sample
+_VIX_MIN_PF_GAP       = 0.30  # PF(above) - PF(below), same anchor
+
 # Gates that leave a recognisable trace in the log whenever a fund-eligible
 # candidate is evaluated, regardless of outcome. Presence-only (not exact
 # per-candidate counts) — robust to free-text log wording, and sufficient to
@@ -547,6 +562,18 @@ def check_learning_signal_readiness(csv_path=None) -> list:
     grows, so the flag would otherwise never need to repeat, but a live
     number in the text would make every run's message text "new" and
     defeat the dedup.
+
+    2026-08-31: extended to cover two more pending analyses that were being
+    checked manually rather than by this tripwire -- the ribbon-regime
+    carve-out's n bar (project_ribbon_regime_carveout_threshold.md) and the
+    vix_vs_20d_avg-within-trending_risk_on promotion bar
+    (project_vix_regime_edge_threshold.md). Each lives in its own private
+    helper below since both need a materially different population query
+    than the three signals above (different decisive-status sets, extra
+    filters, a new-data-only slice for the vix check) -- kept as separate
+    functions for readability, not as a separate tripwire: both still feed
+    into this function's one return value, so run_all_checks() and the
+    alert dedup in scripts/health_check.py need no changes to pick them up.
     """
     flags = []
     try:
@@ -590,6 +617,157 @@ def check_learning_signal_readiness(csv_path=None) -> list:
                 )
     except Exception as e:
         flags.append(f"⚠️ learning-signal readiness check itself failed to run: {e}")
+
+    try:
+        flags += _check_ribbon_regime_carveout_readiness(csv_path)
+    except Exception as e:
+        flags.append(f"⚠️ ribbon-regime carve-out readiness check itself failed to run: {e}")
+
+    try:
+        flags += _check_vix_regime_edge_readiness(csv_path)
+    except Exception as e:
+        flags.append(f"⚠️ vix-regime edge readiness check itself failed to run: {e}")
+
+    return flags
+
+
+def _check_ribbon_regime_carveout_readiness(csv_path=None) -> list:
+    """project_ribbon_regime_carveout_threshold.md criterion 1: n>=40 in
+    trending_risk_off AND n>=100 in trending_risk_on. Fires once both are
+    crossed; criteria 2 (direct z-test) and 3 (PF<=0.80) still require a
+    human to actually run them -- this only tells you when it's worth doing.
+
+    Population (frozen -- do not redefine after the fact): rib_against
+    superset (ALIGNED_BEAR/LEANING_BEAR for BUY, ALIGNED_BULL/LEANING_BULL
+    for SELL), non-GBP, non-CHF-cluster (EUR/CHF, NZD/CHF, AUD/CHF),
+    confidence>=6, v2, closed_at>=2026-07-14 13:46:31 UTC.
+
+    "Decisive" here INCLUDES PARTIAL_WIN -- confirmed 2026-08-31 as the
+    convention that actually produced this population's originally-recorded
+    n=32/77 (see the addendum in project_ribbon_regime_carveout_threshold.md
+    and feedback_decisive_status_ambiguity.md). This is deliberately NOT the
+    same decisive set as check_learning_signal_readiness()'s outer decisive
+    variable or _check_vix_regime_edge_readiness() below (WIN/FULL_WIN/LOSS,
+    no PARTIAL_WIN) -- each population's frozen definition is spelled out
+    explicitly per-check rather than assumed shared, precisely because that
+    assumption is what caused the apparent "shrinkage" this was found from.
+    """
+    flags = []
+    import pandas as pd
+    path = csv_path or (config.DATA_DIR / "research_trades.csv")
+    if not Path(path).exists():
+        return flags
+    df = pd.read_csv(path)
+    required = {"status", "system_version", "closed_at", "direction",
+                "ribbon_state", "pair", "confidence", "market_regime"}
+    if not required.issubset(df.columns):
+        return flags
+
+    decisive = df[df["status"].astype(str).str.upper().isin(
+        ["WIN", "FULL_WIN", "PARTIAL_WIN", "LOSS"])].copy()
+    if decisive.empty:
+        return flags
+    decisive = decisive[decisive["system_version"] == "v2"]
+    decisive["_closed_dt"] = pd.to_datetime(decisive["closed_at"], errors="coerce", utc=True)
+    cutoff = pd.Timestamp("2026-07-14 13:46:31", tz="UTC")
+    decisive = decisive[decisive["_closed_dt"] >= cutoff]
+
+    direction = decisive["direction"].astype(str).str.upper()
+    ribbon    = decisive["ribbon_state"].astype(str)
+    rib_against = ((direction == "BUY")  & ribbon.isin(["ALIGNED_BEAR", "LEANING_BEAR"])) | \
+                  ((direction == "SELL") & ribbon.isin(["ALIGNED_BULL", "LEANING_BULL"]))
+    pair_up = decisive["pair"].astype(str).str.upper()
+    non_gbp = ~pair_up.str.contains("GBP")
+    non_chf_cluster = ~pair_up.isin(["EUR/CHF", "NZD/CHF", "AUD/CHF"])
+    conf = pd.to_numeric(decisive["confidence"], errors="coerce")
+
+    pop = decisive[rib_against & non_gbp & non_chf_cluster & (conf >= 6)]
+    n_off = int((pop["market_regime"] == "trending_risk_off").sum())
+    n_on  = int((pop["market_regime"] == "trending_risk_on").sum())
+
+    if n_off >= _RIBBON_CARVEOUT_MIN_N_OFF and n_on >= _RIBBON_CARVEOUT_MIN_N_ON:
+        flags.append(
+            f"📊 Ribbon-regime carve-out population has reached n>={_RIBBON_CARVEOUT_MIN_N_OFF} "
+            f"trending_risk_off and n>={_RIBBON_CARVEOUT_MIN_N_ON} trending_risk_on — "
+            f"ready to run the pre-registered direct z-test and PF check "
+            f"(see project_ribbon_regime_carveout_threshold.md criteria 2-3)"
+        )
+    return flags
+
+
+def _check_vix_regime_edge_readiness(csv_path=None) -> list:
+    """project_vix_regime_edge_threshold.md's promotion bar, checked ONLY
+    against trades closing strictly after the 2026-08-31 discovery freeze --
+    pooling with the discovery sample would just re-confirm the same fitted
+    data, which is exactly what this bar exists to prevent given the effect
+    already decayed once within that sample's own two time-halves.
+
+    Population: market_regime=='trending_risk_on', decisive (WIN/FULL_WIN/
+    LOSS -- this population's own frozen definition does NOT include
+    PARTIAL_WIN, unlike the ribbon-regime check above), v2, closed_at both
+    >=2026-07-14 13:46:31 UTC and > the discovery freeze.
+
+    All three of the doc's checkable criteria are evaluated: n>=30 in EACH
+    of vix_above/vix_below, a direct (not pooled) two-proportion z-test
+    p<0.05 in the hypothesized direction, and a PF floor/gap anchored to the
+    discovery sample's weaker (already-decayed) second half. Criterion 4
+    there (re-verify the regime confound) is structurally guaranteed here --
+    the query is already restricted to market_regime=='trending_risk_on'
+    alone, so there is no cross-regime pooling for the confound to hide in.
+    """
+    flags = []
+    import pandas as pd
+    path = csv_path or (config.DATA_DIR / "research_trades.csv")
+    if not Path(path).exists():
+        return flags
+    df = pd.read_csv(path)
+    required = {"status", "system_version", "closed_at", "market_regime",
+                "vix_vs_20d_avg", "net_pips"}
+    if not required.issubset(df.columns):
+        return flags
+
+    decisive = df[df["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN", "LOSS"])].copy()
+    if decisive.empty:
+        return flags
+    decisive = decisive[decisive["system_version"] == "v2"]
+    decisive["_closed_dt"] = pd.to_datetime(decisive["closed_at"], errors="coerce", utc=True)
+    cutoff = pd.Timestamp("2026-07-14 13:46:31", tz="UTC")
+    freeze = pd.Timestamp(_VIX_DISCOVERY_FREEZE, tz="UTC")
+    new_data = decisive[(decisive["_closed_dt"] >= cutoff) & (decisive["_closed_dt"] > freeze)]
+
+    ton = new_data[new_data["market_regime"] == "trending_risk_on"]
+    above = ton[ton["vix_vs_20d_avg"] == 1.0]
+    below = ton[ton["vix_vs_20d_avg"] == -1.0]
+    n_above, n_below = len(above), len(below)
+    if n_above < _VIX_MIN_N_PER_CELL or n_below < _VIX_MIN_N_PER_CELL:
+        return flags  # not enough new (post-freeze) data yet
+
+    def _wins(d):
+        return int(d["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN"]).sum())
+
+    def _pf(d):
+        gp = d.loc[d["net_pips"] > 0, "net_pips"].sum()
+        gl = -d.loc[d["net_pips"] < 0, "net_pips"].sum()
+        return gp / gl if gl > 0 else float("inf")
+
+    wins_above, wins_below = _wins(above), _wins(below)
+    pf_above, pf_below = _pf(above), _pf(below)
+
+    result = _ztest_worse_beats_better(wins_above, n_above, wins_below, n_below)
+    if result is None:
+        return flags
+    p_value, wr_below, wr_above = result
+
+    sig   = wr_above > wr_below and p_value < 0.05
+    pf_ok = pf_above >= _VIX_MIN_PF_ABOVE and (pf_above - pf_below) >= _VIX_MIN_PF_GAP
+
+    if sig and pf_ok:
+        flags.append(
+            f"📊 vix_vs_20d_avg-within-trending_risk_on has cleared its promotion bar "
+            f"on NEW data alone (n>={_VIX_MIN_N_PER_CELL}/cell closing after "
+            f"{_VIX_DISCOVERY_FREEZE} UTC, independent p<0.05, PF gap>={_VIX_MIN_PF_GAP}) — "
+            f"ready to evaluate for promotion (see project_vix_regime_edge_threshold.md)"
+        )
     return flags
 
 
