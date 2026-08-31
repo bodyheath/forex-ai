@@ -16,9 +16,29 @@ from unittest.mock import patch
 # Minimal stubs so daily.py can be imported without heavy dependencies
 # ---------------------------------------------------------------------------
 
+_REAL_CONDITIONS_CAPS = {
+    "trending_risk_on":  9,
+    "trending_risk_off": 6,
+    "ranging_low_vol":   6,
+    "ranging_high_vol":  4,
+}
+
+
 def _make_market_regime_stub(regime: str):
+    # 2026-09-02: must include "conditions_cap", matching the exact values
+    # src/market_regime.py's REGIMES dict actually returns for each regime.
+    # This was missing before -- _compute_patience_score() reads
+    # regime_data.get("conditions_cap", 10), so a stub without this key
+    # silently fell through to the uncapped default on every call, making
+    # every one of this file's cap assertions fail regardless of whether
+    # the real capping logic worked (it does -- confirmed separately by
+    # reading src/market_regime.py directly, which sets this correctly).
     mod = types.ModuleType("src.market_regime")
-    mod.detect = lambda: {"regime": regime, "score": 0}
+    mod.detect = lambda: {
+        "regime": regime,
+        "score": 0,
+        "conditions_cap": _REAL_CONDITIONS_CAPS.get(regime, 10),
+    }
     return mod
 
 
@@ -54,9 +74,15 @@ class TestRegimeCaps(unittest.TestCase):
             f"ranging_low_vol must cap at 6, got {score}")
 
     def test_risk_off_capped_at_6(self):
-        score = self._score_for("risk_off")
+        # 2026-09-02: was "risk_off" -- not a real regime key (the actual
+        # keys in src/market_regime.py's REGIMES dict are trending_risk_on/
+        # trending_risk_off/ranging_low_vol/ranging_high_vol). Didn't affect
+        # this specific test's mechanics (the stub fully replaces detect(),
+        # so _compute_patience_score() never looks the name up against real
+        # REGIMES), but a regression test should exercise a real regime name.
+        score = self._score_for("trending_risk_off")
         self.assertLessEqual(score, 6,
-            f"risk_off must cap at 6, got {score}")
+            f"trending_risk_off must cap at 6, got {score}")
 
     def test_trending_risk_on_no_regime_cap(self):
         stub = _make_market_regime_stub("trending_risk_on")
