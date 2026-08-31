@@ -11255,14 +11255,27 @@ def run() -> int:
             _log_line(log, f"Online learner retrain failed: {_ol_exc}")
 
         # Item 6: GitHub token expiry warning — Monday 6am full scan only
+        #
+        # 2026-08-31: was GET /user, which always 403s for the GITHUB_TOKEN
+        # GitHub Actions auto-generates for this workflow (daily.yml's
+        # secrets.GITHUB_TOKEN, scoped by permissions: contents: write) --
+        # that token authenticates as github-actions[bot], not a user
+        # account, so /user is a 403 by design regardless of whether the
+        # token actually has adequate permissions. Confirmed via the
+        # workflow's own git push step succeeding on the same token every
+        # run this fired -- the check was testing an endpoint this token
+        # class was never meant to access. GET /repos/{owner}/{repo} is
+        # something a contents:write installation token can legitimately
+        # read, so a 403 there is now a real signal.
         if scan_mode == "full" and now_ak.weekday() == 0:
             try:
                 import os as _os_gh
                 import requests as _req_gh
                 _gh_token = _os_gh.environ.get("GITHUB_TOKEN", "")
                 if _gh_token:
+                    _gh_repo = _os_gh.environ.get("GITHUB_REPOSITORY", "bodyheath/forex-ai")
                     _gh_resp = _req_gh.get(
-                        "https://api.github.com/user",
+                        f"https://api.github.com/repos/{_gh_repo}",
                         headers={"Authorization": f"Bearer {_gh_token}"},
                         timeout=10,
                     )
@@ -11275,13 +11288,12 @@ def run() -> int:
                         )
                     elif _gh_resp.status_code == 403:
                         _telegram(
-                            "⚠️ GITHUB TOKEN 403 FORBIDDEN — token exists but lacks required "
-                            "permissions — regenerate PAT with repo+workflow scopes in GitHub "
-                            "Settings → Developer settings → Personal access tokens"
+                            f"⚠️ GITHUB TOKEN 403 FORBIDDEN on repos/{_gh_repo} — token exists "
+                            "but can't read its own repo — check the workflow's `permissions:` "
+                            "block (needs at least contents: read)"
                         )
                         _log_line(log,
-                            "⚠️ GitHub token returns 403 — Telegram alert sent — "
-                            "regenerate token with repo+workflow scopes")
+                            f"⚠️ GitHub token returns 403 on repos/{_gh_repo} — Telegram alert sent")
                     else:
                         _log_line(log, f"GitHub token status: HTTP {_gh_resp.status_code}")
                 else:
