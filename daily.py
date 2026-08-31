@@ -6788,8 +6788,27 @@ def _send_telegram_summary(
                                 _trk_mlp.update_fields(int(_yt["id"]), ml_win_probability=round(_ol_prob, 3))
                         except Exception:
                             pass
+                        # Reliability gate (2026-09-01): online_learner.py had zero
+                        # validation of its own predictions -- no holdout, no
+                        # accuracy check -- unlike ml_predictor.py's sibling
+                        # is_model_reliable() mechanism. The penalty and hard
+                        # block below are real, live decisions on real fund
+                        # trades; they must not fire on an unproven model's
+                        # word alone. The prediction is still computed, logged,
+                        # and stamped above regardless -- informational until
+                        # proven, exactly like ml_predictor.py's own model
+                        # before it clears the same bar.
+                        try:
+                            _ol_reliable = _ol_fund.is_model_reliable()
+                        except Exception:
+                            _ol_reliable = False
+                        if not _ol_reliable:
+                            _log_line(log, (
+                                f"[ML] {_yt_pair} online-learner prediction not yet reliable "
+                                f"(P(win)={_ol_prob:.1%}) — penalty/block suppressed, informational only"
+                            ))
                         # If AI says good but ML says bad — penalise confidence
-                        if float(_yt_parsed.get("confidence") or 0) >= 7.0 and _ol_prob <= 0.35:
+                        if _ol_reliable and float(_yt_parsed.get("confidence") or 0) >= 7.0 and _ol_prob <= 0.35:
                             _ml_penalty = 0.5
                             if isinstance(_yt.get("parsed"), dict):
                                 _yt["parsed"]["confidence"] = max(
@@ -6800,7 +6819,7 @@ def _send_telegram_summary(
                                 f"conf -{_ml_penalty} → {_yt_parsed.get('confidence', 0):.1f}"
                             ))
                         # Hard block: ML win probability < 25% — model is highly confident this loses
-                        if _ol_prob < 0.25:
+                        if _ol_reliable and _ol_prob < 0.25:
                             _blk_ml = f"ML win probability too low ({_ol_prob:.1%})"
                             _log_line(log, f"[ML] BLOCKING {_yt_pair} — {_blk_ml}")
                             _fund_st_blocked.append((_yt, _blk_ml))
