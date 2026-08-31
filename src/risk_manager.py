@@ -176,6 +176,30 @@ def _compute_drawdown_tier(profile: dict, est: float, peak: float) -> dict:
     prev_entry_bal  = profile.get("dd_tier_entered_balance", est)
     prev_entry_peak = profile.get("dd_tier_entered_peak",    peak)
 
+    # 2026-08-31: a stored dd_tier_entered_peak that EXCEEDS the current true
+    # peak is a mathematical impossibility under correct data (peak can only
+    # grow) -- it means the anchor was set while peak_balance was itself
+    # corrupted (confirmed root cause: the 2026-08-28 triplication bug
+    # inflated peak_balance to $10,845.83 for one scan; trades.csv was
+    # repaired the same day, but this stored anchor never was, so it has
+    # been silently gating "caution" mode on a drawdown that never happened
+    # ever since). The normal gradual-recovery gate below assumes its own
+    # anchor reflects a real historical drawdown -- that assumption doesn't
+    # hold here, and resetting the anchor to today's values wouldn't help
+    # either (recovered_pct against a freshly-set anchor is always 0, so the
+    # gate would just restart the clock instead of correcting anything).
+    # The only correct response to a proven-impossible anchor is to trust
+    # the freshly (and correctly) computed natural tier directly, exactly
+    # like the step-down path already does for a genuine deterioration --
+    # there is no real drawdown here to require gradual recovery from.
+    if prev_entry_peak > peak:
+        return {
+            "drawdown_mode":           natural,
+            "drawdown_mode_changed":   (natural != prev),
+            "dd_tier_entered_balance": est,
+            "dd_tier_entered_peak":    peak,
+        }
+
     nat_idx  = _DD_TIERS.index(natural)
     prev_idx = _DD_TIERS.index(prev)
 
@@ -283,6 +307,54 @@ def save_profile(profile: dict) -> None:
 
 # ── Risk state computation ────────────────────────────────────────────────────
 
+def _fresh_peak_and_balance(profile: dict) -> tuple:
+    """Return (estimated_balance, peak_balance) from a fresh recompute against
+    the current trades.csv, not from profile's own on-disk, independently-
+    ratcheted peak_balance.
+
+    2026-08-31: risk_profile.json's peak_balance is a separate running-max
+    ("peak = max(existing_peak, new_balance)") that can only ever grow, and
+    nothing ever re-validates a previously-recorded peak once the data behind
+    it changes. Confirmed via git history: it jumped from a correct $10,414.33
+    to $10,845.83 in one scan on 2026-08-28 05:19 UTC -- exactly the window
+    the (separately, already-fixed) trades.csv triplication bug was inflating
+    calculated balance -- and was never corrected when that CSV was repaired
+    the same day (commit 8d716790), because the repair only touched the CSV,
+    not this cached, independently-ratcheted state file. That phantom peak
+    then silently drove "caution" mode (0.75% risk, A/B-grade-only gating)
+    for 3 real days on data implying a drawdown that never happened --
+    confirmed via financials.calculate_fund_state(), the single source of
+    truth for fund P&L, which computes this exact same peak internally from
+    the current (clean) trades.csv every time it's called and returns
+    $10,414.33 -- exactly matching fund_state.json (which is fine; it was
+    never exposed to this specific ratchet) and NOT risk_profile.json.
+
+    Always recomputing fresh here, rather than trusting profile's own cached
+    peak, means a future one-off data anomaly self-heals on the next scan
+    instead of permanently corrupting real position sizing. Falls back to
+    fund_state.json (proven correct, already computed the same way this
+    scan) rather than profile's own stale figure if the fresh recompute
+    fails for any reason -- never falls back to the exact mechanism that
+    caused this bug.
+    """
+    try:
+        from src.trading import financials
+        fresh = financials.calculate_fund_state()
+        if "error" not in fresh:
+            return fresh.get("balance", config.ACCOUNT_BALANCE), fresh.get("peak_balance", config.ACCOUNT_BALANCE)
+    except Exception:
+        pass
+    try:
+        from src import fund_state as _fs
+        disk = _fs.load()
+        return disk.get("balance", config.ACCOUNT_BALANCE), disk.get("peak_balance", config.ACCOUNT_BALANCE)
+    except Exception:
+        pass
+    # Last-resort fallback only if both fresh sources are unavailable.
+    est = profile.get("estimated_balance", config.ACCOUNT_BALANCE)
+    return est, max(profile.get("peak_balance", est), est)
+
+
 def compute_risk_state(profile: dict) -> dict:
     """Derive current risk mode, drawdown tier, and stats from closed trades + profile."""
     rows   = tracker.load()
@@ -310,9 +382,10 @@ def compute_risk_state(profile: dict) -> dict:
     overall_wr = (sum(1 for r in decisive if r["status"] == "WIN") / len(decisive)
                   if decisive else None)
 
-    # Drawdown
-    est  = profile.get("estimated_balance", config.ACCOUNT_BALANCE)
-    peak = max(profile.get("peak_balance", est), est)
+    # Drawdown -- fresh recompute (see _fresh_peak_and_balance docstring for why
+    # this must not trust profile's own cached, independently-ratcheted peak).
+    est, peak = _fresh_peak_and_balance(profile)
+    peak = max(peak, est)  # a peak can never be below the current balance
     dd   = (peak - est) / peak if peak > 0 else 0.0
 
     # ── Drawdown tier (5-tier system) ─────────────────────────────────────────

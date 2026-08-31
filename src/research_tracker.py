@@ -135,7 +135,10 @@ FIELDS = [
     "da_fired",                   # TRUE/FALSE — did DA raise objections for this candidate?
     "da_downgraded",              # TRUE/FALSE — did objections actually change the tier (false for e.g. F->F)?
     "da_grade_before",            # grade before the DA fold-in (only differs from `grade` when da_downgraded=TRUE)
-    "da_reasons",                 # semicolon-joined DA objection text, blank if da_fired=FALSE
+    "da_reasons",                 # semicolon-joined DA objection text. NOT gated on da_fired --
+                                   # devil_advocate() records any MINOR-or-COMPELLING objection
+                                   # regardless of whether the downgrade threshold was met, so this
+                                   # can be populated even when da_fired=FALSE.
     # ── Cross-pair currency consensus adjustment at entry ─────────────────────
     "consensus_adj",              # -1/0/1 -- daily.py's _apply_currency_consensus() confidence
                                    # nudge for this candidate. 0 is AMBIGUOUS on its own: it means
