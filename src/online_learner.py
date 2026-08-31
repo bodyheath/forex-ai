@@ -31,6 +31,19 @@ _RECENCY_TABLE = [(1, 1.0), (7, 0.8), (14, 0.6), (30, 0.4)]
 # FULL_WIN≈+1.95R, WIN≈+1.35R, PARTIAL_WIN≈+0.35R, LOSS=-1R
 _R_WEIGHTS = {"FULL_WIN": 1.00, "WIN": 0.85, "PARTIAL_WIN": 0.55, "LOSS": 1.00}
 
+# Reliability gate (2026-09-01) — mirrors ml_predictor.py's n_consecutive_reliable
+# pattern exactly: a model is trusted to actually influence a live decision
+# (confidence penalty / hard block) only after 3 consecutive retrains clear a
+# holdout-AUC bar, never on a single lucky retrain. Unlike ml_predictor.py's
+# own version of this gate (is_model_reliable(), confirmed via a full-codebase
+# grep to have ZERO callers anywhere -- a well-designed but entirely unused
+# safety check), THIS gate is actually wired into daily.py's penalty/hard-block
+# call site, not just computed and left unread.
+_HOLDOUT_FRACTION          = 0.30  # newest N% held out from training, same ~1/3 split ml_predictor.py uses
+_MIN_HOLDOUT_N             = 10    # below this, a holdout AUC isn't trustworthy -- treat as unreliable this round
+_RELIABILITY_AUC_THRESHOLD = 0.65  # same bar as ml_predictor.py's is_model_reliable()
+_RELIABILITY_STREAK_REQUIRED = 3   # same streak length as ml_predictor.py
+
 
 def _recency_weight(closed_at: str) -> float:
     try:
@@ -148,6 +161,19 @@ def partial_fit_trade(source_table: str, trade_id, outcome: str,
     return True
 
 
+def is_model_reliable() -> bool:
+    """Return True only when the model has had holdout AUC >= _RELIABILITY_AUC_THRESHOLD
+    for _RELIABILITY_STREAK_REQUIRED+ consecutive retrains.
+
+    Mirrors ml_predictor.py's is_model_reliable() exactly (same threshold, same
+    streak length). Until this is True, predict_proba()'s output may still be
+    computed and displayed/logged, but must NOT be used to apply a confidence
+    penalty or hard-block a real trade candidate -- see daily.py's call site.
+    """
+    meta = _load_meta()
+    return meta.get("n_consecutive_reliable", 0) >= _RELIABILITY_STREAK_REQUIRED
+
+
 def predict_proba(features: dict) -> float | None:
     """Return win probability from online model (0–1), or None if not ready."""
     scaler, clf, f_cols = _load_model()
@@ -230,6 +256,13 @@ def retrain_all_from_feature_store(log=None) -> dict:
     # Sort oldest first so scaler partial_fit sees full range before clf trains
     research_rows.sort(key=lambda r: r.get("captured_at", ""))
 
+    # Capture the previous reliability streak BEFORE the meta file is deleted
+    # below -- _load_meta() called after the unlink() would always see an
+    # empty/missing file and read 0, silently capping n_consecutive_reliable
+    # at 1 forever regardless of how many good retrains actually occurred in
+    # a row (caught via a synthetic 3-good-retrains smoke test before shipping).
+    prev_consec = _load_meta().get("n_consecutive_reliable", 0)
+
     # Reset model for clean retrain
     if ONLINE_MODEL_FILE.exists():
         ONLINE_MODEL_FILE.unlink()
@@ -244,10 +277,13 @@ def retrain_all_from_feature_store(log=None) -> dict:
     )
     scaler = StandardScaler()
 
-    trained = 0
+    # Resolve labels first (one pass), THEN split chronologically into a
+    # training portion and a holdout portion -- same "oldest N%, newest M%"
+    # temporal-holdout shape as ml_predictor.py's _temporal_cv_scores(), so
+    # this model's reliability streak is judged on genuinely unseen (future-
+    # relative-to-training) data, not a lucky in-sample fit.
+    resolved: list = []
     skipped = 0
-    history: list = []
-
     for feat_row in research_rows:
         tid = str(feat_row.get("trade_id", ""))
         src = feat_row.get("source_table", "research")
@@ -264,7 +300,19 @@ def retrain_all_from_feature_store(log=None) -> dict:
         else:
             skipped += 1
             continue
+        resolved.append((feat_row, status, closed_at, label))
 
+    n_resolved = len(resolved)
+    n_holdout  = int(n_resolved * _HOLDOUT_FRACTION) if n_resolved >= _MIN_HOLDOUT_N * 2 else 0
+    train_rows, holdout_rows = (
+        (resolved[:-n_holdout], resolved[-n_holdout:]) if n_holdout > 0 else (resolved, [])
+    )
+
+    trained = 0
+    history: list = []
+
+    for feat_row, status, closed_at, label in train_rows:
+        tid = str(feat_row.get("trade_id", ""))
         try:
             X = np.array([[float(feat_row.get(c) or 0.0) for c in FEATURE_COLS]])
             scaler.partial_fit(X)
@@ -284,6 +332,30 @@ def retrain_all_from_feature_store(log=None) -> dict:
 
     _save_model(scaler, clf, FEATURE_COLS)
 
+    # Holdout evaluation -- predict on rows never seen by partial_fit above.
+    holdout_auc = None
+    if len(holdout_rows) >= _MIN_HOLDOUT_N:
+        try:
+            from sklearn.metrics import roc_auc_score
+            X_hold = np.array([
+                [float(fr.get(c) or 0.0) for c in FEATURE_COLS] for fr, _, _, _ in holdout_rows
+            ])
+            y_hold = [lbl for _, _, _, lbl in holdout_rows]
+            X_hold_s = scaler.transform(X_hold)
+            proba = clf.predict_proba(X_hold_s)
+            classes = list(clf.classes_)
+            win_idx = classes.index(1) if 1 in classes else 1
+            p_win = proba[:, win_idx]
+            if len(set(y_hold)) >= 2:  # AUC undefined with only one class present
+                holdout_auc = round(float(roc_auc_score(y_hold, p_win)), 3)
+        except Exception as exc:
+            _log(f"[online_learner] Holdout evaluation failed: {exc}")
+
+    if holdout_auc is not None and holdout_auc >= _RELIABILITY_AUC_THRESHOLD:
+        n_consecutive_reliable = prev_consec + 1
+    else:
+        n_consecutive_reliable = 0
+
     recent = history[-20:]
     recent_wins = sum(1 for h in recent if h["label"] == 1)
     recent_wr = round(recent_wins / len(recent), 3) if recent else None
@@ -299,8 +371,18 @@ def retrain_all_from_feature_store(log=None) -> dict:
         "recent_win_rate": recent_wr,
         "overall_win_rate": overall_wr,
         "retrain_source": "bulk_retrain",
+        "holdout_n": len(holdout_rows),
+        "holdout_auc": holdout_auc,
+        "n_consecutive_reliable": n_consecutive_reliable,
     }
     _save_meta(meta)
+
+    if holdout_auc is not None:
+        _log(f"[online_learner] Holdout AUC {holdout_auc:.3f} on {len(holdout_rows)} unseen trades "
+             f"(reliable retrains: {n_consecutive_reliable}/{_RELIABILITY_STREAK_REQUIRED})")
+    else:
+        _log(f"[online_learner] Holdout not evaluated (n={len(holdout_rows)}, need >= {_MIN_HOLDOUT_N}) "
+             f"— reliability streak reset to 0")
 
     wr_str = f"{recent_wr:.0%}" if recent_wr is not None else "?"
     _log(f"[online_learner] Bulk retrain complete: {trained} trades trained "
