@@ -1,0 +1,24 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 conflicts with uptrend structure and 4H pin bar at key level, creating mixed signals with crowded EUR short positioning amplifying reversal risk.
+RISK_FACTORS: [1] MTF disagreement: Monthly SELL vs. Weekly NEUTRAL vs. Daily NEUTRAL vs. 4H BUY (conf=0/3) — no MTF alignment violates core entry rule. [2] Crowded EUR short at 14% net with UNWINDING momentum near 1y range bottom = classic institutional reversal trap; EUR rate flat + JPY rising reduces carry support.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily must both agree on direction for trade entry. Current state (W:NEUTRAL + D:NEUTRAL vs. M:SELL + 4H:BUY) shows no consensus. Confidence floor breached (4/10 < 7/10 minimum).
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL (4/10):**
+- **D1 RSI=53.8** → Standard tier:

@@ -1,0 +1,23 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: CHF net SHORT positioning is crowded and unwinding at cycle highs while JPY rates are rising, but conflicting MTF signals (W/D neutral vs M/4H divergence) and RSI 47.5 (neutral zone) prevent high-confidence entry.
+RISK_FACTORS: [1] MTF disagreement: Weekly and Daily both NEUTRAL (conf=0/3) — insufficient directional alignment; only Monthly SELL and 4H BUY create noise. [2] CHF positioning reversal risk: net SHORT at 100% with UNWINDING momentum suggests institutional longs exiting, not fresh shorts building — early signal, not confirmation.
+TRADE_THIS: NO
+ENTRY_TYPE: STANDBY
+ENTRY_TRIGGER_PRICE: 196.80
+ENTRY_TRIGGER_REASON: Await Weekly RSI <30 or Daily close below 197.00 + MACD histogram turn negative on D1 to confirm downtrend reversal; current setup lacks 2/3 MTF agreement (hard rule violation).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Rationale:**
+
+1. **MTF VETO (Hard Rule)**: W:NEUTRAL + D:NEUTRAL + M:SELL + 4H:BUY

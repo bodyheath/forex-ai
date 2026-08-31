@@ -1,0 +1,25 @@
+```
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level (1.1602) with ribbon leaning bull and crowded short positioning creates contrarian BUY setup, but mixed MTF alignment and neutral RSI/MACD limit conviction.
+RISK_FACTORS: [1] MTF conf=0/3 (M:SELL conflicts weekly/daily neutral) — no directional confluence; [2] Crowded EUR short positioning unwinding = reversal risk but also mean-reversion squeeze; price trapped between SMA50(1.1488) and SMA200(1.1632) with no clear breakout direction.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.1510
+ENTRY_TRIGGER_REASON: Break above SMA50 (1.1488) + retest at pin bar level confirms upside breakout; RSI >55 + MACD positive divergence required.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI=54.3 (neutral zone 45–62) → baseline 3–4
+- T_sig=NEUTRAL_3 (pre-computed) → locked at 3
