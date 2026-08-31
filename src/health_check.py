@@ -437,6 +437,16 @@ def check_grade_ordering(csv_path=None) -> list:
 
     Stays silent for any bucket below _GRADE_MIN_N — a thin/unstable sample
     is not evidence of anything, and must never be reported as a false flag.
+
+    2026-09-01: filtered to v2 + closed_at>=2026-07-14 13:46:31 UTC (the
+    exit-logic-fix cutoff) -- the follow-up the 2026-08-28 re-verification
+    flagged as needed but blocked on data volume at the time. Without this
+    filter, D-vs-C fired every run on stale pre-fix grade labels (already
+    diagnosed and closed as a duplication/staleness artifact, not a live
+    finding -- re-confirmed 2026-09-01: raw n=812/61 p=0.037, but strict
+    n=475/40 p=0.375, not significant). F-vs-D holds under both, and more
+    strongly under strict (p=1.8e-8) -- this filter doesn't suppress a real
+    signal, it removes a stale one from re-triggering every run.
     """
     flags = []
     try:
@@ -445,7 +455,14 @@ def check_grade_ordering(csv_path=None) -> list:
         if not Path(path).exists():
             return flags
         df = pd.read_csv(path)
-        decisive = df[df["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN", "LOSS"])]
+        status_u = df["status"].astype(str).str.upper()
+        closed_dt = pd.to_datetime(df["closed_at"], errors="coerce", utc=True)
+        cutoff = pd.Timestamp("2026-07-14 13:46:31", tz="UTC")
+        decisive = df[
+            status_u.isin(["WIN", "FULL_WIN", "LOSS"])
+            & (df["system_version"] == "v2")
+            & (closed_dt >= cutoff)
+        ]
 
         buckets = {}
         for grade in _GRADE_ORDER:
