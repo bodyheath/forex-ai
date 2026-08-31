@@ -8,6 +8,7 @@ R-multiple and pips from entry/stop/exit.
 """
 
 import csv
+import sys
 from datetime import datetime, timezone
 
 import config
@@ -450,8 +451,15 @@ def check_inverse_open(pair: str, direction: str, max_id: int = None) -> str | N
                     f"(same directional bet as {pair} {direction.upper()}). "
                     f"Avoid doubling exposure."
                 )
-    except Exception:
-        pass
+    except Exception as exc:
+        # 2026-09-02: fail CLOSED, not open. This is a real hard block
+        # (service.py sets trade_this="NO" on any non-empty return) --
+        # silently returning None here on e.g. a load() failure meant "no
+        # inverse conflict" got reported when the check genuinely couldn't
+        # run at all, the opposite of what a same-directional-exposure guard
+        # should do when it can't verify.
+        print(f"[tracker] check_inverse_open error for {pair}: {exc} — blocking conservatively", file=sys.stderr)
+        return f"WARNING: Inverse-pair check failed ({exc}) — blocking conservatively"
     return None
 
 
@@ -489,8 +497,15 @@ def check_currency_concentration(pair: str, direction: str, max_per_ccy: int = 1
                     f"WARNING: {ccy} already appears in {count} open fund trade(s) "
                     f"(max {max_per_ccy}) — {pair} {direction.upper()} would exceed the 1-per-currency limit"
                 )
-    except Exception:
-        pass
+    except Exception as exc:
+        # 2026-09-02: fail CLOSED, not open -- same reasoning as
+        # check_inverse_open() above. service.py sets trade_this="NO" on any
+        # non-empty return; silently returning None on e.g. a load() failure
+        # reported "no concentration problem" when the check genuinely
+        # couldn't run, the opposite of what a currency-exposure guard
+        # should do when it can't verify.
+        print(f"[tracker] check_currency_concentration error for {pair}: {exc} — blocking conservatively", file=sys.stderr)
+        return f"WARNING: Currency-concentration check failed ({exc}) — blocking conservatively"
     return None
 
 
