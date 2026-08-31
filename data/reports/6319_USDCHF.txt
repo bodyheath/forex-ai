@@ -1,0 +1,23 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: CHF net SHORT positioning unwinding from crowded long near 1y range top creates reversal risk; USD rate flat while CHF rate falling provides mild fundamental support for CHF strength (USD/CHF sell).
+RISK_FACTORS: [1] MTF shows no agreement (M:BUY vs W/D/4H:NEUTRAL, conf=0/3) — trade lacks directional confluence and violates MTF rule; [2] OSC shows no oscillator agreement (Stoch 63.6, CCI 12.0 = NONE) and RSI 50.6 is dead-center neutral — no technical conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree on direction (conf=0/3 < 2/3 threshold). Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**MTF Failure (Hard Block):** M:BUY, but W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL → conf=0/3. Per system rules, **both weekly AND daily must agree** on direction for trade approval. They don't

@@ -1,0 +1,17 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with T_sig=SELL_3 signal; MTF disagreement (M:SELL vs W/D:NEUTRAL vs 4H:BUY) blocks trade despite bullish ribbon alignment.
+RISK_FACTORS: [1] MTF consensus fails — only 0/3 agreement (conf=0%, wt=80%) invalidates directional conviction; [2] D1 RSI=57.3 in confirmed UPTREND (ribbon=ALIGNED_BULL, price>SMA50>SMA200) signals no reversal urgency — RSI 57 in uptrend is neutral zone, not SELL confirmation.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do NOT both agree on direction. Monthly conflicts (SELL) with weekly/daily (NEUTRAL). Confidence <2/3 threshold. Fundamental edge (AUD rate rising +2.19%, CAD rate falling, diff +2.19%) argues for BUY, not SELL. T_sig=SELL_3 is contradicted by D1 structure (uptrend, ribbon bullish, price>SMA50>S

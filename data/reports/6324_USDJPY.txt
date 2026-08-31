@@ -1,0 +1,25 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + rising JPY rates + ribbon leaning bear suggest weak downside bias, but RSI neutral, MTF all-neutral, and 4H uptrend structure create conflicting signals with no directional conviction.
+RISK_FACTORS: (1) MTF confluence fails entirely (M/W/D/4H all NEUTRAL, conf=0/3) — no timeframe alignment; (2) 4H shows uptrend structure (price > SMA50 > SMA200, golden cross) directly conflicts with D1 pin_bar_bearish intent.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly AND daily must both agree on direction; all four timeframes NEUTRAL means no tradeable confluence exists.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS RATIONALE:**
+
+1. **MTF Rule Enforcement (HARD BLOCK):** M/W/D/4H all score NEUTRAL, conf=0/3. The system mandate requires weekly AND daily to both agree on direction (conf ≥2/3). This setup has ZERO agreement. **TRADE_THIS = NO immediately.**
+
+2. **Technical Score =
