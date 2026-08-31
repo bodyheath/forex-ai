@@ -1,0 +1,27 @@
+```
+PAIR: EUR/GBP
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly BUY + crowded EUR short unwinding creates contrarian reversal potential, but D1 mixed trend and double-top pattern conflict—low-conviction setup requiring breakout confirmation.
+RISK_FACTORS: [1. D1 double-top bearish pattern contradicts weekly uptrend; [2. MTF agreement only 1/3 (W:BUY vs D/4H:NEUTRAL)—breakout may fail; crowded short unwind is reversal *risk* not certainty]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 0.8570
+ENTRY_TRIGGER_REASON: Break above D1 double-top neckline at ~0.8570 + weekly BUY confirmation + EUR short unwind structural support.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI=49.4 (neutral 45–62 zone) → baseline 3
+- D1 T_sig=NEUTRAL_3 → no override needed
+- 4H RSI=50.1 (neutral) + bullish_engulfing pattern → +

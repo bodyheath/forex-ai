@@ -1,0 +1,24 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 6/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders pattern with D1 RSI neutral (53.5) and price extended above SMA50; M1 SELL conflicts with D1 NEUTRAL—MTF disagreement kills conviction, but EUR crowded short + JPY building creates reversal risk favoring SHORT bias.
+RISK_FACTORS: [1] MTF disagreement: M1=SELL, D1=NEUTRAL, 4H=BUY (0/3 conf)—no clear trend alignment; [2] EUR positioning already crowded short at 14.0% with UNWINDING—reversal squeeze could spike volatility against SHORT entry.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 184.50
+ENTRY_TRIGGER_REASON: Break below SMA50 (184.77) and neckline support (~184.50) of head-and-shoulders pattern, confirming weakness.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**MTF Failure → NO TRADE:**
+- M1=SELL, D1=NEUTRAL, 4H=BUY → conf=0/3 (0% agreement). Hard rule: "MTF weekly+daily both agree"—

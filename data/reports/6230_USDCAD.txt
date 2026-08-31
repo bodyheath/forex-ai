@@ -1,0 +1,25 @@
+```
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Ribbon leaning bearish and 4H SELL signal offer weak directional bias, but neutral MTF alignment (0/3 agreement) and mixed D1 technicals prevent high-conviction trade.
+RISK_FACTORS: [MTF disagreement—Monthly, Weekly, Daily all NEUTRAL with only 4H showing bearish bias (80% weight insufficient for confirmation); CAD positioning unwinding reduces institutional conviction on short CAD leg]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation—Weekly and Daily do not both agree on direction (conf 0/3 < 2/3 threshold). Mixed D1 (price below SMA50, above SMA200) and Stochastic overbought (71.5) at neutral RSI (45.6) create conflicting signals. Ribbon leaning bear (4/5) provides only 1-point directional edge. CAD COT unwinding undermines conviction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI 45.6 → standard tier = 3–4 NEUTRAL (

@@ -1,0 +1,24 @@
+```
+PAIR: CAD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + ribbon leaning bull supports upside, but MTF misalignment (W/D neutral vs 4H buy) and RSI neutral (54.4) prevent high-confidence entry.
+RISK_FACTORS: [1. MTF confluence fails: weekly and daily both NEUTRAL, 4H isolated BUY does not meet threshold (need >=2 of 3 major timeframes aligned); conf=0/3 explicitly fails MTF rule.] [2. CAD positioning UNWINDING while JPY BUILDING: institutions reducing CAD conviction while adding JPY shorts — creates conflicting directional pressure and suggests risk of fade.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 115.40
+ENTRY_TRIGGER_REASON: Break above pin bar high + 4H trendline; requires confluence improvement (4H sustained above 50MA or daily RSI >60) before entry risk acceptable.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**ANALYSIS:**
+
+**MTF Verdict (CRITICAL FAILURE):**  
+Weekly=NEUTRAL, Daily=NEUTRAL, 4H=BUY → conf=0/3 (0%  alignment). **Hard rule triggered:

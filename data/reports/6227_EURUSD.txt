@@ -1,0 +1,34 @@
+```
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key level (bullish) + crowded EUR short positioning near 1-year low + ribbon leaning bull (4/5 aligned) = classic institutional reversal setup, but blocked by M:SELL and rate differential headwind.
+
+RISK_FACTORS: 
+1. MTF fails consensus rule (M:SELL vs W/D:NEUTRAL; conf=0/3) — no weekly+daily agreement, violates trade gateway.
+2. Negative rate differential (-1.38% EUR vs USD) suppresses long conviction; crowded short reversal is risk itself, not support.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: [BLOCKED_MTF_CONFLICT]
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: Monthly bearish (M:SELL) contradicts daily/weekly neutral stance. Weekly and daily do not both agree on direction (conf=0/3 < 2/3 threshold). Gateway criteria not met.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 T_sig=NEUTRAL_3 anchors baseline at 5.
+- RSI=53 (standard mixed MTF) → tier

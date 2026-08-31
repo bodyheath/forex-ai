@@ -1,0 +1,23 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and monthly downtrends conflict with daily neutral and 4H upside, creating a weak bearish directional bias challenged by aligned bullish ribbon and GBP rate premium.
+RISK_FACTORS: [MTF disagreement (W:SELL + D:NEUTRAL + 4H:BUY) = conf only 1/3, below 2/3 threshold; Ribbon ALIGNED_BULL contradicts weekly bearish bias, suggesting upside continuation risk]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF alignment failure — weekly and daily do not both agree on direction (only 1/3 agreement); confidence 4/10 is below 7/10 threshold. ALIGNED_BULL ribbon (5/5 EMAs stacked bullish) conflicts with weekly SELL signal, increasing reversal risk. Inside bar on both D1 and 4H suggests consolidation, not conviction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF RULE OVERRIDE (CRITICAL):** Weekly = SELL, Daily = NEUTRAL, 4H = BUY → conf = 1/3 (only 20%
