@@ -47,24 +47,19 @@ def _online_learn_closure(source_table: str, updated: dict, log=print) -> None:
         )
     except Exception as exc:
         log(f"[monitor] ML online_learn error ({source_table} trade {updated.get('id')}): {exc}")
-    # Fund trades: train the fund-specific ML model (features stored at trade open)
-    if source_table == "main":
-        try:
-            from src.online_learner import OnlineLearner as _OL_mon, _R_WEIGHTS as _RW
-            _fund_ol = _OL_mon()
-            _pips    = float(updated.get("pips") or 0)
-            _status  = (updated.get("status") or "").upper()
-            _win_set = {"WIN", "FULL_WIN", "PARTIAL_WIN"}
-            outcome  = 1 if _status in _win_set else 0
-            r_weight = _RW.get(_status, 0.70)
-            _fund_ol.train_fund_outcome(
-                trade_id=str(updated.get("id", "")),
-                outcome=outcome,
-                pips=_pips,
-                r_weight=r_weight,
-            )
-        except Exception as _e:
-            log(f"[ML] train error: {_e}")
+    # 2026-09-02: removed the fund-specific OnlineLearner class training call
+    # that used to live here. Confirmed dead in practice, not just unused:
+    # data/fund_feature_store.json had features stored for only 8 trade_ids
+    # ever (5 never even opened, 1 still PENDING, 2 reached EXPIRED), and
+    # data/fund_online_model.pkl / fund_online_model_meta.json never existed
+    # at all -- train_fund_outcome() (only ever called from here) had never
+    # completed successfully in production, because real fund trades close
+    # through outcome_checker.py, which calls partial_fit_trade() above
+    # (the module-level online model) and never touched this class. The
+    # class also had no prediction method at all -- nothing ever read a
+    # prediction back out of it even when training worked -- and its 11
+    # features overlapped almost entirely with the module-level model's
+    # richer 80-feature scheme. See project_full_audit_sep2026.md.
 
 
 def _analyse_loss(trade: dict, prices: dict, log_fn=None) -> dict:

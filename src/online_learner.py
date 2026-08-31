@@ -37,12 +37,12 @@ _R_WEIGHTS = {"FULL_WIN": 1.00, "WIN": 0.85, "PARTIAL_WIN": 0.55, "LOSS": 1.00}
 # holdout-AUC bar, never on a single lucky retrain. Unlike ml_predictor.py's
 # own version of this gate (is_model_reliable(), confirmed via a full-codebase
 # grep to have ZERO callers anywhere -- a well-designed but entirely unused
-# safety check), THIS gate is actually wired into daily.py's penalty/hard-block
-# call site, not just computed and left unread.
+# safety check, since removed), THIS gate is actually wired into daily.py's
+# penalty/hard-block call site, not just computed and left unread.
 _HOLDOUT_FRACTION          = 0.30  # newest N% held out from training, same ~1/3 split ml_predictor.py uses
 _MIN_HOLDOUT_N             = 10    # below this, a holdout AUC isn't trustworthy -- treat as unreliable this round
-_RELIABILITY_AUC_THRESHOLD = 0.65  # same bar as ml_predictor.py's is_model_reliable()
-_RELIABILITY_STREAK_REQUIRED = 3   # same streak length as ml_predictor.py
+_RELIABILITY_AUC_THRESHOLD = 0.65  # same bar ml_predictor.py's (now-removed) is_model_reliable() used
+_RELIABILITY_STREAK_REQUIRED = 3   # same streak length ml_predictor.py's version used
 
 
 def _recency_weight(closed_at: str) -> float:
@@ -165,10 +165,11 @@ def is_model_reliable() -> bool:
     """Return True only when the model has had holdout AUC >= _RELIABILITY_AUC_THRESHOLD
     for _RELIABILITY_STREAK_REQUIRED+ consecutive retrains.
 
-    Mirrors ml_predictor.py's is_model_reliable() exactly (same threshold, same
-    streak length). Until this is True, predict_proba()'s output may still be
-    computed and displayed/logged, but must NOT be used to apply a confidence
-    penalty or hard-block a real trade candidate -- see daily.py's call site.
+    Mirrors ml_predictor.py's (now-removed) is_model_reliable() exactly (same
+    threshold, same streak length). Until this is True, predict_proba()'s
+    output may still be computed and displayed/logged, but must NOT be used
+    to apply a confidence penalty or hard-block a real trade candidate --
+    see daily.py's call site.
     """
     meta = _load_meta()
     return meta.get("n_consecutive_reliable", 0) >= _RELIABILITY_STREAK_REQUIRED
@@ -405,143 +406,20 @@ def build_status_line() -> str:
     return f"Online learner: {n} trades{wr_str} (last update {last})"
 
 
-# ── Fund-trade online learning ─────────────────────────────────────────────────
-
-_FUND_MODEL_FILE = config.DATA_DIR / "fund_online_model.pkl"
-_FUND_META_FILE  = config.DATA_DIR / "fund_online_model_meta.json"
-_FUND_STORE_FILE = config.DATA_DIR / "fund_feature_store.json"
-
-# Numeric features extracted from each fund trade at open
-_FUND_NUMERIC_FEATURES = [
-    "confidence", "rsi", "stop_pips", "rr",
-    "consecutive_losses", "drawdown", "trend_score",
-]
-
-
-class OnlineLearner:
-    """Fund-trade online learner.
-
-    Stores entry-context features when a fund trade opens.
-    Trains the SGDClassifier when the trade closes and outcome is known.
-    Uses a separate model file from the research-trained model so the two
-    datasets don't contaminate each other.
-    """
-
-    def __init__(self):
-        self._clf    = None
-        self._scaler = None
-        self._load()
-
-    def _load(self) -> None:
-        if not _FUND_MODEL_FILE.exists():
-            return
-        try:
-            payload      = pickle.loads(_FUND_MODEL_FILE.read_bytes())
-            self._scaler = payload.get("scaler")
-            self._clf    = payload.get("clf")
-        except Exception:
-            pass
-
-    def _save(self) -> None:
-        _FUND_MODEL_FILE.write_bytes(pickle.dumps({
-            "scaler": self._scaler,
-            "clf":    self._clf,
-        }))
-
-    @property
-    def model(self):
-        if self._clf is None:
-            try:
-                from sklearn.linear_model import SGDClassifier
-                self._clf = SGDClassifier(
-                    loss="log_loss", alpha=0.01,
-                    learning_rate="optimal", random_state=42,
-                )
-            except ImportError:
-                pass
-        return self._clf
-
-    def _dict_to_vector(self, features: dict):
-        try:
-            import numpy as np
-            x = [float(features.get(k) or 0.0) for k in _FUND_NUMERIC_FEATURES]
-            return np.array([x])
-        except Exception:
-            return None
-
-    def store_fund_features(self, trade_id: str, features: dict) -> None:
-        """Persist entry-context features so they can be used to train on closure."""
-        try:
-            import shutil as _sh_fs
-            store: dict = {}
-            if _FUND_STORE_FILE.exists():
-                try:
-                    store = json.loads(_FUND_STORE_FILE.read_text(encoding="utf-8"))
-                except Exception:
-                    store = {}
-            store[str(trade_id)] = {
-                "features":  features,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
-            }
-            _tmp_fs = str(_FUND_STORE_FILE) + ".tmp"
-            with open(_tmp_fs, "w", encoding="utf-8") as _fh:
-                json.dump(store, _fh, indent=2)
-            _sh_fs.move(_tmp_fs, str(_FUND_STORE_FILE))
-        except Exception as e:
-            print(f"[ML] store error: {e}")
-
-    def train_fund_outcome(self, trade_id: str, outcome: int, pips: float,
-                           r_weight: float = 1.0) -> bool:
-        """Train the fund model on a closed trade's outcome.
-
-        Returns True if the model was updated, False if features not found.
-        """
-        try:
-            if not _FUND_STORE_FILE.exists():
-                return False
-            store = json.loads(_FUND_STORE_FILE.read_text(encoding="utf-8"))
-            entry = store.get(str(trade_id))
-            if not entry:
-                return False
-            features = entry.get("features", {})
-            X = self._dict_to_vector(features)
-            if X is None or self.model is None:
-                return False
-
-            try:
-                from sklearn.preprocessing import StandardScaler
-                if self._scaler is None:
-                    self._scaler = StandardScaler()
-                self._scaler.partial_fit(X)
-                X_s = self._scaler.transform(X)
-            except ImportError:
-                X_s = X
-
-            self.model.partial_fit(X_s, [outcome], classes=[0, 1], sample_weight=[r_weight])
-            self._save()
-
-            # Update meta (non-critical)
-            try:
-                meta: dict = {}
-                if _FUND_META_FILE.exists():
-                    try:
-                        meta = json.loads(_FUND_META_FILE.read_text(encoding="utf-8"))
-                    except Exception:
-                        meta = {}
-                meta["n_fund_trades"] = meta.get("n_fund_trades", 0) + 1
-                meta["last_updated"]  = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
-                meta["last_outcome"]  = outcome
-                history = meta.get("recent_outcomes", [])
-                history.append({"label": outcome, "pips": round(float(pips), 1)})
-                meta["recent_outcomes"] = history[-20:]
-                recent_wins = sum(1 for h in meta["recent_outcomes"] if h["label"] == 1)
-                meta["recent_win_rate"] = round(recent_wins / len(meta["recent_outcomes"]), 3)
-                _FUND_META_FILE.write_text(json.dumps(meta, indent=2), encoding="utf-8")
-            except Exception:
-                pass
-
-            print(f"[ML] Trained fund #{trade_id} outcome={outcome} pips={pips:+.1f}")
-            return True
-        except Exception as e:
-            print(f"[ML] train error: {e}")
-            return False
+# 2026-09-02: removed the OnlineLearner class (fund-trade-specific model)
+# that used to live below this point. Confirmed dead in practice before
+# removing, not just unused: data/fund_feature_store.json had features
+# stored for only 8 trade_ids ever (5 never even opened as real trades, 1
+# still PENDING, 2 reached EXPIRED -- not even a real WIN/LOSS), and
+# data/fund_online_model.pkl / fund_online_model_meta.json never existed at
+# all, meaning train_fund_outcome() had never completed successfully in
+# production. Root cause: it was only ever called from monitor.py's
+# trade-closing loop, but real fund trades actually close through
+# outcome_checker.py, which calls partial_fit_trade() above (the module-
+# level model this file already implements) and never touched this class.
+# It also never had a prediction method at all -- nothing anywhere ever
+# read a prediction back out of it, even on the rare occasion training
+# worked when called directly for verification. Its 11 features overlapped
+# almost entirely with the module-level model's richer 80-feature scheme
+# (feature_extractor.FEATURE_COLS) -- no unique signal was lost by removing
+# it. See project_full_audit_sep2026.md for the full investigation.
