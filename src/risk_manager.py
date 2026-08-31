@@ -383,7 +383,7 @@ def _is_win_outcome(r: dict) -> bool:
         try:
             return float(r.get("net_pips") or 0) > 0
         except (TypeError, ValueError):
-            return True
+            return False  # unparseable/missing net_pips -- conservative default, not a win
     return False
 
 
