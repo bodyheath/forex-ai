@@ -1104,6 +1104,21 @@ def _summarise(df: pd.DataFrame, label: str, pair: str = "") -> dict:
     divergence    = _detect_divergence(df, rsi, pair=pair)
     ribbon        = _ema_ribbon(close)
 
+    # bb_position / price_vs_200ma: 2026-09-01 fix -- three separate downstream
+    # write sites (daily.py) expect these as pre-computed keys on this bundle,
+    # but nothing ever produced them (only "bollinger"/"sma200" existed, under
+    # different names) -- confirmed 0/2699 populated in research_trades.csv,
+    # a key-naming/derivation gap, not a scope or ordering bug like the two
+    # other dead fields fixed alongside this one. bb_position is the
+    # normalized position within the bands (0=at lower band, 1=at upper band,
+    # can go outside [0,1] when price is stretched beyond either band, same
+    # information "bollinger"'s text state describes, just as a number).
+    _bb_range = bb_upper - bb_lower
+    bb_position_val = round((last - bb_lower) / _bb_range, 3) if _bb_range > 0 else "n/a"
+    price_vs_200ma_val = (
+        ("above" if last > sma200 else "below") if not np.isnan(sma200) else "n/a"
+    )
+
     return {
         "timeframe": label,
         "last_close": round(last, 5),
@@ -1112,6 +1127,8 @@ def _summarise(df: pd.DataFrame, label: str, pair: str = "") -> dict:
         "macd": macd_state,
         "macd_hist": macd_hist_val,
         "bollinger": bb_state,
+        "bb_position": bb_position_val,
+        "price_vs_200ma": price_vs_200ma_val,
         "sma20": round(sma20_val, 5),
         "sma50": round(sma50, 5),
         "sma200": (round(sma200, 5) if not np.isnan(sma200) else "n/a"),
