@@ -290,6 +290,33 @@ def check_fund_state_staleness() -> list:
                 "🚨 fund_state.json staleness — disk state disagrees with a fresh "
                 "recompute from trades.csv: " + "; ".join(mismatches)
             )
+
+        # 2026-08-31: peak_balance/balance were excluded from stable_fields above
+        # deliberately (see Finding 2 of the 2026-08-31 full-system audit) --
+        # but that left a real blind spot: a torn write can wipe peak_balance to
+        # 0.0 (reproduced this session) with nothing here to catch it. Can't
+        # just add "peak_balance" to stable_fields with an equality check the
+        # way the other three fields work, though -- disk peak is SUPPOSED to
+        # sit above the current balance during a real, legitimate drawdown, so
+        # disk != fresh is the normal case, not a bug. The one shape that is
+        # never legitimate under correct operation is disk peak dropping BELOW
+        # the fresh current balance -- peak = max(peak, balance) makes that
+        # mathematically impossible unless the stored peak was wiped/corrupted
+        # low. Checking against fresh BALANCE specifically (not fresh peak) is
+        # deliberate too: fresh peak from a full chronological recompute could
+        # legitimately be a hair below a stale disk peak from something this
+        # narrow check shouldn't be trying to adjudicate.
+        fresh_balance = fresh.get("balance")
+        disk_peak     = disk.get("peak_balance")
+        if fresh_balance is not None and disk_peak is not None:
+            if float(disk_peak) < float(fresh_balance) - 0.01:
+                flags.append(
+                    "🚨 fund_state.json peak_balance corruption — disk peak_balance "
+                    f"({disk_peak!r}) is LESS than a fresh recompute's current balance "
+                    f"({fresh_balance!r}), which is impossible under correct operation "
+                    "(peak can never be below balance) — the stored peak was likely "
+                    "wiped or corrupted by an interrupted write"
+                )
     except Exception as e:
         flags.append(f"⚠️ fund-state staleness check itself failed to run: {e}")
     return flags
