@@ -1280,6 +1280,7 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
             _filled_ccys.add(quote)
 
     # If the diversity filter left us short, backfill from skipped pairs (relax cap)
+    _overflow_added: set = set()
     if len(selected) < top_n and _div_skipped:
         _sel_set = set(selected)
         for pair in _div_skipped:
@@ -1287,6 +1288,7 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
                 break
             if pair not in _sel_set:
                 selected.append(pair)
+                _overflow_added.add(pair)
                 _ov_parts = pair.split("/")
                 _ov_reasons = [
                     f"{_c} cap not yet reached"
@@ -1295,6 +1297,12 @@ def select_pairs(top_n: int = 15, price_fetch_limit: int = _PRICE_FETCH_LIMIT,
                 ]
                 _ov_why = " — ".join(_ov_reasons) if _ov_reasons else "cap relaxed"
                 log(f"  Diversity overflow: {pair} added — {_ov_why} — filling remaining slots")
+
+    # Pairs the overflow backfill just re-added to `selected` are no longer
+    # actually skipped -- drop them here so the "Pairs skipped" report below
+    # doesn't list a pair as both "overflow added" and "skipped" in the same scan.
+    if _overflow_added:
+        _div_skipped = [p for p in _div_skipped if p not in _overflow_added]
 
     # Log diversity filter results
     if _div_skipped:
