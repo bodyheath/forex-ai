@@ -127,6 +127,45 @@ def atomic_write_json(path: Path, data: dict) -> bool:
         return False
 
 
+def atomic_write_json(path: Path, data: dict) -> bool:
+    """Write dict as JSON atomically via unique .tmp -> rename. Returns True on success.
+
+    PROPOSED 2026-08-31, NOT YET WIRED IN -- fund_state.json/risk_profile.json/
+    price_cache.json/price_fetch_state.json currently write via plain
+    Path.write_text(), which truncates the destination immediately on open()
+    before any new content is written. If the process is killed/interrupted
+    (GHA runner cancellation/timeout, OOM) in the window between that
+    truncation and the write completing, the file is left with 0 bytes or
+    invalid JSON. Confirmed via direct reproduction this session: a
+    truncated fund_state.json causes load() to catch the JSONDecodeError and
+    silently overwrite the file with _DEFAULTS (peak_balance reset to 0.0,
+    balance/consecutive_losses/etc all lost) -- with only a stderr print as
+    warning. This mirrors atomic_write_csv() above (already used for
+    trades.csv/research_trades.csv) and was verified empirically on this
+    Windows environment: shutil.move() onto an existing destination
+    correctly and atomically replaces it (via os.rename()'s modern
+    MoveFileEx-based implementation) rather than silently degrading to a
+    non-atomic copy+delete, so this pattern is safe to use here too.
+    """
+    try:
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp_fd, tmp_path = tempfile.mkstemp(dir=str(path.parent), suffix=".tmp")
+        try:
+            with os.fdopen(tmp_fd, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+            shutil.move(tmp_path, str(path))
+        except Exception:
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+            raise
+        return True
+    except Exception:
+        return False
+
+
 def atomic_write_csv(path: Path, df: pd.DataFrame) -> bool:
     """Write DataFrame as CSV atomically via unique .tmp → rename. Returns True on success."""
     try:

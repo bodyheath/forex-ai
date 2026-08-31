@@ -301,8 +301,16 @@ def load_profile() -> dict:
 
 
 def save_profile(profile: dict) -> None:
+    # 2026-08-31: atomic (temp-file + rename) rather than a plain write_text() --
+    # this file suffered exactly the corruption-adjacent bug class this
+    # prevents (see project_risk_profile_peak_ratchet_fix.md). No behavior
+    # change on failure: previously a write_text() exception propagated to
+    # the caller unhandled, so an atomic_write_json() False result is raised
+    # here too rather than swallowed.
     profile["updated_at"] = _now()
-    config.RISK_PROFILE_FILE.write_text(json.dumps(profile, indent=2), encoding="utf-8")
+    from src.trading.financials import atomic_write_json
+    if not atomic_write_json(config.RISK_PROFILE_FILE, profile):
+        raise OSError(f"atomic_write_json failed for {config.RISK_PROFILE_FILE}")
 
 
 # ── Risk state computation ────────────────────────────────────────────────────
