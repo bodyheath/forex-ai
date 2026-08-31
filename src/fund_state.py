@@ -168,6 +168,16 @@ def is_trading_blocked(state: dict) -> tuple:
                 f"Daily limit: {DAILY_TRADE_LIMIT} fund trades already opened today",
                 "daily_limit")
 
+    # 2026-09-02: both branches below now fail CLOSED (keep blocking) rather
+    # than fail OPEN (bypass the block) when pause_until/observation_mode_until
+    # can't be parsed. This is a real-money circuit breaker -- a corrupted
+    # timestamp means "we don't know if the cooldown has elapsed", and the
+    # conservative answer to "don't know" is to keep blocking, not to let
+    # trading resume. The old behavior silently resumed trading on exactly
+    # the kind of state corruption these pause/observation mechanisms exist
+    # to guard against (e.g. 3 consecutive real losses, then a corrupted
+    # write mid-cooldown would have cancelled the cooldown instead of
+    # honoring it). Still logs the same diagnostic either way.
     pause_until = state.get("pause_until")
     if pause_until:
         try:
@@ -177,7 +187,10 @@ def is_trading_blocked(state: dict) -> tuple:
                         f"3 consecutive losses — paused until {pu.strftime('%a %d %b %H:%M')} Auckland",
                         "pause")
         except Exception as exc:
-            print(f"[fund_state] corrupt pause_until {pause_until!r}: {exc} — pause bypassed", file=sys.stderr)
+            print(f"[fund_state] corrupt pause_until {pause_until!r}: {exc} — blocking conservatively", file=sys.stderr)
+            return (True,
+                    f"Pause state unreadable ({pause_until!r}) — blocking until manually cleared",
+                    "pause")
 
     if state.get("observation_mode"):
         obs_until = state.get("observation_mode_until")
@@ -189,7 +202,10 @@ def is_trading_blocked(state: dict) -> tuple:
                             f"Weekly loss limit — observation until {ou.strftime('%a %d %b %H:%M')} Auckland",
                             "observation_mode")
             except Exception as exc:
-                print(f"[fund_state] corrupt observation_mode_until {obs_until!r}: {exc} — block bypassed", file=sys.stderr)
+                print(f"[fund_state] corrupt observation_mode_until {obs_until!r}: {exc} — blocking conservatively", file=sys.stderr)
+                return (True,
+                        f"Observation-mode state unreadable ({obs_until!r}) — blocking until manually cleared",
+                        "observation_mode")
 
     return False, "", "none"
 
