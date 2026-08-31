@@ -12121,6 +12121,22 @@ def run() -> int:
         except Exception as _tc_r_exc:
             _log_line(log, f"Trend cache load failed: {_tc_r_exc}")
 
+        # FIX 2 Part C: Init _ccy_strength in run() scope so _log_one_research
+        # closure can access it -- same class of bug as _monthly_trends/
+        # _trend_structures above (it previously only lived in
+        # _send_telegram_summary()'s scope, a different function). Confirmed
+        # via the 2026-08-31 full-system audit: dxy_direction/
+        # base_currency_strength/quote_currency_strength all silently
+        # NameError'd on every single attempt inside _log_one_research,
+        # swallowed by the bare except: pass around each read site -- 0/2699
+        # rows populated in research_trades.csv history as a result.
+        _ccy_strength: dict = {}
+        try:
+            from src import currency_strength as _cs_mod_r
+            _ccy_strength = _cs_mod_r.compute()
+        except Exception as _cs_r_exc:
+            _log_line(log, f"Currency strength (research logging) load failed: {_cs_r_exc}")
+
         # Research trading mode: paper-trade conf>=4 pairs (0.01 lots)
         # conf-4 "borderline" setups are tracked separately — they build ML training
         # data and reveal where the real profitable threshold actually sits.
