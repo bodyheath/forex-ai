@@ -12186,7 +12186,25 @@ def run() -> int:
                 _daily_rt  = (_tech_rt.get("daily") or {})       if isinstance(_tech_rt, dict) else {}
                 _rib_rt    = (_daily_rt.get("ribbon") or {})      if isinstance(_daily_rt, dict) else {}
                 _mtf_rt    = (_bundle_rt.get("mtf") or {})        if isinstance(_bundle_rt, dict) else {}
-                _fa_rt     = r_result.get("_fundamental_alignment") or {}
+                # Fundamental alignment — recompute directly rather than reading
+                # r_result["_fundamental_alignment"], which is only ever set as a
+                # side effect of calling _trade_quality_grade() (below) or one of
+                # the earlier per-pair analysis functions -- reading it BEFORE
+                # that call, as this used to, sees it unset even on fully deep-
+                # analysed "sonnet" tier candidates (confirmed 0/2699 populated
+                # in the 2026-08-31 full-system audit). Recomputing fresh here
+                # avoids depending on another function's side effect and its
+                # exact call order, same fix pattern as the ccy_strength scope
+                # bug fixed earlier this session.
+                _fa_rt: dict = {}
+                try:
+                    _pair_fa_rt = r_result.get("pair", "")
+                    if _pair_fa_rt and "/" in _pair_fa_rt and _rdir:
+                        from src import fundamentals as _fund_rt
+                        _fb_rt, _fq_rt = _pair_fa_rt.split("/")
+                        _fa_rt = _fund_rt.get_fundamental_alignment(_fb_rt, _fq_rt, _rdir)
+                except Exception:
+                    pass
                 _fa_rt     = _fa_rt if isinstance(_fa_rt, dict) else {}
 
                 # Grade — recompute directly (avoids _quality_grades scope issue)
