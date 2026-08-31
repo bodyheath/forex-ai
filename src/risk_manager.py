@@ -396,7 +396,13 @@ def compute_risk_state(profile: dict) -> dict:
     # from close-time order for trades closed out of id sequence). The
     # streak/last-5 math below needs the true close-time order, not file
     # order, or "last 5 closed trades" silently isn't.
-    closed.sort(key=lambda r: pd.to_datetime(r.get("closed_at"), errors="coerce"))
+    def _closed_at_key(r: dict):
+        raw = str(r.get("closed_at") or "")
+        try:
+            return datetime.strptime(raw[:19], "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            return datetime.min  # unparseable -- sort first, never masks a real trade
+    closed.sort(key=_closed_at_key)
 
     # Consecutive streak
     cons_loss = cons_win = 0
