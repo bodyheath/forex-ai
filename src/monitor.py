@@ -2114,6 +2114,50 @@ def _check_pending_trades(prices: dict, log_fn=None) -> list:
     return activated
 
 
+def _fill_missing_prices_from_cache(unavailable: list, prices: dict, price_sources: dict, log=print) -> list:
+    """Last-resort fill for still-missing prices from price_cache.json (populated
+    by the daily scan) -- ONLY when that cache is within price_fetcher's own
+    _PRICE_CACHE_MAX_AGE_HOURS freshness bar. Returns the still-unavailable list.
+
+    2026-08-31: previously used whatever was in price_cache.json regardless of
+    age, only logging the age for visibility. That fed straight into
+    _check_pending_trades(), which activates real (trade_this=="YES") fund
+    PENDING orders based on whether the price crossed the entry trigger -- an
+    arbitrarily stale cached price could cause a wrong activation decision. A
+    stale cache is now treated the same as "no price available": the pair
+    stays excluded from this cycle's pending-trigger check rather than risk
+    acting on old data. Extracted into its own function (previously inline in
+    run()) specifically so this freshness-gating logic is unit-testable
+    without needing to exercise the rest of run()'s network calls.
+    """
+    if not unavailable:
+        return unavailable
+    try:
+        from src.price_fetcher import (
+            _load_price_cache as _lpc_mon,
+            _PRICE_CACHE_MAX_AGE_HOURS as _PCMAH_mon,
+        )
+        cached_p, cache_age = _lpc_mon()
+        cache_fresh = cache_age is not None and cache_age < _PCMAH_mon
+        filled = 0
+        if cache_fresh:
+            for p in unavailable:
+                if p in cached_p:
+                    prices[p] = cached_p[p]
+                    price_sources[p] = "price_cache"
+                    filled += 1
+            if filled:
+                log(f"Monitor: {filled} pair(s) filled from price cache ({cache_age:.1f}h old)")
+                unavailable = [p for p in unavailable if p not in prices]
+        elif any(p in cached_p for p in unavailable):
+            age_str = f"{cache_age:.1f}h old" if cache_age is not None else "age unknown"
+            log(f"Monitor: price cache too stale to use ({age_str}, max {_PCMAH_mon:.0f}h) — "
+                f"leaving still-missing pair(s) unavailable rather than using stale data")
+    except Exception:
+        pass
+    return unavailable
+
+
 def run(log=print) -> dict:
     """Run the between-scan monitor. Returns the monitor_log dict written to disk."""
     now_ak   = _auckland_now()
@@ -2280,23 +2324,7 @@ def run(log=print) -> dict:
             log(f"  API quota critical — external backup disabled for {len(_missing)} pairs")
 
     _unavailable = [p for p in all_pairs if p not in prices]
-    # Last-resort: fill still-missing prices from price_cache (populated by daily scan)
-    if _unavailable:
-        try:
-            from src.price_fetcher import _load_price_cache as _lpc_mon
-            _cached_p_mon, _cache_age_mon = _lpc_mon()
-            _filled_mon = 0
-            for _pm in _unavailable:
-                if _pm in _cached_p_mon:
-                    prices[_pm] = _cached_p_mon[_pm]
-                    price_sources[_pm] = "price_cache"
-                    _filled_mon += 1
-            if _filled_mon:
-                _age_str = f"{_cache_age_mon:.1f}h old" if _cache_age_mon is not None else "age unknown"
-                log(f"Monitor: {_filled_mon} pair(s) filled from price cache ({_age_str})")
-                _unavailable = [p for p in _unavailable if p not in prices]
-        except Exception:
-            pass
+    _unavailable = _fill_missing_prices_from_cache(_unavailable, prices, price_sources, log)
     result["yf_price_pairs"] = len(prices)
     _send_fallback_alerts(_ta, _td_backup_pairs, _sq_backup_pairs, _unavailable, log=log)
 
