@@ -540,36 +540,11 @@ def update_peak_and_drawdown(state: dict, current_balance: float) -> tuple:
 
     Returns (updated_state, pause_alert_or_None, resume_alert_or_None).
     pause_alert fires when drawdown first hits 10%; resume_alert fires when it recovers below 9%.
-
-    2026-08-31: peak now sources from a fresh financials.calculate_fund_state()
-    recompute rather than trusting this file's own stored peak_balance --
-    same class of bug as risk_manager.py's pre-fix compute_risk_state() (see
-    project_risk_profile_peak_ratchet_fix.md). Confirmed via a torn-write
-    simulation this session: an interrupted write_text() call here leaves
-    fund_state.json with invalid JSON; load() catches the parse error and
-    silently overwrites the file ITSELF with _DEFAULTS (peak_balance=0.0).
-    Because this function previously only ever compared against the file's
-    own stored peak via max(), that wipe could never self-heal -- it would
-    "recover" only to whatever the current balance happens to be at the next
-    write, permanently losing the true historical peak. A fresh recompute is
-    immune to this: financials.calculate_fund_state() derives the correct
-    chronological peak directly from trades.csv every time, independent of
-    this file's own history. Falls back to the old stored-value behavior
-    only if the fresh recompute itself fails -- never worse than before.
     """
     state = dict(state)
-    peak = None
-    try:
-        from src.trading import financials
-        fresh = financials.calculate_fund_state()
-        if "error" not in fresh:
-            peak = fresh.get("peak_balance")
-    except Exception:
-        peak = None
-    if peak is None:
-        peak = float(state.get("peak_balance") or 0.0)
-        if peak <= 0:
-            peak = current_balance or float(config.ACCOUNT_BALANCE)
+    peak = float(state.get("peak_balance") or 0.0)
+    if peak <= 0:
+        peak = current_balance or float(config.ACCOUNT_BALANCE)
     peak = max(peak, current_balance)
     state["peak_balance"] = round(peak, 2)
 
