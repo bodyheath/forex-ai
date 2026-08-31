@@ -6763,15 +6763,29 @@ def _send_telegram_summary(
                 except Exception as _rich_err:
                     _log_line(log, f"[rich-features] ERROR stamping entry features "
                               f"for #{_yt.get('id')}: {_rich_err}")
-                # ML win-probability display (PART 6)
+                # ML win-probability -- also gates the real penalty/hard-block below,
+                # not just display, despite the "(PART 6)" comment's original framing.
+                #
+                # 2026-09-02: was building _ol_feats by hand with only 4 of
+                # FEATURE_COLS's 80 features populated (confidence, reward_risk,
+                # direction_buy, rsi14) and every other feature defaulted to a
+                # hardcoded 0.0 -- including features whose real neutral value is
+                # nothing like zero (rsi14's true neutral is 50, not 0; the score
+                # fields' true neutral is ~5, not 0). The model was trained via
+                # feature_extractor.extract(), which uses these correct neutral
+                # defaults for anything missing -- so the live gating call was
+                # evaluating the model against an input distribution it never
+                # actually saw in training, on ~76/80 features every single time.
+                # ml_predictor.py's own blended-prediction path (get_win_prob())
+                # already uses extract() for this exact same model architecture --
+                # this call site just never did. Currently harmless in practice
+                # (online_learner.is_model_reliable() has never yet returned True,
+                # so this feature vector has never actually driven a penalty or
+                # hard-block), but a live risk the moment it does.
                 try:
                     from src import online_learner as _ol_fund
-                    from src.feature_extractor import FEATURE_COLS as _ol_fund_cols
-                    _ol_feats = {c: 0.0 for c in _ol_fund_cols}
-                    _ol_feats["confidence"]     = float(_yt_parsed.get("confidence") or 0)
-                    _ol_feats["reward_risk"]    = float(_yt_parsed.get("reward_risk") or 0)
-                    _ol_feats["direction_buy"]  = 1.0 if _yt_dir_ta == "BUY" else 0.0
-                    _ol_feats["rsi14"]          = float((_yt.get("bundle") or {}).get("technical", {}).get("daily", {}).get("rsi14") or 50)
+                    from src.feature_extractor import extract as _ol_extract
+                    _ol_feats = _ol_extract(_yt_pair, _yt_parsed, _yt.get("bundle") or {})
                     _ol_prob = _ol_fund.predict_proba(_ol_feats)
                     if _ol_prob is not None:
                         _ml_emoji = "\U0001f7e2" if _ol_prob >= 0.6 else ("\U0001f534" if _ol_prob <= 0.4 else "\U0001f7e1")
