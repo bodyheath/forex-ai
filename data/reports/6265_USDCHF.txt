@@ -1,0 +1,34 @@
+```
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: CHF positioning is unwinding from a crowded long near 1y highs while USD rate is flat, creating institutional reversal risk; pin bar at resistance adds structure.
+
+RISK_FACTORS: 
+1. MTF confluence failure — Monthly BUY vs Weekly/Daily NEUTRAL = 0/3 agreement; NO trade-valid MTF alignment.
+2. RSI 51.7 (D1) and 53.3 (4H) both mid-range NEUTRAL with MACD flat near zero — no momentum confirmation.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule breach: Weekly and Daily both NEUTRAL; Monthly BUY alone is insufficient. Confidence 4/10 < 7/10 threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+### **DETAILED REASONING**
+
+**MTF Veto (Hard Rule):**  
+MTF shows **M:BUY | W:NEUTRAL | D:NEUTRAL | 4H:NEUTRAL** with conf=0/3 (wt=100%).  
+✗ Weekly ≠ Daily agreement required = **TRADE_THIS blocked**.

@@ -1,0 +1,26 @@
+```
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish double-top pattern in confirmed downtrend with aligned bear ribbon, but MTF discord (W:BUY vs D:NEUTRAL vs 4H:SELL) and crowded EUR short positioning undermine conviction.
+RISK_FACTORS: MTF agreement only 1/3 (fails trading rule); EUR positioning near 1y short extreme with UNWINDING momentum = high reversal risk into any continuation sell.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence 40% < 66% threshold; TRADE_THIS rule requires weekly + daily agreement — weekly is BUY, daily is NEUTRAL, 4H is SELL. No MTF consensus.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**RATIONALE:**
+
+**MTF Rejection (HARD RULE):**  
+- Weekly: BUY | Daily: NEUTRAL | 4H: SELL → only 1/3 directional agreement (40% < 66% required)
+- Trading rule explicitly forbids: *"if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless"*
+- **Result: TRADE

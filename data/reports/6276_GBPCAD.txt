@@ -1,0 +1,23 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and monthly both SELL with double-top pattern on D1, but daily neutral and 4H bullish create conflicting MTF signals (conf=1/3); GBP rate flat + CAD rate falling provide weak fundamental support for CAD strength, but positioning unwind in both pairs reduces conviction.
+RISK_FACTORS: [1] MTF disagreement (W/M=SELL vs D=NEUTRAL & 4H=BUY) fails ≥2/3 alignment rule — trade confidence capped at max 5 even with pattern confirmation. [2] Oscillator_confluence=NONE (Stoch 26.9 + CCI=-66 lack RSI agreement) — no triple or partial confluence to amplify reversal signal.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.8750
+ENTRY_TRIGGER_REASON: Confirmation of double-top breakdown below 38.2% Fib level (1.8788) with daily close below SMA50 (1.8845).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Rationale:**
+
+**MTF VETO (Critical):** Weekly=SELL + Monthly=SELL, but

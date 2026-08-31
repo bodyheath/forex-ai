@@ -1,0 +1,24 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: GBP uptrend is weakening (converging ribbon, MACD near-zero, RSI neutral) while CHF crowded short positioning presents reversal risk; D1 SELL signal conflicts with bullish candle patterns, creating low-confidence trade.
+
+RISK_FACTORS: [1] MTF agreement weak (D:SELL vs 4H:NEUTRAL, monthly neutral) — only 1/3 timeframes aligned, 40% confidence threshold unmet. [2] CHF COT near extreme short (~100% net) unwinding creates sharp reversal risk; GBP also unwinding from 59% short, reducing directional conviction.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement insufficient (1/3 < 2/3 threshold). Conflicting signals: D1 T_sig=SELL_5 contradicted by morning_star:bul (D1) + double_bottom:bul (4H). Ribbon converging signals trend weakening, not reversal confirmation. CHF extreme crowded positioning (100% net short unwinding) suggests imminent volatility but direction ambiguous given GBP also unwinding.
+ENTRY_TRIGGER_EXP

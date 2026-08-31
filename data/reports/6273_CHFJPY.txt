@@ -1,0 +1,37 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: CHF positioned for reversal on crowded long unwind, but weak technical setup and MTF disagreement limit conviction.
+
+RISK_FACTORS: [1) MTF confusion: M:SELL vs W:NEUTRAL vs D:NEUTRAL (conf=0/3) violates buy/sell threshold — no clear directional alignment across timeframes, 2) CHF COT reversal risk: institutions UNWINDING crowded long near 1-year high positioning — reversal momentum is declining, not building]
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+### **ANALYSIS:**
+
+**MTF REJECTION (CRITICAL):**
+- **Weekly:** NEUTRAL → no conviction
+- **Daily:** NEUTRAL → no conviction  
+- **Monthly:** SELL (context only)
+- **4H:** BUY (conflicting)
+- **Confidence across MTF = 0/3** (0 layers agree on direction; need ≥2/3 or MTF rule kills trade)
+
+**HARD MTF RULE:** *"If weekly AND daily don't both agree on direction (conf<2

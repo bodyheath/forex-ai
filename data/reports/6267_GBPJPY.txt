@@ -1,0 +1,19 @@
+```
+PAIR: GBP/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bullish inverse head-and-shoulders pattern on 4H with fully aligned ribbon and uptrend structure on D1, but MTF conflict (M:SELL vs W/D:NEUTRAL vs 4H:BUY) breaks buy rules—confidence capped below 7 threshold.
+RISK_FACTORS: [1. MTF agreement failure: Monthly in downtrend (SELL) while 4H attempts BUY—no consensus direction across timeframes (conf=0/3, wt=80% enforces NO-TRADE rule). 2. GBP COT unwinding reduces conviction; JPY institutional BUILDING into net SHORT suggests potential squeeze/reversal if risk sentiment shifts.]
+TRADE_THIS: NO
+ENTRY_TYPE: CONDITIONAL_BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 217.85
+ENTRY_TRIGGER_REASON: If price breaks above IHS neckline ~217.85, would target SH=219.516 Fib resistance, BUT trade only if D1 confirms BUY (RSI breaks 55+, MACD h flips positive) AND weekly shifts from NEUTRAL to BUY—otherwise month-long SELL regime dominates.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+```
