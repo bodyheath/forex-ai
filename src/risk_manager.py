@@ -363,15 +363,45 @@ def _fresh_peak_and_balance(profile: dict) -> tuple:
     return est, max(profile.get("peak_balance", est), est)
 
 
+def _is_win_outcome(r: dict) -> bool:
+    """True for WIN, False for LOSS, net_pips-sign for PARTIAL_WIN.
+
+    2026-08-31: PARTIAL_WIN is a real, decisive, money-affecting close (partial
+    profit taken) -- excluding it entirely (as compute_risk_state() previously
+    did) makes it invisible to both streak-breaking and win-rate math, as if
+    the trade never happened. It isn't uniformly a "win" by label either --
+    real data has at least one PARTIAL_WIN closing net-negative (a small loss
+    despite the partial-profit exit) -- so its outcome is judged by its actual
+    net_pips sign, the same standard WIN/LOSS are implicitly held to.
+    """
+    status = r.get("status")
+    if status == "WIN":
+        return True
+    if status == "LOSS":
+        return False
+    if status == "PARTIAL_WIN":
+        try:
+            return float(r.get("net_pips") or 0) > 0
+        except (TypeError, ValueError):
+            return True
+    return False
+
+
 def compute_risk_state(profile: dict) -> dict:
     """Derive current risk mode, drawdown tier, and stats from closed trades + profile."""
-    rows   = tracker.load()
-    closed = [r for r in rows if r.get("status") in ("WIN", "LOSS")]
+    rows = tracker.load()
+    closed = [r for r in rows if r.get("status") in ("WIN", "LOSS", "PARTIAL_WIN")]
+    # 2026-08-31: trades.csv row order does NOT match chronological closed_at
+    # order (confirmed via real data -- rows are ~id-ordered, which diverges
+    # from close-time order for trades closed out of id sequence). The
+    # streak/last-5 math below needs the true close-time order, not file
+    # order, or "last 5 closed trades" silently isn't.
+    closed.sort(key=lambda r: pd.to_datetime(r.get("closed_at"), errors="coerce"))
 
     # Consecutive streak
     cons_loss = cons_win = 0
     for r in reversed(closed):
-        if r["status"] == "LOSS":
+        if not _is_win_outcome(r):
             if cons_win:
                 break
             cons_loss += 1
@@ -382,12 +412,12 @@ def compute_risk_state(profile: dict) -> dict:
 
     # Last-5 win rate
     last5    = closed[-5:]
-    last5_wr = (sum(1 for r in last5 if r["status"] == "WIN") / len(last5)
+    last5_wr = (sum(1 for r in last5 if _is_win_outcome(r)) / len(last5)
                 if last5 else None)
 
     # Overall win rate
-    decisive   = [r for r in closed if r["status"] in ("WIN", "LOSS")]
-    overall_wr = (sum(1 for r in decisive if r["status"] == "WIN") / len(decisive)
+    decisive   = closed
+    overall_wr = (sum(1 for r in decisive if _is_win_outcome(r)) / len(decisive)
                   if decisive else None)
 
     # Drawdown -- fresh recompute (see _fresh_peak_and_balance docstring for why
