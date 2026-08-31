@@ -10,6 +10,7 @@ Twelve Data's free tier (~800 calls/day, 8/min) comfortably covers this.
 """
 
 import time
+from datetime import datetime, timezone
 
 import numpy as np
 import pandas as pd
@@ -324,6 +325,76 @@ def _frame_from_td(data: dict) -> pd.DataFrame:
     for col in ("open", "high", "low", "close"):
         df[col] = pd.to_numeric(df[col], errors="coerce")
     return df[["open", "high", "low", "close"]].dropna()
+
+
+def _drop_still_forming_daily_candle(daily: pd.DataFrame) -> pd.DataFrame:
+    """Drop the last row of a daily-interval frame if it's dated today (UTC) --
+    still accumulating price action, not a genuinely closed daily candle.
+
+    2026-09-02: forex has no exchange-style daily close; both Yahoo Finance
+    and Twelve Data's "1day" bars roll over on their own internal clock
+    (confirmed empirically for Yahoo: EUR/USD's daily bar rolls at London
+    midnight, currently 23:00 UTC under BST) and simply reflect whatever
+    price action has accumulated since that roll, however little, the
+    moment a fetch happens. A scan running soon after that roll (confirmed
+    via real reconstruction from 60 days of hourly EUR/USD data: the
+    "prelondon"/"london"/"preny" scan slots land 6-12 hours into the ~24h
+    cycle) sees a last_close that can differ from the day's eventual close
+    by tens of pips on average and up to ~90 pips on a volatile day, with
+    RSI14 swinging by double-digit points on the same days (one real
+    example: RSI 56.6 final vs ~71 as seen by those three scan slots) --
+    easily enough to flip a Bollinger-band reading, an RSI overbought/
+    oversold call, or a divergence detection. The "morning"/"full" scan
+    slots land 19-22 hours in and were already accurate to within a few
+    pips/RSI points -- this fix costs them almost nothing.
+
+    Every indicator this file computes for the daily timeframe (RSI, MACD,
+    Bollinger, SMA20/50/200, ribbon, divergence, candle patterns, pivots,
+    fibonacci, oscillator confluence) derives from this one shared frame,
+    so filtering here once -- rather than patching each formula -- fixes
+    all of them uniformly. SMA200 is structurally near-immune regardless
+    (a 200-day average dilutes one day's partial-candle error to under
+    half a pip) and needs no special handling.
+
+    Uses the bar's own date, not a hardcoded rollover hour, so this is
+    correct regardless of which of the 5 scan modes calls it and robust to
+    Yahoo's own rollover time shifting with BST/GMT. Never drops below 1
+    row of data, even in the pathological case of a single-row frame.
+    """
+    if daily.empty or len(daily) <= 1:
+        return daily
+    last_date = daily.index[-1]
+    if hasattr(last_date, "tz") and last_date.tz is not None:
+        last_date = last_date.tz_convert("UTC").tz_localize(None)
+    today_utc = pd.Timestamp(datetime.now(timezone.utc).date())
+    if pd.Timestamp(last_date.date()) >= today_utc:
+        return daily.iloc[:-1]
+    return daily
+
+
+def _drop_still_forming_from_values(values: list) -> list:
+    """Same freeze as _drop_still_forming_daily_candle(), for the raw
+    newest-first list-of-dicts shape (each with a "datetime" key) that
+    get_trend_structure(), get_market_structure(), and get_rsi_divergence()
+    read directly off the cache instead of going through _frame_from_td().
+
+    2026-09-02: those three functions bypass analyse()'s daily frame
+    entirely -- they hit `cache.get(f"TD:{pair}:1day:400", ...)` on their
+    own -- so the frame-level freeze above never reaches them. They each
+    key off the newest (index 0, since this list is newest-first) candle's
+    close/high/low the same way RSI/MACD/Bollinger did, so they carry the
+    same still-forming-candle exposure and need the same fix applied here.
+    """
+    if not values or len(values) <= 1:
+        return values
+    try:
+        newest_date = pd.Timestamp(values[0]["datetime"]).date()
+    except (KeyError, TypeError, ValueError):
+        return values
+    today_utc = datetime.now(timezone.utc).date()
+    if newest_date >= today_utc:
+        return values[1:]
+    return values
 
 
 # ---------------------------------------------------------------------------
@@ -1168,6 +1239,7 @@ def analyse(base: str, quote: str) -> dict:
         monthly = _frame_from_td(_td_request(symbol, "1month", 60))
         weekly  = _frame_from_td(_td_request(symbol, "1week",  200))
         daily   = _frame_from_td(_td_request(symbol, "1day",   400))
+        daily   = _drop_still_forming_daily_candle(daily)
         four_h  = _frame_from_td(_td_request(symbol, "4h",     500))
         if symbol in _yf_sourced_pairs:
             source = "Yahoo Finance"
@@ -1485,10 +1557,12 @@ def get_trend_structure(pair: str) -> dict:
         return {"status": "insufficient", "buy_valid": None, "sell_valid": None,
                 "hh": False, "hl": False, "lh": False, "ll": False, "detail": "no data"}
 
+    values = _drop_still_forming_from_values(cached["values"])
+
     highs: list = []
     lows:  list = []
     # values are newest-first; take last 120 candles and reverse to oldest-first
-    for v in reversed((cached["values"] or [])[:120]):
+    for v in reversed((values or [])[:120]):
         try:
             highs.append(float(v["high"]))
             lows.append(float(v["low"]))
@@ -1586,7 +1660,7 @@ def get_market_structure(pair: str) -> dict:
     if not isinstance(cached, dict) or not cached.get("values"):
         return _neutral
 
-    raw = (cached["values"] or [])[:20]
+    raw = (_drop_still_forming_from_values(cached["values"]) or [])[:20]
     if len(raw) < 8:
         return _neutral
 
@@ -1682,7 +1756,7 @@ def get_rsi_divergence(pair: str) -> dict:
     if not isinstance(cached, dict) or not cached.get("values"):
         return _neutral
 
-    raw = (cached["values"] or [])[:150]
+    raw = (_drop_still_forming_from_values(cached["values"]) or [])[:150]
     if len(raw) < 40:
         return _neutral
 
