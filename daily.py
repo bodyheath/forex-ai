@@ -13023,6 +13023,31 @@ def run() -> int:
                     _dsc_v2_decisive_strict = int(_dsc_fresh_fs.get("v2_decisive_strict") or 0)
                     _dsc_v2_decisive_strict_postfix = int(_dsc_fresh_fs.get("v2_decisive_strict_postfix") or 0)
                     _dsc_strat_start        = str(_dsc_fresh_fs.get("strategy_start_date") or "")
+                    # 2026-09-02: fund-performance fields below used to come from
+                    # a second, fully independent gross-pips CSV read+recompute
+                    # (the "Fund performance from trades.csv" block that used to
+                    # sit here) -- same root-cause bug as v2_win_rate/v2_net_pips
+                    # above, just for the primary "[discord] Fund perf" line
+                    # instead of the v2-stats embed fields. Reading them from
+                    # this same already-computed _dsc_fresh_fs instead means
+                    # daily.py no longer touches trades.csv's pips column
+                    # directly for any fund-performance purpose.
+                    _dsc_fund_tot  = int(_dsc_fresh_fs.get("v2_total_trades") or 0)
+                    _dsc_fopen_cnt = int(_dsc_fresh_fs.get("v2_open_count") or 0)
+                    _dsc_dec       = _dsc_v2_decisive
+                    _dsc_fwr       = _dsc_v2_wr
+                    _dsc_fw_tot    = _dsc_v2_wins
+                    _dsc_fl_tot    = _dsc_v2_losses
+                    _dsc_fp        = int(_dsc_fresh_fs.get("v2_protected_count") or 0)
+                    _dsc_fw        = int(_dsc_fresh_fs.get("v2_full_wins") or 0)
+                    _dsc_fl        = _dsc_fl_tot
+                    _dsc_awp       = _dsc_tof(_dsc_fresh_fs.get("avg_win_pips"), 0.0)
+                    _dsc_awd       = _dsc_tof(_dsc_fresh_fs.get("avg_win_dollars"), 0.0)
+                    _dsc_alp       = _dsc_tof(_dsc_fresh_fs.get("avg_loss_pips"), 0.0)
+                    _dsc_ald       = _dsc_tof(_dsc_fresh_fs.get("avg_loss_dollars"), 0.0)
+                    _dsc_pfd       = _dsc_tof(_dsc_fresh_fs.get("fund_dollar_pf"), 0.0)
+                    _dsc_best_pr   = str(_dsc_fresh_fs.get("best_pair") or "")
+                    _dsc_best_pp   = _dsc_tof(_dsc_fresh_fs.get("best_pips"), 0.0)
                 except Exception:
                     pass  # fall back to cached values already set above
 
@@ -13036,88 +13061,50 @@ def run() -> int:
                     _dsc_v2_decisive_strict = 0
                     _dsc_v2_decisive_strict_postfix = 0
                     _dsc_strat_start        = ""
+                # Fund-performance defaults (in case fresh_fs failed) -- same
+                # guard pattern as the V2 stats defaults immediately above.
+                if "_dsc_fund_tot" not in dir():
+                    _dsc_fund_tot  = 0
+                    _dsc_fopen_cnt = 0
+                    _dsc_dec       = 0
+                    _dsc_fwr       = 0.0
+                    _dsc_fw_tot = _dsc_fl_tot = _dsc_fp = _dsc_fw = _dsc_fl = 0
+                    _dsc_awp = _dsc_awd = _dsc_alp = _dsc_ald = _dsc_pfd = 0.0
+                    _dsc_best_pr = ""
+                    _dsc_best_pp = 0.0
 
-                # ── Fund performance from trades.csv ─────────────────────────────
-                import pandas as _dsc_pd
-                _dsc_fopen_cnt = 0
-                _dsc_fund_tot  = 0
-                _dsc_dec       = 0
-                _dsc_fwr       = 0.0
-                _dsc_fw        = _dsc_fp = _dsc_fl = 0
-                _dsc_awp = _dsc_awd = _dsc_alp = _dsc_ald = _dsc_pfd = 0.0
-                _dsc_best_pr   = ""
-                _dsc_best_pp   = 0.0
-                _dsc_total_ret = 0.0
+                # ── Fund performance ──────────────────────────────────────────────
+                # 2026-09-02: this used to be a second, fully independent
+                # gross-pips CSV read+recompute (win/loss purely by raw
+                # "pips" sign, its own per-row dollar conversion, its own
+                # profit factor). All of that is now sourced from
+                # _dsc_fresh_fs (financials.calculate_fund_state(), populated
+                # above) instead -- daily.py no longer touches trades.csv's
+                # pips column directly for any fund-performance figure.
+                # Expiry-alert checking is unrelated to pips/win-rate (it's
+                # just "is an open conditional order about to expire") and
+                # keeps its own minimal, clearly-scoped CSV read below.
+                _log_line(log, (
+                    f"[discord] Fund perf: "
+                    f"wins={_dsc_fw_tot} "
+                    f"(full={_dsc_fw} protected={_dsc_fp}) "
+                    f"losses={_dsc_fl} "
+                    f"decisive={_dsc_dec} "
+                    f"wr={_dsc_fwr:.0f}%"
+                ))
+                _dsc_total_ret = (_dsc_bal - 10000) / 10000 * 100
+
                 _dsc_expiry_al = []
                 try:
+                    import pandas as _dsc_pd
                     _dsc_df    = _dsc_pd.read_csv(config.DATA_DIR / "trades.csv", encoding="utf-8-sig")
                     _dsc_v2_mask = (
                         _dsc_df["system_version"].astype(str) == "v2"
                         if "system_version" in _dsc_df.columns
                         else _dsc_pd.Series([True] * len(_dsc_df), index=_dsc_df.index)
                     )
-                    _dsc_fund  = _dsc_df[(_dsc_df["trade_this"].astype(str) == "YES") & _dsc_v2_mask].copy()
-                    _dsc_fo    = _dsc_fund[_dsc_fund["status"].astype(str).str.upper() == "OPEN"]
-                    _dsc_fc    = _dsc_fund[_dsc_fund["status"].astype(str).str.upper() != "OPEN"]
-                    _dsc_fopen_cnt = len(_dsc_fo)
-                    _dsc_fund_tot  = len(_dsc_fund)
-                    _dsc_pip_n = _dsc_pd.to_numeric(_dsc_fc["pips"], errors="coerce").fillna(0)
-                    # Win/loss determined purely by pips — status labels are display only
-                    _dsc_wins_m   = _dsc_pip_n > 0
-                    _dsc_losses_m = _dsc_pip_n < 0
-                    _dsc_fw_tot   = int(_dsc_wins_m.sum())    # all positive-pip trades
-                    _dsc_fl_tot   = int(_dsc_losses_m.sum())  # all negative-pip trades
-                    _dsc_dec      = _dsc_fw_tot + _dsc_fl_tot
-                    _dsc_fwr      = _dsc_fw_tot / _dsc_dec * 100 if _dsc_dec > 0 else 0.0
-                    # Cascade breakdown (subset of wins) for display transparency
-                    _dsc_status_u = _dsc_fc["status"].str.upper()
-                    _dsc_fp  = int((_dsc_wins_m & _dsc_status_u.isin(["PARTIAL_WIN", "PROTECTED"])).sum())
-                    _dsc_fw  = _dsc_fw_tot - _dsc_fp   # full wins
-                    _dsc_fl  = _dsc_fl_tot             # = all losses
-                    _log_line(log, (
-                        f"[discord] Fund perf: "
-                        f"wins={_dsc_fw_tot} "
-                        f"(full={_dsc_fw} protected={_dsc_fp}) "
-                        f"losses={_dsc_fl} "
-                        f"decisive={_dsc_dec} "
-                        f"wr={_dsc_fwr:.0f}%"
-                    ))
-
-                    def _dsc_dollar(row):
-                        try:
-                            pair   = str(row.get("pair", ""))
-                            ps     = 0.01 if "JPY" in pair else 0.0001
-                            entry  = _dsc_tof(row.get("entry"))
-                            stop   = _dsc_tof(row.get("stop_loss"))
-                            pips   = _dsc_tof(row.get("pips"))
-                            szp    = _dsc_tof(row.get("position_size_pct_at_entry"), 0)
-                            if szp <= 0 or szp != szp:
-                                szp = _dsc_szpct
-                            sp = abs(entry - stop) / ps if entry and stop else 100
-                            return pips * (_dsc_bal * szp / 100 / sp) if sp > 0 else 0.0
-                        except Exception:
-                            return 0.0
-
-                    _dsc_wrows = _dsc_fc[_dsc_wins_m]
-                    _dsc_lrows = _dsc_fc[_dsc_losses_m]
-                    _dsc_wd = [_dsc_dollar(r) for _, r in _dsc_wrows.iterrows()]
-                    _dsc_ld = [abs(_dsc_dollar(r)) for _, r in _dsc_lrows.iterrows()]
-                    if len(_dsc_wrows):
-                        _dsc_awp = float(_dsc_pd.to_numeric(_dsc_wrows["pips"], errors="coerce").mean() or 0)
-                        _dsc_awd = sum(_dsc_wd) / len(_dsc_wd) if _dsc_wd else 0
-                    if len(_dsc_lrows):
-                        _dsc_alp = abs(float(_dsc_pd.to_numeric(_dsc_lrows["pips"], errors="coerce").mean() or 0))
-                        _dsc_ald = sum(_dsc_ld) / len(_dsc_ld) if _dsc_ld else 0
-                    _tw = sum(_dsc_wd)
-                    _tl = sum(_dsc_ld) or 0.01
-                    _dsc_pfd = _tw / _tl
-                    if len(_dsc_fc):
-                        _bi = _dsc_pd.to_numeric(_dsc_fc["pips"], errors="coerce").idxmax()
-                        _br = _dsc_fc.loc[_bi]
-                        _dsc_best_pr = str(_br.get("pair", ""))
-                        _dsc_best_pp = _dsc_tof(_br.get("pips"))
-                    _dsc_total_ret = (_dsc_bal - 10000) / 10000 * 100
-                    # Expiry alerts
+                    _dsc_fund = _dsc_df[(_dsc_df["trade_this"].astype(str) == "YES") & _dsc_v2_mask]
+                    _dsc_fo   = _dsc_fund[_dsc_fund["status"].astype(str).str.upper() == "OPEN"]
                     for _, _dsc_ot in _dsc_fo.iterrows():
                         for _ecol in ("expiry_date", "expiry"):
                             _ev = str(_dsc_ot.get(_ecol, "") or "")
@@ -13133,7 +13120,7 @@ def run() -> int:
                                     pass
                                 break
                 except Exception as _dsc_fe:
-                    _log_line(log, f"[discord] fund trades error: {_dsc_fe}")
+                    _log_line(log, f"[discord] fund expiry-check error: {_dsc_fe}")
 
                 # ── Research trades ──────────────────────────────────────────────
                 # Headline win rate / profit factor / confidence bands are v2-only —

@@ -461,8 +461,19 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         closed = fund[fund["status"].isin(list(CLOSED_STATUSES))]
         # V2 system reset: only v2-tagged trades count toward balance, streak, and stats.
         # v1 history is preserved in trades.csv but excluded from all running calculations.
+        # 2026-09-02: fund_total_trades/open_count below are NOT v2-scoped (they
+        # count `fund`, all versions) -- added v2-scoped equivalents here so
+        # callers that need a scope consistent with the win/loss/pips stats
+        # (all v2-only) have a correct field to read instead of re-deriving it
+        # from a fresh CSV read of their own (see daily.py/monitor.py's former
+        # independent gross-pips blocks, now wired to this function's output).
         if "system_version" in fund.columns:
+            fund_v2 = fund[fund["system_version"] == "v2"]
             closed = closed[closed["system_version"] == "v2"]
+        else:
+            fund_v2 = fund
+        _v2_total_trades = int(len(fund_v2))
+        _v2_open_count   = int((fund_v2["status"].astype(str).str.upper() == "OPEN").sum())
         try:
             closed = closed.sort_values("closed_at", na_position="last")
         except Exception:
@@ -615,6 +626,25 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         _v2_win_rate = round(_v2_wins / _v2_decisive * 100.0, 1) if _v2_decisive > 0 else 0.0
         _v2_net_pips = round(float(_v2_pips.sum()), 1) if len(_v2_pips) > 0 else 0.0
 
+        # v2-scoped, net-pips-based cascade breakdown (full wins vs. partial/
+        # protected wins) -- the existing top-level protected_count/win_count
+        # below are gross-pips-derived (confirmed unused by any live consumer
+        # as of 2026-09-02) and were not extended to v2/net scope; this is the
+        # corrected equivalent for callers that need it.
+        if len(_v2_closed) > 0:
+            _v2_status_upper   = _v2_closed["status"].astype(str).str.upper()
+            _v2_cascade_mask   = _v2_status_upper.isin(["PARTIAL_WIN", "PROTECTED"])
+            _v2_protected_count = int(((_v2_pips > 0) & _v2_cascade_mask).sum())
+        else:
+            _v2_protected_count = 0
+        _v2_full_wins = _v2_wins - _v2_protected_count
+
+        # 2026-09-02: v2-scoped breakeven count (net_pips exactly 0, neither
+        # win nor loss) -- added for monitor.py's dashboard-stats structural
+        # fix, which previously tracked this via its own independent
+        # BREAKEVEN-status / zero-pips row count instead of reading it here.
+        _v2_breakeven_count = int((_v2_pips == 0).sum()) if len(_v2_closed) > 0 else 0
+
         # Strict decisive: only true TARGET_HIT (WIN/FULL_WIN) and STOP_HIT (LOSS) exits.
         # Excludes EXPIRED reclassified by r_multiple sign and PARTIAL_WIN legacy trades.
         _strict_mask        = _v2_closed["status"].str.upper().isin({"WIN", "FULL_WIN", "LOSS"})
@@ -715,6 +745,11 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             "v2_net_pips":           _v2_net_pips,
             "v2_decisive_strict":    _v2_decisive_strict,
             "v2_decisive_strict_postfix": _v2_decisive_strict_postfix,
+            "v2_protected_count":    _v2_protected_count,
+            "v2_full_wins":          _v2_full_wins,
+            "v2_breakeven_count":    _v2_breakeven_count,
+            "v2_open_count":         _v2_open_count,
+            "v2_total_trades":       _v2_total_trades,
         }
     except Exception:
         return {
