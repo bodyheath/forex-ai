@@ -163,6 +163,23 @@ FIELDS = [
     # sweep-sourced rows and any candidate that never reached Stage-2 Sonnet.
     "memory_hash",                 # first 12 hex chars of sha256(rendered memory block)
     "memory_chars",                # length of the memory block actually included
+    # ── Grade component diagnostics (2026-09-02) ──────────────────────────────
+    # These are already computed inside _trade_quality_grade() and used to
+    # assign the letter grade, but were never persisted -- meaning the exact
+    # trigger behind a historical F/D grade could only be reconstructed by
+    # elimination, not read directly (see the F-vs-D decomposition this
+    # surfaced). Pure visibility addition: reading these fields changes
+    # nothing about how any candidate is graded or traded.
+    "w_d_conflict",                # TRUE if weekly and daily MTF signals actively disagree
+                                    # (both directional, opposite) -- an unconditional F-trigger
+                                    # with no rescue path.
+    "rib_against",                 # TRUE if daily EMA ribbon opposes trade direction (ALIGNED_*
+                                    # or LEANING_* against) -- the D/F ribbon-opposition trigger,
+                                    # before the ribbon-only-relief exemption is applied.
+    "atr_cal",                     # TRUE if stop distance is 0.7-1.5x ATR14 and target distance
+                                    # is 1.5-3.0x ATR14 -- one of grade A's required conditions.
+    "fib_near",                    # TRUE if price sits near a computed Fibonacci level --
+                                    # another of grade A's required conditions.
 ]
 
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN", "FULL_WIN", "STALE_EXIT", "SKIPPED"}

@@ -12305,6 +12305,12 @@ def run() -> int:
                     "da_downgraded":    _qg_rt.get("da_downgraded", False),
                     "da_grade_before":  _qg_rt.get("da_grade_before", ""),
                     "da_reasons":       _qg_rt.get("da_reasons", ""),
+                    # 2026-09-02: persist grade-component diagnostics already computed
+                    # inside _trade_quality_grade() -- see research_tracker.FIELDS.
+                    "w_d_conflict":     _qg_rt.get("w_d_conflict", ""),
+                    "rib_against":      _qg_rt.get("rib_against", ""),
+                    "atr_cal":          _qg_rt.get("atr_cal", ""),
+                    "fib_near":         _qg_rt.get("fib_near", ""),
                     # 2026-08-28: persist the cross-pair currency consensus
                     # adjustment itself (not just its effect on confidence) so
                     # it's queryable -- same rationale as da_fired/etc above.
