@@ -1,0 +1,26 @@
+```
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fib 61.8% resistance with 4H SELL and CHF COT unwinding (crowded short reversal risk) suggests limited upside, but mixed MTF and neutral ribbon prevent high-confidence entry.
+RISK_FACTORS: [1. MTF conf=0/3 — weekly, daily, and 4H all disagree; no directional alignment across timeframes. 2. CHF COT unwinding from crowded long near 1y range top = reversal risk for SHORT — institutions reducing conviction.]
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly NEUTRAL + daily NEUTRAL + 4H SELL fail to achieve 2/3 agreement. CONFIDENCE<7 and mixed ribbon (3/5 aligned) do not support entry. Requires weekly or daily to confirm SELL direction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+### RATIONALE:
+
+**TECHNICAL (4/10):**
+- D1 RSI=52.5 → mid-zone neutral (45–62 range) = baseline 3–4. T_sig=NEUTRAL_3 is appropriate.
+- 4H

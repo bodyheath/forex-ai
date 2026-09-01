@@ -1,0 +1,25 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 aligns with SELL signal, but MTF misalignment (W:NEUTRAL, D:SELL only 1/3 agreement) and converging ribbon weakness undermine conviction; dual COT unwinding creates conflicting reversal risks.
+
+RISK_FACTORS: 
+1. MTF CONFLICT — Weekly and 4H both NEUTRAL while only D1 shows SELL (conf=1/3, below 2/3 threshold); price is in confirmed uptrend structure (SMA50 > SMA200, golden cross) contradicting D1 reversal signal.
+2. COT REVERSAL RISK — EUR crowded SHORT near bottom (unwinding = potential short-squeeze rally), CHF crowded LONG near top (unwinding = potential unwind sell-off); conflicting institutional flows create whipsaw risk and reduce positioning conviction.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated — D1 SELL (1/3) does not meet 2/3 minimum MTF agreement threshold; W:NEUTRAL + D:SELL + 4H:NEUTRAL fails MTF consensus.
+ENTRY_TRIGGER_EXP

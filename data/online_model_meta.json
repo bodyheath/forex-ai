@@ -1,14 +1,33 @@
 {
-  "n_decisive": 1,
-  "last_updated": "2026-08-31T21:11:11",
+  "n_decisive": 5,
+  "last_updated": "2026-09-01T11:11:11",
   "last_outcome": 1,
   "recent_outcomes": [
+    {
+      "label": 0,
+      "ts": "2026-09-01"
+    },
+    {
+      "label": 1,
+      "ts": "2026-08-31"
+    },
+    {
+      "label": 1,
+      "ts": "2026-08-31"
+    },
+    {
+      "label": 0,
+      "ts": "2026-09-01"
+    },
     {
       "label": 1,
       "ts": "2026-07-23"
     }
   ],
-  "recent_win_rate": 1.0,
-  "overall_win_rate": 1.0,
-  "retrain_source": "bulk_retrain"
+  "recent_win_rate": 0.6,
+  "overall_win_rate": 0.6,
+  "retrain_source": "bulk_retrain",
+  "holdout_n": 0,
+  "holdout_auc": null,
+  "n_consecutive_reliable": 0
 }
