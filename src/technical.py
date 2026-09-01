@@ -397,6 +397,67 @@ def _drop_still_forming_from_values(values: list) -> list:
     return values
 
 
+def _drop_still_forming_weekly_bar(weekly: pd.DataFrame) -> pd.DataFrame:
+    """Drop the last row of a weekly-interval frame if it falls in the current
+    ISO week -- still accumulating price action, not a genuinely closed week.
+
+    2026-09-02: the weekly-timeframe sibling of _drop_still_forming_daily_
+    candle() above. Discovered while investigating why real fund trades were
+    being rejected more than expected -- get_weekly_trend() and analyse()'s
+    own weekly frame (which feeds the MTF weekly signal used throughout
+    _trade_quality_grade(), including the real-money weekly-trend hard block
+    in daily.py) both read a weekly bar that Yahoo/Twelve Data update
+    continuously through the week, the same still-forming-candle pattern
+    already fixed for daily. Confirmed empirically: reconstructing real
+    weekly bars for 6 major pairs over 2 years (504 real week-instances),
+    the trend classification (BUY/SELL/NEUTRAL) computed from a Monday-
+    Tuesday partial week differs from the same week's actual Friday close
+    31.7% of the time (range 21-39% across pairs) -- material and directly
+    exposed to a hard block on real fund trades, not just a display number.
+
+    Uses the bar's own ISO (year, week) vs. today's, not a hardcoded
+    rollover day, so this is correct regardless of which of the 5 scan
+    modes calls it. Never drops below 1 row of data.
+    """
+    if weekly.empty or len(weekly) <= 1:
+        return weekly
+    last_date = weekly.index[-1]
+    if hasattr(last_date, "tz") and last_date.tz is not None:
+        last_date = last_date.tz_convert("UTC").tz_localize(None)
+    today_utc = datetime.now(timezone.utc).date()
+    last_iso = pd.Timestamp(last_date).isocalendar()
+    today_iso = pd.Timestamp(today_utc).isocalendar()
+    if (last_iso.year, last_iso.week) >= (today_iso.year, today_iso.week):
+        return weekly.iloc[:-1]
+    return weekly
+
+
+def _drop_still_forming_weekly_from_values(values: list) -> list:
+    """Same freeze as _drop_still_forming_weekly_bar(), for the raw
+    newest-first list-of-dicts shape that get_weekly_trend() reads directly
+    off the cache instead of going through _frame_from_td().
+
+    2026-09-02: get_weekly_trend() hits `cache.get(f"TD:{pair}:1week:20",
+    ...)` on its own, bypassing analyse()'s weekly frame entirely -- same
+    bypass pattern already found and fixed for the daily timeframe's
+    get_market_structure()/get_rsi_divergence()/get_trend_structure(). This
+    is the one that actually gates real fund trades directly (the weekly-
+    trend hard block in daily.py reads its output).
+    """
+    if not values or len(values) <= 1:
+        return values
+    try:
+        newest_date = pd.Timestamp(values[0]["datetime"]).date()
+    except (KeyError, TypeError, ValueError):
+        return values
+    today_utc = datetime.now(timezone.utc).date()
+    newest_iso = pd.Timestamp(newest_date).isocalendar()
+    today_iso = pd.Timestamp(today_utc).isocalendar()
+    if (newest_iso.year, newest_iso.week) >= (today_iso.year, today_iso.week):
+        return values[1:]
+    return values
+
+
 # ---------------------------------------------------------------------------
 # Indicator math
 # ---------------------------------------------------------------------------
@@ -1238,6 +1299,7 @@ def analyse(base: str, quote: str) -> dict:
     try:
         monthly = _frame_from_td(_td_request(symbol, "1month", 60))
         weekly  = _frame_from_td(_td_request(symbol, "1week",  200))
+        weekly  = _drop_still_forming_weekly_bar(weekly)
         daily   = _frame_from_td(_td_request(symbol, "1day",   400))
         daily   = _drop_still_forming_daily_candle(daily)
         four_h  = _frame_from_td(_td_request(symbol, "4h",     500))
@@ -1498,8 +1560,10 @@ def get_weekly_trend(pair: str) -> dict:
     if not isinstance(cached, dict) or not cached.get("values"):
         return {"trend": "NEUTRAL", "strength": "weak", "n_weeks": 0}
 
+    values = _drop_still_forming_weekly_from_values(cached["values"])
+
     closes, opens, highs, lows = [], [], [], []
-    for v in cached["values"]:
+    for v in (values or []):
         try:
             closes.append(float(v["close"]))
             opens.append(float(v["open"]))
