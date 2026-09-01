@@ -1,0 +1,22 @@
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 pin bar at resistance + RSI 58.8 (neutral-to-overbought in uptrend) + T_sig=SELL_4 conflict with 4H BUY, but MTF agreement only 1/3 (D:SELL vs 4H:BUY) blocks high-confidence entry.
+
+RISK_FACTORS: (1) MTF conflict — D1 SELL vs 4H BUY with only 20% weighted agreement (1/3 directions aligned); (2) Ribbon ALIGNED_BULL + price above SMA50 > SMA200 signal continuation, contradicting SELL bias; (3) JPY positioning BUILDING (net short) argues against JPY strength (inverse of SELL NZD/JPY).
+
+TRADE_THIS: NO
+
+**REASONING:**
+
+1. **MTF RULE BREACH**: Weekly=NEUTRAL, Daily=SELL, 4H=BUY → only 1/3 agree on direction (SELL). Confidence floor is 1/3 = 33% agreement, well below 2/3 threshold. Per MTF rule: "if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless." Daily DOES signal SELL, but 4H contradicts

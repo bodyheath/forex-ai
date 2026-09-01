@@ -1,0 +1,23 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with T_sig=SELL_3, bearish RSI divergence, and 4H sell signal; MTF disagreement and converging ribbon signal trend weakening into potential reversal.
+RISK_FACTORS: [1) MTF conf=0/3 — weekly neutral, daily neutral, 4H sell — NO directional agreement → violates MTF rule, blocks TRADE_THIS YES. 2) CHF crowded long positioning (100% net SHORT = 100% reverse, crowded institutional longs) unwinding into reversal risk — institutional exit could accelerate decline.] 
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL + D:NEUTRAL + 4H:SELL do not satisfy "weekly AND daily both agree on direction" requirement (conf=0/3). Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS NOTES:**
+
+1. **MTF FAILURE (critical):** Weekly=NEUTRAL, Daily=NEUTRAL, 4H=SELL → conf=0/3. The MTF rule requires weekly AND daily agreement. You have neither. 4H sells

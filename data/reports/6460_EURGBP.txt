@@ -1,0 +1,23 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 with 4H uptrend conflict and crowded EUR short positioning creates low-conviction SELL setup with high reversal risk.
+RISK_FACTORS: [1] MTF disagreement (W:BUY vs D:NEUTRAL vs 4H:SELL, conf=1/3) violates MTF rule — setup lacks directional consensus across timeframes. [2] EUR positioned crowded SHORT at 14.0% with UNWINDING momentum near 1-year range bottom: institutional reversal risk if shorts capitulate (could spike EUR higher against thesis).
+TRADE_THIS: NO
+ENTRY_TYPE: HOLD
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly, daily, and 4H timeframes do not align (W:BUY, D:NEUTRAL, 4H:SELL; confidence 1/3 << 2/3 threshold). Insufficient MTF consensus to trigger trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **Technical Score = 4:** D1 RSI=49.8 (NEUTRAL, 3-4 tier in mixed trend). D1 shows head-and-

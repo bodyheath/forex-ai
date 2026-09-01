@@ -1,0 +1,26 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+
+KEY_THESIS: D1 T_sig=SELL_3 with RSI overbought in uptrend context + partial oscillator confluence (Stoch+CCI=SELL 2/3) conflicts with bullish ribbon structure and golden-cross fundamentals; MTF shows W:SELL but D:NEUTRAL breaks the required dual-agreement rule, invalidating high-conviction setup.
+
+RISK_FACTORS: 
+1. MTF disagreement (W:SELL vs D:NEUTRAL) fails >=2/3 MTF confirmation threshold — confidence capped at 5 maximum; golden-cross + aligned ribbon bullish context contradicts SELL bias.
+2. CAD positioning unwinding (MOM=UNWINDING) reduces conviction in short CAD leg; FIB 100.0% resistance at 0.99444 only 6p away but is also support level, signaling consolidation rather than directional breakout.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.9925
+ENTRY_TRIGGER_REASON: Break below 4H inside_bar low to confirm downside momentum reversal from overbought RSI in D1 context.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48

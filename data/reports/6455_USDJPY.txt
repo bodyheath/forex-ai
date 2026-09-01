@@ -1,0 +1,23 @@
+```
+PAIR: USD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key support (155.256) with bullish intent conflicts with overbought 4H RSI and partial oscillator sell signal; neutral MTF alignment limits conviction.
+RISK_FACTORS: [1. Oscillator confluence SELL (2/3: Stoch+CCI overbought) contradicts BUY setup — reversal risk if price fails pin bar confirm. 2. All timeframes MTF=NEUTRAL (0/3 conf) — no directional bias from trend structure; price trapped in 155.256–163.979 range with no clear momentum leader.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence 0/3 (all timeframes neutral) fails minimum directional agreement; oscillator sell signal (2/3) contradicts pin bar bullish intent — insufficient confluence for trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+1. **MTF Rule (HARD FAIL):** W=NEUTRAL, D=NEUTRAL, 4H=NEUTRAL → conf=0/3. **Both weekly AND daily required to agree on direction; neither does.** Trade locked at NO regardless of

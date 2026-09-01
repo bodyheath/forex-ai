@@ -1,0 +1,27 @@
+```
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and monthly both signal SELL, but daily is NEUTRAL and ribbon is ALIGNED_BULL — conflicting signals create low-confidence setup; pin bar at key level offers reversal entry but MTF agreement insufficient.
+RISK_FACTORS: MTF conf=1/3 (only 1 of 3 timeframes agree on SELL direction); ribbon fully aligned bullish contradicts weekly/monthly sell signal, creating trend-reversal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 217.50
+ENTRY_TRIGGER_REASON: Sell limit above pin-bar high (217.50) if price breaks above SMA50 (215.9349) — confluence with weekly/monthly sell confluence only if momentum fails at resistance.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**Detailed Scoring Rationale:**
+
+**TECHNICAL_SCORE: 4/10**
+- **RSI (D1=56.1):** Mixed trend context. Daily is NEUTRAL; weekly and monthly are SELL. Standard tier (45–62=3–4 NEUTRAL) applies. Score **3**.
+- **T_sig baseline:** D1 shows T_sig=SELL_3, but
