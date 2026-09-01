@@ -584,12 +584,30 @@ def _research_analytics_section() -> str:
     except Exception:
         return ""
 
-    closed = [r for r in rt_rows if r.get("status") in ("WIN", "LOSS", "PARTIAL_WIN", "EXPIRED")]
+    # 2026-09-02: EXPIRED excluded from the denominator here, matching the
+    # dominant convention already established in risk_manager.py::
+    # _is_win_outcome() and dynamic_threshold.py::_decisive_bucket() --
+    # EXPIRED (timed out before resolving to a target/stop hit) isn't a
+    # clean directional outcome the way WIN/LOSS/PARTIAL_WIN are, and was
+    # previously counted here as a guaranteed non-win regardless of its
+    # actual net_pips sign, which understated the displayed win rate.
+    closed = [r for r in rt_rows if r.get("status") in ("WIN", "LOSS", "PARTIAL_WIN")]
     if len(closed) < 5:
         return ""
 
     def _win(r):
-        return r.get("status") in ("WIN", "PARTIAL_WIN")
+        status = r.get("status")
+        if status == "WIN":
+            return True
+        if status == "PARTIAL_WIN":
+            # Real, decisive, money-affecting close that isn't uniformly a
+            # win by label -- classify by net_pips sign, same precedent as
+            # risk_manager.py::_is_win_outcome() and dynamic_threshold.py.
+            try:
+                return float(r.get("net_pips") or 0) > 0
+            except (TypeError, ValueError):
+                return False  # unparseable/missing net_pips -- conservative, not a win
+        return False
 
     def _pct(wins, total):
         return round(wins / total * 100) if total else 0
