@@ -1,0 +1,24 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Multi-timeframe sell alignment (M/W/D/4H all SELL) with crowded EUR short at reversal risk conflicts with bullish ribbon alignment; pin bar at key level offers mean-reversion edge despite uptrend structure.
+RISK_FACTORS: [1] EUR positioning at 14% net short near 1-year bottom creates institutional unwind reversal risk — contrarian to SELL direction. [2] Ribbon fully aligned bullish (5/5 EMA fan) contradicts downtrend signal; price >SMA50>SMA200 golden cross — strong structural uptrend may reject sell entry.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 185.0250
+ENTRY_TRIGGER_REASON: Break below pin bar low at near-term support; RSI confirmation <50 required to validate sell in uptrend context.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**ANALYSIS NOTES:**
+
+**Technical (5/10):**
+- D1 T_sig=SELL_4 is baseline, but MTF context overrides: **M/W/D all SELL (3/3 agreement), 4H also SELL = 4/4 downtrend.** This

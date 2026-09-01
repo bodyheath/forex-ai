@@ -1,0 +1,23 @@
+```
+PAIR: USD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level (bullish) + RSI 53.8 neutral in mixed trend + rising JPY yields create conflicting signals; fundamental USD strength (+2.79% diff) supports upside but positioning/sentiment remain cautious.
+RISK_FACTORS: [1) MTF entirely neutral (conf=0/3) — no directional agreement across any timeframe, eliminating trend context and raising reversal risk; 2) Oscillator partial SELL (2/3) conflicts with pin bar bullish pattern — CCI/Stochastic overbought while price consolidates, suggesting range-break uncertainty.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence <2/3 (all timeframes neutral) violates mandatory rule — no trade entry permitted. Fundamental +2.79% differential and rising JPY rates create divergent pressure; pin bar alone is insufficient in the absence of MTF agreement.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF Rule Violation (HARD STOP):** Monthly, Weekly, Daily, and 4H all scored NEUTRAL. Confidence = 0/3. Per mandate

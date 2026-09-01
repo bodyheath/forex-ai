@@ -1,0 +1,25 @@
+```
+PAIR: EUR/AUD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+
+KEY_THESIS: D1 oversold pin bar at key level + RSI 35.6 in confirmed downtrend + partial oscillator confluence (2/3) aligns with T_sig=BUY_7, but 4H:SELL conflict and bearish ribbon divergence cap confidence at 6.
+
+RISK_FACTORS: 
+1. MTF conflict: 4H disagrees (SELL, head_and_shoulders pattern) — only 2/3 agreement; confidence capped below 7 per rule.
+2. COT reversal risk: EUR net short at crowded 14% with UNWINDING momentum suggests institutional positioning near reversal inflection — contrarian bullish confluence but potential trap if EUR short squeeze exhausts.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.6254 (FIB SL/D1 lower band confluence)
+ENTRY_TRIGGER_REASON: Buy limit at FIB swing low 1.62539 if price bounces from oversold RSI 35.6 + pin bar + lower BB; wait for 4H to flip to BUY or RSI above 50 to confirm MTF alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS

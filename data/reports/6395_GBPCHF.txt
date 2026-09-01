@@ -1,0 +1,26 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: MTF alignment (W+D+4H all SELL) + converging ribbon signals trend exhaustion; CHF crowded positioning reversal risk conflicts with bullish candle pattern.
+RISK_FACTORS: [1) CHF net SHORT at 100% crowded long (near 1y range top) with UNWINDING momentum — institutional reversal risk undermines SELL conviction; 2) D1 morning_star bullish pattern + price >SMA50>SMA200 uptrend structure contradicts SELL bias — conflicting signals reduce edge]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.0920
+ENTRY_TRIGGER_REASON: Break below D1 support at SMA50 (1.0860) with confirmation on 4H close
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+## ANALYSIS NOTES:
+
+**TECHNICAL_SCORE: 6/10**
+- D1 RSI=56.0 (neutral zone 45–62 in uptrend = score 3–4 baseline), but T_sig=SELL_5 pre-computed.
+- 4H RSI=60.2 (still neutral, no overbought trigger

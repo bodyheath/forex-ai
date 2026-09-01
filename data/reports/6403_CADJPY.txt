@@ -1,0 +1,23 @@
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 78.6% Fib resistance + RSI overbought in uptrend (64.2 on 4H) + T_sig=SELL_4 suggest pullback/reversal, but weak MTF confirmation (1/3) and UNWINDING CAD positioning reduce conviction.
+RISK_FACTORS: MTF severely mixed (W:NEUTRAL, D:SELL, 4H:NEUTRAL) — only daily agrees on direction, failing 2/3 MTF rule; CAD COT UNWINDING (institutions reducing short exposure) contradicts SELL thesis and signals potential reversal of bearish conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 115.273
+ENTRY_TRIGGER_REASON: Sell limit at 78.6% Fib resistance (near pin bar high) — wait for price to touch and reject; only execute if weekly OR 4H confirms downside (avoid false breakout into uptrend).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+1. **TECHNICAL (5/10):** T_sig=SELL_4 anchors baseline. RSI 56.5 (D1) and 64

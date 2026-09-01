@@ -1,0 +1,25 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar rejection at 61.8% Fib + CHF COT unwinding from crowded long creates contrarian short edge, but weak MTF agreement (0/3) and neutral RSI 52.5 limit conviction.
+RISK_FACTORS: [1] MTF conflict — Monthly BUY vs 4H SELL with neutral D1/W creates directional ambiguity; momentum insufficient for breakout. [2] CHF COT unwinding near 1y range top is reversal risk but not confirmation; pin bar is rejection signal only, not reversal catalyst.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.80850
+ENTRY_TRIGGER_REASON: Sell limit below pin bar low at Fib 61.8% res (0.80917) — wait for confirmation of rejection; entry only if price retests level and closes below 0.8085.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL (4/10):**
+- D1 RSI 52.5 = neutral zone (45–62), scored 3–4 baseline per standard tiers.
+- MTF rule: D1=NEUTRAL, W

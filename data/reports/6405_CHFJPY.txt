@@ -1,0 +1,27 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 2/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Structural downtrend with pin bar reversal signal at key level, but weak MTF confluence and crowded CHF short positioning severely limit conviction.
+RISK_FACTORS: [1. MTF conflict: Monthly SELL vs Weekly/Daily NEUTRAL = 0/3 agreement, violates MTF rule for trade-this threshold. 2. COT reversal risk: CHF net SHORT at extreme (100% crowded long reversal) + UNWINDING = institutional positioning flipping — classic squeeze setup favoring CHF strength (counter to SELL thesis).]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 197.35
+ENTRY_TRIGGER_REASON: Confirmation of pin bar pattern rejection below 197.94 key level with close below D1 open (197.94 = pin high).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- D1 T_sig = NEUTRAL_3 (baseline). RSI 50.4 = NEUTRAL (45–62 tier). MACD positive at +0.3089 = weak bullish momentum, conflicts SELL thesis → no bonus.
+- Pin bar at key level is

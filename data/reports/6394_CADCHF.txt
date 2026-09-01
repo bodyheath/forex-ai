@@ -1,0 +1,25 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 uptrend with RSI mid-neutral (56.6) conflicts with 4H pin-bar reversal and bearish RSI divergence; MTF disagreement (M:BUY vs W/D/4H:NEUTRAL/SELL) and converging ribbon signal trend weakening, not a tradeable setup.
+
+RISK_FACTORS: 
+1. MTF conflict (conf=0/3): M:BUY contradicts W/D:NEUTRAL and 4H:SELL — no directional consensus, fails MTF rule.
+2. CHF COT reversal risk: CHF net SHORT@100% (crowded long on carry traders) + MOM=UNWINDING near 1y high — institutional unwinding into crowded shorts = major reversal risk for long CHF (short CAD/CHF).
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF weekly + daily do NOT both agree (M:BUY, W:NEUTRAL, D:NEUTRAL, 4H:SELL = conf 0/3 << 2/3 threshold). Hard rule blocks trade regardless of other signals.
+ENTRY_TRIGGER_EXPIRY_HOURS:
