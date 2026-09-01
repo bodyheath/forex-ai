@@ -109,13 +109,29 @@ def compute(
     #     (confirmed live-active as of 2026-08-14: only 1 sonnet-tier
     #     decisive trade closed in the preceding 7 days).
     def _decisive_bucket(rows, limit=50):
+        # 2026-09-02: PARTIAL_WIN is a real, decisive, money-affecting close
+        # (partial profit taken) that isn't uniformly a win by label -- real
+        # data has PARTIAL_WIN trades that closed net-negative after costs
+        # (17 confirmed cases in research_trades.csv as of this fix). This
+        # win-rate feeds the threshold that directly gates real trades, so
+        # unconditionally counting every PARTIAL_WIN as a win overstated the
+        # win rate this mechanism reacts to, in the direction that makes the
+        # system more permissive than it should be. Classifies by net_pips
+        # sign instead, matching the precedent already established in
+        # risk_manager.py::_is_win_outcome(). EXPIRED stays excluded, same
+        # as it already was here and already is in _is_win_outcome().
         bucket = []
         for r in reversed(rows):
             st = (r.get("status") or "").upper()
-            if st in ("WIN", "PARTIAL_WIN", "FULL_WIN"):
+            if st == "WIN" or st == "FULL_WIN":
                 bucket.append(True)
             elif st == "LOSS":
                 bucket.append(False)
+            elif st == "PARTIAL_WIN":
+                try:
+                    bucket.append(float(r.get("net_pips") or 0) > 0)
+                except (TypeError, ValueError):
+                    bucket.append(False)  # unparseable/missing net_pips -- conservative, not a win
             else:
                 continue
             if len(bucket) >= limit:
