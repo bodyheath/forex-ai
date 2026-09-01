@@ -92,8 +92,26 @@ jobs:
           stage_files() {
             git add data/trades.csv data/research_trades.csv data/fund_state.json 2>/dev/null || true
             git add data/price_cache.json data/discord_dashboard.json data/pair_statistics.json 2>/dev/null || true
-            git add data/watchlist_cache.json data/loss_journal.json data/fund_feature_store.json 2>/dev/null || true
+            git add data/watchlist_cache.json data/loss_journal.json 2>/dev/null || true
             git add data/online_learner.json data/dashboard.html data/partial_profit_state.json 2>/dev/null || true
+            # 2026-09-02: run_guard.json and risk_profile.json were missing from
+            # this list entirely -- daily.py writes both locally every run (the
+            # duplicate-run guard write is explicitly commented "so any queued
+            # concurrent run sees it"), but neither ever reached origin from a
+            # "full"-mode run, because this curated list never included them
+            # (intraday.yml's `git add data/` picks them up via its own wildcard,
+            # which is why intraday scans persist correctly and full scans never
+            # did). Confirmed live: a manually-triggered full scan wrote a fresh
+            # run_guard.json locally, but origin/main's copy after the run was
+            # byte-identical to before it -- still showing the last INTRADAY
+            # commit's mode/timestamp, not this run's. Practical effect: the
+            # guard can never detect two "full" scans running close together
+            # (e.g. a cron-job.org retry) -- it always compares against whichever
+            # scan mode last ran on intraday.yml instead of the true last run,
+            # so a genuine full-mode duplicate reads as "different mode --
+            # PROCEEDING" instead of being blocked. risk_profile.json has the
+            # same staleness exposure for the same reason.
+            git add data/run_guard.json data/risk_profile.json 2>/dev/null || true
             git add docs/ 2>/dev/null || true
           }
 
