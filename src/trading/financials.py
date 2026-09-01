@@ -475,12 +475,30 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             sl     = safe_float(row.get("stop_loss"))
             pair   = str(row.get("pair", ""))
             ps     = pip_size(pair)
+            # 2026-09-02: use net_pips (real spread/slippage/commission/swap
+            # costs already applied, see src/trade_costs.py) instead of gross
+            # pips, so the tracked balance/peak_balance/drawdown reflect what
+            # live execution would actually look like rather than an
+            # idealized cost-free fill. Confirmed before this change that
+            # balance/peak_balance were never sourced from any real broker
+            # figure -- this system has no broker integration at all
+            # (src/broker.py is a stub, never imported anywhere) -- so there
+            # was no live account history to protect from disruption.
+            # Falls back to gross pips only when net_pips is missing/
+            # unparseable (a handful of older rows predate net_pips being
+            # computed at all) -- never silently zeroes a real trade's P&L.
             pips_v = safe_float(row.get("pips"))
+            try:
+                _net_pips_v = float(row.get("net_pips"))
+                if not (math.isnan(_net_pips_v) or math.isinf(_net_pips_v)):
+                    pips_v = _net_pips_v
+            except (TypeError, ValueError):
+                pass  # keep gross pips_v as fallback
 
             stop_pips = abs(entry - sl) / ps if entry > 0 and sl > 0 else 100.0
             dpp = calculate_dpp(running_bal, pct, stop_pips)
 
-            # Dollar P&L always from pips — status label is display only
+            # Dollar P&L always from pips (net_pips when available) — status label is display only
             dollars = pips_v * dpp if pips_v != 0.0 else 0.0
 
             # Track when we cross into "today" for daily_opening_balance
@@ -575,8 +593,22 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         _profit_factor    = round(sum(_win_pips_list) / _sum_loss_pips, 3) if _sum_loss_pips > 0 else 0.0
 
         # V2 strategy stats (closed is already filtered to system_version == "v2")
+        # 2026-09-02: this block re-derived from raw gross "pips" independently
+        # of the per-row net_pips loop above -- the same root-cause bug just
+        # fixed for balance/peak_balance, showing up a second time here.
+        # _v2_net_pips was mislabeled: it was gross, not net. Same fix
+        # pattern -- prefer net_pips (real costs already applied), fall back
+        # to that row's gross pips only when net_pips is missing/unparseable.
         _v2_closed = closed
-        _v2_pips     = pd.to_numeric(_v2_closed["pips"], errors="coerce").fillna(0) if len(_v2_closed) > 0 else pd.Series(dtype=float)
+        if len(_v2_closed) > 0:
+            _v2_gross_col = pd.to_numeric(_v2_closed["pips"], errors="coerce").fillna(0)
+            if "net_pips" in _v2_closed.columns:
+                _v2_net_col = pd.to_numeric(_v2_closed["net_pips"], errors="coerce")
+                _v2_pips = _v2_net_col.fillna(_v2_gross_col)
+            else:
+                _v2_pips = _v2_gross_col
+        else:
+            _v2_pips = pd.Series(dtype=float)
         _v2_wins     = int((_v2_pips > 0).sum())
         _v2_losses   = int((_v2_pips < 0).sum())
         _v2_decisive = _v2_wins + _v2_losses
