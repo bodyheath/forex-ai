@@ -24,6 +24,9 @@ check_fund_state_staleness()           -> list[str]
 check_dispatch(records)                -> list[str]
 check_grade_ordering()                 -> list[str]
 check_rib_strongly_against_edge_health() -> list[str]
+check_currency_consensus_edge_health() -> list[str]
+check_ribbon_exclusion_continued_validity() -> list[str]
+check_weekly_signal_edge_health()      -> list[str]
 check_learning_signal_readiness()      -> list[str]
 check_audit_fixes_present()            -> list[str]
 check_warning_fire_rate(records)       -> list[str]
@@ -49,6 +52,37 @@ _GRADE_ORDER          = ["A", "B", "C", "D", "F"]  # best to worst
 
 _RIB_EDGE_WINDOW      = 40   # trailing decisive-trade window checked against the older baseline
 _RIB_EDGE_MIN_N       = 15   # minimum size for EITHER the trailing window or the older baseline
+
+# 2026-09-02: three new decay/continued-validity tripwires added off the back
+# of the quant-judgment assessment, which found only two of the many signals
+# _trade_quality_grade()/the fund gate rely on had any standing decay monitor
+# at all (grade ordering, rib_strongly_against). Same discipline as above:
+# silent until there's enough data, flags only a real z-test-significant
+# drift, never touches any decision path.
+_CONSENSUS_EDGE_WINDOW  = 40  # trailing decisive-trade window for the consensus-agrees check
+_CONSENSUS_EDGE_MIN_N   = 15
+_EXCLUSION_EDGE_WINDOW  = 30  # trailing window for the GBP-cross/CHF-cluster continued-validity check
+_EXCLUSION_EDGE_MIN_N   = 15
+# Both exclusions were justified this session against strict/v2/post-exit-fix
+# decisive data -- see _trade_quality_grade()'s 2026-08-27 comment for the
+# original evidence (GBP-cross n=73 PF=0.749; CHF-cluster n=61 WR=16.4%
+# PF=0.397). This check flags the OPPOSITE direction from the ribbon check:
+# a significant IMPROVEMENT in the excluded population, since that's the
+# signal that the exclusion's own justification may be decaying, not a
+# further decline (which just reconfirms the existing exclusion).
+_CHF_CLUSTER_PAIRS = ("EUR/CHF", "NZD/CHF", "AUD/CHF")
+
+# Weekly-trend hard-block MTF signal was rewritten 2026-09-02 (the weekly-
+# candle-freeze fix, wip/freeze-weekly-candle -> main commit fdbf1930) --
+# w_d_conflict itself only started being logged to research_trades.csv the
+# same day. Comparing pre/post performance would just re-run into the same
+# signal-discontinuity problem already documented in
+# feedback_signal_discontinuity_candle_freeze.md, so this check is scoped to
+# post-fix data ONLY and stays silent (by design, not by bug) until enough
+# of it exists.
+_WEEKLY_SIGNAL_FIX_DATE = "2026-09-02"
+_WEEKLY_EDGE_WINDOW     = 30
+_WEEKLY_EDGE_MIN_N      = 15
 
 _LEARNING_SIGNAL_MIN_N = 15  # same n>=15 convention as _GRADE_MIN_N / learning.py's MIN_SAMPLES
 
@@ -568,6 +602,206 @@ def check_rib_strongly_against_edge_health(csv_path=None) -> list:
     return flags
 
 
+def check_currency_consensus_edge_health(csv_path=None) -> list:
+    """Standing decay tripwire for _apply_currency_consensus()'s net effect.
+
+    2026-09-02: added off the back of the quant-judgment assessment -- the
+    consensus adjustment (+/-1 confidence based on cross-pair currency
+    agreement) had no standing check on whether it still correlates with
+    real outcomes at all, despite directly moving candidates across the
+    fund's confidence threshold. Same structure as
+    check_rib_strongly_against_edge_health(): tracks the "agrees"
+    (consensus_adj=+1, consensus_eligible=True) population's own win rate
+    over time -- trailing window vs. the older, disjoint baseline -- and
+    flags only if recent performance has fallen significantly below it.
+
+    Does not test whether "agrees" beats "contradicts" cross-sectionally --
+    that's a one-time informativeness question, not a standing decay
+    tripwire, and isn't checked here.
+    """
+    flags = []
+    try:
+        import pandas as pd
+        path = csv_path or (config.DATA_DIR / "research_trades.csv")
+        if not Path(path).exists():
+            return flags
+        df = pd.read_csv(path)
+        decisive = df[df["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN", "LOSS"])].copy()
+        if decisive.empty:
+            return flags
+
+        consensus_adj = pd.to_numeric(decisive.get("consensus_adj"), errors="coerce")
+        eligible = decisive.get("consensus_eligible").astype(str).str.upper() == "TRUE" \
+            if "consensus_eligible" in decisive.columns else pd.Series(False, index=decisive.index)
+        pop = decisive[eligible & (consensus_adj == 1)].copy()
+
+        if "closed_at" in pop.columns:
+            pop["_closed_dt"] = pd.to_datetime(pop["closed_at"], errors="coerce")
+            pop = pop.sort_values("_closed_dt")
+
+        n_total = len(pop)
+        recent = pop.tail(_CONSENSUS_EDGE_WINDOW)
+        older  = pop.iloc[: max(0, n_total - _CONSENSUS_EDGE_WINDOW)]
+        if len(recent) < _CONSENSUS_EDGE_MIN_N or len(older) < _CONSENSUS_EDGE_MIN_N:
+            return flags
+
+        def _wins(d):
+            return int(d["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN"]).sum())
+
+        older_n, older_wins   = len(older), _wins(older)
+        recent_n, recent_wins = len(recent), _wins(recent)
+
+        result = _ztest_worse_beats_better(older_wins, older_n, recent_wins, recent_n)
+        if result is None:
+            return flags
+        p_value, recent_wr, older_wr = result
+        if recent_wr < older_wr and p_value < 0.05:
+            flags.append(
+                f"🚨 currency-consensus 'agrees' edge drifting — most recent "
+                f"{recent_n} decisive trades WR={recent_wr*100:.1f}% vs the prior "
+                f"{older_n} decisive trades WR={older_wr*100:.1f}%, p={p_value:.4f}."
+            )
+    except Exception as e:
+        flags.append(f"⚠️ currency-consensus edge-health check itself failed to run: {e}")
+    return flags
+
+
+def check_ribbon_exclusion_continued_validity(csv_path=None) -> list:
+    """Standing continued-validity tripwire for the GBP-cross and CHF-cluster
+    exclusions carved out of the ribbon-only-relief mechanism.
+
+    2026-09-02: added off the back of the quant-judgment assessment. Both
+    exclusions were justified against strict/v2/post-exit-fix decisive data
+    as of 2026-08-27 (see _trade_quality_grade()'s comment: GBP-cross n=73
+    PF=0.749; CHF-cluster n=61 WR=16.4% PF=0.397) -- but because they're
+    excluded from the population check_rib_strongly_against_edge_health()
+    watches, nothing re-checks whether either exclusion is still warranted.
+    A human quant assumes every edge (including a documented NON-edge like
+    these two exclusions) can drift; this closes that specific blind spot.
+
+    Deliberately the mirror image of the ribbon check: flags a significant
+    IMPROVEMENT in the excluded population's recent win rate vs. its own
+    older baseline, since that's the signal worth a human's attention here
+    (the exclusion's justification may be fading) -- not further decline,
+    which only reconfirms the existing exclusion and needs no alert.
+    """
+    flags = []
+    try:
+        import pandas as pd
+        path = csv_path or (config.DATA_DIR / "research_trades.csv")
+        if not Path(path).exists():
+            return flags
+        df = pd.read_csv(path)
+        decisive = df[df["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN", "LOSS"])].copy()
+        if decisive.empty:
+            return flags
+
+        direction = decisive["direction"].astype(str).str.upper()
+        ribbon    = decisive["ribbon_state"].astype(str)
+        rib_against = ((direction == "BUY")  & ribbon.isin(["ALIGNED_BEAR", "LEANING_BEAR"])) | \
+                      ((direction == "SELL") & ribbon.isin(["ALIGNED_BULL", "LEANING_BULL"]))
+        pair_up = decisive["pair"].astype(str).str.upper()
+
+        def _wins(d):
+            return int(d["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN"]).sum())
+
+        def _check_population(pop: "pd.DataFrame", label: str):
+            if "closed_at" in pop.columns:
+                pop = pop.copy()
+                pop["_closed_dt"] = pd.to_datetime(pop["closed_at"], errors="coerce")
+                pop = pop.sort_values("_closed_dt")
+            n_total = len(pop)
+            recent = pop.tail(_EXCLUSION_EDGE_WINDOW)
+            older  = pop.iloc[: max(0, n_total - _EXCLUSION_EDGE_WINDOW)]
+            if len(recent) < _EXCLUSION_EDGE_MIN_N or len(older) < _EXCLUSION_EDGE_MIN_N:
+                return
+            older_n, older_wins   = len(older), _wins(older)
+            recent_n, recent_wins = len(recent), _wins(recent)
+            # Improvement direction: test "recent beats older" by swapping the
+            # argument order relative to the ribbon check's decay direction.
+            result = _ztest_worse_beats_better(recent_wins, recent_n, older_wins, older_n)
+            if result is None:
+                return
+            p_value, older_wr_, recent_wr_ = result
+            if recent_wr_ > older_wr_ and p_value < 0.05:
+                flags.append(
+                    f"ℹ️ {label} exclusion may be decaying — most recent {recent_n} "
+                    f"decisive trades WR={recent_wr_*100:.1f}% vs the prior {older_n} "
+                    f"decisive trades WR={older_wr_*100:.1f}%, p={p_value:.4f}. Worth "
+                    f"revisiting whether this exclusion is still warranted."
+                )
+
+        gbp_pop = decisive[rib_against & pair_up.str.contains("GBP")].copy()
+        _check_population(gbp_pop, "GBP-cross")
+
+        chf_pop = decisive[rib_against & pair_up.isin([p.upper() for p in _CHF_CLUSTER_PAIRS])].copy()
+        _check_population(chf_pop, "CHF-cluster")
+
+    except Exception as e:
+        flags.append(f"⚠️ ribbon-exclusion continued-validity check itself failed to run: {e}")
+    return flags
+
+
+def check_weekly_signal_edge_health(csv_path=None) -> list:
+    """Standing decay tripwire for the weekly MTF signal (w_d_conflict),
+    scoped to post-freeze-fix data only.
+
+    2026-09-02: the weekly-candle-freeze fix (merged as fdbf1930) rewrote how
+    the weekly trend signal feeding w_d_conflict/w_d_agree is computed, and
+    w_d_conflict itself only started being logged the same day. Comparing
+    pre/post performance would just reproduce the same signal-discontinuity
+    problem documented in feedback_signal_discontinuity_candle_freeze.md, so
+    this is scoped to trades scanned on/after _WEEKLY_SIGNAL_FIX_DATE only --
+    it will stay silent for a while by design, not by bug, until enough
+    clean post-fix data exists to say anything.
+    """
+    flags = []
+    try:
+        import pandas as pd
+        path = csv_path or (config.DATA_DIR / "research_trades.csv")
+        if not Path(path).exists():
+            return flags
+        df = pd.read_csv(path)
+        decisive = df[df["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN", "LOSS"])].copy()
+        if decisive.empty or "w_d_conflict" not in decisive.columns:
+            return flags
+
+        scan_date = pd.to_datetime(decisive.get("date"), errors="coerce")
+        post_fix = decisive[scan_date >= pd.Timestamp(_WEEKLY_SIGNAL_FIX_DATE)].copy()
+        w_conflict = post_fix.get("w_d_conflict").astype(str).str.upper() == "TRUE"
+        pop = post_fix[w_conflict].copy()
+
+        if "closed_at" in pop.columns:
+            pop["_closed_dt"] = pd.to_datetime(pop["closed_at"], errors="coerce")
+            pop = pop.sort_values("_closed_dt")
+
+        n_total = len(pop)
+        recent = pop.tail(_WEEKLY_EDGE_WINDOW)
+        older  = pop.iloc[: max(0, n_total - _WEEKLY_EDGE_WINDOW)]
+        if len(recent) < _WEEKLY_EDGE_MIN_N or len(older) < _WEEKLY_EDGE_MIN_N:
+            return flags  # expected for a while post-fix -- silent by design
+
+        def _wins(d):
+            return int(d["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN"]).sum())
+
+        older_n, older_wins   = len(older), _wins(older)
+        recent_n, recent_wins = len(recent), _wins(recent)
+
+        result = _ztest_worse_beats_better(older_wins, older_n, recent_wins, recent_n)
+        if result is None:
+            return flags
+        p_value, recent_wr, older_wr = result
+        if recent_wr < older_wr and p_value < 0.05:
+            flags.append(
+                f"🚨 post-freeze-fix w_d_conflict edge drifting — most recent "
+                f"{recent_n} decisive trades WR={recent_wr*100:.1f}% vs the prior "
+                f"{older_n} decisive trades WR={older_wr*100:.1f}%, p={p_value:.4f}."
+            )
+    except Exception as e:
+        flags.append(f"⚠️ weekly-signal edge-health check itself failed to run: {e}")
+    return flags
+
+
 def check_learning_signal_readiness(csv_path=None) -> list:
     """Standing tripwire for the Part 5.4 gap found in the 2026-08-30
     structural audit: memory_hash, consensus_adj, and da_fired all had
@@ -904,6 +1138,9 @@ def run_all_checks() -> dict:
     flags += check_dispatch(records)
     flags += check_grade_ordering()
     flags += check_rib_strongly_against_edge_health()
+    flags += check_currency_consensus_edge_health()
+    flags += check_ribbon_exclusion_continued_validity()
+    flags += check_weekly_signal_edge_health()
     flags += check_learning_signal_readiness()
     flags += check_audit_fixes_present()
     flags += check_warning_fire_rate(records)
