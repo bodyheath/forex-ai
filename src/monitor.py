@@ -3280,122 +3280,32 @@ def run(log=print) -> dict:
                 )
 
             # ── Fund trade statistics ──────────────────────────────────────────
-            _st_wins = _st_losses = _st_partial = _st_breakeven = _st_decisive = 0
-            _st_wr = _st_avg_win = _st_avg_loss = _st_pf = _st_best_pips = _st_total_pips = 0.0
-            _st_avg_win_d = _st_avg_loss_d = _st_dollar_pf = 0.0
-            _st_best_pair = ""
-            _st_total = 0
-            try:
-                import csv as _csv_dash
-                import math as _math_st
-                with open(config.DATA_DIR / "trades.csv", encoding="utf-8-sig", newline="") as _tf:
-                    _fund_rows = [r for r in _csv_dash.DictReader(_tf)
-                                  if r.get("trade_this") == "YES"
-                                  and r.get("system_version") == "v2"]
-                _st_total = len(_fund_rows)
-                _sample   = _fund_rows[0] if _fund_rows else {}
-                _has_outcome = (
-                    "outcome" in _sample and
-                    any(str(r.get("outcome") or "").strip() for r in _fund_rows)
-                )
-                _result_col = "outcome" if _has_outcome else "status"
-                log(f"  [fund-stats] result_col={_result_col} total={_st_total}")
-
-                _win_pips_list, _loss_pips_list = [], []
-                _win_dollars_list, _loss_dollars_list = [], []
-                _best_pips_seen = 0.0
-                _fs_sizing_pct = 1.0
-
-                for _fr in _fund_rows:
-                    _st_out = str(_fr.get(_result_col) or "").upper()
-                    _raw_pip = (
-                        _fr.get("cascading_total_pips_weighted") or
-                        _fr.get("cascading_total_pips") or
-                        _fr.get("pips") or ""
-                    )
-                    try:
-                        _fp = float(_raw_pip) if _raw_pip != "" else 0.0
-                        if _math_st.isnan(_fp):
-                            _fp = 0.0
-                    except (ValueError, TypeError):
-                        _fp = 0.0
-
-                    _pair_d_st = str(_fr.get("pair") or "")
-                    _pip_sz_st = 0.01 if "JPY" in _pair_d_st.upper() else 0.0001
-                    try:
-                        _sz_pct_raw = _fr.get("position_size_pct_at_entry")
-                        _sz_pct_st = float(_sz_pct_raw) if (
-                            _sz_pct_raw and str(_sz_pct_raw).strip() not in ("", "nan")
-                        ) else _fs_sizing_pct
-                        _risk_usd_st = _dash_open_bal * _sz_pct_st / 100.0
-                        _entry_v = float(_fr.get("entry") or 0)
-                        _stop_v  = float(_fr.get("stop_loss") or 0)
-                        _sp_st   = abs(_entry_v - _stop_v) / _pip_sz_st if _entry_v and _stop_v else 0.0
-                        _dollar_pnl = _fp * (_risk_usd_st / _sp_st) if _sp_st > 0 else 0.0
-                    except (ValueError, TypeError):
-                        _dollar_pnl = 0.0
-
-                    if _st_out in ("WIN", "FULL_WIN"):
-                        _st_wins += 1
-                        _win_pips_list.append(_fp)
-                        if _dollar_pnl > 0:
-                            _win_dollars_list.append(_dollar_pnl)
-                    elif _st_out == "PARTIAL_WIN":
-                        _st_partial += 1
-                        _win_pips_list.append(_fp)
-                        if _dollar_pnl > 0:
-                            _win_dollars_list.append(_dollar_pnl)
-                    elif _st_out == "BREAKEVEN":
-                        _st_breakeven += 1
-                    elif _st_out == "EXPIRED":
-                        if _fp > 0:
-                            _st_wins += 1
-                            _win_pips_list.append(_fp)
-                            if _dollar_pnl > 0:
-                                _win_dollars_list.append(_dollar_pnl)
-                        elif _fp == 0:
-                            _st_breakeven += 1
-                        else:
-                            _st_losses += 1
-                            _loss_pips_list.append(abs(_fp))
-                            if _dollar_pnl < 0:
-                                _loss_dollars_list.append(abs(_dollar_pnl))
-                    elif _st_out in ("LOSS", "EXPIRED_LOSS", "STALE_EXIT"):
-                        if _fp > 0:
-                            _st_partial += 1
-                            _win_pips_list.append(_fp)
-                            if _dollar_pnl > 0:
-                                _win_dollars_list.append(_dollar_pnl)
-                        else:
-                            _st_losses += 1
-                            _loss_pips_list.append(abs(_fp))
-                            if _dollar_pnl < 0:
-                                _loss_dollars_list.append(abs(_dollar_pnl))
-                    if _fp > _best_pips_seen:
-                        _best_pips_seen = _fp
-                        _st_best_pair = _pair_d_st
-
-                _st_best_pips = _best_pips_seen
-                _st_decisive  = _st_wins + _st_losses + _st_partial
-                if _st_decisive > 0:
-                    _st_wr = (_st_wins + _st_partial) / _st_decisive * 100
-                _tot_win  = sum(_win_pips_list)
-                _tot_loss = sum(_loss_pips_list)
-                _st_avg_win  = _tot_win  / len(_win_pips_list)  if _win_pips_list  else 0.0
-                _st_avg_loss = _tot_loss / len(_loss_pips_list) if _loss_pips_list else 0.0
-                _st_pf       = _tot_win / _tot_loss             if _tot_loss > 0   else 0.0
-                _st_total_pips = _tot_win - _tot_loss
-                _tot_win_d   = sum(_win_dollars_list)
-                _tot_loss_d  = sum(_loss_dollars_list)
-                _st_avg_win_d  = _tot_win_d  / len(_win_dollars_list)  if _win_dollars_list  else 0.0
-                _st_avg_loss_d = _tot_loss_d / len(_loss_dollars_list) if _loss_dollars_list else 0.0
-                _st_dollar_pf  = _tot_win_d / _tot_loss_d if _tot_loss_d > 0 else 0.0
-                log(
-                    f"  [fund-stats] wins={_st_wins} protected={_st_partial} "
-                    f"losses={_st_losses} decisive={_st_decisive} wr={_st_wr:.1f}%"
-                )
-            except Exception as _st_exc:
-                log(f"  Monitor: fund stats calculation failed: {_st_exc}")
+            # 2026-09-02: this used to be a second, fully independent
+            # gross-pips CSV read+recompute (its own WIN/PARTIAL_WIN/EXPIRED/
+            # LOSS branching, its own per-row dollar conversion using
+            # *today's* balance retroactively for every historical trade).
+            # It never even looked at net_pips. All of it is replaced with
+            # reads from _state_dash (financials.calculate_fund_state(),
+            # already computed above) -- monitor.py no longer touches
+            # trades.csv's pips column directly for any fund-performance
+            # figure. Note: tracing every consumer of these values in
+            # discord_notifier.build_fund_dashboard_embed() confirmed only
+            # win_count/protected_count/loss_count are actually used (summed
+            # into a decisive count for the V1-archive-trade line) --
+            # win_rate/profit_factor/avg_win_*/avg_loss_*/best_pair/
+            # best_pips/fund_dollar_pf/breakeven_count/fund_total_trades are
+            # read into locals there but never rendered into the embed text.
+            _st_wins      = int(_state_dash.get("v2_full_wins") or 0)
+            _st_partial   = int(_state_dash.get("v2_protected_count") or 0)
+            _st_losses    = int(_state_dash.get("v2_losses") or 0)
+            _st_breakeven = int(_state_dash.get("v2_breakeven_count") or 0)
+            _st_decisive  = int(_state_dash.get("v2_decisive") or 0)
+            _st_wr        = float(_state_dash.get("v2_win_rate") or 0.0)
+            _st_total     = int(_state_dash.get("v2_total_trades") or 0)
+            log(
+                f"  [fund-stats] wins={_st_wins} protected={_st_partial} "
+                f"losses={_st_losses} decisive={_st_decisive} wr={_st_wr:.1f}%"
+            )
 
             from src import fund_state as _fs_dash
             _fs_d = _fs_dash.load()
@@ -3461,22 +3371,24 @@ def run(log=print) -> dict:
             # Build full state dict — single source of truth for the dashboard
             _full_state = {
                 **_state_dash,
-                # Statistics (computed above)
+                # 2026-09-02: win_count/protected_count/loss_count/
+                # breakeven_count/decisive_count/win_rate/fund_total_trades
+                # are overridden here because _state_dash's own top-level
+                # fields of the same name are v1+v2-mixed and/or gross-pips-
+                # derived (confirmed unused by any other live consumer) --
+                # these v2_*-prefixed fields are the correct, net-pips-based
+                # equivalents. profit_factor/avg_win_pips/avg_win_dollars/
+                # avg_loss_pips/avg_loss_dollars/best_pair/best_pips/
+                # fund_dollar_pf are NOT overridden here -- _state_dash's
+                # own top-level fields of those names are already v2-scoped
+                # and net-pips-based, so they pass through the spread as-is.
                 "win_count":           _st_wins,
                 "protected_count":     _st_partial,
                 "loss_count":          _st_losses,
                 "breakeven_count":     _st_breakeven,
                 "decisive_count":      _st_decisive,
                 "win_rate":            _st_wr,
-                "profit_factor":       _st_pf,
-                "avg_win_pips":        _st_avg_win,
-                "avg_win_dollars":     _st_avg_win_d,
-                "avg_loss_pips":       _st_avg_loss,
-                "avg_loss_dollars":    _st_avg_loss_d,
                 "fund_total_trades":   _st_total,
-                "best_pair":           _st_best_pair,
-                "best_pips":           _st_best_pips,
-                "fund_dollar_pf":      _st_dollar_pf,
                 # Metadata from fund_state.json (sizing, win streak — not in CSV)
                 "sizing_mode":         str(_fs_d.get("sizing_mode") or "normal"),
                 "current_sizing_pct":  float(_fs_d.get("current_sizing_pct") or 1.0),
