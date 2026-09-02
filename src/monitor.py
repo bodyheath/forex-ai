@@ -62,7 +62,7 @@ def _online_learn_closure(source_table: str, updated: dict, log=print) -> None:
     # richer 80-feature scheme. See project_full_audit_sep2026.md.
 
 
-def _analyse_loss(trade: dict, prices: dict, log_fn=None) -> dict:
+def _analyse_loss(trade: dict, log_fn=None) -> dict:
     """Use Claude Haiku to analyse why a trade lost and what to learn from it."""
     _log = log_fn or print
 
