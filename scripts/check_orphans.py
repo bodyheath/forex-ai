@@ -438,6 +438,16 @@ def run_all():
     def_orphans = check_orphan_defs(defs, ident_idx)
 
     param_orphans = check_orphan_params(src_py_files())
+    # If the function/class itself has no real external caller (dead OR
+    # insular), its individual unused parameters are redundant noise on top
+    # of that whole-function finding -- suppress them regardless of the
+    # def's own allowlist status, since the def-level entry (or a future
+    # fix/removal of the def) already covers this.
+    _orphaned_def_names = {(o.file, o.name) for o in def_orphans}
+    param_orphans = [
+        p for p in param_orphans
+        if (p.file, p.func_name) not in _orphaned_def_names
+    ]
 
     allow = load_allowlist()
 
