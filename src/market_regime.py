@@ -26,9 +26,6 @@ regime_display_lines(regime_data) -> list[str]
 
 conditions_telegram_line(regime_data, conditions_score) -> str
     Single-line conditions summary for intraday scans.
-
-telegram_line(regime_data) -> str
-    Legacy single-line regime label (backward-compat).
 """
 
 import json
@@ -527,15 +524,3 @@ def conditions_telegram_line(regime_data: dict, conditions_score: int) -> str:
     else:
         quality = "below average"
     return f"📊 Trading conditions: {conditions_score}/10 — {label} — {quality}"
-
-
-def telegram_line(regime_data: dict) -> str:
-    """Legacy single-line regime label for backward-compatibility."""
-    if not regime_data:
-        return ""
-    emoji = regime_data.get("emoji", "📊")
-    label = regime_data.get("label", "Unknown")
-    desc  = (regime_data.get("description") or "").strip()
-    if desc:
-        desc = desc[0].upper() + desc[1:]
-    return f"{emoji} <b>Market environment: {label}</b> — {desc}"

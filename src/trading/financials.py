@@ -480,6 +480,16 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             pass
 
         prev_in_today = False
+        # 2026-09-02: worst single calendar day's P&L % ever seen, for the
+        # FTMO daily-loss-limit check (risk_of_ruin.build_ftmo_section(),
+        # wired into the weekly report). Tracked alongside the existing
+        # "today only" daily_open_bal/daily_pnl_d below, reusing the same
+        # already-computed `dollars`/`running_bal` -- no separate pip/dollar
+        # conversion, so this can't drift from the main balance calc above.
+        _wd_day = None
+        _wd_open_bal = running_bal
+        _wd_pnl_d = 0.0
+        worst_daily_pnl_pct = 0.0  # most negative day seen; 0.0 if never negative
         for _, row in closed.iterrows():
             pct    = safe_pos_pct(row.get("position_size_pct_at_entry"))
             entry  = safe_float(row.get("entry"))
@@ -522,6 +532,15 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             if in_today:
                 daily_pnl_d += dollars
 
+            _row_date = closed_ts[:10]
+            if _row_date != _wd_day:
+                if _wd_day is not None and _wd_open_bal > 0:
+                    worst_daily_pnl_pct = min(worst_daily_pnl_pct, _wd_pnl_d / _wd_open_bal * 100)
+                _wd_day = _row_date
+                _wd_open_bal = running_bal
+                _wd_pnl_d = 0.0
+            _wd_pnl_d += dollars
+
             running_bal = running_bal + dollars
             peak_bal    = max(peak_bal, running_bal)
 
@@ -548,6 +567,9 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             # else pips_v == 0 and not a win status → neutral, streak unchanged
 
         # Streak is naturally v2-only because `closed` is filtered to system_version == "v2".
+
+        if _wd_day is not None and _wd_open_bal > 0:
+            worst_daily_pnl_pct = min(worst_daily_pnl_pct, _wd_pnl_d / _wd_open_bal * 100)
 
         if not prev_in_today:
             daily_open_bal = running_bal
@@ -710,6 +732,7 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             "peak_balance":          round(peak_bal, 2),
             "current_drawdown_pct":  round(drawdown_pct, 4),
             "drawdown_pct":          round(drawdown_pct, 4),
+            "worst_daily_pnl_pct":   round(worst_daily_pnl_pct, 4),
             "consecutive_losses":    int(cons_losses),
             "consecutive_wins":      int(cons_wins),
             "open_count":            len(open_trades),
@@ -760,6 +783,7 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             "peak_balance":          STARTING_BALANCE,
             "current_drawdown_pct":  0.0,
             "drawdown_pct":          0.0,
+            "worst_daily_pnl_pct":   0.0,
             "consecutive_losses":    0,
             "current_sizing_pct":    1.0,
             "sizing_mode":           "normal",
