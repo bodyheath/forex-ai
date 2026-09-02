@@ -58,3 +58,97 @@ partial-profit system, superseded by the current T1/T2/T3 cascade logic
 live code. Every function in it is expected to be orphaned.
 
 - FILE: src/_archived_partial_profit_checker.py
+
+## risk_manager.py::risk_dashboard_lines() -- likely superseded, revisit if Telegram risk reporting is ever revived
+
+A complete "RISK DASHBOARD" Telegram section (balance, win rate, risk/trade,
+exposure, streak, drawdown banner). Its siblings drawdown_header_line() and
+drawdown_tier_alert_lines() in the same file are both live. Content
+substantially overlaps what monitor.py's Discord dashboard embed
+(build_fund_dashboard_embed) already shows -- most likely superseded by
+that richer Discord view rather than forgotten, but not certain enough to
+delete outright. 2026-09-02 triage decision: leave as-is, revisit only if
+Telegram (as opposed to Discord) risk reporting becomes a priority again.
+
+- FUNCTION: risk_dashboard_lines (src/risk_manager.py)
+
+## billing.py::build_credit_section() -- real feature, lower-priority than the working inline version
+
+A well-designed CREDIT BALANCE section (backup-key display, low-balance
+urgency framing) exists here, but daily.py renders credit balance with a
+simpler inline one-liner instead (`💳 $X.XX combined (N days)`) and never
+calls this function. Not broken, just using the plainer path. 2026-09-02
+triage decision: leave as-is -- swapping to the fuller version is a real
+but low-priority content upgrade, not a bug fix.
+
+- FUNCTION: build_credit_section (src/billing.py)
+
+## pair_statistics.py / regime_learning.py accessor duplication -- real drift risk, not urgent
+
+get_adaptive_targets()/count_needed() (pair_statistics.py) and
+get_regime_win_rate()/get_time_win_rate() (regime_learning.py) are clean
+accessor functions, but every real call site (daily.py, 3 locations)
+bypasses them and reads the underlying JSON stores directly instead --
+one call site even hardcodes the same `>= 10` threshold
+get_adaptive_targets() already encapsulates. Not missing functionality,
+just duplicated logic with a real risk of the two copies drifting apart
+over time. 2026-09-02 triage decision: leave as-is, revisit if that drift
+risk ever actually bites (e.g. the threshold gets changed in one place
+and not the other).
+
+- FUNCTION: get_adaptive_targets (src/pair_statistics.py)
+- FUNCTION: count_needed (src/pair_statistics.py)
+- FUNCTION: get_regime_win_rate (src/regime_learning.py)
+- FUNCTION: get_time_win_rate (src/regime_learning.py)
+
+## Parameters deliberately dead by design -- pure 2:1 TP-or-SL system retired the 3-target cascade
+
+cascade.py's own module docstring: "Pure 2:1 risk:reward target system...
+t1_price = (unused for new trades; column preserved for historical
+display)... t3_price = (unused)." ATR/adaptive-multiplier params on
+compute_levels() are explicitly documented as "accepted but ignored";
+t3_hit() is documented as "Always False -- no T3 in the pure TP-or-SL
+system." send_fund_milestone()'s t1/t3/t1_hit/t2_hit/t3_hit params are the
+same story one layer up -- the function only has 2 real outcomes (trail-to-
+breakeven at T1, full win at T2) under the current system. None of these
+are gaps; they're signature compatibility with the retired 3-target
+design, kept so old call patterns don't need touching.
+
+- PARAMETER: compute_levels.atr (src/cascade.py)
+- PARAMETER: compute_levels.t1_mult (src/cascade.py)
+- PARAMETER: compute_levels.t2_mult (src/cascade.py)
+- PARAMETER: compute_levels.t3_mult (src/cascade.py)
+- PARAMETER: t3_hit.price (src/cascade.py)
+- PARAMETER: t3_hit.row (src/cascade.py)
+- PARAMETER: send_fund_milestone.t1 (src/discord_notifier.py)
+- PARAMETER: send_fund_milestone.t3 (src/discord_notifier.py)
+- PARAMETER: send_fund_milestone.t1_hit (src/discord_notifier.py)
+- PARAMETER: send_fund_milestone.t2_hit (src/discord_notifier.py)
+- PARAMETER: send_fund_milestone.t3_hit (src/discord_notifier.py)
+
+## Other deliberately-dead parameters, individually verified
+
+- PARAMETER: send_master_scan_report.strategy_start_date (src/discord_notifier.py)
+  -- deliberately bypassed: a comment at the top of discord_notifier.py
+  explains calculate_fund_state()'s computed value was found unreliable
+  (a mislabeled v2 trade skewed it), so the hardcoded V2_STRATEGY_START
+  constant is used everywhere instead. Working as intended.
+- PARAMETER: send_master_scan_report.ml_accuracy (src/discord_notifier.py)
+  -- set to the exact same value as ml_overall_wr (a duplicate alias),
+  which the message already displays under that name. Nothing missing.
+- PARAMETER: compute_costs.lots (src/trade_costs.py)
+  -- this function returns a cost breakdown in PIPS, which doesn't scale
+  with position size; only a dollar conversion would need lots.
+- PARAMETER: _classify_candle.direction (src/feature_extractor.py)
+  -- candle-shape classification (PIN_BAR/ENGULFING/etc.) is a property
+  of the OHLC data alone, not the trade's intended direction.
+- PARAMETER: extract.pair (src/feature_extractor.py)
+  -- the ML feature set is deliberately pair-agnostic to keep the model
+  generalizable rather than overfit to specific instruments.
+- PARAMETER: _send_entry_confirmed_alert.log_fn (src/discord_notifier.py)
+  -- optional logging callback, never actually invoked; cosmetic only.
+- PARAMETER: _send_fallback_alerts.log (src/monitor.py)
+  -- same as above, cosmetic only.
+- PARAMETER: drawdown_header_line.profile (src/risk_manager.py)
+  -- the function only needs risk_state; profile is accepted but unused,
+  cosmetic only.
