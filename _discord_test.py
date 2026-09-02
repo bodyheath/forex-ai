@@ -14,7 +14,7 @@ if os.path.exists(_env_path):
                 os.environ.setdefault(_k.strip(), _v.strip())
 
 from src.discord_notifier import (
-    send_fund_trade_opened, send_fund_milestone, send_fund_stop_hit,
+    send_fund_milestone, send_fund_stop_hit,
     send_fund_approaching, send_research_batch, send_full_scan_report,
     send_system_health, send_circuit_breaker, send_workflow_failure,
     send_monitor_gap_alert, send_watch_list_movement,
@@ -28,16 +28,10 @@ print("Sending test messages to Discord...")
 print("Check all 5 Discord channels")
 print()
 
-print("Test 1: New fund trade...")
-r = send_fund_trade_opened(
-    pair="AUD/JPY", direction="BUY", conf=7,
-    entry=113.250, stop=112.680, t1=113.478, t2=113.649, t3=113.820,
-    risk_pct=1.0, risk_dollars=100.23, rr=2.4, checklist_score=8,
-    kill_zone="London", regime="Trending Risk-On", rsi=45.2, atr=65,
-    monthly_trend="Bullish", hhhl="Confirmed", ccy_strength="AUD+2 JPY-3", adx=28,
-)
-print(f"  -> {ok(r)} to #fund-alerts")
-time.sleep(2)
+# Test 1 (send_fund_trade_opened) removed 2026-09-02 -- that function was
+# confirmed dead (see scripts/check_orphans.py) and removed from
+# discord_notifier.py: stale content from the retired 3-target cascade,
+# zero real callers, superseded by the Telegram "YES trade alerts" path.
 
 print("Test 2: Fund T1 milestone...")
 r = send_fund_milestone(
