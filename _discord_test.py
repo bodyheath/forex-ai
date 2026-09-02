@@ -241,9 +241,9 @@ r = send_monitor_gap_alert(gap_minutes=127, last_run_time="2026-06-22 07:01 UTC"
 print(f"  -> {ok(r)} to #critical")
 
 print()
-print("All 18 test messages done!")
+print("All test messages done!")
 print("Check all 5 Discord channels:")
-print("  #fund-alerts:   Tests 1-6")
+print("  #fund-alerts:   Tests 2-6")
 print("  #monitor:       Tests 7-9 and 11")
 print("  #research:      Test 10")
 print("  #system-health: Tests 12-14")
