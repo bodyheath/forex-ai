@@ -1,0 +1,25 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key resistance (1.1632 SMA200) + SELL signal with 4H BUY creates unresolved MTF conflict, limiting conviction despite crowded short setup offering reversal risk.
+RISK_FACTORS: [1] MTF disagreement — D1:SELL vs 4H:BUY (conf=1/3) invalidates clean directional setup; [2] COT UNWINDING EUR shorts at crowded bottom increases reversal risk and conflicts with SELL bias — if EUR rebounds, positioned shorts will force cover.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1632
+ENTRY_TRIGGER_REASON: Confirm break below SMA200 + D1 pin bar rejection; wait for 4H trend alignment to SELL before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**SCORECARD DETAIL:**
+
+**TECHNICAL_SCORE: 5/10**
+- D1 T_sig=SELL_6 baseline (6→5 after MTF penalty)
+- RSI 56.1 = neutral zone (45–62 = 3–4 NEUTRAL); D1 trend=mixed, so standard tier applies →

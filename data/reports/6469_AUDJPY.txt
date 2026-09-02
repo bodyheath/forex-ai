@@ -1,0 +1,23 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 pin bar at key level (bullish pattern) conflicts with RSI overbought (64.9) in uptrend context and T_sig SELL_3; MTF disagreement (M:SELL, W:SELL, D:NEUTRAL, 4H:BUY) fails 2/3 consensus rule, blocking high-confidence trade.
+
+RISK_FACTORS: [1] MTF conflict — daily neutral while 4H bullish and weekly/monthly bearish create directional ambiguity; T_sig baseline is SELL_3 but pin_bar_at_key_level:bul pattern is reversal-bullish, undermining seller conviction. [2] RSI 64.9 is elevated but within uptrend normal range (45–77); MACD histogram still positive (0.2196) and ribbon fully aligned bullish (5/5) — underlying uptrend structure intact despite T_sig bearish label.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: WAIT_CONFIRMATION
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF conf=1/3 (fails 2/3 rule); pin bar bullish pattern + aligned ribbon + positive MACD contradict SELL_3 signal. Await either D

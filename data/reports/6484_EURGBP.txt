@@ -1,0 +1,23 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 50% Fib + D1 SELL_5 signal, but MTF conflict (W:BUY vs D:SELL) and RSI 55 neutral in mixed trend severely limit conviction; EUR crowded short unwind is a reversal risk.
+RISK_FACTORS: (1) MTF disagreement (W/D/4H conf=1/3 <2/3 threshold) invalidates high-confidence trade — weekly bullish contradicts daily sell setup. (2) EUR net SHORT at 14% unwinding + GBP SHORT at 59% unwinding = institutional conviction collapsing; reversal likely before continuation.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule breach — weekly and daily do not both agree on direction (conf=1/3). TRADE_THIS=NO regardless of technical setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF RULE BREACH (HARD STOP):** Weekly=BUY, Daily=SELL, 4H=NEUTRAL → conf=1/3 (only 1 of 3 agrees). Rule states: *if
