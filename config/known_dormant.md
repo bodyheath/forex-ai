@@ -114,10 +114,20 @@ breakeven at T1, full win at T2) under the current system. None of these
 are gaps; they're signature compatibility with the retired 3-target
 design, kept so old call patterns don't need touching.
 
+compute_levels()'s `target` parameter is the same story from a different
+angle: daily.py passes the analyst's LLM-suggested target price in, but the
+function always overrides it with the mechanical `entry ± stop_dist × 2R`
+-- deliberate trading discipline (a fixed ratio beats a subjective
+target), not an oversight. Confirmed 2026-09-02, held one round before
+being added here specifically to make sure it wasn't a live bug (a
+genuinely different value being silently discarded, unlike the pure
+None-default knobs above) before concluding it's the same pattern.
+
 - PARAMETER: compute_levels.atr (src/cascade.py)
 - PARAMETER: compute_levels.t1_mult (src/cascade.py)
 - PARAMETER: compute_levels.t2_mult (src/cascade.py)
 - PARAMETER: compute_levels.t3_mult (src/cascade.py)
+- PARAMETER: compute_levels.target (src/cascade.py)
 - PARAMETER: t3_hit.price (src/cascade.py)
 - PARAMETER: t3_hit.row (src/cascade.py)
 - PARAMETER: send_fund_milestone.t1 (src/discord_notifier.py)
@@ -125,6 +135,19 @@ design, kept so old call patterns don't need touching.
 - PARAMETER: send_fund_milestone.t1_hit (src/discord_notifier.py)
 - PARAMETER: send_fund_milestone.t2_hit (src/discord_notifier.py)
 - PARAMETER: send_fund_milestone.t3_hit (src/discord_notifier.py)
+
+## health_counters.py::details() -- real purpose, no obvious call site, low value
+
+Its own docstring says "for logging". Its sibling counts() IS used (the
+System Health section's per-category counts), but details() -- the full
+per-event detail strings (which pair, which trade ID, what error) --
+is never called anywhere, not even in a stale script. Unlike the FTMO/FMP
+pattern, there's no complete-but-unwired sibling call site pointing at
+where this obviously belongs; verbose per-event error strings are useful
+for debugging but arguably too noisy for the routine per-scan message.
+2026-09-02 triage decision: leave as-is, low priority.
+
+- FUNCTION: details (src/health_counters.py)
 
 ## Other deliberately-dead parameters, individually verified
 

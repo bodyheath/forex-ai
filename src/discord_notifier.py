@@ -1440,6 +1440,11 @@ def update_closed_trades_log(
         "value": (
             f"Total closed: {n} trades{_trunc_note}\n"
             f"Realised P&L: {total_realised_pips:+.1f}p / ${total_realised_dollars:+.2f}\n"
+            # 2026-09-02: fund_balance was a confirmed orphaned param (see
+            # scripts/check_orphans.py) -- accepted but never shown anywhere
+            # in this embed, even though current balance is a natural
+            # companion to the realised P&L line above it.
+            f"Current balance: ${fund_balance:,.2f}\n"
             f"Current streak: {streak_text}"
         ),
         "inline": False,
