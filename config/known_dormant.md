@@ -183,3 +183,26 @@ for debugging but arguably too noisy for the routine per-scan message.
   it again would just repeat the same percentage under a second label with
   no new information, unlike fund_wins/fund_protected/fund_losses which add
   the full-vs-protected split. Left unused deliberately.
+
+## confidence_calibration.py::recalibrated_confidence() -- reverted before shipping, not abandoned
+
+Designed, implemented, and correctly reverted before shipping after a
+corrected walk-forward split showed it would have passed 11 candidates
+with a real 0/11 win rate. Stays dormant until the calibration table's
+hot-streak-contamination problem has a validated fix. Full account of the
+reverted override and the re-verification that caught it lives in
+_dd_allows_trade()'s docstring (daily.py) -- quoted in full in this
+session's investigation.
+
+- FUNCTION: recalibrated_confidence (src/confidence_calibration.py)
+
+## monitor.py::_check_hot_alert_sent's is_currently_hot param -- intentional/defensive, not a bug
+
+The only call site guarantees this is always True by construction (pairs
+are pre-filtered to currently-hot before the function is ever called), so
+the parameter can't carry information the persisted continuously_hot flag
+doesn't already have. Confirmed via the full mechanism: _mark_hot_zone_exited()
+resets continuously_hot the moment a pair actually leaves the HOT zone, so
+the persisted flag stays honest without needing a live cross-check.
+
+- PARAMETER: _check_hot_alert_sent.is_currently_hot (src/monitor.py)
