@@ -1,0 +1,17 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish divergence + converging ribbon + CHF crowded long + D1 SELL_3 signal offset by mixed MTF structure (W/D neutral) and RSI in neutral zone within uptrend context.
+RISK_FACTORS: [1. MTF misalignment: weekly and daily both NEUTRAL, 4H disagrees (SELL) — conf=0/3 fails MTF rule; trade lacks multi-timeframe confirmation], [2. CHF positioning at extreme crowded short (~100% institutional positioning unwinding from top of 1y range) creates reversal risk, but CAD net SHORT and UNWINDING suggest paired deleveraging rather than conviction reversal]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly=NEUTRAL, daily=NEUTRAL, 4H=SELL; no consensus direction (conf=0/3 < 2/3 threshold). D1 T_sig=SELL_3 undercut by RSI=59.0 (neutral in uptrend context, not confirming sell), and oscillator_confluence=NONE (stoch_k=65.6, CCI=78.4 diverge with no alignment).

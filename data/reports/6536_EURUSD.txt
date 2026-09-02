@@ -1,0 +1,34 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar rejection at key level + D1 SELL signal conflicts with 4H BUY and MTF disagreement (1/3), creating mixed setup with crowded EUR short positioning (unwinding risk).
+
+RISK_FACTORS: 
+1. MTF alignment failure — D:SELL vs 4H:BUY + M/W:NEUTRAL (conf=1/3) violates MTF rule; trade direction not confirmed across timeframes.
+2. COT unwinding — EUR net SHORT at 14.0% crowding (near 1y bottom) with UNWINDING momentum = reversal risk into SELL.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — only D:SELL agrees; Weekly and 4H do not confirm direction. Confidence below threshold (5 < 7 required). Crowded short positioning unwinding adds reversal risk.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Analysis Summary:**
+
+**Why NO despite T_sig=SELL_6:**
+
+1. **MTF Failure (Critical):** D1=SELL, 4H=BUY, W=NEUTRAL, M=

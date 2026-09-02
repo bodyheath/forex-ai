@@ -1,0 +1,23 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 50% Fib (exact range midpoint) with SELL bias from T_sig=5, but MTF conflict (W:BUY vs D:SELL, conf=1/3) and overbought 4H RSI=63.5 + UNWINDING EUR shorts create reversal trap risk.
+RISK_FACTORS: (1) MTF disagreement disqualifies trade per rules — weekly wants BUY, daily wants SELL, confidence only 1/3, below 2/3 threshold. (2) EUR positioning crowded short + UNWINDING = institutional reversal risk — if shorts cover, EUR rallies into GBP weakness, flipping direction.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:BUY and D:SELL do not both agree (conf 1/3 < 2/3 required). Reversal risk from crowded EUR short unwind overrides T_sig SELL bias.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**EXPLANATION:**
+
+- **MTF HARD STOP**: Weekly=BUY, Daily=SELL, 4H
