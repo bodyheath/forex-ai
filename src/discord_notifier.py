@@ -154,16 +154,6 @@ def _price_position_bar(entry, current, stop, target, direction="BUY"):
         return ""
 
 
-def _cascade_progress_bar(t1_hit, t2_hit, t3_hit):
-    t1 = "\U0001f7e2" if t1_hit else "⬜"
-    t2 = "\U0001f7e2" if t2_hit else "⬜"
-    t3 = "\U0001f7e2" if t3_hit else "⬜"
-    t1_pct = "40%" if t1_hit else "░░"
-    t2_pct = "30%" if t2_hit else "░░"
-    t3_pct = "30%" if t3_hit else "░░"
-    return f"{t1} T1 ({t1_pct})  {t2} T2 ({t2_pct})  {t3} T3 ({t3_pct})"
-
-
 def _get_tradingview_url(pair):
     symbol = pair.replace("/", "")
     return f"https://www.tradingview.com/chart/?symbol=FX:{symbol}"
