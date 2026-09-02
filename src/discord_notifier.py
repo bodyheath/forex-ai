@@ -202,49 +202,6 @@ def _send_embed(webhook_url, title, description, color, fields=None):
     return False
 
 
-def send_fund_trade_opened(pair, direction, conf, entry, stop, t1, t2, t3,
-                            risk_pct, risk_dollars, rr, checklist_score,
-                            kill_zone="", regime="", rsi=0, atr=0,
-                            monthly_trend="", hhhl="", ccy_strength="", adx=0):
-    pip_sz    = 0.01 if "JPY" in pair else 0.0001
-    stop_pips = abs(entry - stop) / pip_sz
-    t1_pips   = abs(t1 - entry)   / pip_sz
-    t2_pips   = abs(t2 - entry)   / pip_sz
-    t3_pips   = abs(t3 - entry)   / pip_sz
-    tv_url    = _get_tradingview_url(pair)
-    dir_emoji = "\U0001f4c8" if direction == "BUY" else "\U0001f4c9"
-
-    fields = [
-        {"name": "Trade Type",          "value": _trade_type_label(True),             "inline": False},
-        {"name": f"{dir_emoji} Entry",  "value": f"`{entry:.5f}`",                    "inline": True},
-        {"name": "\U0001f6d1 Stop Loss","value": f"`{stop:.5f}` ({stop_pips:.1f}p)",  "inline": True},
-        {"name": "\U0001f4ca R:R Ratio","value": f"`{rr}:1`",                         "inline": True},
-        {"name": "\U0001f3af T1 (40%)", "value": f"`{t1:.5f}` +{t1_pips:.1f}p",      "inline": True},
-        {"name": "\U0001f3af T2 (30%)", "value": f"`{t2:.5f}` +{t2_pips:.1f}p",      "inline": True},
-        {"name": "\U0001f3af T3 (30%)", "value": f"`{t3:.5f}` +{t3_pips:.1f}p",      "inline": True},
-        {"name": "\U0001f4b0 Position Size", "value": f"{risk_pct}% of fund\n${risk_dollars:.2f} at risk", "inline": True},
-        {"name": "\U0001f916 Confidence",    "value": f"{conf}/10\nChecklist: {checklist_score}/10",       "inline": True},
-        {"name": "\U0001f550 Session",       "value": kill_zone or "Any",             "inline": True},
-        {"name": "\U0001f4c8 Signal Filters","value": (
-            f"{'✅' if monthly_trend else '⬜'} Monthly trend\n"
-            f"{'✅' if hhhl else '⬜'} HHHL structure\n"
-            f"{'✅' if kill_zone else '⬜'} Kill zone\n"
-            f"{'✅' if ccy_strength else '⬜'} Currency strength\n"
-            f"ADX: {adx:.0f} · RSI: {rsi:.1f}"
-        ), "inline": True},
-        {"name": "\U0001f30d Market Regime", "value": regime or "Unknown",            "inline": True},
-        {"name": "\U0001f4ca Price Position","value": _price_position_bar(entry, entry, stop, t1, direction) or "Chart below", "inline": False},
-        {"name": "\U0001f517 Chart",         "value": f"[View {pair} on TradingView]({tv_url})", "inline": False},
-    ]
-    return _send_embed(
-        WEBHOOK_FUND,
-        f"\U0001f4bc NEW FUND TRADE — {pair} {dir_emoji} {direction}",
-        f"New position opened at {entry:.5f}",
-        COLOR_FUND_NEW,
-        fields=fields,
-    )
-
-
 def send_fund_milestone(pair, direction, milestone, pips, entry, current, stop,
                          t1=None, t2=None, t3=None,
                          t1_hit=False, t2_hit=False, t3_hit=False, dollars=0):
