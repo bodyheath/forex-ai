@@ -3033,6 +3033,49 @@ def _weekly_performance_section(date: str) -> list:
     except Exception as _ror_exc:
         lines.append(f"⚠️ Risk analysis unavailable ({_ror_exc})")
 
+    # ── Sharpe Ratio ─────────────────────────────────────────────────────────
+    # 2026-09-02: built alongside RoR/Kelly above but never wired in --
+    # compute_sharpe_from_history() was a confirmed orphan (see
+    # scripts/check_orphans.py). Same data source, same report, natural fit.
+    try:
+        from src import risk_of_ruin as _ror_sharpe
+        _sharpe = _ror_sharpe.compute_sharpe_from_history()
+        if _sharpe.get("sharpe") is not None:
+            lines.append(
+                f"📐 <b>Sharpe Ratio:</b> {_sharpe['sharpe']:+.2f} "
+                f"({_sharpe['verdict']}) — {_sharpe['n_trades']} decisive trades"
+            )
+    except Exception as _sharpe_exc:
+        lines.append(f"⚠️ Sharpe ratio unavailable ({_sharpe_exc})")
+
+    # ── FTMO Challenge Metrics ───────────────────────────────────────────────
+    # 2026-09-02: build_ftmo_section() was a confirmed orphan (see
+    # scripts/check_orphans.py) -- a complete, working FTMO compliance
+    # section that was never spliced into this report alongside its sibling
+    # build_ror_section() above. Inputs sourced the same way daily.py's
+    # Discord fund-perf section already does (calculate_fund_state()); the
+    # worst-ever daily loss and max drawdown use running historical
+    # trackers (calculate_fund_state()'s worst_daily_pnl_pct, fund_state.json's
+    # max_drawdown_seen) rather than today's figures, matching what the
+    # FTMO rules actually gate on (has the limit EVER been breached).
+    try:
+        from src.trading import financials as _fin_ftmo
+        from src import fund_state as _fs_ftmo
+        from src import risk_of_ruin as _ror_ftmo
+        _ftmo_fs    = _fin_ftmo.calculate_fund_state()
+        _ftmo_fsjson = _fs_ftmo.load()
+        _ftmo_worst_day_pct = abs(min(float(_ftmo_fs.get("worst_daily_pnl_pct") or 0.0), 0.0))
+        _ftmo_max_dd_pct    = float(_ftmo_fsjson.get("max_drawdown_seen") or 0.0)
+        lines += _ror_ftmo.build_ftmo_section(
+            fund_start=_fin_ftmo.STARTING_BALANCE,
+            current_balance=float(_ftmo_fs.get("balance") or _fin_ftmo.STARTING_BALANCE),
+            peak_balance=float(_ftmo_fs.get("peak_balance") or _fin_ftmo.STARTING_BALANCE),
+            max_daily_loss_pct=_ftmo_worst_day_pct,
+            max_total_dd_pct=_ftmo_max_dd_pct,
+        )
+    except Exception as _ftmo_exc:
+        lines.append(f"⚠️ FTMO metrics unavailable ({_ftmo_exc})")
+
     return lines
 
 
@@ -7111,6 +7154,30 @@ def _send_telegram_summary(
                     f"({_entry_info['entry_type']} at {_entry_info['trigger_price']} "
                     f"expires {_expiry_h}h)"
                 ))
+                # 2026-09-02: send_pending_trade_alert() was a confirmed orphan
+                # (see scripts/check_orphans.py) -- its sibling
+                # _send_entry_confirmed_alert() already fires when this same
+                # trade later activates (monitor.py), but nothing announced
+                # the PENDING order being set in the first place. Best-effort:
+                # a missing/unreachable webhook must not block the CSV write
+                # above or the entry-type loop for other candidates.
+                try:
+                    from src import discord_notifier as _dn_pending
+                    _dn_pending.send_pending_trade_alert(
+                        trade_id=int(_yt_id),
+                        pair=_yt_pair,
+                        direction=_yt_dir,
+                        confidence=float(_yt_parsed.get("confidence") or 0),
+                        entry_type=_entry_info["entry_type"],
+                        trigger_price=_entry_info["trigger_price"],
+                        trigger_reason=_entry_info["trigger_reason"] or "",
+                        expiry_hours=_expiry_h,
+                        stop=float(_yt_parsed.get("stop_loss") or _yt_parsed.get("stop") or 0),
+                        target=float(_yt_parsed.get("target") or 0),
+                        rr=float(_yt_parsed.get("reward_risk") or 0),
+                    )
+                except Exception as _pending_alert_exc:
+                    _log_line(log, f"[entry] pending-trade Discord alert failed: {_pending_alert_exc}")
             _trk_et.update_fields(int(_yt_id), **_entry_kwargs)
     except Exception as _et_exc:
         import traceback as _et_tb
@@ -9806,16 +9873,29 @@ def _send_telegram_summary(
             else:
                 _wc_rsn_id = "low rates + risk-on selling" if "risk-on" in _env_id else "weak fundamentals"
             _ctx_id.append(f"📉 Weakest: <b>{_wc_id}</b> — {_wc_rsn_id} ({_scores_id.get(_wc_id,0):.0f})")
+        # 2026-09-02: this used to call market_regime.telegram_line() (regime
+        # label + description only) followed immediately by a separate
+        # "Trading conditions: X/10" line below. conditions_telegram_line()
+        # was a confirmed orphan (see scripts/check_orphans.py) -- a newer,
+        # richer single line combining the regime label with that same score
+        # and a "capacity" framing (score vs. the regime's own conditions_cap).
+        # _compute_patience_score() is moved up so its score is available
+        # here; it's the same conditions_score conditions_telegram_line()
+        # expects -- its own docstring: "the regime detector is the single
+        # source of truth: its conditions_cap sets the hard maximum before
+        # the 4-factor calculation even runs." The old standalone "Trading
+        # conditions: X/10" line is now folded into this one instead of
+        # repeating the same score twice.
+        _ps_id = _compute_patience_score(ctx)
         try:
             from src import market_regime as _mr_id
             _rd_id = _mr_id.detect()
-            _rl_id = _mr_id.telegram_line(_rd_id)
+            _rl_id = _mr_id.conditions_telegram_line(_rd_id, _ps_id["score"])
             if _rl_id:
                 _ctx_id.append(_rl_id)
         except Exception:
             pass
-        _ps_id = _compute_patience_score(ctx)
-        _ctx_id.append(f"📊 <b>Trading conditions: {_ps_id['score']}/10</b> — {_ps_id['description']}")
+        _ctx_id.append(f"<i>{_ps_id['description']}</i>")
         all_sections.append(_ctx_id)
 
         # ECONOMIC CALENDAR — include on 5pm and 11pm scans (shows tonight's events)
@@ -12863,11 +12943,25 @@ def run() -> int:
         except Exception:
             td_calls = _tech_td
 
+        # 2026-09-02: the Yahoo/Stooq fallback-chain telemetry getters were
+        # confirmed orphans (see scripts/check_orphans.py) -- built alongside
+        # the Yahoo->Stooq->Twelve Data fallback chain but never added to
+        # this line, which silently only ever reported Twelve Data usage.
+        try:
+            _yahoo_calls   = _tech_mod.get_yahoo_call_count()
+            _yahoo_pairs   = _tech_mod.get_yahoo_sourced_pairs()
+            _yahoo4h_pairs = _tech_mod.get_yahoo_4h_sourced_pairs()
+            _stooq_pairs   = _tech_mod.get_stooq_sourced_pairs()
+        except Exception:
+            _yahoo_calls, _yahoo_pairs, _yahoo4h_pairs, _stooq_pairs = 0, set(), set(), set()
+
         _log_line(log, (
             f"[COST] Haiku in={run_stats.get('haiku_input',0)} out={run_stats.get('haiku_output',0)} · "
             f"Sonnet in={run_stats.get('sonnet_input',0)} out={run_stats.get('sonnet_output',0)} · "
             f"TD calls={td_calls} · est=${run_stats.get('estimated_usd',0):.4f} · "
             f"cache_hits={run_stats.get('cache_hits',0)} · "
+            f"Yahoo calls={_yahoo_calls} ({len(_yahoo_pairs)} pairs, {len(_yahoo4h_pairs)} via 4h) · "
+            f"Stooq pairs={len(_stooq_pairs)} · "
             f"duration={run_duration_min:.1f}m"
         ))
 

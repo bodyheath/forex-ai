@@ -916,7 +916,7 @@ def send_master_scan_report(
         _desc_lead = "No actionable setups this scan"
     _description = (
         f"{_desc_lead}\n"
-        f"Fund: **${fund_balance:,.2f}** ({daily_pnl_pct:+.2f}% today) · "
+        f"Fund: **${fund_balance:,.2f}** ({daily_pnl_pct:+.2f}% / ${daily_pnl_dollars:+.2f} today) · "
         f"{open_count}/4 slots used"
     )
 
@@ -1163,6 +1163,37 @@ def send_master_scan_report(
             f"Gross pips: {v2_net_pips:+.1f}p (raw pips, not cost-adjusted)\n"
             f"Return: {total_return_pct:+.2f}% since inception"
         )
+        # 2026-09-02: fund_win_rate/fund_wins/fund_protected/fund_losses were
+        # confirmed orphaned params (see scripts/check_orphans.py). They carry
+        # the same totals as v2_win_rate/v2_wins/v2_losses above (fund_wins +
+        # fund_protected == v2_wins, fund_win_rate == v2_win_rate) plus the
+        # full-vs-protected split those totals don't show on their own --
+        # added as a genuinely new breakdown line rather than replacing the
+        # line above, so this doesn't just repeat the same numbers under a
+        # second label.
+        _perf_val += (
+            f"\nBreakdown: {fund_wins} full win"
+            + ("s" if fund_wins != 1 else "")
+            + f" · {fund_protected} protected win"
+            + ("s" if fund_protected != 1 else "")
+            + f" · {fund_losses} loss"
+            + ("es" if fund_losses != 1 else "")
+        )
+        # avg_win_pips/avg_win_dollars/avg_loss_pips/avg_loss_dollars/
+        # profit_factor_dollars/best_pair/best_pips were also confirmed
+        # orphaned params -- genuinely new information, not shown anywhere
+        # else in this message.
+        if avg_win_pips or avg_loss_pips:
+            _perf_val += (
+                f"\nAvg win: +{avg_win_pips:.1f}p"
+                + (f" / +${avg_win_dollars:.2f}" if avg_win_dollars else "")
+                + f" · Avg loss: -{avg_loss_pips:.1f}p"
+                + (f" / -${avg_loss_dollars:.2f}" if avg_loss_dollars else "")
+            )
+        if profit_factor_dollars:
+            _perf_val += f"\nProfit factor ($): {profit_factor_dollars:.2f}"
+        if best_pair and best_pips:
+            _perf_val += f"\nBest trade: {best_pair} +{best_pips:.1f}p"
     else:
         _perf_val = (
             f"**V2 STRATEGY (2:1 R:R)** — Building history · Started: {V2_STRATEGY_START}\n"
@@ -1905,7 +1936,13 @@ def send_pending_trade_alert(
     fmt        = f"{{:.{decimals}f}}"
 
     embed = {
-        "title":       f"⏳ {pair} — Pending Entry",
+        # 2026-09-02: trade_id was accepted but never displayed anywhere in
+        # this embed -- confirmed via scripts/check_orphans.py while wiring
+        # this function up for the first time. Added to the title, matching
+        # the "#{id}" convention build_fund_dashboard_embed() already uses
+        # for open-trade fields, so a PENDING alert can be correlated to the
+        # trade it refers to.
+        "title":       f"⏳ {pair} #{trade_id} — Pending Entry",
         "description": (
             f"{dir_emoji} **{direction}** · Conf: {confidence:.1f}/10\n"
             f"Entry type: {type_label}"

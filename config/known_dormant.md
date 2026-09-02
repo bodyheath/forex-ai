@@ -152,3 +152,11 @@ design, kept so old call patterns don't need touching.
 - PARAMETER: drawdown_header_line.profile (src/risk_manager.py)
   -- the function only needs risk_state; profile is accepted but unused,
   cosmetic only.
+- PARAMETER: send_master_scan_report.fund_win_rate (src/discord_notifier.py)
+  -- 2026-09-02, found while wiring up fund_wins/fund_protected/fund_losses
+  into a new "Breakdown: N full win / N protected win / N loss" line (same
+  batch as the entries above): fund_win_rate is numerically identical to
+  v2_win_rate, which the existing win-rate line already displays -- adding
+  it again would just repeat the same percentage under a second label with
+  no new information, unlike fund_wins/fund_protected/fund_losses which add
+  the full-vs-protected split. Left unused deliberately.
