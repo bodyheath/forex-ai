@@ -1,0 +1,27 @@
+```
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (44p/6pt) + pin bar at key level + D1 SELL signal conflict with bullish ribbon, but CHF crowded short unwinding and weak MTF agreement (1/3) undermine conviction.
+RISK_FACTORS: [1. MTF severely misaligned: M:BUY vs D:SELL (conf=25%) — no trade-worthy structure. 2. CHF COT unwinding from crowded long near top — reversal risk if CHF accelerates lower, trapping shorts.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree on direction. Weekly=NEUTRAL, Daily=SELL (confidence 1/3 << 2/3 threshold). No trade setup valid.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Analysis Summary**
+
+**Why NO despite SELL signal:**
+
+1. **MTF VETO (Critical Rule):** W:NEUTRAL + D:SELL = only 1/3 agreement. Rule requires ≥2/3 (both weekly AND daily same direction). **Trade rejected outright.**

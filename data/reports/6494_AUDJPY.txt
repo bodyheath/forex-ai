@@ -1,0 +1,24 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Daily uptrend structure conflicts with multiple bearish signals (pin bar at resistance, RSI overbought in rising rate environment, 4H double-top pattern), creating reversal risk but insufficient confluence for high-confidence short.
+RISK_FACTORS: [1] MTF disagreement — Weekly+Daily conf only 1/3 (D1=NEUTRAL, W=SELL, 4H=BUY) violates MTF rule threshold for trade entry; [2] ALIGNED_BULL ribbon (5/5 EMA stack) and price > SMA50 > SMA200 (golden cross) signal intact uptrend structure, contradicting bearish technicals.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 115.20
+ENTRY_TRIGGER_REASON: Break above pin bar high at 114.648 Fib SH confirms failed reversal; shorting after retest of key level confirms 4H double-top completion.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF RULE VIOLATION (HARD STOP):**  
+Weekly=SELL, Daily=NEUTRAL, 4H=BUY → 1/3 agree = 33%
