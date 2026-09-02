@@ -1,0 +1,24 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + D1 SELL signal + SMD -5 (institutions bearish) conflict with ALIGNED_BULL ribbon and uptrend structure; crowded positioning (EUR short, CHF long) both unwinding creates reversal risk that undermines the sell case.
+RISK_FACTORS: [1] MTF conf=1/3 (only D1 agrees on SELL; W and M NEUTRAL, 4H NEUTRAL) — MTF rule violation: W+D must both agree for high-confidence trade. [2] COT UNWINDING on both legs + ALIGNED_BULL ribbon suggests institutional SHORT positions are reversing into LONG; EUR net short near bottom + CHF net long near top = highest probability for bounce/reversal AGAINST the SELL setup.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade fails MTF rule (W≠SELL, conf 1/3 < 2/3 threshold) and positioning/ribbon contradict SELL direction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAIL RATIONALE:**
+
+**TECHNICAL_SCORE: 5/10**
+- D1 T_sig=SELL_
