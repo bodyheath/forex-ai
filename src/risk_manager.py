@@ -645,15 +645,6 @@ def compute_open_exposure(profile: dict) -> dict:
     }
 
 
-# ── Balance update from outcome ───────────────────────────────────────────────
-
-def update_balance_from_outcome(trade: dict) -> None:
-    # No-op: estimated_balance is now synced from calculate_fund_state() every
-    # scan (daily.py Site 1, ~line 11762).  Kept as a shell so any remaining
-    # callers do not raise AttributeError.
-    return
-
-
 # ── Telegram / display helpers ────────────────────────────────────────────────
 
 def fmt_currency(amount: float, currency: str) -> str:

@@ -64,20 +64,9 @@ def set_auto_patterns(patterns: list) -> None:
     save(kept)
 
 
-def render() -> str:
-    records = load()
-    if not records:
-        return "SYSTEM MEMORY: (empty - no learned patterns yet)"
-    lines = ["SYSTEM MEMORY - patterns learned from past outcomes (weight heavily):"]
-    for i, r in enumerate(records, 1):
-        tag = r.get("source", "user").upper()
-        lines.append(f"  {i}. [{tag}] PATTERN: {r.get('pattern')}")
-        lines.append(f"     OUTCOME: {r.get('outcome')}")
-    return "\n".join(lines)
-
-
 # ── Budget-aware render for the Sonnet prompt ──────────────────────────────────
-# 2026-08-30: render() above was gated at the Sonnet-prompt call site by
+# 2026-08-30: the old all-or-nothing render() (removed 2026-09-02, see git
+# history) was gated at the Sonnet-prompt call site by
 # `if mem and len(mem) < 500`. Seed patterns alone (3 hand-written priors,
 # unchanged since the initial commit) already render to 615 chars -- over the
 # cap before a single outcome/auto record is added. git log -S confirms that

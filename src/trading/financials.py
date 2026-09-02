@@ -993,29 +993,3 @@ def verify_trade_integrity(df: pd.DataFrame = None) -> dict:
         "trade_count": len(fund),
         "issues":      raw_issues,
     }
-
-
-# ─── Daily reset ──────────────────────────────────────────────────────────────
-
-def daily_reset_if_needed(current_state: dict) -> dict:
-    """Reset daily P&L fields if the trading day has rolled over.
-
-    Uses Auckland time for day boundary (same as fund_state.py).
-    Returns updated state dict. Never raises.
-    """
-    try:
-        today = _auckland_today()
-        stored_date = str(current_state.get("daily_trades_date", ""))
-        if stored_date == today:
-            return current_state
-
-        # New day: carry balance forward, reset daily fields
-        new_state = dict(current_state)
-        bal = safe_float(current_state.get("balance"), STARTING_BALANCE)
-        new_state["daily_trades_date"]    = today
-        new_state["daily_opening_balance"] = round(bal, 2)
-        new_state["daily_pnl_dollars"]    = 0.0
-        new_state["daily_pnl_pct"]        = 0.0
-        return new_state
-    except Exception:
-        return current_state

@@ -339,10 +339,6 @@ def _auckland_now() -> datetime:
         return utc.astimezone(timezone(timedelta(hours=off)))
 
 
-def _is_weekend() -> bool:
-    return _auckland_now().weekday() >= 5
-
-
 def _is_true(val) -> bool:
     """Return True when a CSV boolean field is set.
 

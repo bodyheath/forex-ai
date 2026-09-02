@@ -30,7 +30,6 @@ FIELDS = [
     "t2_hit_price",
     "t2_hit_pips",                # pip profit on 35% closed at T2
     "t3_hit",                     # TRUE / FALSE
-    "t3_hit_price",
     "t3_hit_pips",                # pip profit on final 30% at T3
     "effective_stop",             # starts as stop_loss; moves to entry after T1 hit
     "cascading_total_pips",       # sum of pips across all hit portions

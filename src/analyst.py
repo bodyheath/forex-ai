@@ -65,14 +65,6 @@ def reset_key_state() -> None:
     _last_memory_meta["chars"] = 0
 
 
-def key_status() -> str:
-    if not config.ANTHROPIC_API_KEY_2:
-        return "🔑 API: primary key (no fallback configured)"
-    if _fallback_triggered:
-        return "⚠️ API: switched to backup key (KEY_2) — primary key failed"
-    return "🔑 API: primary key (KEY_1)"
-
-
 def get_run_stats() -> dict:
     H_IN, H_OUT = 0.80, 4.00
     S_IN, S_OUT = 3.00, 15.00
