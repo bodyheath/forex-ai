@@ -1,7 +1,9 @@
 {
   "last_flags": [
-    "\u26a0\ufe0f Gate silent \u2014 'concentration' has left zero trace in the log across the last 14 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=220, WR=40.5%) significantly outperforms grade D (n=488, WR=19.1%), p=0.0000"
+    "\u26a0\ufe0f Gate silent \u2014 'concentration' has left zero trace in the log across the last 15 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
+    "\ud83d\udcca consensus_adj has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md \u2014 filter to consensus_eligible==True, compare within grade)",
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=224, WR=40.6%) significantly outperforms grade D (n=501, WR=19.0%), p=0.0000",
+    "\ud83d\udea8 fund_state.json staleness \u2014 disk state disagrees with a fresh recompute from trades.csv: current_drawdown_pct: fresh=0.6527 vs disk=0.6"
   ],
-  "last_alert_sent_at": "2026-09-01T21:03:43.731183"
+  "last_alert_sent_at": "2026-09-02T04:37:11.391402"
 }
