@@ -335,19 +335,47 @@ def _best_opportunity_section(rows, today: str) -> str:
     )
 
 
-def _stat_cards(stats: dict) -> str:
-    wr = stats["win_rate"]
-    wr_txt = f"{wr*100:.0f}%" if wr is not None else "-"
-    exp = stats["expectancy_r"]
-    exp_txt = f"{exp:+.2f}R" if exp is not None else "-"
+def _stat_cards(stats: dict, live: dict = None) -> str:
+    """Recommendations/Actionable/Open are legitimate whole-system funnel
+    counts (learning.compute_stats(), blended v1+v2, every trade_this==YES
+    row regardless of era) -- no ambiguity there. Closed/Win rate/Wins-Losses
+    used to come from that same blended source too, sitting right under the
+    "Real Fund" heading and silently disagreeing with the ticker bar's v2-
+    only, net-pips-corrected number (43% vs 60% -- the exact duplicate-number
+    complaint that started this audit; 13 of learning.compute_stats()'s 14
+    "closed" rows are pre-reset v1 history that every other real-fund figure
+    on this page deliberately excludes, per financials.py's own "v1 excluded
+    from all running calculations" convention). Now sourced from the same
+    live, v2-scoped, net-pips-based fund state the ticker bar uses, so this
+    card set and the ticker can never show two different "real fund" numbers
+    again. Expectancy switched from a gross-pips r_multiple average (never
+    net-corrected) to a $/trade figure built from live's already
+    net-corrected avg_win_dollars/avg_loss_dollars -- there's no clean net-
+    corrected R-multiple to substitute without re-deriving r_multiple from
+    net_pips first, which nothing in this codebase currently does."""
+    live = live or {}
+    v2_n   = live.get("v2_decisive", 0)
+    v2_wr  = live.get("v2_win_rate")
+    v2_w   = live.get("v2_wins", 0)
+    v2_l   = live.get("v2_losses", 0)
+    wr_txt = f"{v2_wr:.0f}%" if v2_wr is not None else "-"
+
+    avg_win_d, avg_loss_d = live.get("avg_win_dollars", 0.0), live.get("avg_loss_dollars", 0.0)
+    if v2_n > 0 and v2_wr is not None:
+        p = v2_wr / 100.0
+        exp_d = p * avg_win_d - (1 - p) * avg_loss_d
+        exp_txt = f"{exp_d:+.2f}/trade"
+    else:
+        exp_txt = "-"
+
     cards = [
         ("Recommendations", stats["total_recommendations"]),
         ("Actionable (YES)", stats["actionable"]),
         ("Open", stats["open"]),
-        ("Closed", stats["closed"]),
-        ("Win rate", wr_txt),
-        ("Wins / Losses", f'{stats["wins"]} / {stats["losses"]}'),
-        ("Expectancy", exp_txt),
+        ("Closed (v2)", v2_n),
+        ("Win rate (v2)", wr_txt),
+        ("Wins / Losses (v2)", f'{v2_w} / {v2_l}'),
+        ("Expectancy ($)", exp_txt),
     ]
     return "".join(
         f'<div class="card"><div class="k">{html.escape(str(k))}</div>'
