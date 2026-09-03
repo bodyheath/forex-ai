@@ -92,45 +92,17 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           stage_files() {
-            git add data/trades.csv data/research_trades.csv data/fund_state.json 2>/dev/null || true
-            git add data/price_cache.json data/discord_dashboard.json data/pair_statistics.json 2>/dev/null || true
-            git add data/watchlist_cache.json data/loss_journal.json 2>/dev/null || true
-            git add data/online_learner.json data/dashboard.html data/partial_profit_state.json 2>/dev/null || true
-            # 2026-09-02: run_guard.json and risk_profile.json were missing from
-            # this list entirely -- daily.py writes both locally every run (the
-            # duplicate-run guard write is explicitly commented "so any queued
-            # concurrent run sees it"), but neither ever reached origin from a
-            # "full"-mode run, because this curated list never included them
-            # (intraday.yml's `git add data/` picks them up via its own wildcard,
-            # which is why intraday scans persist correctly and full scans never
-            # did). Confirmed live: a manually-triggered full scan wrote a fresh
-            # run_guard.json locally, but origin/main's copy after the run was
-            # byte-identical to before it -- still showing the last INTRADAY
-            # commit's mode/timestamp, not this run's. Practical effect: the
-            # guard can never detect two "full" scans running close together
-            # (e.g. a cron-job.org retry) -- it always compares against whichever
-            # scan mode last ran on intraday.yml instead of the true last run,
-            # so a genuine full-mode duplicate reads as "different mode --
-            # PROCEEDING" instead of being blocked. risk_profile.json has the
-            # same staleness exposure for the same reason.
-            git add data/run_guard.json data/risk_profile.json 2>/dev/null || true
-            # 2026-09-03: same class of bug as run_guard.json/risk_profile.json
-            # above -- src/virtual_books.py writes data/virtual_books/*.json and
-            # *.csv on every full-mode run (evaluate_candidates() is called
-            # unconditionally from the main pipeline), but this curated list
-            # never included that directory, so any book activity from a
-            # "full"-mode run was silently discarded, never reaching origin.
-            # Found while auditing the dashboard's all-books-at-$10,000 display
-            # against raw state -- confirmed via the GitHub API that origin has
-            # data/virtual_books/candidates.csv (persisted via intraday.yml's
-            # wildcard `git add data/`) but no book state/position files at all.
-            git add data/virtual_books/ 2>/dev/null || true
-            # 2026-09-04: same missing-staging bug class as data/virtual_books/
-            # above -- src/shadow_mode.py writes data/shadow_rules.json (now fed
-            # automatically by virtual_books.py's settlement path) but it's not
-            # inside data/virtual_books/, so it needs its own entry here too.
-            git add data/shadow_rules.json 2>/dev/null || true
-            git add docs/ 2>/dev/null || true
+            # 2026-09-04: replaced a curated per-file list with the same
+            # wildcard intraday.yml has always safely used. This is the
+            # third time a new data file (run_guard.json/risk_profile.json
+            # on 2026-09-02, data/virtual_books/ on 2026-09-03,
+            # shadow_rules.json on 2026-09-04) was silently discarded from
+            # "full"-mode runs because a curated list can only ever include
+            # files someone remembered to add to it. A wildcard structurally
+            # can't have that failure mode -- any new file daily.py ever
+            # writes under data/ gets committed automatically, no matter
+            # what it's called or when it was added.
+            git add data/ docs/ 2>/dev/null || true
           }
 
           # 2026-08-29: rewritten from git-pull-rebase (with a --no-rebase
