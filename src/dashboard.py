@@ -1904,12 +1904,23 @@ def generate() -> str:
     best_html      = _safe_section("best_opportunity", _best_opportunity_section, rows, today)
     ticker_html    = _safe_section("ticker_bar", _ticker_bar, live_fund)
     risk_html      = _safe_section("risk", _risk_section)
-    ror_html       = _safe_section("ror_kelly_ftmo_sharpe", _ror_kelly_ftmo_sharpe_section)
     block_html     = _safe_section("trading_block", _trading_block_section)
-    stat_cards_html = _safe_section("stat_cards", _stat_cards, stats, live_fund)
 
-    books_html  = _safe_section("virtual_books", _virtual_books_section)
+    open_positions_html = _safe_section("open_positions", _open_positions_section, live_fund)
+    books_html          = _safe_section("virtual_books", _virtual_books_section)
+    scan_reports_html   = _safe_section("daily_scan_reports", _daily_scan_reports_section)
 
+    # Curated system-health cards -- exactly what's worth knowing at a
+    # glance (grade inversion, calibration status, shadow-mode status); the
+    # active-safety-gate card is block_html above, shown under Real Fund
+    # since that's what it directly governs.
+    grade_status_html = _safe_section("grade_inversion_status", _grade_inversion_status_card)
+    calib_status_html = _safe_section("calibration_status", _calibration_status_card)
+    shadow_status_html = _safe_section("shadow_status", _shadow_mode_status_card)
+
+    # Full diagnostics -- real, verified, correct, but not "worth knowing at
+    # a glance" per the curated list above. Collapsed by default.
+    ror_html    = _safe_section("ror_kelly_ftmo_sharpe", _ror_kelly_ftmo_sharpe_section)
     pop_html    = _safe_section("research_population", _research_population_section)
     calib_html  = _safe_section("calibration", _calibration_section)
     online_html = _safe_section("online_learner", _online_learner_section)
@@ -1917,14 +1928,23 @@ def generate() -> str:
     shadow_html = _safe_section("shadow_mode", _shadow_mode_section)
     trace_html  = _safe_section("dynamic_threshold_trace", _dynamic_threshold_trace_section)
     da_html     = _safe_section("da_downgrade", _da_downgrade_section)
-
     learning_html  = _safe_section("learning_feed", _learning_feed_section)
+
     analytics_html = _safe_section("research_analytics", _research_analytics_section)
     equity_html    = _safe_section("equity_curve", _equity_curve, rows)
     by_conf_html   = _safe_section("by_confidence", _by_confidence, rows)
-    rows_table_html = _safe_section(
-        "rows_table", _rows_table, rows,
-        fallback="<p style='color:var(--mut)'>Recommendations table unavailable this run.</p>",
+
+    # Recent/actionable activity by default (actionable == trade_this=="YES",
+    # 204 rows -- a genuinely meaningful default view); the full 6600+ row
+    # history is one click away, not the first thing on the page.
+    actionable_rows = [r for r in rows if r.get("trade_this") == "YES"]
+    actionable_table_html = _safe_section(
+        "rows_table_actionable", _rows_table, actionable_rows,
+        fallback="<p style='color:var(--mut)'>Actionable trades table unavailable this run.</p>",
+    )
+    full_table_html = _safe_section(
+        "rows_table_full", _rows_table, rows,
+        fallback="<p style='color:var(--mut)'>Full recommendations table unavailable this run.</p>",
     )
 
     # Client-side auto-refresh: a lightweight periodic HEAD check that only
