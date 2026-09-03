@@ -172,7 +172,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .best-dir.buy{color:var(--green)}.best-dir.sell{color:var(--red)}
 .best-conf{font-size:13px;color:var(--blue);font-weight:600;margin-left:auto}
 .best-reason{font-size:13px;color:var(--mut);margin-top:8px;line-height:1.5}
-"""
+""".replace("__MONO__", _MONO)
 
 
 def _f(v, nd=2):
