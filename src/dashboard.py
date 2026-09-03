@@ -593,16 +593,16 @@ def _risk_section() -> str:
     bar_cls = "danger" if bar_pct >= 100 else "warn" if bar_pct >= 60 else ""
 
     sym = {"USD":"$","EUR":"€","GBP":"£"}.get(cur, f"{cur} ")
-    real_bal = config.ACCOUNT_BALANCE
-    fund_ret = (bal - _rm.FUND_START) / _rm.FUND_START * 100
+    # 2026-09-04 Part 2: balance and drawdown dropped from this card set --
+    # both already shown once, correctly, on the ticker bar above. Keeping
+    # them here too was exactly the kind of duplicate-number clutter this
+    # rebuild is trying to eliminate. This section's unique value is the
+    # risk MODE/tier (badge below), peak, sizing, exposure, and streak.
     cards = [
-        ("FOREX AI FUND",  f'{sym}{bal:,.2f} ({fund_ret:+.1f}%)'),
-        ("Real Account",   f'{sym}{real_bal:,.2f}'),
         ("Peak balance",   f'{sym}{peak:,.2f}'),
         ("Risk per trade", f'{mode_risk:.2f}%'),
         ("Last-5 win rate", wr_txt),
         ("Open exposure",  f'{tot:.1f}% / {_rm.MAX_DAILY_RISK:.0f}%'),
-        ("Drawdown",       f'{dd:.1f}%'),
     ]
     cards_html = "".join(
         f'<div class="risk-card"><div class="k">{html.escape(k)}</div>'
