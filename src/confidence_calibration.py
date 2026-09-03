@@ -131,7 +131,20 @@ def build_calibration_table(as_of: datetime = None) -> dict:
         except (TypeError, ValueError):
             continue
 
-        is_win = status in _WIN_STATUSES
+        # 2026-09-04: PARTIAL_WIN is a real, decisive, money-affecting close
+        # that isn't uniformly a win by label -- same bug class fixed in 6
+        # other places this session (risk_manager.py, dynamic_threshold.py,
+        # dashboard.py's research-analytics section, financials.py x2,
+        # learning.py::compute_stats()). Found here while auditing this exact
+        # table's numbers against raw data for the dashboard rebuild.
+        # Classify by net_pips sign instead of unconditional label match.
+        if status == "PARTIAL_WIN":
+            try:
+                is_win = float(r.get("net_pips") or 0) > 0
+            except (TypeError, ValueError):
+                is_win = False  # unparseable/missing net_pips -- conservative, not a win
+        else:
+            is_win = status in _WIN_STATUSES
         key = (conf, direction, _has_gbp(r.get("pair", "")))
         b = buckets.setdefault(key, [0, 0])  # [wins, n]
         b[0] += int(is_win)
