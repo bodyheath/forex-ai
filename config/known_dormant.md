@@ -206,3 +206,24 @@ resets continuously_hot the moment a pair actually leaves the HOT zone, so
 the persisted flag stays honest without needing a live cross-check.
 
 - PARAMETER: _check_hot_alert_sent.is_currently_hot (src/monitor.py)
+
+## virtual_books.py's per-book eligibility functions -- uniform callback interface, not every book needs every argument
+
+Every BookConfig.eligibility function shares one call signature (r,
+quality_grades, dd_mode, conf_threshold, eff_conf_fn, dd_allows_fn) so
+evaluate_candidates()'s per-book loop can call any of them identically
+without needing to know which book uses which inputs -- the same pattern as
+send_fund_milestone()'s t1/t3/t1_hit/t2_hit/t3_hit params above. Each
+function only references the subset of arguments its own rule actually
+needs; that's the design working as intended, not five incomplete
+implementations. A future Book F with a different rule may use a different
+subset again without changing the interface.
+
+- PARAMETER: _elig_a_control.eff_conf_fn (src/virtual_books.py)
+- PARAMETER: _elig_b_flat_conf_rr.conf_threshold (src/virtual_books.py)
+- PARAMETER: _elig_b_flat_conf_rr.dd_allows_fn (src/virtual_books.py)
+- PARAMETER: _elig_c_grade_based.conf_threshold (src/virtual_books.py)
+- PARAMETER: _elig_c_grade_based.eff_conf_fn (src/virtual_books.py)
+- PARAMETER: _elig_d_no_da.eff_conf_fn (src/virtual_books.py)
+- PARAMETER: _elig_e_no_dd_gate.dd_mode (src/virtual_books.py)
+- PARAMETER: _elig_e_no_dd_gate.eff_conf_fn (src/virtual_books.py)
