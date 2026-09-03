@@ -125,6 +125,11 @@ jobs:
             # data/virtual_books/candidates.csv (persisted via intraday.yml's
             # wildcard `git add data/`) but no book state/position files at all.
             git add data/virtual_books/ 2>/dev/null || true
+            # 2026-09-04: same missing-staging bug class as data/virtual_books/
+            # above -- src/shadow_mode.py writes data/shadow_rules.json (now fed
+            # automatically by virtual_books.py's settlement path) but it's not
+            # inside data/virtual_books/, so it needs its own entry here too.
+            git add data/shadow_rules.json 2>/dev/null || true
             git add docs/ 2>/dev/null || true
           }
 
