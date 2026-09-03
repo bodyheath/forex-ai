@@ -1514,7 +1514,7 @@ def generate() -> str:
     risk_html      = _safe_section("risk", _risk_section)
     ror_html       = _safe_section("ror_kelly_ftmo_sharpe", _ror_kelly_ftmo_sharpe_section)
     block_html     = _safe_section("trading_block", _trading_block_section)
-    stat_cards_html = _safe_section("stat_cards", _stat_cards, stats)
+    stat_cards_html = _safe_section("stat_cards", _stat_cards, stats, live_fund)
 
     books_html  = _safe_section("virtual_books", _virtual_books_section)
 
