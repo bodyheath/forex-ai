@@ -19,21 +19,27 @@ Format (parsed by `load_allowlist()` in check_orphans.py):
 
 ---
 
-## shadow_mode.py -- mid-rollout, Phase 04 not yet built
+## shadow_mode.py -- two functions deliberately still unwired
 
-Built 2026-09-01 as the framework for evaluating future grading rules
-without affecting live decisions. Nothing calls it yet because the daily.py
-integration point ("Phase 04": wire `record_evaluation()` into the real
-scan/close path) hasn't been built. This is expected to stay orphaned until
-Phase 04 ships -- remove these entries once it does, since a Phase 04 that
-silently failed to wire in would otherwise look identical to "not built
-yet" from this checker's point of view.
+Built 2026-09-01, extended 2026-09-04 (see PROMOTION_DISCIPLINE.md and
+project_promotion_discipline_sep2026.md). `register_rule()`/
+`record_evaluation()` are now called from `src/virtual_books.py`'s
+settlement path, and `check_promotion_readiness()`/`list_rules()` from
+`src/dashboard.py` -- all four are wired and no longer belong here.
 
-- FUNCTION: register_rule (src/shadow_mode.py)
-- FUNCTION: record_evaluation (src/shadow_mode.py)
-- FUNCTION: check_promotion_readiness (src/shadow_mode.py)
-- FUNCTION: list_rules (src/shadow_mode.py)
+The remaining two are dormant by design, not by omission:
+- `mark_promoted()` is explicitly human-only -- called by hand after a
+  reviewed, approved code change ships a promotion, never automatically.
+- `assert_promotion_authorized()` is a guard meant for the START of any
+  future code path that would apply a promoted rule to a real decision.
+  Nothing in this repo currently applies a shadow-tested rule to a real
+  decision yet (no rule has ever cleared `promotable`), so there is no call
+  site for it yet. Remove this entry the day a promotion-applying code path
+  is actually built and calls it -- a promotion path that forgot to call it
+  would otherwise look identical to "not built yet" from this checker.
+
 - FUNCTION: mark_promoted (src/shadow_mode.py)
+- FUNCTION: assert_promotion_authorized (src/shadow_mode.py)
 
 ## broker.py -- confirmed stub, no live-trading integration exists
 
