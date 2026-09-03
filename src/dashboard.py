@@ -207,6 +207,28 @@ tr:hover td{background:rgba(255,255,255,.015)}
 .best-dir.buy{color:var(--green)}.best-dir.sell{color:var(--red)}
 .best-conf{font-size:13px;color:var(--blue);font-weight:600;margin-left:auto}
 .best-reason{font-size:13px;color:var(--mut);margin-top:8px;line-height:1.5}
+
+/* ── Daily Scan Reports timeline ─────────────────────────────────────────── */
+.scan-entry{border:1px solid var(--line);border-radius:8px;margin-bottom:8px;overflow:hidden}
+.scan-entry summary{list-style:none;cursor:pointer;padding:11px 14px;display:flex;
+  align-items:center;gap:12px;flex-wrap:wrap;background:var(--card2)}
+.scan-entry summary::-webkit-details-marker{display:none}
+.scan-entry summary::before{content:"▸";color:var(--mut);font-size:11px;transition:transform .15s}
+.scan-entry[open] summary::before{transform:rotate(90deg)}
+.scan-time{font-family:__MONO__;font-size:12px;color:var(--fg);font-weight:600}
+.scan-mode{font-size:11px;color:var(--mut);text-transform:capitalize}
+.scan-regime{font-size:11px;background:rgba(91,157,255,.14);color:var(--blue);
+  padding:2px 8px;border-radius:10px;font-weight:600}
+.scan-count{font-size:11px;color:var(--mut);margin-left:auto}
+.scan-body{padding:14px}
+
+/* ── Collapsible disclosure (full diagnostics / full history) ───────────── */
+.disclosure{margin-top:10px}
+.disclosure > summary{cursor:pointer;color:var(--blue);font-size:12.5px;font-weight:600;
+  list-style:none;padding:8px 0}
+.disclosure > summary::-webkit-details-marker{display:none}
+.disclosure > summary::before{content:"▸ ";}
+.disclosure[open] > summary::before{content:"▾ ";}
 """.replace("__MONO__", _MONO).replace("__SANS__", _SANS)
 
 
