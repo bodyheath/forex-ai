@@ -50,6 +50,16 @@ _WARNING_FIRE_RATE    = 0.80 # fires-per-candidate ratio considered "near-univer
 _GRADE_MIN_N          = 15   # minimum decisive trades per grade bucket to compare
 _GRADE_ORDER          = ["A", "B", "C", "D", "F"]  # best to worst
 
+# 2026-07-14 13:46:31 UTC: the exit-logic-fix cutoff. Grade-ordering comparisons
+# are filtered to v2 + closed_at >= this timestamp (see
+# get_strict_decisive_grade_population() below) -- without it, D-vs-C fires on
+# stale pre-fix grade labels (diagnosed and closed as a duplication/staleness
+# artifact, not a live finding: re-confirmed 2026-09-01, raw n=812/61 p=0.037,
+# but strict n=475/40 p=0.375, not significant). F-vs-D holds under both, and
+# more strongly under strict (p=1.8e-8) -- this filter doesn't suppress a real
+# signal, it removes a stale one from re-triggering every run.
+_GRADE_ORDERING_CUTOFF = "2026-07-14 13:46:31"
+
 _RIB_EDGE_WINDOW      = 40   # trailing decisive-trade window checked against the older baseline
 _RIB_EDGE_MIN_N       = 15   # minimum size for EITHER the trailing window or the older baseline
 
