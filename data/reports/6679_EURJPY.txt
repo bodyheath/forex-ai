@@ -1,0 +1,23 @@
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 shows uptrend structure with pin bar at resistance (78.6% Fib) and RSI 58.6 (neutral-zone), but MTF weekly+daily disagree (W:SELL vs D:NEUTRAL, conf=1/3), failing MTF rule; EUR COT unwinding crowded short creates reversal risk.
+RISK_FACTORS: [1] MTF disagreement (W:SELL, D:NEUTRAL, 4H:BUY) violates 2/3 agreement rule — no high-conviction direction established. [2] EUR COT positioning unwinding from crowded short (@14% net) — institutional reversal risk into BUY, directly conflicts SELL thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF consensus failure — weekly and daily do not both agree on direction; cannot satisfy minimum 2/3 MTF agreement. COT unwinding EUR short adds structural reversal pressure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**REASONING:**
+
+1. **MTF Rule Enforcement (CRITICAL):** W:SELL, D:NEUTRAL, 4H:BUY = 1 agree per direction

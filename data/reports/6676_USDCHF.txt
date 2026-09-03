@@ -1,0 +1,16 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key resistance + CHF net short unwinding + D1 SELL signal conflict with D1 uptrend structure creates ambiguous setup; MTF disagreement (M:BUY, W:NEUTRAL, D:SELL, 4H:BUY = 1/3 agreement) fails multi-timeframe confirmation rule.
+RISK_FACTORS: [1] MTF conflict — only 1/3 timeframes agree (D1:SELL); M/W/4H lean opposite direction, violating MTF consensus rule (weekly+daily must both agree). [2] COT CHF unwinding into resistance — institutions closing crowded short positioning near 1y top is classic reversal risk; USD neutral positioning offers no directional conviction. D1 golden-cross (price > SMA50 > SMA200) contradicts T_sig=SELL_5.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade rejected — MTF rule violation. Weekly is NEUTRAL (not BUY or SELL), daily is SELL. Confluence required: weekly AND daily must *both* agree on direction. Confidence 5/10 < threshold 7/10. Pin bar + resistance + OSC=

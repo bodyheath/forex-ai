@@ -1,0 +1,24 @@
+```
+PAIR: CAD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 78.6% Fib + SELL_3 signal conflicts with aligned bull ribbon and uptrend structure; MTF disagreement (D=NEUTRAL, 4H=BUY) blocks high-confidence trade entry.
+RISK_FACTORS: [1] MTF conflict — D1 NEUTRAL and 4H BUY disagree; ribbon ALIGNED_BULL suggests continuation, not reversal. [2] COT unwinding on CAD (conviction declining) while JPY building — conflicting institutional momentum reduces positioning reliability.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**RATIONALE:**
+
+1. **MTF Rule Violation (TRADE_THIS=NO):** W:NEUTRAL, D:NEUTRAL, 4H:BUY = 0/3 agreement. Confidence floor is 2/3 for any trade; this setup fails.  
+2. **Technical Contradiction:** D1 shows uptrend (price > SMA50 > SMA200, golden cross) with aligned bull ribbon (5/5 EMAs fanned).

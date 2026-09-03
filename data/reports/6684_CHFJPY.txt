@@ -1,0 +1,18 @@
+```
+PAIR: CHF/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 2/10
+POSITIONING_SCORE: 2/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Downtrend structure (price < SMA50 < SMA200) with pin bar at key level offers BUY setup, but MTF misalignment (M:SELL vs W/D:NEUTRAL vs 4H:BUY) and crowded CHF short positioning unwinding create high reversal risk—technical edge negated by positioning conflict.
+RISK_FACTORS: [1] MTF confidence=0/3 (M:SELL vs W:NEUTRAL vs D:NEUTRAL vs 4H:BUY) — no agreement across timeframes; [2] CHF positioning at crowded SHORT 100% with UNWINDING momentum — institutional liquidation likely to drive CHF stronger (opposite to SELL trade), directly contradicting directional thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree on direction (W:NEUTRAL, D:NEUTRAL, 4H opposes M:SELL). Additional critical risk: CHF short crowding + UNWINDING = high probability of CHF rally into SELL entry. Wait for W and D to align bullish before reconsidering.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0

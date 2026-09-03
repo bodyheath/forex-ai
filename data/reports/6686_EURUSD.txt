@@ -1,0 +1,25 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H downtrend (T=7) conflicts with D1 neutral-mixed; EUR crowded short positioning unwinding creates reversal risk; ribbon LEANING_BULL on D1 contradicts SELL bias.
+RISK_FACTORS: [1] MTF agreement failure — D1 NEUTRAL, 4H SELL (conf=0/3 weighted 80%) violates core BUY rule (both must agree). [2] EUR COT unwinding (reversal risk) — institutions reducing crowded short; combined with LEANING_BULL ribbon, setup favors bounce, not continuation SELL.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violated (D1:NEUTRAL + 4H:SELL do not achieve 2/3 agreement). LEANING_BULL ribbon + EUR COT unwinding signal long risk, not short edge.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+RATIONALE:
+
+**MTF Consensus (HARD RULE BLOCK):**
+- M:NEUTRAL, W:NEUTRAL, D1:NEUTRAL (T_sig=3), 4H:SELL (T=7)
+- Confidence

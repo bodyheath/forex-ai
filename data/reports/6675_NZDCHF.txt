@@ -1,0 +1,28 @@
+```
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 pin bar at resistance with RSI 60.8 (approaching overbought in uptrend context) and converging ribbon signal weakening momentum, but MTF disagreement (W:NEUTRAL, D:SELL vs 4H:BUY) and CHF crowded-short unwinding create conflicting signals.
+
+RISK_FACTORS: (1) MTF confidence only 1/3 (daily and weekly do NOT both agree on direction) — violates core MTF rule, severely limiting trade validity. (2) CHF positioning unwinding near 1y crowded-long peak indicates institutional reversal risk; pin bar is bullish-bias but D1 T_sig=SELL_6 conflicts with 4H bullish setup.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule failure: W:NEUTRAL + D:SELL ≠ agreement. No trade setup valid.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**RATIONALE:**
+
+1. **MTF Conflict (Hard Fail):** Weekly=NEUTRAL, Daily=SELL, 4H=BUY → only 1/3 agree.
