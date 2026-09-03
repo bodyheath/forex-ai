@@ -1,0 +1,4396 @@
+{
+  "ribbon_carveout_exclude_trending_risk_on": {
+    "description": "Exclude trending_risk_on from the ribbon-only-relief carve-out (_ribbon_only_f_or_d in daily.py) -- pre-registered 2026-08-30, see project_ribbon_regime_carveout_threshold.md. would_fire=True means trending_risk_on (the proposed exclusion would apply, sending this candidate back to its original F/D grade instead of the C rescue); would_fire=False means trending_risk_off (direct comparison only -- ranging_low_vol is deliberately excluded from this shadow rule, matching the frozen criteria's own choice not to pool it in, which is exactly what manufactured the original false-positive significance).",
+    "registered_at": "2026-09-03T08:04:27.769612+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 100,
+    "min_n_no_fire": 40,
+    "alpha": 0.05,
+    "pf_max_fire": 0.8,
+    "pf_min_fire": null,
+    "pf_min_gap": null,
+    "promoted": false,
+    "evaluations": [
+      {
+        "timestamp": "2026-09-03T08:04:27.778957+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 54.9,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 06:31:19",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.781048+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 133.0,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-31 22:01:54",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.782460+00:00",
+        "would_fire": false,
+        "outcome": "PARTIAL_WIN",
+        "net_pips": 59.6,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-16 05:10:55",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.783871+00:00",
+        "would_fire": true,
+        "outcome": "PARTIAL_WIN",
+        "net_pips": 33.4,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-17 05:11:02",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.785278+00:00",
+        "would_fire": true,
+        "outcome": "PARTIAL_WIN",
+        "net_pips": 41.5,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-20 05:10:55",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.786699+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -95.5,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-21 12:01:38",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.788275+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 104.7,
+        "context": {
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-15 22:01:42",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.789810+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -94.0,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-21 18:10:59",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.791496+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -112.2,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-23 05:01:32",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.793179+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -85.0,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-21 09:01:41",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.794836+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -87.3,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-21 01:01:25",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.796422+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -66.3,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-21 03:01:38",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.797996+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -43.3,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-23 13:01:32",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.799638+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -42.3,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-23 07:01:39",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.801296+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -107.3,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-27 07:01:36",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.802978+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 131.8,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-23 09:01:35",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.804691+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -120.5,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-21 02:01:29",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.806307+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -80.6,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-21 10:01:39",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.807934+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -85.5,
+        "context": {
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-20 15:01:42",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.809574+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -64.0,
+        "context": {
+          "pair": "EUR/USD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-23 13:01:32",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.811155+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 224.4,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-23 18:10:46",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.812794+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -65.9,
+        "context": {
+          "pair": "CAD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-23 08:01:24",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.814549+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -41.4,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-23 08:01:24",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.816316+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 127.7,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-24 10:01:39",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.817995+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 243.4,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-30 15:01:36",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.819755+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -99.1,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-27 07:01:38",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.821466+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -75.3,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-23 14:01:39",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.823194+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 197.5,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-30 14:01:53",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.824918+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -65.3,
+        "context": {
+          "pair": "CAD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-23 14:01:39",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.826671+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -36.0,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-23 08:01:24",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.828428+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -101.5,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-29 19:01:46",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.830144+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -87.2,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-23 15:01:46",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.831891+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 157.5,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-30 18:11:01",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.833653+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 137.2,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-30 18:11:01",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.835427+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 186.8,
+        "context": {
+          "pair": "CAD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-30 14:01:53",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.837214+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -37.8,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-28 11:01:33",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.839031+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -100.1,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-29 21:01:28",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.840846+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 141.2,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-31 15:31:24",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.842691+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -68.5,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-23 13:01:32",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.844554+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 144.9,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-30 18:11:02",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.846469+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 139.5,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-30 18:11:04",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.848378+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 111.4,
+        "context": {
+          "pair": "CAD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-30 18:11:04",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.850278+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -91.7,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-29 19:01:47",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.852160+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 214.4,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-30 18:11:04",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.854271+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 139.2,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-08-01 15:31:28",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.856461+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 93.2,
+        "context": {
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-30 18:11:05",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.859056+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 112.9,
+        "context": {
+          "pair": "EUR/USD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-29 22:01:37",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.861278+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 140.6,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-30 18:11:05",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.863375+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 116.4,
+        "context": {
+          "pair": "CAD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-30 18:11:05",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.865482+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -90.1,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-29 19:01:47",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.867551+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 146.8,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-30 18:11:06",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.869597+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 139.2,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-02 16:01:34",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.871667+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 153.8,
+        "context": {
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-29 21:10:59",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.873749+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 105.4,
+        "context": {
+          "pair": "EUR/USD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-30 18:11:06",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.875772+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -125.7,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-31 14:01:43",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.877844+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 131.7,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-30 18:11:07",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.879935+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 113.0,
+        "context": {
+          "pair": "CAD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-30 18:11:07",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.882001+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -88.7,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-29 21:01:30",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.884080+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 120.3,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-30 11:01:42",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.886266+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 122.8,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-30 18:11:07",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.888665+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 154.0,
+        "context": {
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-29 21:10:59",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.891019+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 105.9,
+        "context": {
+          "pair": "EUR/USD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-30 18:11:08",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.893152+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 104.6,
+        "context": {
+          "pair": "CAD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-30 18:11:10",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.895301+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 95.8,
+        "context": {
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-30 18:11:10",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.897444+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -94.2,
+        "context": {
+          "pair": "CHF/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-30 14:01:55",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.899603+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -80.2,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-07-30 13:01:32",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.901795+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -124.1,
+        "context": {
+          "pair": "CHF/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-30 20:01:31",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.904213+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -124.2,
+        "context": {
+          "pair": "CHF/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-31 09:01:29",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.906446+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -134.1,
+        "context": {
+          "pair": "CHF/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-07-31 09:01:29",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.908688+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -80.0,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-08-03 22:01:37",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.910897+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 126.8,
+        "context": {
+          "pair": "EUR/CAD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-07 15:01:33",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.913147+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -44.7,
+        "context": {
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-19 15:31:27",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.915533+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -50.4,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-17 06:31:20",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.918030+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -41.9,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-14 07:31:31",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.920524+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -86.7,
+        "context": {
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-17 10:01:35",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.923044+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -50.7,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-17 06:31:21",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.925651+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -45.8,
+        "context": {
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-17 05:45:44",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.928085+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -86.5,
+        "context": {
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-17 11:01:40",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.930472+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -45.9,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-17 04:31:30",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.932906+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 292.0,
+        "context": {
+          "pair": "CHF/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-20 09:01:35",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.935276+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -86.3,
+        "context": {
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-17 10:01:35",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.937969+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 58.7,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-19 15:01:35",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.940399+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -81.1,
+        "context": {
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-17 11:01:41",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.943016+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -46.2,
+        "context": {
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-19 15:31:28",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.945512+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 52.9,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-19 18:10:47",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.947953+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -109.9,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-19 13:01:37",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.950498+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -46.1,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-20 10:31:37",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.953053+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -82.3,
+        "context": {
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-26 04:01:34",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.955528+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 63.3,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-19 21:11:05",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.958046+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -46.1,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-21 07:31:27",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.960521+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -46.3,
+        "context": {
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-20 05:31:25",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.963128+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -82.2,
+        "context": {
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-26 22:01:36",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.965781+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 63.8,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-19 21:11:06",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.968833+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 106.9,
+        "context": {
+          "pair": "EUR/CAD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-26 03:08:48",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.971469+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -46.4,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-21 03:31:18",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.974069+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -80.9,
+        "context": {
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-21 13:01:35",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.976631+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 54.2,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-19 21:11:07",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.979201+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -111.2,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-19 13:01:38",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.981805+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -47.0,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-19 14:31:26",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.984404+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -49.5,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-21 16:31:23",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.987040+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -51.5,
+        "context": {
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-21 10:31:35",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.989892+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -40.8,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-19 23:01:35",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.992804+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -55.7,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-21 03:01:34",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.995545+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -51.8,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-21 10:31:36",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:27.998342+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -100.9,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-27 03:01:37",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.001261+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -45.9,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-26 04:01:36",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.004058+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 93.2,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 05:10:52",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.006778+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -97.9,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-28 11:01:39",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.009557+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -66.0,
+        "context": {
+          "pair": "AUD/CAD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-27 03:01:38",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.012548+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 139.0,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 05:10:52",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.015520+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -51.3,
+        "context": {
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-28 11:01:39",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.018329+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -91.8,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-28 11:01:39",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.021114+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -60.8,
+        "context": {
+          "pair": "AUD/CAD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-08-27 03:01:38",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.023874+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -85.2,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-03 03:01:30",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.026680+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 147.7,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 04:01:38",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.029543+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 101.7,
+        "context": {
+          "pair": "EUR/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 05:10:53",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.032465+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 129.7,
+        "context": {
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 03:01:47",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.035312+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 204.2,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 05:10:54",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.038117+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 95.3,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-01 10:01:41",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.040926+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 163.3,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-03 06:31:25",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.043906+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 102.6,
+        "context": {
+          "pair": "EUR/CAD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 18:10:21",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.046804+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 204.4,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 05:10:58",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.049710+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 84.0,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 05:10:59",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.052574+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 204.5,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 05:10:59",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.055826+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 133.9,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 11:10:15",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.059398+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 121.5,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-03 05:09:52",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.062685+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 135.5,
+        "context": {
+          "pair": "CAD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 14:01:45",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.065814+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 144.6,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-03 05:09:52",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.068861+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 204.6,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 12:09:19",
+          "backfilled": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.071901+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 204.5,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-02 21:10:13",
+          "backfilled": true
+        }
+      }
+    ]
+  },
+  "vix_regime_edge_trending_risk_on": {
+    "description": "Within trending_risk_on only, vix_vs_20d_avg above outperforms below -- pre-registered 2026-08-31, see project_vix_regime_edge_threshold.md. would_fire=True means vix_above (the hypothesized WINNER side); would_fire=False means vix_below. Discovery sample (closed_at<=2026-08-31, n=127/370) is DELIBERATELY NOT backfilled here -- it must never count toward promotion per the frozen walk-forward discipline. Only new-data-only evaluations (closed_at>2026-08-31) are logged below.",
+    "registered_at": "2026-09-03T08:04:28.075148+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 30,
+    "min_n_no_fire": 30,
+    "alpha": 0.05,
+    "pf_max_fire": null,
+    "pf_min_fire": 0.7,
+    "pf_min_gap": 0.3,
+    "promoted": false,
+    "evaluations": [
+      {
+        "timestamp": "2026-09-03T08:04:28.082949+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 272.7,
+        "context": {
+          "pair": "GBP/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 14:01:42",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.085989+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 83.7,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 05:10:49",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.089005+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 259.7,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 03:01:45",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.092341+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -43.0,
+        "context": {
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-01 15:01:37",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.095399+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 54.9,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 06:31:19",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.098465+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -37.2,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-01 03:01:36",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.101548+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 200.4,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 14:01:43",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.104632+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 53.9,
+        "context": {
+          "pair": "NZD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-08-31 22:01:53",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.107757+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 232.0,
+        "context": {
+          "pair": "GBP/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 21:10:07",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.110901+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 133.0,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-08-31 22:01:54",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.114197+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 130.1,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 18:10:17",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.117414+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 236.8,
+        "context": {
+          "pair": "CHF/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 18:10:19",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.120763+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -76.0,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 02:01:37",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.124513+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -59.2,
+        "context": {
+          "pair": "EUR/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-01 09:01:35",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.128185+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 93.2,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 05:10:52",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.131634+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 191.2,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-03 05:09:46",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.135173+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 245.1,
+        "context": {
+          "pair": "GBP/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 18:10:20",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.138788+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 139.0,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 05:10:52",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.142182+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 127.8,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 18:10:20",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.145698+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 76.6,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 15:01:39",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.149150+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 182.8,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 05:09:47",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.152595+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -73.1,
+        "context": {
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 14:01:44",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.157590+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 121.1,
+        "context": {
+          "pair": "USD/CHF",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 02:01:39",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.161077+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 237.5,
+        "context": {
+          "pair": "GBP/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:10:20",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.164617+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -85.2,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 03:01:30",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.168071+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 147.7,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 04:01:38",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.171642+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 34.9,
+        "context": {
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 14:01:44",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.175096+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 101.7,
+        "context": {
+          "pair": "EUR/USD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 05:10:53",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.178655+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 130.3,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 13:01:33",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.182279+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 261.0,
+        "context": {
+          "pair": "CHF/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 13:01:34",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.185961+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 102.7,
+        "context": {
+          "pair": "EUR/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 15:01:40",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.189698+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 268.4,
+        "context": {
+          "pair": "GBP/NZD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 03:01:46",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.193967+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 129.7,
+        "context": {
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 03:01:47",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.197783+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 204.2,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 05:10:54",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.201951+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 95.3,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-01 10:01:41",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.205635+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 132.7,
+        "context": {
+          "pair": "GBP/USD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-01 18:01:42",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.209663+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -27.3,
+        "context": {
+          "pair": "EUR/GBP",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 06:01:31",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.213547+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -71.0,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-08-31 15:31:26",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.217247+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -76.1,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-01 04:01:45",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.221116+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -115.0,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 03:01:47",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.224906+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 93.5,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 05:10:54",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.228939+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -49.5,
+        "context": {
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 09:01:33",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.232751+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 163.3,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 06:31:25",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.236403+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 67.5,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:10:21",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.240073+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -50.4,
+        "context": {
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 14:01:44",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.243886+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 174.4,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 05:09:48",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.247726+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -73.8,
+        "context": {
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 14:01:44",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.251419+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -68.5,
+        "context": {
+          "pair": "GBP/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 09:01:34",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.255488+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 54.2,
+        "context": {
+          "pair": "NZD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 10:01:38",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.260669+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -68.5,
+        "context": {
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-01 15:01:39",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.264611+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -118.5,
+        "context": {
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 13:01:35",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.268506+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -115.2,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 02:01:39",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.272459+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 130.7,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 05:10:55",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.276644+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -71.9,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-08-31 13:01:40",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.280545+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -76.1,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 02:01:39",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.284401+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 102.6,
+        "context": {
+          "pair": "EUR/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:10:21",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.288252+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -104.0,
+        "context": {
+          "pair": "GBP/AUD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:01:40",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.292295+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 204.2,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 05:10:56",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.296224+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 129.3,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:10:22",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.300164+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 246.9,
+        "context": {
+          "pair": "CHF/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:10:22",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.304114+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -59.1,
+        "context": {
+          "pair": "EUR/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-08-31 15:31:27",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.308994+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 237.5,
+        "context": {
+          "pair": "GBP/NZD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 05:10:56",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.312922+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 89.5,
+        "context": {
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 05:10:57",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.316856+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 76.4,
+        "context": {
+          "pair": "EUR/CHF",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 09:01:35",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.320837+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 67.1,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 18:10:23",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.326090+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -66.3,
+        "context": {
+          "pair": "GBP/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-01 15:01:39",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.330654+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -54.7,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-01 12:01:41",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.334813+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -68.4,
+        "context": {
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 11:01:51",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.339789+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -47.7,
+        "context": {
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 16:01:40",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.343991+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -41.2,
+        "context": {
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-01 15:01:39",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.348025+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -41.8,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 02:01:39",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.351984+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -64.7,
+        "context": {
+          "pair": "GBP/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 09:01:35",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.355994+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -121.2,
+        "context": {
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 07:01:36",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.360013+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 169.2,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-03 05:09:49",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.364034+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 188.7,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-03 05:09:49",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.368109+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 133.1,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 11:10:12",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.372138+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 246.5,
+        "context": {
+          "pair": "CHF/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-03 05:09:49",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.376195+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 121.7,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 18:10:23",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.380458+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -105.8,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 03:01:47",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.384686+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -99.6,
+        "context": {
+          "pair": "GBP/AUD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 21:02:06",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.389074+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -121.9,
+        "context": {
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 03:01:47",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.393897+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -48.0,
+        "context": {
+          "pair": "NZD/USD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 03:01:47",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.398418+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -59.4,
+        "context": {
+          "pair": "EUR/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 16:01:41",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.403245+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 204.4,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 05:10:58",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.407879+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -50.0,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-01 10:01:43",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.412260+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 84.0,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 05:10:59",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.416782+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -61.0,
+        "context": {
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 08:01:38",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.421025+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -71.2,
+        "context": {
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 14:01:44",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.425264+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 204.5,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 05:10:59",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.429530+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 94.2,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 05:11:00",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.434277+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -40.3,
+        "context": {
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-01 15:01:39",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.438560+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -41.6,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 15:01:41",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.442823+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -118.0,
+        "context": {
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 13:01:35",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.447176+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 180.8,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-03 05:09:50",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.451486+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 190.9,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-03 05:09:50",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.456384+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -77.0,
+        "context": {
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 14:01:45",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.462520+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 133.9,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 11:10:15",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.467061+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 246.4,
+        "context": {
+          "pair": "CHF/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-03 05:09:51",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.471646+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 132.4,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 18:10:25",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.476062+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -76.7,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 03:01:47",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.480591+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -99.8,
+        "context": {
+          "pair": "GBP/AUD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 20:01:32",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.484964+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -110.3,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 03:01:47",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.489413+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -64.9,
+        "context": {
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 09:01:35",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.493821+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 228.3,
+        "context": {
+          "pair": "GBP/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-03 05:09:51",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.498555+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -96.9,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 14:01:45",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.503043+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -126.4,
+        "context": {
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 03:01:47",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.507515+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -52.7,
+        "context": {
+          "pair": "NZD/USD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 03:01:48",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.512308+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -95.4,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 07:01:37",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.516795+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -28.3,
+        "context": {
+          "pair": "EUR/GBP",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-03 06:01:32",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.521427+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -73.4,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 15:01:41",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.526961+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -59.7,
+        "context": {
+          "pair": "EUR/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 16:01:42",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.532931+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -55.1,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 03:01:48",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.537779+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 121.5,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-03 05:09:52",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.543209+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -39.5,
+        "context": {
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-01 15:01:39",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.548019+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -41.1,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 13:01:35",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.552740+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -62.2,
+        "context": {
+          "pair": "GBP/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 09:01:35",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.557852+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -63.8,
+        "context": {
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 09:01:36",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.562626+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 231.8,
+        "context": {
+          "pair": "GBP/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 18:10:25",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.567238+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 172.4,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-03 05:09:52",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.571912+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 187.1,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 14:01:45",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.576645+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 135.5,
+        "context": {
+          "pair": "CAD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 14:01:45",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.581358+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 134.9,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 05:11:02",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.586140+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 236.2,
+        "context": {
+          "pair": "CHF/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 18:10:26",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.592243+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -28.6,
+        "context": {
+          "pair": "EUR/GBP",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 12:01:35",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.597530+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 133.2,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 18:10:26",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.602598+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -75.5,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 03:01:48",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.607797+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -65.7,
+        "context": {
+          "pair": "USD/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 16:01:42",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.612800+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -100.1,
+        "context": {
+          "pair": "GBP/AUD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 18:01:41",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.617800+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 235.2,
+        "context": {
+          "pair": "GBP/NZD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 05:11:03",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.622962+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -52.4,
+        "context": {
+          "pair": "NZD/USD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 03:01:48",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.628103+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -60.0,
+        "context": {
+          "pair": "EUR/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 15:01:41",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.633066+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 204.5,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 05:11:03",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.638242+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -55.4,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-01 09:01:37",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.643337+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -55.3,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-01 13:01:51",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.648320+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -94.0,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": -1.0,
+          "closed_at": "2026-09-02 14:01:46",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.653861+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -39.6,
+        "context": {
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-01 18:31:24",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.659420+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -55.2,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 03:01:48",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.664752+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -39.7,
+        "context": {
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-01 21:31:23",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.669879+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -55.4,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 05:31:25",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.675138+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -110.4,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 05:31:26",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.680304+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 144.6,
+        "context": {
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 05:09:52",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.685364+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -39.2,
+        "context": {
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 09:01:36",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.690605+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -35.7,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 15:01:41",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.695734+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -57.6,
+        "context": {
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 08:01:40",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.701201+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 223.9,
+        "context": {
+          "pair": "GBP/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:10:13",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.706242+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 164.0,
+        "context": {
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 05:09:53",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.711282+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -96.1,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 14:01:46",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.716389+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 135.6,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 11:10:17",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.721447+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -23.7,
+        "context": {
+          "pair": "EUR/GBP",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 00:31:25",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.727025+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -74.9,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 16:01:42",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.732398+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -70.5,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 05:31:27",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.737755+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -100.2,
+        "context": {
+          "pair": "GBP/AUD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:02:08",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.742996+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 234.8,
+        "context": {
+          "pair": "GBP/NZD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 11:10:17",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.748277+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 204.6,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 12:09:19",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.753472+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 236.1,
+        "context": {
+          "pair": "CHF/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:10:13",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.758822+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 204.5,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:10:13",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.764014+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -55.3,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 12:31:31",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.769161+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -39.4,
+        "context": {
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 12:31:33",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.774379+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -57.8,
+        "context": {
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 12:31:33",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.779961+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -117.8,
+        "context": {
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 12:31:33",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.785240+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 135.3,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:10:27",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.791792+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -70.5,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 12:31:33",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.797536+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -39.6,
+        "context": {
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:31:21",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.803128+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -35.8,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:31:23",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.809069+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -58.1,
+        "context": {
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:31:23",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.814616+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -95.7,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:31:23",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.819926+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 135.2,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:10:14",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.825335+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -74.8,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:31:23",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.830648+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -106.5,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:31:23",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.836327+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -47.4,
+        "context": {
+          "pair": "NZD/USD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:31:24",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.841818+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -110.4,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:31:24",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.847198+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -55.3,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:31:24",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.852501+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -67.4,
+        "context": {
+          "pair": "GBP/USD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 18:31:24",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.858197+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -67.4,
+        "context": {
+          "pair": "GBP/USD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:31:20",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.864071+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -55.3,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:31:21",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.869806+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -110.4,
+        "context": {
+          "pair": "EUR/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:31:21",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.875771+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -39.7,
+        "context": {
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:31:21",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.881245+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -35.8,
+        "context": {
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:31:22",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.886672+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -116.9,
+        "context": {
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:31:22",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.892794+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -95.4,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:31:22",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.898317+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 175.1,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 04:31:30",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.903776+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 236.1,
+        "context": {
+          "pair": "CHF/JPY",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 05:09:53",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.909378+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -74.7,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:31:22",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.914901+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -70.5,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:31:22",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.920417+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -100.2,
+        "context": {
+          "pair": "GBP/AUD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-02 21:31:22",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.926583+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -60.4,
+        "context": {
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 05:31:18",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.932284+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -101.8,
+        "context": {
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 05:31:19",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.937973+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -83.8,
+        "context": {
+          "pair": "NZD/JPY",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 05:31:19",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.943709+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -80.2,
+        "context": {
+          "pair": "GBP/CAD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 05:31:20",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.949328+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -80.5,
+        "context": {
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 05:31:20",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      },
+      {
+        "timestamp": "2026-09-03T08:04:28.955297+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -105.4,
+        "context": {
+          "pair": "GBP/AUD",
+          "direction": "BUY",
+          "vix_vs_20d_avg": 1.0,
+          "closed_at": "2026-09-03 05:31:20",
+          "backfilled": true,
+          "post_freeze_new_data": true
+        }
+      }
+    ]
+  }
+}

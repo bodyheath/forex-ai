@@ -564,6 +564,36 @@ def _settle_book_positions(candidate_id: int, net_pips: float, status: str, log_
             log_fn(f"[vbook:{book_id}] candidate #{candidate_id} settled {status} "
                    f"{dollars:+.2f} -> balance ${state['balance']:,.2f}")
 
+            # 2026-09-04: auto-feed every book's real settled outcomes into
+            # shadow_mode.py, so evidence accumulates automatically as soon
+            # as a book runs -- "mandatory by construction," not dependent on
+            # anyone remembering to wire this in before proposing a book's
+            # config as a real fund-rule change. Deliberately would_fire=True
+            # only (this book DID take this trade) -- would_fire=False
+            # (candidates this book rejected) is NOT logged here: recreating
+            # that retroactively would need this scan's dd_mode, which isn't
+            # persisted per-candidate (CANDIDATE_FIELDS has no dd_mode
+            # column), and reconstructing it unsafely risked silently
+            # misrepresenting a book's real eligibility logic -- worse than
+            # not logging it. What accumulates here is still genuinely
+            # useful: this book's own decisive-outcome distribution, ready to
+            # compare against another book's own would_fire=True distribution
+            # at promotion-check time. Never affects any real decision --
+            # failure here must never break real settlement.
+            try:
+                from src import shadow_mode as _sm
+                _sm.register_rule(
+                    f"vbook_{book_id}",
+                    description=f"Virtual book {book_id}: {BOOKS[book_id].description}",
+                )
+                _sm.record_evaluation(
+                    f"vbook_{book_id}", would_fire=True, outcome=status, net_pips=net_pips,
+                    context={"candidate_id": candidate_id, "pair": pos.get("pair"),
+                             "direction": pos.get("direction")},
+                )
+            except Exception as _sm_exc:
+                log_fn(f"[vbook:{book_id}] shadow_mode logging failed (non-fatal): {_sm_exc}")
+
         if touched:
             _write_csv(_positions_path(book_id), positions, POSITION_FIELDS)
 
