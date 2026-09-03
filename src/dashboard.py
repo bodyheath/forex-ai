@@ -966,6 +966,11 @@ def _ror_kelly_ftmo_sharpe_section() -> str:
 
     return (
         '<section><h2>Risk of Ruin &middot; Kelly &middot; FTMO &middot; Sharpe</h2>'
+        f'<p style="font-size:11px;color:var(--mut);margin-bottom:10px">Risk of Ruin/Kelly/Sharpe '
+        f'use a different population than the Real Fund cards above (all fund history, v1+v2 '
+        f'blended, strict WIN/LOSS only, n={n} here) — a pre-existing risk_of_ruin.py convention, '
+        f'not unified with the v2-only figures elsewhere on this page. FTMO below is unaffected: '
+        f'it reads live, v2-scoped fund state directly.</p>'
         f'<div class="risk-grid" style="margin-bottom:14px">{_cards_html(cards)}</div>'
         '<h3 style="font-size:11px;color:var(--mut);margin:14px 0 8px;text-transform:uppercase;'
         'letter-spacing:.05em">FTMO challenge compliance</h3>'
