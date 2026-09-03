@@ -1019,10 +1019,20 @@ def _virtual_books_section() -> str:
 
 
 def _research_population_section() -> str:
-    """Population-level stats across every research candidate logged, plus
-    the grade decomposition (F/D/C/B/A) with the F-vs-D comparison the health
-    checks track. PARTIAL_WIN classified by net_pips sign, same as the rest
-    of this dashboard."""
+    """Population-level stats across every research candidate logged (a raw
+    funnel count, all statuses, all versions -- deliberately unfiltered), plus
+    the grade decomposition using health_check.py's own strict-decisive
+    definition (v2, post-exit-fix-cutoff, WIN/FULL_WIN/LOSS only -- see
+    get_strict_decisive_grade_population()), not a rough unfiltered query.
+
+    2026-09-04: this table previously computed grade win rates from ALL rows
+    (v1+v2 blended, no date cutoff, PARTIAL_WIN included via net_pips) and
+    showed F beating D at 51%/34% with no significance test -- directionally
+    right but diluted, and easy to misread as a *different* finding from
+    health_check.py's own F-vs-D result (47.3%/19.5%, p=1.8e-8) when it's the
+    same finding measured more loosely. Now calls the exact same population
+    builder health_check.py uses, so this panel and that check can never
+    silently disagree."""
     try:
         import csv as _csv
         rt_csv = config.DATA_DIR / "research_trades.csv"
@@ -1035,17 +1045,6 @@ def _research_population_section() -> str:
     if not rows:
         return ""
 
-    def _win(r):
-        status = r.get("status")
-        if status in ("WIN", "FULL_WIN"):
-            return True
-        if status == "PARTIAL_WIN":
-            try:
-                return float(r.get("net_pips") or 0) > 0
-            except (TypeError, ValueError):
-                return False
-        return False
-
     total = len(rows)
     status_bkt: dict = {}
     for r in rows:
@@ -1056,43 +1055,71 @@ def _research_population_section() -> str:
         for k, v in sorted(status_bkt.items(), key=lambda x: -x[1])
     )
 
-    closed = [r for r in rows if r.get("status") in ("WIN", "LOSS", "PARTIAL_WIN", "FULL_WIN")]
-    grade_bkt: dict = {}
-    for r in closed:
-        g = r.get("grade") or "?"
-        b = grade_bkt.setdefault(g, [0, 0])
-        b[0] += _win(r)
-        b[1] += 1
-    grade_rows = []
-    for g in sorted(grade_bkt):
-        w, n = grade_bkt[g]
-        wr = round(w / n * 100) if n else 0
-        cls = "pos" if wr >= 50 else "neg"
-        grade_rows.append(
-            f'<tr><td>{html.escape(g)}</td><td class="num">{n}</td>'
-            f'<td class="num">{w}</td><td class="num {cls}">{wr}%</td></tr>'
-        )
+    from src import health_check as _hc
+    try:
+        decisive = _hc.get_strict_decisive_grade_population()
+    except Exception:
+        decisive = None
 
+    grade_html = ""
     fd_note = ""
-    if "F" in grade_bkt and "D" in grade_bkt:
-        wf, nf = grade_bkt["F"]
-        wd, nd = grade_bkt["D"]
-        if nf and nd:
-            wrf, wrd = wf / nf * 100, wd / nd * 100
-            verdict = ("F trades underperform D, as the grade ordering predicts" if wrf < wrd
-                       else "F trades are NOT underperforming D — grade ordering may need review")
-            fd_note = (f'<p style="font-size:11px;color:var(--mut);margin-top:10px">F-vs-D: '
-                       f'Grade F win rate {wrf:.0f}% (n={nf}) vs Grade D {wrd:.0f}% (n={nd}) '
-                       f'— {verdict}</p>')
+    if decisive is not None and not decisive.empty:
+        grade_bkt: dict = {}
+        for grade in _hc._GRADE_ORDER:
+            g = decisive[decisive["grade"].astype(str) == grade]
+            n = len(g)
+            if n < _hc._GRADE_MIN_N:
+                continue  # thin sample -- excluded, same bar health_check.py uses
+            wins = int((g["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN"])).sum())
+            grade_bkt[grade] = (wins, n)
+
+        grade_rows = []
+        for g in _hc._GRADE_ORDER:
+            if g not in grade_bkt:
+                continue
+            w, n = grade_bkt[g]
+            wr = round(w / n * 100) if n else 0
+            cls = "pos" if wr >= 50 else "neg"
+            grade_rows.append(
+                f'<tr><td>{html.escape(g)}</td><td class="num">{n}</td>'
+                f'<td class="num">{w}</td><td class="num {cls}">{wr}%</td></tr>'
+            )
+        if grade_rows:
+            grade_html = (
+                f'<p style="font-size:11px;color:var(--mut);margin:14px 0 8px">Strict-decisive '
+                f'grade population ({int(decisive.shape[0])} candidates: v2 only, closed on/after '
+                f'the {_hc._GRADE_ORDERING_CUTOFF} UTC exit-logic-fix, WIN/FULL_WIN/LOSS only -- '
+                f'same definition health_check.py::check_grade_ordering() uses; buckets below '
+                f'{_hc._GRADE_MIN_N} decisive trades are hidden, not shown as unstable noise).</p>'
+                '<table><tr><th>Grade</th><th>Decisive</th><th>Wins</th><th>Win rate</th></tr>'
+                + "".join(grade_rows) + "</table>"
+            )
+
+        present = [g for g in _hc._GRADE_ORDER if g in grade_bkt]
+        for i in range(len(present) - 1):
+            better, worse = present[i], present[i + 1]
+            b_wins, b_n = grade_bkt[better]
+            w_wins, w_n = grade_bkt[worse]
+            result = _hc._ztest_worse_beats_better(b_wins, b_n, w_wins, w_n)
+            if result is None:
+                continue
+            p_value, worse_wr, better_wr = result
+            if worse_wr > better_wr and p_value < 0.05:
+                fd_note = (
+                    f'<p style="font-size:11px;color:var(--amber);margin-top:10px">'
+                    f'Grade ordering inverted — grade {worse} (n={w_n}, WR={worse_wr*100:.1f}%) '
+                    f'significantly outperforms grade {better} (n={b_n}, WR={better_wr*100:.1f}%), '
+                    f'p={p_value:.4g}. See project_fvsd_reinvestigation_sep2026 memory for the '
+                    f'full investigation.</p>'
+                )
 
     return (
         '<section><h2>Research Population &amp; Grade Decomposition</h2>'
         f'<p style="font-size:11px;color:var(--mut);margin-bottom:10px">{total} research '
-        f'candidates logged — every candidate the system evaluates, not just the ones that '
-        f'became real trades.</p>'
+        f'candidates logged (all statuses, all versions) — every candidate the system evaluates, '
+        f'not just the ones that became real trades.</p>'
         f'<div class="grid" style="margin-bottom:14px">{status_html}</div>'
-        '<table><tr><th>Grade</th><th>Closed</th><th>Wins</th><th>Win rate</th></tr>'
-        + "".join(grade_rows) + "</table>"
+        + grade_html
         + fd_note + "</section>"
     )
 
