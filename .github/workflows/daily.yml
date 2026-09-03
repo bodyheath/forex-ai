@@ -114,6 +114,17 @@ jobs:
             # PROCEEDING" instead of being blocked. risk_profile.json has the
             # same staleness exposure for the same reason.
             git add data/run_guard.json data/risk_profile.json 2>/dev/null || true
+            # 2026-09-03: same class of bug as run_guard.json/risk_profile.json
+            # above -- src/virtual_books.py writes data/virtual_books/*.json and
+            # *.csv on every full-mode run (evaluate_candidates() is called
+            # unconditionally from the main pipeline), but this curated list
+            # never included that directory, so any book activity from a
+            # "full"-mode run was silently discarded, never reaching origin.
+            # Found while auditing the dashboard's all-books-at-$10,000 display
+            # against raw state -- confirmed via the GitHub API that origin has
+            # data/virtual_books/candidates.csv (persisted via intraday.yml's
+            # wildcard `git add data/`) but no book state/position files at all.
+            git add data/virtual_books/ 2>/dev/null || true
             git add docs/ 2>/dev/null || true
           }
 
