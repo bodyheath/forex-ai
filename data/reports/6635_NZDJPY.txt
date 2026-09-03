@@ -1,0 +1,22 @@
+```
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with 4H double-top reversal pattern and converging ribbon suggesting trend exhaustion; fundamentals support JPY strength but positioning lacks conviction.
+RISK_FACTORS: [1) MTF misalignment (M/W/D all NEUTRAL, 4H BUY isolated at 0/3 confidence) creates no directional consensus — trade violates core rule requiring W+D agreement; 2) D1 T_sig=NEUTRAL_3 baseline + 4H double_top bearish pattern offset by D1 pin_bar_at_key_level bullish — conflicting signals lower probability]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily both NEUTRAL (not aligned); 4H BUY signal insufficient to override lack of weekly+daily agreement. Confidence 4/10 is below 7 threshold. No valid setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**DIAGNOSTIC NOTES:**
+- **MTF FAILURE (CRITICAL):** Weekly=NEUTRAL, Daily=NEUTRAL, 4H=BUY. Rule requires both W AND D to agree on

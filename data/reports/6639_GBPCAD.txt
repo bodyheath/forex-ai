@@ -1,0 +1,23 @@
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + D1 BUY signal + 4H oversold RSI(19.3) suggest corrective bounce in GBP/CAD, but weak MTF alignment (only 2/3) and institutional GBP unwinding limit conviction.
+RISK_FACTORS: MTF agreement insufficient (W:NEUTRAL + D:BUY fails 3/3 weekly+daily rule; 4H alone does not override); GBP COT unwinding mid-range suggests institutional conviction fading into strength.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.8700
+ENTRY_TRIGGER_REASON: Pullback to SMA50(1.8846) support zone with confirmation of higher low + D1 pin bar pattern validity retest
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Violation (Critical):** Weekly=NEUTRAL, Daily=BUY. The system requires *both* weekly AND daily to agree on direction for TRADE_THIS=YES. You have 2/3 agreement (D+4H both BUY), but W is neutral. This fails the "weekly+daily both agree" gate → **TRADE_THIS=

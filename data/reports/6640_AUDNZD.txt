@@ -1,0 +1,21 @@
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fib 61.8% resistance + D1 RSI 61.9 (overbought in mixed MTF) + institutional AUD short-building creates bearish reversal setup, but weak ribbon alignment and mixed weekly signal limit conviction.
+RISK_FACTORS: MTF conf=2/3 (W:NEUTRAL weakens sell case — not both weekly+daily agree on SELL); AUD positioning mid-range, not extreme conviction despite 23% short.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.2130
+ENTRY_TRIGGER_REASON: Break below pin bar low; confirmation of reversal from Fib 61.8% resistance.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+**RATIONALE:**
+- **MTF rule violation**: W:NEUTRAL + D:SELL = 2/3 agreement (conf=65%) fails the hard threshold that *both* weekly AND daily must agree. Despite D1/4H alignment (SELL), the weekly's neutral stance introduces material uncertainty.
+- **Technical**: D1 RSI=61.9 in an uptrend context (price > SMA50 > SMA200, golden cross) falls in the 45–

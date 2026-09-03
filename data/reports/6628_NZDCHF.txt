@@ -1,0 +1,24 @@
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pinbar at key level + converging ribbon signals trend exhaustion, but MTF disagreement (W:NEUTRAL, D:SELL, 4H:BUY) blocks high-confidence trade; CHF crowded short positioning unwinding adds reversal risk.
+RISK_FACTORS: [1. MTF discord — weekly neutral + 4H bullish contradict daily sell signal, confidence capped at 5; 2. CHF COT unwinding near 1y crowded-short top — institutional positioning reversal suggests CHF strength fade imminent, undermining NZD/CHF bearish thesis]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF confluence <2/3 (D:SELL vs W:NEUTRAL + 4H:BUY) violates MTF rule; confidence 5 < 7 threshold; R:R data unavailable.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1 RSI=60.8 in confirmed uptrend (price>SMA50>SMA200, golden cross) → standard tier

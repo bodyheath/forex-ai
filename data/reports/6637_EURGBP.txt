@@ -1,0 +1,24 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 50% Fib + D1 SELL signal + Daily oversold RSI in confirmed downtrend (W:BUY / D:SELL = 2/3 MTF agreement) supports near-term short into crowded EUR short positioning with unwinding risk.
+RISK_FACTORS: [1. MTF only 2/3 agreement (Weekly BUY vs Daily SELL) — conflicting multi-timeframe direction weakens conviction below 7/10 threshold. 2. EUR COT unwinding from extreme short (14% net) — institutional reduction of shorts signals potential reversal squeeze; GBP also unwinding (59%) — both currencies reducing conviction simultaneously increases reversal risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8555
+ENTRY_TRIGGER_REASON: Break below SMA50 (0.8555) with confirmation; near-term support hold would invalidate at 0.8574 (50% Fib).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**CONFIDENCE = 6/10 (below 7 threshold → NO trade):**
+- **Technical:** T_sig=SELL_5 + pin

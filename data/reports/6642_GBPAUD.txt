@@ -1,0 +1,26 @@
+PAIR: GBP/AUD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key support with RSI oversold in downtrend + weekly/4H alignment supports reversal bounce, but bearish divergence and ribbon still aligned bear create reversal risk.
+RISK_FACTORS: [1. Bearish RSI divergence (7p/4pt) conflicts with BUY setup — potential false breakout. 2. D1 ribbon ALIGNED_BEAR (5/5 stacked) indicates trend continuation risk; reversal incomplete until ribbon starts to converge or flip.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.8815
+ENTRY_TRIGGER_REASON: Support at range swing low (SL=1.88153); entry on bounce confirmation above pin bar low with RSI <30.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (6/10):**
+- D1 RSI=37.5 in confirmed downtrend (W:BUY + D:NEUTRAL = mixed, fallback to standard tiers): 35–45 range = 5–6 BUY baseline.
+- T_sig=BUY_3 (pre-computed baseline).
+- 4
