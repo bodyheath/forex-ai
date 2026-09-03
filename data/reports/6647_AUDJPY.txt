@@ -1,0 +1,16 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key resistance with D1 RSI overbought (64) conflicts with aligned bullish ribbon and 4H oversold bounce (RSI 13.8), creating mixed-direction setup; MTF lacks consensus (W:SELL vs 4H:BUY), lowering tradability.
+RISK_FACTORS: [1] MTF disagreement (weekly SELL vs 4H BUY, only 1/3 confluence) violates core MTF rule — trade confidence capped below 7 regardless of setup quality. [2] T_sig baseline=SELL_3 (weak) undermined by ALIGNED_BULL ribbon (5/5 EMAs fanning) and extreme 4H oversold (RSI 13.8) suggesting institutional demand into dip — potential false signal or early reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: CONDITIONAL_WAIT
+ENTRY_TRIGGER_PRICE: 114.648 (FIB SH resistance) OR 113.50 (SMA50 pullback)
+ENTRY_TRIGGER_REASON: MTF rule violation blocks entry now. If weekly confirms SELL (price breaks below 113.50 and W shifts to consistent SELL), or if 4H breaks above 115.20 with D1 RSI diverg

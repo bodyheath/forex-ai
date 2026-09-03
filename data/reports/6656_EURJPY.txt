@@ -1,0 +1,28 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 78.6% Fib (185.69) + bearish 4H double top conflicts with bullish ribbon and EUR crowded short reversal risk, creating ambiguous confluence.
+RISK_FACTORS: ['MTF disagree (W:SELL, D:NEUTRAL, 4H:BUY = 1/3 conf): no clear cross-timeframe consensus; entry will be counter-daily trend', 'EUR net SHORT at 14% crowded extreme with UNWINDING COT momentum = high institutional reversal-flip risk; shorting into unwinding position is counter-positioning']
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: Confidence below 7.0 threshold; MTF agreement fails (only 1/3 timescales agree on direction).
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Veto:**  
+Weekly=SELL, Daily=NEUTRAL, 4H=BUY → only 1/3 agree. Confidence 1/3 = 33% (fail). **This alone blocks the trade** per MTF hard rule.
+
+**Technical (Score

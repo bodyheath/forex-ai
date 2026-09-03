@@ -1,0 +1,23 @@
+```
+PAIR: GBP/NZD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with converging ribbon suggests trend weakening; NZD rate falling supports GBP weakness, but mixed MTF alignment and neutral RSI limit conviction.
+RISK_FACTORS: [1. MTF disagreement (M:SELL vs W/D:NEUTRAL conf=0/3) undermines directional bias — entry premature without breakout confirmation. 2. Ribbon converging signals reversal risk; price trapped in 2.2819–2.3534 range with no clear momentum (OSC=NONE, MACDh near zero on both D1/4H).]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 2.2819
+ENTRY_TRIGGER_REASON: Break below range support at SL (2.2819) with D1 RSI <40 confirms downtrend resumption.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+```
+
+**RATIONALE:**
+
+- **MTF CRITICAL FAILURE:** M1 = SELL, but W/D/4H = NEUTRAL → conf = 0/3 (only monthly agrees). Hard rule requires W + D both agree for valid directional bias. This alone triggers TRADE_THIS: NO

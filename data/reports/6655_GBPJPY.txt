@@ -1,0 +1,24 @@
+PAIR: GBP/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Multi-timeframe conflict (M/W bearish, D neutral, 4H bullish) with converging ribbon signals weakening uptrend; pin bar at key level offers tactical short bias but lacks conviction.
+RISK_FACTORS: (1) D1 T_sig=NEUTRAL_3 contradicts directional conviction; (2) MTF agreement only 1/3 (4H bullish conflicts with weekly/monthly sells).
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF confluence fails (W:SELL + D:NEUTRAL + 4H:BUY = 1/3 agreement; threshold requires ≥2/3 both weekly AND daily aligned). Confidence 5 < floor 7. R:R uncomputed (no SL/TP supplied); TECHNICAL_SCORE 4 is neutral bias insufficient for directional trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL (4/10):**
+- **D1 RSI=53.4** in confirmed UPTREND (price > SMA50 > SMA200): neutral zone (45–65

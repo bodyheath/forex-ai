@@ -1,0 +1,25 @@
+PAIR: EUR/GBP
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 7/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 50% Fibonacci + oversold EUR positioning unwinding creates contrarian long setup, but mixed MTF alignment (W:BUY vs D:SELL) limits confidence.
+RISK_FACTORS: [1] MTF conflict — weekly BUY vs daily SELL (conf=2/3) violates core entry rule; daily trend still mixed/range. [2] EUR COT positioning unwinding from crowded short (14% net SHORT) — reversal may be underway but lacks confirmation from oscillators (OSC=NONE, RSI neutral at 55.8, MACD flat).
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 0.8560
+ENTRY_TRIGGER_REASON: Wait for pullback to SMA50 (0.8555) + RSI <45 on D1 to confirm reversal off crowded EUR short positioning before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**REASONING:**
+
+**MTF VETO:** Weekly BUY + Daily SELL = 2/3 agreement only. **Hard rule states: both weekly AND daily must agree.** This pair fails. TRADE_THIS must be NO despite attractive confluence.
+
+**Why no immediate buy despite bull
