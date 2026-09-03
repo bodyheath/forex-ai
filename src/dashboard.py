@@ -912,11 +912,109 @@ def _research_analytics_section() -> str:
     )
 
 
-def _group_header(title: str, subtitle: str = "") -> str:
+def _group_header(title: str, subtitle: str = "", anchor: str = "") -> str:
+    id_attr = f' id="{html.escape(anchor)}"' if anchor else ""
     return (
-        f'<div class="group-header"><span class="group-title">{html.escape(title)}</span>'
+        f'<div class="group-header"{id_attr}><span class="group-title">{html.escape(title)}</span>'
         + (f'<span class="group-sub">{html.escape(subtitle)}</span>' if subtitle else "")
         + "</div>"
+    )
+
+
+def _grade_inversion_status_card() -> str:
+    """Compact, curated system-health card: is the grade ladder currently
+    inverted (a worse grade beating a better one)? Reuses the exact same
+    strict-decisive population and z-test as health_check.py and the full
+    grade table in _research_population_section() -- see that function's
+    docstring and project_fvsd_reinvestigation_sep2026 memory for the full
+    investigation behind this."""
+    try:
+        from src import health_check as _hc
+        decisive = _hc.get_strict_decisive_grade_population()
+    except Exception:
+        return ""
+    if decisive is None or decisive.empty:
+        return _status_card("Grade Ordering", "—", "Not enough strict-decisive data yet", "mut")
+
+    buckets = {}
+    for grade in _hc._GRADE_ORDER:
+        g = decisive[decisive["grade"].astype(str) == grade]
+        n = len(g)
+        if n < _hc._GRADE_MIN_N:
+            continue
+        wins = int((g["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN"])).sum())
+        buckets[grade] = (wins, n)
+
+    present = [g for g in _hc._GRADE_ORDER if g in buckets]
+    for i in range(len(present) - 1):
+        better, worse = present[i], present[i + 1]
+        b_wins, b_n = buckets[better]
+        w_wins, w_n = buckets[worse]
+        result = _hc._ztest_worse_beats_better(b_wins, b_n, w_wins, w_n)
+        if result is None:
+            continue
+        p_value, worse_wr, better_wr = result
+        if worse_wr > better_wr and p_value < 0.05:
+            return _status_card(
+                "Grade Ordering", "INVERTED",
+                f"Grade {worse} (WR {worse_wr*100:.0f}%) beats grade {better} (WR {better_wr*100:.0f}%), "
+                f"p={p_value:.2g} — see Full Diagnostics below",
+                "red",
+            )
+    return _status_card("Grade Ordering", "OK", "No significant inversion detected", "green")
+
+
+def _calibration_status_card() -> str:
+    """Compact, curated system-health card: confidence calibration's
+    'benched' status -- built, measured, deliberately not wired to any live
+    decision yet. See _calibration_section() in Full Diagnostics for the
+    full bucket table."""
+    try:
+        from src import confidence_calibration as _cc
+        table = _cc.build_calibration_table()
+    except Exception:
+        return ""
+    if not table:
+        return _status_card("Confidence Calibration", "—", "Not enough closed research-trade history yet", "mut")
+    n_active = len([k for k in table if k != "_overall"])
+    return _status_card(
+        "Confidence Calibration", "BENCHED",
+        f"{n_active} bucket(s) measured — zero live callers, held back deliberately until proven "
+        f"out-of-sample (see Full Diagnostics below)",
+        "amber",
+    )
+
+
+def _shadow_mode_status_card() -> str:
+    """Compact, curated system-health card: are any candidate grading/gating
+    rules currently under silent shadow evaluation?"""
+    try:
+        from src import shadow_mode as _sm
+        rules = _sm.list_rules()
+    except Exception:
+        return ""
+    if not rules:
+        return _status_card("Shadow-Mode Rules", "NONE", "No candidate rules in shadow evaluation", "mut")
+    ready = 0
+    for name in rules:
+        try:
+            if _sm.check_promotion_readiness(name).get("ready"):
+                ready += 1
+        except Exception:
+            continue
+    return _status_card(
+        "Shadow-Mode Rules", f"{len(rules)} tracked",
+        f"{ready} ready for a promotion conversation" if ready else "None ready yet",
+        "green" if ready else "blue",
+    )
+
+
+def _status_card(label: str, value: str, detail: str, color: str) -> str:
+    return (
+        f'<div class="risk-card"><div class="k">{html.escape(label)}</div>'
+        f'<div class="v" style="color:var(--{color});font-size:15px">{html.escape(value)}</div>'
+        f'<div style="font-size:11px;color:var(--mut);margin-top:6px;line-height:1.4">'
+        f'{html.escape(detail)}</div></div>'
     )
 
 
