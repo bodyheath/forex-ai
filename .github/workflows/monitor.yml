@@ -111,6 +111,12 @@ jobs:
             git add data/pair_statistics.json         2>/dev/null || true
             git add data/watchlist_cache.json         2>/dev/null || true
             git add data/dashboard.html               2>/dev/null || true
+            # 2026-09-03: src/virtual_books.py's settle_open_candidates() (which
+            # closes out any book's open position on a stop/target hit) is called
+            # from this workflow, but data/virtual_books/ was never in this list --
+            # same missing-staging bug class as run_guard.json/risk_profile.json
+            # before them, found while auditing the dashboard's virtual-books panel.
+            git add data/virtual_books/               2>/dev/null || true
             git add docs/                             2>/dev/null || true
           }
 
