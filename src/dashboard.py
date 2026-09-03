@@ -444,7 +444,14 @@ def _equity_curve(rows) -> str:
         pts.append(f"{x:.1f},{y:.1f}")
     zero_y = h - pad - (0 - lo) / span * (h - 2 * pad)
     colour = "var(--green)" if seq[-1] >= 0 else "var(--red)"
-    return (
+    caption = (
+        f'<p style="font-size:11px;color:var(--mut);margin-bottom:8px">Uses a fifth population '
+        f'on this page (n={n}): all fund history, v1+v2 blended, status in WIN/LOSS/BREAKEVEN '
+        f'only (no PARTIAL_WIN, no EXPIRED), gross r_multiple (never net-corrected) — a pre-'
+        f'existing chart, correct on its own terms but not the same number as the Real Fund '
+        f'cards, the grade table, or RoR/Kelly/Sharpe above.</p>'
+    )
+    return caption + (
         f'<svg viewBox="0 0 {w} {h}" width="100%" height="{h}">'
         f'<line x1="{pad}" y1="{zero_y:.1f}" x2="{w-pad}" y2="{zero_y:.1f}" stroke="var(--line)" stroke-dasharray="4 4"/>'
         f'<polyline points="{" ".join(pts)}" fill="none" stroke="{colour}" stroke-width="2"/>'
