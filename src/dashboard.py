@@ -41,44 +41,44 @@ def _session_time(pair: str) -> tuple:
 
 _MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,'Cascadia Mono','Liberation Mono',monospace"
 
-_CSS = f"""
-:root{{--bg:#05070a;--card:#0d1117;--line:#1c232d;--fg:#dbe4ee;--mut:#6b7686;
---green:#00e08c;--red:#ff4d4f;--amber:#e0a930;--blue:#4c9eff}}
-*{{box-sizing:border-box}}
-body{{margin:0;background:var(--bg);color:var(--fg);
-font:12.5px/1.45 {_MONO};padding:18px 22px 40px;letter-spacing:.01em}}
-h1{{font-size:17px;margin:0 0 2px;font-weight:700;letter-spacing:.02em;text-transform:uppercase}}
-.sub{{color:var(--mut);margin:0 0 14px;font-size:11px}}
+_CSS = """
+:root{--bg:#05070a;--card:#0d1117;--line:#1c232d;--fg:#dbe4ee;--mut:#6b7686;
+--green:#00e08c;--red:#ff4d4f;--amber:#e0a930;--blue:#4c9eff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+font:12.5px/1.45 __MONO__;padding:18px 22px 40px;letter-spacing:.01em}
+h1{font-size:17px;margin:0 0 2px;font-weight:700;letter-spacing:.02em;text-transform:uppercase}
+.sub{color:var(--mut);margin:0 0 14px;font-size:11px}
 
 /* ── Top ticker strip ────────────────────────────────────────────────────── */
-.ticker{{display:flex;flex-wrap:wrap;gap:0;background:var(--card);
-  border:1px solid var(--line);border-radius:6px;margin-bottom:18px;overflow:hidden}}
-.tick{{flex:1 1 110px;padding:8px 14px;border-right:1px solid var(--line);min-width:100px}}
-.tick:last-child{{border-right:none}}
-.tick-k{{display:block;color:var(--mut);font-size:9.5px;text-transform:uppercase;
-  letter-spacing:.08em;margin-bottom:3px}}
-.tick-v{{display:block;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}}
+.ticker{display:flex;flex-wrap:wrap;gap:0;background:var(--card);
+  border:1px solid var(--line);border-radius:6px;margin-bottom:18px;overflow:hidden}
+.tick{flex:1 1 110px;padding:8px 14px;border-right:1px solid var(--line);min-width:100px}
+.tick:last-child{border-right:none}
+.tick-k{display:block;color:var(--mut);font-size:9.5px;text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:3px}
+.tick-v{display:block;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
 
 /* ── Group headers (real fund / virtual books / diagnostics / trade log) ──── */
-.group-header{{display:flex;align-items:baseline;gap:10px;margin:26px 0 10px;
-  padding-bottom:6px;border-bottom:2px solid var(--line)}}
-.group-header:first-of-type{{margin-top:4px}}
-.group-title{{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--blue)}}
-.group-sub{{color:var(--mut);font-size:11px}}
+.group-header{display:flex;align-items:baseline;gap:10px;margin:26px 0 10px;
+  padding-bottom:6px;border-bottom:2px solid var(--line)}
+.group-header:first-of-type{margin-top:4px}
+.group-title{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--blue)}
+.group-sub{color:var(--mut);font-size:11px}
 
-.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px;margin-bottom:18px}}
-.card{{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 12px}}
-.card .k{{color:var(--mut);font-size:9.5px;text-transform:uppercase;letter-spacing:.06em}}
-.card .v{{font-size:19px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}}
-section{{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:14px}}
-section h2{{font-size:12px;margin:0 0 10px;color:var(--fg);text-transform:uppercase;
-  letter-spacing:.06em;font-weight:700}}
-table{{width:100%;border-collapse:collapse;font-size:11.5px}}
-th,td{{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);white-space:nowrap}}
-th{{color:var(--mut);font-weight:600;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em}}
-td.num{{text-align:right;font-variant-numeric:tabular-nums}}
-.pill{{padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700}}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.card .k{color:var(--mut);font-size:9.5px;text-transform:uppercase;letter-spacing:.06em}
+.card .v{font-size:19px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
+section{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:14px}
+section h2{font-size:12px;margin:0 0 10px;color:var(--fg);text-transform:uppercase;
+  letter-spacing:.06em;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--mut);font-weight:600;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.pill{padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700}
 .WIN{background:rgba(63,185,80,.15);color:var(--green)}
 .LOSS{background:rgba(248,81,73,.15);color:var(--red)}
 .OPEN{background:rgba(88,166,255,.15);color:var(--blue)}
