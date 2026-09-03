@@ -1,7 +1,15 @@
 name: Deploy GitHub Pages
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
   workflow_dispatch:
+
+concurrency:
+  group: deploy-pages
+  cancel-in-progress: true
 
 jobs:
   deploy:
