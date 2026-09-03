@@ -93,34 +93,16 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           stage_files() {
-            # Stage only specific data files — never stage workflow/code changes
-            git add data/trades.csv                   2>/dev/null || true
-            git add data/research_trades.csv          2>/dev/null || true
-            git add data/fund_state.json              2>/dev/null || true
-            git add data/monitor_log.json             2>/dev/null || true
-            git add data/heartbeat.json               2>/dev/null || true
-            git add data/hot_zone_alerts.json         2>/dev/null || true
-            git add data/milestone_log.json           2>/dev/null || true
-            git add data/market_reopen.json           2>/dev/null || true
-            git add data/run_guard.json               2>/dev/null || true
-            git add data/discord_dashboard.json       2>/dev/null || true
-            git add data/partial_profit_state.json    2>/dev/null || true
-            git add data/online_model_meta.json       2>/dev/null || true
-            git add data/online_model.pkl             2>/dev/null || true
-            git add data/trade_features.csv           2>/dev/null || true
-            git add data/pair_statistics.json         2>/dev/null || true
-            git add data/watchlist_cache.json         2>/dev/null || true
-            git add data/dashboard.html               2>/dev/null || true
-            # 2026-09-03: src/virtual_books.py's settle_open_candidates() (which
-            # closes out any book's open position on a stop/target hit) is called
-            # from this workflow, but data/virtual_books/ was never in this list --
-            # same missing-staging bug class as run_guard.json/risk_profile.json
-            # before them, found while auditing the dashboard's virtual-books panel.
-            git add data/virtual_books/               2>/dev/null || true
-            # 2026-09-04: same missing-staging bug class as data/virtual_books/
-            # above -- shadow_rules.json isn't inside that directory.
-            git add data/shadow_rules.json            2>/dev/null || true
-            git add docs/                             2>/dev/null || true
+            # 2026-09-04: replaced a curated per-file list with the same
+            # wildcard intraday.yml has always safely used -- still scoped
+            # to data/ and docs/ only, so this still never stages
+            # workflow/source changes. Third recurrence of the same bug
+            # (run_guard.json/risk_profile.json, then data/virtual_books/,
+            # then shadow_rules.json, each silently discarded from this
+            # workflow because a curated list can only include files someone
+            # remembered to add). A wildcard structurally can't have that
+            # failure mode.
+            git add data/ docs/ 2>/dev/null || true
           }
 
           # 2026-08-29: rewritten from git-pull-rebase (with a --no-rebase
