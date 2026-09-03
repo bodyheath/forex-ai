@@ -2241,6 +2241,16 @@ def run(log=print) -> dict:
     log(f"[monitor] Fund pairs: {fund_pairs}")
 
     if not _fund_open and not _res_open:
+        # Virtual books (src/virtual_books.py) can still have an open
+        # candidate here even with zero real/research trades open (rare, but
+        # possible) -- settle against the on-disk price cache rather than
+        # skip entirely, since the real-trade early-exit below never runs
+        # again until something reopens.
+        try:
+            from src import virtual_books as _vbooks_early
+            _vbooks_early.settle_open_candidates(log_fn=log)
+        except Exception as _vbooks_early_exc:
+            log(f"[vbooks] settlement failed (non-fatal): {_vbooks_early_exc}")
         result["skipped_reason"] = "no_open_trades"
         log("Monitor: no open trades — skipping — zero API calls used.")
         _write_monitor_log(result)
@@ -2260,6 +2270,21 @@ def run(log=print) -> dict:
     _fund_pairs = sorted({r.get("pair", "") for r in _fund_open if r.get("pair")})
     _res_pairs  = sorted({r.get("pair", "") for r in _res_open  if r.get("pair")})
     all_pairs   = sorted({r.get("pair", "") for r in all_open   if r.get("pair")})
+
+    # Fold in pairs with an open virtual-book candidate (src/virtual_books.py)
+    # that isn't already covered by an open real/research trade on the same
+    # pair, so it still gets a fresh price from this same batched fetch
+    # instead of falling back to a possibly-stale on-disk cache.
+    _vbook_pairs: list = []
+    try:
+        from src import virtual_books as _vbooks_pairs
+        _vbook_pairs = _vbooks_pairs.get_open_candidate_pairs()
+        _extra_vbook_pairs = [p for p in _vbook_pairs if p not in all_pairs]
+        if _extra_vbook_pairs:
+            all_pairs = sorted(set(all_pairs) | set(_extra_vbook_pairs))
+    except Exception as _vbooks_pairs_exc:
+        log(f"[vbooks] pair lookup failed (non-fatal): {_vbooks_pairs_exc}")
+
     log(
         f"Monitor: {len(_fund_pairs)} fund pair(s) + {len(_res_pairs)} research pair(s) — "
         f"{len(all_pairs)} unique pairs — fetching via Yahoo Finance"
@@ -2464,6 +2489,17 @@ def run(log=print) -> dict:
                 pass
     except Exception as _pend_exc:
         log(f"[pending] Pending check failed: {_pend_exc}")
+
+    # Virtual books (src/virtual_books.py): settle any open candidate whose
+    # pair now has a fresh price from the batch above, or that has expired.
+    # Passes this run's own just-fetched `prices` dict rather than letting
+    # settle_open_candidates() fall back to its own (possibly stale) disk
+    # cache read -- zero extra network calls either way.
+    try:
+        from src import virtual_books as _vbooks_settle
+        _vbooks_settle.settle_open_candidates(log_fn=log, prices=prices)
+    except Exception as _vbooks_settle_exc:
+        log(f"[vbooks] settlement failed (non-fatal): {_vbooks_settle_exc}")
 
     # ── Step 2: Ensure cascade levels + zone classification ──────────────────
     for i, row in enumerate(_fund_open):

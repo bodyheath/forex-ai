@@ -5691,6 +5691,41 @@ def _send_telegram_summary(
     # so it can be applied in the yes_trades filter immediately.
     _dd_mode: str = (risk_data or {}).get("risk_state", {}).get("drawdown_mode", "normal")
 
+    # ── Virtual books ──────────────────────────────────────────────────────
+    # 2026-09-03: parallel rule-configuration backtesting (src/virtual_books.py).
+    # Runs right here because _quality_grades/_dd_mode/_trade_conf_thr are all
+    # already fully computed at this exact point -- every input below is
+    # reused, not recomputed, so this costs zero additional LLM/API calls.
+    # Placed BEFORE the real fund-loop starts (~line 6004 at the time of
+    # writing) so nothing it does can be confused with, or affect, the real
+    # trade_this decision that follows. Never touches trades.csv,
+    # fund_state.json, or risk_profile.json -- see that module's own
+    # docstring for the full design.
+    try:
+        from src import virtual_books as _vbooks
+        _vbooks_result = _vbooks.evaluate_candidates(
+            deep_results, _quality_grades, _dd_mode, _trade_conf_thr,
+            eff_conf_fn=_eff_conf, dd_allows_fn=_dd_allows_trade,
+            scan_mode=scan_mode, date_str=date,
+            log_fn=lambda m: _log_line(log, m),
+        )
+        _log_line(log, (
+            f"[vbooks] {_vbooks_result['new_candidates']} new candidate(s) — "
+            f"opened: {_vbooks_result['opened_by_book']}"
+        ))
+        if scan_mode == "full":
+            for _vb_id, _vb_summary in _vbooks.get_all_summaries().items():
+                _log_line(log, (
+                    f"[vbooks] {_vb_id}: ${_vb_summary['balance']:,.2f} "
+                    f"({_vb_summary['return_pct']:+.2f}%) · "
+                    f"dd={_vb_summary['current_drawdown_pct']:.2f}% · "
+                    f"{_vb_summary['wins']}W/{_vb_summary['losses']}L "
+                    f"({_vb_summary['win_rate']:.0f}% of {_vb_summary['decisive']} decisive) · "
+                    f"{_vb_summary['open_positions']} open"
+                ))
+    except Exception as _vbooks_exc:
+        _log_line(log, f"[vbooks] evaluate_candidates failed (non-fatal): {_vbooks_exc}")
+
     # Hard block: compute not-viable pairs (net R:R after costs below check_viability()'s
     # own min_net_rr, currently 1.5 — using its own "viable" field rather than a separately
     # hardcoded cutoff here, since a previous 1.3 cutoff in this exact spot silently diverged
