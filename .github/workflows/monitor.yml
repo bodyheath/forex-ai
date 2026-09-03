@@ -63,6 +63,19 @@ jobs:
           DISCORD_WEBHOOK_CRITICAL: ${{ secrets.DISCORD_WEBHOOK_CRITICAL }}
         run: python daily.py
 
+      - name: Copy dashboard to GitHub Pages
+        # 2026-09-03: monitor.yml runs every 30 minutes -- far tighter than
+        # daily.yml/intraday.yml's ~5x/day combined -- and daily.py's monitor
+        # branch now regenerates data/dashboard.html on this same cadence.
+        # Copying it into docs/ here is what actually gets that freshness to
+        # the live Pages site; if: always() matches the same fix applied to
+        # daily.yml/intraday.yml's identical step.
+        if: always()
+        run: |
+          mkdir -p docs
+          cp data/dashboard.html docs/index.html
+          cp data/trades.csv docs/trades.csv
+
       - name: Commit monitor state
         id: commit_monitor
         # 2026-08-26: if: always() -- same rationale as daily.yml/intraday.yml.
