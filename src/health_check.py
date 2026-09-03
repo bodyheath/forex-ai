@@ -474,6 +474,35 @@ def _ztest_worse_beats_better(better_wins, better_n, worse_wins, worse_n):
         return None
 
 
+def get_strict_decisive_grade_population(csv_path=None):
+    """Return the strict-decisive grade population: status in WIN/FULL_WIN/LOSS,
+    system_version==v2, closed_at >= the exit-logic-fix cutoff. This is THE
+    definition of "real, comparable, decisive grade data" used everywhere a
+    grade-ordering comparison needs to be trustworthy (check_grade_ordering()
+    below, and dashboard.py's grade-decomposition panel) -- factored out here
+    so both call sites can never independently drift from each other, or from
+    a rougher/unfiltered query someone writes without knowing this history.
+    PARTIAL_WIN is deliberately excluded (not a clean WIN/LOSS-equivalent
+    close), so this population is immune to the separate gross-vs-net-pips
+    PARTIAL_WIN classification bug fixed elsewhere this session.
+
+    Returns an empty DataFrame (not None) if research_trades.csv is missing.
+    """
+    import pandas as pd
+    path = csv_path or (config.DATA_DIR / "research_trades.csv")
+    if not Path(path).exists():
+        return pd.DataFrame()
+    df = pd.read_csv(path)
+    status_u = df["status"].astype(str).str.upper()
+    closed_dt = pd.to_datetime(df["closed_at"], errors="coerce", utc=True)
+    cutoff = pd.Timestamp(_GRADE_ORDERING_CUTOFF, tz="UTC")
+    return df[
+        status_u.isin(["WIN", "FULL_WIN", "LOSS"])
+        & (df["system_version"] == "v2")
+        & (closed_dt >= cutoff)
+    ]
+
+
 def check_grade_ordering(csv_path=None) -> list:
     """Flag if a strictly-worse grade significantly outperforms a strictly-
     better one on decisive win-rate — same class as the rib_strongly_against
@@ -481,32 +510,12 @@ def check_grade_ordering(csv_path=None) -> list:
 
     Stays silent for any bucket below _GRADE_MIN_N — a thin/unstable sample
     is not evidence of anything, and must never be reported as a false flag.
-
-    2026-09-01: filtered to v2 + closed_at>=2026-07-14 13:46:31 UTC (the
-    exit-logic-fix cutoff) -- the follow-up the 2026-08-28 re-verification
-    flagged as needed but blocked on data volume at the time. Without this
-    filter, D-vs-C fired every run on stale pre-fix grade labels (already
-    diagnosed and closed as a duplication/staleness artifact, not a live
-    finding -- re-confirmed 2026-09-01: raw n=812/61 p=0.037, but strict
-    n=475/40 p=0.375, not significant). F-vs-D holds under both, and more
-    strongly under strict (p=1.8e-8) -- this filter doesn't suppress a real
-    signal, it removes a stale one from re-triggering every run.
     """
     flags = []
     try:
-        import pandas as pd
-        path = csv_path or (config.DATA_DIR / "research_trades.csv")
-        if not Path(path).exists():
+        decisive = get_strict_decisive_grade_population(csv_path)
+        if decisive.empty:
             return flags
-        df = pd.read_csv(path)
-        status_u = df["status"].astype(str).str.upper()
-        closed_dt = pd.to_datetime(df["closed_at"], errors="coerce", utc=True)
-        cutoff = pd.Timestamp("2026-07-14 13:46:31", tz="UTC")
-        decisive = df[
-            status_u.isin(["WIN", "FULL_WIN", "LOSS"])
-            & (df["system_version"] == "v2")
-            & (closed_dt >= cutoff)
-        ]
 
         buckets = {}
         for grade in _GRADE_ORDER:
