@@ -30,6 +30,7 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: write
+      actions: write  # needed to dispatch deploy-pages.yml (GITHUB_TOKEN pushes don't auto-trigger it)
 
     steps:
       - name: Check out repository
