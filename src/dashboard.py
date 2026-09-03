@@ -7,9 +7,25 @@ Active YES-trade setups are shown in prominent green alert cards at the very top
 import html
 import sys
 from datetime import datetime
+from datetime import timedelta as _timedelta
 
 import config
 from src import tracker
+
+
+def _parse_ts(s):
+    """Parse a trades.csv/threshold_history.json timestamp string (naive,
+    treated as UTC -- both files' timestamps already are). Returns None on
+    anything unparseable rather than raising."""
+    if not s:
+        return None
+    s = str(s).strip()
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(s[:len(fmt.replace("%f", "000000"))] if "%f" in fmt else s[:19], fmt)
+        except ValueError:
+            continue
+    return None
 
 # ---------------------------------------------------------------------------
 # Session windows in NZT (NZST = UTC+12) keyed by currency.
