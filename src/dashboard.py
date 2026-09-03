@@ -655,13 +655,17 @@ def _research_analytics_section() -> str:
     # clean directional outcome the way WIN/LOSS/PARTIAL_WIN are, and was
     # previously counted here as a guaranteed non-win regardless of its
     # actual net_pips sign, which understated the displayed win rate.
-    closed = [r for r in rt_rows if r.get("status") in ("WIN", "LOSS", "PARTIAL_WIN")]
+    # 2026-09-04: FULL_WIN added -- found while auditing this section against
+    # raw data, 22 real decisive FULL_WIN rows in research_trades.csv were
+    # silently excluded from every breakdown below (grade, day-of-week, hour,
+    # regime, MFE/MAE), understating each bucket's true N.
+    closed = [r for r in rt_rows if r.get("status") in ("WIN", "FULL_WIN", "LOSS", "PARTIAL_WIN")]
     if len(closed) < 5:
         return ""
 
     def _win(r):
         status = r.get("status")
-        if status == "WIN":
+        if status in ("WIN", "FULL_WIN"):
             return True
         if status == "PARTIAL_WIN":
             # Real, decisive, money-affecting close that isn't uniformly a
