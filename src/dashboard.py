@@ -884,9 +884,19 @@ def _ticker_bar(live: dict) -> str:
 
 
 def _ror_kelly_ftmo_sharpe_section() -> str:
-    """Risk of Ruin, Kelly Criterion, annualised Sharpe, and FTMO challenge
-    compliance -- all derived from the same closed-trade history and live
-    fund state, not a separately-tracked snapshot."""
+    """Risk of Ruin, Kelly Criterion, and Sharpe come from risk_of_ruin.py's
+    own compute_trade_stats()/compute_sharpe_from_history() -- pre-existing,
+    general-purpose functions also used elsewhere (e.g. the weekly Telegram
+    report), NOT rewritten here. 2026-09-04 audit finding, disclosed rather
+    than silently fixed: those two functions read tracker.load() filtered to
+    strict status in (WIN, LOSS) only -- no PARTIAL_WIN, no EXPIRED-by-pips-
+    sign reclassification, no v1/v2 split -- a FOURTH population definition
+    on this page, different from both the ticker bar's v2-scoped net-pips
+    figure and learning.compute_stats()'s blended one. Left alone rather than
+    unified because changing a shared, non-dashboard-owned function's
+    population definition is a bigger, riskier change than this page's own
+    audit scope -- flagged as a follow-up instead. FTMO is unaffected: it's
+    built entirely from calculate_fund_state()'s live, v2-scoped fields."""
     try:
         import json as _json
         from src import risk_of_ruin as _ror
