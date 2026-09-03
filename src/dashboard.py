@@ -411,6 +411,15 @@ def _by_confidence(rows) -> str:
 
 
 def _equity_curve(rows) -> str:
+    """2026-09-04 audit finding, disclosed rather than silently unified: this
+    chart uses tracker.load() filtered to status in (WIN, LOSS, BREAKEVEN)
+    only -- no PARTIAL_WIN, no EXPIRED, blended v1+v2, gross r_multiple (never
+    net-corrected) -- a fifth population definition on this page, different
+    from the Real Fund cards (v2-only, net-pips), the grade table (v2-only,
+    strict cutoff), and RoR/Kelly/Sharpe (blended v1+v2, strict WIN/LOSS,
+    also gross). Correct on its own terms; left alone rather than rewritten
+    for the same reason as RoR/Kelly/Sharpe -- see the caption rendered above
+    this chart in generate()."""
     seq = []
     cum = 0.0
     for r in sorted(rows, key=lambda x: (x.get("closed_at") or "")):
