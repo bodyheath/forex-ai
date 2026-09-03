@@ -12843,6 +12843,14 @@ def run() -> int:
             _log_line(log, f"Dashboard updated: {path}")
         except Exception as exc:
             _log_line(log, f"Dashboard step failed: {exc}")
+            try:
+                _telegram(
+                    "🚨 Dashboard generation failed — data/dashboard.html was NOT "
+                    "updated this run — check GitHub Actions log immediately\n"
+                    f"Error: {exc}"
+                )
+            except Exception:
+                pass
 
         _log_line(log, "=== Daily run complete ===")
 
