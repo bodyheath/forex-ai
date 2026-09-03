@@ -1,0 +1,25 @@
+```
+PAIR: EUR/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 78.6% Fib + D1 SELL_3 signal conflicts with bullish ribbon alignment and 4H oversold RSI (18.1), creating ambiguous reversal risk in crowded EUR short positioning.
+RISK_FACTORS: [1: MTF disagreement (M:SELL + W:SELL vs D:NEUTRAL + 4H:BUY) — only 1/3 agreement prevents HIGH conviction trade. 2: EUR COT UNWINDING from crowded short (14% net) — institutional unwind often precedes sharp reversal; D1 T_sig=SELL_3 conflicts with this macro reversal risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT_BREAKOUT
+ENTRY_TRIGGER_PRICE: 185.69
+ENTRY_TRIGGER_REASON: Confirmation break below Fib 78.6% + D1 close below pin bar low required to validate SELL_3; currently pin bar is inside key level, not confirmed break.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+---
+
+### **Analysis Rationale:**
+
+**MTF RULE BREACH**: Weekly + Daily do NOT agree (W:SELL + D:NEUTRAL = 1/3

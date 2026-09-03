@@ -1,0 +1,26 @@
+```
+PAIR: GBP/NZD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with converging ribbon in range-bound market suggests weak reversal potential; GBP COT unwinding undermines conviction.
+RISK_FACTORS: [1. MTF conflict: M:SELL vs W/D:NEUTRAL breaks 2/3 agreement rule—insufficient directional confirmation across timeframes. 2. COT UNWINDING on GBP positioning reduces institutional conviction; NZD neutral and stale (1675d) adds no support.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation—weekly and daily do not both agree on direction (W:NEUTRAL, D:NEUTRAL vs M:SELL). Confidence 4/10 < 7 threshold. Ribbon converging signals trend weakening, not strengthening. GBP COT UNWINDING is a -1 positioning penalty.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### Scoring Rationale:
+
+**TECHNICAL (3/10):**  
+- D1 T_sig = NEUTRAL_3 baseline (RSI 48.6 mid-neutral zone, MACD near zero, price 2.2924

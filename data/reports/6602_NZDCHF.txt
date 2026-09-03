@@ -1,0 +1,16 @@
+PAIR: NZD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level conflicts with confirmed uptrend structure; MTF misalignment (W:NEUTRAL + D:SELL only 1/3 agreement) + CHF crowded short positioning unwinding create reversal risk, but uptrend remains structurally intact — low-confidence setup.
+RISK_FACTORS: [1] MTF disagreement (only D:SELL vs M:BUY + 4H:BUY) fails >=2/3 threshold — trade is invalid per rules. [2] CHF positioned net SHORT at extreme (100% short) with MOM=UNWINDING near 1y range top signals potential snap-back rally into NZD strength, invalidating SELL thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do NOT both agree on direction (conf=1/3, requires >=2/3). D1:SELL + M:BUY + 4H:BUY = conflicting timeframes. Additionally, uptrend structure (price > SMA50 > SMA200, golden cross) + pin bar at key level marked BUL (bullish) contradicts T_sig=SELL

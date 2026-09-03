@@ -1,0 +1,26 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 50% Fib + RSI neutral setup conflicts with weekly uptrend conviction; crowded EUR short positioning creates reversal risk despite T_sig=SELL_5.
+RISK_FACTORS: [1. MTF misalignment: W:BUY vs D:SELL (conf=1/3) — trade enters conflicted timeframe structure; 2. COT reversal risk: EUR short unwinding from crowded extreme (14% net short, institutional position momentum UNWINDING) — potential squeeze into weekly BUY bias could invalidate SELL entry within 24-48h]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly BUY + daily SELL do not both agree on direction (conf 1/3 << 2/3 threshold). Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**MTF Rejection (Hard Rule):**
+Weekly=BUY, Daily=SELL, confidence=1/3. This fails the "MTF weekly+daily both agree" mandate. Trade is blocked regardless of other scores.
+
+**Technical (5/10 — neutral,
