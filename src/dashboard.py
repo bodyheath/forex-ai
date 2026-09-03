@@ -207,7 +207,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
 .best-dir.buy{color:var(--green)}.best-dir.sell{color:var(--red)}
 .best-conf{font-size:13px;color:var(--blue);font-weight:600;margin-left:auto}
 .best-reason{font-size:13px;color:var(--mut);margin-top:8px;line-height:1.5}
-""".replace("__MONO__", _MONO)
+""".replace("__MONO__", _MONO).replace("__SANS__", _SANS)
 
 
 def _f(v, nd=2):
