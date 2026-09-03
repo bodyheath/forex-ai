@@ -98,6 +98,7 @@ jobs:
         run: python daily.py
 
       - name: Copy dashboard to GitHub Pages
+        if: always()
         run: |
           mkdir -p docs
           cp data/dashboard.html docs/index.html
