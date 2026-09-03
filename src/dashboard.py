@@ -1431,18 +1431,37 @@ def _safe_section(label: str, fn, *args, fallback: str = "") -> str:
 
 def generate() -> str:
     from src import learning
+    from src.trading import financials as _fin
     rows = tracker.load()
     stats = learning.compute_stats()
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+    live_fund = _safe_section("live_fund_state", _fin.calculate_fund_state, fallback={})
+    if not isinstance(live_fund, dict):
+        live_fund = {}
 
     today = _safe_section("most_recent_date", _most_recent_date, rows, fallback="")
     active_html    = _safe_section("active_setups", _active_setups, rows)
     watch_html     = _safe_section("watch_list", _watch_list_section, rows, today)
     best_html      = _safe_section("best_opportunity", _best_opportunity_section, rows, today)
+    ticker_html    = _safe_section("ticker_bar", _ticker_bar, live_fund)
     risk_html      = _safe_section("risk", _risk_section)
+    ror_html       = _safe_section("ror_kelly_ftmo_sharpe", _ror_kelly_ftmo_sharpe_section)
+    block_html     = _safe_section("trading_block", _trading_block_section)
+    stat_cards_html = _safe_section("stat_cards", _stat_cards, stats)
+
+    books_html  = _safe_section("virtual_books", _virtual_books_section)
+
+    pop_html    = _safe_section("research_population", _research_population_section)
+    calib_html  = _safe_section("calibration", _calibration_section)
+    online_html = _safe_section("online_learner", _online_learner_section)
+    cot_html    = _safe_section("cot_positioning", _cot_positioning_section)
+    shadow_html = _safe_section("shadow_mode", _shadow_mode_section)
+    trace_html  = _safe_section("dynamic_threshold_trace", _dynamic_threshold_trace_section)
+    da_html     = _safe_section("da_downgrade", _da_downgrade_section)
+
     learning_html  = _safe_section("learning_feed", _learning_feed_section)
     analytics_html = _safe_section("research_analytics", _research_analytics_section)
-    stat_cards_html = _safe_section("stat_cards", _stat_cards, stats)
     equity_html    = _safe_section("equity_curve", _equity_curve, rows)
     by_conf_html   = _safe_section("by_confidence", _by_confidence, rows)
     rows_table_html = _safe_section(
@@ -1450,26 +1469,71 @@ def generate() -> str:
         fallback="<p style='color:var(--mut)'>Recommendations table unavailable this run.</p>",
     )
 
+    # Client-side auto-refresh: a lightweight periodic HEAD check that only
+    # reloads when the page has actually changed (via ETag/Last-Modified),
+    # not a blind full reload -- avoids disrupting anyone mid-scroll on a
+    # scan that produced no changes. 120s undershoots the ~30min regen
+    # cadence by a wide margin so nobody waits long after a real update.
+    refresh_js = """
+<script>
+(function(){
+  var CHECK_MS = 120000;
+  var lastTag = null;
+  function check(){
+    fetch(location.pathname, {method:'HEAD', cache:'no-store'}).then(function(r){
+      var tag = r.headers.get('etag') || r.headers.get('last-modified');
+      if (tag) {
+        if (lastTag === null) { lastTag = tag; }
+        else if (tag !== lastTag) { location.reload(); }
+      }
+    }).catch(function(){});
+  }
+  setInterval(check, CHECK_MS);
+})();
+</script>
+"""
+
     body = (
         f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
         f'<meta name="viewport" content="width=device-width,initial-scale=1">'
-        f'<title>forex-ai dashboard</title><style>{_CSS}</style></head><body>'
-        f'<h1>forex-ai &mdash; performance dashboard</h1>'
+        f'<title>forex-ai terminal</title><style>{_CSS}</style></head><body>'
+        f'<h1>forex-ai terminal</h1>'
         f'<p class="sub">Generated {now} &middot; {len(rows)} recommendations logged'
-        f' &middot; NOT financial advice</p>'
+        f' &middot; auto-refreshes when updated &middot; NOT financial advice</p>'
         f'{active_html}'
         f'{watch_html}'
         f'{best_html}'
-        f'<div class="grid">{stat_cards_html}</div>'
-        f'{risk_html}'
-        f'<section><h2>Equity curve</h2>{equity_html}</section>'
-        f'<section><h2>Win rate by confidence score</h2>{by_conf_html}</section>'
-        f'{analytics_html}'
-        f'{learning_html}'
-        f'<section><h2>All recommendations</h2>{rows_table_html}</section>'
-        f'<p class="foot">Columns T/F/S/P/M = technical, fundamental, sentiment, positioning, macro scores.'
-        f' Record an outcome with: <code>python main.py --close ID WIN|LOSS [exit_price]</code></p>'
-        f'</body></html>'
+        f'{ticker_html}'
+
+        + _group_header("Real Fund", "Live trading account — actual money-equivalent state")
+        + f'<div class="grid">{stat_cards_html}</div>'
+        + risk_html
+        + ror_html
+        + block_html
+
+        + _group_header("Virtual Books", "Parallel rule-configuration backtests, zero extra cost")
+        + books_html
+
+        + _group_header("System Health & Diagnostics", "What the system knows about itself")
+        + pop_html
+        + calib_html
+        + online_html
+        + cot_html
+        + shadow_html
+        + trace_html
+        + da_html
+        + learning_html
+
+        + _group_header("Trade Log & Research Analytics")
+        + f'<section><h2>Equity curve</h2>{equity_html}</section>'
+        + f'<section><h2>Win rate by confidence score</h2>{by_conf_html}</section>'
+        + analytics_html
+        + f'<section><h2>All recommendations</h2>{rows_table_html}</section>'
+
+        + '<p class="foot">Columns T/F/S/P/M = technical, fundamental, sentiment, positioning, macro scores.'
+        + ' Record an outcome with: <code>python main.py --close ID WIN|LOSS [exit_price]</code></p>'
+        + refresh_js
+        + '</body></html>'
     )
 
     config.DASHBOARD_HTML.write_text(body, encoding="utf-8")
