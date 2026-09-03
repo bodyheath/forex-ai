@@ -1698,7 +1698,7 @@ def _open_positions_section(live: dict) -> str:
         prices = _fin.load_prices()
         for book_id in sorted(_vb.BOOKS):
             positions = _vb._load_csv(_vb._positions_path(book_id))
-            candidates = _vb._load_csv(_vb._positions_path(book_id).parent / "candidates.csv")
+            candidates = _vb._load_csv(_vb.CANDIDATES_CSV)
             cand_by_id = {str(c.get("id")): c for c in candidates}
             for p in positions:
                 if p.get("status") != "OPEN":
