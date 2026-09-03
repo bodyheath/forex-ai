@@ -4392,5 +4392,135 @@
         }
       }
     ]
+  },
+  "vbook_A_control": {
+    "description": "Virtual book A_control: Current real rules, unchanged (control)",
+    "registered_at": "2026-09-03T12:31:19.074881+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 30,
+    "min_n_no_fire": 30,
+    "alpha": 0.05,
+    "pf_max_fire": null,
+    "pf_min_fire": null,
+    "pf_min_gap": null,
+    "promoted": false,
+    "evaluations": [
+      {
+        "timestamp": "2026-09-03T12:31:19.078538+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -80.4,
+        "context": {
+          "candidate_id": 3,
+          "pair": "AUD/NZD",
+          "direction": "SELL"
+        }
+      }
+    ]
+  },
+  "vbook_B_conf6_rr15": {
+    "description": "Virtual book B_conf6_rr15: Flat conf>=6, RR>=1.5 eligibility (grade-independent)",
+    "registered_at": "2026-09-03T12:31:19.089193+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 30,
+    "min_n_no_fire": 30,
+    "alpha": 0.05,
+    "pf_max_fire": null,
+    "pf_min_fire": null,
+    "pf_min_gap": null,
+    "promoted": false,
+    "evaluations": [
+      {
+        "timestamp": "2026-09-03T12:31:19.092722+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -80.4,
+        "context": {
+          "candidate_id": 3,
+          "pair": "AUD/NZD",
+          "direction": "SELL"
+        }
+      }
+    ]
+  },
+  "vbook_C_grade_based": {
+    "description": "Virtual book C_grade_based: Grade A/B/C required instead of confidence-based eligibility",
+    "registered_at": "2026-09-03T12:31:19.096837+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 30,
+    "min_n_no_fire": 30,
+    "alpha": 0.05,
+    "pf_max_fire": null,
+    "pf_min_fire": null,
+    "pf_min_gap": null,
+    "promoted": false,
+    "evaluations": [
+      {
+        "timestamp": "2026-09-03T12:31:19.100442+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -80.4,
+        "context": {
+          "candidate_id": 3,
+          "pair": "AUD/NZD",
+          "direction": "SELL"
+        }
+      }
+    ]
+  },
+  "vbook_D_no_da": {
+    "description": "Virtual book D_no_da: Control with Devil's Advocate fold-in disabled",
+    "registered_at": "2026-09-03T12:31:19.109088+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 30,
+    "min_n_no_fire": 30,
+    "alpha": 0.05,
+    "pf_max_fire": null,
+    "pf_min_fire": null,
+    "pf_min_gap": null,
+    "promoted": false,
+    "evaluations": [
+      {
+        "timestamp": "2026-09-03T12:31:19.112651+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -80.4,
+        "context": {
+          "candidate_id": 3,
+          "pair": "AUD/NZD",
+          "direction": "SELL"
+        }
+      }
+    ]
+  },
+  "vbook_E_no_dd_gate": {
+    "description": "Virtual book E_no_dd_gate: Control with drawdown-tier gating removed",
+    "registered_at": "2026-09-03T12:31:19.116638+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 30,
+    "min_n_no_fire": 30,
+    "alpha": 0.05,
+    "pf_max_fire": null,
+    "pf_min_fire": null,
+    "pf_min_gap": null,
+    "promoted": false,
+    "evaluations": [
+      {
+        "timestamp": "2026-09-03T12:31:19.120184+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -80.4,
+        "context": {
+          "candidate_id": 3,
+          "pair": "AUD/NZD",
+          "direction": "SELL"
+        }
+      }
+    ]
   }
 }
