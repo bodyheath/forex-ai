@@ -162,6 +162,18 @@ jobs:
             exit 1
           fi
 
+          # 2026-09-03: see daily.yml -- GITHUB_TOKEN-authored pushes don't
+          # trigger other workflows' `on: push` triggers, so deploy-pages.yml
+          # never fires from this commit path on its own (confirmed live: it
+          # did not fire from this exact monitor run when this dashboard
+          # cadence was first wired up). Dispatch it via API instead, which
+          # isn't subject to that restriction.
+          curl -s -o /dev/null -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy-pages.yml/dispatches" \
+            -d '{"ref":"main"}' || true
+
       - name: Alert on push failure
         if: failure() && steps.commit_monitor.outcome == 'failure'
         env:
