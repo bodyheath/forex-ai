@@ -1560,15 +1560,21 @@ def _shadow_mode_section() -> str:
         except Exception:
             continue
         wf, wnf = status.get("would_fire_wr"), status.get("would_not_fire_wr")
+        p_val = status.get("p_value")
+        p_txt = f'{p_val:.2g}' if p_val is not None else '—'
+        state_txt = ("PROMOTABLE" if status.get("promotable") else
+                     "review" if status.get("ready_for_review") else "collecting")
         rows_html.append(
             f'<tr><td>{html.escape(name)}</td>'
             f'<td style="font-size:11px;color:var(--mut);white-space:normal">'
             f'{html.escape(status.get("description",""))}</td>'
-            f'<td class="num">{status.get("n_decisive",0)}/{status.get("min_n","?")}</td>'
-            f'<td class="num">{status.get("days_elapsed",0)}/{status.get("max_days","?")}d</td>'
+            f'<td class="num">{status.get("n_fire",0)}/{status.get("min_n_fire","?")}</td>'
+            f'<td class="num">{status.get("n_no_fire",0)}/{status.get("min_n_no_fire","?")}</td>'
             f'<td class="num">{f"{wf*100:.0f}%" if wf is not None else "—"}</td>'
             f'<td class="num">{f"{wnf*100:.0f}%" if wnf is not None else "—"}</td>'
-            f'<td>{"READY" if status.get("ready") else "collecting"}</td></tr>'
+            f'<td class="num">{p_txt} (bar {status.get("corrected_alpha",0):.4f}, '
+            f'{status.get("n_active_rules","?")} active)</td>'
+            f'<td>{state_txt}</td></tr>'
         )
     return (
         '<section><h2>Shadow-Mode Rule Staging</h2>'
