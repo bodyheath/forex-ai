@@ -1,0 +1,21 @@
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 7/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+ENTRY: 1.2135
+TARGET: 1.1985
+STOP_LOSS: 1.2210
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 18:00–20:00 NZST
+NEWS_WARNING: Monitor RBA/RBNZ statements and AU/NZ CPI releases within 48h — check calendar before entry
+KEY_THESIS: Pin bar rejection at exact 61.8% Fibonacci resistance (1.21235) combined with bearish head-and-shoulders on 4H and D1:SELL + 4H:SELL MTF alignment signals distribution at a high-probability reversal zone, despite the broader uptrend structure.
+RISK_FACTORS: (1) Price sits above SMA50 and SMA200 in a confirmed golden-cross uptrend — counter-trend SELL carries mean-reversion risk if AUD rate differential (+1.78% with AUD rising) drives fresh institutional longs. (2) EMA ribbon NEUTRAL (only 3/5 aligned bearish) and OSC confluence absent — momentum is not yet decisively rolling over, increasing the probability of a choppy consolidation rather than a clean breakdown.
+TRADE_THIS: NO
+
+**Rationale for override:** MTF conf=2/3 with W:NEUTRAL — weekly timeframe does not confirm SELL direction. Rules require W AND D to both agree for TRADE_THIS YES. W:NEUTRAL fails that gate regardless of other scores. Additionally, SELL segment expectancy is -0.29R per system memory, and AUD rate differential is actively rising — fundamental headwind to the SELL. Confidence held at 7 but MTF rule is a hard block.

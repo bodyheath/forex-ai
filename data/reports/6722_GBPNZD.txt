@@ -1,0 +1,28 @@
+```
+PAIR: GBP/NZD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: GBP weakness (falling rates, unwinding short positioning) and NZD stability create asymmetric SELL setup, but weak technicals and converging ribbon signal caution.
+RISK_FACTORS: [1. MTF disagreement (M:SELL vs W/D:NEUTRAL) violates MTF consensus rule — low conviction setup. 2. Converging ribbon + mixed D1 trend indicate trend weakness; reversal risk if price holds above 2.2950.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 2.2950
+ENTRY_TRIGGER_REASON: Sell limit at D1 SMA50 resistance (2.3071) pullback target; confirmation of ribbon convergence + pin bar rejection.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (4/10):**
+- D1 RSI=48.6 → standard tier = 3-4 NEUTRAL (price/MAs misaligned, mixed trend)
+- D1 T_sig=NEUTRAL_3 baseline applied (no strong directional bias)
+- 4H RSI=54.2 (uptrend context) →

@@ -1,0 +1,24 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 50% Fib with RSI neutral in mixed trend + SMD institutional bearish bias, but MTF conflict (W:BUY vs D:SELL) and EUR crowded short positioning severely limit conviction.
+RISK_FACTORS: [1] MTF disagreement (W:BUY conf=1/3) breaks core MTF rule — daily SELL bias weakened by weekly BUY context; [2] EUR COT UNWINDING from net SHORT @14% = institutional conviction declining + reversal risk into crowded short; GBP also UNWINDING mid-range reduces both directional edges.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8550
+ENTRY_TRIGGER_REASON: Breakdown below 50% Fibonacci support at 0.8574 with continuation to SMA50 at 0.8555 would confirm D1 SELL bias, but only if MTF aligns (W flips to SELL or conf improves to ≥2/3).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REJECTION RATIONALE:**
+
+**MTF Rule Violation (CRITICAL):**
+- Weekly = BUY | Daily = SELL | 4

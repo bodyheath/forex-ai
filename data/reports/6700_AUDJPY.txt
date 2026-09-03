@@ -1,0 +1,24 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level (bullish context) conflicts with D1 SELL_3 signal; MTF agreement fails (W:SELL vs D:NEUTRAL vs 4H:BUY), creating setup ambiguity despite aligned ribbon.
+RISK_FACTORS: [1. MTF conflicted structure (conf=1/3 << 2/3 threshold) overrides directional conviction — trade lacks multi-timeframe confirmation required for 7+ confidence.] [2. 4H double_top_bearish contradicts D1 pin_bar_bullish and aligned ribbon — pattern conflict reduces technical reliability.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly (SELL) and Daily (NEUTRAL) do not both agree on direction (confidence 1/3 << 2/3 threshold). Trade blocked per mandate.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 5/10**
+- **D1 RSI=64.0 in confirmed UPTREND (D:NEUTRAL context):** D1 is technically neutral per MTF line, but price
