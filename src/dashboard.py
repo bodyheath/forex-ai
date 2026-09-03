@@ -1578,11 +1578,14 @@ def _shadow_mode_section() -> str:
         )
     return (
         '<section><h2>Shadow-Mode Rule Staging</h2>'
-        '<p style="font-size:11px;color:var(--mut);margin-bottom:10px">Candidate rules run silently '
-        'against real scans before ever affecting a live decision. "Ready" means the evidence bar is '
-        'cleared for a promotion conversation — never an automatic promotion.</p>'
-        '<table><tr><th>Rule</th><th>Description</th><th>N decisive</th><th>Days</th>'
-        '<th>Would-fire WR</th><th>Would-not-fire WR</th><th>Status</th></tr>'
+        '<p style="font-size:11px;color:var(--mut);margin-bottom:10px">Candidate rules, virtual-book '
+        'configs, and specialist-agent signals run silently against real scans before ever affecting '
+        'a live decision. The significance bar is Bonferroni-corrected by how many rules are '
+        'currently active — more parallel tests makes promotion stricter for all of them, '
+        'automatically. "PROMOTABLE" means every registered criterion is met, not just worth a look; '
+        'promotion itself is always a separate, human-reviewed code change.</p>'
+        '<table><tr><th>Rule</th><th>Description</th><th>N fire</th><th>N no-fire</th>'
+        '<th>Fire WR</th><th>No-fire WR</th><th>p-value</th><th>Status</th></tr>'
         + "".join(rows_html) + "</table></section>"
     )
 
