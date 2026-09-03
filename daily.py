@@ -11049,6 +11049,19 @@ def run() -> int:
                 import traceback as _mon_tb
                 _log_line(log, f"Monitor run failed: {_mon_exc}")
                 _log_line(log, _mon_tb.format_exc())
+
+            # Regenerate the dashboard on monitor's ~30min cadence too, not just
+            # full/intraday scans -- the dashboard previously only refreshed
+            # ~5x/day even though monitor.yml runs every 30 minutes and already
+            # updates the Discord embed on that cadence. Log-only on failure
+            # (not a Telegram alert like the full-scan path): a single missed
+            # regen 48x/day is not worth paging on, and the next monitor run
+            # 30 minutes later will simply try again.
+            try:
+                path = dashboard.generate()
+                _log_line(log, f"Dashboard updated (monitor): {path}")
+            except Exception as _dash_exc:
+                _log_line(log, f"Dashboard step failed (monitor): {_dash_exc}")
         return 0
 
     # ── Duplicate-run guard ────────────────────────────────────────────────────
