@@ -39,23 +39,46 @@ def _session_time(pair: str) -> tuple:
     return "London", "7pm – 11pm NZT"
 
 
-_CSS = """
-:root{--bg:#0e1117;--card:#171b22;--line:#262c36;--fg:#e6edf3;--mut:#8b949e;
---green:#3fb950;--red:#f85149;--amber:#d29922;--blue:#58a6ff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);
-font:14px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:32px}
-h1{font-size:22px;margin:0 0 4px}.sub{color:var(--mut);margin:0 0 24px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:28px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
-.card .k{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
-.card .v{font-size:26px;font-weight:600;margin-top:6px}
-section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:24px}
-section h2{font-size:15px;margin:0 0 14px;color:var(--fg)}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
-th{color:var(--mut);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
-td.num{text-align:right;font-variant-numeric:tabular-nums}
-.pill{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+_MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,'Cascadia Mono','Liberation Mono',monospace"
+
+_CSS = f"""
+:root{{--bg:#05070a;--card:#0d1117;--line:#1c232d;--fg:#dbe4ee;--mut:#6b7686;
+--green:#00e08c;--red:#ff4d4f;--amber:#e0a930;--blue:#4c9eff}}
+*{{box-sizing:border-box}}
+body{{margin:0;background:var(--bg);color:var(--fg);
+font:12.5px/1.45 {_MONO};padding:18px 22px 40px;letter-spacing:.01em}}
+h1{{font-size:17px;margin:0 0 2px;font-weight:700;letter-spacing:.02em;text-transform:uppercase}}
+.sub{{color:var(--mut);margin:0 0 14px;font-size:11px}}
+
+/* ── Top ticker strip ────────────────────────────────────────────────────── */
+.ticker{{display:flex;flex-wrap:wrap;gap:0;background:var(--card);
+  border:1px solid var(--line);border-radius:6px;margin-bottom:18px;overflow:hidden}}
+.tick{{flex:1 1 110px;padding:8px 14px;border-right:1px solid var(--line);min-width:100px}}
+.tick:last-child{{border-right:none}}
+.tick-k{{display:block;color:var(--mut);font-size:9.5px;text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:3px}}
+.tick-v{{display:block;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}}
+
+/* ── Group headers (real fund / virtual books / diagnostics / trade log) ──── */
+.group-header{{display:flex;align-items:baseline;gap:10px;margin:26px 0 10px;
+  padding-bottom:6px;border-bottom:2px solid var(--line)}}
+.group-header:first-of-type{{margin-top:4px}}
+.group-title{{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--blue)}}
+.group-sub{{color:var(--mut);font-size:11px}}
+
+.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px;margin-bottom:18px}}
+.card{{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 12px}}
+.card .k{{color:var(--mut);font-size:9.5px;text-transform:uppercase;letter-spacing:.06em}}
+.card .v{{font-size:19px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}}
+section{{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:14px}}
+section h2{{font-size:12px;margin:0 0 10px;color:var(--fg);text-transform:uppercase;
+  letter-spacing:.06em;font-weight:700}}
+table{{width:100%;border-collapse:collapse;font-size:11.5px}}
+th,td{{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);white-space:nowrap}}
+th{{color:var(--mut);font-weight:600;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em}}
+td.num{{text-align:right;font-variant-numeric:tabular-nums}}
+.pill{{padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700}}
 .WIN{background:rgba(63,185,80,.15);color:var(--green)}
 .LOSS{background:rgba(248,81,73,.15);color:var(--red)}
 .OPEN{background:rgba(88,166,255,.15);color:var(--blue)}
