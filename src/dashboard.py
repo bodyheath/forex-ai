@@ -1971,45 +1971,78 @@ def generate() -> str:
 </script>
 """
 
+    system_health_grid = (
+        f'<div class="grid">{grade_status_html}{calib_status_html}{shadow_status_html}</div>'
+    )
+
+    full_diagnostics = (
+        '<details class="disclosure"><summary>Full diagnostics — RoR/Kelly/Sharpe, COT/positioning, '
+        'dynamic threshold trace, DA downgrade, online learner, full grade &amp; calibration tables, '
+        'learned patterns</summary>'
+        + ror_html + pop_html + calib_html + online_html + cot_html
+        + shadow_html + trace_html + da_html + learning_html
+        + '</details>'
+    )
+
+    full_history = (
+        '<details class="disclosure"><summary>Full history — every recommendation ever logged '
+        f'({len(rows)} rows)</summary><div class="table-scroll">{full_table_html}</div></details>'
+    )
+
+    topnav = (
+        '<nav class="topnav">'
+        '<a href="#real-fund">Real Fund</a>'
+        '<a href="#open-trades">Open Trades</a>'
+        '<a href="#virtual-books">Virtual Books</a>'
+        '<a href="#system-health">System Health</a>'
+        '<a href="#scan-reports">Scan Reports</a>'
+        '<a href="#trade-log">Trade Log</a>'
+        '</nav>'
+    )
+
     body = (
         f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
         f'<meta name="viewport" content="width=device-width,initial-scale=1">'
         f'<title>forex-ai terminal</title><style>{_CSS}</style></head><body>'
-        f'<h1>forex-ai terminal</h1>'
+        f'<div class="masthead"><div class="wrap">'
+        f'<h1>forex-ai</h1>'
         f'<p class="sub">Generated {now} &middot; {len(rows)} recommendations logged'
         f' &middot; auto-refreshes when updated &middot; NOT financial advice</p>'
-        f'{active_html}'
-        f'{watch_html}'
-        f'{best_html}'
-        f'{ticker_html}'
+        + topnav
+        + '</div></div>'
+        + '<div class="wrap">'
+        + active_html
+        + watch_html
+        + best_html
+        + ticker_html
 
-        + _group_header("Real Fund", "Live trading account — actual money-equivalent state")
-        + f'<div class="grid">{stat_cards_html}</div>'
+        + _group_header("Real Fund", "Live trading account — actual money-equivalent state", "real-fund")
         + risk_html
-        + ror_html
         + block_html
 
-        + _group_header("Virtual Books", "Parallel rule-configuration backtests, zero extra cost")
+        + _group_header("Open / Current Trades", "What's live right now, real fund and every book", "open-trades")
+        + open_positions_html
+
+        + _group_header("Virtual Books", "Parallel rule-configuration backtests, zero extra cost", "virtual-books")
         + books_html
 
-        + _group_header("System Health & Diagnostics", "What the system knows about itself")
-        + pop_html
-        + calib_html
-        + online_html
-        + cot_html
-        + shadow_html
-        + trace_html
-        + da_html
-        + learning_html
+        + _group_header("System Health", "Worth knowing at a glance", "system-health")
+        + system_health_grid
+        + full_diagnostics
 
-        + _group_header("Trade Log & Research Analytics")
+        + _group_header("Daily Scan Reports", "The actual narrative behind each scan", "scan-reports")
+        + scan_reports_html
+
+        + _group_header("Trade Log & Research Analytics", "", "trade-log")
         + f'<section><h2>Equity curve</h2>{equity_html}</section>'
         + f'<section><h2>Win rate by confidence score</h2>{by_conf_html}</section>'
         + analytics_html
-        + f'<section><h2>All recommendations</h2>{rows_table_html}</section>'
+        + f'<section><h2>Actionable trades ({len(actionable_rows)})</h2>'
+        + f'<div class="table-scroll">{actionable_table_html}</div>{full_history}</section>'
 
         + '<p class="foot">Columns T/F/S/P/M = technical, fundamental, sentiment, positioning, macro scores.'
         + ' Record an outcome with: <code>python main.py --close ID WIN|LOSS [exit_price]</code></p>'
+        + '</div>'
         + refresh_js
         + '</body></html>'
     )
