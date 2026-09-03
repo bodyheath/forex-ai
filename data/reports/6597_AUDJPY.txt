@@ -1,0 +1,23 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at resistance + RSI 64 (overbought in uptrend context) + W:SELL conflicts with D:NEUTRAL and 4H:BUY; aligned ribbon suggests continuation, but T_sig=SELL_3 + daily overbought signals pullback risk.
+RISK_FACTORS: MTF agreement weak (1/3 confidence) — weekly and daily/4H conflict directionally, reducing signal reliability. Both AUD and JPY COT positioning building SHORT (converging bearish conviction), yet both rates rising — fundamental-technical divergence creates confusion on true macro bias.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:SELL + D:NEUTRAL + 4H:BUY = no consensus (1/3 < 2/3 threshold). Do not trade conflicted timeframes.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **Technical Score = 5**: D1 RSI=64 is in the uptrend overbought zone (standard would be 4-5 SELL; uptrend context shifts SELL threshold to 65-77 range
