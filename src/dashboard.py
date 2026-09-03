@@ -63,45 +63,57 @@ def _session_time(pair: str) -> tuple:
 
 
 _MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,'Cascadia Mono','Liberation Mono',monospace"
+_SANS = "-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,Helvetica,Arial,sans-serif"
 
 _CSS = """
-:root{--bg:#05070a;--card:#0d1117;--line:#1c232d;--fg:#dbe4ee;--mut:#6b7686;
---green:#00e08c;--red:#ff4d4f;--amber:#e0a930;--blue:#4c9eff}
+:root{--bg:#0a0d12;--card:#12161d;--card2:#161b23;--line:#232a35;--fg:#e4eaf1;--mut:#7c8794;
+--green:#1fd691;--red:#ff5c5c;--amber:#e8b23d;--blue:#5b9dff}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);
-font:12.5px/1.45 __MONO__;padding:18px 22px 40px;letter-spacing:.01em}
-h1{font-size:17px;margin:0 0 2px;font-weight:700;letter-spacing:.02em;text-transform:uppercase}
-.sub{color:var(--mut);margin:0 0 14px;font-size:11px}
+font:14px/1.55 __SANS__;padding:0 0 48px;letter-spacing:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+h1{font-size:20px;margin:0;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--mut);margin:2px 0 0;font-size:12.5px}
+.num,td.num,.tick-v,.card .v,.risk-card .v{font-family:__MONO__;font-variant-numeric:tabular-nums}
+
+/* ── Top nav / masthead ──────────────────────────────────────────────────── */
+.masthead{position:sticky;top:0;z-index:10;background:rgba(10,13,18,.92);
+  backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:14px 0}
+.topnav{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.topnav a{color:var(--mut);text-decoration:none;font-size:12px;font-weight:600;
+  padding:5px 10px;border-radius:5px;transition:background .15s,color .15s}
+.topnav a:hover{background:var(--card2);color:var(--fg)}
 
 /* ── Top ticker strip ────────────────────────────────────────────────────── */
 .ticker{display:flex;flex-wrap:wrap;gap:0;background:var(--card);
-  border:1px solid var(--line);border-radius:6px;margin-bottom:18px;overflow:hidden}
-.tick{flex:1 1 110px;padding:8px 14px;border-right:1px solid var(--line);min-width:100px}
+  border:1px solid var(--line);border-radius:10px;margin:20px 0;overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.tick{flex:1 1 110px;padding:12px 16px;border-right:1px solid var(--line);min-width:100px}
 .tick:last-child{border-right:none}
-.tick-k{display:block;color:var(--mut);font-size:9.5px;text-transform:uppercase;
-  letter-spacing:.08em;margin-bottom:3px}
-.tick-v{display:block;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.tick-k{display:block;color:var(--mut);font-size:10px;text-transform:uppercase;
+  letter-spacing:.07em;margin-bottom:4px;font-weight:600}
+.tick-v{display:block;font-size:19px;font-weight:700}
 
-/* ── Group headers (real fund / virtual books / diagnostics / trade log) ──── */
-.group-header{display:flex;align-items:baseline;gap:10px;margin:26px 0 10px;
-  padding-bottom:6px;border-bottom:2px solid var(--line)}
-.group-header:first-of-type{margin-top:4px}
-.group-title{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--blue)}
-.group-sub{color:var(--mut);font-size:11px}
+/* ── Group headers ────────────────────────────────────────────────────────── */
+.group-header{display:flex;align-items:baseline;gap:10px;margin:36px 0 14px;
+  padding-bottom:8px;border-bottom:1px solid var(--line);scroll-margin-top:70px}
+.group-header:first-of-type{margin-top:8px}
+.group-title{font-size:15px;font-weight:700;letter-spacing:-.005em;color:var(--fg)}
+.group-sub{color:var(--mut);font-size:12px}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px;margin-bottom:18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
-.card .k{color:var(--mut);font-size:9.5px;text-transform:uppercase;letter-spacing:.06em}
-.card .v{font-size:19px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
-section{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:14px}
-section h2{font-size:12px;margin:0 0 10px;color:var(--fg);text-transform:uppercase;
-  letter-spacing:.06em;font-weight:700}
-table{width:100%;border-collapse:collapse;font-size:11.5px}
-th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
-th{color:var(--mut);font-weight:600;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em}
-td.num{text-align:right;font-variant-numeric:tabular-nums}
-.pill{padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.card .k{color:var(--mut);font-size:10px;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.card .v{font-size:18px;font-weight:700;margin-top:5px}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;
+  margin-bottom:16px;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+section h2{font-size:14.5px;margin:0 0 12px;color:var(--fg);font-weight:700;letter-spacing:-.005em}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--mut);font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em}
+tr:hover td{background:rgba(255,255,255,.015)}
+.table-scroll{overflow-x:auto}
+.pill{padding:2px 8px;border-radius:4px;font-size:10.5px;font-weight:700}
 .WIN{background:rgba(63,185,80,.15);color:var(--green)}
 .LOSS{background:rgba(248,81,73,.15);color:var(--red)}
 .OPEN{background:rgba(88,166,255,.15);color:var(--blue)}
