@@ -109,6 +109,8 @@ jobs:
             git add data/trade_features.csv           2>/dev/null || true
             git add data/pair_statistics.json         2>/dev/null || true
             git add data/watchlist_cache.json         2>/dev/null || true
+            git add data/dashboard.html               2>/dev/null || true
+            git add docs/                             2>/dev/null || true
           }
 
           # 2026-08-29: rewritten from git-pull-rebase (with a --no-rebase
