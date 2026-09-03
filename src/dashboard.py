@@ -15,8 +15,11 @@ from src import tracker
 
 def _parse_ts(s):
     """Parse a trades.csv/threshold_history.json timestamp string (naive,
-    treated as UTC -- both files' timestamps already are). Returns None on
-    anything unparseable rather than raising."""
+    treated as UTC -- both files' timestamps already are). Tries the full
+    string against each format rather than pre-slicing it (a superficially
+    similar slice-then-strptime pattern elsewhere in this codebase is
+    actually broken -- see dynamic_threshold.py's own _parse_dt docstring).
+    Returns None on anything unparseable rather than raising."""
     if not s:
         return None
     s = str(s).strip()
@@ -26,7 +29,7 @@ def _parse_ts(s):
         pass
     for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
         try:
-            return datetime.strptime(s[:len(fmt) + (8 if fmt.endswith("%S") else 0)], fmt)
+            return datetime.strptime(s, fmt)
         except ValueError:
             continue
     return None
