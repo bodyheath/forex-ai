@@ -807,6 +807,612 @@ def _research_analytics_section() -> str:
     )
 
 
+def _group_header(title: str, subtitle: str = "") -> str:
+    return (
+        f'<div class="group-header"><span class="group-title">{html.escape(title)}</span>'
+        + (f'<span class="group-sub">{html.escape(subtitle)}</span>' if subtitle else "")
+        + "</div>"
+    )
+
+
+def _ticker_bar(live: dict) -> str:
+    """Top-of-page ticker strip: the numbers a person scanning fast checks first."""
+    bal   = live.get("balance", 0.0)
+    eq    = live.get("total_equity", bal)
+    dd    = live.get("current_drawdown_pct", 0.0)
+    wr    = live.get("win_rate", 0.0)
+    pf    = live.get("profit_factor", 0.0)
+    daily = live.get("daily_pnl_pct", 0.0)
+    sizing = live.get("sizing_mode", "NORMAL")
+    open_n = live.get("open_count", 0)
+
+    def _chip(label, value, cls=""):
+        return (f'<div class="tick"><span class="tick-k">{html.escape(label)}</span>'
+                f'<span class="tick-v {cls}">{html.escape(str(value))}</span></div>')
+
+    dd_cls  = "neg" if dd > 0 else ""
+    pnl_cls = "pos" if daily > 0 else "neg" if daily < 0 else ""
+    return '<div class="ticker">' + "".join([
+        _chip("Balance", f"${bal:,.2f}"),
+        _chip("Equity", f"${eq:,.2f}"),
+        _chip("Day P/L", f"{daily:+.2f}%", pnl_cls),
+        _chip("Drawdown", f"{dd:.2f}%", dd_cls),
+        _chip("Win %", f"{wr:.1f}%"),
+        _chip("Profit factor", f"{pf:.2f}"),
+        _chip("Open", str(open_n)),
+        _chip("Sizing", sizing),
+    ]) + "</div>"
+
+
+def _ror_kelly_ftmo_sharpe_section() -> str:
+    """Risk of Ruin, Kelly Criterion, annualised Sharpe, and FTMO challenge
+    compliance -- all derived from the same closed-trade history and live
+    fund state, not a separately-tracked snapshot."""
+    try:
+        import json as _json
+        from src import risk_of_ruin as _ror
+        from src import risk_manager as _rm
+        from src.trading import financials as _fin
+    except Exception:
+        return ""
+    try:
+        live = _fin.calculate_fund_state()
+        stats = _ror.compute_trade_stats()
+        sharpe = _ror.compute_sharpe_from_history()
+    except Exception:
+        return ""
+
+    try:
+        profile = _json.loads(config.RISK_PROFILE_FILE.read_text(encoding="utf-8")) \
+            if config.RISK_PROFILE_FILE.exists() else {}
+    except Exception:
+        profile = {}
+    mode = profile.get("risk_mode", "normal")
+    risk_pct = _rm.MODE_RISK.get(mode, 1.0) / 100.0
+
+    n = stats.get("decisive", 0)
+    cards = []
+    if n >= 10 and stats.get("win_rate") is not None:
+        wr_f    = stats["win_rate"]
+        avg_rr  = stats["avg_win_rr"]
+        ror     = _ror.risk_of_ruin(wr_f, avg_rr, risk_pct)
+        kelly   = _ror.kelly_criterion(wr_f, avg_rr)
+        cards += [
+            ("Risk of Ruin (50% DD)", "100%" if ror >= 1.0 else f"{ror*100:.2f}%"),
+            ("Kelly Criterion", f"{kelly*100:.1f}%" if kelly > 0 else "negative edge"),
+            ("Quarter Kelly", f"{kelly*100*0.25:.1f}%" if kelly > 0 else "—"),
+            ("Current risk / trade", f"{risk_pct*100:.2f}%"),
+        ]
+    else:
+        cards.append(("Risk of Ruin / Kelly", f"need 10+ decisive trades (have {n})"))
+
+    if sharpe.get("sharpe") is not None:
+        cards += [
+            ("Sharpe ratio (annualised)", f'{sharpe["sharpe"]:.2f}'),
+            ("Sharpe verdict", sharpe["verdict"]),
+        ]
+    else:
+        cards.append(("Sharpe ratio", sharpe.get("verdict", "insufficient data")))
+
+    ftmo = _ror.compute_ftmo_metrics(
+        _rm.FUND_START,
+        live.get("balance", _rm.FUND_START),
+        live.get("peak_balance", _rm.FUND_START),
+        abs(live.get("worst_daily_pnl_pct", 0.0)),
+        live.get("current_drawdown_pct", 0.0),
+    )
+    ftmo_cards = [
+        ("FTMO profit", f'{ftmo["profit_pct"]:+.2f}% (target {_ror.FTMO_PROFIT_TARGET_PCT:.0f}%)'),
+        ("FTMO daily-loss rule", "OK" if ftmo["daily_rule_ok"] else "BREACHED"),
+        ("FTMO total-DD rule", "OK" if ftmo["total_rule_ok"] else "BREACHED"),
+        ("Challenge viable", "YES" if ftmo["challenge_viable"] else "NO"),
+    ]
+
+    def _cards_html(items):
+        return "".join(
+            f'<div class="risk-card"><div class="k">{html.escape(str(k))}</div>'
+            f'<div class="v">{html.escape(str(v))}</div></div>'
+            for k, v in items
+        )
+
+    return (
+        '<section><h2>Risk of Ruin &middot; Kelly &middot; FTMO &middot; Sharpe</h2>'
+        f'<div class="risk-grid" style="margin-bottom:14px">{_cards_html(cards)}</div>'
+        '<h3 style="font-size:11px;color:var(--mut);margin:14px 0 8px;text-transform:uppercase;'
+        'letter-spacing:.05em">FTMO challenge compliance</h3>'
+        f'<div class="risk-grid">{_cards_html(ftmo_cards)}</div>'
+        '</section>'
+    )
+
+
+def _trading_block_section() -> str:
+    """Any active safety gate that currently changes real-money sizing or
+    blocks trading outright, plus the most recent scan's run-guard record."""
+    try:
+        import json as _json
+        profile = _json.loads(config.RISK_PROFILE_FILE.read_text(encoding="utf-8")) \
+            if config.RISK_PROFILE_FILE.exists() else {}
+        guard_file = config.DATA_DIR / "run_guard.json"
+        guard = _json.loads(guard_file.read_text(encoding="utf-8")) if guard_file.exists() else {}
+    except Exception:
+        return ""
+
+    mode = profile.get("risk_mode", "normal")
+    gates = []
+    if mode == "capital_protection":
+        gates.append(("CAPITAL PROTECTION", "Risk cut to 0.25% per trade — drawdown breach", True))
+    elif mode == "streak_protection":
+        gates.append(("STREAK PROTECTION", "Risk cut to 0.25% per trade — 3+ consecutive losses", True))
+    elif mode == "reduced":
+        gates.append(("REDUCED RISK", "Last-5 win rate below 40%", True))
+    if not gates:
+        gates.append(("NO ACTIVE GATES", f"Trading normally (mode: {mode})", False))
+
+    gate_html = "".join(
+        (f'<div class="risk-warn"><strong>{html.escape(label)}</strong> — {html.escape(desc)}</div>'
+         if is_warn else
+         f'<div class="risk-warn" style="color:var(--fg);background:rgba(0,224,140,.08);'
+         f'border-color:var(--green)"><strong style="color:var(--green)">{html.escape(label)}</strong>'
+         f' — {html.escape(desc)}</div>')
+        for label, desc, is_warn in gates
+    )
+
+    guard_html = ""
+    if guard:
+        guard_html = (
+            f'<p style="font-size:11px;color:var(--mut);margin-top:10px">Last scan: '
+            f'<strong style="color:var(--fg)">{html.escape(str(guard.get("mode","")))}</strong> mode'
+            f' &middot; {html.escape(str(guard.get("source","")))}'
+            f' &middot; {html.escape((guard.get("timestamp_utc") or "")[:16].replace("T"," "))} UTC</p>'
+        )
+
+    return '<section><h2>Trading-Block / Safety-Gate Status</h2>' + gate_html + guard_html + '</section>'
+
+
+def _virtual_books_section() -> str:
+    """5 independent virtual portfolios, side by side, for direct comparison."""
+    try:
+        from src import virtual_books
+        summaries = virtual_books.get_all_summaries()
+    except Exception:
+        return ""
+    if not summaries:
+        return ""
+
+    rows_html = []
+    for book_id in sorted(summaries):
+        s = summaries[book_id]
+        ret = s.get("return_pct", 0.0)
+        ret_cls = "pos" if ret > 0 else "neg" if ret < 0 else ""
+        rows_html.append(
+            f'<tr><td><strong>{html.escape(book_id)}</strong></td>'
+            f'<td style="color:var(--mut);white-space:normal">{html.escape(s.get("description",""))}</td>'
+            f'<td class="num">${s.get("balance",0):,.2f}</td>'
+            f'<td class="num {ret_cls}">{ret:+.2f}%</td>'
+            f'<td class="num">{s.get("win_rate",0):.1f}%</td>'
+            f'<td class="num">{s.get("decisive",0)}</td>'
+            f'<td class="num">{s.get("current_drawdown_pct",0):.2f}%</td>'
+            f'<td class="num">{s.get("total_trades",0)}</td>'
+            f'<td class="num">{s.get("open_positions",0)}</td>'
+            f'</tr>'
+        )
+    return (
+        '<section><h2>Virtual Books — Parallel Rule-Configuration Backtesting</h2>'
+        '<p style="font-size:11px;color:var(--mut);margin-bottom:10px">5 independent virtual '
+        'portfolios run every scan at zero extra LLM cost, each testing a different rule '
+        'configuration against the same candidates the real fund evaluates.</p>'
+        '<table><tr><th>Book</th><th>Rule variant</th><th>Balance</th><th>Return</th>'
+        '<th>Win rate</th><th>Decisive</th><th>Drawdown</th><th>Trades</th><th>Open</th></tr>'
+        + "".join(rows_html) + "</table></section>"
+    )
+
+
+def _research_population_section() -> str:
+    """Population-level stats across every research candidate logged, plus
+    the grade decomposition (F/D/C/B/A) with the F-vs-D comparison the health
+    checks track. PARTIAL_WIN classified by net_pips sign, same as the rest
+    of this dashboard."""
+    try:
+        import csv as _csv
+        rt_csv = config.DATA_DIR / "research_trades.csv"
+        if not rt_csv.exists():
+            return ""
+        with rt_csv.open("r", encoding="utf-8-sig", newline="") as fh:
+            rows = list(_csv.DictReader(fh))
+    except Exception:
+        return ""
+    if not rows:
+        return ""
+
+    def _win(r):
+        status = r.get("status")
+        if status in ("WIN", "FULL_WIN"):
+            return True
+        if status == "PARTIAL_WIN":
+            try:
+                return float(r.get("net_pips") or 0) > 0
+            except (TypeError, ValueError):
+                return False
+        return False
+
+    total = len(rows)
+    status_bkt: dict = {}
+    for r in rows:
+        st = r.get("status") or "UNKNOWN"
+        status_bkt[st] = status_bkt.get(st, 0) + 1
+    status_html = "".join(
+        f'<div class="card"><div class="k">{html.escape(k)}</div><div class="v">{v}</div></div>'
+        for k, v in sorted(status_bkt.items(), key=lambda x: -x[1])
+    )
+
+    closed = [r for r in rows if r.get("status") in ("WIN", "LOSS", "PARTIAL_WIN", "FULL_WIN")]
+    grade_bkt: dict = {}
+    for r in closed:
+        g = r.get("grade") or "?"
+        b = grade_bkt.setdefault(g, [0, 0])
+        b[0] += _win(r)
+        b[1] += 1
+    grade_rows = []
+    for g in sorted(grade_bkt):
+        w, n = grade_bkt[g]
+        wr = round(w / n * 100) if n else 0
+        cls = "pos" if wr >= 50 else "neg"
+        grade_rows.append(
+            f'<tr><td>{html.escape(g)}</td><td class="num">{n}</td>'
+            f'<td class="num">{w}</td><td class="num {cls}">{wr}%</td></tr>'
+        )
+
+    fd_note = ""
+    if "F" in grade_bkt and "D" in grade_bkt:
+        wf, nf = grade_bkt["F"]
+        wd, nd = grade_bkt["D"]
+        if nf and nd:
+            wrf, wrd = wf / nf * 100, wd / nd * 100
+            verdict = ("F trades underperform D, as the grade ordering predicts" if wrf < wrd
+                       else "F trades are NOT underperforming D — grade ordering may need review")
+            fd_note = (f'<p style="font-size:11px;color:var(--mut);margin-top:10px">F-vs-D: '
+                       f'Grade F win rate {wrf:.0f}% (n={nf}) vs Grade D {wrd:.0f}% (n={nd}) '
+                       f'— {verdict}</p>')
+
+    return (
+        '<section><h2>Research Population &amp; Grade Decomposition</h2>'
+        f'<p style="font-size:11px;color:var(--mut);margin-bottom:10px">{total} research '
+        f'candidates logged — every candidate the system evaluates, not just the ones that '
+        f'became real trades.</p>'
+        f'<div class="grid" style="margin-bottom:14px">{status_html}</div>'
+        '<table><tr><th>Grade</th><th>Closed</th><th>Wins</th><th>Win rate</th></tr>'
+        + "".join(grade_rows) + "</table>"
+        + fd_note + "</section>"
+    )
+
+
+def _calibration_section() -> str:
+    """Confidence-calibration diagnostics -- surfaced as a feature to show
+    off, not a bug to hide: recalibrated_confidence() has zero callers in
+    the live pipeline today, which is deliberate caution, not an oversight."""
+    try:
+        from src import confidence_calibration as _cc
+    except Exception:
+        return ""
+    try:
+        table = _cc.build_calibration_table()
+    except Exception:
+        return ""
+    if not table:
+        return ('<section><h2>Confidence Calibration</h2>'
+                '<p style="font-size:12px;color:var(--mut)">Not enough closed research-trade '
+                'history yet to build a calibration table.</p></section>')
+
+    overall = table.get("_overall", 0.0)
+    active_buckets = {k: v for k, v in table.items() if k != "_overall"}
+
+    rows_html = []
+    for key in sorted(active_buckets, key=lambda k: (-k[0], k[1], k[2])):
+        conf, direction, has_gbp = key
+        wr = active_buckets[key]
+        pair_tag = "GBP" if has_gbp else "non-GBP"
+        dcls = "buy" if direction == "BUY" else "sell"
+        cls = "pos" if wr >= 0.5 else "neg"
+        rows_html.append(
+            f'<tr><td>{conf}/10</td><td class="{dcls}">{html.escape(direction)}</td>'
+            f'<td>{pair_tag}</td><td class="num {cls}">{wr*100:.0f}%</td></tr>'
+        )
+
+    n_active = len(active_buckets)
+    cards_html = (
+        f'<div class="risk-card"><div class="k">Population mean win rate</div>'
+        f'<div class="v">{overall*100:.1f}%</div></div>'
+        f'<div class="risk-card"><div class="k">Buckets live (trusted)</div>'
+        f'<div class="v">{n_active}</div></div>'
+        f'<div class="risk-card"><div class="k">Wiring status</div>'
+        f'<div class="v" style="color:var(--amber);font-size:14px">BENCHED</div></div>'
+    )
+
+    body = (
+        f'<p style="font-size:11px;color:var(--mut);margin-bottom:10px">recalibrated_confidence() '
+        f'maps raw AI confidence to an empirically-measured win probability, keyed on (confidence, '
+        f'direction, GBP-involvement). A bucket only goes live once it clears {_cc.MIN_BUCKET}+ '
+        f'decisive trades AND {_cc.MIN_BUCKET_SPAN_DAYS}+ days of close-date spread — otherwise it '
+        f'falls back to the population mean below rather than reporting an unstable estimate off a '
+        f'lucky or unlucky streak.</p>'
+        f'<div class="risk-grid" style="margin-bottom:12px">{cards_html}</div>'
+    )
+    if n_active:
+        body += (
+            '<table><tr><th>Confidence</th><th>Dir</th><th>Pair type</th>'
+            '<th>Empirical win rate</th></tr>' + "".join(rows_html) + '</table>'
+        )
+    else:
+        body += ('<p style="font-size:11px;color:var(--mut)">No bucket has yet cleared the '
+                 'sample-size and time-span bar — every candidate still falls back to the '
+                 'population mean.</p>')
+    body += (
+        '<p style="font-size:11px;color:var(--mut);margin-top:10px">'
+        '<strong style="color:var(--amber)">Not yet wired into any live decision</strong> — '
+        'this is deliberate caution, not an oversight: the system holds this signal back until '
+        'it proves out-of-sample rather than gating real trades on it prematurely.</p>'
+    )
+    return '<section><h2>Confidence Calibration</h2>' + body + '</section>'
+
+
+def _online_learner_section() -> str:
+    """Online learner reliability-gate status: whether the model has enough
+    consecutive reliable retrains for its predictions to matter."""
+    try:
+        import json as _json
+        from src import online_learner as _ol
+        meta_file = config.DATA_DIR / "online_model_meta.json"
+        meta = _json.loads(meta_file.read_text(encoding="utf-8")) if meta_file.exists() else {}
+    except Exception:
+        return ""
+    if not meta:
+        return ""
+
+    required = getattr(_ol, "_RELIABILITY_STREAK_REQUIRED", 3)
+    streak = meta.get("n_consecutive_reliable", 0)
+    reliable = streak >= required
+    auc = meta.get("holdout_auc")
+    auc_txt = f"{auc:.3f}" if auc is not None else "—"
+    rwr = meta.get("recent_win_rate")
+    owr = meta.get("overall_win_rate")
+
+    cards = [
+        ("Decisive trades trained", meta.get("n_decisive", 0)),
+        ("Recent win rate (last 20)", f"{rwr*100:.0f}%" if rwr is not None else "—"),
+        ("Overall win rate", f"{owr*100:.0f}%" if owr is not None else "—"),
+        ("Holdout AUC", auc_txt),
+        ("Reliability streak", f"{streak}/{required}"),
+        ("Last retrained", (meta.get("last_updated") or "—")[:16].replace("T", " ")),
+    ]
+    cards_html = "".join(
+        f'<div class="risk-card"><div class="k">{html.escape(str(k))}</div>'
+        f'<div class="v">{html.escape(str(v))}</div></div>' for k, v in cards
+    )
+    status_line = ("RELIABLE — predictions eligible to influence sizing" if reliable else
+                   "NOT YET RELIABLE — holdout streak below gate, predictions logged but not acted on")
+    status_cls = "var(--green)" if reliable else "var(--amber)"
+
+    return (
+        '<section><h2>Online Learner Status</h2>'
+        f'<div class="risk-grid">{cards_html}</div>'
+        f'<p style="font-size:12px;margin-top:10px;color:{status_cls};font-weight:600">{status_line}</p>'
+        '</section>'
+    )
+
+
+def _cot_positioning_section() -> str:
+    """COT / positioning signals already logged per research trade -- there
+    is no standalone Positioning Agent yet, so this surfaces exactly what
+    the current pipeline captures in passing, including the dead field."""
+    try:
+        import csv as _csv
+        rt_csv = config.DATA_DIR / "research_trades.csv"
+        if not rt_csv.exists():
+            return ""
+        with rt_csv.open("r", encoding="utf-8-sig", newline="") as fh:
+            rows = list(_csv.DictReader(fh))
+    except Exception:
+        return ""
+    if not rows:
+        return ""
+
+    def _win(r):
+        status = r.get("status")
+        if status in ("WIN", "FULL_WIN"):
+            return True
+        if status == "PARTIAL_WIN":
+            try:
+                return float(r.get("net_pips") or 0) > 0
+            except (TypeError, ValueError):
+                return False
+        return False
+
+    closed = [r for r in rows if r.get("status") in ("WIN", "LOSS", "PARTIAL_WIN", "FULL_WIN")]
+
+    accel_bkt: dict = {}
+    for r in closed:
+        try:
+            vi = int(float(r.get("cot_accelerating", "")))
+        except (TypeError, ValueError):
+            continue
+        label = {1: "Building", 0: "Stable", -1: "Fading"}.get(vi, str(vi))
+        b = accel_bkt.setdefault(label, [0, 0])
+        b[0] += _win(r)
+        b[1] += 1
+
+    fund_bkt: dict = {}
+    for r in closed:
+        v = r.get("fundamental_alignment") or "?"
+        b = fund_bkt.setdefault(v, [0, 0])
+        b[0] += _win(r)
+        b[1] += 1
+
+    def _tbl(bkt, label):
+        if not bkt:
+            return ""
+        rows_html = "".join(
+            f'<tr><td>{html.escape(str(k))}</td><td class="num">{v[1]}</td>'
+            f'<td class="num">{v[0]}</td>'
+            f'<td class="num">{round(v[0]/v[1]*100) if v[1] else 0}%</td></tr>'
+            for k, v in sorted(bkt.items())
+        )
+        return (f'<h3 style="font-size:11px;color:var(--mut);margin:14px 0 8px;text-transform:'
+                f'uppercase;letter-spacing:.05em">{html.escape(label)}</h3>'
+                '<table><tr><th>Category</th><th>Trades</th><th>Wins</th><th>Win rate</th></tr>'
+                + rows_html + "</table>")
+
+    has_momentum_data = any((r.get("cot_momentum") or "").strip() for r in rows)
+    momentum_note = "" if has_momentum_data else (
+        f'<p style="font-size:11px;color:var(--amber);margin-top:12px">cot_momentum is logged in '
+        f'the schema but is 100% blank across all {len(rows)} research trades logged so far — '
+        f'wired to nothing yet. A dedicated Positioning Agent to build this out does not exist yet.</p>'
+    )
+
+    return (
+        '<section><h2>COT / Positioning Data</h2>'
+        f'<p style="font-size:11px;color:var(--mut);margin-bottom:10px">CFTC Commitments-of-Traders '
+        f'positioning signals already logged per research trade ({len(closed)} closed trades with '
+        f'positioning data). No standalone Positioning Agent exists yet — this is what the current '
+        f'pipeline captures in passing.</p>'
+        + _tbl(accel_bkt, "Win rate by COT momentum")
+        + _tbl(fund_bkt, "Win rate by fundamental alignment")
+        + momentum_note + "</section>"
+    )
+
+
+def _shadow_mode_section() -> str:
+    """Candidate grading/gating rules currently under silent shadow
+    evaluation, and how close each is to a promotion conversation."""
+    try:
+        from src import shadow_mode as _sm
+        rules = _sm.list_rules()
+    except Exception:
+        return ""
+    if not rules:
+        return (
+            '<section><h2>Shadow-Mode Rule Staging</h2>'
+            '<p style="font-size:12px;color:var(--mut)">No candidate grading/gating rules are '
+            'currently in shadow evaluation. shadow_mode.py exists as the standard on-ramp for any '
+            'future rule change: a new rule is registered and evaluated silently against real scans '
+            'before it can ever affect a live decision.</p></section>'
+        )
+
+    rows_html = []
+    for name in rules:
+        try:
+            status = _sm.check_promotion_readiness(name)
+        except Exception:
+            continue
+        wf, wnf = status.get("would_fire_wr"), status.get("would_not_fire_wr")
+        rows_html.append(
+            f'<tr><td>{html.escape(name)}</td>'
+            f'<td style="font-size:11px;color:var(--mut);white-space:normal">'
+            f'{html.escape(status.get("description",""))}</td>'
+            f'<td class="num">{status.get("n_decisive",0)}/{status.get("min_n","?")}</td>'
+            f'<td class="num">{status.get("days_elapsed",0)}/{status.get("max_days","?")}d</td>'
+            f'<td class="num">{f"{wf*100:.0f}%" if wf is not None else "—"}</td>'
+            f'<td class="num">{f"{wnf*100:.0f}%" if wnf is not None else "—"}</td>'
+            f'<td>{"READY" if status.get("ready") else "collecting"}</td></tr>'
+        )
+    return (
+        '<section><h2>Shadow-Mode Rule Staging</h2>'
+        '<p style="font-size:11px;color:var(--mut);margin-bottom:10px">Candidate rules run silently '
+        'against real scans before ever affecting a live decision. "Ready" means the evidence bar is '
+        'cleared for a promotion conversation — never an automatic promotion.</p>'
+        '<table><tr><th>Rule</th><th>Description</th><th>N decisive</th><th>Days</th>'
+        '<th>Would-fire WR</th><th>Would-not-fire WR</th><th>Status</th></tr>'
+        + "".join(rows_html) + "</table></section>"
+    )
+
+
+def _dynamic_threshold_trace_section() -> str:
+    """Live trace of the dynamic confidence threshold: the last 10 computed
+    entries and their inputs, from threshold_history.json."""
+    try:
+        import json as _json
+        hist_file = config.DATA_DIR / "threshold_history.json"
+        if not hist_file.exists():
+            return ""
+        history = _json.loads(hist_file.read_text(encoding="utf-8"))
+    except Exception:
+        return ""
+    if not history:
+        return ""
+
+    latest = history[-1]
+    rows_html = []
+    for e in reversed(history[-10:]):
+        ts = (e.get("timestamp") or "")[:16].replace("T", " ")
+        wr = e.get("win_rate_recent")
+        wr_txt = f"{wr*100:.0f}%" if wr is not None else "—"
+        rows_html.append(
+            f'<tr><td>{html.escape(ts)}</td><td>{html.escape(str(e.get("scan_mode","")))}</td>'
+            f'<td>{html.escape(str(e.get("regime","")))}</td>'
+            f'<td class="num">{e.get("regime_base","")}</td>'
+            f'<td class="num">{wr_txt}</td>'
+            f'<td class="num">{e.get("win_rate_adjustment","")}</td>'
+            f'<td>{html.escape(str(e.get("win_rate_source","")))}</td>'
+            f'<td class="num">{e.get("data_quality_adjustment","")}</td>'
+            f'<td class="num" style="font-weight:700">{e.get("final_threshold","")}</td></tr>'
+        )
+
+    return (
+        '<section><h2>Dynamic Threshold — Live Trace</h2>'
+        f'<p style="font-size:11px;color:var(--mut);margin-bottom:10px">Current effective '
+        f'confidence threshold: <strong style="color:var(--fg);font-size:14px">'
+        f'{latest.get("final_threshold","—")}/10</strong> &middot; regime '
+        f'{html.escape(str(latest.get("regime","")))} &middot; last computed '
+        f'{html.escape((latest.get("timestamp") or "")[:16].replace("T"," "))}</p>'
+        '<table><tr><th>Time</th><th>Mode</th><th>Regime</th><th>Base</th><th>Recent WR</th>'
+        '<th>WR adj</th><th>WR source</th><th>DQ adj</th><th>Final</th></tr>'
+        + "".join(rows_html) + "</table></section>"
+    )
+
+
+def _da_downgrade_section() -> str:
+    """Devil's-advocate objection/downgrade aggregates. Undercounts before
+    2026-08-27, when the da_fired schema was added -- see
+    project_da_downgrade_tracking.md."""
+    try:
+        import csv as _csv
+        rt_csv = config.DATA_DIR / "research_trades.csv"
+        if not rt_csv.exists():
+            return ""
+        with rt_csv.open("r", encoding="utf-8-sig", newline="") as fh:
+            rows = list(_csv.DictReader(fh))
+    except Exception:
+        return ""
+
+    evaluated = [r for r in rows if (r.get("da_fired") or "").strip() != ""]
+    if not evaluated:
+        return (
+            '<section><h2>Devil&rsquo;s-Advocate (DA) Downgrade Tracking</h2>'
+            '<p style="font-size:12px;color:var(--mut)">No candidates evaluated under the '
+            'da_fired schema yet.</p></section>'
+        )
+
+    fired = [r for r in evaluated if (r.get("da_fired") or "").strip().upper() == "TRUE"]
+    downgraded = [r for r in evaluated if (r.get("da_downgraded") or "").strip().upper() == "TRUE"]
+    cards = [
+        ("Candidates evaluated", len(evaluated)),
+        ("DA objections raised", len(fired)),
+        ("DA actually downgraded tier", len(downgraded)),
+        ("Downgrade rate (of fired)", f"{len(downgraded)/len(fired)*100:.0f}%" if fired else "—"),
+    ]
+    cards_html = "".join(
+        f'<div class="risk-card"><div class="k">{html.escape(str(k))}</div>'
+        f'<div class="v">{html.escape(str(v))}</div></div>' for k, v in cards
+    )
+    return (
+        '<section><h2>Devil&rsquo;s-Advocate (DA) Downgrade Tracking</h2>'
+        '<p style="font-size:11px;color:var(--mut);margin-bottom:10px">Tracks how often the '
+        'devil&rsquo;s-advocate pass raises an objection on a candidate, and how often that '
+        'objection actually changed its grade tier (vs. e.g. F&rarr;F, no real effect). '
+        'Undercounts before 2026-08-27, when this schema was added.</p>'
+        f'<div class="risk-grid">{cards_html}</div></section>'
+    )
+
+
 def _safe_section(label: str, fn, *args, fallback: str = "") -> str:
     """Run one dashboard section builder in isolation. A single malformed
     row/candidate must degrade that one section, not take down the whole
