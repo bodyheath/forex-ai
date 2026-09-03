@@ -1514,6 +1514,208 @@ def _da_downgrade_section() -> str:
     )
 
 
+def _open_positions_section(live: dict) -> str:
+    """Everything currently live right now, in one place: the real fund's
+    open trades (from calculate_fund_state()'s open_trades, already computed
+    with live prices) and each virtual book's open positions (joined from
+    that book's own positions.csv + candidates.csv, priced live the same
+    way -- no cascade partial-profit stages, a single target, reusing
+    financials.calculate_pnl()'s own open-trade math rather than
+    reimplementing it)."""
+    rows_html = []
+
+    for t in (live.get("open_trades") or []):
+        pnl = t.get("dollars_unrealised", 0.0)
+        cls = "pos" if pnl > 0 else "neg" if pnl < 0 else ""
+        rows_html.append(
+            f'<tr><td><strong>Real Fund</strong></td><td>{html.escape(str(t.get("pair","")))}</td>'
+            f'<td class="{"buy" if t.get("direction")=="BUY" else "sell"}">{html.escape(str(t.get("direction","")))}</td>'
+            f'<td class="num">{_f(t.get("entry"))}</td>'
+            f'<td class="num">{_f(t.get("stop"))}</td>'
+            f'<td class="num">{_f(t.get("t1") if not t.get("t1_hit") else (t.get("t2") if not t.get("t2_hit") else t.get("t3")))}</td>'
+            f'<td class="num {cls}">${pnl:+,.2f}</td>'
+            f'<td class="num">{html.escape(str(t.get("open_str","?")))}</td></tr>'
+        )
+
+    try:
+        from src import virtual_books as _vb
+        from src.trading import financials as _fin
+        prices = _fin.load_prices()
+        for book_id in sorted(_vb.BOOKS):
+            positions = _vb._load_csv(_vb._positions_path(book_id))
+            candidates = _vb._load_csv(_vb._positions_path(book_id).parent / "candidates.csv")
+            cand_by_id = {str(c.get("id")): c for c in candidates}
+            for p in positions:
+                if p.get("status") != "OPEN":
+                    continue
+                cand = cand_by_id.get(str(p.get("candidate_id")), {})
+                pair = p.get("pair") or cand.get("pair", "")
+                direction = (p.get("direction") or cand.get("direction", "")).upper()
+                entry = _fin.safe_float(cand.get("entry"))
+                stop = _fin.safe_float(cand.get("stop_loss"))
+                target = _fin.safe_float(cand.get("t2_price"))
+                cp = _fin.get_price(prices, pair)
+                pnl = _fin.calculate_pnl(
+                    pair=pair, direction=direction, entry=entry, stop_loss=stop,
+                    pos_pct=p.get("position_size_pct"), balance=_fin.safe_float(p.get("balance_at_entry")),
+                    t1_price=target, t2_price=None, t3_price=None,
+                    t1_hit=False, t2_hit=False, t3_hit=False,
+                    status="OPEN", exit_price=None, current_price=cp,
+                )
+                opened_dt = _fin.parse_utc_dt(str(p.get("opened_at", "")))
+                open_str = "?"
+                if opened_dt:
+                    from datetime import datetime as _dt, timezone as _tz
+                    hours = (_dt.now(_tz.utc) - opened_dt).total_seconds() / 3600
+                    open_str = f"{hours:.0f}h" if hours < 24 else f"{hours/24:.0f}d"
+                dollars = pnl.get("dollars", 0.0)
+                cls = "pos" if dollars > 0 else "neg" if dollars < 0 else ""
+                rows_html.append(
+                    f'<tr><td>{html.escape(book_id)}</td><td>{html.escape(str(pair))}</td>'
+                    f'<td class="{"buy" if direction=="BUY" else "sell"}">{html.escape(direction)}</td>'
+                    f'<td class="num">{_f(entry)}</td><td class="num">{_f(stop)}</td>'
+                    f'<td class="num">{_f(target)}</td>'
+                    f'<td class="num {cls}">${dollars:+,.2f}</td>'
+                    f'<td class="num">{html.escape(open_str)}</td></tr>'
+                )
+    except Exception as exc:
+        print(f"[dashboard] open_positions virtual-book join failed: {exc}", file=sys.stderr)
+
+    if not rows_html:
+        return (
+            '<section><h2>Open / Current Trades</h2>'
+            '<p style="font-size:13px;color:var(--mut)">Nothing open right now — real fund or '
+            'any virtual book.</p></section>'
+        )
+
+    return (
+        '<section><h2>Open / Current Trades</h2>'
+        '<table><tr><th>Book</th><th>Pair</th><th>Dir</th><th>Entry</th><th>Stop</th>'
+        '<th>Target</th><th>Unrealised P/L</th><th>Open</th></tr>'
+        + "".join(rows_html) + '</table></section>'
+    )
+
+
+def _daily_scan_reports_section(limit: int = 15) -> str:
+    """A readable, browsable timeline of recent scans -- not a spreadsheet of
+    raw candidate rows. Each entry: the regime/threshold read that scan
+    actually computed (threshold_history.json, one entry per scan), the
+    highest-confidence candidate analysed in that scan's window and its real
+    key_thesis narrative (tracker.load(), which logs the analyst's actual
+    prose per candidate), and a plain trade-or-not summary.
+
+    Scan boundaries: threshold_history.json has no candidate-id link to
+    trades.csv, so candidates are joined by timestamp proximity -- every
+    trades.csv row whose timestamp falls between the previous scan's
+    threshold-compute timestamp and this one's (confirmed empirically: a
+    scan's candidates all log within ~3 minutes, immediately before that
+    scan's own threshold compute() call)."""
+    try:
+        import json as _json
+        hist_file = config.DATA_DIR / "threshold_history.json"
+        if not hist_file.exists():
+            return ""
+        history = _json.loads(hist_file.read_text(encoding="utf-8"))
+    except Exception:
+        return ""
+    if not history:
+        return ""
+
+    rows = tracker.load()
+    parsed_rows = []
+    for r in rows:
+        dt = _parse_ts(r.get("timestamp"))
+        if dt:
+            parsed_rows.append((dt, r))
+    parsed_rows.sort(key=lambda x: x[0])
+
+    entries = []
+    recent = history[-limit:]
+    for i, entry in enumerate(recent):
+        ts = _parse_ts(entry.get("timestamp"))
+        if ts is None:
+            continue
+        # Window: from 60 minutes before this scan's compute() call (a full
+        # scan takes well under that) up to the compute() timestamp itself.
+        window_start = ts - _timedelta(minutes=60)
+        window = [r for (dt, r) in parsed_rows if window_start <= dt <= ts]
+        entries.append((ts, entry, window))
+
+    entries.sort(key=lambda x: x[0], reverse=True)
+
+    blocks = []
+    for i, (ts, entry, window) in enumerate(entries):
+        yes = [r for r in window if r.get("trade_this") == "YES"]
+        no = [r for r in window if r.get("trade_this") != "YES" and r.get("confidence")]
+
+        def _conf(r):
+            try:
+                return float(r.get("confidence") or 0)
+            except (TypeError, ValueError):
+                return 0.0
+
+        best = max(window, key=_conf) if window else None
+        wr = entry.get("win_rate_recent")
+        wr_txt = f"{wr*100:.0f}%" if wr is not None else "—"
+
+        if yes:
+            outcome_html = (
+                f'<div style="color:var(--green);font-weight:600;margin-top:6px">'
+                f'{len(yes)} trade{"s" if len(yes)!=1 else ""} taken: '
+                + ", ".join(f'{html.escape(y.get("pair",""))} {html.escape((y.get("direction") or "").upper())}' for y in yes)
+                + '</div>'
+            )
+        else:
+            outcome_html = (
+                '<div style="color:var(--mut);margin-top:6px">No actionable setups this scan '
+                f'(effective threshold {entry.get("final_threshold","?")}/10' +
+                (f', best candidate scored {_conf(best):.0f}/10' if best else '') + ')</div>'
+            )
+
+        best_html = ""
+        if best is not None:
+            thesis = html.escape((best.get("key_thesis") or "")[:400])
+            best_html = (
+                f'<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">'
+                f'<div style="font-size:11px;color:var(--mut);text-transform:uppercase;'
+                f'letter-spacing:.05em;margin-bottom:4px">Best opportunity this scan</div>'
+                f'<div><strong>{html.escape(best.get("pair",""))}</strong> '
+                f'<span class="{"buy" if (best.get("direction") or "").upper()=="BUY" else "sell"}">'
+                f'{html.escape((best.get("direction") or "").upper())}</span> '
+                f'&middot; confidence {html.escape(str(best.get("confidence","")))}/10</div>'
+                + (f'<div style="font-size:12px;color:var(--mut);margin-top:4px">{thesis}'
+                   + ("…" if len(best.get("key_thesis") or "") > 400 else "") + '</div>' if thesis else "")
+                + '</div>'
+            )
+
+        open_attr = " open" if i == 0 else ""
+        blocks.append(
+            f'<details class="scan-entry"{open_attr}>'
+            f'<summary><span class="scan-time">{html.escape(ts.strftime("%Y-%m-%d %H:%M"))} UTC</span>'
+            f'<span class="scan-mode">{html.escape(str(entry.get("scan_mode","")))}</span>'
+            f'<span class="scan-regime">{html.escape(str(entry.get("regime","")).replace("_"," ").title())}</span>'
+            f'<span class="scan-count">{len(window)} analysed</span></summary>'
+            f'<div class="scan-body">'
+            f'<div style="font-size:12px;color:var(--mut)">Threshold {entry.get("final_threshold","?")}/10 '
+            f'(regime base {entry.get("regime_base","?")}, recent win rate {wr_txt} via '
+            f'{html.escape(str(entry.get("win_rate_source","")))}, data quality {entry.get("data_quality_pct","?")}%)</div>'
+            + outcome_html + best_html
+            + '</div></details>'
+        )
+
+    if not blocks:
+        return ""
+
+    return (
+        '<section><h2>Daily Scan Reports</h2>'
+        '<p style="font-size:11px;color:var(--mut);margin-bottom:10px">The last '
+        f'{len(blocks)} scans, newest first — click to expand. Regime/threshold read from '
+        'threshold_history.json; best-opportunity commentary and trade-or-not outcome from the '
+        'actual candidates analysed in that scan\'s window.</p>'
+        + "".join(blocks) + '</section>'
+    )
+
+
 def _safe_section(label: str, fn, *args, fallback: str = "") -> str:
     """Run one dashboard section builder in isolation. A single malformed
     row/candidate must degrade that one section, not take down the whole
