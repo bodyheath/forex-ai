@@ -117,6 +117,9 @@ jobs:
             # same missing-staging bug class as run_guard.json/risk_profile.json
             # before them, found while auditing the dashboard's virtual-books panel.
             git add data/virtual_books/               2>/dev/null || true
+            # 2026-09-04: same missing-staging bug class as data/virtual_books/
+            # above -- shadow_rules.json isn't inside that directory.
+            git add data/shadow_rules.json            2>/dev/null || true
             git add docs/                             2>/dev/null || true
           }
 
