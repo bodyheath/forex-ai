@@ -429,7 +429,16 @@ def _rows_table(rows) -> str:
 
 
 def _risk_section() -> str:
-    """Render the risk profile panel from risk_profile.json."""
+    """Render the risk profile panel. Balance/peak/drawdown/streak are sourced
+    live from financials.calculate_fund_state() (recomputed fresh from
+    trades.csv on every call) rather than the risk_profile.json snapshot,
+    which is only rewritten once per full/intraday scan and goes stale
+    between scans -- the same stale-snapshot pattern already fixed for
+    risk_profile.json's own peak_balance ratchet (see
+    project_risk_profile_peak_ratchet_fix.md). risk_mode/last_5_win_rate/
+    total_open_pct are stateful risk-manager sizing decisions with no
+    equivalent in calculate_fund_state()'s pure trade-history computation,
+    so those three still come from the risk_profile.json snapshot."""
     import json as _json
     try:
         if not config.RISK_PROFILE_FILE.exists():
@@ -438,18 +447,22 @@ def _risk_section() -> str:
     except Exception:
         return ""
 
-    bal  = profile.get("estimated_balance", 0)
-    peak = profile.get("peak_balance", bal)
+    from src.trading import financials as _fin
+    live = _fin.calculate_fund_state()
+
     cur  = profile.get("account_currency", "USD")
     mode = profile.get("risk_mode", "normal")
-    cl   = profile.get("consecutive_losses", 0)
-    cw   = profile.get("consecutive_wins", 0)
     wr   = profile.get("last_5_win_rate")
     tot  = profile.get("total_open_pct", 0.0)
 
+    bal  = live.get("balance", profile.get("estimated_balance", 0))
+    peak = live.get("peak_balance", profile.get("peak_balance", bal))
+    cl   = live.get("consecutive_losses", profile.get("consecutive_losses", 0))
+    cw   = live.get("consecutive_wins", profile.get("consecutive_wins", 0))
+    dd   = live.get("current_drawdown_pct", 0.0)
+
     from src import risk_manager as _rm
     mode_risk = _rm.MODE_RISK.get(mode, 1.0)
-    dd        = (peak - bal) / peak * 100 if peak > 0 else 0.0
 
     wr_txt = f"{wr*100:.0f}%" if wr is not None else "—"
     bar_pct = min(tot / _rm.MAX_DAILY_RISK * 100, 100)
