@@ -20,9 +20,13 @@ def _parse_ts(s):
     if not s:
         return None
     s = str(s).strip()
-    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
+    try:
+        return datetime.fromisoformat(s)
+    except ValueError:
+        pass
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
         try:
-            return datetime.strptime(s[:len(fmt.replace("%f", "000000"))] if "%f" in fmt else s[:19], fmt)
+            return datetime.strptime(s[:len(fmt) + (8 if fmt.endswith("%S") else 0)], fmt)
         except ValueError:
             continue
     return None
