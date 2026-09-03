@@ -57,7 +57,7 @@ a look" — a rule can be `ready_for_review` and still correctly conclude
 
 | Rule | Status | Notes |
 |---|---|---|
-| `ribbon_carveout_exclude_trending_risk_on` | **Not promotable** | n=98/32 (need 100/40); p=0.38 (need <0.025 corrected); PF(fire)=1.51 (need ≤0.80). See [`project_ribbon_regime_carveout_threshold.md`](../../memory) and the 2026-09-04 re-verification below. |
+| `ribbon_carveout_exclude_trending_risk_on` | **Not promotable** | n=98/32 (need 100/40); p=0.38 (need <0.025 corrected); PF(fire)=1.51 (need ≤0.80). See [`project_ribbon_regime_carveout_threshold.md`](../../memory) and the 2026-09-04 re-verification below. A separate 43,344-candidate 3-year mechanical backtest (`scripts/historical_grading_backtest.py`, no regime split) found ribbon-strongly-against and ribbon-against statistically indistinguishable from each other (p=0.48) and both mildly beating non-opposition — doesn't resolve this rule's regime-specific question directly, but weakens ribbon-opposition-as-explanation generally. |
 | `vix_regime_edge_trending_risk_on` | **Not promotable — trending toward confirmed false lead** | Post-freeze new data (n=97/94) shows the gap has *inverted* (below now beats above), not merely narrowed. p=0.11, PF gap is negative. See [`project_vix_regime_edge_threshold.md`](../../memory). |
 | `vbook_B_conf6_rr15`, `vbook_C_grade_based`, `vbook_D_no_da`, `vbook_E_no_dd_gate` | Auto-registered, accumulating | Every settled position each book takes is logged automatically (`src/virtual_books.py::_settle_book_positions()`) — no manual step required. Currently near-zero volume (the feature is new); check `check_promotion_readiness()` before treating any of these as evidence either way. |
 
