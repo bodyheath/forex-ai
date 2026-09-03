@@ -816,11 +816,22 @@ def _group_header(title: str, subtitle: str = "") -> str:
 
 
 def _ticker_bar(live: dict) -> str:
-    """Top-of-page ticker strip: the numbers a person scanning fast checks first."""
+    """Top-of-page ticker strip: the numbers a person scanning fast checks first.
+
+    2026-09-04: live["win_rate"] (calculate_fund_state()'s top-level field) is
+    derived from raw gross `pips`, not `net_pips` -- confirmed dead/never fixed
+    earlier this session specifically because nothing called it (see the
+    "confirmed unused by any live consumer" comment next to it in
+    financials.py). This dashboard revived it as a caller, producing a second,
+    gross-pips-inflated "win rate" (70.0%) that visibly contradicted the
+    Real Fund section's correct, net-pips-based number (60.0% under the v2
+    reset scope). Switched to live["v2_win_rate"], which is net-pips-based
+    and v2-scoped, matching every other corrected figure on this page.
+    """
     bal   = live.get("balance", 0.0)
     eq    = live.get("total_equity", bal)
     dd    = live.get("current_drawdown_pct", 0.0)
-    wr    = live.get("win_rate", 0.0)
+    wr    = live.get("v2_win_rate", 0.0)
     pf    = live.get("profit_factor", 0.0)
     daily = live.get("daily_pnl_pct", 0.0)
     sizing = live.get("sizing_mode", "NORMAL")
