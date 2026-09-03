@@ -995,17 +995,17 @@ def _shadow_mode_status_card() -> str:
         return ""
     if not rules:
         return _status_card("Shadow-Mode Rules", "NONE", "No candidate rules in shadow evaluation", "mut")
-    ready = 0
+    promotable = 0
     for name in rules:
         try:
-            if _sm.check_promotion_readiness(name).get("ready"):
-                ready += 1
+            if _sm.check_promotion_readiness(name).get("promotable"):
+                promotable += 1
         except Exception:
             continue
     return _status_card(
         "Shadow-Mode Rules", f"{len(rules)} tracked",
-        f"{ready} ready for a promotion conversation" if ready else "None ready yet",
-        "green" if ready else "blue",
+        f"{promotable} promotable (every criterion met)" if promotable else "None promotable yet",
+        "green" if promotable else "blue",
     )
 
 
