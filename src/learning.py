@@ -23,7 +23,26 @@ def _to_float(v):
 
 _WIN_STATUSES    = {"WIN", "FULL_WIN", "PARTIAL_WIN"}
 _LOSS_STATUSES   = {"LOSS"}
+_DECISIVE_STATUSES = {"WIN", "FULL_WIN", "PARTIAL_WIN", "LOSS"}
 _CLOSED_STATUSES = _WIN_STATUSES | _LOSS_STATUSES | {"BREAKEVEN"}
+
+
+def _is_win(r) -> bool:
+    """PARTIAL_WIN is a real, decisive, money-affecting close that isn't
+    uniformly a win by label -- real data has PARTIAL_WIN trades that closed
+    net-negative after costs. Classify it by net_pips sign instead of the
+    raw status label, matching the precedent already established in
+    risk_manager.py::_is_win_outcome(), dynamic_threshold.py, dashboard.py's
+    research-analytics section, and financials.py."""
+    status = r.get("status")
+    if status in ("WIN", "FULL_WIN"):
+        return True
+    if status == "PARTIAL_WIN":
+        try:
+            return float(r.get("net_pips") or 0) > 0
+        except (TypeError, ValueError):
+            return False  # unparseable/missing net_pips -- conservative, not a win
+    return False
 
 
 def _closed(rows):
@@ -31,10 +50,10 @@ def _closed(rows):
 
 
 def _winrate(rows):
-    decisive = [r for r in rows if r.get("status") in (_WIN_STATUSES | _LOSS_STATUSES)]
+    decisive = [r for r in rows if r.get("status") in _DECISIVE_STATUSES]
     if not decisive:
         return None, 0
-    wins = sum(1 for r in decisive if r["status"] in _WIN_STATUSES)
+    wins = sum(1 for r in decisive if _is_win(r))
     return wins / len(decisive), len(decisive)
 
 
