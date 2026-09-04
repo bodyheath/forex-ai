@@ -1,0 +1,55 @@
+I need to carefully work through this setup, especially the contradictions.
+
+**MTF Check:**
+W:SELL + D:SELL = both agree SELL direction ✓ (2/3 rule met for TRADE_THIS eligibility)
+
+**RSI in UPTREND context (critical):**
+Ribbon = ALIGNED_BULL, price > SMA50 > SMA200, golden-cross. But MTF says W:SELL + D:SELL = confirmed DOWNTREND signal on higher timeframes. These conflict. The trend= line says uptrend structurally, but MTF momentum is SELL. I'll use MTF direction (W+D both SELL) as the operative context → standard RSI tiers apply (mixed/neutral between structure and momentum).
+
+RSI=71.2: standard tier = 62-70 = SELL 4-5, but 71.2 is just above 70 → 7-8 SELL tier. T_sig=SELL_7. Use T_sig anchor = 7.
+
+**RSI UPTREND adjustment:** The structural uptrend means overbought is somewhat normal. But W:SELL+D:SELL overrides — use standard tiers. RSI 71.2 → SELL_7 confirmed. TECHNICAL_SCORE = 7.
+
+**Contradictions noted:**
+- ALIGNED_BULL ribbon (5/5, fan) = strong trend continuation bias → conflicts with SELL
+- FUND: AUD rate rising, CHF rate falling = rate differential strongly favors AUD/CHF BUY, not SELL
+- PAT = pin_bar_at_key_level:bul = bullish candle pattern = conflicts with SELL
+- FIB: price at 0.5824, SH=0.5781 (swing high already broken above), SL=0.5547 — price above swing high = breakout territory, no Fibonacci resistance confirmed nearby
+- DIV = bearish:moderate (52p/3pt) = CONFIRMED bearish divergence → +1 confidence for SELL
+- OSC = TRIPLE_SELL → +2 confidence
+- CHF net SHORT @100% MOM=UNWINDING → crowded CHF short unwinding = CHF strengthening = AUD/CHF bearish → supports SELL
+- FUND diff=+4.50% AUD over CHF = fundamentally bullish AUD/CHF = conflicts with SELL
+
+**Fundamental conflicts:** Rate diff strongly BUY. SELL setup fighting +4.50% rate differential. System Memory Pattern 3: "Technical signal conflicts with rate differential direction → fundamentals tend to win over weeks." This is a significant red flag.
+
+**SELL setups system memory:** Win rate 50%, expectancy -0.29R → unprofitable, reduce confidence.
+
+**Confidence build:**
+- Base: 5
+- MTF W+D both SELL: +1
+- DIVERGENCE CONFIRMED: +1
+- OSCILLATOR TRIPLE_SELL: +2
+- Rate differential conflicts (Pattern 3 penalty): -1
+- ALIGNED_BULL ribbon conflicts: -1
+- Bullish pin bar pattern conflicts: -1 (confidence, not technical score)
+- SELL setup negative expectancy: -1
+- Net: 5+1+1+2-1-1-1-1 = **5** → below 7 threshold
+
+**TRADE_THIS = NO** (confidence <7, and rate differential fighting the trade)
+
+**Entry/SL/Target computation:**
+Entry: 0.5824 (current)
+SL: above recent structure — ATR=0.0038, place 1.5×ATR above = 0.5824 + 0.0057 = 0.5881
+Risk = 0.5881 - 0.5824 = 0.0057
+Target (2R): 0.5824 - (0.0057 × 2) = 0.5824 - 0.0114 = **0.5710**
+
+---
+
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+KEY_THESIS: D1 RSI overbought (71.2) in confirmed uptrend with bearish RSI divergence + triple oscillator sell confluence + CHF crowded long unwinding creates high-probability reversal setup at key resistance.
+RISK_FACTORS: ALIGNED_BULL ribbon (5/5) contradicts sell thesis — trend continuation bias remains intact; AUD rate rising + CHF rate falling supports continuation, not reversal.

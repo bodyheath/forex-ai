@@ -1,0 +1,32 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 SELL_6 signal conflicts with 4H bullish structure and MTF disagreement (W:BUY vs D:SELL) — crowded EUR shorts unwinding create reversal risk; entry only if D1 breakdown below 0.8554 confirmed with fresh bear conviction.
+
+RISK_FACTORS: 
+1. MTF conflict (W:BUY + D:SELL, conf=1/3 <2/3 threshold) = trade invalidated by MTF rule; 4H uptrend pin_bar suggests bullish continuation risk.
+2. EUR COT at extreme SHORT (14.0% net, near 1y bottom) + UNWINDING momentum = institutional positioning trapped short; any bounce triggers short-covering rally, opposing SELL thesis.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.8554
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 with close <0.8554 to confirm downtrend and override MTF conflict; requires MACD cross bearish as confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+```
+
+---
+
+### **Detailed Reasoning:**
+
+**MTF RULE VIOLATION (HARD STOP
