@@ -1,0 +1,27 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 RSI 64.3 in confirmed uptrend signals overbought (not oversold) with pin bar rejection at 100% Fib level, but MTF agreement 1/3 and COT unwinding crowd shorts undermine conviction.
+RISK_FACTORS: [1. MTF severely misaligned (only D:SELL; M/W/4H neutral) — trend directional confidence <40%; 2. COT positioning flipped: EUR crowded SHORT unwinding + CHF crowded LONG unwinding = institutional reversal risk contradicts SELL setup]
+TRADE_THIS: NO
+
+ENTRY_TYPE: [CONDITIONAL_AVOID]
+ENTRY_TRIGGER_PRICE: [N/A]
+ENTRY_TRIGGER_REASON: [Trade fails MTF rule: only 1/3 timeframes align on SELL (D only); W and M neutral. Confidence 1/3 < 2/3 threshold. Do not enter.]
+ENTRY_TRIGGER_EXPIRY_HOURS: [0]
+```
+
+---
+
+### **SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 5/10**
+- **D1 RSI 64.3 in confirmed UPTREND (golden cross, price > SMA50 >

@@ -1,0 +1,24 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 SELL signal conflicts with 4H uptrend and bullish patterns (double bottom, pin bar); MTF disagreement (W:BUY vs D:SELL, conf=1/3) disqualifies trade; EUR short positioning unwinding near crowded extreme limits downside conviction.
+RISK_FACTORS: [1] MTF misalignment (weekly BUY vs daily SELL) violates trade entry rule — conf<2/3 blocks execution. [2] EUR COT unwinding reversal risk: crowded short at bottom of 1y range suggests institutional capitulation may precede EUR bounce, invalidating SELL thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not agree on direction (W:BUY, D:SELL, conf=1/3 << 2/3 threshold). Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**ANALYSIS:**
+
+**Technical Rejection (Hard Block):**
+- **MTF Misalignment**: Weekly=BUY, Daily=SELL, 4H=NEUTRAL → confidence=1/3 (40%). Rule: *both
