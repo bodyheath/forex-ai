@@ -6605,6 +6605,17 @@ def _send_telegram_summary(
                         pass
                     continue
                 _ccy_blk, _ccy = _fs.check_currency_exposure(_yt.get("pair", ""), _ot_open_trades)
+                # 2026-09-04: unconditional heartbeat -- health_check.py's gate-
+                # presence tripwire (_GATE_PATTERNS["concentration"]) can only
+                # ever see this code path via the "Currency concentration —"
+                # text below, which is conditional on an actual block. With 0
+                # real open positions most scans, that line legitimately never
+                # fires, and the tripwire can't tell "never runs" apart from
+                # "runs every time, nothing to block" -- it flagged exactly
+                # that ambiguity on 2026-09-04. This line always fires when the
+                # gate is evaluated, mirroring [sizing]'s existing unconditional
+                # log pattern elsewhere in this same loop.
+                _log_line(log, f"[concentration] checked {_yt.get('pair','')} — blocked={_ccy_blk}")
                 if _ccy_blk:
                     _blk_rsn_ccy = (
                         f"Currency concentration — {_ccy} at {_fs.MAX_CURRENCY_EXPOSURE} open trades"
