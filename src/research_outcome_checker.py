@@ -44,24 +44,36 @@ _FETCH_DELAY       = 10     # seconds between calls; free tier = 8 req/min
 _POST_CLOSE_DAYS   = 5      # track for this many days after a trade closes
 
 
+# 2026-09-05: same evidence-based extension as src/outcome_checker.py's
+# EXPIRY_EXTENSION_DAYS (see that module's own docstring for the full
+# 803-candidate curve) -- net benefit of waiting longer plateaus around
+# +3 to +5 extra days regardless of the original window's length, then
+# erodes as stop-hits keep accumulating faster than target-hits. Applied
+# here as a flat addition to every tier/fallback so the relative
+# volatility-based spacing (5/7/10) is preserved, just shifted -- still
+# comfortably under _STALE_EXIT_DAYS=21's hard cap even at the top tier.
+EXPIRY_EXTENSION_DAYS = 4
+
+
 def _compute_expiry_days(row: dict) -> int:
     """Volatility-based expiry:
       - High volatility  (atr_percentile_6m > 1.2) → 5 days  (trade resolves faster)
       - Low volatility   (atr_percentile_6m < 0.8) → 10 days (trade needs more time)
       - Normal volatility                           → 7 days
+    Plus a flat +4-day extension on every tier (see EXPIRY_EXTENSION_DAYS).
 
     Falls back to R:R-based formula for rows where atr_percentile_6m is missing,
-    and ultimately to _EXPIRY_DAYS=7 if levels are missing too.
+    and ultimately to _EXPIRY_DAYS=7 if levels are missing too (both also +4).
     """
     try:
         atr_pct = row.get("atr_percentile_6m")
         if atr_pct not in (None, ""):
             atr_val = float(atr_pct)
             if atr_val > 1.2:
-                return 5
+                return 5 + EXPIRY_EXTENSION_DAYS
             if atr_val < 0.8:
-                return 10
-            return 7
+                return 10 + EXPIRY_EXTENSION_DAYS
+            return 7 + EXPIRY_EXTENSION_DAYS
     except (TypeError, ValueError):
         pass
 
@@ -73,11 +85,11 @@ def _compute_expiry_days(row: dict) -> int:
         sd = abs(entry - stop)
         td = abs(entry - target)
         if sd <= 0:
-            return _EXPIRY_DAYS
+            return _EXPIRY_DAYS + EXPIRY_EXTENSION_DAYS
         rr = td / sd
-        return max(7, round(rr * 2))
+        return max(7, round(rr * 2)) + EXPIRY_EXTENSION_DAYS
     except (TypeError, ValueError, ZeroDivisionError):
-        return _EXPIRY_DAYS
+        return _EXPIRY_DAYS + EXPIRY_EXTENSION_DAYS
 
 
 
