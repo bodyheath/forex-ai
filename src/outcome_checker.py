@@ -37,6 +37,44 @@ _PRICE_URL   = "https://api.twelvedata.com/price"
 _EXPIRY_DAYS = 5    # fallback; actual expiry is computed from R:R
 _FETCH_DELAY = 10   # seconds between price calls; free tier = 8 req/min
 
+# 2026-09-05: real-fund EXPIRY_EXTENSION_DAYS, evidence-based.
+#
+# Motivated by a real-fund audit finding 9 of the fund's 10 decisive v2
+# trades resolved EXPIRED rather than cleanly hitting target or stop --
+# only 1 (EUR/NZD, id=2909) ever reached its 2R target within the old
+# window. Investigated at scale: scripts/expiry_extension_analysis.py
+# walked 803 EXPIRED research candidates forward through real subsequent
+# historical daily OHLC (not estimated) for up to 15 extra days past their
+# actual expiry, checking each day's high/low against the trade's own real
+# target and stop. Result -- the honest trade-off, not just the upside:
+#
+#   Extra days   cum% would hit TARGET   cum% would hit STOP   net
+#   1            33.5%                   8.2%                  +25.3pp
+#   3            48.3%                   18.2%                 +30.1pp
+#   4            52.2%                   22.2%                 +30.0pp
+#   5            54.0%                   23.8%                 +30.3pp (peak)
+#   9            58.7%                   29.3%                 +29.4pp
+#   15           59.8%                   32.8%                 +27.0pp
+#
+# Net benefit (target-recovery minus new-stop-outs) plateaus at days 3-5
+# and then *erodes* as the window keeps opening -- stop-hit rate keeps
+# climbing (8.2%->32.8%) faster than target-hit rate, which is nearly flat
+# past day ~8 (57.8%->59.8%). +4 extra days sits right in the peak/plateau
+# and is a clean, auditable round number -- going further trades away
+# already-banked benefit for more downside, not more upside.
+#
+# Caveat, stated plainly: re-run against the real fund's own 9 EXPIRED
+# trades specifically (n=9, not the 803-row population above) showed the
+# OPPOSITE in that tiny sample -- 6 of 9 would have flipped to a stop-out,
+# only 2 to a target. At n=9 this is expected sampling variance (one of
+# those "stops" was a single day after an already-marginal +4.4-pip expiry
+# -- not evidence the mechanism differs for real-fund trades, just too few
+# trades to say anything on their own). The 803-row population is the
+# statistically reliable evidence this change is based on; the real fund's
+# own tiny sample doesn't overturn it, but is disclosed rather than hidden.
+# Full writeup: project_expiry_window_extension_sep2026.md.
+EXPIRY_EXTENSION_DAYS = 4
+
 
 def _to_float(val):
     try:
@@ -46,7 +84,8 @@ def _to_float(val):
 
 
 def _compute_expiry_days(row: dict) -> int:
-    """Dynamic expiry from R:R: max(4, round(rr * 1.5) + 1)."""
+    """Dynamic expiry from R:R: max(4, round(rr * 1.5) + 1), plus the
+    evidence-based +4 day extension (see EXPIRY_EXTENSION_DAYS above)."""
     try:
         entry  = float(row.get("entry")     or 0)
         stop   = float(row.get("stop_loss") or 0)
@@ -54,11 +93,11 @@ def _compute_expiry_days(row: dict) -> int:
         sd = abs(entry - stop)
         td = abs(entry - target)
         if sd <= 0:
-            return _EXPIRY_DAYS
+            return _EXPIRY_DAYS + EXPIRY_EXTENSION_DAYS
         rr = td / sd
-        return max(4, round(rr * 1.5) + 1)
+        return max(4, round(rr * 1.5) + 1) + EXPIRY_EXTENSION_DAYS
     except (TypeError, ValueError, ZeroDivisionError):
-        return _EXPIRY_DAYS
+        return _EXPIRY_DAYS + EXPIRY_EXTENSION_DAYS
 
 
 def _fetch_live_price(pair: str) -> float | None:
