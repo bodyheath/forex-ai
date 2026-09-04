@@ -1,0 +1,26 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both confirm SELL; pin bar at key level bearish on 4H supports downside; ribbon converging signals trend weakening into reversal zone.
+RISK_FACTORS: [1] CHF positioning near 1-year crowded long extreme with UNWINDING momentum creates reversal risk (longs exiting = potential bounce). [2] Ribbon converging + 4H BUY pattern conflicts with D1 SELL — trend is fragile; break above 1.1008 FIB resistance invalidates setup.
+TRADE_THIS: YES
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.0985
+ENTRY_TRIGGER_REASON: Sell into failed bounce at upper band of converging ribbon; 4H pin bar confirmation + D1 RSI 56.8 (neutral-to-overbought in range context) = lower-risk entry above current price.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+**RATIONALE:**
+
+**MTF Alignment:**  
+✓ Weekly: SELL  
+✓ Daily: SELL  
+✓ Confidence 2/3 (W+D agree; 4H conflicts) = TRADE_THIS permitted (≥2/3

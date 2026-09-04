@@ -1,0 +1,17 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at 100% Fib + RSI 64.3 (near overbought in uptrend) + D1 SELL signal conflict with aligned bullish ribbon and uptrend structure; COT unwinding on both sides creates reversal risk.
+RISK_FACTORS: [1] MTF alignment weak (D:SELL vs W/M/4H:NEUTRAL = 1/3 confidence, 40% weighting) — lacks multi-timeframe confirmation; sell signal may be false breakup fakeout. [2] EUR positioned net SHORT (crowded short, 14% COT), CHF positioned net SHORT (crowded long, 100% COT) + both UNWINDING — institutional reversal likely BUY EUR/CHF (long), not SELL; selling into unwinding short positioning is high-risk.
+TRADE_THIS: NO
+ENTRY_TYPE: AVOID
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF conf=1/3 fails minimum 2/3 threshold; COT unwinding both sides signals institutional pivot away from EUR/CHF downside; pin bar + RSI 64.3 in uptrend is correction noise, not reversal confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS

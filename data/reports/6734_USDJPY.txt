@@ -1,0 +1,20 @@
+PAIR: USD/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + D1 RSI 43.7 (neutral-to-bullish) + D1/4H both BUY + rising JPY rate (carry cost rising) = bounce setup off 155.256 support zone, but mixed ribbon and stale COT limit conviction.
+RISK_FACTORS: [1] MTF conf=2/3 (M:NEUTRAL weakens alignment — only D+4H agree; W:NEUTRAL = no weekly confirmation); [2] OSC=NONE (Stoch 71=overbought on 4H, CCI=-208=extreme bearish momentum mismatch — oscillators conflicted, not supporting).
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 157.50
+ENTRY_TRIGGER_REASON: Pullback to EMA21 (approx 157.50) + RSI <40 on D1 for cleaner entry confirmation within pin bar structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE (Confidence <7 → NO TRADE):**
+- **MTF Rule violation:** Weekly=NEUTRAL (not BUY) → conf only 2/3; system requires >=2/3

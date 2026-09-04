@@ -1,0 +1,27 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: Bearish RSI divergence + triple oscillator SELL confluence + CHF crowded short reversal risk override bullish ribbon structure; D1 SELL vs W NEUTRAL creates MTF conflict.
+
+RISK_FACTORS: [1) MTF conflict: Weekly neutral vs Daily SELL (conf=1/3 <2/3 threshold) — reversal signal questionable across timeframes. 2) CHF positioning at crowded near-12m high with UNWINDING momentum — institutional reversal could whipsaw retail shorts; CAD rate falling limits upside support.]
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.5863
+ENTRY_TRIGGER_REASON: Break below SH swing high 0.58604 confirms bearish divergence + oscillator confluence; align with CHF crowded short unwind.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+REASONING:
+• **TECHNICAL_SCORE=6**: D1 T_sig=SELL_6 baseline. RSI=67 in uptrend context (shift SELL zone higher: 65-77=4-5SELL standard, but 67 near overbought inflection). MACD histogram negative (

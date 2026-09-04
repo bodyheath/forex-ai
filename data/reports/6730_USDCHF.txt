@@ -1,0 +1,32 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 pin bar at key level + D1 SELL signal + CHF COT unwinding (crowded short reversal risk) conflict with MTF alignment failure (W and D disagree, conf=1/3), creating a trapped-liquidity setup vulnerable to institutional stop-hunts.
+
+RISK_FACTORS: 
+1. MTF disagreement (W:NEUTRAL, D:SELL, 4H:BUY, conf=1/3 << 2/3 threshold) violates MTF rule — trade confidence artificially suppressed despite strong D1 technicals.
+2. CHF positioning at 100% net SHORT near 1-year crowded high with UNWINDING momentum — institutional reversal risk; USD neutral at 50% provides no conviction buffer.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8115
+ENTRY_TRIGGER_REASON: Break below D1 pin bar low (0.8115) + Fibonacci support SL (0.7909) to confirm institutional exit momentum and oversold churn in CHF.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 T_sig=SELL
