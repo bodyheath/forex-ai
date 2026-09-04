@@ -35,8 +35,22 @@ sm.register_rule(
     min_n_fire=100, min_n_no_fire=100, alpha=0.05,
 )
 
-fire = df[(~df["rib_still_relevant"]) & (df["rib_strongly_against"] | df["rib_against"])]
-no_fire = df[(~df["rib_still_relevant"]) & (~df["rib_strongly_against"]) & (~df["rib_against"])]
+fire_full = df[(~df["rib_still_relevant"]) & (df["rib_strongly_against"] | df["rib_against"])].sort_values("date")
+no_fire_full = df[(~df["rib_still_relevant"]) & (~df["rib_strongly_against"]) & (~df["rib_against"])].sort_values("date")
+
+# Bounded, evenly-spaced sample (not the full 7,927/26,092 population) --
+# shadow_mode.py's per-evaluation JSON read-modify-write doesn't scale to
+# tens of thousands of calls, and doesn't need to: 300 per side, spread
+# evenly across the full 3-year date range, comfortably clears the
+# min_n_fire/min_n_no_fire=100 bar while staying a fast, proportionate
+# amount of data to store. The full population's aggregate stats are
+# already the registered evidence (see description above); this sample is
+# for check_promotion_readiness() to have real, representative evaluations
+# to compute its own independent z-test/PF from.
+SAMPLE_N = 300
+fire = fire_full.iloc[::max(1, len(fire_full)//SAMPLE_N)].head(SAMPLE_N)
+no_fire = no_fire_full.iloc[::max(1, len(no_fire_full)//SAMPLE_N)].head(SAMPLE_N)
+print(f"Sampling {len(fire)} of {len(fire_full)} fire rows, {len(no_fire)} of {len(no_fire_full)} no-fire rows")
 
 n_logged = 0
 for group, would_fire in ((fire, True), (no_fire, False)):
