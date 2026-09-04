@@ -3866,17 +3866,25 @@ def _pre_fetch_shared_data(pairs: list, log=print) -> tuple:
 
 # ── Indicative level calculator ───────────────────────────────────────────────
 
+_EXPIRY_EXTENSION_DAYS = 4  # see EXPIRY_EXTENSION_DAYS docstring below
+
 def _compute_expiry_days_from_rr(rr: float) -> int:
     """Calibrate trade expiry from R:R ratio.
 
     Stop ≈ 1x ATR ≈ average daily range (ADR), so R:R ≈ target_pips / adr_pips.
-    Formula: max(4, round(rr * 1.5) + 1)
-    Examples: R:R 2.3 → 4 days; R:R 3.1 → 6 days.
+    Base formula: max(4, round(rr * 1.5) + 1) (e.g. R:R 2.3 → 4 days;
+    R:R 3.1 → 6 days), plus a flat +4-day extension on top (see
+    _EXPIRY_EXTENSION_DAYS's docstring in src/outcome_checker.py for the
+    full evidence -- this is display/logging only; the real fund's own
+    outcome_checker.py and research trades' research_outcome_checker.py
+    each carry the identical +4 change in their own formulas, and this
+    function exists purely so "expires in N days" messages shown here
+    match what those two actually do).
     """
     try:
-        return max(4, round(float(rr) * 1.5) + 1)
+        return max(4, round(float(rr) * 1.5) + 1) + _EXPIRY_EXTENSION_DAYS
     except (TypeError, ValueError):
-        return 5
+        return 5 + _EXPIRY_EXTENSION_DAYS
 
 
 def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict,
