@@ -119,7 +119,14 @@ _GATE_PATTERNS = {
     "trend_hard":    re.compile(r"\[trend-hard\]"),
     "session":       re.compile(r"\[session\]"),
     "dd_tier":       re.compile(r"\[sizing\]"),
-    "concentration": re.compile(r"[Cc]urrency concentration"),
+    # 2026-09-04: matches the new unconditional [concentration] heartbeat in
+    # daily.py (fires every time check_currency_exposure() is evaluated,
+    # regardless of outcome) instead of the old "Currency concentration —"
+    # text, which only ever appeared on an actual block -- with 0 real open
+    # positions most scans, that line legitimately never fired, and this
+    # tripwire couldn't tell "never runs" apart from "runs, nothing to
+    # block". Confirmed real: flagged exactly that ambiguity on 2026-09-04.
+    "concentration": re.compile(r"\[concentration\]|[Cc]urrency concentration"),
     "capacity":      re.compile(r"\[capacity\]"),
     "da_escalation": re.compile(r"\bSonnet\b"),
 }
