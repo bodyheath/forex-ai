@@ -2487,8 +2487,11 @@ def _trade_quality_grade(r: dict) -> dict:
     A — conf≥8, R:R>2.5, all 3 TFs, ATR-calibrated, Fib near, no news, ribbon aligned, divergence
     B — conf≥7, R:R≥2.0, weekly+daily agree, no severe negatives
     C — conf≥6, R:R≥1.5, no blocking conditions
-    D — ribbon against direction, R:R<1.5, or TF conflict + low conf
-    F — ribbon strongly against, weekly/daily direct conflict, or R:R<1.3
+    D — R:R<1.5, TF conflict + low confidence, or (GBP-cross/CHF-cluster only) ribbon against direction
+    F — weekly/daily direct conflict, R:R<1.5, or (GBP-cross/CHF-cluster only) ribbon strongly against
+        (docstring corrected 2026-09-05 to match the code's actual R:R<1.5 bar, not the stale <1.3
+        it previously claimed; ribbon-opposition scoped to GBP-crosses/CHF-cluster the same day --
+        see the _rib_still_relevant comment below for the evidence)
     """
     p         = r.get("parsed", {})
     bundle    = r.get("bundle", {})
