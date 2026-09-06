@@ -48,7 +48,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "git add -A; $msg = (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'); git diff --cached --quiet; if ($LASTEXITCODE -ne 0) { git commit -m \"Auto-commit: $msg\"; git push origin main } ",
+            "command": "$branch = git rev-parse --abbrev-ref HEAD; if ($branch -eq \"main\") { exit 0 }; git add -A; $msg = (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'); git diff --cached --quiet; if ($LASTEXITCODE -ne 0) { git commit -m \"Auto-commit: $msg\"; git push origin $branch } ",
             "shell": "powershell",
             "timeout": 30,
             "statusMessage": "Pushing changes to GitHub..."
