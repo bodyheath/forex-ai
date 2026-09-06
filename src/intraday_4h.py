@@ -289,3 +289,156 @@ def run_scan(log: Callable = print) -> dict:
     vb._write_csv(CANDIDATES_CSV, candidates, CANDIDATE_FIELDS)
     vb._write_csv(vb._positions_path(BOOK_ID), positions, vb.POSITION_FIELDS)
     return {"evaluated": len(UNIVERSE), "opened": opened}
+
+
+# ─── Outcome checking / settlement ──────────────────────────────────────────
+# Mirrors research_outcome_checker.py's pattern (target/stop check, then an
+# expiry check, both against the row's own recorded levels) -- sized in
+# hours via _compute_expiry_hours() above instead of research_outcome_
+# checker.py's day-count constants, since a multi-week expiry makes no
+# sense for a setup expected to resolve in hours-to-days.
+
+def _classify_close(net_pips: float, hit: str) -> str:
+    if hit == "TARGET":
+        return "WIN"
+    if hit == "STOP":
+        return "LOSS"
+    return "WIN" if net_pips > 0 else ("LOSS" if net_pips < 0 else "EXPIRED")
+
+
+def settle_open_positions(log: Callable = print, prices: dict = None) -> dict:
+    """Called once per scan (same cadence as run_scan). Checks every OPEN
+    candidate in this book's own candidates CSV for a target/stop hit or
+    its own per-candidate hours-based expiry, closes it, then settles every
+    open position in this book's own positions CSV -- never touches any
+    other book's files, trades.csv, research_trades.csv, or fund_state.json.
+    """
+    from src.trading import financials
+
+    candidates = vb._load_csv(CANDIDATES_CSV)
+    if not candidates:
+        return {"closed": 0}
+    if prices is None:
+        prices = financials.load_prices()
+
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    closed_count = 0
+
+    for row in candidates:
+        if row.get("status") != "OPEN":
+            continue
+        pair = row.get("pair", "")
+        direction = row.get("direction", "")
+        entry = float(row.get("entry") or 0)
+        stop = float(row.get("stop_loss") or 0)
+        target = float(row.get("target") or 0)
+        price = financials.get_price(prices, pair)
+
+        hit, exit_price = None, None
+        try:
+            opened = datetime.strptime(row.get("opened_at", "")[:19], "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            opened = now
+        expiry_hours = float(row.get("expiry_hours") or _EXPIRY_HOURS_FLOOR)
+        expired = (now - opened) > timedelta(hours=expiry_hours)
+
+        if price is not None:
+            if direction == "BUY":
+                if price >= target:
+                    hit, exit_price = "TARGET", target
+                elif price <= stop:
+                    hit, exit_price = "STOP", stop
+            else:
+                if price <= target:
+                    hit, exit_price = "TARGET", target
+                elif price >= stop:
+                    hit, exit_price = "STOP", stop
+
+        if hit is None and expired:
+            hit, exit_price = "EXPIRED", (price if price is not None else entry)
+        if hit is None:
+            continue
+
+        from src import cascade
+        pips = cascade.pips_at(entry, exit_price, pair, direction) or 0.0
+        try:
+            hours_held = max(0.0, (now - opened).total_seconds() / 3600.0)
+            net_pips = trade_costs.net_pips_for_closed_trade(
+                pair, direction, entry, pips, hours_held / 24.0,
+            )
+        except Exception:
+            net_pips = pips
+
+        status = _classify_close(net_pips, hit)
+        row["status"] = status
+        row["closed_at"] = vb._now_str()
+        row["exit_price"] = exit_price
+        row["pips"] = round(pips, 1)
+        row["net_pips"] = round(net_pips, 1)
+        closed_count += 1
+        log(f"[intraday_4h] #{row['id']} {pair} {direction} closed {status} "
+            f"({net_pips:+.1f}p net, hit={hit})")
+
+        _settle_positions_for_candidate(int(row["id"]), net_pips, status, log)
+
+    if closed_count:
+        vb._write_csv(CANDIDATES_CSV, candidates, CANDIDATE_FIELDS)
+    return {"closed": closed_count}
+
+
+def _settle_positions_for_candidate(candidate_id: int, net_pips: float, status: str,
+                                     log: Callable) -> None:
+    from src.trading import financials
+    positions = vb._load_csv(vb._positions_path(BOOK_ID))
+    touched = False
+    for pos in positions:
+        if pos.get("candidate_id") != str(candidate_id) or pos.get("status") != "OPEN":
+            continue
+        touched = True
+        balance_at_entry = float(pos.get("balance_at_entry") or vb.STARTING_BALANCE)
+        pct = float(pos.get("position_size_pct") or 0)
+        stop_pips = float(pos.get("stop_pips") or 0)
+        dpp = financials.calculate_dpp(balance_at_entry, pct, stop_pips)
+        dollars = round(net_pips * dpp, 2) if dpp else 0.0
+
+        state = vb.load_book_state(BOOK_ID)
+        new_balance = state["balance"] + dollars
+        state["balance"] = round(new_balance, 2)
+        state["peak_balance"] = round(max(state["peak_balance"], new_balance), 2)
+        dd_pct = ((state["peak_balance"] - new_balance) / state["peak_balance"] * 100
+                  if state["peak_balance"] > 0 else 0.0)
+        state["current_drawdown_pct"] = round(dd_pct, 4)
+        state["max_drawdown_seen"] = round(max(state.get("max_drawdown_seen", 0.0), dd_pct), 4)
+        if net_pips > 0:
+            state["consecutive_wins"] = int(state.get("consecutive_wins") or 0) + 1
+            state["consecutive_losses"] = 0
+            state["wins"] = int(state.get("wins") or 0) + 1
+        elif net_pips < 0:
+            state["consecutive_losses"] = int(state.get("consecutive_losses") or 0) + 1
+            state["consecutive_wins"] = 0
+            state["losses"] = int(state.get("losses") or 0) + 1
+        vb.save_book_state(state)
+
+        pos["status"] = "CLOSED"
+        pos["closed_at"] = vb._now_str()
+        pos["net_pips"] = round(net_pips, 1)
+        pos["dollars"] = dollars
+        pos["balance_after"] = state["balance"]
+        log(f"[intraday_4h] position #{pos['id']} settled {status} {dollars:+.2f} "
+            f"-> balance ${state['balance']:,.2f}")
+
+        # Same auto-feed convention virtual_books.py's own settlement uses --
+        # accumulates evidence automatically, no separate step to remember.
+        try:
+            from src import shadow_mode as _sm
+            _sm.register_rule(f"vbook_{BOOK_ID}",
+                               description=f"Virtual book {BOOK_ID}: {BOOK_DESCRIPTION}")
+            _sm.record_evaluation(f"vbook_{BOOK_ID}", would_fire=True, outcome=status,
+                                   net_pips=net_pips,
+                                   context={"candidate_id": candidate_id, "pair": pos.get("pair"),
+                                            "direction": pos.get("direction")})
+        except Exception as exc:
+            log(f"[intraday_4h] shadow_mode logging failed (non-fatal): {exc}")
+
+    if touched:
+        vb._write_csv(vb._positions_path(BOOK_ID), positions, vb.POSITION_FIELDS)
