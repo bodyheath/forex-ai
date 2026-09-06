@@ -41,6 +41,22 @@ The remaining two are dormant by design, not by omission:
 - FUNCTION: mark_promoted (src/shadow_mode.py)
 - FUNCTION: assert_promotion_authorized (src/shadow_mode.py)
 
+## engine_arbitration.py::register_disagreement_rule() -- guard for a second engine that doesn't exist yet
+
+Built 2026-09-07, same shape as shadow_mode.py's assert_promotion_authorized()
+above: a guard meant for the START of a future code path, not something with
+a call site today. Exactly one engine has real directional authority right
+now (the main LLM pipeline) -- Positioning/COT, Carry/Macro, and Sentiment
+are shadow-mode advisory only and never independently propose a real BUY/
+SELL, so there is nothing yet that could disagree with the main engine on
+direction. resolve() (same file) IS exercised, directly, by
+tests/test_engine_arbitration.py against synthetic multi-engine inputs --
+only this registration helper has no caller. Remove this entry the day a
+second engine gets real directional authority and something calls
+register_disagreement_rule() before the first time resolve() runs for real.
+
+- FUNCTION: register_disagreement_rule (src/engine_arbitration.py)
+
 ## broker.py -- confirmed stub, no live-trading integration exists
 
 Documented repeatedly this session: `LIVE_TRADING` defaults `False`, is

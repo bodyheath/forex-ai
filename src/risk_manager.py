@@ -597,8 +597,34 @@ def size_trade_from_result(result: dict, profile: dict,
 
 # ── Correlation check ─────────────────────────────────────────────────────────
 
+def _literal_currency_correlated(pair1: str, dir1: str, pair2: str, dir2: str) -> bool:
+    """Old check: flag correlated if the two trades share a directional
+    currency code (e.g. BUY EUR/USD + BUY GBP/USD both short USD). Kept as
+    the fallback for when the real correlation model has no data -- see
+    src/correlation_model.py's module docstring for why this is no longer
+    the primary check (it both over- and under-flags real correlation)."""
+    exp1 = _currency_exposure(pair1, dir1)
+    exp2 = _currency_exposure(pair2, dir2)
+    return any(exp1.get(c) == exp2.get(c) for c in exp1)
+
+
+def _trades_correlated(pair1: str, dir1: str, pair2: str, dir2: str) -> bool:
+    try:
+        from src import correlation_model
+        result = correlation_model.are_correlated(pair1, dir1, pair2, dir2)
+        if result is not None:
+            return result
+    except Exception:
+        pass
+    # Real model unavailable (no matrix yet, stale beyond MAX_STALE_DAYS, or a
+    # pair outside the 28-pair UNIVERSE) -- fail toward the more conservative
+    # old check rather than skip the correlation gate.
+    return _literal_currency_correlated(pair1, dir1, pair2, dir2)
+
+
 def apply_correlation_checks(sized_trades: list) -> list:
-    """Flag and halve positions for trades that share directional currency exposure."""
+    """Flag and halve positions for trades whose real historical returns move
+    together in the same risk direction (see src/correlation_model.py)."""
     n = len(sized_trades)
     if n < 2:
         return sized_trades
@@ -607,9 +633,7 @@ def apply_correlation_checks(sized_trades: list) -> list:
     for i in range(n):
         for j in range(i + 1, n):
             t1, t2 = sized_trades[i], sized_trades[j]
-            exp1 = _currency_exposure(t1["pair"], t1["direction"])
-            exp2 = _currency_exposure(t2["pair"], t2["direction"])
-            if any(exp1.get(c) == exp2.get(c) for c in exp1):
+            if _trades_correlated(t1["pair"], t1["direction"], t2["pair"], t2["direction"]):
                 corr_pairs.add(i)
                 corr_pairs.add(j)
 

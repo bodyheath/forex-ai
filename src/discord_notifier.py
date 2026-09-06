@@ -688,6 +688,31 @@ def send_balance_drift_alert(title: str, message: str) -> bool:
     )
 
 
+def send_correlation_stale_alert(title: str, message: str) -> bool:
+    """Alert that src/correlation_model.py's weekly matrix refresh has been
+    failing long enough that apply_correlation_checks() (risk_manager.py)
+    is silently running on a stale -- or entirely missing -- correlation
+    matrix and has fallen back to the old literal currency-code check with
+    no other signal that anything's wrong.
+
+    2026-09-07: a stale correlation matrix nobody's alerted to is worse
+    than no correlation check at all -- it gives false confidence that the
+    real-correlation gate is protecting position sizing when it silently
+    isn't. Same shape as send_balance_drift_alert() -- must not go
+    unnoticed the way that reconciliation gap did before it got a watch.
+    """
+    fields = [
+        {"name": "\U0001f4c9 Detail", "value": message[:1024], "inline": False},
+    ]
+    return _send_embed(
+        WEBHOOK_CRITICAL,
+        title,
+        "Correlation matrix refresh check (src/correlation_model.py)",
+        COLOR_CRITICAL,
+        fields=fields,
+    )
+
+
 def send_monitor_gap_alert(gap_minutes, last_run_time=""):
     fields = [
         {"name": "⏰ Gap Duration", "value": f"{gap_minutes:.0f} minutes", "inline": True},
