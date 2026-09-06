@@ -315,6 +315,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                 )
                 closed.append(updated)
                 _online_learn(updated)
+                _record_loss_classification(updated)
                 _closed_this = True
 
             elif _casc.stop_hit(row, price):
@@ -374,6 +375,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                     )
                     closed.append(updated)
                     _online_learn(updated)
+                    _record_loss_classification(updated)
                     _closed_this = True
 
             if _closed_this:
@@ -388,6 +390,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                     log(f"  Research {pair} #{rec_id} closed as STALE_EXIT — exceeded 21 day maximum")
                     closed.append(updated)
                     _online_learn(updated)
+                    _record_loss_classification(updated)
                     continue
             except Exception:
                 pass
@@ -420,6 +423,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
             )
             closed.append(updated)
             _online_learn(updated)
+            _record_loss_classification(updated)
 
         except Exception as exc:
             log(f"  Research #{rec_id} {pair}: outcome check error — {exc}")
