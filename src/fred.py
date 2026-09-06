@@ -43,6 +43,43 @@ def latest(series_id: str):
     return None, None
 
 
+def history(series_id: str, start: str, end: str = None) -> list:
+    """Return the full observation history for series_id between start and
+    end (YYYY-MM-DD), oldest first, as [{"date": ..., "value": float}, ...]
+    with missing ('.') observations dropped.
+
+    2026-09-06: added for the Carry/Macro Agent backtest -- latest()/trend()
+    above only ever fetch the most recent 60 points with no date-range
+    params, so there was no existing way to pull real historical rate
+    history for a backtest. Uncached (backtest-only, one-shot use); live
+    code should keep using latest()/trend()'s cached snapshot path, not this.
+    """
+    params = {
+        "series_id": series_id,
+        "api_key": config.FRED_API_KEY,
+        "file_type": "json",
+        "sort_order": "asc",
+        "observation_start": start,
+    }
+    if end:
+        params["observation_end"] = end
+    try:
+        resp = requests.get(_URL, params=params, timeout=_TIMEOUT)
+        resp.raise_for_status()
+        obs = resp.json().get("observations", [])
+    except Exception:  # noqa: BLE001
+        return []
+    out = []
+    for o in obs:
+        if o.get("value") in (".", "", None):
+            continue
+        try:
+            out.append({"date": o["date"], "value": float(o["value"])})
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
 def trend(series_id: str, lookback: int = 12):
     """Return a short 'rising'/'falling'/'flat' descriptor comparing the latest
     value to one ~`lookback` observations back, or None if unavailable."""
