@@ -171,7 +171,7 @@ def refresh_correlation_matrix(force: bool = False, log=lambda *a: None) -> bool
     corr = rets.corr(min_periods=200)
     payload = {
         "computed_at": time.time(),
-        "computed_date": pd.Timestamp.utcnow().isoformat(),
+        "computed_date": pd.Timestamp.now("UTC").isoformat(),
         "lookback": REFRESH_LOOKBACK,
         "n_pairs": len(closes.columns),
         "matrix": corr.round(4).where(pd.notna(corr), None).to_dict(),
