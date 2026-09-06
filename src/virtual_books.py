@@ -191,6 +191,30 @@ def _elig_e_no_dd_gate(r, quality_grades, dd_mode, conf_threshold, eff_conf_fn, 
     return dd_allows_fn(r, "normal", quality_grades, conf_threshold, log_fn=lambda m: None)
 
 
+def _elig_f_sentiment_only(r, quality_grades, dd_mode, conf_threshold, eff_conf_fn, dd_allows_fn) -> bool:
+    """Book F: trades purely on the Sentiment Agent's verdict (2026-09-06,
+    Phase 01B specialist #3) -- ignores grade/dd_mode/conf_threshold/eff_conf
+    entirely, unlike Books B-E which each vary exactly one dimension of an
+    otherwise-real gate. This book exists specifically to test the signal in
+    total isolation, so it deliberately does NOT inherit even Books B-E's
+    one shared carve-out (respecting dd_mode=="halt" as real risk
+    management) -- there is no real capital at stake in any virtual book
+    regardless, and diluting "fully isolated" with a partial technical
+    carve-out would defeat the point of this specific book.
+
+    Reads the SAME memoized verdict src.sentiment_agent.get_or_evaluate()
+    already computed for this candidate during research-trade logging
+    earlier this scan (see daily.py's _log_one_research()) -- never a
+    second LLM call for the same candidate."""
+    try:
+        from src import sentiment_agent as _sa
+        direction = (r.get("parsed") or {}).get("direction", "")
+        result = _sa.get_or_evaluate(r.get("pair", ""), direction)
+        return _sa.would_fire(result)
+    except Exception:
+        return False
+
+
 @dataclass(frozen=True)
 class BookConfig:
     book_id: str
