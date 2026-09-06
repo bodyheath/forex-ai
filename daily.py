@@ -12847,7 +12847,7 @@ def run() -> int:
                 # this exact call instead of paying for a second one.
                 try:
                     from src import sentiment_agent as _sent_rt
-                    _sent_result = _sent_rt.get_or_evaluate(r_result["pair"], _casc_d_rt)
+                    _sent_result = _sent_rt.get_or_evaluate(r_result["pair"], _rdir)
                     _extra_rt.update({
                         "sentiment_verdict":         _sent_result.get("verdict", ""),
                         "sentiment_confidence":      _sent_result.get("confidence", ""),
