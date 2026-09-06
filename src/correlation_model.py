@@ -84,6 +84,51 @@ def _fetch_closes() -> pd.DataFrame:
     return pd.DataFrame(closes)
 
 
+STALE_ALERT_DAYS = REFRESH_INTERVAL_DAYS * 2   # 14 days -- a whole missed refresh cycle,
+                                                # not a single transient fetch blip
+
+
+def _current_matrix_age_days():
+    """Age in days of whatever matrix is currently on disk, or None if there
+    isn't one at all."""
+    if not MATRIX_PATH.exists():
+        return None
+    try:
+        payload = json.loads(MATRIX_PATH.read_text(encoding="utf-8"))
+        return (time.time() - payload.get("computed_at", 0)) / 86400.0
+    except Exception:
+        return None
+
+
+def _alert_stale(reason: str, log) -> None:
+    """Fires through the existing critical-severity channels (Discord +
+    Telegram) -- mirrors src/reconciliation.py's _alert_critical(), same
+    no-throttle convention (alerts every time the condition holds, not just
+    once) so a sustained problem stays visible until it's actually fixed."""
+    age = _current_matrix_age_days()
+    age_str = f"{age:.1f} days old" if age is not None else "no matrix has ever been computed"
+    title = "\U0001f4c9 CORRELATION MATRIX STALE — silently using literal-currency-code fallback"
+    message = (
+        f"{reason}\n\n"
+        f"Current matrix: {age_str} (alert threshold: {STALE_ALERT_DAYS} days; "
+        f"hard fallback at {MAX_STALE_DAYS} days).\n"
+        f"apply_correlation_checks() (risk_manager.py) is falling back to the old "
+        f"literal currency-code check for any pair combination the stale/missing "
+        f"real correlation model can't answer -- position sizing is degraded, "
+        f"not broken, but the real-correlation protection is not actually running."
+    )
+    try:
+        from src import discord_notifier as _dn
+        _dn.send_correlation_stale_alert(title, message)
+    except Exception as exc:
+        log(f"[correlation_model] Discord alert failed: {exc}")
+    try:
+        from src import telegram_alert as _ta
+        _ta.send(f"{title}\n\n{message}")
+    except Exception as exc:
+        log(f"[correlation_model] Telegram alert failed: {exc}")
+
+
 def refresh_correlation_matrix(force: bool = False, log=lambda *a: None) -> bool:
     """Recompute and persist the correlation matrix if stale.
 
@@ -91,6 +136,14 @@ def refresh_correlation_matrix(force: bool = False, log=lambda *a: None) -> bool
     computed, or already fresh enough that no recompute was needed), False
     only if a refresh was attempted and failed AND no prior matrix exists to
     fall back on.
+
+    Alerts (Discord + Telegram, see _alert_stale()) whenever a refresh
+    attempt fails AND the matrix currently on disk (or its total absence) is
+    already past STALE_ALERT_DAYS -- a single missed refresh isn't alerted
+    on (transient yfinance/network hiccups happen and the next scan a few
+    hours later will simply retry), but a matrix that's been silently stale
+    for two whole refresh cycles is exactly the "false confidence" failure
+    mode this check exists to catch.
     """
     if MATRIX_PATH.exists() and not force:
         try:
@@ -105,6 +158,13 @@ def refresh_correlation_matrix(force: bool = False, log=lambda *a: None) -> bool
     if len(closes.columns) < MIN_PAIRS_FOR_VALID_REFRESH:
         log(f"[correlation_model] refresh failed: only {len(closes.columns)}/{len(UNIVERSE)} "
             f"pairs fetched -- keeping existing matrix if any")
+        stale_age = _current_matrix_age_days()
+        if stale_age is None or stale_age >= STALE_ALERT_DAYS:
+            _alert_stale(
+                f"Refresh attempt fetched only {len(closes.columns)}/{len(UNIVERSE)} "
+                f"pairs (need >= {MIN_PAIRS_FOR_VALID_REFRESH}) -- refresh could not complete.",
+                log,
+            )
         return MATRIX_PATH.exists()
 
     rets = np.log(closes / closes.shift(1)).dropna(how="all")
@@ -121,6 +181,9 @@ def refresh_correlation_matrix(force: bool = False, log=lambda *a: None) -> bool
         log(f"[correlation_model] refreshed matrix from {len(closes)} days, {len(closes.columns)} pairs")
     except OSError as e:
         log(f"[correlation_model] failed to persist matrix: {e}")
+        stale_age = _current_matrix_age_days()
+        if stale_age is None or stale_age >= STALE_ALERT_DAYS:
+            _alert_stale(f"Refresh computed a fresh matrix but failed to persist it: {e}", log)
         return MATRIX_PATH.exists()
 
     global _matrix_cache
