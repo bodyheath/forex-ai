@@ -31,10 +31,13 @@ data/cache/
 data/fund_state.json
 data/price_cache.json
 
+# Test-only artifact (tests/test_correlation_model.py patches MATRIX_PATH here)
+data/_test_correlation_matrix.json
+
 # Claude Code artifacts
 .claude/
 
-# ML model pickle files — never commit (security risk)
+# ML model pickle files ï¿½ never commit (security risk)
 *.pkl
 data/*.pkl
 data/fund_online_model.pkl
