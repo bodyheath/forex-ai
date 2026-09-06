@@ -12839,6 +12839,29 @@ def run() -> int:
                 except Exception:
                     pass
 
+                # ── Sentiment Agent verdict (2026-09-06, Phase 01B specialist #3) ──
+                # Pure observability -- logged alongside every candidate this
+                # pipeline already produces, never read by any grading/gating
+                # code. get_or_evaluate() memoizes per (pair, direction) so the
+                # virtual book's eligibility check later this same scan reuses
+                # this exact call instead of paying for a second one.
+                try:
+                    from src import sentiment_agent as _sent_rt
+                    _sent_result = _sent_rt.get_or_evaluate(r_result["pair"], _rdir)
+                    _extra_rt.update({
+                        "sentiment_verdict":         _sent_result.get("verdict", ""),
+                        "sentiment_confidence":      _sent_result.get("confidence", ""),
+                        "sentiment_reason":          _sent_result.get("reason", ""),
+                        "sentiment_base_drift":      _sent_result.get("base_drift", ""),
+                        "sentiment_quote_drift":     _sent_result.get("quote_drift", ""),
+                        "sentiment_n_headlines":     _sent_result.get("n_headlines", ""),
+                        "sentiment_evaluated_at":    _sent_result.get("evaluated_at", ""),
+                        "sentiment_oldest_headline": _sent_result.get("oldest_headline_published", ""),
+                        "sentiment_newest_headline": _sent_result.get("newest_headline_published", ""),
+                    })
+                except Exception as _sent_exc:
+                    _log_line(log, f"[sentiment_agent] evaluation failed for {r_result['pair']}: {_sent_exc}")
+
                 _rt_id = _rt.log_research_trade(
                     r_result["pair"], _rp, _rsrc, _smode,
                     extra_fields=_extra_rt,
