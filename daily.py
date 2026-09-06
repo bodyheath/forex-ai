@@ -5838,17 +5838,6 @@ def _send_telegram_summary(
     except Exception:
         pass
 
-    # ── CORRELATION MODEL — prime/refresh before sizing uses it ──────────────────
-    # apply_correlation_checks() (risk_manager.py) reads this lazily via
-    # src.correlation_model.get_correlation(); refreshing once per scan here
-    # (no-op unless >REFRESH_INTERVAL_DAYS stale) keeps the network fetch off
-    # that hot path and matches market_regime's own once-per-scan priming above.
-    try:
-        from src import correlation_model as _corr_scan
-        _corr_scan.refresh_correlation_matrix(log=lambda *a: print(*a))
-    except Exception as _corr_scan_exc:
-        print(f"[correlation_model] refresh failed (non-fatal, falls back to literal check): {_corr_scan_exc}")
-
     # DA now evaluated earlier (before grade computation, above) and folded
     # into grade directly instead of mutating confidence — see that block's
     # comment. A candidate DA downgrades to D or F and that _dd_allows_trade
