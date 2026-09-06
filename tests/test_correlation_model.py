@@ -5,12 +5,17 @@ investigation and backtest this is based on).
 
 No network calls: are_correlated()/get_correlation() are tested against a
 matrix injected directly into the module's in-process cache, never against
-a real fetch. refresh_correlation_matrix() itself (the only function that
-touches yfinance) is not exercised here -- it's a thin wrapper already
-covered by the same fetch pattern used and tested elsewhere in
-scripts/historical_grading_backtest.py.
+a real fetch. refresh_correlation_matrix()'s own network path (_fetch_closes,
+yfinance) is mocked out; only its staleness-alerting behaviour is exercised
+here (2026-09-07, added after an audit found the refresh had no failure-path
+alerting at all -- a stale matrix with nobody alerted is worse than no
+correlation check, since it gives false confidence the real-correlation gate
+is protecting sizing when it has silently fallen back to the literal check).
 """
+import json
+import time
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from src import correlation_model
