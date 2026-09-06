@@ -179,6 +179,15 @@ FIELDS = [
                                     # is 1.5-3.0x ATR14 -- one of grade A's required conditions.
     "fib_near",                    # TRUE if price sits near a computed Fibonacci level --
                                     # another of grade A's required conditions.
+    # ── Loss postmortem classification (2026-09-06) ────────────────────────────
+    "loss_failure_mode",           # THESIS_WRONG | TIMING_WRONG | NORMAL_VARIANCE |
+                                    # NORMAL_VARIANCE_UNREFINED | INSUFFICIENT_DATA -- set once,
+                                    # at close, for LOSS and any other terminal status that closed
+                                    # net-negative (EXPIRED/PARTIAL_WIN/STALE_EXIT/BREAKEVEN with
+                                    # net_pips<0). Blank for WIN and for any row this classifier
+                                    # doesn't apply to. See src/loss_postmortem.py for the full
+                                    # rule and its reliability gates -- pure observability, does
+                                    # not feed any grading/gating decision.
 ]
 
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN", "FULL_WIN", "STALE_EXIT", "SKIPPED"}
