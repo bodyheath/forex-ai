@@ -118,6 +118,135 @@ def _record_sentiment_evaluation(updated: dict) -> None:
         print(f"[research_outcome_checker] sentiment shadow_mode recording error "
               f"(research trade {updated.get('id')}): {exc}", file=sys.stderr)
 
+
+# 2026-09-06: ribbon_carveout_exclude_trending_risk_on was frozen at 130
+# evaluations from a single 2026-09-03 backfill, with no live feed since --
+# same missing-feed class of bug as sentiment_agent_supports above, but
+# this one matters more: its own verdict was explicitly "inconclusive, wait
+# for more (non-bursty) data" (project_ribbon_regime_carveout_threshold.md),
+# a recommendation that only makes sense if evaluations keep accumulating,
+# and it's the leading explanation for the F-vs-D grade inversion Phase 05
+# is gated on. vix_regime_edge_trending_risk_on and
+# ribbon_general_population_demotion_removed are deliberately NOT given the
+# same live feed -- both reached real, closed, one-time conclusions
+# (confirmed false lead; promoted) and are finished by design, not stale.
+#
+# The rule's original would_fire condition was "would this candidate have
+# been rescued by _ribbon_only_f_or_d" (daily.py) -- that code branch was
+# REMOVED ENTIRELY in the 01E grading fix, so it no longer exists to call.
+# Reconstructed here as a pure function of persisted fields instead (a
+# timeframe-independent recomputation, not a live code dependency) so the
+# SAME definition keeps evaluating going forward, rather than silently
+# redefining what "fire" means partway through one rule's evidence pool.
+#
+# KNOWN, QUANTIFIED IMPRECISION: the original condition's confidence branch
+# was (w_d_agree OR conf>6) -- w_d_agree means weekly AND daily signals both
+# equal the candidate's OWN direction (daily.py:2582), which isn't persisted
+# anywhere on research_trades.csv (only the coarser w_d_conflict boolean
+# is; mtf_count is NOT a safe substitute -- it counts agreement toward
+# mtf.py's own dominant/majority-voted direction, which can differ from the
+# candidate's chosen direction). This reconstruction requires conf>6
+# strictly, dropping the w_d_agree branch -- CONSERVATIVE (narrower than
+# the original), since it excludes every candidate sitting at exactly
+# confidence==6 that the original might have included via w_d_agree=True.
+# Checked directly against the current population: 325/2916 rows (~11%)
+# sit at exactly this boundary (ribbon-against, non-conflicted, conf==6) --
+# a real, non-trivial gap, not a rounding error. Reported plainly rather
+# than silently approximated away; an unknown fraction of those 325 would
+# genuinely have been eligible under the true original definition.
+_RIBBON_CARVEOUT_RULE = "ribbon_carveout_exclude_trending_risk_on"
+_RIBBON_CARVEOUT_DESCRIPTION = (
+    "Exclude trending_risk_on from the ribbon-only-relief carve-out "
+    "(_ribbon_only_f_or_d in daily.py) -- pre-registered 2026-08-30, see "
+    "project_ribbon_regime_carveout_threshold.md. would_fire=True means "
+    "trending_risk_on (the proposed exclusion would apply, sending this "
+    "candidate back to its original F/D grade instead of the C rescue); "
+    "would_fire=False means trending_risk_off (direct comparison only -- "
+    "ranging_low_vol is deliberately excluded from this shadow rule, "
+    "matching the frozen criteria's own choice not to pool it in, which is "
+    "exactly what manufactured the original false-positive significance)."
+)
+
+
+def _ribbon_carveout_would_fire(updated: dict):
+    """Returns True/False for would_fire, or None if this candidate isn't
+    part of this rule's population at all (not eligible for the original
+    rescue condition, or regime is ranging_low_vol/unknown -- both
+    deliberately excluded, matching the rule's own frozen criteria)."""
+    pair = (updated.get("pair") or "").upper()
+    direction = (updated.get("direction") or "").upper()
+    ribbon = updated.get("ribbon_state", "")
+    try:
+        entry = float(updated.get("entry") or 0)
+        stop = float(updated.get("stop_loss") or 0)
+        target = float(updated.get("target") or 0)
+        conf = float(updated.get("confidence") or 0)
+    except (TypeError, ValueError):
+        return None
+    if not (entry and stop and target) or direction not in ("BUY", "SELL"):
+        return None
+    rr = abs(target - entry) / abs(entry - stop) if abs(entry - stop) > 0 else 0
+    ribbon = str(ribbon).upper()
+    w_d_conflict = str(updated.get("w_d_conflict", "")).upper() == "TRUE"
+    is_gbp_cross = "GBP" in pair.split("/")
+    is_chf_cluster = pair in ("EUR/CHF", "NZD/CHF", "AUD/CHF")
+
+    rib_strongly_against = (
+        (direction == "BUY" and ribbon == "ALIGNED_BEAR") or
+        (direction == "SELL" and ribbon == "ALIGNED_BULL")
+    )
+    rib_against = (
+        (direction == "BUY" and ribbon in ("ALIGNED_BEAR", "LEANING_BEAR")) or
+        (direction == "SELL" and ribbon in ("ALIGNED_BULL", "LEANING_BULL"))
+    )
+    eligible = (
+        (rib_strongly_against or rib_against)
+        and not w_d_conflict
+        and rr >= 2.0 - 1e-6     # epsilon: real 2.0 R:R candidates can land at
+                                 # 1.9999999999999556 from plain float arithmetic
+                                 # (verified directly) -- a bare >= 2.0 would
+                                 # silently drop genuinely-eligible candidates
+        and conf > 6             # conservative proxy for (w_d_agree or conf>6) -- see comment above
+        and not is_gbp_cross
+        and not is_chf_cluster
+    )
+    if not eligible:
+        return None
+
+    regime = updated.get("market_regime", "")
+    if regime == "trending_risk_on":
+        return True
+    if regime == "trending_risk_off":
+        return False
+    return None   # ranging_low_vol or unknown -- deliberately excluded
+
+
+def _record_ribbon_carveout_evaluation(updated: dict) -> None:
+    """Best-effort: record this closed research trade against the ribbon-
+    regime carve-out's original criteria (reconstructed -- see comment
+    above). Pure observability -- never raises, never affects the trade's
+    own fields, never feeds a grading/gating decision."""
+    try:
+        would_fire = _ribbon_carveout_would_fire(updated)
+        if would_fire is None:
+            return  # not part of this rule's population -- nothing to record
+        from src import shadow_mode as _sm
+        _sm.register_rule(
+            _RIBBON_CARVEOUT_RULE, description=_RIBBON_CARVEOUT_DESCRIPTION,
+            min_n_fire=100, min_n_no_fire=40, alpha=0.05, pf_max_fire=0.8,
+        )
+        _sm.record_evaluation(
+            _RIBBON_CARVEOUT_RULE, would_fire=would_fire,
+            outcome=updated.get("status"), net_pips=updated.get("net_pips"),
+            context={"id": updated.get("id"), "pair": updated.get("pair"),
+                     "direction": updated.get("direction"),
+                     "market_regime": updated.get("market_regime"),
+                     "closed_at": updated.get("closed_at")},
+        )
+    except Exception as exc:
+        print(f"[research_outcome_checker] ribbon carveout shadow_mode recording error "
+              f"(research trade {updated.get('id')}): {exc}", file=sys.stderr)
+
 _PRICE_URL         = "https://api.twelvedata.com/price"
 _EXPIRY_DAYS       = 7      # fallback; actual expiry is computed from R:R
 _STALE_EXIT_DAYS   = 21     # hard maximum — close without T1 hit after this many days
@@ -384,6 +513,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                 _online_learn(updated)
                 _record_loss_classification(updated)
                 _record_sentiment_evaluation(updated)
+                _record_ribbon_carveout_evaluation(updated)
                 _closed_this = True
 
             elif _casc.stop_hit(row, price):
@@ -445,6 +575,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                     _online_learn(updated)
                     _record_loss_classification(updated)
                     _record_sentiment_evaluation(updated)
+                    _record_ribbon_carveout_evaluation(updated)
                     _closed_this = True
 
             if _closed_this:
@@ -461,6 +592,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                     _online_learn(updated)
                     _record_loss_classification(updated)
                     _record_sentiment_evaluation(updated)
+                    _record_ribbon_carveout_evaluation(updated)
                     continue
             except Exception:
                 pass
@@ -495,6 +627,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
             _online_learn(updated)
             _record_loss_classification(updated)
             _record_sentiment_evaluation(updated)
+            _record_ribbon_carveout_evaluation(updated)
 
         except Exception as exc:
             log(f"  Research #{rec_id} {pair}: outcome check error — {exc}")
