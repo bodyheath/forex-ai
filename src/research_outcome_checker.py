@@ -51,6 +51,73 @@ def _record_loss_classification(updated: dict) -> None:
     except Exception as exc:
         print(f"[research_outcome_checker] loss classification error (research trade {updated.get('id')}): {exc}", file=sys.stderr)
 
+
+# 2026-09-06: sentiment_agent_supports was registered in shadow_mode.py
+# (src/sentiment_agent.py's own docstring) but had no code path anywhere
+# that ever called record_evaluation() on it -- caught by a read-only status
+# check, not an error, since a shadow_mode rule with zero evaluations raises
+# nothing and looks identical to "just needs more time" from the outside.
+# This is that missing feed. Deliberately NOT reusing virtual_books.py's
+# vbook_F_sentiment_only auto-feed (settled positions only, would_fire=True
+# only) -- that can never populate this rule's would_fire=False side, and
+# this rule was pre-registered as a real two-proportion test that needs
+# both. Mirrors _record_loss_classification()'s hook point and fail-open
+# shape immediately above, since that's the only genuinely LIVE per-close
+# feed pattern in this codebase -- ribbon_carveout_exclude_trending_risk_on
+# and vix_regime_edge_trending_risk_on turned out, on inspection, to be
+# one-time historical backfills with no live feed of their own either (see
+# the same read-only check that caught this).
+_SENTIMENT_RULE = "sentiment_agent_supports"
+_SENTIMENT_RULE_DESCRIPTION = (
+    "Phase 01B specialist #3 (Sentiment Agent, src/sentiment_agent.py). "
+    "would_fire=True means the LLM read today's central-bank/news headlines "
+    "for the candidate's base and quote currencies and returned verdict=SUPPORTS "
+    "with confidence>=6 for this candidate's own stated direction; "
+    "would_fire=False covers CONTRADICTS, NEUTRAL, and low-confidence SUPPORTS "
+    "(UNAVAILABLE evaluations -- no same-day headlines, or the LLM call itself "
+    "failed -- are never recorded here at all; absent evidence isn't evidence "
+    "either way). NO historical backtest behind this rule at all -- promotion "
+    "rests entirely on live, forward-only evidence; expect weeks-to-months of "
+    "elapsed calendar time before min_n_fire/min_n_no_fire are reached, not "
+    "because the bar is different but because there is no way to accelerate "
+    "the sample size the way a backtest does for this file's other rules. An "
+    "early promising streak (n<<60) is NOT the same kind of evidence a "
+    "backtested rule would need to clear its own bar."
+)
+
+
+def _record_sentiment_evaluation(updated: dict) -> None:
+    """Best-effort: record this closed research trade's sentiment verdict
+    (already persisted on the row at creation time -- see daily.py's
+    _log_one_research()) as one shadow_mode evaluation. Pure observability
+    -- never raises, never affects the trade's own fields, never feeds a
+    grading/gating decision.
+
+    Skips recording entirely when the verdict is blank/UNAVAILABLE (no
+    same-day headlines existed, or the LLM call failed at creation time) --
+    an absent evaluation isn't evidence for either side of the test."""
+    try:
+        verdict = str(updated.get("sentiment_verdict") or "").upper()
+        if verdict not in ("SUPPORTS", "CONTRADICTS", "NEUTRAL"):
+            return  # blank or UNAVAILABLE -- nothing to record
+        from src import sentiment_agent, shadow_mode as _sm
+        confidence = updated.get("sentiment_confidence")
+        would_fire = sentiment_agent.would_fire({"verdict": verdict, "confidence": confidence})
+        _sm.register_rule(
+            _SENTIMENT_RULE, description=_SENTIMENT_RULE_DESCRIPTION,
+            min_n_fire=60, min_n_no_fire=60, alpha=0.05,
+        )
+        _sm.record_evaluation(
+            _SENTIMENT_RULE, would_fire=would_fire,
+            outcome=updated.get("status"), net_pips=updated.get("net_pips"),
+            context={"id": updated.get("id"), "pair": updated.get("pair"),
+                     "direction": updated.get("direction"), "verdict": verdict,
+                     "confidence": confidence},
+        )
+    except Exception as exc:
+        print(f"[research_outcome_checker] sentiment shadow_mode recording error "
+              f"(research trade {updated.get('id')}): {exc}", file=sys.stderr)
+
 _PRICE_URL         = "https://api.twelvedata.com/price"
 _EXPIRY_DAYS       = 7      # fallback; actual expiry is computed from R:R
 _STALE_EXIT_DAYS   = 21     # hard maximum — close without T1 hit after this many days
@@ -316,6 +383,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                 closed.append(updated)
                 _online_learn(updated)
                 _record_loss_classification(updated)
+                _record_sentiment_evaluation(updated)
                 _closed_this = True
 
             elif _casc.stop_hit(row, price):
@@ -376,6 +444,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                     closed.append(updated)
                     _online_learn(updated)
                     _record_loss_classification(updated)
+                    _record_sentiment_evaluation(updated)
                     _closed_this = True
 
             if _closed_this:
@@ -391,6 +460,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                     closed.append(updated)
                     _online_learn(updated)
                     _record_loss_classification(updated)
+                    _record_sentiment_evaluation(updated)
                     continue
             except Exception:
                 pass
@@ -424,6 +494,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
             closed.append(updated)
             _online_learn(updated)
             _record_loss_classification(updated)
+            _record_sentiment_evaluation(updated)
 
         except Exception as exc:
             log(f"  Research #{rec_id} {pair}: outcome check error — {exc}")
