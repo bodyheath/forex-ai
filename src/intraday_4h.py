@@ -340,7 +340,7 @@ def settle_open_positions(log: Callable = print, prices: dict = None) -> dict:
         entry = float(row.get("entry") or 0)
         stop = float(row.get("stop_loss") or 0)
         target = float(row.get("target") or 0)
-        price = financials.get_price(prices, pair)
+        price = prices.get(pair)  # batch_fetch_prices() already keys by "BASE/QUOTE"
 
         hit, exit_price = None, None
         try:
