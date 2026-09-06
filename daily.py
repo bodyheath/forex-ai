@@ -6087,6 +6087,43 @@ def _send_telegram_summary(
                     pass
                 _yt_pair   = _yt.get("pair", "")
                 _yt_parsed = (_yt.get("parsed") or {})
+                # ── AI-DECLINED VETO — must run before any other gate ─────────────────
+                # yes_trades (_yes_raw above) is confidence-gated, not trade_this-gated —
+                # "any pair with 7+ effective confidence qualifies for a trade alert
+                # regardless of what the analyst's trade_this field says" (see _yes_raw's
+                # comment). That's fine for alerting, but this loop is real fund capital
+                # gating, and a candidate whose own analysis said trade_this=NO must not
+                # be allowed through it just because confidence happened to be high.
+                #
+                # 2026-09-06: found this had never mattered for real capital — the only
+                # place status="OPEN" is ever written (tracker.py:285) is gated on the
+                # ORIGINAL trade_this value at analysis time, so a confidence-admitted
+                # trade_this=NO candidate could clear every single gate below (circuit
+                # breaker, trend, session, cooldown, ML, drawdown-tier) and still never
+                # actually persist as an open position — confirmed via fund_state.json's
+                # open_count staying 0. But nothing stopped it from being logged as
+                # gated_at_open=YES, appended to _ot_open_trades, and counted against
+                # daily_trades_count, which produced a same-scan Telegram alert claiming
+                # an open trade (#6767, GBP/CAD) that never existed in trades.csv or
+                # fund_state.json — while Discord, which re-reads the CSV fresh, correctly
+                # showed nothing open. Every other exit from this loop already writes back
+                # SKIPPED+notes to keep the CSV honest (see the blocks below); this was the
+                # one path that had no such correction because it was never expected to be
+                # reached by a trade_this=NO candidate. Blocking it here, first, removes
+                # the gap at its source instead of adding a symmetric write-back for a
+                # state that should never be entered.
+                if _yt_parsed.get("trade_this") != "YES":
+                    _blk_ai_no = "AI recommended NO_TRADE — confidence-only admission, not eligible for real fund capital"
+                    _log_line(log, f"[ai-veto] BLOCKED {_yt_pair} — {_blk_ai_no}")
+                    _fund_st_blocked.append((_yt, _blk_ai_no))
+                    try:
+                        from src import tracker as _trk_ai_no
+                        if _yt.get("id"):
+                            _trk_ai_no.update_outcome(int(_yt["id"]), "SKIPPED",
+                                                       notes=f"Blocked: {_blk_ai_no}")
+                    except Exception:
+                        pass
+                    continue
                 # ── CIRCUIT BREAKER — FIRST check, reads fresh from disk every trade ──
                 _cb_read_failed = False
                 try:
