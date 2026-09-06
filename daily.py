@@ -2487,8 +2487,11 @@ def _trade_quality_grade(r: dict) -> dict:
     A — conf≥8, R:R>2.5, all 3 TFs, ATR-calibrated, Fib near, no news, ribbon aligned, divergence
     B — conf≥7, R:R≥2.0, weekly+daily agree, no severe negatives
     C — conf≥6, R:R≥1.5, no blocking conditions
-    D — ribbon against direction, R:R<1.5, or TF conflict + low conf
-    F — ribbon strongly against, weekly/daily direct conflict, or R:R<1.3
+    D — R:R<1.5, TF conflict + low confidence, or (GBP-cross/CHF-cluster only) ribbon against direction
+    F — weekly/daily direct conflict, R:R<1.5, or (GBP-cross/CHF-cluster only) ribbon strongly against
+        (docstring corrected 2026-09-05 to match the code's actual R:R<1.5 bar, not the stale <1.3
+        it previously claimed; ribbon-opposition scoped to GBP-crosses/CHF-cluster the same day --
+        see the _rib_still_relevant comment below for the evidence)
     """
     p         = r.get("parsed", {})
     bundle    = r.get("bundle", {})
@@ -2717,26 +2720,57 @@ def _trade_quality_grade(r: dict) -> dict:
     _pair_up_grade = (r.get("pair") or "").upper()
     _is_gbp_cross = "GBP" in _pair_up_grade.split("/")
     _is_chf_cluster = _pair_up_grade in ("EUR/CHF", "NZD/CHF", "AUD/CHF")
-    _ribbon_only_f_or_d = (
-        (rib_strongly_against or rib_against)
-        and not w_d_conflict
-        and rr >= 2.0
-        and (w_d_agree or conf > 6)
-        and conf >= 6
-        and not _is_gbp_cross
-        and not _is_chf_cluster
-    )
+
+    # 2026-09-05: ribbon-opposition (rib_strongly_against for F, rib_against
+    # for D) no longer auto-demotes for the general population. A 43,344-
+    # candidate, 3-year, 28-pair mechanical backtest of the real production
+    # technical/ribbon functions (no LLM -- scripts/historical_grading_
+    # backtest.py, see project_historical_backtest_sep2026.md) found
+    # rib_strongly_against (n=8,797, WR 46.2%, PF 0.991) and rib_against
+    # (n=4,528, WR 46.1%, PF 1.015) statistically indistinguishable from
+    # each other (p=0.478) AND BOTH significantly outperforming the non-
+    # opposition population (PF 0.851; p=6.2e-6 and p=0.00055) -- stable
+    # across all 4 years tested, not a burst. At this sample size, ribbon
+    # opposition on its own does not predict failure; using it as an
+    # automatic F/D disqualifier for everyone was itself the miscalibration,
+    # not merely unproven. This directly addresses the real-fund funnel
+    # finding that the drawdown-tier grade filter was blocking 49% of every
+    # candidate that otherwise would have traded -- the single largest real
+    # source of "why aren't more real trades happening."
+    #
+    # GBP-crosses and the CHF-cluster are the deliberate exception, NOT
+    # swept up in this change -- both have their OWN separate, live-data
+    # evidence that ribbon-opposition specifically IS bad for them (GBP-
+    # cross n=73 PF=0.749; CHF-cluster n=61 WR=16.4% PF=0.397 -- original
+    # findings below). Checked directly against the same 43,344-row
+    # mechanical population: within the ribbon-opposition buckets
+    # specifically, neither GBP-crosses (PF 0.976 / 1.176) nor the CHF-
+    # cluster (PF 0.973 / 0.989) stood out from every other pair (PF
+    # 1.0 / 0.947) -- the mechanical backtest neither confirms nor
+    # overturns their original live-data finding, so it's left standing
+    # rather than assumed superseded by the broader result. The GBP-cross
+    # exclusion was separately re-verified 2026-09-04 and found not
+    # decaying (project_gbp_cross_exclusion_decay_check_sep2026.md).
+    #
+    # The old _ribbon_only_f_or_d "relief" mechanism (rescue ribbon-opposed,
+    # non-GBP/CHF candidates from F/D down to C, under several extra
+    # conditions) is removed entirely, not just left inert -- its only
+    # eligible population (non-GBP/CHF ribbon-opposed candidates) no longer
+    # reaches the ribbon-triggered F/D branch to need rescuing in the first
+    # place; they now flow through the ladder on their other merits like
+    # any other candidate. Registered as a shadow_mode.py rule
+    # (ribbon_general_population_demotion_removed) for standing before/after
+    # comparison -- see PROMOTION_DISCIPLINE.md.
+    _rib_still_relevant = _is_gbp_cross or _is_chf_cluster
 
     # ── Grade F — never trade ─────────────────────────────────────────────
-    if _ribbon_only_f_or_d:
-        grade = "C"
-    elif rib_strongly_against or w_d_conflict or rr < 1.5:
+    if (rib_strongly_against and _rib_still_relevant) or w_d_conflict or rr < 1.5:
         grade = "F"
         # Issue 3 floor: 3/3 fundamental tailwind + conf>=6 cannot be Grade F
         if _has_fund_tailwind and conf >= 6:
             grade = "C"
     # ── Grade D — avoid ──────────────────────────────────────────────────
-    elif rib_against or rr < 2.0 or (not w_d_agree and conf <= 6):
+    elif (rib_against and _rib_still_relevant) or rr < 2.0 or (not w_d_agree and conf <= 6):
         grade = "D"
     # ── Grade A — take immediately ────────────────────────────────────────
     # R:R gate is rr>=2.0, not rr>2.5 — cascade.py's trade-construction system
@@ -3866,17 +3900,25 @@ def _pre_fetch_shared_data(pairs: list, log=print) -> tuple:
 
 # ── Indicative level calculator ───────────────────────────────────────────────
 
+_EXPIRY_EXTENSION_DAYS = 4  # see EXPIRY_EXTENSION_DAYS docstring below
+
 def _compute_expiry_days_from_rr(rr: float) -> int:
     """Calibrate trade expiry from R:R ratio.
 
     Stop ≈ 1x ATR ≈ average daily range (ADR), so R:R ≈ target_pips / adr_pips.
-    Formula: max(4, round(rr * 1.5) + 1)
-    Examples: R:R 2.3 → 4 days; R:R 3.1 → 6 days.
+    Base formula: max(4, round(rr * 1.5) + 1) (e.g. R:R 2.3 → 4 days;
+    R:R 3.1 → 6 days), plus a flat +4-day extension on top (see
+    _EXPIRY_EXTENSION_DAYS's docstring in src/outcome_checker.py for the
+    full evidence -- this is display/logging only; the real fund's own
+    outcome_checker.py and research trades' research_outcome_checker.py
+    each carry the identical +4 change in their own formulas, and this
+    function exists purely so "expires in N days" messages shown here
+    match what those two actually do).
     """
     try:
-        return max(4, round(float(rr) * 1.5) + 1)
+        return max(4, round(float(rr) * 1.5) + 1) + _EXPIRY_EXTENSION_DAYS
     except (TypeError, ValueError):
-        return 5
+        return 5 + _EXPIRY_EXTENSION_DAYS
 
 
 def _calc_indicative_levels(pair: str, parsed: dict, bundle: dict,
