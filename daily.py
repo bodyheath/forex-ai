@@ -11346,6 +11346,22 @@ def run() -> int:
 
     with log_path.open("a", encoding="utf-8") as log:
 
+        # ── CORRELATION MODEL — prime/refresh before sizing uses it ──────────────
+        # apply_correlation_checks() (risk_manager.py) reads this lazily via
+        # src.correlation_model.get_correlation(); refreshing once per scan here
+        # (no-op unless >REFRESH_INTERVAL_DAYS stale) keeps the network fetch off
+        # that hot path. Deliberately placed here -- the very first statement of
+        # every non-monitor, non-duplicate-guarded scan -- rather than nested
+        # inside _send_telegram_summary() (where an earlier version of this
+        # lived): that function's own alert-dedup logic could in principle skip
+        # sending in some future refactor, which would silently take this
+        # refresh down with it. This location has no such dependency.
+        try:
+            from src import correlation_model as _corr_scan
+            _corr_scan.refresh_correlation_matrix(log=lambda m: _log_line(log, m))
+        except Exception as _corr_scan_exc:
+            _log_line(log, f"[correlation_model] refresh failed (non-fatal, falls back to literal check): {_corr_scan_exc}")
+
         # 0a. Pre-fetch prices for all open trades before outcome checking.
         #     Uses /time_series?interval=1day&outputsize=2 — more reliable on
         #     the free tier than /price.  The resulting cache is passed to both
