@@ -248,6 +248,13 @@ BOOKS: dict[str, BookConfig] = {
         "Control with drawdown-tier gating removed",
         _elig_e_no_dd_gate,
     ),
+    "F_sentiment_only": BookConfig(
+        "F_sentiment_only",
+        "Trades purely on the Sentiment Agent's verdict (2026-09-06) -- "
+        "fully isolated from grade/dd_mode/confidence, no backtest behind it, "
+        "live-only evidence (see shadow_mode.py's sentiment_agent_supports registration)",
+        _elig_f_sentiment_only,
+    ),
 }
 
 
