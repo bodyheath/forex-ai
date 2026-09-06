@@ -37,6 +37,20 @@ def _online_learn(updated: dict) -> None:
     except Exception as exc:
         print(f"[research_outcome_checker] ML training error (research trade {updated.get('id')}): {exc}", file=sys.stderr)
 
+
+def _record_loss_classification(updated: dict) -> None:
+    """Best-effort: classify a closed research trade into a loss failure mode
+    (see src/loss_postmortem.py) and persist it. Pure observability -- never
+    raises, never affects the trade's own status/fields beyond the one new
+    column, and never feeds a grading/gating decision."""
+    try:
+        from src import loss_postmortem, research_tracker as _rt_lpm
+        mode = loss_postmortem.classify_loss_failure_mode(updated)
+        if mode:
+            _rt_lpm.update_fields(updated.get("id"), loss_failure_mode=mode)
+    except Exception as exc:
+        print(f"[research_outcome_checker] loss classification error (research trade {updated.get('id')}): {exc}", file=sys.stderr)
+
 _PRICE_URL         = "https://api.twelvedata.com/price"
 _EXPIRY_DAYS       = 7      # fallback; actual expiry is computed from R:R
 _STALE_EXIT_DAYS   = 21     # hard maximum — close without T1 hit after this many days
