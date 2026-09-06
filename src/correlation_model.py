@@ -146,10 +146,16 @@ def _load_matrix():
 
 
 def get_correlation(pair1: str, pair2: str):
-    """Real correlation between two pairs' daily returns, or None if unavailable."""
+    """Real correlation between two pairs' daily returns, or None if unavailable.
+
+    Does NOT trigger a refresh itself (that would mean a network call on
+    every pairwise lookup inside a scan's hot path, and would make this
+    function's tests network-dependent) -- refresh_correlation_matrix() is
+    called once per scan from daily.py's startup sequence, the same place
+    market_regime.detect() and other once-per-scan state refreshes live.
+    """
     if pair1 == pair2:
         return 1.0
-    refresh_correlation_matrix()   # no-op network call unless the matrix is stale
     matrix = _load_matrix()
     if matrix is None:
         return None
