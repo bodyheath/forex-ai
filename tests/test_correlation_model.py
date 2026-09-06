@@ -136,5 +136,84 @@ class TestRiskManagerFallback(unittest.TestCase):
         self.assertFalse(result[1].get("correlated", False))
 
 
+class TestRefreshStaleAlerting(unittest.TestCase):
+    """refresh_correlation_matrix() must alert (Discord + Telegram) when a
+    refresh attempt fails AND the on-disk matrix is already past
+    STALE_ALERT_DAYS -- but NOT for a single transient failure while the
+    existing matrix is still fresh enough to trust."""
+
+    def setUp(self):
+        correlation_model._matrix_cache = None
+        self._tmpdir_patcher = patch.object(
+            correlation_model, "MATRIX_PATH", Path("data/_test_correlation_matrix.json")
+        )
+        self._tmpdir_patcher.start()
+        if correlation_model.MATRIX_PATH.exists():
+            correlation_model.MATRIX_PATH.unlink()
+        # Force _fetch_closes() to always "fail" (too few pairs) without any
+        # network access.
+        self._fetch_patcher = patch.object(
+            correlation_model, "_fetch_closes",
+            return_value=__import__("pandas").DataFrame({"EUR/USD": [1.0] * 5}),
+        )
+        self._fetch_patcher.start()
+
+    def tearDown(self):
+        self._fetch_patcher.stop()
+        self._tmpdir_patcher.stop()
+        if correlation_model.MATRIX_PATH.exists():
+            correlation_model.MATRIX_PATH.unlink()
+        correlation_model._matrix_cache = None
+
+    def _write_matrix(self, age_days: float):
+        correlation_model.MATRIX_PATH.write_text(json.dumps({
+            "computed_at": time.time() - age_days * 86400.0,
+            "matrix": {},
+        }), encoding="utf-8")
+
+    @patch("src.discord_notifier.send_correlation_stale_alert")
+    @patch("src.telegram_alert.send")
+    def test_no_matrix_at_all_alerts_immediately(self, mock_tg, mock_discord):
+        # No prior matrix -- there's nothing to fall back on except the
+        # literal check, and that's exactly the "false confidence" case.
+        correlation_model.refresh_correlation_matrix(log=lambda *a: None)
+        mock_discord.assert_called_once()
+        mock_tg.assert_called_once()
+
+    @patch("src.discord_notifier.send_correlation_stale_alert")
+    @patch("src.telegram_alert.send")
+    def test_fresh_matrix_transient_failure_does_not_alert(self, mock_tg, mock_discord):
+        self._write_matrix(age_days=3)   # well under STALE_ALERT_DAYS (14)
+        correlation_model.refresh_correlation_matrix(force=True, log=lambda *a: None)
+        mock_discord.assert_not_called()
+        mock_tg.assert_not_called()
+
+    @patch("src.discord_notifier.send_correlation_stale_alert")
+    @patch("src.telegram_alert.send")
+    def test_matrix_past_stale_alert_threshold_alerts(self, mock_tg, mock_discord):
+        self._write_matrix(age_days=correlation_model.STALE_ALERT_DAYS + 1)
+        correlation_model.refresh_correlation_matrix(force=True, log=lambda *a: None)
+        mock_discord.assert_called_once()
+        mock_tg.assert_called_once()
+
+    @patch("src.discord_notifier.send_correlation_stale_alert")
+    @patch("src.telegram_alert.send")
+    def test_successful_refresh_never_alerts(self, mock_tg, mock_discord):
+        import pandas as pd
+        # 250 days of two fully-correlated series across every UNIVERSE pair
+        # -- enough rows to clear min_periods=200 and enough columns to clear
+        # MIN_PAIRS_FOR_VALID_REFRESH.
+        from src.selector import UNIVERSE
+        n = 250
+        data = {pair: [1.0 + 0.001 * i for i in range(n)] for pair in UNIVERSE}
+        self._fetch_patcher.stop()
+        with patch.object(correlation_model, "_fetch_closes", return_value=pd.DataFrame(data)):
+            correlation_model.refresh_correlation_matrix(force=True, log=lambda *a: None)
+        self._fetch_patcher.start()   # tearDown expects this to still be running
+        mock_discord.assert_not_called()
+        mock_tg.assert_not_called()
+        self.assertTrue(correlation_model.MATRIX_PATH.exists())
+
+
 if __name__ == "__main__":
     unittest.main()
