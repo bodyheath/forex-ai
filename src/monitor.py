@@ -2235,6 +2235,23 @@ def run(log=print) -> dict:
 
     _verify_fund_state(_fund_open, log=log)
 
+    # ── Balance reconciliation — runs every monitor cycle, unconditionally ────
+    # 2026-09-06: deliberately NOT folded into the `if fund_closed:` fund-
+    # state reconciliation further below (fund_state.reconcile_from_trades())
+    # -- that one only runs when a fund trade closed THIS run, so
+    # fund_state.json can go long stretches (confirmed empirically this
+    # session: real decisive fund trades can go days between closes)
+    # without ever being checked against a fresh recompute at all. This
+    # check has no such gate — every single monitor cycle gets one,
+    # trades closed or not, exactly the standing watch this engagement's
+    # own recurring tracked-balance bugs never had.
+    try:
+        from src import reconciliation as _recon
+        _recon.check_balance_reconciliation(log=log)
+    except Exception as _recon_exc:
+        log(f"[reconciliation] top-level failure (unexpected — should have "
+            f"been caught inside check_balance_reconciliation itself): {_recon_exc}")
+
     # Definitive fund trade sets — used to hard-filter all monitor channel sends.
     fund_pairs = {str(r.get("pair", "")) for r in _fund_open}
     fund_ids   = {str(r.get("id",   "")) for r in _fund_open}
