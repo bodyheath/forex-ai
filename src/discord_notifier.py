@@ -663,6 +663,31 @@ def send_ghost_trade_alert(ghost_lines: list):
     )
 
 
+def send_balance_drift_alert(title: str, message: str) -> bool:
+    """Alert that src/reconciliation.py's standing balance check found a
+    mismatch beyond tolerance (or that the check itself failed to run --
+    fail-closed, treated as a real problem, not a skip).
+
+    2026-09-06: built directly from this engagement's own biggest recurring
+    finding -- every tracked-balance bug found this session (the peak-
+    balance ratchet drift, gross-vs-net-pips mismatches, the
+    fund_total_trades drift that motivated fund_state.reconcile_from_
+    trades() in the first place) was caught by someone happening to look,
+    not by anything standing watch. This is that standing watch's alert
+    path -- must not go unnoticed the way those did.
+    """
+    fields = [
+        {"name": "\U0001f4b0 Detail", "value": message[:1024], "inline": False},
+    ]
+    return _send_embed(
+        WEBHOOK_CRITICAL,
+        title,
+        "Automatic balance reconciliation check (src/reconciliation.py)",
+        COLOR_CRITICAL,
+        fields=fields,
+    )
+
+
 def send_monitor_gap_alert(gap_minutes, last_run_time=""):
     fields = [
         {"name": "⏰ Gap Duration", "value": f"{gap_minutes:.0f} minutes", "inline": True},
