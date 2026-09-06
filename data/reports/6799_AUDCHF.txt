@@ -1,0 +1,40 @@
+I need to carefully work through this setup before finalizing.
+
+**MTF Check:** W:SELL + D:SELL = confirmed downtrend direction. 4H:NEUTRAL. conf=2/3 meets the "weekly AND daily both agree" requirement for SELL. ✓
+
+**RSI in Confirmed Downtrend context:** W:SELL+D:SELL = confirmed downtrend. Apply downtrend RSI tiers. RSI=68.0 → in a downtrend, standard shift applies: 42-62=NEUTRAL(3-4), and RSI 68 is above that range... In a downtrend, RSI 68 is actually elevated/overbought territory. The standard tiers still apply at upper end — RSI 62-70=SELL(4-5 standard), but in a downtrend context this is more significant. T_sig=SELL_5. I'll anchor at 5.
+
+**Bonuses:** MACD histogram D1=+0.0005 (slightly positive — does NOT confirm SELL direction, no bonus). BB not stated. Price vs SMA50: price=0.5814 > SMA50=0.5689 — price above SMA50, does NOT confirm SELL (no bonus). D1+4H same direction: D1=SELL, 4H=NEUTRAL — not same, no bonus.
+
+**TECHNICAL_SCORE:** Anchor T_sig=5. No bonuses fire. RSI downtrend context is already reflected. Score = **5**.
+
+**RIBBON:** ALIGNED_BULL fan 5/5 — this directly conflicts with SELL thesis. Converging would support reversal, but it's ALIGNED_BULL fanning. This is a significant risk factor.
+
+**DIV:** bearish:moderate → DIVERGENCE: CONFIRMED → +1 confidence
+
+**OSC:** TRIPLE_SELL (Stoch K=86.5>80, CCI=134.5>100, RSI=68>65) → +2 confidence
+
+**FUNDAMENTAL:** Rate diff=+4.50% favoring AUD, AUD_rate=rising, CHF_rate=falling. This is BULLISH AUD/CHF fundamentally, directly opposing SELL. FUND_SCORE for SELL = low. Score = **3** (fundamentals fight this trade hard).
+
+**POSITIONING:** CHF net SHORT@88% crowded, unwinding — CHF short squeeze risk means CHF could strengthen = AUD/CHF falls = supports SELL. AUD net SHORT@26% mid-range, stable. Score = **6**.
+
+**SENTIMENT:** AUD=8art, CHF=8art — balanced. Score = **5**.
+
+**MACRO:** VIX=14.3 (low, risk-on = favors AUD over CHF), oil=91.5 (risk-on), curve=0.4. Risk-on environment is BEARISH for this SELL. Score = **4**.
+
+**CONFIDENCE base:** Start at 5. MTF W+D agree SELL +1=6. DIV confirmed +1=7. OSC TRIPLE_SELL +2=9. But: ALIGNED_BULL ribbon directly conflicts (-1). Fundamentals strongly oppose SELL (-1). Risk-on macro (-0.5, round to -1). System memory: SELL setups negative expectancy (-1). = 9-4 = **5**.
+
+Confidence = 5 → below 7 threshold → **TRADE_THIS: NO**.
+
+**FIB:** SH=0.57806, SL=0.5547, range=234p. Near= not stated (not within 10 pips of a level). Nearest resistance likely near SH=0.5781. Price=0.5814 is above the Swing High — extended.
+
+**Entry/SL/Target for output:** Even though NO trade, I must provide levels. Current price=0.5814. Stop above recent high ~0.5850. Entry=0.5814. SL=0.5852. Risk=38p. Target=0.5814-(0.0038×2)=0.5738.
+
+---
+
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5
+KEY_THESIS: Confirmed downtrend (W:SELL + D:SELL) with RSI 68 overbought in uptrend context, triple oscillator confluence (Stoch 86.5 + CCI 134.5 + RSI all extreme), bearish RSI divergence, and CHF institutional unwinding from crowded long—pin bar at key level signals mean reversion despite aligned bull ribbon.
+RISK_FACTORS: [1) Aligned bull EMA ribbon (5/5 fan) and golden-cross structure (price > SMA50 > SMA200) argue trend continuation BUY—contradicts SELL thesis. 2) AUD fundamental strength (+4.50% diff, rising AUD rate, falling CHF rate) supports AUD strength; CHF reversal unwind may be offset by AUD carry bid.]

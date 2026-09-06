@@ -1,0 +1,23 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + D1 SELL signal conflicts with aligned bullish ribbon and uptrend structure; CHF crowded short positioning + EUR unwinding creates reversal risk despite technical setup.
+RISK_FACTORS: [1) MTF agreement only 1/3 (D:SELL vs W/M:NEUTRAL, 4H:NEUTRAL) — insufficient conviction; 2) CHF net short at 88% crowded positioning near 1y top with MOM:UNWINDING — institutional reversal risk directly opposes trade direction]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confluence insufficient (1/3 < 2/3 threshold); CHF positioning too crowded for SHORT; aligned ribbon + uptrend structure contradicts D1 SELL_5 signal
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF RULE FAIL (HARD STOP):** Weekly=NEUTRAL, Daily=SELL, 4H=NEUTRAL, Monthly=NEUTRAL → only 1/3 timeframes confirm SELL direction. MTF confidence = 1/3 = 33%, well below 2/

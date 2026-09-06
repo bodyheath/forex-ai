@@ -1,0 +1,25 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_5 conflicts with 4H uptrend and bullish candle pattern; MTF conf=1/3 (W:BUY vs D:SELL) blocks trade entry.
+RISK_FACTORS: [1] MTF disagreement (Weekly BUY vs Daily SELL) at 40% confidence threshold — does not meet ≥2/3 MTF consensus rule; trade is INVALID per system. [2] Both EUR and GBP in COT UNWINDING phase — institutional conviction declining on both legs; reduced positioning momentum support.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not agree on direction (conf=1/3). Trade blocked regardless of technical score or R:R.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+### DETAILED SCORING BREAKDOWN:
+
+**TECHNICAL_SCORE: 5/10**
+- **D1 context**: Price 0.8588 vs SMA50 0.8554 vs SMA200 0.8653 → *mixed/range* (price above 50, but below 200; no clear trend

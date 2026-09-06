@@ -1,0 +1,26 @@
+PAIR: AUD/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level (114.96 SH) with D1+4H aligned BUY and RSI 41.7 in neutral zone suggest bounce potential, but weekly SELL conflict and converging ribbon (trend weakening) limit conviction.
+RISK_FACTORS: MTF conflict (W:SELL vs D/4H:BUY, conf=2/3 <threshold) reduces directional conviction; converging ribbon signals trend exhaustion and reversal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 113.5200
+ENTRY_TRIGGER_REASON: Break above 113.52 (recent swing high near SMA50 confluence) confirms D1+4H alignment and negates weekly SELL structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING SUMMARY:**
+
+**MTF Rule Violation (PRIMARY FACTOR):** Weekly is SELL, Daily+4H are BUY. Confidence = 2/3 (66.7%) < 2/3 threshold (fail). Per instructions: "if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless."
+
+**Technical Score (6/10):**
+-
