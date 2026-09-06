@@ -233,3 +233,8 @@ subset again without changing the interface.
 - PARAMETER: _elig_d_no_da.eff_conf_fn (src/virtual_books.py)
 - PARAMETER: _elig_e_no_dd_gate.dd_mode (src/virtual_books.py)
 - PARAMETER: _elig_e_no_dd_gate.eff_conf_fn (src/virtual_books.py)
+- PARAMETER: _elig_f_sentiment_only.quality_grades (src/virtual_books.py)
+- PARAMETER: _elig_f_sentiment_only.dd_mode (src/virtual_books.py)
+- PARAMETER: _elig_f_sentiment_only.conf_threshold (src/virtual_books.py)
+- PARAMETER: _elig_f_sentiment_only.eff_conf_fn (src/virtual_books.py)
+- PARAMETER: _elig_f_sentiment_only.dd_allows_fn (src/virtual_books.py)
