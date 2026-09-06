@@ -149,6 +149,7 @@ def get_correlation(pair1: str, pair2: str):
     """Real correlation between two pairs' daily returns, or None if unavailable."""
     if pair1 == pair2:
         return 1.0
+    refresh_correlation_matrix()   # no-op network call unless the matrix is stale
     matrix = _load_matrix()
     if matrix is None:
         return None
