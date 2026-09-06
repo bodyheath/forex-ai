@@ -312,14 +312,22 @@ def settle_open_positions(log: Callable = print, prices: dict = None) -> dict:
     its own per-candidate hours-based expiry, closes it, then settles every
     open position in this book's own positions CSV -- never touches any
     other book's files, trades.csv, research_trades.csv, or fund_state.json.
-    """
-    from src.trading import financials
 
+    Fetches its own current prices via yahoo_finance.batch_fetch_prices()
+    (one free Yahoo batch call, no Twelve Data dependency) rather than
+    reading the shared on-disk price cache -- virtual_books.py's other
+    books rely on monitor.py folding their open pairs into ITS price-fetch
+    batch (get_open_candidate_pairs()) to stay fresh; this book stays fully
+    self-contained instead of depending on that cooperation, consistent
+    with its Yahoo-only isolation elsewhere.
+    """
     candidates = vb._load_csv(CANDIDATES_CSV)
     if not candidates:
         return {"closed": 0}
     if prices is None:
-        prices = financials.load_prices()
+        open_pairs = sorted({c["pair"] for c in candidates
+                              if c.get("status") == "OPEN" and c.get("pair")})
+        prices = yf_mod.batch_fetch_prices(open_pairs, log=log) if open_pairs else {}
 
     now = datetime.now(timezone.utc).replace(tzinfo=None)
     closed_count = 0
