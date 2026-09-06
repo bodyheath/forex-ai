@@ -1,0 +1,27 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Ribbon converging + CHF extreme short crowding unwinding + W:SELL signal suggests weakness, but D1 neutral RSI and mixed MTF (1/3 conf) prevent high conviction.
+RISK_FACTORS: [1] MTF severely misaligned (W:SELL vs D:NEUTRAL vs 4H:NEUTRAL, conf=1/3 < 2/3 threshold) — no clear directional agreement. [2] CHF COT reversal risk: 88% net short near 1y high + UNWINDING = institutional long-covering rally possible, contradicting SELL bias.
+TRADE_THIS: NO
+ENTRY_TYPE: STANDBY
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly SELL does not have daily+ confirmation (D1=NEUTRAL, 4H=NEUTRAL). Confidence 1/3 well below 2/3 required. System blocks entry despite weekly signal until D1 and 4H align bearish or price breaks below key support.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **ANALYSIS SUMMARY**
+
+**Why NO despite SELL leanings:**
+
+1. **MTF Alignment FAILURE** (hard

@@ -1,0 +1,24 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key level + bearish pre-signal (T_sig=SELL_5) conflicts with aligned bullish ribbon and uptrend structure; weak MTF agreement (1/3) and UNWINDING in both EUR/CHF positions create reversal risk — trade setup is ambiguous.
+
+RISK_FACTORS: 
+1. MTF disagreement (W/M neutral, D sell only) = conf 1/3, below 2/3 threshold — violates MTF rule for trade qualification.
+2. CHF crowded short positioning (88%) unwinding + EUR short unwinding = institutional de-risking may reverse both, conflicting with SELL bias.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: STANDBY
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do not both agree on direction (conf<2/3). D1 shows SELL pre-signal, but W/M neutral and 4H neutral = mixed mode. Aligned ribbon (5/5 bull) contradicts T_sig bearish bias. Pin bar at key level (0.9390 near SH swing) requires RSI confirmation — RSI=57.1 is neutral (45–62 in uptrend = 3–4 NEUTRAL), no

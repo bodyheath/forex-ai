@@ -1,0 +1,26 @@
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 78.6% Fib resistance + D1 SELL signal, but weak MTF alignment (1/3 agreement) and 4H uptrend conflict prevent high-conviction setup.
+RISK_FACTORS: MTF breakdown — daily SELL contradicted by 4H uptrend; EUR positioning UNWINDING (institutions reducing conviction) signals weakening directional conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1630
+ENTRY_TRIGGER_REASON: Rejection at 78.6% Fib level (1.16295) with pin bar confirmation + D1 SELL signal; await break below 1.16290 to validate.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**ANALYSIS NOTES:**
+
+1. **MTF Conflict (Critical):** Weekly and Daily both NEUTRAL/SELL, but 4H is UPTREND. Confidence = 1/3 (40% weight) = fail MTF rule (need 2/3 agreement minimum). This alone drops TRADE_THIS to NO.
+
+2. **Technical Score = 5 (NEUTRAL):**
+   - D1 RSI=57 (mixed zone, standard tier = 3

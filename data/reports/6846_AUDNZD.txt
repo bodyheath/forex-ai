@@ -1,0 +1,58 @@
+I need to carefully evaluate this setup before confirming the Haiku's preliminary assessment.
+
+**MTF CRITICAL CHECK:**
+- W: NEUTRAL, D: SELL — Weekly does NOT agree with SELL direction. The rule states "Weekly AND daily must both agree on direction for TRADE_THIS YES." W=NEUTRAL ≠ SELL agreement. This is a hard fail for TRADE_THIS YES regardless of other scores.
+
+**TECHNICAL SCORE CHECK (RSI in uptrend context):**
+- Confirmed UPTREND (W:BUY+D:BUY)? No — W:NEUTRAL, D:SELL. MTF is mixed/neutral, so use standard RSI tiers.
+- RSI=70.7 → standard tier 62-70 = 4-5 SELL, borderline into 70-76 = 7-8 SELL. At 70.7, just entering the 70-76 zone → 7 SELL.
+- BB at/above upper band: +1 SELL bonus
+- MACD 4H negative (-0.0005): +1 SELL bonus
+- RIB=ALIGNED_BULL: this CONFLICTS with SELL — a caution flag, not a bonus
+- PAT=double_bottom:bul on D1 — conflicts with SELL direction
+- T_sig=SELL_8 is the Python anchor. The double_bottom:bul pattern conflicts but T_sig already accounts for it. Maintain SELL_8 → **TECHNICAL_SCORE: 8**
+
+**OSCILLATOR:** TRIPLE_SELL (3/3) → +2 CONFIDENCE
+
+**DIVERGENCE:** NONE → no adjustment
+
+**RIBBON:** ALIGNED_BULL (fan) — this strongly contradicts SELL. Trend continuation bias = higher reversal risk on SELL entries.
+
+**FUNDAMENTAL:** Rate diff +1.78% AUD rising, NZD falling = AUD fundamentally stronger = AUD/NZD BUY bias fundamentally. SELL direction conflicts with fundamentals. Pattern #3 from SYSTEM MEMORY applies. Score: 4/10 (conflicting)
+
+**SENTIMENT:** AUD=8 bullish, NZD=8 bullish — both strong, neutral for AUD/NZD cross. Score: 5/10
+
+**POSITIONING:** AUD net SHORT 26% — not extreme, STABLE. NZD neutral (stale). Score: 5/10
+
+**MACRO:** VIX=14.3 (low, risk-on = AUD positive), oil=91.5 (risk-on favors AUD), curve=0.4 (mild). Risk-on environment favors AUD over NZD but both commodity currencies. Score: 5/10
+
+**CONFIDENCE CALCULATION:**
+- Haiku base: 7
+- MTF W:NEUTRAL (not confirming SELL) → this is a structural weakness
+- TRIPLE_SELL OSC: +2 → 9
+- ALIGNED_BULL ribbon conflicts: -1 → 8
+- Fundamental conflict (rate diff favors AUD/NZD higher, Pattern #3): -1 → 7
+- SELL segment negative expectancy (Pattern #8): -1 → 6
+- Weekly not agreeing: hard MTF fail
+
+**FINAL DECISION:** Weekly = NEUTRAL, not SELL. The MTF rule requires BOTH weekly AND daily to agree. This is a hard NO regardless of confidence score. Confidence also lands at 6 after adjustments, which is a NO by the ≤6 rule as well.
+
+---
+
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 1.2256
+TARGET: 1.2102
+STOP_LOSS: 1.2333
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 3:00–5
+KEY_THESIS: RSI overbought at 70.7 in confirmed uptrend with triple-oscillator SELL confluence (Stoch 85.7 + CCI 191.2) signals reversal; fundamental AUD strength (rate rising +1.78%) provides mean-reversion edge, while ribbon alignment confirms trend structure but ATR elevated increases whipsaw risk.
+RISK_FACTORS: [1] MTF agreement only 2/3 (M+D+4H=SELL but W=NEUTRAL)—weekly hesitation weakens conviction; [2] Price at upper Bollinger Band in strong uptrend—may extend further before reversal, risking early exit.
