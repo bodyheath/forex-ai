@@ -188,6 +188,24 @@ FIELDS = [
                                     # doesn't apply to. See src/loss_postmortem.py for the full
                                     # rule and its reliability gates -- pure observability, does
                                     # not feed any grading/gating decision.
+    # ── Sentiment Agent (2026-09-06, Phase 01B specialist #3) ──────────────────
+    # Set once, at candidate creation, for every research candidate this pipeline
+    # already logs -- see src/sentiment_agent.py for the full source/timestamp
+    # discipline. Pure observability: does not feed any grading/gating decision.
+    # Unlike Positioning/Carry, this specialist has NO historical backtest behind
+    # it (see shadow_mode.py's registration notes for "sentiment_agent_supports")
+    # -- oldest/newest_headline_published below exist specifically so a later
+    # audit can confirm, from this row alone, that nothing scored predates the
+    # row's own creation.
+    "sentiment_verdict",            # SUPPORTS | CONTRADICTS | NEUTRAL | UNAVAILABLE
+    "sentiment_confidence",         # 0-10, 0 when NEUTRAL/UNAVAILABLE
+    "sentiment_reason",             # one-line LLM explanation
+    "sentiment_base_drift",         # HAWKISH | DOVISH | NEUTRAL, base currency
+    "sentiment_quote_drift",        # HAWKISH | DOVISH | NEUTRAL, quote currency
+    "sentiment_n_headlines",        # count of today-dated headlines actually used
+    "sentiment_evaluated_at",       # wall-clock timestamp of the LLM call
+    "sentiment_oldest_headline",    # oldest headline's own publishedAt among those used
+    "sentiment_newest_headline",    # newest headline's own publishedAt among those used
 ]
 
 OUTCOME_STATUSES = {"WIN", "LOSS", "BREAKEVEN", "EXPIRED", "PARTIAL_WIN", "FULL_WIN", "STALE_EXIT", "SKIPPED"}
