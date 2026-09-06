@@ -175,21 +175,125 @@ def part1b_open_positions_check(corr):
         return
 
 
-def part2_backtest_historical_gating():
-    print(f"\n{'='*90}\nPART 2: backtest -- would gating decisions have changed historically?\n{'='*90}")
+def part2a_out_of_sample_stability(closes: pd.DataFrame):
+    """Split price history in half. Build a correlation matrix from the FIRST
+    half only (calibration -- this is what a real gate would have had
+    available at the time). Check whether pairs it calls 'highly correlated'
+    stay correlated, and pairs it calls 'uncorrelated' stay uncorrelated, in
+    the SECOND half (validation) -- i.e. is the real-correlation structure a
+    persistent structural feature or a curve-fit artifact of one window?"""
+    print(f"\n{'='*90}\nPART 2a: out-of-sample stability of the real correlation matrix\n{'='*90}")
+    mid = len(closes) // 2
+    split_date = closes.index[mid]
+    calib_corr = build_correlation_matrix(closes.iloc[:mid])
+    valid_corr = build_correlation_matrix(closes.iloc[mid:])
+    print(f"Calibration window: {closes.index[0].date()} -> {closes.index[mid-1].date()} ({mid} days)")
+    print(f"Validation window:  {closes.index[mid].date()} -> {closes.index[-1].date()} ({len(closes)-mid} days)")
+
+    rows = []
+    pairs = [p for p in UNIVERSE if p in calib_corr.columns]
+    for i in range(len(pairs)):
+        for j in range(i + 1, len(pairs)):
+            p1, p2 = pairs[i], pairs[j]
+            c_calib = calib_corr.loc[p1, p2]
+            c_valid = valid_corr.loc[p1, p2]
+            if pd.isna(c_calib) or pd.isna(c_valid):
+                continue
+            rows.append({"pair1": p1, "pair2": p2, "calib_corr": c_calib, "valid_corr": c_valid})
+    df = pd.DataFrame(rows)
+
+    high = df[df["calib_corr"].abs() >= 0.60]
+    low = df[df["calib_corr"].abs() < 0.30]
+    print(f"\n{len(high)} combos flagged 'highly correlated' (|corr|>=0.60) in calibration half:")
+    print(f"  mean |corr| in validation half: {high['valid_corr'].abs().mean():.3f}  "
+          f"(still >=0.60 in {len(high[high['valid_corr'].abs()>=0.60])}/{len(high)} = "
+          f"{(high['valid_corr'].abs()>=0.60).mean()*100:.1f}%)")
+    print(f"{len(low)} combos flagged 'uncorrelated' (|corr|<0.30) in calibration half:")
+    print(f"  mean |corr| in validation half: {low['valid_corr'].abs().mean():.3f}  "
+          f"(still <0.30 in {len(low[low['valid_corr'].abs()<0.30])}/{len(low)} = "
+          f"{(low['valid_corr'].abs()<0.30).mean()*100:.1f}%)")
+    return split_date, calib_corr, valid_corr
+
+
+def part2b_backtest_gating_decisions(split_date, calib_corr):
+    """Using ONLY the calibration-half correlation matrix (available before
+    split_date -- no lookahead), replay every day in the validation half of
+    the real historical_backtest_results.csv population and check whether
+    the literal currency-code check, the regime-group check, and the real
+    out-of-sample correlation check would have flagged the same, or
+    different, same-day multi-pair combinations as 'correlated'."""
+    print(f"\n{'='*90}\nPART 2b: backtest -- gating decisions on real historical candidate-days\n{'='*90}")
     hist = pd.read_csv("data/historical_backtest_results.csv")
     hist = hist[hist["bucket"] != "would_F"].copy()
-    corr = pd.read_csv("data/correlation_matrix.csv", index_col=0) if Path("data/correlation_matrix.csv").exists() else None
-    return hist, corr
+    hist["date"] = pd.to_datetime(hist["date"])
+    hist = hist[hist["date"] >= split_date].copy()
+    print(f"Validation-half tradeable candidates (date >= {split_date.date()}): {len(hist)} rows")
+    print("NOTE: the mechanical backtest tests BOTH directions per pair/day independently")
+    print("(it doesn't pick a single direction the way a real LLM signal would) -- both")
+    print("tradeable directions are used as separate hypothetical same-day candidates below;")
+    print("this is a known limitation carried over from Phase 02's own design, not new here.")
+
+    by_date = hist.groupby(hist["date"].dt.date)
+    literal_flags, regime_flags, real_flags = 0, 0, 0
+    real_only, literal_only = [], []
+    total_combos = 0
+
+    for date, grp in by_date:
+        cands = list(grp[["pair", "direction"]].itertuples(index=False, name=None))
+        n = len(cands)
+        if n < 2:
+            continue
+        for i in range(n):
+            for j in range(i + 1, n):
+                p1, d1 = cands[i]
+                p2, d2 = cands[j]
+                if p1 == p2:
+                    continue
+                total_combos += 1
+                lit = literal_check(p1, d1, p2, d2)
+                reg = regime_group_check(p1, d1, p2, d2)
+                real, eff_corr = real_correlation_check(p1, d1, p2, d2, calib_corr)
+                if lit:
+                    literal_flags += 1
+                if reg:
+                    regime_flags += 1
+                if real:
+                    real_flags += 1
+                if real and not lit:
+                    real_only.append((date, p1, d1, p2, d2, eff_corr))
+                if lit and not real:
+                    literal_only.append((date, p1, d1, p2, d2, eff_corr))
+
+    print(f"\nTotal same-day cross-pair combinations checked: {total_combos}")
+    print(f"  literal currency-code check flags:  {literal_flags} ({literal_flags/total_combos*100:.1f}%)")
+    print(f"  regime-group check flags:            {regime_flags} ({regime_flags/total_combos*100:.1f}%)")
+    print(f"  real out-of-sample correlation flags: {real_flags} ({real_flags/total_combos*100:.1f}%)")
+
+    print(f"\nCombos the literal check MISSES but real correlation catches "
+          f"(new true positives): {len(real_only)}")
+    seen = set()
+    for date, p1, d1, p2, d2, ec in sorted(real_only, key=lambda r: -abs(r[5]))[:10]:
+        key = (p1, d1[:1], p2, d2[:1])
+        print(f"  {date} {p1} {d1} + {p2} {d2}   eff_corr={ec:+.3f}")
+
+    print(f"\nCombos the literal check flags but real correlation says are NOT actually "
+          f"correlated (false positives it was making): {len(literal_only)}")
+    for date, p1, d1, p2, d2, ec in sorted(literal_only, key=lambda r: abs(r[5]))[:10]:
+        print(f"  {date} {p1} {d1} + {p2} {d2}   eff_corr={ec:+.3f}")
+
+    return real_only, literal_only
 
 
 if __name__ == "__main__":
     print("Fetching/loading real daily closes for all 28 UNIVERSE pairs...")
     closes = fetch_all_closes()
-    print(f"\nBuilding correlation matrix from {len(closes)} days of real returns...")
+    closes.index = pd.to_datetime(closes.index)
+    print(f"\nBuilding full-history correlation matrix from {len(closes)} days of real returns...")
     corr = build_correlation_matrix(closes)
     corr.to_csv("data/correlation_matrix.csv")
     print(f"Saved matrix to data/correlation_matrix.csv")
 
     part1_compare_groupings(corr)
     part1b_open_positions_check(corr)
+    split_date, calib_corr, valid_corr = part2a_out_of_sample_stability(closes)
+    part2b_backtest_gating_decisions(split_date, calib_corr)
