@@ -160,9 +160,14 @@ class TestRefreshStaleAlerting(unittest.TestCase):
 
     def tearDown(self):
         self._fetch_patcher.stop()
-        self._tmpdir_patcher.stop()
+        # Must unlink the TEST path before stopping the MATRIX_PATH patcher --
+        # stopping it first reverts MATRIX_PATH to the real
+        # data/correlation_matrix.json, and this cleanup would delete the
+        # real production matrix instead of the test one. (Caught exactly
+        # this way during the 2026-09-07 pre-merge audit: it did.)
         if correlation_model.MATRIX_PATH.exists():
             correlation_model.MATRIX_PATH.unlink()
+        self._tmpdir_patcher.stop()
         correlation_model._matrix_cache = None
 
     def _write_matrix(self, age_days: float):
