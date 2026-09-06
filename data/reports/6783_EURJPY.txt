@@ -1,0 +1,25 @@
+PAIR: EUR/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + 4H RSI oversold (28.2) + D1 BUY signal align for bounce, but MTF conflict (W:SELL vs D:BUY) and converging ribbon limit upside conviction.
+RISK_FACTORS: [1] EUR crowded short positioning unwinding — reversal risk but also whipsaw potential if shorts reverse hard then cover and flip long. [2] Weekly sell signal contradicts daily — price may fail to sustain above 184.8 SMA50 resistance; converging ribbon suggests trend weakening into potential reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 183.45
+ENTRY_TRIGGER_REASON: Pullback to support near lower Fibonacci level (179.369 + half-range buffer ~183.5) would confirm consolidation before sustained BUY.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF GATE:** W:SELL + D:BUY = 2/3 agreement. **Fails MTF rule** (needs both W and D aligned for TRADE_THIS=YES). Confidence capped at ≤6 due to conflicting weekly sell signal.
+
+**TECHNICAL (
