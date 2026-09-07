@@ -31,6 +31,62 @@ A new book is a `BookConfig` entry in `BOOKS` below plus an eligibility
 function; nothing else in this module changes. This module never reads or
 writes trades.csv, fund_state.json, or risk_profile.json — it has no way to
 affect the real fund's decisions or state.
+
+============================================================================
+REJECTION OBSERVABILITY (added 2026-09-07)
+============================================================================
+Before this date, shadow_mode only ever heard about a candidate a book
+FIRED on (`_settle_book_positions()`'s would_fire=True calls) -- a
+candidate a book REJECTED (its eligibility() returned False, or it was
+eligible but `_fs_mod.compute_sizing()` blocked it on that book's OWN
+simulated drawdown) left no trace at all. That made Book E's actual
+purpose -- does the real fund's drawdown-tier gate reject candidates that
+would have been fine, or correctly reject ones that would have lost --
+structurally unanswerable: `entry`/`stop_loss`/`t2_price` are mechanical
+and identical regardless of which book takes a candidate, so a REJECTED
+candidate's eventual real outcome (from the SAME settlement pass that
+already runs for every OPEN candidate) tells you exactly what would have
+happened had the rejecting book fired instead. That signal was being
+computed and then thrown away.
+
+Two changes close this gap, both additive (no existing behaviour changes):
+
+  1. `dd_mode`/`conf_threshold` now persist on every NEW candidate row
+     (CANDIDATE_FIELDS) -- both were already being passed into
+     evaluate_candidates() as real, live scan values before this; this only
+     started writing them down. Candidates opened before 2026-09-07 have
+     these fields blank and that is NOT retroactively reconstructable: the
+     only related trace is data/risk_profile.json's git history, but
+     drawdown-tier assignment has real hysteresis (_compute_drawdown_tier's
+     recovery step-up logic in risk_manager.py) that a point-in-time
+     snapshot can't safely re-derive, and matching a git commit's timestamp
+     to the exact scan that produced a given candidate row isn't guaranteed
+     precise enough to trust for this. Same call made here as the
+     mfe_pips/da_reasons reliability-date split (see
+     project_full_audit_sep2026.md) -- flag the discontinuity, don't
+     silently backfill something that can't be verified correct.
+
+  2. Every book's rejection of a candidate (per the two reasons above) is
+     recorded once, at evaluation time, in `rejections.csv` (a candidate_id
+     x book_id join table, mirroring `<book_id>_positions.csv`'s shape).
+     When that candidate later settles (`settle_open_candidates()` --
+     target/stop hit, or 14-day expiry), `_settle_book_rejections()` feeds
+     every still-PENDING rejection into shadow_mode under the SAME
+     `vbook_{book_id}` rule already used for fires -- would_fire=False,
+     same outcome/net_pips/register_rule()/record_evaluation() call shape,
+     not a parallel mechanism. shadow_mode.check_promotion_readiness()
+     already computes a separate would_fire=True vs would_fire=False
+     WR/PF/n for every registered rule (see that module) -- this was
+     already built to consume exactly this data, it just never received
+     any for a virtual book before now. A rejection that's superseded by a
+     later fire (e.g. dd_mode improves between two same-day scans and the
+     book takes the candidate after all) is removed rather than settled --
+     a book's FINAL decision on a candidate is what shadow_mode sees,
+     never both.
+
+  Candidates that were already rejected before 2026-09-07 have no
+  rejections.csv row and never will -- this observability only starts
+  accumulating from today forward, exactly like (1) above.
 """
 from __future__ import annotations
 
@@ -50,6 +106,7 @@ from src import trade_costs
 
 VBOOKS_DIR = config.DATA_DIR / "virtual_books"
 CANDIDATES_CSV = VBOOKS_DIR / "candidates.csv"
+REJECTIONS_CSV = VBOOKS_DIR / "rejections.csv"
 
 STARTING_BALANCE = 10_000.0
 EXPIRY_DAYS = 14  # matches research_tracker.py's research-trade expiry window
@@ -59,6 +116,16 @@ CANDIDATE_FIELDS = [
     "entry", "stop_loss", "t2_price",
     "confidence", "eff_conf", "grade", "da_grade_before", "rr",
     "mtf_agreeing_count",
+    "dd_mode", "conf_threshold",   # 2026-09-07: real scan context at evaluation
+                                     # time -- see module docstring's REJECTION
+                                     # OBSERVABILITY section. Both were already
+                                     # computed and passed into
+                                     # evaluate_candidates() before this; this
+                                     # only started persisting them onto the
+                                     # row. Absent (blank) on any candidate
+                                     # opened before 2026-09-07 -- not
+                                     # reconstructable after the fact, see that
+                                     # section for why.
     "status",            # OPEN | WIN | LOSS | EXPIRED
     "opened_at", "closed_at", "exit_price", "pips", "net_pips",
 ]
@@ -68,6 +135,18 @@ POSITION_FIELDS = [
     "position_size_pct", "sizing_mode", "balance_at_entry", "stop_pips",
     "status",             # OPEN | CLOSED
     "closed_at", "net_pips", "dollars", "balance_after",
+]
+
+REJECTION_FIELDS = [
+    "id", "candidate_id", "book_id", "pair", "direction",
+    "reason",             # "eligibility" (cfg.eligibility() said no) or
+                          # "sizing" (eligible, but compute_sizing() blocked
+                          # it on THIS BOOK'S OWN simulated drawdown -- a
+                          # distinct gate from the real dd_mode passed into
+                          # eligibility(), see module docstring)
+    "recorded_at",
+    "status",             # PENDING | SETTLED
+    "settled_at",
 ]
 
 
@@ -341,8 +420,17 @@ def evaluate_candidates(
     """
     _log = log_fn or (lambda m: None)
     candidates = _load_csv(CANDIDATES_CSV)
+    rejections = _load_csv(REJECTIONS_CSV)
     new_candidates = 0
     opened_by_book = {bid: 0 for bid in BOOKS}
+    rejections_changed = False
+
+    def _find_pending_rejection(cid: int, book_id: str) -> Optional[dict]:
+        for rej in rejections:
+            if rej.get("candidate_id") == str(cid) and rej.get("book_id") == book_id \
+                    and rej.get("status") == "PENDING":
+                return rej
+        return None
 
     for r in deep_results:
         parsed = r.get("parsed") or {}
@@ -385,6 +473,8 @@ def evaluate_candidates(
                 "da_grade_before": qg.get("da_grade_before", ""),
                 "rr": qg.get("rr", ""),
                 "mtf_agreeing_count": mtf.get("agreeing_count", ""),
+                "dd_mode": dd_mode,
+                "conf_threshold": conf_threshold,
                 "status": "OPEN",
                 "opened_at": _now_str(),
                 "closed_at": "",
@@ -403,23 +493,63 @@ def evaluate_candidates(
             continue
 
         for book_id, cfg in BOOKS.items():
+            positions = _load_csv(_positions_path(book_id))
+            if any(p.get("candidate_id") == str(candidate_id) for p in positions):
+                continue  # this book already resolved this candidate (fired or rejected+settled)
+
             try:
                 allowed = cfg.eligibility(r, quality_grades, dd_mode, conf_threshold,
                                           eff_conf_fn, dd_allows_fn)
             except Exception as exc:
                 _log(f"[vbook:{book_id}] eligibility check failed for {pair}: {exc}")
                 continue
-            if not allowed:
-                continue
 
-            positions = _load_csv(_positions_path(book_id))
-            if any(p.get("candidate_id") == str(candidate_id) for p in positions):
-                continue  # this book already has a position in this candidate
+            if not allowed:
+                if _find_pending_rejection(candidate_id, book_id) is None:
+                    rejections.append({
+                        "id": _next_id(rejections),
+                        "candidate_id": candidate_id,
+                        "book_id": book_id,
+                        "pair": pair,
+                        "direction": direction,
+                        "reason": "eligibility",
+                        "recorded_at": _now_str(),
+                        "status": "PENDING",
+                        "settled_at": "",
+                    })
+                    rejections_changed = True
+                continue
 
             state = load_book_state(book_id)
             pct, mode, _reason = _fs_mod.compute_sizing(state, state["balance"], eff_conf_fn(r))
             if pct is None:
-                continue  # blocked by this book's own checklist-score/drawdown tier gate
+                # Eligible per the real gate, but blocked by THIS book's own
+                # simulated drawdown-tier sizing gate -- a distinct rejection
+                # reason from "eligibility" above (see module docstring).
+                if _find_pending_rejection(candidate_id, book_id) is None:
+                    rejections.append({
+                        "id": _next_id(rejections),
+                        "candidate_id": candidate_id,
+                        "book_id": book_id,
+                        "pair": pair,
+                        "direction": direction,
+                        "reason": "sizing",
+                        "recorded_at": _now_str(),
+                        "status": "PENDING",
+                        "settled_at": "",
+                    })
+                    rejections_changed = True
+                continue
+
+            # About to fire -- if an earlier same-day evaluation (e.g. before
+            # dd_mode improved between two scans) had recorded a rejection
+            # for this exact (candidate, book), drop it: shadow_mode must
+            # only ever see this book's FINAL decision on a candidate, never
+            # both a rejection and a fire for the same one.
+            pending = _find_pending_rejection(candidate_id, book_id)
+            if pending is not None:
+                rejections.remove(pending)
+                rejections_changed = True
 
             pos_id = _next_id(positions)
             positions.append({
@@ -445,6 +575,8 @@ def evaluate_candidates(
 
     if new_candidates or any(opened_by_book.values()):
         _write_csv(CANDIDATES_CSV, candidates, CANDIDATE_FIELDS)
+    if rejections_changed:
+        _write_csv(REJECTIONS_CSV, rejections, REJECTION_FIELDS)
 
     return {"new_candidates": new_candidates, "opened_by_book": opened_by_book}
 
@@ -542,6 +674,7 @@ def settle_open_candidates(log_fn: Callable = None, prices: dict = None) -> dict
              f"({net_pips:+.1f}p net, hit={hit})")
 
         _settle_book_positions(int(row["id"]), net_pips, status, _log)
+        _settle_book_rejections(int(row["id"]), net_pips, status, _log)
 
     if closed_count:
         _write_csv(CANDIDATES_CSV, candidates, CANDIDATE_FIELDS)
@@ -627,6 +760,43 @@ def _settle_book_positions(candidate_id: int, net_pips: float, status: str, log_
 
         if touched:
             _write_csv(_positions_path(book_id), positions, POSITION_FIELDS)
+
+
+def _settle_book_rejections(candidate_id: int, net_pips: float, status: str, log_fn: Callable) -> None:
+    """Feed every still-PENDING rejection of this now-closed candidate into
+    shadow_mode as a would_fire=False evaluation, using the SAME
+    vbook_{book_id} rule the fire side already writes to -- see module
+    docstring's REJECTION OBSERVABILITY section. Never touches any book's
+    balance/positions (a rejected candidate was never a real position for
+    that book); this only ever appends to shadow_rules.json."""
+    rejections = _load_csv(REJECTIONS_CSV)
+    changed = False
+    for rej in rejections:
+        if rej.get("candidate_id") != str(candidate_id) or rej.get("status") != "PENDING":
+            continue
+        book_id = rej.get("book_id")
+        rej["status"] = "SETTLED"
+        rej["settled_at"] = _now_str()
+        changed = True
+
+        try:
+            from src import shadow_mode as _sm
+            _sm.register_rule(
+                f"vbook_{book_id}",
+                description=f"Virtual book {book_id}: {BOOKS[book_id].description}",
+            )
+            _sm.record_evaluation(
+                f"vbook_{book_id}", would_fire=False, outcome=status, net_pips=net_pips,
+                context={"candidate_id": candidate_id, "pair": rej.get("pair"),
+                         "direction": rej.get("direction"), "reject_reason": rej.get("reason")},
+            )
+            log_fn(f"[vbook:{book_id}] rejection of candidate #{candidate_id} settled {status} "
+                   f"({net_pips:+.1f}p net, reason={rej.get('reason')})")
+        except Exception as _sm_exc:
+            log_fn(f"[vbook:{book_id}] shadow_mode rejection logging failed (non-fatal): {_sm_exc}")
+
+    if changed:
+        _write_csv(REJECTIONS_CSV, rejections, REJECTION_FIELDS)
 
 
 def get_open_candidate_pairs() -> list:
