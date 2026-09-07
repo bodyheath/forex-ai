@@ -25,6 +25,36 @@ from anthropic import Anthropic
 import config
 from src import memory
 
+
+class SonnetTruncatedError(RuntimeError):
+    """Sonnet confirmation exhausted max_tokens on every attempt before ever
+    emitting a parseable CONFIDENCE line.
+
+    2026-09-07: found via a real candidate (AUD/CHF, Haiku conf=8/10 SELL,
+    coherent thesis) that was silently dropped this way -- Sonnet's response
+    was still mid-reasoning (walking through the MTF check and technical
+    score) when it hit the ceiling on both attempts. Distinguished from the
+    generic RuntimeError this same retry loop raises for other unparseable-
+    response cases (e.g. a genuinely malformed response under end_turn)
+    specifically so callers can tell "Sonnet never finished judging this
+    candidate" apart from "Sonnet judged it and something else went wrong" --
+    conflating the two under one generic exception is exactly what made this
+    failure mode invisible: daily.py's per-pair catch-all logged both as an
+    identical `FAILED {pair}: {exc}` line, indistinguishable from an ordinary
+    rejection or a data error.
+    """
+    def __init__(self, pair: str, stop_reason: str, raw_tail: str):
+        self.pair = pair
+        self.stop_reason = stop_reason
+        self.raw_tail = raw_tail
+        super().__init__(
+            f"Sonnet confirmation for {pair} exhausted max_tokens on every attempt "
+            f"before emitting a parseable CONFIDENCE line (stop_reason={stop_reason}) "
+            f"-- NOT a rejection on merit, Sonnet never finished reasoning about it. "
+            f"Last raw response tail: {raw_tail!r}"
+        )
+
+
 # ── API key fallback state ─────────────────────────────────────────────────────
 _using_fallback: bool     = False
 _fallback_triggered: bool = False
