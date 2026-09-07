@@ -1,0 +1,41 @@
+I need to carefully review the MTF data and ribbon before finalizing.
+
+**MTF Check:** M:BUY W:BUY D:BUY 4H:BUY — all agree BUY. Weekly and daily both BUY ✓
+
+**RSI Trend Context:** MTF is M:BUY W:BUY D:BUY — this is a CONFIRMED UPTREND signal from MTF perspective, despite price structure showing death-cross/downtrend. The MTF line overrides for RSI tier selection → use UPTREND shifted tiers. RSI=34.2 in uptrend context: standard tiers apply since uptrend shifts SELL zones higher, not BUY zones lower. Actually wait — the D1 trend line says "downtrend (price < SMA50 < SMA200, death-cross structure)" but MTF says W:BUY D:BUY. The MTF line is the authoritative signal for RSI context. With W:BUY+D:BUY = CONFIRMED UPTREND → shift SELL zones higher. RSI 34.2 in uptrend: standard BUY zone (30-35 = 7-8 BUY). T_sig=BUY_8 confirmed.
+
+**Ribbon:** ALIGNED_BEAR fan — this conflicts with MTF BUY signal. The bear ribbon is a risk factor but MTF takes precedence for direction.
+
+**FUND:** diff=-2.21% EUR_rate=flat AUD_rate=rising → bearish for EUR/AUD. This conflicts with BUY. Score 3-4.
+
+**OSC Triple BUY:** +2 confidence
+**DIV:** NONE
+**FIB:** near=-27.2%@1.61549 (8p res) — price is 8p above resistance level. This is actually resistance, not support for BUY entry.
+
+**System Memory #5:** Confidence >=7 setups: win rate 33%, negative expectancy — reduce confidence.
+**System Memory #9:** Skip BUY on AUD pairs when Fundamental <5 and Macro <6 — EXPIRED but noted.
+
+**Confidence build:** Base from MTF conf 3/3 → start 6. Triple OSC BUY +2 = 8. No DIV = 0. Ribbon ALIGNED_BEAR conflicts → -1 = 7. Fund conflict (EUR flat, AUD rising, -2.21% diff) → caution. System memory #5 (conf>=7 negative expectancy) → -1 = 6.
+
+With confidence landing at 6, TRADE_THIS = NO per rules (conf<=6 = NO always).
+
+---
+
+PAIR: EUR/AUD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_BUY
+ENTRY: 1.6147
+TARGET: 1.6305
+STOP_LOSS: 1.6068
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 15:00–17:00 NZST
+NEWS_WARNING: Monitor EUR and AUD central bank commentary — AUD rate-rising cycle active; any RBA hawkish statement materially increases downside risk within 48h
+KEY_THESIS: Daily RSI 34.2 in oversold BUY zone with triple oscillator confluence (Stoch 9.7, CCI −144.3, RSI all agree) and pin bar at key Fib level creates a high-probability mean-reversion bounce, but the aligned bear EMA ribbon and negative 2.21% rate differential capping EUR while AUD rises critically undermines durable upside.
+RISK_FACTORS: 1) ALIGNED_BEAR EMA ribbon with fan structure signals dominant downtrend momentum — bounce may be shallow and quickly overwhelmed; 2) EUR rate flat vs AUD rate rising creates a widening carry headwind that systematically pressures

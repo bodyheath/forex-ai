@@ -1,0 +1,43 @@
+I need to carefully evaluate this setup, particularly the RSI trend context rule.
+
+**RSI TREND CONTEXT CHECK:**
+MTF = M:SELL W:SELL D:SELL 4H:SELL — all SELL. But the D1 data says `trend=uptrend (price > SMA50 > SMA200, golden-cross structure)` and RIB=ALIGNED_BULL. This is a contradiction between MTF signals and price structure. The MTF conf=3/3 SELL means W and D both agree SELL — so RSI overbought rules apply in SELL context. RSI 70.7 in W:SELL+D:SELL = confirmed downtrend context? No — the price structure IS an uptrend (golden cross, ALIGNED_BULL ribbon). MTF SELL here likely means momentum signals, not structural trend. I'll treat as mixed/standard RSI tiers given the structural uptrend conflict.
+
+**Standard RSI tiers:** RSI 70.7 = 70-76 = 7-8 SELL tier. T_sig=SELL_8. TRIPLE_SELL oscillator +2 confidence. BB at upper band confirms SELL. MACD 4H slightly negative (-0.0000). But RIBBON=ALIGNED_BULL is a strong counter — trend continuation bias.
+
+**MTF:** W:SELL + D:SELL both agree → direction confirmed for SELL. 4H:SELL bonus.
+
+**FIB:** SH=1.22561, SL=1.1909, range=347p. Price=1.2236 is near the swing high — near top of range, resistance area.
+
+**FUNDAMENTAL conflict:** AUD_rate=rising, NZD_rate=falling, diff=+1.78% FAVORS AUD/NZD BUY (AUD stronger). Selling into positive carry = headwind. FUND score reduced.
+
+**SYSTEM MEMORY #3:** Technical signal conflicts with rate differential direction → lower confidence. SELL conflicts with AUD rising/NZD falling differential.
+**SYSTEM MEMORY #8:** SELL setups win rate 50%, expectancy -0.29R → reduce confidence.
+**SYSTEM MEMORY #5:** Confidence >=7 setups negative expectancy → pressure to reduce.
+
+**RIBBON ALIGNED_BULL** = significant counter-signal for SELL. This raises reversal risk substantially.
+
+**PAT=double_bottom:bul** on BOTH D1 and 4H — bullish pattern conflicts with SELL direction.
+
+**Confidence adjustment:** Haiku says 8. But: FUND conflicts (-1), RIBBON ALIGNED_BULL conflicts (-1), double_bottom:bul PAT conflicts (-1), system memory SELL penalty. Starting from 8: -1 FUND conflict, -1 RIBBON conflict, -1 PAT conflict = 5. That's too aggressive. More reasonably: TRIPLE_SELL +2 already baked in Haiku's 8. Deduct -1 FUND conflict, -1 structural uptrend/ribbon conflict = 6. Confidence = 6 → TRADE_THIS: NO.
+
+**Entry:** Haiku suggested pullback entry 1.2210. Stop above recent high ~1.2260 (above SH 1.22561). Risk = 50 pips. Target = 2R = 1.2210 - 0.0100 = 1.2110.
+
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 8/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 6/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 1.2210
+TARGET: 1.2110
+STOP_LOSS: 1.2260
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open pullback, 21:00–23:00 NZST
+NEWS_WARNING: Monitor AUD/NZD central bank commentary and AU/N
+KEY_THESIS: Overbought D1 RSI 70.7 in confirmed uptrend with triple oscillator sell confluence and price at upper BB; pullback into support at SL 1.1909 is high-probability reversal target aligned with AUD rate rising (positive carry fade risk).
+RISK_FACTORS: [1] Ribbon ALIGNED_BULL and price > SMA50 = trend continuation bias — uptrend persistence could trigger new highs before reversal. [2] AUD net SHORT positioning at 26% is not extreme; if institutional unwinding reverses, AUD could rally further, stopping SELL below entry.

@@ -1,0 +1,24 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level + RSI 65.5 in confirmed uptrend signals overbought reversal, but conflicting MTF structure (D:SELL vs W/M:NEUTRAL) and fully aligned bullish ribbon undermine conviction.
+RISK_FACTORS: [1] MTF disagreement — weekly and monthly neutral while daily sells; daily alone insufficient for high-confidence reversal in strong uptrend. [2] Ribbon ALIGNED_BULL (5/5 EMAs stacked) contradicts sell thesis and suggests trend continuation rather than reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.7240
+ENTRY_TRIGGER_REASON: Sell only if price breaks above 0.7240 (recent swing high) to confirm false breakout; otherwise hold for weekly/monthly alignment before entering.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL_SCORE: 6/10**
+- D1 RSI=65.5 in **confirmed UPTREND** (price > SMA50 > SMA200, W:NEUTRAL D:SELL ambiguity noted below) → standard tier: 65-77=4-5

@@ -1,0 +1,28 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Bearish RSI divergence (38p/4pt) + moderate overbought (RSI 61.7 in uptrend, threshold 65) + CHF positioned crowded long at reversal risk + pin bar at resistance confirms rejection at 100% Fib level.
+RISK_FACTORS: MTF weekly and daily both NEUTRAL (no directional consensus: conf 0/3 fails MTF rule); CAD COT UNWINDING reduces positioning conviction and conflicts with SELL bias.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do not both agree on direction (both NEUTRAL); confidence 0/3 << 2/3 threshold. Trade rejected despite technical setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### **Rationale:**
+
+1. **MTF Enforcement (Hard Rule):** W:NEUTRAL + D:NEUTRAL = conf 0/3 fails the requirement that weekly AND daily must both agree on direction. This is a **blocking veto** regardless of technical confluence.
+
+2. **Technical Score = 5/10:**
+   - RSI 61.7 in

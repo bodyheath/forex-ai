@@ -1,0 +1,21 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 61.8% Fib resistance + RSI 61.5 (upper-neutral) + T_sig SELL_6 suggest pullback, but weak MTF alignment (only D:SELL, 4H:uptrend conflict) and OSC divergence (Stoch overbought but CCI extreme bullish) create significant directional ambiguity.
+
+RISK_FACTORS: 
+1. MTF conflict — 4H in uptrend (inverse H&S pattern, price > SMA50 > SMA200) contradicts D1 SELL; only 1/3 timeframes agree (conf 40%) — reversal risk if 4H continuation breaks through.
+2. COT momentum unwinding on both EUR and GBP reduces institutional conviction; SMD neutral offers no contrarian edge; OSC confluence NONE (Stoch/CCI misaligned) weakens reversal probability.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8610
+ENTRY_TRIGGER_REASON: Rejection above Fib 61.8% level (0.8599) with confirmation lower-high formation on D1; only execute if 4H momentum weakens (MACD histogram flips

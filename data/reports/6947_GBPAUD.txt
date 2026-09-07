@@ -1,0 +1,51 @@
+I need to carefully evaluate this setup, noting several conflicts:
+
+**Critical flags:**
+- RIB=ALIGNED_BEAR (fan, 5/5 aligned bearish) — this is a strong downtrend continuation signal
+- PAT=head_and_shoulders:bea on D1 — this is a SELL pattern, conflicting with BUY direction
+- FUND diff=-0.73% GBP_rate=flat, AUD_rate=rising — fundamentals favor AUD (SELL GBP/AUD)
+- Death-cross structure confirmed on both D1 and 4H
+- RSI 30.5 in a confirmed downtrend: using DOWNTREND-shifted tiers, RSI 30.5 = 30-42 range = only 5-6 BUY (not 7-8), since oversold is normal in downtrends
+- T_sig=BUY_6 is the Python anchor — I'll use 6, not 7
+- SYSTEM MEMORY: SELL setups negative expectancy, BUY setups positive but demand full confluence
+- PAT conflict (H&S bearish on D1) vs pin bar bullish on 4H — mixed signals
+- MTF says W:BUY D:BUY — these DO agree, satisfying the MTF requirement
+- However, ribbon ALIGNED_BEAR fan is a major contradiction to BUY thesis
+- H&S on D1 is a significant bearish pattern that conflicts with BUY
+
+**Confidence adjustment:**
+- Start: Haiku 7
+- TRIPLE_BUY OSC: +2 already reflected
+- DIVERGENCE: NONE (no boost)
+- H&S bearish pattern on D1 conflicts with BUY direction: -1
+- ALIGNED_BEAR ribbon fanning: -1
+- Fundamental conflict (AUD rising rates): -1
+- System memory pattern 3 (tech conflicts with rate differential): -1
+- Net: reduce to 5-6 range → 6/10
+
+Confidence = 6 → TRADE_THIS: NO (hard rule: conf ≤6 = NO always)
+
+**TECHNICAL_SCORE:** T_sig=BUY_6, RSI in downtrend shifted tiers = 30.5 in 30-42 = 5-6 range, H&S bearish conflicts → stay at 6
+
+**Entries:** ATR=0.0100, entry at 1.8785, stop = 1.8785 - 1.5×ATR = 1.8785 - 0.0150 = 1.8635, target = 1.8785 + 2×0.0150 = 1.9085
+
+---
+
+PAIR: GBP/AUD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_BUY
+ENTRY: 1.8785
+TARGET: 1.9085
+STOP_LOSS: 1.8635
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 3:00–5:00 PM Auckland time
+NEWS_WARNING: Monitor GBP and AUD high-impact events (RBA rate decisions, UK CPI/GDP) within 48h — AUD rate-rising bias creates headline risk against BUY direction
+KEY_THESIS: Triple oscillator confluence (Stoch 7.9, CCI -157.1, RSI 30.5) and MTF BUY alignment suggest an oversold bounce, but a D1 head-and-shoulders bearish pattern, aligned-bear fanning ribbon, and AUD rising rates fundamentally opposing GBP strength reduce conviction to a non-tradeable level.
+RISK_FACTORS: 1) ALIGNED_BEAR ribbon fanning with death-cross structure intact on both D1 and 4H means any bounce is likely a lower high within an ongoing downtrend — the H&S target
