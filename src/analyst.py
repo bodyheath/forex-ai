@@ -4,7 +4,9 @@ Stage 1  — Haiku full analysis for ALL pairs in scope (~200 input tokens each)
            Outputs confidence 1-10, direction, all 5 layer scores, key thesis.
 Stage 2  — Sonnet confirmation ONLY for pairs where Haiku confidence >= threshold
            (6 for the 6am full scan, 7 for intraday scans). Typically 0-3 pairs.
-           Uses ultra-compressed input (<500 tokens) and 1000 max_tokens output.
+           Uses ultra-compressed input (<500 tokens) and 1500 max_tokens output
+           (raised 400 -> 600 -> 1000 -> 1500 -- see SonnetTruncatedError below;
+           1000 was still recurring as of 2026-09-07).
 
 Skip-unchanged: pairs that moved <10 pips since last scan are skipped entirely,
 further reducing API calls on repeated intraday runs.
