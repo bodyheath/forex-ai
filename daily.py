@@ -1113,11 +1113,10 @@ def _smd_score(result: dict) -> int:
 
 
 def _eff_conf(result: dict) -> float:
-    """Confidence after MA ribbon, COT momentum, GBP/CHF-specific, fundamental,
-    and Smart Money Divergence adjustments.
+    """Confidence after MA ribbon, GBP/CHF-specific, fundamental, and Smart
+    Money Divergence adjustments.
 
     Ribbon:           −1 when ALIGNED ribbon is fully against trade direction.
-    COT reversal:     −1 when institutions just flipped away from the direction.
     GBP/CHF SELL:     −1 when ribbon is CONVERGING — scoped, temporary patch,
                       see _gbp_chf_converging_ribbon_penalty() for the current
                       revisit condition (a real live test case, not a date —
@@ -1127,6 +1126,11 @@ def _eff_conf(result: dict) -> float:
     Devil's Advocate no longer adjusts this — its verdict now feeds
     _trade_quality_grade() as a grade downgrade instead of a confidence
     mutation (see the DA evaluation loop in _send_telegram_summary).
+
+    2026-09-08: the COT reversal/unwind penalty that used to live here was
+    removed -- a real backtest found the penalized direction's forward win
+    rate HIGHER than baseline at every lag tested, not lower (see the
+    comment above where _cot_reversal_penalty() used to be defined).
     """
     raw = _conf(result)
     if raw == 0:
@@ -1145,7 +1149,6 @@ def _eff_conf(result: dict) -> float:
             adj -= 1
     except Exception:
         pass
-    adj += _cot_reversal_penalty(result)
     adj += _gbp_chf_converging_ribbon_penalty(result)
     # Fundamental alignment adjustment
     _fa = result.get("_fundamental_alignment")
