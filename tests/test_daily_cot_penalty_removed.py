@@ -34,10 +34,14 @@ class TestCotReversalPenaltyRemoved(unittest.TestCase):
     def test_reversing_case_that_used_to_penalise_now_unaffected(self):
         # SELL GBP/USD with quote(USD) old_net > 0 (old long) REVERSING used
         # to trigger -1 under the old rule (SELL + quote old_long -> penalty).
+        # "_fundamental_alignment" is pre-set (not None) so _eff_conf() skips
+        # its live fundamentals.get_fundamental_alignment() lookup branch --
+        # isolates this test to the COT-removal question only.
         result = {
             "parsed": {"direction": "SELL", "confidence": 7},
             "bundle": self._bundle("quote", "REVERSING", 1000),
             "pair": "GBP/USD",
+            "_fundamental_alignment": {},
         }
         self.assertEqual(daily._eff_conf(result), 7.0)
 
@@ -57,6 +61,7 @@ class TestCotReversalPenaltyRemoved(unittest.TestCase):
                 "technical": {"daily": {"ribbon": {"status": "NEUTRAL"}}},
             },
             "pair": "EUR/USD",
+            "_fundamental_alignment": {},
         }
         self.assertEqual(daily._eff_conf(result), 8.0)
 
@@ -67,6 +72,7 @@ class TestCotReversalPenaltyRemoved(unittest.TestCase):
             "parsed": {"direction": "SELL", "confidence": 7},
             "bundle": self._bundle("quote", "STABLE", 0, ribbon="ALIGNED_BULL"),
             "pair": "EUR/USD",
+            "_fundamental_alignment": {},
         }
         self.assertEqual(daily._eff_conf(result), 6.0)
 
