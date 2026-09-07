@@ -547,9 +547,12 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
     """Sonnet confirmation for high-confidence pairs.
 
     Input: ~400-600 tokens (compressed data + Haiku report).
-    Output: max 1000 tokens (raised 400 -> 600 -> 1000 — complex ribbon-vs-MTF conflict trades
-    kept hitting the 600 limit before reaching the CONFIDENCE line, causing stop_reason=max_tokens
-    failures).
+    Output: max 1500 tokens (raised 400 -> 600 -> 1000 -> 1500 -- complex ribbon-vs-MTF
+    conflict trades keep hitting the ceiling before reaching the CONFIDENCE line, causing
+    stop_reason=max_tokens failures; still recurring at 1000 as of 2026-09-07, e.g. AUD/CHF.
+    See SonnetTruncatedError -- both attempts exhausting the ceiling now raises that instead
+    of a generic RuntimeError, so callers can tell "never finished judging" apart from any
+    other failure).
     Only called for pairs where Haiku confidence >= sonnet_threshold (6 for full scan, 7 for intraday).
     threshold_override: if set, replaces the global confidence threshold in the Sonnet prompt.
     """
@@ -559,7 +562,7 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
     def _call(client):
         return client.messages.create(
             model=config.CLAUDE_MODEL,
-            max_tokens=1000,
+            max_tokens=1500,
             system=[{"type": "text", "text": system_prompt, "cache_control": {"type": "ephemeral"}}],
             messages=[{"role": "user", "content": user_message}],
         )
