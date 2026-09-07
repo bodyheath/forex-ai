@@ -1839,6 +1839,7 @@ def _analyse_pair(pair: str, log, force_deep: bool = False,
                   sonnet_threshold: int = 6,
                   pair_threshold_override=None,
                   max_open_id=None) -> dict | None:
+    from src import analyst as _anl_pair
     try:
         return service.analyse_and_log(
             pair,
@@ -1850,7 +1851,7 @@ def _analyse_pair(pair: str, log, force_deep: bool = False,
             pair_threshold_override=pair_threshold_override,
             max_open_id=max_open_id,
         )
-    except analyst.SonnetTruncatedError as exc:
+    except _anl_pair.SonnetTruncatedError as exc:
         # 2026-09-07: distinct from the generic FAILED path below on purpose --
         # this candidate was never actually judged (Sonnet ran out of room
         # mid-reasoning, both attempts), not rejected on merit or lost to a
