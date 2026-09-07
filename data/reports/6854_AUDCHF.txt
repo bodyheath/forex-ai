@@ -1,0 +1,41 @@
+I need to carefully evaluate this setup, noting several conflicts.
+
+**Key conflicts to resolve:**
+
+**MTF:** W:SELL + D:SELL + 4H:SELL — all three agree SELL. ✓ MTF condition met.
+
+**TECHNICAL_SCORE anchor:** T_sig=SELL_5. RSI=68 in confirmed downtrend (W:SELL+D:SELL). Per downtrend RSI rules, shift SELL zones higher — standard 62-70=4-5SELL applies but in downtrend context, RSI 68 is NOT extreme overbought (overbought normal in downtrend means lower threshold). Actually in a downtrend, oversold is normal — overbought zones shift DOWN, so RSI 68 in a downtrend is more meaningful SELL signal. Pin bar at key level = bullish PAT on D1 — conflicts with SELL direction. 4H PAT=bearish pin bar — confirms SELL. MACD histogram barely positive (0.0005) — weak. Ribbon ALIGNED_BULL fan 5/5 — this is a significant conflict with SELL.
+
+DIV: bearish:moderate — CONFIRMED, +1 confidence.
+OSC: TRIPLE_SELL (Stoch 86.5>80, CCI 134.5>100, RSI 68>65) — +2 confidence.
+
+**FUNDAMENTAL conflict:** Rate diff +4.50% AUD rising, CHF falling — strongly favors AUD strength (BUY AUD/CHF), directly opposes SELL. Pattern #3 in memory: technical vs rate differential — fundamentals tend to win. FUNDAMENTAL_SCORE for SELL direction: 4 (opposing).
+
+**RIBBON ALIGNED_BULL:** This is a major risk for a SELL. The ribbon directly contradicts the SELL thesis.
+
+**Positioning:** CHF net SHORT@88% near top of range, unwinding — CHF longs building = CHF strengthening = AUD/CHF falling. Supports SELL. AUD net SHORT mid-range, stable — mild support for SELL.
+
+**Confidence build:** Base 5, DIV +1=6, TRIPLE_SELL OSC +2=8. But ribbon aligned bull conflicts → -1=7. Rate differential opposes → -1=6. D1 PAT bullish pin bar conflicts → no additional deduction (already in T_sig). System memory pattern #8: SELL setups negative expectancy → -1 = 5. That drops to 6 before the memory adjustment... Conf=6 = NO trade per rules.
+
+Actually reconsidering: base 5, +1 DIV, +2 OSC = 8, -1 ribbon conflict, -1 rate diff conflict = 6. SELL segment negative expectancy (pattern #8) reinforces caution. Confidence = 6 → TRADE_THIS: NO.
+
+---
+
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 0.5814
+TARGET: 0.5666
+STOP_LOSS: 0.5888
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 15:00–17:00 NZST
+NEWS_WARNING: Monitor RBA and SNB communications; AUD rate-rising bias creates whipsaw risk on any RBA hawkish surprise within 48h
+KEY_THESIS: W+D+4H aligned SELL with triple oscillator confluence and confirmed bearish divergence at overbought RSI 68 offers a technical reversal case, but the bullish EMA ribbon (5/5 aligned), +4.50% rate differential strongly favouring AUD, and the system's negative SELL expectancy (-0.29R across 8 trades) collectively undermine conviction below the required threshold.
+RISK_FACTORS: 1) EMA ribbon fully aligned bullish (5/5 fan

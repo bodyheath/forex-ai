@@ -5,7 +5,7 @@
   "daily_pnl_dollars": 0.0,
   "daily_pnl_pct": 0.0,
   "peak_balance": 10314.07,
-  "current_drawdown_pct": 0.6527,
+  "current_drawdown_pct": 0.65,
   "drawdown_pct": 0.6527,
   "consecutive_losses": 1,
   "consecutive_wins": 0,
@@ -24,8 +24,8 @@
   "best_pair": "EUR/NZD",
   "best_pips": 237.7,
   "fund_total_trades": 204,
-  "current_sizing_pct": 1.0,
-  "sizing_mode": "NORMAL",
+  "current_sizing_pct": 1.167,
+  "sizing_mode": "normal",
   "daily_trades_date": "2026-09-07",
   "unrealised_dollars": 0,
   "unrealised_pips": 0,
@@ -64,6 +64,22 @@
       "checklist_score": 4.0,
       "blocked_reason": "currency_exposure",
       "timestamp": "2026-08-28T23:19:08"
+    },
+    {
+      "pair": "EUR/JPY",
+      "direction": "BUY",
+      "confidence": 7.0,
+      "checklist_score": 4.0,
+      "blocked_reason": "currency_exposure",
+      "timestamp": "2026-09-07T17:19:40"
+    },
+    {
+      "pair": "USD/JPY",
+      "direction": "BUY",
+      "confidence": 7.0,
+      "checklist_score": 4.0,
+      "blocked_reason": "currency_exposure",
+      "timestamp": "2026-09-07T17:19:41"
     }
   ],
   "sizing_reason": "Standard 1% risk (+0.17% recovery)",

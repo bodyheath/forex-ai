@@ -1,0 +1,32 @@
+PAIR: GBP/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key level with bearish confirmation on 4H, but RSI neutral and MTF alignment weak (M:SELL vs D:NEUTRAL) limits conviction.
+
+RISK_FACTORS: [1] MTF conflict: Monthly is SELL but Daily/4H are NEUTRAL—price lacks directional conviction, increasing reversal risk. [2] GBP COT unwinding long positions while RSI sits neutral (52.9)—institutional exit may signal weakening momentum despite technical setup.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 2.2950
+ENTRY_TRIGGER_REASON: Break below pin bar low at key support; confirmation of 4H bearish pattern and Monthly SELL alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+1. **MTF RULE VIOLATION**: W:NEUTRAL + D:NEUTRAL fails the "both agree" requirement (conf 0/3). Monthly is SELL but carries no weight without daily confirmation. **TRADE_THIS must be NO** per rules.
+
+2. **TECHNICAL (4/10)**:
+   - RSI 52.9 D1 = NEUTRAL zone (45–62), no directional signal.

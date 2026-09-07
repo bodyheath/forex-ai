@@ -1,0 +1,38 @@
+I need to resolve the fundamental contradiction in this data before scoring.
+
+**CRITICAL DATA CONFLICT ANALYSIS:**
+
+- **RIB = ALIGNED_BULL** (all 6 EMAs stacked bullish, fan spreading = acceleration) → trend continuation bias
+- **MTF M:SELL W:SELL D:SELL 4H:SELL** → all timeframes bearish
+- **PAT D1 = double_bottom:bul** → bullish reversal candle pattern
+- **FUND diff = +1.78% AUD_rate=rising NZD_rate=falling** → fundamentals FAVOR AUD (BUY, not SELL)
+- **RSI D1 = 70.7 in confirmed UPTREND** → using uptrend RSI shift: 65-77 = NEUTRAL(4-5), NOT a strong SELL signal
+- **T_sig = SELL_8** → Python anchor, but uptrend RSI adjustment and ribbon contradiction warrant review
+
+**RSI TREND CONTEXT OVERRIDE:** Confirmed UPTREND (price > SMA50 > SMA200, golden-cross, ALIGNED_BULL ribbon fan). RSI 70.7 in uptrend = neutral zone (65-77 = 4-5 per uptrend shift rules). T_sig=SELL_8 is pre-computed without trend-context shift. Justified ±1 adjustment → TECHNICAL_SCORE: 7.
+
+**FUNDAMENTAL CONFLICT:** Rate diff +1.78% AUD rising vs NZD falling = structurally BULLISH AUD/NZD. Selling into fundamental tailwind = System Memory Pattern #3 (lower confidence).
+
+**POSITIONING:** AUD net SHORT 26% = contrarian BUY pressure building, not SELL fuel.
+
+---
+
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+ENTRY: 1.2210
+TARGET: 1.2056
+STOP_LOSS: 1.2287
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 3:00–5:00 PM Auckland time
+NEWS_WARNING: Monitor AUD/NZD central bank commentary — RBA rising/RBNZ falling rate divergence creates binary event risk on any CB speaker within 48h
+KEY_THESIS: Triple oscillator SELL confluence (RSI 70.7, Stoch 85.7, CCI 191.2) at upper Bollinger Band with bearish 4H pin bar at key level offers a technical exhaustion SELL, but the ALIGNED_BULL ribbon, +1.78% rate differential favoring AUD, and RSI normalized for uptrend context severely undermine conviction.
+RISK_FACTORS: 1) ALIGNED_BULL ribbon fanning outward signals trend acceleration — SELL into a strengthening uptrend against fundamental tailwind has historically low win rate (System Memory Pattern #3). 2) AUD net SHORT positioning at only 26% (not extreme) removes a key contrarian catalyst; short squeeze risk if AUD fundamentals continue improving.
+TRADE_THIS: NO

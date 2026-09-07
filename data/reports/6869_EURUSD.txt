@@ -1,0 +1,24 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 78.6% Fib resistance + D1 SELL signal, but weak MTF agreement (1/3) and uptrend 4H structure undermine conviction.
+RISK_FACTORS: MTF fragmentation (D:SELL vs 4H:uptrend) — only 1/3 timeframes agree, below 2/3 threshold; EUR COT unwinding while positioning net SHORT creates reversal risk if unwinding accelerates.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1630
+ENTRY_TRIGGER_REASON: Retest of pin bar high at Fib 78.6% resistance (1.16295) with RSI confluence above 60.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+**RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1: T_sig=SELL_6 is baseline, but RSI=57 in mixed trend context = neutral-to-soft (3-4 tier). No MACD confirmation (h=-0.0009, near zero). Pin bar at key level is bullish reversal setup, NOT bearish continuation — contradicts SELL signal. Adjustment: **-1** (
