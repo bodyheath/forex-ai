@@ -1,0 +1,38 @@
+I need to carefully analyze the conflicts in this data before confirming.
+
+**Key conflicts to resolve:**
+
+**MTF vs RIBBON conflict:** MTF shows M:BUY W:BUY D:BUY 4H:BUY (conf=3/3, wt=100%) — this is full alignment. However, RIB=ALIGNED_BEAR fan=5/5. This is a significant contradiction. The ribbon represents the actual EMA stack reality (price < all EMAs, bearish fan), while MTF signals may be momentum-based oscillator readings. The ribbon says trend continuation bear; MTF says bounce conditions.
+
+**RSI context:** Confirmed downtrend (W:BUY+D:BUY per MTF... wait — MTF says W:BUY D:BUY, so this is actually an UPTREND context per MTF alignment). But price is below SMA50 < SMA200 with death-cross. The MTF "BUY" signals appear to be oscillator/oversold bounces, not trend direction. The D1 trend line explicitly says "downtrend (price < SMA50 < SMA200, death-cross structure)."
+
+**RSI scoring:** D1 RSI=30.5. The trend context: D1 says downtrend. MTF says BUY across all. This is the core conflict. RIBBON=ALIGNED_BEAR confirms the structural downtrend. I'll treat this as a downtrend context (ribbon overrides MTF momentum readings for trend context). In confirmed downtrend, RSI 30-42 = 7-8 BUY. RSI=30.5 → 7 BUY. T_sig=BUY_6. With TRIPLE_BUY OSC: +2 would normally apply. But ribbon conflict is real.
+
+**PAT conflict:** D1=head_and_shoulders:bea (bearish pattern!) vs 4H=pin_bar_at_key_level:bul. D1 bearish H&S pattern directly conflicts with BUY direction.
+
+**Fundamental:** Rate diff=-0.73% (GBP paying less, AUD rising) — fundamentally bearish for GBP/AUD. FUND_SCORE=4.
+
+**SYSTEM MEMORY:** Pattern #9 (expired but noted): Skip BUY when Fundamental <5 and Macro <6. FUND=4, MACRO needs assessment. VIX=14.3 (low, risk-on), oil=91.5 (high, AUD positive), curve=0.4 (slightly positive). MACRO≈5-6. This is borderline.
+
+**Confidence calibration:** TRIPLE_BUY OSC +2, DIV=NONE, but H&S bearish pattern on D1 is a major negative for a BUY setup. RIBBON=ALIGNED_BEAR fan is strongly bearish. System memory shows SELL setups underperform but BUY setups have positive expectancy (+0.48R). However, a D1 head and shoulders in a structural downtrend is a serious risk factor against taking a BUY.
+
+**Final assessment:** The D1 H&S bearish pattern + ALIGNED_BEAR ribbon + negative rate differential + fundamental weakness creates too many conflicts against a BUY despite the oscillator confluence. Confidence should be reduced.
+
+PAIR: GBP/AUD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_BUY
+ENTRY: 1.8785
+TARGET: 1.8985
+STOP_LOSS: 1.8685
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 18:00–20:00 NZST
+NEWS_WARNING: Monitor GBP and AUD central bank commentary; AUD rate rising path creates ongoing headwind — check for RBA/BoE speakers within 48h
+KEY_THESIS: Triple oscillator BU
+RISK_FACTORS: (1) RIBBON=ALIGNED_BEAR contradicts BUY direction — 5/5 EMA stack bearish signals trend continuation risk, not reversal; (2) GBP positioning UNWINDING (institutions reducing short conviction) while pair trades into major structure (SMA50/200 well above price) — weak fundamental support (GBP rate flat, AUD rising, rate diff -0.73%) limits upside follow-through.
