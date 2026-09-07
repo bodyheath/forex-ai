@@ -4416,6 +4416,17 @@
           "pair": "AUD/NZD",
           "direction": "SELL"
         }
+      },
+      {
+        "timestamp": "2026-09-07T08:31:15.915303+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -147.0,
+        "context": {
+          "candidate_id": 13,
+          "pair": "EUR/JPY",
+          "direction": "BUY"
+        }
       }
     ]
   },
@@ -4453,6 +4464,28 @@
           "pair": "USD/JPY",
           "direction": "BUY"
         }
+      },
+      {
+        "timestamp": "2026-09-07T08:31:15.884059+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -116.7,
+        "context": {
+          "candidate_id": 10,
+          "pair": "CAD/JPY",
+          "direction": "BUY"
+        }
+      },
+      {
+        "timestamp": "2026-09-07T08:31:15.930722+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -147.0,
+        "context": {
+          "candidate_id": 13,
+          "pair": "EUR/JPY",
+          "direction": "BUY"
+        }
       }
     ]
   },
@@ -4478,6 +4511,17 @@
           "candidate_id": 3,
           "pair": "AUD/NZD",
           "direction": "SELL"
+        }
+      },
+      {
+        "timestamp": "2026-09-07T08:31:15.946122+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -147.0,
+        "context": {
+          "candidate_id": 13,
+          "pair": "EUR/JPY",
+          "direction": "BUY"
         }
       }
     ]
@@ -4516,6 +4560,28 @@
           "pair": "USD/JPY",
           "direction": "BUY"
         }
+      },
+      {
+        "timestamp": "2026-09-07T08:31:15.899588+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -116.7,
+        "context": {
+          "candidate_id": 10,
+          "pair": "CAD/JPY",
+          "direction": "BUY"
+        }
+      },
+      {
+        "timestamp": "2026-09-07T08:31:15.961958+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -147.0,
+        "context": {
+          "candidate_id": 13,
+          "pair": "EUR/JPY",
+          "direction": "BUY"
+        }
       }
     ]
   },
@@ -4541,6 +4607,17 @@
           "candidate_id": 3,
           "pair": "AUD/NZD",
           "direction": "SELL"
+        }
+      },
+      {
+        "timestamp": "2026-09-07T08:31:15.977791+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -147.0,
+        "context": {
+          "candidate_id": 13,
+          "pair": "EUR/JPY",
+          "direction": "BUY"
         }
       }
     ]
@@ -12374,5 +12451,32 @@
     "pf_min_gap": null,
     "promoted": false,
     "evaluations": []
+  },
+  "vbook_F_sentiment_only": {
+    "description": "Virtual book F_sentiment_only: Trades purely on the Sentiment Agent's verdict (2026-09-06) -- fully isolated from grade/dd_mode/confidence, no backtest behind it, live-only evidence (see shadow_mode.py's sentiment_agent_supports registration)",
+    "registered_at": "2026-09-07T08:31:15.991157+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 30,
+    "min_n_no_fire": 30,
+    "alpha": 0.05,
+    "pf_max_fire": null,
+    "pf_min_fire": null,
+    "pf_min_gap": null,
+    "promoted": false,
+    "evaluations": [
+      {
+        "timestamp": "2026-09-07T08:31:16.004299+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -147.0,
+        "context": {
+          "candidate_id": 13,
+          "pair": "EUR/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      }
+    ]
   }
 }
