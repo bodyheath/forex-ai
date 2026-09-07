@@ -1031,11 +1031,11 @@ def _conf(result: dict) -> int:
 # to live here was a 3-anecdote discovery sample used to both find and
 # validate its own threshold -- exactly the pattern shadow_mode.py's own
 # docstring warns against; a real, larger backtest shows the opposite sign.
-# See project_full_audit_sep2026.md-era memory / MEMORY.md for the full
-# writeup. Also removed the same day: the equivalent LLM-judged instruction
-# in _haiku_system_prompt() (this file's own analyst.py sibling) -- the
-# same debunked signal was independently influencing confidence through
-# both a deterministic and an LLM-judged path.
+# Also removed the same day: the equivalent LLM-judged instruction in
+# src/analyst.py's _haiku_system_prompt() -- the same debunked signal was
+# independently influencing confidence through both a deterministic path
+# (this one) and an LLM-judged path, and removing only one would have left
+# the other running unchanged.
 
 
 def _gbp_chf_converging_ribbon_penalty(result: dict) -> int:
