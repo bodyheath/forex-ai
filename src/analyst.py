@@ -591,6 +591,8 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
             except Exception:
                 pass
         if attempt == 2:
+            if stop_reason == "max_tokens":
+                raise SonnetTruncatedError(pair, stop_reason, report[-400:])
             raise RuntimeError(
                 f"Sonnet confirmation for {pair} missing CONFIDENCE after 2 attempts "
                 f"(stop_reason={stop_reason})\n"
