@@ -1,0 +1,24 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 SELL_6 at 61.8% Fib + upper BB with pin bar pattern, but MTF agreement weak (1/3: only D1 commits) and 4H uptrend conflicts; EUR/GBP COT unwinding both legs reduces institutional conviction.
+RISK_FACTORS: [1] MTF disagreement (4H uptrend vs D1 SELL) = low directional consensus, reversal risk if 4H breakout continues; [2] Both EUR and GBP COT UNWINDING = institutional conviction fading on both sides, reduces edge.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8610
+ENTRY_TRIGGER_REASON: Rejection at 61.8% Fib@0.8599 + upper BB; wait for pullback above pin bar high to confirm sellers in control before shorting.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+**RATIONALE:**
+
+**Technical (6/10):**  
+D1 T_sig=SELL_6 is baseline. RSI=61.5 in mixed/range context (not confirmed uptrend or downtrend per MTF line: both W and D are

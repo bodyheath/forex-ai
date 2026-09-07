@@ -1,0 +1,24 @@
+PAIR: GBP/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level suggests reversal attempt, but weak MTF alignment (M:SELL vs W/D:NEUTRAL) and mixed technicals prevent high-confidence directional conviction.
+RISK_FACTORS: [1] MTF conflict — monthly bearish but weekly/daily neutral; directional conviction only 0/3 at D1/W level, reducing edge significantly. [2] COT GBP unwinding short positioning mid-range — institutional conviction weakening on the short side; if unwind accelerates, SELL thesis loses tail-wind support.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 2.2930
+ENTRY_TRIGGER_REASON: Break below recent swing low (SL 2.2775 + confluence at 50p above) confirms M:SELL rejection; wait for pullback into 2.2930–2.2945 zone before shorting.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF Rule (Critical Gatekeeper):**
+- W:NEUTRAL + D:NEUTRAL + M:SELL = **0/3 agreement at decision levels (D/W)**. Confidence floor forced to ≤5 regardless of pattern.

@@ -1,0 +1,42 @@
+I need to carefully evaluate this setup, noting several conflicts before finalizing.
+
+**Critical conflicts to resolve:**
+
+1. **MTF says W:BUY D:BUY** → weekly and daily both agree BUY ✓ — MTF condition met
+2. **RIB=ALIGNED_BEAR fan 5/5** — this is a strong bearish structural signal conflicting with the BUY direction
+3. **PAT=head_and_shoulders:bea** — bearish pattern on D1, conflicting with BUY direction
+4. **FUND: AUD rate rising, GBP flat, diff=-0.73%** — fundamental headwind against BUY
+5. **RSI=30.5 in confirmed DOWNTREND** — applying downtrend RSI adjustment: RSI 30-42 = 5-6BUY (not 7-8). T_sig=BUY_6, so TECHNICAL_SCORE stays at 6.
+6. **OSC TRIPLE_BUY** → +2 confidence
+7. **DIV=NONE** → no adjustment
+8. **BB at/below lower band** → confirms BUY (+1 to technical)
+9. **Bearish ribbon + bearish H&S pattern** = reversal risk, not trend change
+10. **SYSTEM MEMORY #8**: SELL setups negative expectancy — irrelevant here, but BUY setups #7 show positive expectancy (+0.48R) — slight favour
+11. **FUNDAMENTAL_SCORE**: Rate diff against GBP, AUD rising = score 3/10
+12. **Confidence reduction**: Bearish ribbon, bearish H&S pattern, and fundamental headwind all conflict with BUY — these are significant risks
+
+**TECHNICAL_SCORE**: T_sig=BUY_6, downtrend RSI adjustment keeps it at 6, BB lower band +1 = **7**, but H&S bearish pattern is a strong conflict → stay at **6**
+
+**Confidence**: Base ~6, +2 TRIPLE_BUY OSC, -1 ribbon conflict, -1 H&S bearish conflict, -1 fundamental headwind = **6** → TRADE_THIS: NO
+
+---
+
+PAIR: GBP/AUD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_BUY
+ENTRY: 1.8785
+TARGET: 1.8985
+STOP_LOSS: 1.8685
+REWARD_RISK_RATIO: 2.0:1
+BEST_ENTRY_TIME: London open 18:00–20:00 NZST
+NEWS_WARNING: Monitor AUD employment/RBA commentary and GBP data within 48h — rate-sensitive pair
+KEY_THESIS: Triple oscillator confluence and RSI at 30.5 touching lower Bollinger Band signal extreme oversold conditions in a potential mean-reversion bounce, but a bearish head-and-shoulders pattern, fully aligned bear EMA ribbon, and AUD rate-rising fundamental headwind create too many conflicts for a high-confidence BUY entry.
+RISK_FACTORS: 1. ALIGNED_BEAR ribbon (5/5 EMAs stacked bearish) with death-cross structure means any bounce is likely corrective only — downtrend resumption risk is high. 2. Fundamental rate differential favours AUD (rising) over GBP (flat), undermining sustained GBP/AUD recovery and increasing the risk of a failed technical bounce.
+TRADE_THIS: NO

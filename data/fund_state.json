@@ -26,7 +26,7 @@
   "fund_total_trades": 204,
   "current_sizing_pct": 1.167,
   "sizing_mode": "normal",
-  "daily_trades_date": "2026-09-07",
+  "daily_trades_date": "2026-09-08",
   "unrealised_dollars": 0,
   "unrealised_pips": 0,
   "total_equity": 10246.75,
@@ -39,7 +39,7 @@
   "v2_decisive": 10,
   "v2_win_rate": 60.0,
   "v2_net_pips": 234.6,
-  "daily_trades_count": 1,
+  "daily_trades_count": 0,
   "circuit_breaker_active": false,
   "circuit_breaker_reason": null,
   "pause_until": null,
@@ -96,6 +96,22 @@
       "checklist_score": 5.0,
       "blocked_reason": "currency_exposure",
       "timestamp": "2026-09-07T23:18:38"
+    },
+    {
+      "pair": "EUR/JPY",
+      "direction": "BUY",
+      "confidence": 7.0,
+      "checklist_score": 4.0,
+      "blocked_reason": "currency_exposure",
+      "timestamp": "2026-09-08T01:42:06"
+    },
+    {
+      "pair": "USD/JPY",
+      "direction": "BUY",
+      "confidence": 7.0,
+      "checklist_score": 5.0,
+      "blocked_reason": "currency_exposure",
+      "timestamp": "2026-09-08T01:42:06"
     }
   ],
   "sizing_reason": "Standard 1% risk (+0.17% recovery)",
