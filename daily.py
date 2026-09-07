@@ -1018,99 +1018,24 @@ def _conf(result: dict) -> int:
         return 0
 
 
-# COT-unwind widened trigger, calibrated against the confirmed GBP short-squeeze
-# case (large speculators covered 47% of a 1-year-extreme net-short GBP position
-# over 4 weeks; GBP/USD rallied +2.7% over the same span while the system kept
-# recommending SHORT GBP throughout — the deterministic REVERSING-only penalty
-# never fired because the position never flipped sign, only shrank).
-# _COT_EXTREME_PCT: the OLD (3-weeks-ago) position must itself have been within
-#   this many percentage points of the 52-week range's top/bottom to count as
-#   "started from a real extreme" — matches positioning.py's own extreme_flag
-#   bucketing (<=15 / >=85), not a new, separately-invented cutoff.
-# _COT_UNWIND_MAGNITUDE_PCT: the move since then must cover at least this much
-#   of the 52-week range span. Backtested across 6 currencies with live COT
-#   history (48 walk-forward weekly snapshots each; USD/NZD excluded — both
-#   permanently stale in this system, same as their known live-scan status):
-#   20% was the tightest value that still catches both confirmed true
-#   positives (GBP: 33.2%/44.9% at the relevant weeks; AUD's 2026-06 long
-#   unwind, which preceded a real ~2.3% AUD/USD decline) while excluding a
-#   confirmed false positive at 15% (CHF's 2026-07-14 reading at 19.5%, where
-#   real short-CHF trades in the following days mostly won — penalising them
-#   would have been wrong). Not a hardcoded GBP-specific number: derived from
-#   fields already computed by positioning.py for every currency, and this is
-#   a soft -1 to confidence (same as the existing REVERSING branch), not a
-#   hard block, so occasional misses on either side are an accepted tradeoff,
-#   same as the pre-existing REVERSING-only rule already accepted.
-_COT_EXTREME_PCT = 15
-_COT_UNWIND_MAGNITUDE_PCT = 20
-
-
-def _cot_reversal_penalty(result: dict) -> int:
-    """Return -1 if a REVERSING COT signal, or a large sustained UNWINDING
-    from a recent extreme, aligns with the OLD positioning that now
-    contradicts the trade direction, else 0.
-
-    Rule: penalise when institutions recently FLIPPED (REVERSING) or have
-    been steadily exiting a position that started near a 1-year extreme
-    (UNWINDING, magnitude >= _COT_UNWIND_MAGNITUDE_PCT of the 52-week range
-    from a 3-weeks-ago reading that was itself within _COT_EXTREME_PCT of
-    that range's top/bottom) — in both cases, you are trading with the
-    crowd that is now exiting.
-      BUY  + base  COT REVERSING/large-unwind from net LONG  → institutions abandoned their long
-      BUY  + quote COT REVERSING/large-unwind from net SHORT → institutions abandoned their short
-      SELL + base  COT REVERSING/large-unwind from net SHORT → institutions abandoned their short
-      SELL + quote COT REVERSING/large-unwind from net LONG  → institutions abandoned their long
-    """
-    try:
-        direction = (result.get("parsed", {}).get("direction") or "").upper()
-        if direction not in ("BUY", "SELL"):
-            return 0
-        pos = result.get("bundle", {}).get("positioning", {})
-        pair = result.get("pair", "")
-        clean = pair.upper().replace("/", "")
-        base_ccy  = clean[:3] if len(clean) >= 6 else ""
-        quote_ccy = clean[3:6] if len(clean) >= 6 else ""
-
-        for side, ccy in (("base", base_ccy), ("quote", quote_ccy)):
-            pp = pos.get(side, {})
-            if pp.get("status") != "ok":
-                continue
-            momentum = pp.get("cot_momentum")
-            if momentum == "REVERSING":
-                pass  # existing trigger, behaviour unchanged
-            elif momentum == "UNWINDING":
-                try:
-                    hi = pp.get("one_year_high")
-                    lo = pp.get("one_year_low")
-                    net_3w_ago = pp.get("net_3w_ago", 0)
-                    delta_pct = pp.get("momentum_delta_pct", 0) or 0
-                    if hi is None or lo is None or hi == lo:
-                        continue
-                    old_pct_in_range = (net_3w_ago - lo) / (hi - lo) * 100
-                except (TypeError, ValueError, ZeroDivisionError):
-                    continue
-                was_near_extreme = (old_pct_in_range <= _COT_EXTREME_PCT
-                                     or old_pct_in_range >= 100 - _COT_EXTREME_PCT)
-                if not (was_near_extreme and delta_pct >= _COT_UNWIND_MAGNITUDE_PCT):
-                    continue
-            else:
-                continue
-            old_net   = pp.get("net_3w_ago", 0)
-            old_long  = old_net > 0
-            old_short = old_net < 0
-            # BUY: you want base up — penalty if base was long (flipped/unwound to short)
-            #      or quote was short (flipped/unwound to long, making quote stronger)
-            if direction == "BUY":
-                if side == "base"  and old_long:  return -1
-                if side == "quote" and old_short: return -1
-            # SELL: you want base down — penalty if base was short (flipped/unwound to long)
-            #       or quote was long (flipped/unwound to short, weakening quote you need weak)
-            else:
-                if side == "base"  and old_short: return -1
-                if side == "quote" and old_long:  return -1
-    except Exception:
-        pass
-    return 0
+# cot_reversal_penalty() -- REMOVED 2026-09-08. A real backtest
+# (scripts/cot_reversal_penalty_backtest.py, called this exact live function
+# against real CFTC + price history, 8,840 firing instances vs. 60,820
+# non-firing baseline, walk-forward, no lookahead) found the penalized
+# direction's forward win rate HIGHER than the non-penalized baseline at
+# every lag tested (51.7% vs 49.7% at 5 trading days, growing to 53.7% vs
+# 49.4% at 20 days) -- the opposite of this penalty's premise, not just "no
+# edge". Consistent across both REVERSING and UNWINDING subtypes and 7/8
+# currencies (3 individually significant on their own: EUR p=0.0037, JPY
+# p=0.0166, CHF p=0.0379). The 20%/GBP-AUD-CHF calibration comment that used
+# to live here was a 3-anecdote discovery sample used to both find and
+# validate its own threshold -- exactly the pattern shadow_mode.py's own
+# docstring warns against; a real, larger backtest shows the opposite sign.
+# Also removed the same day: the equivalent LLM-judged instruction in
+# src/analyst.py's _haiku_system_prompt() -- the same debunked signal was
+# independently influencing confidence through both a deterministic path
+# (this one) and an LLM-judged path, and removing only one would have left
+# the other running unchanged.
 
 
 def _gbp_chf_converging_ribbon_penalty(result: dict) -> int:
@@ -1188,11 +1113,10 @@ def _smd_score(result: dict) -> int:
 
 
 def _eff_conf(result: dict) -> float:
-    """Confidence after MA ribbon, COT momentum, GBP/CHF-specific, fundamental,
-    and Smart Money Divergence adjustments.
+    """Confidence after MA ribbon, GBP/CHF-specific, fundamental, and Smart
+    Money Divergence adjustments.
 
     Ribbon:           −1 when ALIGNED ribbon is fully against trade direction.
-    COT reversal:     −1 when institutions just flipped away from the direction.
     GBP/CHF SELL:     −1 when ribbon is CONVERGING — scoped, temporary patch,
                       see _gbp_chf_converging_ribbon_penalty() for the current
                       revisit condition (a real live test case, not a date —
@@ -1202,6 +1126,11 @@ def _eff_conf(result: dict) -> float:
     Devil's Advocate no longer adjusts this — its verdict now feeds
     _trade_quality_grade() as a grade downgrade instead of a confidence
     mutation (see the DA evaluation loop in _send_telegram_summary).
+
+    2026-09-08: the COT reversal/unwind penalty that used to live here was
+    removed -- a real backtest found the penalized direction's forward win
+    rate HIGHER than baseline at every lag tested, not lower (see the
+    comment above where _cot_reversal_penalty() used to be defined).
     """
     raw = _conf(result)
     if raw == 0:
@@ -1220,7 +1149,6 @@ def _eff_conf(result: dict) -> float:
             adj -= 1
     except Exception:
         pass
-    adj += _cot_reversal_penalty(result)
     adj += _gbp_chf_converging_ribbon_penalty(result)
     # Fundamental alignment adjustment
     _fa = result.get("_fundamental_alignment")
@@ -8653,13 +8581,6 @@ def _send_telegram_summary(
                         block.append(f"Adjusted confidence: {_conf_adj}/10 (−1 for strong ribbon conflict)")
                 except (TypeError, ValueError):
                     pass
-        # COT reversal warning
-        if _cot_reversal_penalty(r) < 0:
-            block.append(
-                "🔄 <b>COT REVERSAL WARNING — institutional positioning has flipped or "
-                "unwound sharply from a recent extreme against this trade direction — "
-                "confidence penalised −1</b>"
-            )
         # Smart Money Divergence (Layer 10) — plain English
         _smd_tb   = _smd_score(r)
         _smd_data = r.get("bundle", {}).get("smart_money", {})
@@ -8799,12 +8720,6 @@ def _send_telegram_summary(
             _rib_wl_bear = _rib_wl_status in ("ALIGNED_BEAR", "LEANING_BEAR")
             if (_rib_wl_bull and dirn == "SELL") or (_rib_wl_bear and dirn == "BUY"):
                 lines.append("⚠️ <b>MA Ribbon conflict — confidence penalised −1, higher risk</b>")
-        # COT reversal warning
-        if _cot_reversal_penalty(rr) < 0:
-            lines.append(
-                "🔄 <b>COT REVERSAL WARNING — institutional positioning has flipped or "
-                "unwound sharply from a recent extreme — confidence penalised −1</b>"
-            )
         # Smart Money Divergence (compact)
         _smd_we   = _smd_score(rr)
         _smd_d_we = rr.get("bundle", {}).get("smart_money", {})
@@ -12113,24 +12028,6 @@ def run() -> int:
             f"stage-1 filtered={filtered_count} · deep-analysed={passed} · "
             f"meaningful(conf>=5)={len(meaningful)} · failed={len(failed_pairs)}",
         )
-
-        # COT-reversal-penalty observability: tallies how often this scan's widened
-        # UNWINDING-from-extreme trigger fires vs the original REVERSING trigger, with
-        # GBP broken out specifically. Added after the 2026-07 GBP short-squeeze fix
-        # (large speculators covered 47% of a 1-year-extreme net-short GBP position over
-        # 4 weeks while GBP/USD rallied +2.7% and the system kept recommending SHORT GBP)
-        # so GBP-pair performance can be rechecked in a few weeks to confirm the widened
-        # trigger actually helped, not just that it fires as designed.
-        try:
-            _cot_pen_hits = [r for r in deep_results if _cot_reversal_penalty(r) < 0]
-            _cot_pen_gbp  = [r for r in _cot_pen_hits if "GBP" in r.get("pair", "").upper()]
-            _log_line(log, (
-                f"[cot_reversal_penalty] fired={len(_cot_pen_hits)}/{passed} "
-                f"gbp={len(_cot_pen_gbp)} "
-                f"pairs={','.join(r.get('pair', '') for r in _cot_pen_hits) or 'none'}"
-            ))
-        except Exception as _cot_pen_exc:
-            _log_line(log, f"[cot_reversal_penalty] observability failed (non-fatal): {_cot_pen_exc}")
 
         # extreme_flag delivery observability: this fix (2026-08-07) only repairs
         # what reaches the AI's prompt (analyst.py's extreme_flag was truncated to
