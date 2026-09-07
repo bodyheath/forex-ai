@@ -536,7 +536,24 @@ def _build_sonnet_message(pair: str, bundle: dict, haiku_report: str) -> str:
         parts.append(haiku_report.strip())
 
     parts.append(
-        "\nOutput PAIR: through TRADE_THIS: only. "
+        # 2026-09-07: strengthened after a real truncation (AUD/CHF, both
+        # attempts hit max_tokens mid-reasoning about the MTF check and
+        # technical score, before ever reaching CONFIDENCE) -- the prior
+        # wording ("Output PAIR: through TRADE_THIS: only") already put
+        # CONFIDENCE third in the field order, but didn't stop the model
+        # from writing prose reasoning before starting the fields at all
+        # under a complex/conflicting setup. This is the last thing Sonnet
+        # sees before generating, so it's the highest-leverage place to
+        # forbid that preamble outright rather than just asking for a field
+        # order. See SonnetTruncatedError's docstring (this file) and
+        # PROMPT_FILE (prompts/analyst.md) for the reasoning rules this
+        # applies to -- resolve them silently, don't narrate them.
+        "\nRespond with ONLY the structured fields below, in order, starting immediately "
+        "with 'PAIR:' as the very first characters of your response -- no preamble, "
+        "reasoning, or commentary before, between, or after the fields. If a rule above "
+        "requires judgement (e.g. a ribbon-vs-MTF conflict), resolve it silently and "
+        "reflect the result directly in the relevant field's value.\n"
+        "Output PAIR: through TRADE_THIS: only. "
         "Include ENTRY TARGET STOP_LOSS REWARD_RISK_RATIO BEST_ENTRY_TIME(Auckland time) NEWS_WARNING."
     )
     return "\n".join(parts)
