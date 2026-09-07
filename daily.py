@@ -1839,6 +1839,7 @@ def _analyse_pair(pair: str, log, force_deep: bool = False,
                   sonnet_threshold: int = 6,
                   pair_threshold_override=None,
                   max_open_id=None) -> dict | None:
+    from src import analyst as _anl_pair
     try:
         return service.analyse_and_log(
             pair,
@@ -1850,6 +1851,18 @@ def _analyse_pair(pair: str, log, force_deep: bool = False,
             pair_threshold_override=pair_threshold_override,
             max_open_id=max_open_id,
         )
+    except _anl_pair.SonnetTruncatedError as exc:
+        # 2026-09-07: distinct from the generic FAILED path below on purpose --
+        # this candidate was never actually judged (Sonnet ran out of room
+        # mid-reasoning, both attempts), not rejected on merit or lost to a
+        # data/network error. The [sonnet-truncated] WARNING tag matches
+        # health_check.py's _WARN_LINE_RE, so this also flows into
+        # data/scan_telemetry.jsonl's `warnings` counter automatically going
+        # forward -- see that module for why per-scan health_counters alone
+        # (in-process, reset every run) can't answer "how often does this
+        # happen" on its own.
+        _log_line(log, f"[sonnet-truncated] WARNING {pair}: {exc}")
+        return None
     except Exception as exc:
         _log_line(log, f"FAILED {pair}: {exc}")
         traceback.print_exc(file=log)

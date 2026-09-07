@@ -4,7 +4,9 @@ Stage 1  — Haiku full analysis for ALL pairs in scope (~200 input tokens each)
            Outputs confidence 1-10, direction, all 5 layer scores, key thesis.
 Stage 2  — Sonnet confirmation ONLY for pairs where Haiku confidence >= threshold
            (6 for the 6am full scan, 7 for intraday scans). Typically 0-3 pairs.
-           Uses ultra-compressed input (<500 tokens) and 1000 max_tokens output.
+           Uses ultra-compressed input (<500 tokens) and 1500 max_tokens output
+           (raised 400 -> 600 -> 1000 -> 1500 -- see SonnetTruncatedError below;
+           1000 was still recurring as of 2026-09-07).
 
 Skip-unchanged: pairs that moved <10 pips since last scan are skipped entirely,
 further reducing API calls on repeated intraday runs.
@@ -22,6 +24,36 @@ from anthropic import Anthropic
 
 import config
 from src import memory
+
+
+class SonnetTruncatedError(RuntimeError):
+    """Sonnet confirmation exhausted max_tokens on every attempt before ever
+    emitting a parseable CONFIDENCE line.
+
+    2026-09-07: found via a real candidate (AUD/CHF, Haiku conf=8/10 SELL,
+    coherent thesis) that was silently dropped this way -- Sonnet's response
+    was still mid-reasoning (walking through the MTF check and technical
+    score) when it hit the ceiling on both attempts. Distinguished from the
+    generic RuntimeError this same retry loop raises for other unparseable-
+    response cases (e.g. a genuinely malformed response under end_turn)
+    specifically so callers can tell "Sonnet never finished judging this
+    candidate" apart from "Sonnet judged it and something else went wrong" --
+    conflating the two under one generic exception is exactly what made this
+    failure mode invisible: daily.py's per-pair catch-all logged both as an
+    identical `FAILED {pair}: {exc}` line, indistinguishable from an ordinary
+    rejection or a data error.
+    """
+    def __init__(self, pair: str, stop_reason: str, raw_tail: str):
+        self.pair = pair
+        self.stop_reason = stop_reason
+        self.raw_tail = raw_tail
+        super().__init__(
+            f"Sonnet confirmation for {pair} exhausted max_tokens on every attempt "
+            f"before emitting a parseable CONFIDENCE line (stop_reason={stop_reason}) "
+            f"-- NOT a rejection on merit, Sonnet never finished reasoning about it. "
+            f"Last raw response tail: {raw_tail!r}"
+        )
+
 
 # ── API key fallback state ─────────────────────────────────────────────────────
 _using_fallback: bool     = False
@@ -504,7 +536,24 @@ def _build_sonnet_message(pair: str, bundle: dict, haiku_report: str) -> str:
         parts.append(haiku_report.strip())
 
     parts.append(
-        "\nOutput PAIR: through TRADE_THIS: only. "
+        # 2026-09-07: strengthened after a real truncation (AUD/CHF, both
+        # attempts hit max_tokens mid-reasoning about the MTF check and
+        # technical score, before ever reaching CONFIDENCE) -- the prior
+        # wording ("Output PAIR: through TRADE_THIS: only") already put
+        # CONFIDENCE third in the field order, but didn't stop the model
+        # from writing prose reasoning before starting the fields at all
+        # under a complex/conflicting setup. This is the last thing Sonnet
+        # sees before generating, so it's the highest-leverage place to
+        # forbid that preamble outright rather than just asking for a field
+        # order. See SonnetTruncatedError's docstring (this file) and
+        # PROMPT_FILE (prompts/analyst.md) for the reasoning rules this
+        # applies to -- resolve them silently, don't narrate them.
+        "\nRespond with ONLY the structured fields below, in order, starting immediately "
+        "with 'PAIR:' as the very first characters of your response -- no preamble, "
+        "reasoning, or commentary before, between, or after the fields. If a rule above "
+        "requires judgement (e.g. a ribbon-vs-MTF conflict), resolve it silently and "
+        "reflect the result directly in the relevant field's value.\n"
+        "Output PAIR: through TRADE_THIS: only. "
         "Include ENTRY TARGET STOP_LOSS REWARD_RISK_RATIO BEST_ENTRY_TIME(Auckland time) NEWS_WARNING."
     )
     return "\n".join(parts)
@@ -515,9 +564,12 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
     """Sonnet confirmation for high-confidence pairs.
 
     Input: ~400-600 tokens (compressed data + Haiku report).
-    Output: max 1000 tokens (raised 400 -> 600 -> 1000 — complex ribbon-vs-MTF conflict trades
-    kept hitting the 600 limit before reaching the CONFIDENCE line, causing stop_reason=max_tokens
-    failures).
+    Output: max 1500 tokens (raised 400 -> 600 -> 1000 -> 1500 -- complex ribbon-vs-MTF
+    conflict trades keep hitting the ceiling before reaching the CONFIDENCE line, causing
+    stop_reason=max_tokens failures; still recurring at 1000 as of 2026-09-07, e.g. AUD/CHF.
+    See SonnetTruncatedError -- both attempts exhausting the ceiling now raises that instead
+    of a generic RuntimeError, so callers can tell "never finished judging" apart from any
+    other failure).
     Only called for pairs where Haiku confidence >= sonnet_threshold (6 for full scan, 7 for intraday).
     threshold_override: if set, replaces the global confidence threshold in the Sonnet prompt.
     """
@@ -527,7 +579,7 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
     def _call(client):
         return client.messages.create(
             model=config.CLAUDE_MODEL,
-            max_tokens=1000,
+            max_tokens=1500,
             system=[{"type": "text", "text": system_prompt, "cache_control": {"type": "ephemeral"}}],
             messages=[{"role": "user", "content": user_message}],
         )
@@ -556,6 +608,8 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
             except Exception:
                 pass
         if attempt == 2:
+            if stop_reason == "max_tokens":
+                raise SonnetTruncatedError(pair, stop_reason, report[-400:])
             raise RuntimeError(
                 f"Sonnet confirmation for {pair} missing CONFIDENCE after 2 attempts "
                 f"(stop_reason={stop_reason})\n"
