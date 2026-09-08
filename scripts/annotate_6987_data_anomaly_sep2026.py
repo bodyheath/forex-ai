@@ -19,18 +19,26 @@ reviewing the fund's track record later. Same append-don't-overwrite
 notes-field pattern used in Phase 10's virtual-books stale-grade backfill
 (scripts/backfill_stale_virtual_book_grades_sep2026.py).
 
+Deliberately does NOT use pandas read_csv/to_csv for the write: a
+pandas round-trip of this file infers per-column dtypes (several integer-
+valued columns contain NaN in other rows, forcing float64) and rewrites
+every "5" as "5.0" across THOUSANDS of unrelated rows -- confirmed by a
+real before/after line diff during this script's own development, and
+reverted before this version was written. csv.DictReader/DictWriter
+preserve every field as the exact string it already was; only the one
+target row's notes field is changed.
+
 Usage: python scripts/annotate_6987_data_anomaly_sep2026.py
 """
+import csv
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-import pandas as pd
-
 import config
 
-_TRADE_ID = 6987
+_TRADE_ID = "6987"
 _ANNOTATION = (
     " [2026-09-08 data-quality note: entry price sourced from a Yahoo "
     "Finance daily bar that disagreed with Yahoo's own hourly bars for "
@@ -45,18 +53,27 @@ _ANNOTATION = (
 
 
 def run():
-    df = pd.read_csv(config.TRADES_CSV, encoding="utf-8-sig")
-    mask = df["id"].astype(str) == str(_TRADE_ID)
-    if not mask.any():
+    with config.TRADES_CSV.open("r", encoding="utf-8-sig", newline="") as fh:
+        reader = csv.DictReader(fh)
+        fieldnames = reader.fieldnames
+        rows = list(reader)
+
+    target = next((r for r in rows if r.get("id") == _TRADE_ID), None)
+    if target is None:
         print(f"Trade #{_TRADE_ID} not found -- nothing to do.")
         return
-    before = df.loc[mask, "notes"].iloc[0]
-    if _ANNOTATION.strip() in str(before):
+    before = target["notes"]
+    if _ANNOTATION.strip() in before:
         print(f"Trade #{_TRADE_ID} already annotated -- nothing to do.")
         return
-    after = str(before) + _ANNOTATION
-    df.loc[mask, "notes"] = after
-    df.to_csv(config.TRADES_CSV, index=False)
+    after = before + _ANNOTATION
+    target["notes"] = after
+
+    with config.TRADES_CSV.open("w", encoding="utf-8", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
     print(f"Trade #{_TRADE_ID} notes updated.")
     print(f"  before: {before!r}")
     print(f"  after:  {after!r}")
