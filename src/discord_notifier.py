@@ -225,7 +225,7 @@ def _send_embed(webhook_url, title, description, color, fields=None):
     }
     for attempt in range(3):
         try:
-            r = requests.post(
+            r = _dc_post(
                 webhook_url,
                 json={"embeds": [embed]},
                 timeout=10,
