@@ -25,6 +25,23 @@ _TIMEOUT = 30
 
 _CACHE_TTL = 24.0  # default hours (also used for daily candles)
 
+# 2026-09-08: real incident (#6987, USD/JPY) traced to Yahoo Finance's own
+# daily ("1d") bar disagreeing with its own hourly bars by ~290 pips (1.875%
+# of price) for a specific trading day -- the daily bar's close was
+# genuinely stale/wrong on Yahoo's side, not a caching issue in this repo
+# (confirmed via two independent fresh Yahoo fetches at different lookback
+# periods, both agreeing on the same wrong value). A real historical sweep
+# (scripts/yahoo_daily_hourly_discrepancy_sweep.py; 12 major/cross pairs,
+# ~4,950 real trading days over 2 years) found this daily-vs-hourly gap is
+# ROUTINELY tens of pips (median 0.27% of price, 90th percentile 0.77%) and
+# occasionally much larger (99th percentile 1.48% pooled, up to 1.88% for
+# USD/JPY specifically) -- Yahoo's daily FX data is not reliable at the
+# tens-of-pips level as a matter of course. 1.5% is calibrated to sit above
+# ordinary noise (only ~0.9% of real sampled days exceed it) while still
+# catching #6987's real 1.875% gap with margin.
+_DAILY_CLOSE_SANITY_PCT = 1.5
+_SCAN_SNAPSHOT_MAX_AGE_HOURS = 6.0  # older than this, don't trust it as "fresh"
+
 # Per-interval cache TTL.  Shorter-lived timeframes expire faster so intraday
 # scans always see fresh 4H data without hammering the API.
 _INTERVAL_TTL: dict = {
