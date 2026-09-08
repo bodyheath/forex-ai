@@ -610,7 +610,7 @@ def evaluate_candidates(
             save_book_state(state)
             opened_by_book[book_id] += 1
 
-    if new_candidates or any(opened_by_book.values()):
+    if new_candidates or any(opened_by_book.values()) or candidates_refreshed:
         _write_csv(CANDIDATES_CSV, candidates, CANDIDATE_FIELDS)
     if rejections_changed:
         _write_csv(REJECTIONS_CSV, rejections, REJECTION_FIELDS)
