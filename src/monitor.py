@@ -763,7 +763,7 @@ def _send_dashboard(state: dict, log_fn=None) -> None:
 
         # Post new message
         _post_url = _webhook.rstrip("/") + "?wait=true"
-        resp = _req_dash.post(_post_url, json=payload, timeout=15)
+        resp = _dn_dash._dc_post(_post_url, json=payload, timeout=15)
         if resp.status_code in (200, 204):
             try:
                 _new_id = resp.json().get("id")
