@@ -754,7 +754,7 @@ def _send_dashboard(state: dict, log_fn=None) -> None:
         if _msg_id:
             # Edit existing message (webhook message edit endpoint)
             _edit_url = f"{_webhook.rstrip('/')}/messages/{_msg_id}?wait=true"
-            resp = _req_dash.patch(_edit_url, json=payload, timeout=15)
+            resp = _dn_dash._dc_patch(_edit_url, json=payload, timeout=15)
             if resp.status_code in (200, 204):
                 _log(f"  [dashboard] Edited Discord dashboard (msg {_msg_id})")
                 return
