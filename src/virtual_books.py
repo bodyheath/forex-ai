@@ -87,6 +87,31 @@ Two changes close this gap, both additive (no existing behaviour changes):
   Candidates that were already rejected before 2026-09-07 have no
   rejections.csv row and never will -- this observability only starts
   accumulating from today forward, exactly like (1) above.
+
+STALE DESCRIPTIVE FIELDS (found and fixed 2026-09-09)
+------------------------------------------------------
+A candidate's `grade`/`confidence`/`eff_conf`/`da_grade_before`/`rr`/
+`mtf_agreeing_count` used to be set ONCE, at first creation, and never
+touched again on same-day reuse (`_find_today_candidate()`) -- but each
+book's OWN eligibility check always used the CURRENT scan's fresh
+`quality_grades`, not the frozen row. A pair re-analysed later the same
+Auckland day (its price moved enough to bypass analyst.py's 10-pip
+skip-cache) could get a materially different, real grade -- and a book
+admitting on that later, correct re-analysis would still show the stale
+first-creation grade in `candidates.csv` forever. Confirmed real: AUD/NZD
+SELL (2026-09-07) was created with grade=F (correctly rejected everywhere
+that moment -- `_dd_allows_trade()`'s F-floor has no bug, confirmed by
+reading it directly), then admitted into B_conf6_rr15/D_no_da 11 hours
+later and A_control/C_grade_based/E_no_dd_gate 18 hours later, on
+re-analyses whose real grade must have cleared each book's own bar -- the
+stored row kept showing "F" regardless. This was a data-integrity bug
+(misleading records for anyone reading candidates.csv), NOT an
+admission-logic bug -- every book's own rule was correctly enforced
+against the real grade in effect at decision time; only 2 of the ~15
+candidates in the population so far were affected. Fixed by refreshing
+those fields (never entry/stop_loss/t2_price -- those define the shared
+mechanical trade every book's P&L settles against and must stay frozen
+once set) on every same-day re-evaluation, not just at creation.
 """
 from __future__ import annotations
 
