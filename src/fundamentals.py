@@ -9,6 +9,10 @@ TAILWIND (+1 conf): all three factors align with trade direction.
 HEADWIND (-1 conf): all three factors oppose trade direction.
 MIXED      (0 adj): fewer than three factors align either way.
 
+JPY pairs are excluded from the conf adjustment entirely (forced MIXED)
+-- 2026-09-08 backtest found this mechanism actively backwards for every
+JPY cross, see get_fundamental_alignment()'s inline comment.
+
 CB stance and economic surprise are reviewed monthly.  To update:
   - Run monthly after each major CB meeting cycle.
   - Check Bloomberg ESI, Reuters polls, and central bank statements.
