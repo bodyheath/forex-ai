@@ -1623,7 +1623,7 @@ def update_closed_trades_log(
     if existing_message_id:
         edit_url = f"{WEBHOOK_FUND}/messages/{existing_message_id}?wait=true"
         try:
-            resp = requests.patch(edit_url, json=payload, timeout=10)
+            resp = _dc_patch(edit_url, json=payload, timeout=10)
         except Exception as exc:
             print(f"[closed-trades] Edit request failed: {exc}", file=_sys.stdout)
             return False
