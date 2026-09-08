@@ -1405,7 +1405,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     (r for r in _sn_rows if str(r.get("id", "")) == str(rec_id)), None
                 )
                 if _sn_target and _sn_target.get("status") == "OPEN":
-                    _sn_target["status"]     = updated.get("status", casc_oc)
+                    _sn_target["status"]     = updated.get("status", "LOSS")
                     _sn_target["exit_price"] = updated.get("exit_price", mprice)
                     _sn_target["pips"]       = updated.get("pips", "")
                     _sn_target["closed_at"]  = updated.get("closed_at", "")
