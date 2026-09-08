@@ -6676,24 +6676,11 @@ def _send_telegram_summary(
                         except Exception:
                             pass
                         continue
-                _blk, _blk_rsn, _blk_tp = _fs.is_trading_blocked(_fund_st)
-                if _blk:
-                    _fund_st = _fs.record_missed_opportunity(
-                        _fund_st, _yt.get("pair", ""),
-                        (_yt.get("parsed") or {}).get("direction", ""),
-                        _eff_conf(_yt),
-                        float((_yt.get("screen") or {}).get("score") or 0),
-                        _blk_tp,
-                    )
-                    _fund_st_blocked.append((_yt, _blk_rsn))
-                    try:
-                        from src import tracker as _trk_fsb
-                        if _yt.get("id"):
-                            _trk_fsb.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                    notes=f"Blocked: {_blk_rsn}")
-                    except Exception:
-                        pass
-                    continue
+                # 2026-09-09: the is_trading_blocked() check that used to live here was
+                # removed as redundant -- it's now consolidated into the single gate
+                # earlier in this same loop (see the "CIRCUIT BREAKER / DAILY LIMIT /
+                # PAUSE / OBSERVATION MODE" block above), which every candidate reaching
+                # this point has already passed, using a fresher read of the same fields.
                 _ccy_blk, _ccy = _fs.check_currency_exposure(_yt.get("pair", ""), _ot_open_trades)
                 # 2026-09-04: unconditional heartbeat -- health_check.py's gate-
                 # presence tripwire (_GATE_PATTERNS["concentration"]) can only
