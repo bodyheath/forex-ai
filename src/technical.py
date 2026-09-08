@@ -1372,13 +1372,29 @@ def analyse(base: str, quote: str) -> dict:
         else:
             source = "Twelve Data"
         source_4h = "Yahoo Finance" if symbol in _yf_4h_sourced_pairs else "Twelve Data"
+
+        daily_summary = _summarise(daily, "Daily", pair=symbol)
+        # 2026-09-08: gate the WHOLE Daily timeframe, not just last_close --
+        # RSI/MACD/Bollinger/ATR/patterns/pivots/fibonacci/divergence/ribbon/
+        # tech_signal all derive from the same daily frame, so a bad close
+        # means all of them are suspect, not just the entry-price figure.
+        if isinstance(daily_summary, dict) and daily_summary.get("last_close") is not None:
+            _ok, _reason = _daily_close_sanity_check(symbol, daily_summary["last_close"])
+            if not _ok:
+                daily_summary = {
+                    "timeframe": "Daily",
+                    "status": "insufficient data",
+                    "candle_count": len(daily),
+                    "anomaly": _reason,
+                }
+
         return {
             "status":    "ok",
             "source":    source,
             "source_4h": source_4h,
             "monthly":   _summarise(monthly, "Monthly", pair=symbol),
             "weekly":    _summarise(weekly,  "Weekly",  pair=symbol),
-            "daily":     _summarise(daily,   "Daily",   pair=symbol),
+            "daily":     daily_summary,
             "4h":        _summarise(four_h,  "4-Hour",  pair=symbol),
         }
     except Exception as exc:  # noqa: BLE001 - degrade gracefully
