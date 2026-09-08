@@ -145,6 +145,7 @@ def find_firings(momentum: dict) -> tuple:
                 return {
                     "momentum": row.get(f"cot_momentum_{prefix}"),
                     "pct": row.get(f"pct_in_range_{prefix}"),
+                    "net": row.get(f"net_{prefix}"),
                 }
             b, q = leg("base"), leg("quote")
             if b is None and q is None:
@@ -164,26 +165,27 @@ def find_firings(momentum: dict) -> tuple:
                     elif q and q["pct"] is not None and q["pct"] >= 100 - _EXTREME_PCT:
                         extreme_side, extreme_ccy = "quote", quote
 
-                # -- BUILDING premise: currency gaining conviction ALIGNED with this direction
+                # -- BUILDING premise: mirrors _cot_reversal_penalty()'s own
+                # base/quote directional structure exactly, just with BUILDING
+                # (reinforcing) instead of REVERSING/UNWINDING (contradicting)
+                # and using the CURRENT net position's sign (BUILDING is about
+                # ongoing conviction in whichever direction the currency is
+                # ALREADY net positioned, not a historical reference point the
+                # way old_net was for the removed penalty).
+                #   BUY:  base net-long + BUILDING (doubling down long, base
+                #         should strengthen) OR quote net-short + BUILDING
+                #         (doubling down short, quote should weaken)
+                #   SELL: base net-short + BUILDING OR quote net-long + BUILDING
                 building_side, building_ccy = None, None
                 if direction == "BUY":
-                    if b and b["momentum"] == "BUILDING":
+                    if b and b["momentum"] == "BUILDING" and b["net"] is not None and b["net"] > 0:
                         building_side, building_ccy = "base", base
-                    elif q and q["momentum"] == "BUILDING":
-                        # quote BUILDING conviction in ITS OWN direction only helps a BUY
-                        # of base/quote if quote's own net position is net SHORT (i.e. quote
-                        # weakening) -- but momentum series alone (BUILDING/STABLE/etc.) does
-                        # not by itself encode long/short; approximate the same way
-                        # positioning.py's live Haiku instruction does: BUILDING is shown
-                        # per-currency with no direction-of-trade filter, so any BUILDING
-                        # leg is treated as reinforcing (matches the live instruction's own
-                        # unconditional "raise POSITIONING_SCORE +1" wording -- it does not
-                        # itself condition on which side of net long/short the currency is on).
+                    elif q and q["momentum"] == "BUILDING" and q["net"] is not None and q["net"] < 0:
                         building_side, building_ccy = "quote", quote
                 else:
-                    if b and b["momentum"] == "BUILDING":
+                    if b and b["momentum"] == "BUILDING" and b["net"] is not None and b["net"] < 0:
                         building_side, building_ccy = "base", base
-                    elif q and q["momentum"] == "BUILDING":
+                    elif q and q["momentum"] == "BUILDING" and q["net"] is not None and q["net"] > 0:
                         building_side, building_ccy = "quote", quote
 
                 if extreme_side is None and building_side is None:
