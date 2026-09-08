@@ -424,6 +424,13 @@ def evaluate_candidates(
     new_candidates = 0
     opened_by_book = {bid: 0 for bid in BOOKS}
     rejections_changed = False
+    # 2026-09-09: tracks whether an EXISTING candidate's descriptive fields
+    # were refreshed this call (see the grade-refresh fix below) -- without
+    # this, a scan where a same-day re-analysis changes a candidate's grade
+    # but no book newly opens a position on it would compute the refresh in
+    # memory and then never persist it, since the write below was
+    # previously gated only on new_candidates/opened_by_book.
+    candidates_refreshed = False
 
     def _find_pending_rejection(cid: int, book_id: str) -> Optional[dict]:
         for rej in rejections:
