@@ -6109,48 +6109,74 @@ def _send_telegram_summary(
                     except Exception:
                         pass
                     continue
-                # ── CIRCUIT BREAKER — FIRST check, reads fresh from disk every trade ──
-                _cb_read_failed = False
+                # ── CIRCUIT BREAKER / DAILY LIMIT / PAUSE / OBSERVATION MODE ──────────
+                # 2026-09-09: consolidated single gate. Replaces two things:
+                #   1. The ad-hoc "if consecutive_losses>=3: block" check that used to
+                #      live here. Real incident: it never consulted pause_until's real
+                #      48h expiry, so once 3 losses hit with zero open positions,
+                #      nothing could ever produce the win needed to reset the counter
+                #      -- the block could never clear, even past its own cooldown.
+                #      Confirmed a genuine structural deadlock, not a display bug.
+                #   2. The separate, later is_trading_blocked() call further down this
+                #      same loop, which read _fund_st as loaded ONCE at scan start --
+                #      now redundant, since this earlier check already screens out
+                #      anything it would have caught, and every candidate that reaches
+                #      it must have already passed this one.
+                # Refreshes only the fields is_trading_blocked() reads from a fresh
+                # disk read before every candidate (reproducing the old ad-hoc check's
+                # own "reads fresh from disk every trade" guarantee -- a real close
+                # mid-scan, by monitor.py or an earlier candidate this same loop, is
+                # seen immediately) while preserving _fund_st's other in-memory state
+                # (missed_opportunities, etc.) accumulated so far this scan. Fails
+                # CLOSED on a corrupted/unreadable file -- fund_state.load()'s own
+                # default behavior fails OPEN (consecutive_losses=0), exactly backwards
+                # for a real-money circuit breaker.
+                _cb_gate_fields = (
+                    "consecutive_losses", "circuit_breaker_active", "circuit_breaker_reason",
+                    "daily_trades_count", "pause_until", "observation_mode", "observation_mode_until",
+                )
                 try:
                     with open("data/fund_state.json", encoding="utf-8") as _cb_f:
-                        _cb_st   = json.load(_cb_f)
-                    _cb_losses = int(_cb_st.get("consecutive_losses", 0) or 0)
+                        _cb_fresh = json.load(_cb_f)
+                    _fund_st = dict(_fund_st)
+                    for _cb_k in _cb_gate_fields:
+                        if _cb_k in _cb_fresh:
+                            _fund_st[_cb_k] = _cb_fresh[_cb_k]
                 except Exception as _cb_read_exc:
-                    # Fail closed: an unreadable state file must not be silently treated
-                    # as "zero losses, safe to trade" — that's the wrong direction for a
-                    # loss-protection mechanism. Force the block path below and say so
-                    # explicitly, so a future reader isn't misled into thinking this is a
-                    # genuine 0-loss reading (reliability review fix #3).
-                    _cb_read_failed = True
-                    _cb_losses = 3
                     _log_line(log, (
                         f"[circuit] fund_state.json unreadable ({_cb_read_exc}) — "
-                        f"defaulting to BLOCK (fail-closed) — not a genuine loss count"
+                        f"failing closed for this candidate — not a genuine state reading"
                     ))
-                if _cb_losses >= 3:
-                    _cb_reason = (
-                        "Circuit breaker active: fund_state.json unreadable — "
-                        "failing closed until resolved"
-                        if _cb_read_failed else
-                        f"Circuit breaker active: {_cb_losses} consecutive losses"
+                    _fund_st = dict(_fund_st)
+                    _fund_st["consecutive_losses"] = max(
+                        int(_fund_st.get("consecutive_losses", 0) or 0), 3
                     )
-                    _log_line(log, f"[circuit] BLOCKED {_yt_pair} — {_cb_reason}")
+                _blk, _blk_rsn, _blk_tp = _fs.is_trading_blocked(_fund_st)
+                if _blk:
+                    _fund_st = _fs.record_missed_opportunity(
+                        _fund_st, _yt_pair,
+                        (_yt_parsed.get("direction") or ""),
+                        _eff_conf(_yt),
+                        float((_yt.get("screen") or {}).get("score") or 0),
+                        _blk_tp,
+                    )
+                    _log_line(log, f"[circuit] BLOCKED {_yt_pair} — {_blk_rsn}")
                     _yt_parsed["trade_this"] = "NO"
-                    _yt_parsed["block_reason"] = _cb_reason
-                    _fund_st_blocked.append((_yt, _cb_reason))
+                    _yt_parsed["block_reason"] = _blk_rsn
+                    _fund_st_blocked.append((_yt, _blk_rsn))
                     _yt_conf_cb = _eff_conf(_yt)
                     if _yt_conf_cb >= 6.0:
                         _blocked_setups.append({
                             "pair":      _yt_pair,
                             "direction": (_yt_parsed.get("direction") or "").upper(),
                             "conf":      _yt_conf_cb,
-                            "reason":    _cb_reason,
+                            "reason":    _blk_rsn,
                         })
                     try:
                         from src import tracker as _trk_cb
                         if _yt.get("id"):
                             _trk_cb.update_outcome(int(_yt["id"]), "SKIPPED",
-                                                   notes=f"Blocked: {_cb_reason}")
+                                                   notes=f"Blocked: {_blk_rsn}")
                     except Exception:
                         pass
                     continue
