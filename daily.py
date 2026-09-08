@@ -5571,20 +5571,10 @@ def _send_telegram_summary(
     _ot_open_trades: list = []
     try:
         from src import tracker as _trk_ot
-        _ot_open_trades = [r for r in _trk_ot.load() if r.get("status") == "OPEN"]
-        if scan_baseline_max_id is not None:
-            # Same exclude-on-malformed-id behaviour as tracker.py's
-            # check_currency_concentration()/check_inverse_open() (the sibling
-            # fix for the identical bug class) -- a row whose id can't be
-            # parsed doesn't count as pre-existing open exposure.
-            _filtered_ot: list = []
-            for _r_ot in _ot_open_trades:
-                try:
-                    if int(_r_ot.get("id", 0)) <= scan_baseline_max_id:
-                        _filtered_ot.append(_r_ot)
-                except (TypeError, ValueError):
-                    pass
-            _ot_open_trades = _filtered_ot
+        _ot_open_trades = _filter_rows_before_scan(
+            [r for r in _trk_ot.load() if r.get("status") == "OPEN"],
+            scan_baseline_max_id,
+        )
     except Exception:
         pass
     _open_pair_set = {r.get("pair", "").upper() for r in _ot_open_trades}
