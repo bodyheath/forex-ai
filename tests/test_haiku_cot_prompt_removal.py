@@ -61,14 +61,20 @@ class TestHaikuPromptNoLongerPenalisesCotReversal(unittest.TestCase):
         self.assertIn("informational context", prompt)
         self.assertIn("do NOT adjust POSITIONING_SCORE or CONFIDENCE", prompt)
 
-    def test_building_and_stable_instructions_untouched(self):
-        # Only the REVERSING/UNWINDING penalty was backtested and removed --
-        # BUILDING's +1 boost and STABLE's no-op were never investigated or
-        # requested for removal, so they must survive unchanged.
+    def test_building_boost_removed(self):
+        # BUILDING's +1 POSITIONING_SCORE instruction was investigated and
+        # found empirically unsupported (2026-09-08 systemic audit) -- it
+        # must no longer appear as a scored instruction.
         prompt = analyst._haiku_system_prompt()
-        self.assertIn("BUILDING=institutions increasing conviction in current direction: "
-                      "raise POSITIONING_SCORE +1", prompt)
-        self.assertIn("STABLE=no significant change: no adjustment", prompt)
+        self.assertNotIn("BUILDING=institutions increasing conviction in current direction: "
+                         "raise POSITIONING_SCORE +1", prompt)
+        self.assertNotIn("raise POSITIONING_SCORE +1", prompt)
+
+    def test_all_four_mom_values_marked_informational_only(self):
+        prompt = analyst._haiku_system_prompt()
+        for value in ("BUILDING", "STABLE", "UNWINDING", "REVERSING"):
+            self.assertIn(value, prompt)
+        self.assertIn("informational context only", prompt)
 
     def test_mom_tag_still_flows_through_for_real_historical_reversing_cases(self):
         # Real historical firing instances from the backtest -- Haiku must
