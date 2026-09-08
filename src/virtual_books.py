@@ -87,6 +87,31 @@ Two changes close this gap, both additive (no existing behaviour changes):
   Candidates that were already rejected before 2026-09-07 have no
   rejections.csv row and never will -- this observability only starts
   accumulating from today forward, exactly like (1) above.
+
+STALE DESCRIPTIVE FIELDS (found and fixed 2026-09-09)
+------------------------------------------------------
+A candidate's `grade`/`confidence`/`eff_conf`/`da_grade_before`/`rr`/
+`mtf_agreeing_count` used to be set ONCE, at first creation, and never
+touched again on same-day reuse (`_find_today_candidate()`) -- but each
+book's OWN eligibility check always used the CURRENT scan's fresh
+`quality_grades`, not the frozen row. A pair re-analysed later the same
+Auckland day (its price moved enough to bypass analyst.py's 10-pip
+skip-cache) could get a materially different, real grade -- and a book
+admitting on that later, correct re-analysis would still show the stale
+first-creation grade in `candidates.csv` forever. Confirmed real: AUD/NZD
+SELL (2026-09-07) was created with grade=F (correctly rejected everywhere
+that moment -- `_dd_allows_trade()`'s F-floor has no bug, confirmed by
+reading it directly), then admitted into B_conf6_rr15/D_no_da 11 hours
+later and A_control/C_grade_based/E_no_dd_gate 18 hours later, on
+re-analyses whose real grade must have cleared each book's own bar -- the
+stored row kept showing "F" regardless. This was a data-integrity bug
+(misleading records for anyone reading candidates.csv), NOT an
+admission-logic bug -- every book's own rule was correctly enforced
+against the real grade in effect at decision time; only 2 of the ~15
+candidates in the population so far were affected. Fixed by refreshing
+those fields (never entry/stop_loss/t2_price -- those define the shared
+mechanical trade every book's P&L settles against and must stay frozen
+once set) on every same-day re-evaluation, not just at creation.
 """
 from __future__ import annotations
 
@@ -128,6 +153,11 @@ CANDIDATE_FIELDS = [
                                      # section for why.
     "status",            # OPEN | WIN | LOSS | EXPIRED
     "opened_at", "closed_at", "exit_price", "pips", "net_pips",
+    "notes",             # 2026-09-09: free-text annotations -- currently used
+                          # only for the two pre-fix stale-grade rows (#8, #11,
+                          # see module docstring's STALE DESCRIPTIVE FIELDS
+                          # section and scripts/backfill_stale_virtual_book_
+                          # grades_sep2026.py). Blank on every other row.
 ]
 
 POSITION_FIELDS = [
@@ -424,6 +454,13 @@ def evaluate_candidates(
     new_candidates = 0
     opened_by_book = {bid: 0 for bid in BOOKS}
     rejections_changed = False
+    # 2026-09-09: tracks whether an EXISTING candidate's descriptive fields
+    # were refreshed this call (see the grade-refresh fix below) -- without
+    # this, a scan where a same-day re-analysis changes a candidate's grade
+    # but no book newly opens a position on it would compute the refresh in
+    # memory and then never persist it, since the write below was
+    # previously gated only on new_candidates/opened_by_book.
+    candidates_refreshed = False
 
     def _find_pending_rejection(cid: int, book_id: str) -> Optional[dict]:
         for rej in rejections:
@@ -446,17 +483,47 @@ def evaluate_candidates(
         if not (entry and stop and direction in ("BUY", "SELL")):
             continue
 
+        qg = quality_grades.get(pair) or {}
+        mtf = (r.get("bundle") or {}).get("mtf") or {}
+
         existing = _find_today_candidate(candidates, pair, direction, date_str)
         if existing is not None:
             candidate_id = int(existing["id"])
             candidate_row = existing
+            # 2026-09-09: refresh the DESCRIPTIVE fields (grade/confidence/
+            # eff_conf/da_grade_before/rr/mtf_agreeing_count/dd_mode/
+            # conf_threshold) on every same-day re-evaluation, not just at
+            # first creation. Confirmed real: a pair re-analysed later the
+            # same Auckland day (bypassing the 10-pip skip-cache) can get a
+            # materially different grade -- AUD/NZD SELL on 2026-09-07 was
+            # created with grade=F (correctly rejected by every grade-
+            # respecting book at that moment), then admitted into
+            # B_conf6_rr15/D_no_da 11 hours later and into A_control/
+            # C_grade_based/E_no_dd_gate 17 hours later, on re-analyses
+            # whose real grades must have cleared each book's own bar (the
+            # hard F-floor in _dd_allows_trade() is correctly enforced --
+            # confirmed by reading that function directly) -- but the STORED
+            # row kept showing "F" forever, because only entry/stop_loss/
+            # t2_price/status/opened_at were ever frozen at creation and
+            # everything else was never touched again. This does NOT touch
+            # entry/stop_loss/t2_price -- those define the shared mechanical
+            # trade every book settles its own P&L against once ANY book has
+            # a position in this candidate, and must never change after the
+            # fact.
+            candidate_row["confidence"]         = parsed.get("confidence", candidate_row.get("confidence", ""))
+            candidate_row["eff_conf"]           = round(eff_conf_fn(r), 2)
+            candidate_row["grade"]              = qg.get("grade", candidate_row.get("grade", ""))
+            candidate_row["da_grade_before"]    = qg.get("da_grade_before", candidate_row.get("da_grade_before", ""))
+            candidate_row["rr"]                 = qg.get("rr", candidate_row.get("rr", ""))
+            candidate_row["mtf_agreeing_count"] = mtf.get("agreeing_count", candidate_row.get("mtf_agreeing_count", ""))
+            candidate_row["dd_mode"]            = dd_mode
+            candidate_row["conf_threshold"]     = conf_threshold
+            candidates_refreshed = True
         else:
             target_raw = float(parsed.get("target") or 0)
             _, t2_price, _ = cascade.compute_levels(entry, stop, target_raw, direction)
             if t2_price is None:
                 continue
-            qg = quality_grades.get(pair) or {}
-            mtf = (r.get("bundle") or {}).get("mtf") or {}
             candidate_id = _next_id(candidates)
             candidate_row = {
                 "id": candidate_id,
@@ -573,7 +640,7 @@ def evaluate_candidates(
             save_book_state(state)
             opened_by_book[book_id] += 1
 
-    if new_candidates or any(opened_by_book.values()):
+    if new_candidates or any(opened_by_book.values()) or candidates_refreshed:
         _write_csv(CANDIDATES_CSV, candidates, CANDIDATE_FIELDS)
     if rejections_changed:
         _write_csv(REJECTIONS_CSV, rejections, REJECTION_FIELDS)
