@@ -1113,10 +1113,9 @@ def _smd_score(result: dict) -> int:
 
 
 def _eff_conf(result: dict) -> float:
-    """Confidence after MA ribbon, GBP/CHF-specific, fundamental, and Smart
-    Money Divergence adjustments.
+    """Confidence after GBP/CHF-specific, fundamental, and Smart Money
+    Divergence adjustments.
 
-    Ribbon:           −1 when ALIGNED ribbon is fully against trade direction.
     GBP/CHF SELL:     −1 when ribbon is CONVERGING — scoped, temporary patch,
                       see _gbp_chf_converging_ribbon_penalty() for the current
                       revisit condition (a real live test case, not a date —
@@ -1131,24 +1130,20 @@ def _eff_conf(result: dict) -> float:
     removed -- a real backtest found the penalized direction's forward win
     rate HIGHER than baseline at every lag tested, not lower (see the
     comment above where _cot_reversal_penalty() used to be defined).
+
+    2026-09-08 (systemic audit): the −1 "ALIGNED ribbon fully against trade
+    direction" penalty that used to live here was also removed. Confirmed
+    via the 43,344-row mechanical historical backtest that this condition
+    is a strict subset of _trade_quality_grade()'s rib_strongly_against
+    F-grade floor: penalized n=0 in the tradeable (non-F) population, i.e.
+    any candidate this penalty could ever apply to was already hard-blocked
+    by grade before the penalty could matter. It was dead code, not a live
+    adjustment -- removing it changes nothing about which trades are taken.
     """
     raw = _conf(result)
     if raw == 0:
         return 0.0
     adj = 0
-    try:
-        direction = (result.get("parsed", {}).get("direction") or "").upper()
-        rib_status = (
-            result.get("bundle", {})
-            .get("technical", {})
-            .get("daily", {}) or {}
-        ).get("ribbon", {}).get("status", "")
-        if rib_status == "ALIGNED_BULL" and direction == "SELL":
-            adj -= 1
-        if rib_status == "ALIGNED_BEAR" and direction == "BUY":
-            adj -= 1
-    except Exception:
-        pass
     adj += _gbp_chf_converging_ribbon_penalty(result)
     # Fundamental alignment adjustment
     _fa = result.get("_fundamental_alignment")
