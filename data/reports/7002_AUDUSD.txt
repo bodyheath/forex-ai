@@ -1,0 +1,17 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: Oscillator confluence (RSI/Stoch/CCI all SELL) + pin bar at key level on 4H confirm overbought pullback within intact uptrend; D1 T_sig=SELL_5 + RSI 66 near overbought edge supports tactical short into rally resistance.
+RISK_FACTORS: [1. MTF conf=2/3 (D+4H agree SELL, but W neutral) — only 60% confidence weight; mean reversion into rally may be shallow if weekly uptrend remains dominant], [2. ALIGNED_BULL ribbon (5/5 EMAs stacked) signals continued bullish structure — reversal risk if price holds above SMA50 (0.7039) and rally resumes past 0.7230]
+TRADE_THIS: YES
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.7230
+ENTRY_TRIGGER_REASON: Sell pullback rejection at resistance/prior swing high near 0.7230; pin bar confluence + triple oscillator SELL + D1 RSI 66 (overbought in uptrend per context rules) = tactical short entry on retest of rally high.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
