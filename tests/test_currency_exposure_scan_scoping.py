@@ -71,7 +71,7 @@ class TestFilterRowsBeforeScan(unittest.TestCase):
         result = daily._filter_rows_before_scan(rows, max_id=100)
         self.assertEqual(result, [])
 
-    def test_missing_id_excluded(self):
+    def test_missing_id_defaults_to_kept(self):
         rows = [{"pair": "GBP/USD", "status": "OPEN"}]
         # {}.get("id", 0) -> 0, which is <= any real max_id, so a row with no
         # id at all is treated as pre-existing (matches tracker.py's own
