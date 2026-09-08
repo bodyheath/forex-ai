@@ -9,6 +9,7 @@ API calls per pair and means the indicator definitions are explicit and auditabl
 Twelve Data's free tier (~800 calls/day, 8/min) comfortably covers this.
 """
 
+import json
 import time
 from datetime import datetime, timezone
 
