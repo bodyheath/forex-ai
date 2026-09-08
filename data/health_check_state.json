@@ -1,11 +1,12 @@
 {
   "last_flags": [
-    "\u2139\ufe0f GBP-cross exclusion may be decaying \u2014 most recent 30 decisive trades WR=63.3% vs the prior 172 decisive trades WR=27.3%, p=0.0001. Worth revisiting whether this exclusion is still warranted.",
+    "\u2139\ufe0f GBP-cross exclusion may be decaying \u2014 most recent 30 decisive trades WR=66.7% vs the prior 173 decisive trades WR=27.2%, p=0.0000. Worth revisiting whether this exclusion is still warranted.",
     "\ud83d\udcca consensus_adj has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md \u2014 filter to consensus_eligible==True, compare within grade)",
     "\ud83d\udcca memory_hash has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md's before/after natural-experiment design)",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=325, WR=45.8%) significantly outperforms grade D (n=638, WR=21.6%), p=0.0000",
-    "\ud83d\udea8 currency-consensus 'agrees' edge drifting \u2014 most recent 40 decisive trades WR=0.0% vs the prior 74 decisive trades WR=21.6%, p=0.0008.",
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=642, WR=21.5%) significantly outperforms grade C (n=81, WR=13.6%), p=0.0485",
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=326, WR=46.0%) significantly outperforms grade D (n=642, WR=21.5%), p=0.0000",
+    "\ud83d\udea8 currency-consensus 'agrees' edge drifting \u2014 most recent 40 decisive trades WR=0.0% vs the prior 77 decisive trades WR=20.8%, p=0.0010.",
     "\ud83d\udea8 rib_strongly_against (non-GBP) edge drifting \u2014 most recent 40 decisive trades WR=22.5% vs the prior 366 decisive trades WR=50.5%, p=0.0004. See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
   ],
-  "last_alert_sent_at": "2026-09-07T21:32:40.038914"
+  "last_alert_sent_at": "2026-09-08T04:39:43.073086"
 }
