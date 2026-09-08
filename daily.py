@@ -13156,6 +13156,7 @@ def run() -> int:
                     all_ohlcv_failed=_all_ohlcv_failed,
                     movement_alert_data=_movement_alert_data,
                     threshold_data=_threshold_data,
+                    scan_baseline_max_id=_scan_baseline_max_id,
                     log=log,
                 )
                 if _tg_summary_ok is False:
