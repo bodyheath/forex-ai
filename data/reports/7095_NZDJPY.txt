@@ -1,0 +1,24 @@
+PAIR: NZD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H RSI oversold (27.3) suggests bounce potential, but D1 data missing and MTF all-neutral structure prevents directional conviction; inside bar neutrality + no divergence + fundamental headwind (NZD falling rate vs rising JPY) create weak SELL bias only.
+RISK_FACTORS: (1) D1 RSI/MACD unavailable — cannot confirm downtrend persistence or establish support levels; (2) 4H inside bar + oversold RSI typical prelude to reversal; tight risk/reward without D1 confluence.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF conf=0/3 (all three timeframes neutral) violates MTF rule (requires weekly AND daily agreement). D1 missing prevents dual-timeframe validation. Inside bar + no pattern conviction + no divergence = insufficient setup probability.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Explanation:**
+
+- **MTF rule breach**: M:NEUTRAL, W:NEUTRAL, D:NEUTRAL, 4H:BUY conf=0/3 — no agreement between weekly and daily (both neutral). TRADE_THIS defaults to NO.
+-

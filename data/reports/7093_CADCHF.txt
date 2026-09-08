@@ -1,0 +1,23 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (38p/4pt) and extreme CHF short crowding (88%) conflict with D1/4H uptrend structure and aligned EMA ribbon, creating a contrarian sell setup on overbought conditions in a weakening trend.
+RISK_FACTORS: [1. MTF alignment is CRITICAL FAIL — W:NEUTRAL + D:NEUTRAL + 4H:NEUTRAL means NO weekly OR daily agreement (conf=0/3), triggering hard TRADE_THIS:NO rule regardless of other confluence. 2. EMA ribbon fully aligned bullish (5/5) with golden-cross SMA structure contradicts the bearish divergence signal, suggesting trend continuation risk overrides reversal thesis.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily must both agree on direction. W:NEUTRAL + D:NEUTRAL fails the >=2/3 MTF agreement threshold. Trade rejected.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF HARD REJECT:** W:NEUTRAL and D:NEUTRAL means neither weekly nor daily confirms a directional bias. The rule requires **both

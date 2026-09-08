@@ -1,0 +1,23 @@
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at exact 23.6% Fib support with RSI 44.3 (neutral) offers limited bounce potential, but weak MTF confirmation (1/3 agreement) and 4H downtrend structure undermine conviction.
+RISK_FACTORS: MTF conflict—monthly SELL and 4H NEUTRAL override daily BUY signal; ribbon leaning bear (4/5 aligned downside) contradicts bounce thesis. 4H price < SMA50 < SMA200 (death cross) suggests structural weakness despite D1 pin bar.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.6028
+ENTRY_TRIGGER_REASON: Confirm support hold at swing low (SL) before risking long; pin bar alone insufficient given downtrend context and MTF disagreement.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**MTF Rule Violation (Hard Gate):** Weekly = NEUTRAL, Daily = BUY, 4H = NEUTRAL, Monthly = SELL. Only 1 of 3 agree on BUY direction (conf = 1/3 < 2/3 threshold). **MTF rule triggered: TRADE_THIS

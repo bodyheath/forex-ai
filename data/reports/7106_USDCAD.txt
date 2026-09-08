@@ -1,0 +1,24 @@
+PAIR: USD/CAD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level + 4H downtrend reversal + USD rate premium over falling CAD creates tactical long setup, but MTF weekly neutrality and leaning-bear ribbon limit conviction to tactical range trade.
+RISK_FACTORS: MTF weekly neutrality breaks the ≥2/3 agreement rule (only D+4H aligned; W neutral breaks true consensus); 4H inside bar after pin suggests consolidation risk, not immediate breakout confirmation — entry premature could get stopped in chop.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.3760
+ENTRY_TRIGGER_REASON: Break and close above 4H inside bar high (1.3840+) with RSI confirmation >50 on 4H to signal trend reversal completion.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+### Rationale:
+
+**MTF Failure (Hard Rule):**  
+MTF = W:NEUTRAL + D:BUY + 4H:BUY = 2/3 agreement at 60% confidence. **Hard rule states: "if weekly AND daily don't both agree on direction, TRADE_THIS NO regardless."** Weekly is neutral, so true dual-timeframe confluence
