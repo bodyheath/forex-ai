@@ -2008,7 +2008,7 @@ def send_pending_trade_alert(
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
     try:
-        r = requests.post(webhook, json={"embeds": [embed]}, timeout=10)
+        r = _dc_post(webhook, json={"embeds": [embed]}, timeout=10)
         return r.status_code == 204
     except Exception:
         return False
@@ -2052,7 +2052,7 @@ def _send_entry_confirmed_alert(activation: dict, log_fn=None) -> bool:
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
     try:
-        r = requests.post(webhook, json={"embeds": [embed]}, timeout=10)
+        r = _dc_post(webhook, json={"embeds": [embed]}, timeout=10)
         return r.status_code == 204
     except Exception:
         return False
@@ -2129,7 +2129,7 @@ def send_swap_alert(
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
     try:
-        r = requests.post(webhook, json={"embeds": [embed]}, timeout=10)
+        r = _dc_post(webhook, json={"embeds": [embed]}, timeout=10)
         return r.status_code in (200, 204)
     except Exception as _e:
         print(f"[swap] Discord alert error: {_e}")
