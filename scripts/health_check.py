@@ -57,6 +57,25 @@ def _send_discord(msg: str) -> None:
     webhook = os.environ.get("DISCORD_WEBHOOK_HEALTH") or os.environ.get("DISCORD_WEBHOOK_CRITICAL", "")
     if not webhook:
         return
+    # 2026-09-09: same DISCORD_LIVE_SEND safety gate as src/discord_notifier.py
+    # -- this script has its own independent raw urllib send that the gate
+    # added there doesn't cover. Reuses that module's single gate function
+    # rather than a second copy of the env-var check. Fails CLOSED (blocks
+    # the send) if the gate function itself can't even be imported/called --
+    # same "don't know = don't send" posture as fund_state.py's own
+    # real-money circuit breaker.
+    try:
+        from src import discord_notifier as _dn_gate
+        _live_enabled = _dn_gate._discord_live_sends_enabled()
+    except Exception as _gate_exc:
+        print(f"[health-check] [discord-safety] gate check failed ({_gate_exc}) "
+              f"-- blocking conservatively", file=sys.stderr)
+        _live_enabled = False
+    if not _live_enabled:
+        print("[health-check] [discord-safety] BLOCKED real send -- "
+              "set DISCORD_LIVE_SEND=YES to allow (never in a local .env)",
+              file=sys.stderr)
+        return
     try:
         import urllib.request as _ur
         payload = json.dumps({

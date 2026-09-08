@@ -55,6 +55,7 @@ jobs:
           TELEGRAM_CHAT_ID_2: ${{ secrets.TELEGRAM_CHAT_ID_2 }}
           TELEGRAM_CHAT_ID_3: ${{ secrets.TELEGRAM_CHAT_ID_3 }}
           DISCORD_WEBHOOK_CRITICAL: ${{ secrets.DISCORD_WEBHOOK_CRITICAL }}
+          DISCORD_LIVE_SEND: "YES"
         run: python scripts/heartbeat_watchdog.py
 
       - name: Commit dedup state if changed

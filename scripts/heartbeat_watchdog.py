@@ -88,6 +88,22 @@ def _send_discord(msg: str) -> None:
     webhook = os.environ.get("DISCORD_WEBHOOK_CRITICAL", "")
     if not webhook:
         return
+    # 2026-09-09: same DISCORD_LIVE_SEND safety gate as src/discord_notifier.py
+    # and scripts/health_check.py -- this script has its own independent raw
+    # urllib send. Fails CLOSED (blocks the send) if the gate function itself
+    # can't even be imported/called.
+    try:
+        from src import discord_notifier as _dn_gate
+        _live_enabled = _dn_gate._discord_live_sends_enabled()
+    except Exception as _gate_exc:
+        print(f"[heartbeat-watchdog] [discord-safety] gate check failed ({_gate_exc}) "
+              f"-- blocking conservatively", file=sys.stderr)
+        _live_enabled = False
+    if not _live_enabled:
+        print("[heartbeat-watchdog] [discord-safety] BLOCKED real send -- "
+              "set DISCORD_LIVE_SEND=YES to allow (never in a local .env)",
+              file=sys.stderr)
+        return
     try:
         import urllib.request as _ur
         payload = json.dumps({
