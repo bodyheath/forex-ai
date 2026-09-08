@@ -325,6 +325,32 @@ def reconcile_from_trades(state: dict, df=None, prices: dict | None = None,
         for _k, _v in fresh.items():
             if _k != "open_trades":
                 state[_k] = _v
+        # 2026-09-09: self-heal a missing pause_until. update_after_close()
+        # normally sets pause_until the instant consecutive_losses crosses
+        # CONSECUTIVE_LOSS_LIMIT, but it is only ever invoked for a literal
+        # WIN/LOSS/BREAKEVEN/FULL_WIN/PARTIAL_WIN close -- an EXPIRED close
+        # never triggers it (daily.py's own comment: "EXPIRED closes...
+        # bypass update_after_close"). consecutive_losses itself, just
+        # recomputed above via calculate_fund_state(), counts an EXPIRED
+        # close with negative net pips the same as a literal LOSS. A streak
+        # that crosses the threshold via one or more EXPIRED closes could
+        # therefore leave pause_until permanently unset, and
+        # is_trading_blocked() -- which gates on pause_until, not the raw
+        # counter directly -- would never block despite the real streak
+        # being at or past the limit. This runs on every reconcile (every
+        # monitor cycle, unconditionally), so it catches the threshold-
+        # crossing cycle promptly rather than leaving a silent gap.
+        if (int(state.get("consecutive_losses", 0) or 0) >= CONSECUTIVE_LOSS_LIMIT
+                and not state.get("pause_until")):
+            _pause_ts = _auckland_now() + timedelta(hours=CONSECUTIVE_LOSS_PAUSE_HRS)
+            state["pause_until"] = _pause_ts.strftime("%Y-%m-%dT%H:%M:%S")
+            _log(
+                f"[fund_state] {state['consecutive_losses']} consecutive losses "
+                f"found with no pause_until set (streak likely includes an "
+                f"EXPIRED close, which doesn't call update_after_close()) -- "
+                f"self-healing: pause activated until "
+                f"{_pause_ts.strftime('%a %d %b %H:%M')} Auckland"
+            )
     except Exception as exc:
         _log(f"[fund_state] reconcile_from_trades failed: {exc}")
     return state
