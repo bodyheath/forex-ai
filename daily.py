@@ -5525,6 +5525,7 @@ def _send_telegram_summary(
     all_ohlcv_failed: bool = False,
     movement_alert_data: dict = None,
     threshold_data: dict = None,
+    scan_baseline_max_id: int = None,
     log=None,
 ) -> bool:
     """Build and send Telegram notifications with format tailored to each scan mode.
@@ -5533,6 +5534,25 @@ def _send_telegram_summary(
     evaluation (per-candidate or whole-loop) — see reliability review fix #1. The
     caller uses this to make run()'s exit code correctly reflect a disrupted scan
     instead of always exiting 0.
+
+    scan_baseline_max_id: highest trade id that existed BEFORE this scan wrote
+    anything (same value passed to every _analyse_pair() call this scan as
+    max_open_id). 2026-09-08: without this, _ot_open_trades's initial load
+    below picks up every trade_this=YES candidate FROM THIS SAME SCAN as
+    "already open" -- tracker.log_recommendation() writes status=OPEN the
+    instant a candidate's raw trade_this is YES, before the fund-loop's own
+    drawdown-tier/capacity/concentration corrections run later in this same
+    function. Confirmed real: 2026-09-07 saw 5 separate intraday scans each
+    block a real conf=7+ EUR/JPY AND USD/JPY candidate with "JPY at 2 open
+    trades", even though git history of data/trades.csv shows zero real JPY
+    exposure at every one of those exact moments -- both had independently
+    said trade_this=YES from Sonnet, both got raw-written OPEN moments apart,
+    and _ot_open_trades's un-filtered snapshot (taken after all of this
+    scan's own analysis had already run) counted both against each other.
+    Exactly the same same-scan-phantom-OPEN bug class tracker.py's
+    check_inverse_open()/check_currency_concentration() were already fixed
+    for via this identical max_id pattern -- fund_state.check_currency_
+    exposure()'s call site (below) never got the equivalent protection.
     """
     if log is None:
         import sys as _sys_log
@@ -5545,11 +5565,18 @@ def _send_telegram_summary(
     credit_data     = credit_data     or {}
     cost_lines      = cost_lines      or []
 
-    # Load open trades first — needed to filter already-open pairs from signals
+    # Load open trades first — needed to filter already-open pairs from signals.
+    # Excludes rows written by THIS scan's own analysis (id > scan_baseline_max_id)
+    # -- see this function's docstring for why that matters.
     _ot_open_trades: list = []
     try:
         from src import tracker as _trk_ot
         _ot_open_trades = [r for r in _trk_ot.load() if r.get("status") == "OPEN"]
+        if scan_baseline_max_id is not None:
+            _ot_open_trades = [
+                r for r in _ot_open_trades
+                if not str(r.get("id", "")).isdigit() or int(r["id"]) <= scan_baseline_max_id
+            ]
     except Exception:
         pass
     _open_pair_set = {r.get("pair", "").upper() for r in _ot_open_trades}
