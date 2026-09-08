@@ -1641,7 +1641,7 @@ def update_closed_trades_log(
     # POST new message — ?wait=true required to get message id back
     post_url = f"{WEBHOOK_FUND}?wait=true"
     try:
-        resp = requests.post(post_url, json=payload, timeout=10)
+        resp = _dc_post(post_url, json=payload, timeout=10)
     except Exception as exc:
         print(f"[closed-trades] Post request failed: {exc}", file=_sys.stdout)
         return False
