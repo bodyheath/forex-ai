@@ -1405,7 +1405,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                     (r for r in _sn_rows if str(r.get("id", "")) == str(rec_id)), None
                 )
                 if _sn_target and _sn_target.get("status") == "OPEN":
-                    _sn_target["status"]     = updated.get("status", casc_oc)
+                    _sn_target["status"]     = updated.get("status", "LOSS")
                     _sn_target["exit_price"] = updated.get("exit_price", mprice)
                     _sn_target["pips"]       = updated.get("pips", "")
                     _sn_target["closed_at"]  = updated.get("closed_at", "")
@@ -1429,8 +1429,20 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 log(f"  Monitor: safety-net check failed for #{rec_id}: {_sn_exc}")
             closed_rows.append(updated)
             _online_learn_closure("main", updated)
-            # Loss autopsy — analyse why this trade failed
-            if casc_oc == "LOSS":
+            # Loss autopsy — analyse why this trade failed.
+            # 2026-09-08: this used to read `if casc_oc == "LOSS":`, referencing
+            # a variable that is never defined anywhere in this function --
+            # casc_oc only exists in the sibling _apply_research_milestones()
+            # (its own real cascade outcome: WIN/LOSS/PARTIAL_WIN). A
+            # 2026-06-30 refactor (fda3729c) correctly replaced every other
+            # casc_oc reference in THIS function with the literal "LOSS" --
+            # fund trades have no cascading ambiguity, a STOP hit is always a
+            # LOSS -- but missed this line and the safety-net line above,
+            # guaranteeing a NameError on every real fund stop-loss processed
+            # here since that commit. Checking updated.get("status") instead
+            # of hardcoding True keeps this honest: if update_outcome() above
+            # somehow didn't actually record LOSS, autopsy correctly skips.
+            if updated.get("status") == "LOSS":
                 log("[loss-analysis] Pure loss — running autopsy...")
                 try:
                     _loss_trade_data = dict(row)
