@@ -5501,6 +5501,30 @@ def _build_system_learning_report(date: str) -> list:
     return sec
 
 
+def _filter_rows_before_scan(rows: list, max_id: "int | None") -> list:
+    """Keep only rows with id <= max_id (rows that existed before this scan
+    wrote anything). Returns `rows` unchanged if max_id is None.
+
+    2026-09-08: extracted so the same-scan-phantom-OPEN exclusion used by
+    fund_state.check_currency_exposure()'s caller (_send_telegram_summary(),
+    below) is independently testable without invoking that function's real
+    Telegram/Discord side effects. Same exclude-on-malformed-id behaviour as
+    tracker.py's check_currency_concentration()/check_inverse_open() (the
+    sibling fix for the identical bug class) -- a row whose id can't be
+    parsed doesn't count as pre-existing open exposure.
+    """
+    if max_id is None:
+        return rows
+    kept = []
+    for row in rows:
+        try:
+            if int(row.get("id", 0)) <= max_id:
+                kept.append(row)
+        except (TypeError, ValueError):
+            pass
+    return kept
+
+
 def _send_telegram_summary(
     date: str,
     universe_size: int,
