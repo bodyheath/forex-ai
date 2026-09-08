@@ -14,6 +14,53 @@ import requests
 
 DASHBOARD_STATE_FILE = Path(__file__).resolve().parent.parent / "data" / "discord_dashboard.json"
 
+
+# ── Real-send safety gate ───────────────────────────────────────────────────
+# 2026-09-08: a real Discord investigation this session nearly fired a live
+# POST/PATCH at the production fund-dashboard webhook from an interactive
+# dev sandbox that happened to have a real credential loaded via a local
+# .env, purely as a side effect of reproducing a code path to diagnose it
+# (caught before it went out, but only by chance of noticing in time).
+# Every real outbound Discord call in this module now requires this
+# explicit opt-in -- set by the actual GitHub Actions workflows
+# (.github/workflows/*.yml) alongside the webhook secrets themselves, never
+# by a local .env. Missing/unset = safe no-op everywhere else: every local
+# run, every test, every future investigation like this one.
+
+class _BlockedDiscordResponse:
+    """Duck-typed stand-in for requests.Response when a real send is
+    blocked by the DISCORD_LIVE_SEND gate. status_code=204 matches this
+    module's own success convention so a blocked send doesn't spuriously
+    trigger a caller's retry loop or error-logging path -- it just quietly
+    does nothing, loudly logged instead."""
+    status_code = 204
+    text = ""
+
+    def json(self):
+        return {}
+
+
+def _discord_live_sends_enabled() -> bool:
+    return os.environ.get("DISCORD_LIVE_SEND", "").strip().upper() in ("1", "YES", "TRUE")
+
+
+def _dc_post(url: str, **kwargs):
+    """Drop-in replacement for requests.post() to any Discord webhook URL."""
+    if not _discord_live_sends_enabled():
+        print(f"[discord-safety] BLOCKED real POST to .../{(url or '')[-6:]} "
+              f"-- set DISCORD_LIVE_SEND=YES to allow (never in a local .env)")
+        return _BlockedDiscordResponse()
+    return requests.post(url, **kwargs)
+
+
+def _dc_patch(url: str, **kwargs):
+    """Drop-in replacement for requests.patch() to any Discord webhook URL."""
+    if not _discord_live_sends_enabled():
+        print(f"[discord-safety] BLOCKED real PATCH to .../{(url or '')[-6:]} "
+              f"-- set DISCORD_LIVE_SEND=YES to allow (never in a local .env)")
+        return _BlockedDiscordResponse()
+    return requests.patch(url, **kwargs)
+
 # The pure-2R v2 strategy's actual cutover date (confirmed via cascade.py's git
 # history). calculate_fund_state()'s computed `strategy_start_date` has been
 # unreliable (it trusts the earliest CLOSED trade tagged system_version=='v2',
@@ -178,7 +225,7 @@ def _send_embed(webhook_url, title, description, color, fields=None):
     }
     for attempt in range(3):
         try:
-            r = requests.post(
+            r = _dc_post(
                 webhook_url,
                 json={"embeds": [embed]},
                 timeout=10,
@@ -324,7 +371,7 @@ def send_research_monitor_batch(hot: list, near_stop: list) -> bool:
     }
     for attempt in range(3):
         try:
-            r = requests.post(WEBHOOK_RESEARCH, json={"embeds": [embed]}, timeout=10)
+            r = _dc_post(WEBHOOK_RESEARCH, json={"embeds": [embed]}, timeout=10)
             if r.status_code == 204:
                 return True
             if r.status_code == 429:
@@ -1576,7 +1623,7 @@ def update_closed_trades_log(
     if existing_message_id:
         edit_url = f"{WEBHOOK_FUND}/messages/{existing_message_id}?wait=true"
         try:
-            resp = requests.patch(edit_url, json=payload, timeout=10)
+            resp = _dc_patch(edit_url, json=payload, timeout=10)
         except Exception as exc:
             print(f"[closed-trades] Edit request failed: {exc}", file=_sys.stdout)
             return False
@@ -1594,7 +1641,7 @@ def update_closed_trades_log(
     # POST new message — ?wait=true required to get message id back
     post_url = f"{WEBHOOK_FUND}?wait=true"
     try:
-        resp = requests.post(post_url, json=payload, timeout=10)
+        resp = _dc_post(post_url, json=payload, timeout=10)
     except Exception as exc:
         print(f"[closed-trades] Post request failed: {exc}", file=_sys.stdout)
         return False
@@ -1961,7 +2008,7 @@ def send_pending_trade_alert(
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
     try:
-        r = requests.post(webhook, json={"embeds": [embed]}, timeout=10)
+        r = _dc_post(webhook, json={"embeds": [embed]}, timeout=10)
         return r.status_code == 204
     except Exception:
         return False
@@ -2005,7 +2052,7 @@ def _send_entry_confirmed_alert(activation: dict, log_fn=None) -> bool:
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
     try:
-        r = requests.post(webhook, json={"embeds": [embed]}, timeout=10)
+        r = _dc_post(webhook, json={"embeds": [embed]}, timeout=10)
         return r.status_code == 204
     except Exception:
         return False
@@ -2082,7 +2129,7 @@ def send_swap_alert(
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
     try:
-        r = requests.post(webhook, json={"embeds": [embed]}, timeout=10)
+        r = _dc_post(webhook, json={"embeds": [embed]}, timeout=10)
         return r.status_code in (200, 204)
     except Exception as _e:
         print(f"[swap] Discord alert error: {_e}")
@@ -2142,7 +2189,7 @@ def send_loss_analysis_alert(
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
     try:
-        requests.post(webhook, json={"embeds": [embed]}, timeout=10)
+        _dc_post(webhook, json={"embeds": [embed]}, timeout=10)
     except Exception as exc:
         print(f"[loss-alert] Discord error: {exc}")
         return False
