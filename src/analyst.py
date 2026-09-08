@@ -260,8 +260,8 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
     for side in ("base", "quote"):
         p = pos.get(side, {})
         if p.get("status") == "ok":
-            # extreme_flag has 3 possible values (positioning.py), longest is 79
-            # chars ("...BOTTOM of its ~1y range (crowded short, reversal risk)").
+            # extreme_flag has 3 possible values (positioning.py), longest is 84
+            # chars ("...BOTTOM of ~1y range (crowded short — reversal-risk unconfirmed)").
             # Was truncated to [:20] here, which cuts every string off before any
             # of its actual content ("net positioning nea") — silently destroying
             # the one piece of interpretive context (crowded/reversal-risk) that
