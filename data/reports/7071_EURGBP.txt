@@ -1,0 +1,20 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 61.8% Fib resistance + RSI 59.8 near neutral midpoint suggests limited upside momentum, but mixed MTF and lack of directional clarity prevent high-confidence entry.
+RISK_FACTORS: [1. All timeframes (M/W/D/4H) neutral — no directional confirmation; MTF confidence 0/3 blocks trade per rules. 2. Ribbon only 3/5 aligned (neutral state); Stochastic overbought (73.7) but MACD flat — conflicting oscillator signals reduce setup reliability.]
+TRADE_THIS: NO
+
+**REASONING:**
+
+1. **MTF RULE (HARD BLOCK):** M:NEUTRAL, W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL → conf=0/3 wt=100%. Per rules: "if weekly AND daily don't both agree on direction, TRADE_THIS NO regardless." Zero directional alignment = automatic rejection.
+
+2. **TECHNICAL_SCORE = 4:**
+   - D1 RSI 59.8 = standard tier 45–62 = NEUTRAL (3–4). Pin bar at Fib 61.8% (8p resistance) is supportive (+1 for pattern + level confluence) → base 3 + pattern bonus

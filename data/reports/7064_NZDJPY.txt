@@ -1,0 +1,25 @@
+```
+PAIR: NZD/JPY
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H RSI oversold at 30.2 in downtrend offers tactical bounce, but D1 neutral and no MTF alignment kill conviction.
+RISK_FACTORS: [1) D1 data missing — true trend direction unconfirmed; MTF conf=0/3 means no weekly/daily agreement, violates core entry rule] [2) Fundamental headwind: NZD rates falling + JPY rates rising = structural JPY strength; +1.84% diff insufficient to overcome]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL + D:NEUTRAL + 4H:BUY = conf<2/3 (0/3). TRADE_THIS blocked regardless of 4H oversold signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**REASONING:**
+
+1. **MTF VETO (HARD RULE):** Weekly and Daily both NEUTRAL; 4H is BUY (conf=0/3). Requirement: ≥2/3 agreement (weekly AND daily must both align). This trade fails the mandatory gate — TRADE_THIS=NO.
+
+2.

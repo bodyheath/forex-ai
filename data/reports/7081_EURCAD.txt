@@ -1,0 +1,31 @@
+```
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at 23.6% Fib support + D1 RSI 44.3 (neutral zone) + D:BUY + 4H:BUY agree, but M:SELL creates headwind; ribbon leaning bear limits upside conviction.
+
+RISK_FACTORS: (1) MTF conf only 2/3 (M disagrees); (2) D1 price/MA misalignment (mixed/range structure) limits trend confirmation.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.6050
+ENTRY_TRIGGER_REASON: Pin bar at 23.6% Fib support; test lower edge of range for higher-probability entry with RSI oversold on 4H (31.4).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**MTF Analysis:**
+- D:BUY + 4H:BUY = 2/3 agreement (60% confidence threshold met, but barely).
+- M:SELL creates conflict; overall MTF conf = **2/3 weighted 60%** — marginal for a TRADE_THIS=YES gate.
+- D1 trend = mixed/range (
