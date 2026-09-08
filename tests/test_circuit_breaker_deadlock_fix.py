@@ -195,8 +195,7 @@ class TestResetCircuitBreakerScript(unittest.TestCase):
         self._tmpdir.cleanup()
 
     def test_dry_run_does_not_modify_state(self):
-        import importlib
-        reset_script = importlib.import_module("scripts.reset_circuit_breaker")
+        from scripts import reset_circuit_breaker as reset_script
         with patch("sys.argv", ["reset_circuit_breaker.py"]):
             reset_script.main()
         state = fs.load()
