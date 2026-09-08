@@ -371,7 +371,7 @@ def send_research_monitor_batch(hot: list, near_stop: list) -> bool:
     }
     for attempt in range(3):
         try:
-            r = requests.post(WEBHOOK_RESEARCH, json={"embeds": [embed]}, timeout=10)
+            r = _dc_post(WEBHOOK_RESEARCH, json={"embeds": [embed]}, timeout=10)
             if r.status_code == 204:
                 return True
             if r.status_code == 429:
