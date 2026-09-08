@@ -1,0 +1,23 @@
+PAIR: NZD/CAD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 50% Fib + 4H oversold (RSI 23.5) + D1 BUY signal align on lower timeframes, but W:NEUTRAL and D1 price/MA misalignment limit conviction.
+RISK_FACTORS: Weekly remains neutral—no uptrend confirmation at macro level; OSC shows zero confluence (Stoch 24.5 weak, CCI deeply negative at −110.2)—reversal not yet confirmed by momentum triplet.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.81393
+ENTRY_TRIGGER_REASON: Confluence of D1 pin bar at key level + 4H oversold RSI (23.5) + price at 50% Fib support; enter on touch/bounce confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+1. **MTF Conflict (Confidence cap):** Weekly is NEUTRAL, Daily is BUY, 4H is BUY → only 2/3 agreement. Per MTF rule, conf=2/3 wt=60% means *downgrade to NO* on TRADE_THIS even if CONFIDENCE

@@ -1,0 +1,24 @@
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with converging ribbon and 4H bearish signal suggest weakening uptrend, but D1 neutral RSI and weak oscillator confluence prevent high-conviction entry.
+RISK_FACTORS: [1. D1 RSI at 54 is mid-range neutral — no clear exhaustion signal; price still above SMA50, golden-cross intact on D1/4H.] [2. CHF crowded long positioning near 1-year top creates reversal risk, but GBP net short at 54% is mid-range — no extreme institutional alignment to confirm downside.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.0900
+ENTRY_TRIGGER_REASON: Break below SMA50 at 1.0885 with confirmation close <1.0900 would invalidate golden-cross and confirm ribbon convergence-to-reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF Rule Check:**  
+Weekly, Daily, and Monthly are all NEUTRAL (conf=0/3). Only 4H is SELL. This fails the MTF agreement threshold (need both weekly AND daily aligned). **TRADE_THIS forced NO** regardless of
