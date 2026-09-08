@@ -717,7 +717,37 @@ def _release_lock() -> None:
 
 # ── Dashboard sender ──────────────────────────────────────────────────────────
 
-_DASHBOARD_MSG_FILE = Path("data/discord_dashboard.json")
+_DASHBOARD_MSG_FILE  = Path("data/discord_dashboard.json")
+
+
+def _record_dashboard_diagnostic(name: str, ok: bool, detail: str = "") -> None:
+    """Persist the outcome of a Discord-embed-update attempt to
+    data/discord_<name>_diagnostic.json -- a file that actually gets
+    committed, unlike the daily_*.log files (gitignored, visible only to
+    whichever single GHA run wrote them).
+
+    2026-09-09: added after discovering data/discord_dashboard.json's
+    last_dashboard_balance had been frozen since 2026-09-01 -- a full week
+    of real GHA monitor runs silently failing or skipping the fund-
+    dashboard-embed block, with the only trace ever being a log file no one
+    outside that one run could see. This makes the very next real success
+    or failure directly visible in the repo (staged by the same
+    `git add data/` wildcard every workflow already uses), without needing
+    GHA log access to find out which. `name` distinguishes the dashboard
+    embed from the adjacent closed-trades-log embed -- same risk shape,
+    same fix, separate files since they're separate attempts.
+    """
+    try:
+        path = Path(f"data/discord_{name}_diagnostic.json")
+        payload = {
+            "last_attempt_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "ok": ok,
+            "detail": detail[:2000],
+        }
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    except Exception:
+        pass
 
 def _send_dashboard(state: dict, log_fn=None) -> None:
     """Build and post (or edit) the Discord fund dashboard from a pre-computed state dict."""
@@ -3512,10 +3542,14 @@ def run(log=print) -> dict:
                 "recent_vetoed":       _dash_recent_vetoed,
             }
             _send_dashboard(state=_full_state, log_fn=log)
+            _record_dashboard_diagnostic("dashboard", True, "sent")
+        else:
+            _record_dashboard_diagnostic("dashboard", True, "skipped: discord_notifier unavailable (_dn is falsy)")
     except Exception as _dash_exc:
         import traceback as _tb_dash
         log(f"  Monitor: Discord dashboard update failed: {_dash_exc}")
         log(_tb_dash.format_exc())
+        _record_dashboard_diagnostic("dashboard", False, f"{_dash_exc}\n{_tb_dash.format_exc()}")
 
     # ── Closed trades log ─────────────────────────────────────────────────────
     try:
@@ -3658,8 +3692,13 @@ def run(log=print) -> dict:
                 loss_streak=_ct_loss_row,
             )
             log("Closed trades log updated ✅")
+            _record_dashboard_diagnostic("closed_trades", True, "sent")
+        else:
+            _record_dashboard_diagnostic("closed_trades", True, "skipped: discord_notifier unavailable (_dn is falsy)")
     except Exception as _ct_exc:
+        import traceback as _tb_ct
         log(f"Closed trades log failed: {_ct_exc}")
+        _record_dashboard_diagnostic("closed_trades", False, f"{_ct_exc}\n{_tb_ct.format_exc()}")
 
     # Item 2: Write heartbeat — checked by daily.py to detect monitor downtime
     try:
