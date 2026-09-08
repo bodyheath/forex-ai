@@ -153,6 +153,11 @@ CANDIDATE_FIELDS = [
                                      # section for why.
     "status",            # OPEN | WIN | LOSS | EXPIRED
     "opened_at", "closed_at", "exit_price", "pips", "net_pips",
+    "notes",             # 2026-09-09: free-text annotations -- currently used
+                          # only for the two pre-fix stale-grade rows (#8, #11,
+                          # see module docstring's STALE DESCRIPTIVE FIELDS
+                          # section and scripts/backfill_stale_virtual_book_
+                          # grades_sep2026.py). Blank on every other row.
 ]
 
 POSITION_FIELDS = [
