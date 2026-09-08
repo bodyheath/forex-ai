@@ -6,7 +6,7 @@ sourced from src/technical.py's daily.last_close, itself sourced from
 Yahoo's native daily bar -- while Yahoo's OWN hourly bars for the exact
 same trading day put the real close near 154.16, and the scan's own
 scan_price_snapshot.json (written moments earlier, same run) recorded the
-真 live price as 153.322. A ~290 pip (1.875% of price) gap between two
+real live price as 153.322. A ~290 pip (1.875% of price) gap between two
 data feeds from the SAME provider, for the SAME symbol, on the SAME day.
 
 This is NOT a caching bug in this repo -- confirmed via two independent,
