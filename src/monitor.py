@@ -736,7 +736,6 @@ def _send_dashboard(state: dict, log_fn=None) -> None:
         except Exception:
             pass
 
-        import requests as _req_dash
         _webhook = getattr(_dn_dash, "WEBHOOK_FUND", None)
         if not _webhook:
             try:
