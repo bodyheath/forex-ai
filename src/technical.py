@@ -9,6 +9,7 @@ API calls per pair and means the indicator definitions are explicit and auditabl
 Twelve Data's free tier (~800 calls/day, 8/min) comfortably covers this.
 """
 
+import json
 import time
 from datetime import datetime, timezone
 
@@ -23,6 +24,23 @@ _TD_URL = "https://api.twelvedata.com/time_series"
 _TIMEOUT = 30
 
 _CACHE_TTL = 24.0  # default hours (also used for daily candles)
+
+# 2026-09-08: real incident (#6987, USD/JPY) traced to Yahoo Finance's own
+# daily ("1d") bar disagreeing with its own hourly bars by ~290 pips (1.875%
+# of price) for a specific trading day -- the daily bar's close was
+# genuinely stale/wrong on Yahoo's side, not a caching issue in this repo
+# (confirmed via two independent fresh Yahoo fetches at different lookback
+# periods, both agreeing on the same wrong value). A real historical sweep
+# (scripts/yahoo_daily_hourly_discrepancy_sweep.py; 12 major/cross pairs,
+# ~4,950 real trading days over 2 years) found this daily-vs-hourly gap is
+# ROUTINELY tens of pips (median 0.27% of price, 90th percentile 0.77%) and
+# occasionally much larger (99th percentile 1.48% pooled, up to 1.88% for
+# USD/JPY specifically) -- Yahoo's daily FX data is not reliable at the
+# tens-of-pips level as a matter of course. 1.5% is calibrated to sit above
+# ordinary noise (only ~0.9% of real sampled days exceed it) while still
+# catching #6987's real 1.875% gap with margin.
+_DAILY_CLOSE_SANITY_PCT = 1.5
+_SCAN_SNAPSHOT_MAX_AGE_HOURS = 6.0  # older than this, don't trust it as "fresh"
 
 # Per-interval cache TTL.  Shorter-lived timeframes expire faster so intraday
 # scans always see fresh 4H data without hammering the API.
@@ -1286,6 +1304,50 @@ def _summarise(df: pd.DataFrame, label: str, pair: str = "") -> dict:
     }
 
 
+def _fresh_scan_price(pair: str):
+    """Return this scan's freshest live price for `pair`, or None.
+
+    Reads src/selector.py's scan_price_snapshot.json -- written before the
+    deep per-pair analysis loop runs, independent of and fresher than
+    anything technical.py fetches itself. Fails open (returns None) on any
+    missing/stale/malformed data; a missing cross-check price is not a
+    reason to block analysis, only a confirmed disagreement is.
+    """
+    try:
+        path = config.DATA_DIR / "scan_price_snapshot.json"
+        if not path.exists():
+            return None
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        age_hours = (time.time() - payload.get("timestamp", 0)) / 3600.0
+        if age_hours > _SCAN_SNAPSHOT_MAX_AGE_HOURS:
+            return None
+        price = payload.get("prices", {}).get(pair)
+        return float(price) if price else None
+    except Exception:
+        return None
+
+
+def _daily_close_sanity_check(pair: str, candidate_close: float, log=None) -> tuple:
+    """Cross-check a daily bar's close against this scan's freshest live
+    price. Returns (ok, reason) -- see _DAILY_CLOSE_SANITY_PCT's comment for
+    the real-data calibration behind the threshold. ok=True on missing data
+    (fail open); ok=False only on a confirmed, out-of-tolerance disagreement.
+    """
+    _log = log or (lambda m: None)
+    live_price = _fresh_scan_price(pair)
+    if live_price is None:
+        return True, "no fresh scan price available to cross-check against"
+    pct_diff = abs(candidate_close - live_price) / live_price * 100.0
+    if pct_diff > _DAILY_CLOSE_SANITY_PCT:
+        _log(
+            f"[technical] {pair} daily close {candidate_close} disagrees with "
+            f"this scan's live price {live_price} by {pct_diff:.2f}% "
+            f"(threshold {_DAILY_CLOSE_SANITY_PCT}%) -- treating Daily timeframe as unavailable"
+        )
+        return False, f"{pct_diff:.2f}% disagreement with live scan price {live_price}"
+    return True, f"{pct_diff:.2f}% agreement with live scan price"
+
+
 def analyse(base: str, quote: str) -> dict:
     """Return a technical summary dict for base/quote, or an error marker."""
     if not config.TWELVE_DATA_KEY:
@@ -1310,13 +1372,29 @@ def analyse(base: str, quote: str) -> dict:
         else:
             source = "Twelve Data"
         source_4h = "Yahoo Finance" if symbol in _yf_4h_sourced_pairs else "Twelve Data"
+
+        daily_summary = _summarise(daily, "Daily", pair=symbol)
+        # 2026-09-08: gate the WHOLE Daily timeframe, not just last_close --
+        # RSI/MACD/Bollinger/ATR/patterns/pivots/fibonacci/divergence/ribbon/
+        # tech_signal all derive from the same daily frame, so a bad close
+        # means all of them are suspect, not just the entry-price figure.
+        if isinstance(daily_summary, dict) and daily_summary.get("last_close") is not None:
+            _ok, _reason = _daily_close_sanity_check(symbol, daily_summary["last_close"])
+            if not _ok:
+                daily_summary = {
+                    "timeframe": "Daily",
+                    "status": "insufficient data",
+                    "candle_count": len(daily),
+                    "anomaly": _reason,
+                }
+
         return {
             "status":    "ok",
             "source":    source,
             "source_4h": source_4h,
             "monthly":   _summarise(monthly, "Monthly", pair=symbol),
             "weekly":    _summarise(weekly,  "Weekly",  pair=symbol),
-            "daily":     _summarise(daily,   "Daily",   pair=symbol),
+            "daily":     daily_summary,
             "4h":        _summarise(four_h,  "4-Hour",  pair=symbol),
         }
     except Exception as exc:  # noqa: BLE001 - degrade gracefully
