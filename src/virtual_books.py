@@ -446,17 +446,46 @@ def evaluate_candidates(
         if not (entry and stop and direction in ("BUY", "SELL")):
             continue
 
+        qg = quality_grades.get(pair) or {}
+        mtf = (r.get("bundle") or {}).get("mtf") or {}
+
         existing = _find_today_candidate(candidates, pair, direction, date_str)
         if existing is not None:
             candidate_id = int(existing["id"])
             candidate_row = existing
+            # 2026-09-09: refresh the DESCRIPTIVE fields (grade/confidence/
+            # eff_conf/da_grade_before/rr/mtf_agreeing_count/dd_mode/
+            # conf_threshold) on every same-day re-evaluation, not just at
+            # first creation. Confirmed real: a pair re-analysed later the
+            # same Auckland day (bypassing the 10-pip skip-cache) can get a
+            # materially different grade -- AUD/NZD SELL on 2026-09-07 was
+            # created with grade=F (correctly rejected by every grade-
+            # respecting book at that moment), then admitted into
+            # B_conf6_rr15/D_no_da 11 hours later and into A_control/
+            # C_grade_based/E_no_dd_gate 17 hours later, on re-analyses
+            # whose real grades must have cleared each book's own bar (the
+            # hard F-floor in _dd_allows_trade() is correctly enforced --
+            # confirmed by reading that function directly) -- but the STORED
+            # row kept showing "F" forever, because only entry/stop_loss/
+            # t2_price/status/opened_at were ever frozen at creation and
+            # everything else was never touched again. This does NOT touch
+            # entry/stop_loss/t2_price -- those define the shared mechanical
+            # trade every book settles its own P&L against once ANY book has
+            # a position in this candidate, and must never change after the
+            # fact.
+            candidate_row["confidence"]         = parsed.get("confidence", candidate_row.get("confidence", ""))
+            candidate_row["eff_conf"]           = round(eff_conf_fn(r), 2)
+            candidate_row["grade"]              = qg.get("grade", candidate_row.get("grade", ""))
+            candidate_row["da_grade_before"]    = qg.get("da_grade_before", candidate_row.get("da_grade_before", ""))
+            candidate_row["rr"]                 = qg.get("rr", candidate_row.get("rr", ""))
+            candidate_row["mtf_agreeing_count"] = mtf.get("agreeing_count", candidate_row.get("mtf_agreeing_count", ""))
+            candidate_row["dd_mode"]            = dd_mode
+            candidate_row["conf_threshold"]     = conf_threshold
         else:
             target_raw = float(parsed.get("target") or 0)
             _, t2_price, _ = cascade.compute_levels(entry, stop, target_raw, direction)
             if t2_price is None:
                 continue
-            qg = quality_grades.get(pair) or {}
-            mtf = (r.get("bundle") or {}).get("mtf") or {}
             candidate_id = _next_id(candidates)
             candidate_row = {
                 "id": candidate_id,
