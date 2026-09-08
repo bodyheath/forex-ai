@@ -185,7 +185,8 @@ class TestAnalyseGatesWholeDailyTimeframe(unittest.TestCase):
         with patch.object(technical, "_td_request", side_effect=fake_td_request):
             result = technical.analyse("USD", "JPY")
 
-        self.assertEqual(result["daily"]["status"], "ok"[:0] or result["daily"].get("timeframe"), "Daily")
+        self.assertEqual(result["daily"].get("timeframe"), "Daily")
+        self.assertNotIn("status", result["daily"])  # only set on the insufficient-data path
         self.assertIn("last_close", result["daily"])
         self.assertIn("rsi14", result["daily"])
 
