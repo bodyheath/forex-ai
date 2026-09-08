@@ -1,8 +1,17 @@
-"""Smoke test for the 2026-09-08 removal of the COT reversal/unwind penalty
-from BOTH places it lived: daily.py's deterministic _cot_reversal_penalty()
-(removed entirely) and analyst.py's Haiku system prompt (instruction
-removed, MOM= data tag still passed through but now explicitly marked
-informational-only).
+"""Smoke test for the COT-momentum prompt instructions in analyst.py's Haiku
+system prompt, covering two separate removals against the same MOM= tag:
+
+  - 2026-09-08: the REVERSING/UNWINDING penalty (-1/-2 POSITIONING_SCORE,
+    -1 CONFIDENCE, a RISK_FACTORS mention) was removed from
+    daily.py's deterministic _cot_reversal_penalty() (deleted entirely) and
+    from analyst.py's Haiku prompt (instruction removed, MOM= tag still
+    passed through but now explicitly marked informational-only).
+  - 2026-09-08 (systemic audit): BUILDING's separate +1 POSITIONING_SCORE
+    instruction was ALSO downgraded to informational-only, after a real
+    walk-forward backtest (scripts/extreme_flag_and_building_boost_backtest.py)
+    found no aggregate edge for it -- leaning backwards at 20 days, with
+    individual currencies disagreeing in sign. All four MOM= values
+    (BUILDING/STABLE/UNWINDING/REVERSING) are now informational-only.
 
 IMPORTANT, same honest framing as the Sentiment Agent's live-only
 validation: this is a STRUCTURAL check, not an empirical re-backtest of
@@ -52,14 +61,20 @@ class TestHaikuPromptNoLongerPenalisesCotReversal(unittest.TestCase):
         self.assertIn("informational context", prompt)
         self.assertIn("do NOT adjust POSITIONING_SCORE or CONFIDENCE", prompt)
 
-    def test_building_and_stable_instructions_untouched(self):
-        # Only the REVERSING/UNWINDING penalty was backtested and removed --
-        # BUILDING's +1 boost and STABLE's no-op were never investigated or
-        # requested for removal, so they must survive unchanged.
+    def test_building_boost_removed(self):
+        # BUILDING's +1 POSITIONING_SCORE instruction was investigated and
+        # found empirically unsupported (2026-09-08 systemic audit) -- it
+        # must no longer appear as a scored instruction.
         prompt = analyst._haiku_system_prompt()
-        self.assertIn("BUILDING=institutions increasing conviction in current direction: "
-                      "raise POSITIONING_SCORE +1", prompt)
-        self.assertIn("STABLE=no significant change: no adjustment", prompt)
+        self.assertNotIn("BUILDING=institutions increasing conviction in current direction: "
+                         "raise POSITIONING_SCORE +1", prompt)
+        self.assertNotIn("raise POSITIONING_SCORE +1", prompt)
+
+    def test_all_four_mom_values_marked_informational_only(self):
+        prompt = analyst._haiku_system_prompt()
+        for value in ("BUILDING", "STABLE", "UNWINDING", "REVERSING"):
+            self.assertIn(value, prompt)
+        self.assertIn("informational context only", prompt)
 
     def test_mom_tag_still_flows_through_for_real_historical_reversing_cases(self):
         # Real historical firing instances from the backtest -- Haiku must

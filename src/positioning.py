@@ -386,9 +386,9 @@ def _for_currency(ccy: str) -> dict:
     hi, lo = max(nets), min(nets)
     pct_of_range = (latest - lo) / (hi - lo) * 100 if hi != lo else 50.0
     if pct_of_range >= 85:
-        extreme = "net positioning near the TOP of its ~1y range (crowded long, reversal risk)"
+        extreme = "net positioning near TOP of ~1y range (crowded long — reversal-risk unconfirmed)"
     elif pct_of_range <= 15:
-        extreme = "net positioning near the BOTTOM of its ~1y range (crowded short, reversal risk)"
+        extreme = "net positioning near BOTTOM of ~1y range (crowded short — reversal-risk unconfirmed)"
     else:
         extreme = "net positioning mid-range (not extreme)"
 

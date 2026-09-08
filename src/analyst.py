@@ -260,8 +260,8 @@ def _compress_bundle(pair: str, bundle: dict) -> str:
     for side in ("base", "quote"):
         p = pos.get(side, {})
         if p.get("status") == "ok":
-            # extreme_flag has 3 possible values (positioning.py), longest is 79
-            # chars ("...BOTTOM of its ~1y range (crowded short, reversal risk)").
+            # extreme_flag has 3 possible values (positioning.py), longest is 84
+            # chars ("...BOTTOM of ~1y range (crowded short — reversal-risk unconfirmed)").
             # Was truncated to [:20] here, which cuts every string off before any
             # of its actual content ("net positioning nea") — silently destroying
             # the one piece of interpretive context (crowded/reversal-risk) that
@@ -389,14 +389,13 @@ def _haiku_system_prompt(threshold_override: "float | None" = None) -> str:
         "NEUTRAL=mixed. Already factored into T_sig (+2 for fully aligned in direction). "
         "Use to confirm KEY_THESIS — aligned ribbon = trend continuation, converging = reversal risk.\n"
         "COT MOMENTUM: MOM= in POS line shows institutional positioning momentum over 3 weeks "
-        "(BUILDING/STABLE/UNWINDING/REVERSING). "
-        "BUILDING=institutions increasing conviction in current direction: raise POSITIONING_SCORE +1. "
-        "STABLE=no significant change: no adjustment. "
-        "UNWINDING/REVERSING=institutions reducing or reversing a position: informational context "
-        "only — do NOT adjust POSITIONING_SCORE or CONFIDENCE for this and do NOT add it to "
-        "RISK_FACTORS (2026-09-08: a real historical backtest of this exact signal found the "
-        "previously-penalized direction's forward win rate HIGHER than baseline, not lower — "
-        "penalising it was actively wrong, not just unhelpful).\n"
+        "(BUILDING/STABLE/UNWINDING/REVERSING). All four values are informational context only — "
+        "do NOT adjust POSITIONING_SCORE or CONFIDENCE for any of them and do NOT add them to "
+        "RISK_FACTORS (2026-09-08: a real walk-forward backtest of BUILDING found no aggregate "
+        "edge, leaning backwards at 20 days, with individual currencies disagreeing in sign; a "
+        "separate backtest of the previously-penalized UNWINDING/REVERSING direction found its "
+        "forward win rate HIGHER than baseline, not lower — penalising it was actively wrong, "
+        "not just unhelpful. Neither direction has earned a scored adjustment).\n"
         "SMD: SMD= line = Smart Money Divergence −10 to +10 (institutional vs retail sentiment). "
         "Positive = institutions bullish while retail bearish (contrarian BUY edge). "
         "Negative = institutions bearish while retail bullish (contrarian SELL edge). "
