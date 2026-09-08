@@ -176,7 +176,19 @@ def get_fundamental_alignment(base_ccy: str, quote_ccy: str, direction: str) -> 
     aligned = sum(1 for s in scores if s > 0)
     opposed = sum(1 for s in scores if s < 0)
 
-    if aligned == 3:
+    if "JPY" in (base, quot):
+        # 2026-09-08 (systemic audit): a real walk-forward backtest
+        # (scripts/fundamentals_tailwind_headwind_backtest.py) found this
+        # mechanism actively backwards for every JPY cross -- 7/7 pairs lean
+        # contradicting (5 significantly), zero exceptions -- while the
+        # other 21 pairs show a genuine, strengthening-with-lag edge.
+        # Plausible real cause: JPY's carry-funding/safe-haven role
+        # decouples it from its own CB/carry/growth fundamentals. Factor
+        # scores are still computed and returned below for visibility; only
+        # the conf adjustment itself is neutralized for JPY pairs.
+        alignment = "MIXED"
+        conf_adj  = 0
+    elif aligned == 3:
         alignment = "TAILWIND"
         conf_adj  = +1
     elif opposed == 3:
