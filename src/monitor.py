@@ -1430,19 +1430,19 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
             closed_rows.append(updated)
             _online_learn_closure("main", updated)
             # Loss autopsy — analyse why this trade failed.
-            # 2026-09-08: this branch always follows a fund-trade STOP hit,
-            # which _trk.update_outcome() above was unconditionally called
-            # with "LOSS" for -- fund trades have no cascading WIN/LOSS/
-            # PARTIAL_WIN ambiguity the way research trades do (see
-            # _apply_research_milestones()'s casc_oc = _casc.cascade_outcome(...),
-            # a genuinely different function with its own real cascade
-            # states). A 2026-06-30 refactor (fda3729c) correctly replaced
-            # every other casc_oc reference in THIS function with the literal
-            # "LOSS" but missed this one and the safety-net line above --
-            # both referenced a variable that was never defined in this
-            # function's scope, guaranteeing a NameError on every real fund
-            # stop-loss processed here since that commit.
-            if True:
+            # 2026-09-08: this used to read `if casc_oc == "LOSS":`, referencing
+            # a variable that is never defined anywhere in this function --
+            # casc_oc only exists in the sibling _apply_research_milestones()
+            # (its own real cascade outcome: WIN/LOSS/PARTIAL_WIN). A
+            # 2026-06-30 refactor (fda3729c) correctly replaced every other
+            # casc_oc reference in THIS function with the literal "LOSS" --
+            # fund trades have no cascading ambiguity, a STOP hit is always a
+            # LOSS -- but missed this line and the safety-net line above,
+            # guaranteeing a NameError on every real fund stop-loss processed
+            # here since that commit. Checking updated.get("status") instead
+            # of hardcoding True keeps this honest: if update_outcome() above
+            # somehow didn't actually record LOSS, autopsy correctly skips.
+            if updated.get("status") == "LOSS":
                 log("[loss-analysis] Pure loss — running autopsy...")
                 try:
                     _loss_trade_data = dict(row)
