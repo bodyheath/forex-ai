@@ -488,6 +488,7 @@ def evaluate_candidates(
             candidate_row["mtf_agreeing_count"] = mtf.get("agreeing_count", candidate_row.get("mtf_agreeing_count", ""))
             candidate_row["dd_mode"]            = dd_mode
             candidate_row["conf_threshold"]     = conf_threshold
+            candidates_refreshed = True
         else:
             target_raw = float(parsed.get("target") or 0)
             _, t2_price, _ = cascade.compute_levels(entry, stop, target_raw, direction)
