@@ -65,16 +65,20 @@ class TestCotReversalPenaltyRemoved(unittest.TestCase):
         }
         self.assertEqual(daily._eff_conf(result), 8.0)
 
-    def test_ribbon_penalty_still_works_unaffected_by_removal(self):
-        # Confirms the removal didn't collaterally break a DIFFERENT,
-        # untouched adjustment in the same _eff_conf() cascade.
+    def test_ribbon_opposition_penalty_also_removed(self):
+        # 2026-09-08 systemic audit: the separate "-1 when ALIGNED ribbon is
+        # fully against trade direction" penalty was confirmed inert via the
+        # 43,344-row mechanical historical backtest (this exact condition is
+        # a strict subset of _trade_quality_grade()'s rib_strongly_against
+        # F-grade floor -- penalized n=0 in the tradeable population) and
+        # removed as dead code. No live decision ever depended on it.
         result = {
             "parsed": {"direction": "SELL", "confidence": 7},
             "bundle": self._bundle("quote", "STABLE", 0, ribbon="ALIGNED_BULL"),
             "pair": "EUR/USD",
             "_fundamental_alignment": {},
         }
-        self.assertEqual(daily._eff_conf(result), 6.0)
+        self.assertEqual(daily._eff_conf(result), 7.0)
 
 
 if __name__ == "__main__":
