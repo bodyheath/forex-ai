@@ -1101,6 +1101,38 @@ def build_monitor_weekly_report() -> str:
 
 # ── Candle-based milestone detection ─────────────────────────────────────────
 
+def _entry_utc(row: dict):
+    """Parse this trade's real entry timestamp (trades.csv's "timestamp"
+    field, stored UTC-naive) into an aware UTC datetime. Returns None if
+    missing/unparseable -- callers must fail open, not crash.
+    """
+    raw = str(row.get("timestamp") or "").strip()
+    if not raw:
+        return None
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y-%m-%dT%H:%M:%S"):
+        try:
+            return datetime.strptime(raw[:19], fmt).replace(tzinfo=timezone.utc)
+        except ValueError:
+            continue
+    return None
+
+
+def _candle_window_end_utc(candle_dt: str):
+    """Convert a Yahoo 1H candle's own "datetime" field (naive, Europe/London
+    local per fetch_1h_candles()) into the candle's real UTC window END (its
+    start + 1h). Returns None if unparseable.
+    """
+    if not candle_dt:
+        return None
+    try:
+        from zoneinfo import ZoneInfo
+        naive = datetime.strptime(candle_dt, "%Y-%m-%d %H:%M")
+        london = naive.replace(tzinfo=ZoneInfo("Europe/London"))
+        return london.astimezone(timezone.utc) + timedelta(hours=1)
+    except Exception:
+        return None
+
+
 def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) -> tuple:
     """Return (milestones_list, updated_row_state).
 
@@ -1111,6 +1143,17 @@ def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) ->
         pips      — pip distance from entry (None for STOP)
 
     Processes candles from oldest to newest.
+
+    2026-09-08: real incident (#6987, USD/JPY) -- a trade closed via a
+    "stop hit" on a candle whose entire window ended 5+ hours BEFORE the
+    trade's real entry timestamp, because fetch_1h_candles() always returns
+    "the last N completed hourly bars as of now" with no awareness of any
+    specific trade's entry time. Any freshly-opened trade checked on the
+    very next monitor cycle will, by construction, always be checked
+    against pre-entry candles unless this is guarded explicitly -- a brand
+    new trade can't have even one full completed post-entry hour yet.
+    Candles whose window ends before the real entry are now skipped
+    outright, regardless of what price they show.
     """
     direction = (row.get("direction") or "").upper()
     if direction not in ("BUY", "SELL"):
@@ -1121,6 +1164,7 @@ def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) ->
 
     _t2_done  = _is_true(row_state.get("t2_hit"))
     _trade_id = row_state.get("id", "")
+    _entry_ts = _entry_utc(row_state)
 
     if _t2_done:
         log(f"  Monitor: {pair} #{_trade_id} — target already hit — checking stop only")
@@ -1131,6 +1175,15 @@ def _detect_candle_milestones(row: dict, candles: list, pair: str, log=print) ->
         dt   = candle.get("datetime", "")
         if high is None or low is None:
             continue
+
+        if _entry_ts is not None:
+            _window_end = _candle_window_end_utc(dt)
+            if _window_end is not None and _window_end <= _entry_ts:
+                log(
+                    f"  Monitor: {pair} #{_trade_id} — candle {dt} ends before "
+                    f"real entry ({_entry_ts.strftime('%Y-%m-%d %H:%M:%S')} UTC) — skipping"
+                )
+                continue
 
         # BUY: profit goes up → use HIGH for targets, LOW for stop
         # SELL: profit goes down → use LOW for targets, HIGH for stop
