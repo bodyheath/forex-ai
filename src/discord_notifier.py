@@ -2189,7 +2189,7 @@ def send_loss_analysis_alert(
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
     try:
-        requests.post(webhook, json={"embeds": [embed]}, timeout=10)
+        _dc_post(webhook, json={"embeds": [embed]}, timeout=10)
     except Exception as exc:
         print(f"[loss-alert] Discord error: {exc}")
         return False
