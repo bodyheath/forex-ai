@@ -14,6 +14,53 @@ import requests
 
 DASHBOARD_STATE_FILE = Path(__file__).resolve().parent.parent / "data" / "discord_dashboard.json"
 
+
+# ── Real-send safety gate ───────────────────────────────────────────────────
+# 2026-09-08: a real Discord investigation this session nearly fired a live
+# POST/PATCH at the production fund-dashboard webhook from an interactive
+# dev sandbox that happened to have a real credential loaded via a local
+# .env, purely as a side effect of reproducing a code path to diagnose it
+# (caught before it went out, but only by chance of noticing in time).
+# Every real outbound Discord call in this module now requires this
+# explicit opt-in -- set by the actual GitHub Actions workflows
+# (.github/workflows/*.yml) alongside the webhook secrets themselves, never
+# by a local .env. Missing/unset = safe no-op everywhere else: every local
+# run, every test, every future investigation like this one.
+
+class _BlockedDiscordResponse:
+    """Duck-typed stand-in for requests.Response when a real send is
+    blocked by the DISCORD_LIVE_SEND gate. status_code=204 matches this
+    module's own success convention so a blocked send doesn't spuriously
+    trigger a caller's retry loop or error-logging path -- it just quietly
+    does nothing, loudly logged instead."""
+    status_code = 204
+    text = ""
+
+    def json(self):
+        return {}
+
+
+def _discord_live_sends_enabled() -> bool:
+    return os.environ.get("DISCORD_LIVE_SEND", "").strip().upper() in ("1", "YES", "TRUE")
+
+
+def _dc_post(url: str, **kwargs):
+    """Drop-in replacement for requests.post() to any Discord webhook URL."""
+    if not _discord_live_sends_enabled():
+        print(f"[discord-safety] BLOCKED real POST to .../{(url or '')[-6:]} "
+              f"-- set DISCORD_LIVE_SEND=YES to allow (never in a local .env)")
+        return _BlockedDiscordResponse()
+    return requests.post(url, **kwargs)
+
+
+def _dc_patch(url: str, **kwargs):
+    """Drop-in replacement for requests.patch() to any Discord webhook URL."""
+    if not _discord_live_sends_enabled():
+        print(f"[discord-safety] BLOCKED real PATCH to .../{(url or '')[-6:]} "
+              f"-- set DISCORD_LIVE_SEND=YES to allow (never in a local .env)")
+        return _BlockedDiscordResponse()
+    return requests.patch(url, **kwargs)
+
 # The pure-2R v2 strategy's actual cutover date (confirmed via cascade.py's git
 # history). calculate_fund_state()'s computed `strategy_start_date` has been
 # unreliable (it trusts the earliest CLOSED trade tagged system_version=='v2',
