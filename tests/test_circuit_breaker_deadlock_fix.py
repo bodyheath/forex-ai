@@ -203,8 +203,7 @@ class TestResetCircuitBreakerScript(unittest.TestCase):
         self.assertEqual(state["pause_until"], "2026-09-10T23:11:17")
 
     def test_confirm_without_reason_refuses(self):
-        import importlib
-        reset_script = importlib.import_module("scripts.reset_circuit_breaker")
+        from scripts import reset_circuit_breaker as reset_script
         with patch("sys.argv", ["reset_circuit_breaker.py", "--confirm"]):
             rc = reset_script.main()
         self.assertNotEqual(rc, 0)
@@ -212,8 +211,7 @@ class TestResetCircuitBreakerScript(unittest.TestCase):
         self.assertEqual(state["consecutive_losses"], 3)  # unchanged
 
     def test_confirm_with_reason_resets(self):
-        import importlib
-        reset_script = importlib.import_module("scripts.reset_circuit_breaker")
+        from scripts import reset_circuit_breaker as reset_script
         with patch("sys.argv", ["reset_circuit_breaker.py", "--confirm", "--reason", "test reset"]):
             rc = reset_script.main()
         self.assertEqual(rc, 0)
