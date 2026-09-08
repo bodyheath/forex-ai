@@ -1701,6 +1701,45 @@
           "closed_at": "2026-09-02 21:10:13",
           "backfilled": true
         }
+      },
+      {
+        "timestamp": "2026-09-08T11:11:31.073416+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -143.3,
+        "context": {
+          "id": "2996",
+          "pair": "EUR/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-08 11:11:30"
+        }
+      },
+      {
+        "timestamp": "2026-09-08T11:11:31.533722+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -160.4,
+        "context": {
+          "id": "2997",
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-08 11:11:31"
+        }
+      },
+      {
+        "timestamp": "2026-09-08T11:11:34.196342+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -81.5,
+        "context": {
+          "id": "3010",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-08 11:11:33"
+        }
       }
     ]
   },

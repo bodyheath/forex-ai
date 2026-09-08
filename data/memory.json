@@ -16,16 +16,6 @@
   },
   {
     "source": "outcome",
-    "pattern": "Triple oscillator confluence (RSI+Stoch+CCI) at Bollinger lower band with MTF alignment signals high-probability mean-re",
-    "outcome": "[WIN] EUR/HKD closed 2026-06-23 10:27:20"
-  },
-  {
-    "source": "outcome",
-    "pattern": "Never short a 5/5 bull EMA ribbon on oscillator signals alone when rate differential structurally favors USD upside.",
-    "outcome": "[LOSS] USD/CHF closed 2026-06-24 08:01:39"
-  },
-  {
-    "source": "outcome",
     "pattern": "Never SELL into a 5/5 bullish EMA fan with adverse rate differentials \u2014 oscillator exhaustion alone cannot overcome alig",
     "outcome": "[LOSS] USD/SEK closed 2026-06-23 09:01:41"
   },
@@ -115,14 +105,24 @@
     "outcome": "[EXPIRED] EUR/AUD closed 2026-08-30 21:10:58"
   },
   {
-    "source": "auto",
-    "pattern": "Overall track record to date (n=14)",
-    "outcome": "Win rate 43%, expectancy -0.08R."
+    "source": "outcome",
+    "pattern": "Never short into a 5/5 aligned bull EMA ribbon when sentiment <5 and rate differential opposes direction \u2014 trend structu",
+    "outcome": "[LOSS] AUD/NZD closed 2026-09-08 11:10:58"
+  },
+  {
+    "source": "outcome",
+    "pattern": "Skip BUY setups where EMA ribbon is 4+/5 bearish \u2014 mean-reversion signals cannot override dominant trend structure.",
+    "outcome": "[LOSS] USD/JPY closed 2026-09-08 05:31:25"
   },
   {
     "source": "auto",
-    "pattern": "Setups taken at confidence >= 7 (n=9 closed trades)",
-    "outcome": "Win rate 33%, expectancy -0.08R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
+    "pattern": "Overall track record to date (n=16)",
+    "outcome": "Win rate 38%, expectancy -0.22R."
+  },
+  {
+    "source": "auto",
+    "pattern": "Setups taken at confidence >= 7 (n=11 closed trades)",
+    "outcome": "Win rate 27%, expectancy -0.28R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
   },
   {
     "source": "auto",
@@ -131,12 +131,12 @@
   },
   {
     "source": "auto",
-    "pattern": "BUY setups (n=6 closed trades)",
-    "outcome": "Win rate 33%, expectancy +0.48R. This segment has been profitable overall (positive expectancy) - a point in its favour, but still demand full confluence."
+    "pattern": "BUY setups (n=7 closed trades)",
+    "outcome": "Win rate 29%, expectancy +0.11R. This segment has been profitable overall (positive expectancy) - a point in its favour, but still demand full confluence."
   },
   {
     "source": "auto",
-    "pattern": "SELL setups (n=8 closed trades)",
-    "outcome": "Win rate 50%, expectancy -0.29R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
+    "pattern": "SELL setups (n=9 closed trades)",
+    "outcome": "Win rate 44%, expectancy -0.37R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
   }
 ]

@@ -106,5 +106,23 @@
     "analysis": "## EUR/AUD BUY \u2014 Post-Mortem Analysis\n\nThe **Fundamental score of 4/10** was the clearest warning sign that was critically underweighted relative to the Positioning score of 7, which likely drove the confidence rating higher than warranted \u2014 a Fundamental score this low on a currency pair so sensitive to RBA policy and Australian commodity dynamics should have been a near-automatic disqualifier for a long entry. The asymmetry between strong positioning signals and weak fundamental backing is a classic trap where institutional positioning was already unwinding *into* the direction of the trade recommendation, meaning the \"smart money\" reading was misinterpreted. A macro or RBA-related catalyst (scoring only 5/10) almost certainly accelerated the move against the position between August 26\u201330, a period prone to end-of-month institutional rebalancing flows that frequently punish technically-motivated AUD trades. The sentiment score of 6 combined with a below-neutral fundamental backdrop should have flagged that any bullish EUR/AUD case lacked the fundamental conviction needed to hold through adverse news flow, and the trade should have been skipped or sized to near-zero.\n\nPATTERN: Skip BUY on AUD pairs when Fundamental <5 and Macro <6 \u2014 weak fundamentals won't survive RBA/commodity shocks.",
     "pattern_rule": "Skip BUY on AUD pairs when Fundamental <5 and Macro <6 \u2014 weak fundamentals won't survive RBA/commodity shocks.",
     "analysed_at": "2026-08-30 21:11:07"
+  },
+  {
+    "id": "6895",
+    "pair": "AUD/NZD",
+    "status": "LOSS",
+    "r_multiple": -1.0,
+    "analysis": "## What Went Wrong\n\nThe most critical failure was underweighting the bullish EMA ribbon structure \u2014 a 5/5 aligned golden-cross fan is a dominant structural signal that historically overwhelms short-term oscillator exhaustion readings, yet it was rationalized away rather than treated as a hard counter-signal. The sentiment score of 4/10 and positioning score of 5/10 were both below neutral, providing no confirmation for the SELL, which should have been disqualifying given the trade was already fighting the trend and the rate differential. The +1.78% rate differential explicitly favoring AUD was a fundamental tailwind directly opposing the short, meaning two major non-technical layers (fundamentals + sentiment) were aligned against the trade direction while only technicals supported it. The warning sign that should have prevented this trade was already written in the risk factors \u2014 when your own analysis identifies a \"path of least resistance\" opposing your direction, a 7/10 confidence rating is unjustifiably high and the trade should have been passed.\n\nPATTERN: Never short into a 5/5 aligned bull EMA ribbon when sentiment <5 and rate differential opposes direction \u2014 trend structure trumps oscillators.",
+    "pattern_rule": "Never short into a 5/5 aligned bull EMA ribbon when sentiment <5 and rate differential opposes direction \u2014 trend structu",
+    "analysed_at": "2026-09-08 11:11:09"
+  },
+  {
+    "id": "6987",
+    "pair": "USD/JPY",
+    "status": "LOSS",
+    "r_multiple": "-1.0",
+    "analysis": "## What Went Wrong\n\nThe most critical missed signal was the EMA ribbon showing 4/5 bearish alignment, which was explicitly flagged as a risk factor but then underweighted in favor of the oversold RSI and pin bar setup \u2014 a classic case of confirmation bias toward the technical buy thesis. The sentiment score of 4/10 and the BOJ volatility warning in the news alert were both present but dismissed, and given the trade closed just 16 minutes after opening, a sharp news-driven JPY spike almost certainly overwhelmed the technical setup before price could even approach the entry zone's logical support. The fundamental carry disadvantage (JPY rate rising vs. USD flat) compounded the directional headwind, meaning three independent layers \u2014 sentiment, fundamental, and EMA structure \u2014 were all aligned bearish while only the technical oscillator layer justified the buy. The warning sign that should have prevented this trade was the explicit 4/5 bearish EMA ribbon: when the trend-following indicator contradicts the mean-reversion signal this strongly, a 7/10 confidence rating is inflated and the trade should have been skipped or reduced to a limit order strictly at the pin bar low rather than a market entry.\n\nPATTERN: Skip BUY setups where EMA ribbon is 4+/5 bearish \u2014 mean-reversion signals cannot override dominant trend structure.",
+    "pattern_rule": "Skip BUY setups where EMA ribbon is 4+/5 bearish \u2014 mean-reversion signals cannot override dominant trend structure.",
+    "analysed_at": "2026-09-08 11:11:17"
   }
 ]
