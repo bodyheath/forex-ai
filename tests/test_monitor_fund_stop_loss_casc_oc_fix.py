@@ -72,7 +72,6 @@ class TestFundStopLossCascOcFix(unittest.TestCase):
         self._fund_state_json = tmp_root / "fund_state.json"
         self._milestone_log = tmp_root / "milestone_log.json"
 
-        tracker._write_all.__globals__  # no-op, keeps linters happy about usage
         self._patchers = [
             patch.object(config, "TRADES_CSV", self._trades_csv),
             patch.object(financials, "TRADES_CSV", self._trades_csv),
