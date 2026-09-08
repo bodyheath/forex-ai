@@ -1304,6 +1304,50 @@ def _summarise(df: pd.DataFrame, label: str, pair: str = "") -> dict:
     }
 
 
+def _fresh_scan_price(pair: str):
+    """Return this scan's freshest live price for `pair`, or None.
+
+    Reads src/selector.py's scan_price_snapshot.json -- written before the
+    deep per-pair analysis loop runs, independent of and fresher than
+    anything technical.py fetches itself. Fails open (returns None) on any
+    missing/stale/malformed data; a missing cross-check price is not a
+    reason to block analysis, only a confirmed disagreement is.
+    """
+    try:
+        path = config.DATA_DIR / "scan_price_snapshot.json"
+        if not path.exists():
+            return None
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        age_hours = (time.time() - payload.get("timestamp", 0)) / 3600.0
+        if age_hours > _SCAN_SNAPSHOT_MAX_AGE_HOURS:
+            return None
+        price = payload.get("prices", {}).get(pair)
+        return float(price) if price else None
+    except Exception:
+        return None
+
+
+def _daily_close_sanity_check(pair: str, candidate_close: float, log=None) -> tuple:
+    """Cross-check a daily bar's close against this scan's freshest live
+    price. Returns (ok, reason) -- see _DAILY_CLOSE_SANITY_PCT's comment for
+    the real-data calibration behind the threshold. ok=True on missing data
+    (fail open); ok=False only on a confirmed, out-of-tolerance disagreement.
+    """
+    _log = log or (lambda m: None)
+    live_price = _fresh_scan_price(pair)
+    if live_price is None:
+        return True, "no fresh scan price available to cross-check against"
+    pct_diff = abs(candidate_close - live_price) / live_price * 100.0
+    if pct_diff > _DAILY_CLOSE_SANITY_PCT:
+        _log(
+            f"[technical] {pair} daily close {candidate_close} disagrees with "
+            f"this scan's live price {live_price} by {pct_diff:.2f}% "
+            f"(threshold {_DAILY_CLOSE_SANITY_PCT}%) -- treating Daily timeframe as unavailable"
+        )
+        return False, f"{pct_diff:.2f}% disagreement with live scan price {live_price}"
+    return True, f"{pct_diff:.2f}% agreement with live scan price"
+
+
 def analyse(base: str, quote: str) -> dict:
     """Return a technical summary dict for base/quote, or an error marker."""
     if not config.TWELVE_DATA_KEY:
