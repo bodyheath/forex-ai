@@ -1,0 +1,24 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern with 4H pin bar rejection and monthly downtrend structure override conflicting daily BUY signal, but weak momentum (MACD near zero, RSI mid-range, OSC no confluence) and misaligned MTF (only 1/3 directional agreement) severely limit conviction.
+RISK_FACTORS: [1. MTF rejection: daily BUY conflicts with monthly SELL and 4H SELL; weekly neutral provides no support — entry risks immediate reversal on daily continuation above 1.8840. 2. Oscillator void: Stochastic, CCI, and RSI provide no directional confluence; MACD crossover history unclear — no reversal confirmation signal present.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.8650
+ENTRY_TRIGGER_REASON: Break below double-top neckline (~1.8650) with confirmation of 4H pin bar rejection and re-entry into range support.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- D1 T_sig=BUY_4 but PAT=double_top:bea (bearish) creates

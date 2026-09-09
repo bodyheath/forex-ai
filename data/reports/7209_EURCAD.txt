@@ -1,0 +1,23 @@
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + RSI 42 (neutral-to-lower zone) offers a pullback BUY setup, but MTF conflict (M:SELL vs D:BUY, conf=1/3), mixed ribbon (LEANING_BEAR), and no oscillator confluence severely limit conviction.
+RISK_FACTORS: (1) MTF disagreement (monthly bearish, daily bullish) fails the 2/3 agreement rule — trade direction is contested; (2) Ribbon LEANING_BEAR (4/5 aligned downside) contradicts BUY thesis and suggests downtrend continuation risk.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.5980
+ENTRY_TRIGGER_REASON: Pullback to daily support near SL (1.60028) + Fibonacci 38.2% level (~1.5985) with RSI re-entry <35 would strengthen confluence and MTF alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+• **MTF rule violation:** M:SELL + D:BUY + 4H:SELL = 1/3 agreement (D only). Confidence cap at 5 unless both weekly AND

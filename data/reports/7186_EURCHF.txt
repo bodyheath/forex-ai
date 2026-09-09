@@ -1,0 +1,23 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (26p/4pt) + moderately overbought stochastic (76.9) conflict with bullish ribbon alignment and uptrend structure; MTF neutrality blocks conviction trade.
+RISK_FACTORS: [1] MTF all-neutral (M/W/D/4H show no directional agreement) violates core MTF rule — conf <2/3 means TRADE_THIS must be NO regardless of other signals. [2] Price at 100% Fibonacci retracement (0.94093) and aligned bullish ribbon (5/5 EMA stack) create strong technical support for continuation — divergence + overbought setup may fail to deliver.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly, daily, and 4H timeframes all neutral (0/3 agreement). Trade blocked by framework requirement: weekly AND daily must both agree on direction before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+1. **Technical (4/10):** T_sig=SELL_3 provides a baseline, but RSI 59.9 (D1) and 57.3
