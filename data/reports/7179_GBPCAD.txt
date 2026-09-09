@@ -1,0 +1,18 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Mixed MTF signals (M:SELL vs D:BUY, conf=1/3) with dual bearish patterns (double_top D1 + pin_bar 4H) conflict against D1 BUY_4 signal; oversold RSI 39.7–43.4 lacks oscillator confirmation; GBP/CAD recovery vs falling CAD fundamentals creates ambiguity.
+RISK_FACTORS: [1. MTF agreement fails (conf=1/3 << 2/3 threshold): Weekly neutral + Monthly sell weaken conviction despite D1 BUY_4 — trade-able only post-breakout confirmation. 2. Bearish candle patterns (double_top D1, pin_bar 4H at key level) contradict D1 signal directionality — reversal trap risk if price fails to hold above 1.8840 SMA50.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.8633
+ENTRY_TRIGGER_REASON: Break below FIB swing low (SL 1.86326) with close below D1 SMA50 (1.8840) to confirm double_top completion and pin_bar rejection.
+ENTRY_

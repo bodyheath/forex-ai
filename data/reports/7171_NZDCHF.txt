@@ -1,0 +1,22 @@
+PAIR: NZD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 78.6% Fib + bullish RSI divergence and D1 uptrend structure provide confluence, but mixed MTF (W:NEUTRAL, D:NEUTRAL) and weak 4H RSI(29.7) create conflicting signals.
+RISK_FACTORS: [1. MTF alignment fails critical rule: W and D both NEUTRAL, 4H in downtrend with death-cross — no two timeframes agree on direction (conf=0/3), violating TRADE_THIS gate. 2. CHF net SHORT crowded at 88% with MOM=UNWINDING raises reversal risk; NZD positioning stale (1681d) provides no fresh institutional flow.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.47481
+ENTRY_TRIGGER_REASON: Fib 78.6% support + pin bar + bullish RSI divergence (7p/11pt) confluence at exact level; wait for pullback to confirm before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**DETAILED SCORING BREAKDOWN:**
+
+**TECHNICAL (5/10):**
+- D1 RSI=49.7 (NEUTRAL tier 3
