@@ -195,11 +195,17 @@ def fetch_4h_candles(pair: str, n_candles: int, log=print) -> dict | None:
     }
 
 
-def fetch_1h_candles(pair: str, n_candles: int, log=print) -> dict | None:
+def fetch_1h_candles(pair: str, n_candles: int, log=print, period: str = "2d") -> dict | None:
     """Fetch 1H candles from Yahoo Finance for pair.
 
-    Fetches 7 days of 1H bars and returns the last n_candles bars in Twelve
-    Data time_series format (newest-first). Returns None on any failure.
+    Fetches `period` of 1H bars (2 days by default -- the normal per-run
+    window, confirmed empirically to hold real data well beyond that: a 60d
+    request returns ~83 days of real span with no sign of truncation) and
+    returns the last n_candles bars in Twelve Data time_series format
+    (newest-first). Pass a wider `period` (and a matching larger n_candles,
+    or the extra history is discarded by the .tail() below) for a one-time
+    post-outage catch-up fetch -- see src/monitor.py's gap-detection logic.
+    Returns None on any failure.
     """
     try:
         import yfinance as yf
@@ -211,7 +217,7 @@ def fetch_1h_candles(pair: str, n_candles: int, log=print) -> dict | None:
 
     try:
         ticker = yf.Ticker(symbol)
-        df = ticker.history(period="2d", interval="1h", auto_adjust=True)
+        df = ticker.history(period=period, interval="1h", auto_adjust=True)
     except Exception as exc:
         log(f"[YF-1H] 1H fetch failed for {symbol} ({pair}): {exc}")
         return None

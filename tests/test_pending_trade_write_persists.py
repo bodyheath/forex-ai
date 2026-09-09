@@ -18,7 +18,6 @@ has ever completed activation through this path, so this was a live but
 apparently never-yet-exercised bug rather than one that has already cost
 real money.
 """
-import json
 import os
 import tempfile
 import unittest
@@ -45,11 +44,21 @@ class TestPendingTradeWritePersists(unittest.TestCase):
         self._orig_cwd = os.getcwd()
         os.chdir(self._tmpdir.name)
         Path("data").mkdir(exist_ok=True)
-        # consecutive_losses < 3 so the (unrelated) circuit-breaker re-check
-        # in this function doesn't block the activation this test exercises.
-        Path("data/fund_state.json").write_text(
-            json.dumps({"consecutive_losses": 0}), encoding="utf-8"
+        # fund_state.load() reads from config.DATA_DIR (anchored to the real
+        # repo, not cwd) -- a raw fixture file here would silently be
+        # bypassed in favor of whatever this machine's real fund_state.json
+        # currently contains (real incident: this test originally wrote a
+        # local fixture and passed only by coincidence, then failed once
+        # merged alongside the is_trading_blocked() gate fix, because the
+        # real fund_state.json has a real pause_until in effect right now).
+        # Mock the gate directly instead so this test never depends on live
+        # production state.
+        self._fs_patcher = patch("src.fund_state.load", return_value={})
+        self._blocked_patcher = patch(
+            "src.fund_state.is_trading_blocked", return_value=(False, "", "")
         )
+        self._fs_patcher.start()
+        self._blocked_patcher.start()
         row = {c: "" for c in _TRADES_COLUMNS}
         row.update({
             "id": 9001,
@@ -70,6 +79,8 @@ class TestPendingTradeWritePersists(unittest.TestCase):
         )
 
     def tearDown(self):
+        self._fs_patcher.stop()
+        self._blocked_patcher.stop()
         os.chdir(self._orig_cwd)
         self._tmpdir.cleanup()
 
