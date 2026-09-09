@@ -2213,7 +2213,7 @@ def _check_pending_trades(prices: dict, log_fn=None) -> list:
         })
 
     if activated or cancelled:
-        if _awc_pend(df, "data/trades.csv"):
+        if _awc_pend("data/trades.csv", df):
             _log(f"[pending] Saved: {len(activated)} activated {len(cancelled)} cancelled/expired")
         for act in activated:
             _log(
