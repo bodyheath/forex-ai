@@ -42,3 +42,12 @@ data/_test_correlation_matrix.json
 data/*.pkl
 data/fund_online_model.pkl
 data/online_model.pkl
+
+# 2026-09-09: monitor.py's inter-process lock file — must never be
+# committed. It's meant to live only within a single GHA run's ephemeral
+# checkout; if a crash/timeout ever leaves it behind and a workflow's
+# `git add data/` wildcard sweeps it into a commit, every future run's
+# fresh checkout re-materializes it with a brand-new mtime, permanently
+# wedging every subsequent monitor run (see src/monitor.py _try_acquire_lock
+# for the real incident this caused on 2026-09-08/09).
+data/monitor.lock
