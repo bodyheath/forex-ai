@@ -679,7 +679,10 @@ def _try_acquire_lock(log=print) -> bool:
         None if file already exists, True if non-FileExistsError (proceed anyway)."""
         try:
             fd = os.open(str(_LOCK_FILE), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-            os.write(fd, str(os.getpid()).encode())
+            os.write(fd, json.dumps({
+                "pid": os.getpid(),
+                "acquired_at_utc": datetime.now(timezone.utc).isoformat(),
+            }).encode())
             os.close(fd)
             return True
         except FileExistsError:
@@ -691,20 +694,48 @@ def _try_acquire_lock(log=print) -> bool:
     if result is True:
         return True
 
-    # Lock file exists — check age
+    # Lock file exists — check age using the wall-clock timestamp embedded in
+    # the lock's own content, not filesystem mtime.
+    #
+    # 2026-09-09: mtime is meaningless for staleness here. GHA does a fresh
+    # `git checkout` every run, so if monitor.lock ever ends up committed to
+    # the repo (e.g. a run crashes or is killed by the workflow timeout after
+    # acquiring the lock but before _release_lock() runs, and the workflow's
+    # `git add data/` wildcard sweeps it up), every subsequent run's checkout
+    # re-materializes that file with a brand-new "just written" mtime —
+    # permanently defeating this staleness check regardless of how old the
+    # lock really is. Confirmed real incident: exactly this happened at
+    # 2026-09-08 05:31 UTC, silently wedging every between-scan monitor run
+    # (dashboard updates, closed-trades log, heartbeat, and — the serious
+    # part — real open fund positions no longer being checked for stop/
+    # target hits between full scans) for ~20 hours / dozens of runs, with
+    # zero trace anywhere because the code path was never an exception, just
+    # an intentional "lock held, skip" early return. Storing the acquisition
+    # time inside the lock's own content sidesteps mtime entirely, so this
+    # can't recur even if the file is ever accidentally committed again.
+    age = None
     try:
-        age = time.time() - _LOCK_FILE.stat().st_mtime
-        if age > _LOCK_TIMEOUT:
-            try:
-                _LOCK_FILE.unlink()
-            except OSError as _unlink_err:
-                log(f"Monitor: stale lock ({age:.0f}s) removal failed: {_unlink_err} — skipping run")
-                return False
-            log(f"Monitor: stale lock ({age:.0f}s old) removed — re-acquiring")
-            # Single direct retry; no recursion
-            return _create_lock() is True
+        _lock_payload = json.loads(_LOCK_FILE.read_text(encoding="utf-8"))
+        _acquired_at = datetime.fromisoformat(_lock_payload["acquired_at_utc"])
+        age = (datetime.now(timezone.utc) - _acquired_at).total_seconds()
     except Exception:
-        pass
+        # Unreadable or pre-2026-09-09 legacy content (bare PID, no
+        # timestamp) — fall back to mtime rather than assume either fresh
+        # or stale.
+        try:
+            age = time.time() - _LOCK_FILE.stat().st_mtime
+        except Exception:
+            age = None
+
+    if age is not None and age > _LOCK_TIMEOUT:
+        try:
+            _LOCK_FILE.unlink()
+        except OSError as _unlink_err:
+            log(f"Monitor: stale lock ({age:.0f}s) removal failed: {_unlink_err} — skipping run")
+            return False
+        log(f"Monitor: stale lock ({age:.0f}s old) removed — re-acquiring")
+        # Single direct retry; no recursion
+        return _create_lock() is True
     return False
 
 
