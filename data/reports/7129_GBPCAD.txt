@@ -1,0 +1,22 @@
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 39.7 (oversold in mixed trend) + positive rate differential favours GBP, but weak MTF alignment (1/3: D:BUY vs M:SELL/W:NEUTRAL) and double-top bearish candle pattern create conflicting signals.
+RISK_FACTORS: [1] MTF confidence only 1/3 (monthly SELL opposes daily BUY); monthly downtrend context overrides single daily buy signal. [2] D1 double-top bearish pattern contradicts RSI oversold bounce narrative; price well below both SMA50 (1.8840) and FIB swing SH (1.9041) — limited near-term upside without breakout.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 1.8840
+ENTRY_TRIGGER_REASON: Break above D1 SMA50 (1.8840) with D1+4H trend alignment would restore uptrend structure and override monthly sell bias.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE:**
+
+**MTF Rule Violation (Hard Stop):**
+- Weekly: NEUTRAL, Monthly: SELL, Daily: BU

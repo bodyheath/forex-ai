@@ -1,0 +1,24 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: T_sig SELL_3 conflicts with bullish double_bottom pattern and neutral MTF; price consolidated 9p above 50% Fib, no directional conviction.
+RISK_FACTORS: [1. All MTF timeframes neutral (M/W/D/4H conf=0/3) — no confluence; entry lacks directional bias. 2. Double_bottom candlestick pattern bullish but contradicts T_sig; RSI 56.0 mid-neutral range with stochastic 60.2 near overbought, limiting downside margin.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF conf 0/3 violates minimum consensus rule (weekly+daily must both agree). Pattern-signal conflict + oscillator=NONE prevent reliable entry. Wait for MTF alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+- **MTF rule BLOCKS trade:** W:NEUTRAL, D:NEUTRAL, M:NEUTRAL, 4H:NEUTRAL = 0/3 agreement. Hard rule requires weekly AND daily both directional; neither is. TRADE_THIS forced NO regardless of T_sig.
+-

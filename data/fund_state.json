@@ -56,7 +56,24 @@
   "weekly_start_date": "",
   "observation_mode": false,
   "observation_mode_until": null,
-  "missed_opportunities": [],
+  "missed_opportunities": [
+    {
+      "pair": "USD/JPY",
+      "direction": "BUY",
+      "confidence": 9.0,
+      "checklist_score": 5.0,
+      "blocked_reason": "pause",
+      "timestamp": "2026-09-09T17:18:22"
+    },
+    {
+      "pair": "CHF/JPY",
+      "direction": "BUY",
+      "confidence": 8.0,
+      "checklist_score": 5.0,
+      "blocked_reason": "pause",
+      "timestamp": "2026-09-09T17:18:22"
+    }
+  ],
   "sizing_reason": "Drawdown caution \u2014 fund 3.1% from peak (0.75% risk)",
   "weekend_alert_sent_date": null,
   "drawdown_paused": false,
