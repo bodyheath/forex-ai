@@ -1,0 +1,16 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI oversold (39.7) with bearish double-top pattern conflicts with T_sig=BUY_4; MTF disagree (M:SELL vs D:BUY, conf=1/3) blocks high-confidence entry; CAD rate falling supports weakness but GBP/CAD range-bound with neutral ribbon (3/5 aligned).
+RISK_FACTORS: [1] MTF disagreement (conf=1/3 <<7 threshold) — weekly neutral fails to confirm daily, invalidating trend conviction. [2] D1 price 1.8699 sits 14.1p above SL (1.86326), risking false breakout below FIB SL if range breaks lower; double-top may fail if price reclaims 1.8840 SMA50.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF confidence 40% (1/3 agreement) falls far below 67% (2/3) required; TECHNICAL_SCORE=4 (RSI oversold but D1 T_sig=BUY conflicts with PAT bearish signal) does not meet ≥3 hard floor for RSI+

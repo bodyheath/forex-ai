@@ -1,0 +1,23 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: T_sig=SELL_3 with double-bottom bullish pattern creates directional conflict; RSI neutral (56), no oscillator confluence, all MTF neutral—high uncertainty setup.
+RISK_FACTORS: [1. MTF unanimously NEUTRAL (M/W/D/4H all 0/3 agreement) = no directional conviction; reversal risk high. 2. Candle PAT shows bullish signals (double_bottom + pin_bar_at_key_level) contradicting T_sig=SELL_3 baseline—signal conflict reduces reliability.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Confidence < 7 threshold. MTF conf=0/3 (no weekly or daily alignment) violates MTF rule. PAT bullish bias conflicts with T_sig SELL bias. Insufficient confluence to execute.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+1. **MTF Failure**: All timeframes neutral (M/W/D/4H = NEUTRAL). MTF rule requires weekly AND daily to agree; here both are NEUTRAL with 0/3 confidence. This alone triggers TRADE_THIS=NO

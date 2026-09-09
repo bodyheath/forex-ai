@@ -1,0 +1,24 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (38p/4pt) at resistance confirms D1 T_sig=SELL_3, but MTF alignment (W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL) breaks momentum — trade is low-conviction.
+RISK_FACTORS: [1. MTF conf=0/3 (all timeframes neutral) contradicts sell signal — TRADE_THIS rule requires weekly+daily agreement; this setup lacks both. 2. CHF positioning deeply crowded long (88% SHORT, near 1y TOP) creates reversal-risk headwind if institutional unwinding falters.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.5854
+ENTRY_TRIGGER_REASON: Bearish engulfing + bearish RSI divergence at 100.0% Fib resistance (0.58604); break below recent candle low confirms reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+1. **TECHNICAL_SCORE: 4/10**  
+   - D1 T_sig=SELL_3 is baseline (score 3), boosted by bearish RSI divergence (+1 = 4
