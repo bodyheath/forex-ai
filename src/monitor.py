@@ -746,6 +746,59 @@ def _release_lock() -> None:
         pass
 
 
+def _compute_catchup_window(log=print) -> tuple[str | None, int]:
+    """Return (period, n_candles) for this run's OHLCV fetch.
+
+    Normally (None, _OHLCV_CANDLES) — the standard trailing window. Widened
+    only when the gap since the last successful run exceeds that window.
+
+    2026-09-09: the normal 6-hour candle window (like the monitor.lock
+    staleness check it sits next to) silently assumes monitor.py has been
+    running continuously. A real ~20-hour outage (see the monitor.lock
+    incident this same day) proved that assumption wrong: the next run
+    after a gap only ever looks at the last 6 hours "as of now", so any
+    stop/target level touched and reversed *before* that trailing window
+    is permanently invisible — no exception, no trace, just silence.
+
+    Gap is measured off heartbeat.json's own last_monitor_run content, not
+    any filesystem timestamp — the exact same class of bug (mtime resets
+    on every fresh GHA checkout) is what let the lock bug go undetected
+    for 20 hours in the first place; a value read from committed file
+    content can't be reset by a checkout the way mtime can.
+    """
+    try:
+        if not _HEARTBEAT_FILE.exists():
+            return None, _OHLCV_CANDLES
+        _hb_prev = json.loads(_HEARTBEAT_FILE.read_text(encoding="utf-8"))
+        _hb_prev_raw = _hb_prev.get("last_monitor_run") or ""
+        if not _hb_prev_raw:
+            return None, _OHLCV_CANDLES
+        _hb_prev_ts = datetime.fromisoformat(str(_hb_prev_raw).replace("Z", "+00:00"))
+        if _hb_prev_ts.tzinfo is None:
+            _hb_prev_ts = _hb_prev_ts.replace(tzinfo=timezone.utc)
+        _gap_hours = (datetime.now(timezone.utc) - _hb_prev_ts).total_seconds() / 3600.0
+        if _gap_hours <= _OHLCV_CANDLES:
+            return None, _OHLCV_CANDLES
+
+        # Cap at 30 days — plenty for any realistic outage, and a hard
+        # ceiling against a corrupted/ancient heartbeat timestamp triggering
+        # a pathologically large fetch.
+        _catchup_days    = min(30, int(_gap_hours // 24) + 2)
+        _catchup_period  = f"{_catchup_days}d"
+        _catchup_candles = int(_gap_hours) + 4  # cover the full gap + margin
+        log(
+            f"Monitor: detected a {_gap_hours:.1f}h gap since the last successful "
+            f"run (heartbeat last_monitor_run={_hb_prev_raw}) — widening this run's "
+            f"OHLCV lookback to period={_catchup_period} "
+            f"({_catchup_candles} candles) to catch up on any missed stop/target "
+            f"crossings."
+        )
+        return _catchup_period, _catchup_candles
+    except Exception as _gap_exc:
+        log(f"Monitor: post-outage gap detection failed ({_gap_exc}) — using normal window")
+        return None, _OHLCV_CANDLES
+
+
 # ── Dashboard sender ──────────────────────────────────────────────────────────
 
 _DASHBOARD_MSG_FILE  = Path("data/discord_dashboard.json")
@@ -2136,17 +2189,23 @@ def _check_pending_trades(prices: dict, log_fn=None) -> list:
                 pass
             continue
 
-        # Re-check circuit breaker — CB may have fired since trade was originally approved
+        # Re-check circuit breaker — CB may have fired since trade was originally
+        # approved. Activating a pending trade is entering a new real position,
+        # so it goes through the exact same is_trading_blocked() gate a brand
+        # new candidate would -- not a narrower ad-hoc consecutive_losses>=3
+        # check. That raw check (pre-2026-09-09) didn't know about pause_until
+        # expiry, daily_trades_count, or observation_mode -- a smaller version
+        # of the same deadlock shape fixed elsewhere in fund_state.py/daily.py
+        # this same day; fails closed (blocks) if the gate check itself errors.
         try:
-            import json as _json_pend
-            with open("data/fund_state.json", encoding="utf-8") as _fs_pend_fh:
-                _fs_pend = _json_pend.load(_fs_pend_fh)
-            _pend_cl = int(_fs_pend.get("consecutive_losses", 0))
-        except Exception:
-            _pend_cl = 0
-        if _pend_cl >= 3:
-            _log(f"[pending] #{trade_id} {pair} trigger hit but circuit breaker active "
-                 f"({_pend_cl} losses) — extending expiry 24h")
+            from src import fund_state as _fs_pend_mod
+            _fs_pend_state = _fs_pend_mod.load()
+            _pend_blocked, _pend_reason, _pend_type = _fs_pend_mod.is_trading_blocked(_fs_pend_state)
+        except Exception as _pend_gate_exc:
+            _pend_blocked, _pend_reason, _pend_type = True, f"gate check failed ({_pend_gate_exc})", "error"
+        if _pend_blocked:
+            _log(f"[pending] #{trade_id} {pair} trigger hit but trading blocked "
+                 f"({_pend_type}: {_pend_reason}) — extending expiry 24h")
             try:
                 new_expiry = datetime.now(timezone.utc) + timedelta(hours=24)
                 df.loc[idx, "entry_trigger_expiry"] = new_expiry.strftime("%Y-%m-%d %H:%M:%S")
@@ -2325,6 +2384,10 @@ def run(log=print) -> dict:
         log("Monitor: another instance is already running (lock held) — skipping this run.")
         _write_monitor_log(result)
         return result
+
+    # ── Post-outage catch-up: widen this run's OHLCV lookback if the gap ─────
+    # since the last successful run exceeds the normal _OHLCV_CANDLES window.
+    _catchup_period, _catchup_candles = _compute_catchup_window(log=log)
 
     # ── Load previous run state (last_prices, previously_hot) ────────────────
     _prev_log: dict = {}
@@ -2969,9 +3032,10 @@ def run(log=print) -> dict:
     from src.yahoo_finance import fetch_1h_candles as _yf_1h
     candle_map: dict = {}   # pair → list of candle dicts (newest-first)
     yf_ok       = 0
+    _yf_fetch_kwargs = {"period": _catchup_period} if _catchup_period else {}
     for pair in all_pairs:
         try:
-            candles_result = _yf_1h(pair, _OHLCV_CANDLES, log=log)
+            candles_result = _yf_1h(pair, _catchup_candles, log=log, **_yf_fetch_kwargs)
             if candles_result and candles_result.get("values"):
                 candle_map[pair] = candles_result["values"]
                 yf_ok += 1
@@ -2980,7 +3044,7 @@ def run(log=print) -> dict:
     result["yf_ohlcv_pairs"] = yf_ok
     log(
         f"Monitor: Yahoo Finance 1H OHLCV — {yf_ok}/{len(all_pairs)} pairs "
-        f"({_OHLCV_CANDLES} candles each, no age cutoff)"
+        f"({_catchup_candles} candles each, no age cutoff)"
     )
 
     # Helper functions used in Step 4+5
