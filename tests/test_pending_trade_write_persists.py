@@ -18,7 +18,6 @@ has ever completed activation through this path, so this was a live but
 apparently never-yet-exercised bug rather than one that has already cost
 real money.
 """
-import json
 import os
 import tempfile
 import unittest
