@@ -79,6 +79,8 @@ class TestPendingTradeWritePersists(unittest.TestCase):
         )
 
     def tearDown(self):
+        self._fs_patcher.stop()
+        self._blocked_patcher.stop()
         os.chdir(self._orig_cwd)
         self._tmpdir.cleanup()
 
