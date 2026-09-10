@@ -136,11 +136,11 @@ id,candidate_id,book_id,pair,direction,reason,recorded_at,status,settled_at
 142,43,B_conf6_rr15,USD/JPY,BUY,eligibility,2026-09-09 12:31:48,PENDING,
 144,43,D_no_da,USD/JPY,BUY,sizing,2026-09-09 12:31:48,PENDING,
 145,43,F_sentiment_only,USD/JPY,BUY,eligibility,2026-09-09 12:31:48,PENDING,
-146,44,A_control,NZD/JPY,BUY,eligibility,2026-09-09 12:31:48,PENDING,
-147,44,B_conf6_rr15,NZD/JPY,BUY,eligibility,2026-09-09 12:31:48,PENDING,
-148,44,C_grade_based,NZD/JPY,BUY,eligibility,2026-09-09 12:31:48,PENDING,
-149,44,D_no_da,NZD/JPY,BUY,eligibility,2026-09-09 12:31:48,PENDING,
-150,44,F_sentiment_only,NZD/JPY,BUY,eligibility,2026-09-09 12:31:48,PENDING,
+146,44,A_control,NZD/JPY,BUY,eligibility,2026-09-09 12:31:48,SETTLED,2026-09-10 13:31:20
+147,44,B_conf6_rr15,NZD/JPY,BUY,eligibility,2026-09-09 12:31:48,SETTLED,2026-09-10 13:31:20
+148,44,C_grade_based,NZD/JPY,BUY,eligibility,2026-09-09 12:31:48,SETTLED,2026-09-10 13:31:20
+149,44,D_no_da,NZD/JPY,BUY,eligibility,2026-09-09 12:31:48,SETTLED,2026-09-10 13:31:20
+150,44,F_sentiment_only,NZD/JPY,BUY,eligibility,2026-09-09 12:31:48,SETTLED,2026-09-10 13:31:20
 151,45,A_control,AUD/NZD,SELL,eligibility,2026-09-09 12:31:48,SETTLED,2026-09-09 15:01:43
 152,45,B_conf6_rr15,AUD/NZD,SELL,eligibility,2026-09-09 12:31:48,SETTLED,2026-09-09 15:01:43
 153,45,C_grade_based,AUD/NZD,SELL,eligibility,2026-09-09 12:31:48,SETTLED,2026-09-09 15:01:43
@@ -166,12 +166,12 @@ id,candidate_id,book_id,pair,direction,reason,recorded_at,status,settled_at
 175,49,D_no_da,CHF/JPY,BUY,sizing,2026-09-09 21:19:30,PENDING,
 176,49,E_no_dd_gate,CHF/JPY,BUY,sizing,2026-09-09 21:19:30,PENDING,
 177,49,F_sentiment_only,CHF/JPY,BUY,eligibility,2026-09-09 21:19:30,PENDING,
-178,50,A_control,NZD/CHF,BUY,eligibility,2026-09-10 05:19:01,PENDING,
-179,50,B_conf6_rr15,NZD/CHF,BUY,eligibility,2026-09-10 05:19:01,PENDING,
-180,50,C_grade_based,NZD/CHF,BUY,eligibility,2026-09-10 05:19:01,PENDING,
-181,50,D_no_da,NZD/CHF,BUY,eligibility,2026-09-10 05:19:01,PENDING,
-182,50,E_no_dd_gate,NZD/CHF,BUY,eligibility,2026-09-10 05:19:01,PENDING,
-183,50,F_sentiment_only,NZD/CHF,BUY,eligibility,2026-09-10 05:19:01,PENDING,
+178,50,A_control,NZD/CHF,BUY,eligibility,2026-09-10 05:19:01,SETTLED,2026-09-10 13:31:20
+179,50,B_conf6_rr15,NZD/CHF,BUY,eligibility,2026-09-10 05:19:01,SETTLED,2026-09-10 13:31:20
+180,50,C_grade_based,NZD/CHF,BUY,eligibility,2026-09-10 05:19:01,SETTLED,2026-09-10 13:31:20
+181,50,D_no_da,NZD/CHF,BUY,eligibility,2026-09-10 05:19:01,SETTLED,2026-09-10 13:31:20
+182,50,E_no_dd_gate,NZD/CHF,BUY,eligibility,2026-09-10 05:19:01,SETTLED,2026-09-10 13:31:20
+183,50,F_sentiment_only,NZD/CHF,BUY,eligibility,2026-09-10 05:19:01,SETTLED,2026-09-10 13:31:20
 184,51,A_control,NZD/CAD,BUY,eligibility,2026-09-10 12:25:24,PENDING,
 185,51,B_conf6_rr15,NZD/CAD,BUY,eligibility,2026-09-10 12:25:24,PENDING,
 186,51,C_grade_based,NZD/CAD,BUY,eligibility,2026-09-10 12:25:24,PENDING,
@@ -202,12 +202,12 @@ id,candidate_id,book_id,pair,direction,reason,recorded_at,status,settled_at
 211,55,D_no_da,NZD/JPY,BUY,eligibility,2026-09-10 12:25:24,PENDING,
 212,55,E_no_dd_gate,NZD/JPY,BUY,eligibility,2026-09-10 12:25:24,PENDING,
 213,55,F_sentiment_only,NZD/JPY,BUY,eligibility,2026-09-10 12:25:24,PENDING,
-214,56,A_control,NZD/CHF,BUY,eligibility,2026-09-10 12:25:24,PENDING,
-215,56,B_conf6_rr15,NZD/CHF,BUY,eligibility,2026-09-10 12:25:24,PENDING,
-216,56,C_grade_based,NZD/CHF,BUY,eligibility,2026-09-10 12:25:24,PENDING,
-217,56,D_no_da,NZD/CHF,BUY,eligibility,2026-09-10 12:25:24,PENDING,
-218,56,E_no_dd_gate,NZD/CHF,BUY,eligibility,2026-09-10 12:25:24,PENDING,
-219,56,F_sentiment_only,NZD/CHF,BUY,eligibility,2026-09-10 12:25:24,PENDING,
+214,56,A_control,NZD/CHF,BUY,eligibility,2026-09-10 12:25:24,SETTLED,2026-09-10 13:31:20
+215,56,B_conf6_rr15,NZD/CHF,BUY,eligibility,2026-09-10 12:25:24,SETTLED,2026-09-10 13:31:20
+216,56,C_grade_based,NZD/CHF,BUY,eligibility,2026-09-10 12:25:24,SETTLED,2026-09-10 13:31:20
+217,56,D_no_da,NZD/CHF,BUY,eligibility,2026-09-10 12:25:24,SETTLED,2026-09-10 13:31:20
+218,56,E_no_dd_gate,NZD/CHF,BUY,eligibility,2026-09-10 12:25:24,SETTLED,2026-09-10 13:31:20
+219,56,F_sentiment_only,NZD/CHF,BUY,eligibility,2026-09-10 12:25:24,SETTLED,2026-09-10 13:31:20
 220,57,A_control,CHF/JPY,BUY,eligibility,2026-09-10 12:25:24,PENDING,
 221,57,B_conf6_rr15,CHF/JPY,BUY,eligibility,2026-09-10 12:25:24,PENDING,
 222,57,C_grade_based,CHF/JPY,BUY,eligibility,2026-09-10 12:25:24,PENDING,
