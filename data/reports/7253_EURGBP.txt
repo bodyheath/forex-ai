@@ -1,0 +1,30 @@
+```
+PAIR: EUR/GBP
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Bullish candle patterns (double bottom D1, pin bar 4H) suggest reversal attempt from range, but RSI neutral, MACD flat, and all MTF neutral create low-conviction setup with no directional bias.
+
+RISK_FACTORS: [1. MTF conflict rule violation: all timeframes (M/W/D/4H) are NEUTRAL → conf 0/3, which fails MTF alignment requirement (both weekly AND daily must agree); [2. Ribbon NEUTRAL (3/5 aligned) weakens trend continuation thesis; price trapped in 212p range with no clear breakout direction.]
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 0.8610
+ENTRY_TRIGGER_REASON: Break above 4H pin bar high and D1 range midpoint (0.8609) with RSI >65 to confirm reversal intent.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF Rule Violation (CRITICAL):**
+All timeframes return NEUTRAL — M:NEUTRAL, W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL. Confidence = 0/3, meaning weekly and daily do NOT both agree

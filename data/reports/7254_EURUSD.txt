@@ -1,0 +1,23 @@
+```
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_4 with inverse H&S pattern conflicts with 4H uptrend and bullish ribbon lean; MTF split (M:SELL, W:NEUTRAL, D:SELL, 4H:NEUTRAL) fails 2/3 weekly+daily agreement rule, blocking high-confidence trade.
+RISK_FACTORS: [1. MTF disagreement (daily SELL vs 4H NEUTRAL) violates core MTF rule — directional conviction insufficient; 2. Bullish 4H structure (price > SMA50 > SMA200, golden cross, LEANING_BULL ribbon at 4/5 alignment) contradicts D1 SELL bias — reversal risk if 4H breaks above 1.1627.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do not both agree on direction (W:NEUTRAL, D:SELL fails consensus). 4H lean-bull structure and ribbon alignment create conflicting bias. Confidence 5/10 < threshold 7.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF

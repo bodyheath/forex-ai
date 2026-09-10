@@ -1,0 +1,29 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly sell signal conflicts with daily-neutral and aligned bullish ribbon; pin bar at key level offers reversal structure but RSI 58 in uptrend context is neutral, not strongly oversold.
+RISK_FACTORS: [MTF disagreement (W:SELL vs D:NEUTRAL + 4H:NEUTRAL) undermines conviction; aligned bull ribbon contradicts T_sig=SELL_3 and suggests continuation risk into resistance.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: 0.9900
+ENTRY_TRIGGER_REASON: Weekly SELL + pin bar at key level would be triggered only if D1 closes below pin bar low and RSI confirms rejection of overbought at 60-65 range; requires MTF alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+### Rationale
+
+**MTF Conflict (Critical):**  
+- **Weekly: SELL** | **Daily: NEUTRAL** | **4H: NEUTRAL**
+- Confidence = 1/3 (only 1 of 3 timeframes agrees on direction)
+- **Hard Rule violation**: For TRADE_THIS=YES, weekly AND daily must both agree. They do not.
+- This alone forces **

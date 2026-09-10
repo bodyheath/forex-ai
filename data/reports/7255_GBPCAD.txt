@@ -1,0 +1,25 @@
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + RSI 36 (lower-zone BUY) on D1 with GBP rate advantage, but MTF alignment failure (M:SELL vs D:BUY, conf=1/3) and MACD weakness block high-conviction entry.
+RISK_FACTORS: MTF disagreement (weekly SELL + daily BUY) violates core trade rule; price 189p below SMA50 (1.8837) indicates underlying weakness despite short-term reversal signal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.8580
+ENTRY_TRIGGER_REASON: Support confluence at SL (1.86326 fib) + RSI 30-zone retest would confirm reversal; GBP rate advantage + SMD +3 (institution support) provides secondary confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**MTF Rule Violation (HARD STOP):**
+- Weekly: SELL | Daily: BUY | 4H: NEUTRAL → conf = 1/3 (only daily agrees with BUY direction)
+- Rule: *"if weekly AND daily don't both agree on
