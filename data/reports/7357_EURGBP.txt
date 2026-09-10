@@ -1,0 +1,21 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: T_sig SELL_3 on D1 conflicts with bullish candle patterns (double bottom + inverse H&S) and 4H uptrend structure; no MTF agreement leaves setup unreliable.
+RISK_FACTORS: [1. MTF all NEUTRAL (0/3 agreement) — no directional confluence; setup lacks confluence across timeframes. 2. Candle patterns contradict T_sig — double bottom and inverse H&S both bullish, yet T_sig signals SELL; price at 0.8585 is within range, not at extremes.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence 0/3; no agreement across weekly, daily, and 4H timeframes. T_sig SELL_3 is contradicted by dual bullish candle patterns and 4H uptrend (price > SMA50 > SMA200). Fundamental and sentiment scores neutral. OSC has no confluence. Setup fails MTF rule (weekly AND daily must both agree on direction).
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**Reasoning:**
+
+1. **MTF Rule Breach (HARD STOP):** M/W/D/4
