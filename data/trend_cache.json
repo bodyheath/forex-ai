@@ -1,5 +1,22 @@
 {
-  "timestamp": "2026-09-09T18:22:58.254083+00:00",
-  "monthly_trends": {},
-  "trend_structures": {}
+  "timestamp": "2026-09-10T18:22:53.701131+00:00",
+  "monthly_trends": {
+    "CHF/JPY": {
+      "trend": "SELL",
+      "strength": "moderate",
+      "n_months": 3
+    }
+  },
+  "trend_structures": {
+    "CHF/JPY": {
+      "status": "ok",
+      "buy_valid": false,
+      "sell_valid": true,
+      "hh": false,
+      "hl": false,
+      "lh": true,
+      "ll": true,
+      "detail": "lower highs and lower lows"
+    }
+  }
 }

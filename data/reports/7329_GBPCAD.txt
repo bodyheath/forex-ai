@@ -1,0 +1,24 @@
+```
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with RSI 36 oversold and GBP rate flat vs CAD falling offers bounce setup, but mixed MTF (M:SELL vs D:BUY) and 4H downtrend weaken conviction.
+RISK_FACTORS: MTF disagreement (M:SELL + D:BUY + 4H:NEUTRAL = only 1/3 agreement) fails MTF rule threshold; 4H structure in downtrend (price < SMA50 < SMA200) conflicts with D1 buy signal.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 1.8750
+ENTRY_TRIGGER_REASON: Break above D1 SMA50 (1.8837 resistance) and 4H SMA50 confluent level to confirm trend reversal from 4H downtrend.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1: T_sig=BUY_4 baseline → RSI 36 is in BUY zone (30–35 tier = 7–8 BUY), supported by pin bar at key
