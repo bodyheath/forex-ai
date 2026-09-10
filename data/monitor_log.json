@@ -1,94 +1,42 @@
 {
-  "timestamp": "2026-09-10T18:31:23Z",
+  "timestamp": "2026-09-10T19:01:34Z",
   "trades_checked_fund": 1,
-  "trades_checked_research": 145,
-  "hot_zone_count": 19,
-  "warm_zone_count": 46,
-  "cold_zone_count": 81,
+  "trades_checked_research": 139,
+  "hot_zone_count": 11,
+  "warm_zone_count": 49,
+  "cold_zone_count": 80,
   "api_calls_used": 0,
-  "yf_price_pairs": 28,
-  "yf_ohlcv_pairs": 28,
+  "yf_price_pairs": 25,
+  "yf_ohlcv_pairs": 25,
   "approaching_alerts": 0,
-  "milestones_hit": [
-    {
-      "type": "research",
-      "pair": "EUR/CHF",
-      "level": "STOP",
-      "price": 0.94422,
-      "pips": null,
-      "candle_dt": "2026-09-10 13:00"
-    },
-    {
-      "type": "research",
-      "pair": "USD/CHF",
-      "level": "STOP",
-      "price": 0.81461,
-      "pips": null,
-      "candle_dt": "2026-09-10 13:00"
-    },
-    {
-      "type": "research",
-      "pair": "GBP/NZD",
-      "level": "STOP",
-      "price": 2.32566,
-      "pips": null,
-      "candle_dt": "2026-09-10 13:00"
-    },
-    {
-      "type": "research",
-      "pair": "NZD/USD",
-      "level": "STOP",
-      "price": 0.58087,
-      "pips": null,
-      "candle_dt": "2026-09-10 13:00"
-    },
-    {
-      "type": "research",
-      "pair": "EUR/NZD",
-      "level": "STOP",
-      "price": 1.9966,
-      "pips": null,
-      "candle_dt": "2026-09-10 13:00"
-    },
-    {
-      "type": "research",
-      "pair": "NZD/CAD",
-      "level": "STOP",
-      "price": 0.8011,
-      "pips": null,
-      "candle_dt": "2026-09-10 16:00"
-    }
-  ],
-  "mfe_mae_updated": 145,
+  "milestones_hit": [],
+  "mfe_mae_updated": 139,
   "last_prices": {
-    "AUD/CAD": 0.9899799823760986,
-    "AUD/CHF": 0.5820199847221375,
-    "AUD/JPY": 110.51000213623047,
-    "AUD/NZD": 1.2350800037384033,
-    "AUD/USD": 0.7162810564041138,
-    "CAD/CHF": 0.5878999829292297,
-    "CAD/JPY": 111.62100219726562,
-    "CHF/JPY": 189.8520050048828,
-    "EUR/AUD": 1.622130036354065,
-    "EUR/CAD": 1.6059199571609497,
-    "EUR/CHF": 0.9441800117492676,
-    "EUR/GBP": 0.8594800233840942,
-    "EUR/JPY": 179.27200317382812,
-    "EUR/NZD": 2.003350019454956,
-    "EUR/USD": 1.1617100238800049,
-    "GBP/AUD": 1.8872900009155273,
-    "GBP/CAD": 1.8684699535369873,
-    "GBP/CHF": 1.09853994846344,
-    "GBP/JPY": 208.5760040283203,
-    "GBP/NZD": 2.3309900760650635,
-    "GBP/USD": 1.3513696193695068,
-    "NZD/CAD": 0.8014600276947021,
-    "NZD/CHF": 0.4711900055408478,
-    "NZD/JPY": 89.46700286865234,
-    "NZD/USD": 0.5798109769821167,
-    "USD/CAD": 1.3829799890518188,
-    "USD/CHF": 0.8129799962043762,
-    "USD/JPY": 154.36000061035156
+    "AUD/CAD": 0.9899700284004211,
+    "AUD/CHF": 0.5819000005722046,
+    "AUD/JPY": 110.48200225830078,
+    "AUD/NZD": 1.2350900173187256,
+    "AUD/USD": 0.7162297964096069,
+    "CAD/CHF": 0.5878000259399414,
+    "CAD/JPY": 111.58999633789062,
+    "CHF/JPY": 189.8249969482422,
+    "EUR/AUD": 1.6219799518585205,
+    "EUR/CAD": 1.6058000326156616,
+    "EUR/CHF": 0.9439399838447571,
+    "EUR/GBP": 0.8593599796295166,
+    "EUR/JPY": 179.2050018310547,
+    "EUR/USD": 1.161440134048462,
+    "GBP/AUD": 1.88742995262146,
+    "GBP/CAD": 1.8685799837112427,
+    "GBP/CHF": 1.098389983177185,
+    "GBP/JPY": 208.5279998779297,
+    "GBP/USD": 1.3511687517166138,
+    "NZD/CAD": 0.8014199733734131,
+    "NZD/CHF": 0.4710400104522705,
+    "NZD/JPY": 89.43499755859375,
+    "USD/CAD": 1.3831700086593628,
+    "USD/CHF": 0.8129600286483765,
+    "USD/JPY": 154.33299255371094
   },
   "previously_hot": [
     "AUD/NZD#2934",
@@ -98,26 +46,18 @@
     "EUR/AUD#3091",
     "EUR/CHF#2715",
     "EUR/CHF#2813",
-    "EUR/CHF#3105",
-    "EUR/GBP#2657",
-    "EUR/GBP#2877",
-    "EUR/NZD#3110",
-    "GBP/NZD#3108",
-    "NZD/CAD#3111",
     "NZD/CHF#3001",
     "NZD/CHF#3106",
     "NZD/JPY#3049",
-    "NZD/USD#3109",
-    "USD/CHF#12",
-    "USD/CHF#3107"
+    "USD/CHF#12"
   ],
   "skipped_reason": "",
   "watchlist_prices": {
-    "EUR/CHF": 0.9441800117492676,
-    "USD/CHF": 0.8129900097846985,
-    "GBP/CAD": 1.86844003200531,
-    "USD/CAD": 1.382949948310852,
-    "EUR/CAD": 1.6059999465942383
+    "EUR/CHF": 0.9439399838447571,
+    "USD/CHF": 0.8129600286483765,
+    "GBP/CAD": 1.8685799837112427,
+    "USD/CAD": 1.3831700086593628,
+    "EUR/CAD": 1.6058299541473389
   },
   "watchlist_alerts_sent": [
     "AUD/CAD:2026-09-11",
@@ -126,7 +66,7 @@
     "USD/CHF:2026-09-10"
   ],
   "data_tiers_used": {
-    "t1_yf_ohlcv": 28,
+    "t1_yf_ohlcv": 25,
     "t1_td_backup": 0,
     "t1_sq_backup": 0,
     "t2_synthetic": 0,
@@ -135,7 +75,7 @@
     "t0_no_data": 0
   },
   "source_stats": {
-    "yahoo_finance": 28,
+    "yahoo_finance": 25,
     "twelve_data": 0,
     "stooq": 0,
     "synthetic": 0,
@@ -543,6 +483,11 @@
         "price": 0.9899799823760986,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 0.9899700284004211,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "AUD/CHF": [
@@ -945,6 +890,11 @@
         "price": 0.5820199847221375,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 0.5819000005722046,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "AUD/JPY": [
@@ -1321,6 +1271,11 @@
       {
         "price": 110.51000213623047,
         "timestamp": "2026-09-10T18:31:23Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 110.48200225830078,
+        "timestamp": "2026-09-10T19:01:34Z",
         "source": "yahoo"
       }
     ],
@@ -1724,6 +1679,11 @@
         "price": 1.2350800037384033,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.2350900173187256,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "AUD/USD": [
@@ -2125,6 +2085,11 @@
       {
         "price": 0.7162810564041138,
         "timestamp": "2026-09-10T18:31:23Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.7162297964096069,
+        "timestamp": "2026-09-10T19:01:34Z",
         "source": "yahoo"
       }
     ],
@@ -2528,6 +2493,11 @@
         "price": 0.5878999829292297,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 0.5878000259399414,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "CAD/JPY": [
@@ -2905,6 +2875,11 @@
         "price": 111.62100219726562,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 111.58999633789062,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "CHF/JPY": [
@@ -3281,6 +3256,11 @@
       {
         "price": 189.8520050048828,
         "timestamp": "2026-09-10T18:31:23Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 189.8249969482422,
+        "timestamp": "2026-09-10T19:01:34Z",
         "source": "yahoo"
       }
     ],
@@ -3684,6 +3664,11 @@
         "price": 1.622130036354065,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.6219799518585205,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "EUR/CAD": [
@@ -4085,6 +4070,11 @@
       {
         "price": 1.6059199571609497,
         "timestamp": "2026-09-10T18:31:23Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.6058000326156616,
+        "timestamp": "2026-09-10T19:01:34Z",
         "source": "yahoo"
       }
     ],
@@ -4488,6 +4478,11 @@
         "price": 0.9441800117492676,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 0.9439399838447571,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "EUR/GBP": [
@@ -4890,6 +4885,11 @@
         "price": 0.8594800233840942,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 0.8593599796295166,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "EUR/JPY": [
@@ -5206,6 +5206,11 @@
       {
         "price": 179.27200317382812,
         "timestamp": "2026-09-10T18:31:23Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 179.2050018310547,
+        "timestamp": "2026-09-10T19:01:34Z",
         "source": "yahoo"
       }
     ],
@@ -5711,6 +5716,11 @@
         "price": 1.1617100238800049,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.161440134048462,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "GBP/AUD": [
@@ -6113,6 +6123,11 @@
         "price": 1.8872900009155273,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.88742995262146,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "GBP/CAD": [
@@ -6509,6 +6524,11 @@
       {
         "price": 1.8684699535369873,
         "timestamp": "2026-09-10T18:31:23Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 1.8685799837112427,
+        "timestamp": "2026-09-10T19:01:34Z",
         "source": "yahoo"
       }
     ],
@@ -6912,6 +6932,11 @@
         "price": 1.09853994846344,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.098389983177185,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "GBP/JPY": [
@@ -7288,6 +7313,11 @@
       {
         "price": 208.5760040283203,
         "timestamp": "2026-09-10T18:31:23Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 208.5279998779297,
+        "timestamp": "2026-09-10T19:01:34Z",
         "source": "yahoo"
       }
     ],
@@ -8043,6 +8073,11 @@
         "price": 1.3513696193695068,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.3511687517166138,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "NZD/CAD": [
@@ -8224,6 +8259,11 @@
       {
         "price": 0.8014600276947021,
         "timestamp": "2026-09-10T18:31:23Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.8014199733734131,
+        "timestamp": "2026-09-10T19:01:34Z",
         "source": "yahoo"
       }
     ],
@@ -8626,6 +8666,11 @@
       {
         "price": 0.4711900055408478,
         "timestamp": "2026-09-10T18:31:23Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 0.4710400104522705,
+        "timestamp": "2026-09-10T19:01:34Z",
         "source": "yahoo"
       }
     ],
@@ -9391,6 +9436,11 @@
         "price": 1.3829799890518188,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 1.3831700086593628,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "USD/CHF": [
@@ -9793,6 +9843,11 @@
         "price": 0.8129799962043762,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 0.8129600286483765,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "USD/JPY": [
@@ -10170,6 +10225,11 @@
         "price": 154.36000061035156,
         "timestamp": "2026-09-10T18:31:23Z",
         "source": "yahoo"
+      },
+      {
+        "price": 154.33299255371094,
+        "timestamp": "2026-09-10T19:01:34Z",
+        "source": "yahoo"
       }
     ],
     "NZD/JPY": [
@@ -10541,6 +10601,11 @@
       {
         "price": 89.46700286865234,
         "timestamp": "2026-09-10T18:31:23Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 89.43499755859375,
+        "timestamp": "2026-09-10T19:01:34Z",
         "source": "yahoo"
       }
     ]
