@@ -1,0 +1,23 @@
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fib 78.6% support with Daily SELL signal, but MTF disagreement (D:SELL vs 4H:BUY, conf 1/3) and RSI 57.4 in neutral zone prevent high-confidence entry.
+RISK_FACTORS: [1. MTF conflict: only Daily agrees on SELL direction; 4H leans BUY and Weekly/Monthly neutral — entry lacks multi-timeframe confluence required for TRADE_THIS YES. 2. RSI 57.4 is neutral (45–62 band) with no oscillator confluence (stoch_k=53.6, CCI=-5.7 show no directional bias) — technical setup lacks conviction for a reversal short.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1629
+ENTRY_TRIGGER_REASON: Break below Fib 78.6% support at 1.16295 (currently 4p above, near=sup) would confirm bearish pin bar and unlock D1 SELL signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+1. **MTF Rule Veto:** Weekly + Daily must both agree for TRADE_THIS

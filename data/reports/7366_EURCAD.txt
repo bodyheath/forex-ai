@@ -1,0 +1,23 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 23.6% Fib resistance (1.6065) with bearish ribbon lean (4/5 EMAs) suggests weak seller rejection, but mixed MTF and neutral oscillators prevent high-confidence entry.
+RISK_FACTORS: [1] MTF agreement 0/3 (M:SELL vs W/D/4H:NEUTRAL) violates core trade rule — no directional consensus across timeframes. [2] RSI 45.2 mid-neutral zone with MACD near-zero inflection; oscillator confluence absent (Stoch 31.7, CCI −68.8 show no alignment); price 8p from Fib but within range noise, not a break.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.6065
+ENTRY_TRIGGER_REASON: Price breaks below 23.6% Fib level (1.6065) confirming pin bar rejection and ribbon lean confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**Rationale:**
+
+**MTF Rejection (Critical):** Weekly and Daily both NEUTRAL; only Monthly leans SELL. This violates the rule "MTF weekly+daily both agree" — confidence floor is broken

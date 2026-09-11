@@ -1,0 +1,17 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 RSI overbought (67.8) in confirmed uptrend with pin bar at key level signals pullback risk, but MTF disagreement (D:SELL vs 4H:BUY, conf=1/3) and bullish ribbon alignment undermine conviction.
+RISK_FACTORS: [1. MTF conflict — only 1/3 timeframes align (D1 only); weekly and monthly neutral, 4H bullish engulfing opposes direction — reversal risk if 4H breaks through. 2. ALIGNED_BULL ribbon (5/5 EMAs stacked) + price still above SMA50 golden cross contradicts bearish setup — continuation more likely than reversal.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (conf=1/3 << 2/3 threshold). D1 overbought in uptrend is reversion signal only; 4H bullish engulfing + ALIGNED_BULL ribbon favor continuation, not reversal. Confidence 5 fails TRADE_THIS threshold (≥7 required).
+ENTRY_TRIGGER_EXPIRY_HOURS

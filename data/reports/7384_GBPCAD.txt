@@ -1,0 +1,24 @@
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fib 23.6% + D1 BUY signal offers reversal setup, but mixed MTF structure (M:SELL vs D:BUY, conf=1/3) and weak oscillator confluence limit conviction.
+RISK_FACTORS: [1. Monthly SELL conflicts with daily BUY — trend structure unclear, reversal may be false; 2. OSC conf=NONE (Stoch 30.8 oversold but CCI -93.3 deeply bearish) — no oscillator confirmation of reversal.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.8680
+ENTRY_TRIGGER_REASON: Pullback to Fib SL support (1.8607) + RSI oversold confirmation (RSI <30) would provide double confluence; alternatively wait for D1 candle close above SMA50 (1.8833) to confirm uptrend alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**TECHNICAL (5/10):**
+- D1 T_sig=BUY_4 is baseline (score 4, +1 bonus for pin_bar at key level).

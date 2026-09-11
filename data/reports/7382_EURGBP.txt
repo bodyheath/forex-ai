@@ -1,0 +1,21 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 + double-bottom bullish pattern conflict + MTF all-neutral framework = weak directional conviction; positioning unwind in both pairs offers no edge.
+RISK_FACTORS: [1. MTF conf=0/3 (M/W/D/4H all NEUTRAL) blocks coherent directional confluence — reversal or chop likely. 2. D1 RSI=57 + 4H RSI=58.8 both neutral-zone; no oscillator confluence (OSC=NONE); pattern divergence (T_sig SELL vs PAT double_bottom bullish) creates contradiction.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF framework neutral across all timeframes (conf=0/3); T_sig SELL conflicts with bullish double-bottom pattern; no RSI/MACD/oscillator confluence to overcome directional ambiguity.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**RATIONALE:**
+
+1. **MTF Veto (HARD RULE):** M/W/D/4H all scored NEUTRAL — conf=0/3. This blocks TRADE_THIS=YES regardless
