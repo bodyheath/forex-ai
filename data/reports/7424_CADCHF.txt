@@ -1,0 +1,20 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 63.3 in uptrend suggests normal overbought; bearish divergence conflicts with aligned ribbon and golden cross, creating ambiguous reversal signal.
+RISK_FACTORS: [MTF conf=0/3 (no weekly+daily agreement — TRADE_THIS blocked); CHF positioning at 1y crowded-long top with UNWINDING momentum creates unconfirmed reversal risk that could reverse the setup]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule breach — W:NEUTRAL and D:NEUTRAL do not both agree on any direction. Weekly + daily agreement is mandatory; monthly context only. Bearish DIV conflicts with ALIGNED_BULL ribbon and uptrend structure (price > SMA50 > SMA200). T_sig=SELL_3 and RSI 63.3 are in normal overbought zone for uptrend (shift SELL threshold to >87); no MACD or stochastic confirmation (conf=NONE). Confidence cannot meet 7.0 threshold; R:R cannot be verified without reversal target.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**Rationale:**
+- **MTF

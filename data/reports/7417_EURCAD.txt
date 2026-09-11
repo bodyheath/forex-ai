@@ -1,0 +1,23 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 23.6% Fib + leaning bear ribbon + monthly sell signal offer light downside setup, but weak MTF agreement (0/3 weekly+daily) and neutral RSI/MACD severely limit conviction.
+RISK_FACTORS: [1. MTF disagreement (M:SELL vs W/D:NEUTRAL) breaks core rule — weekly and daily must both agree to trade; confidence artificially capped at 4. 2. RSI 45.2 and MACD near zero in range-bound price action offer no directional confirmation; no oscillator confluence present.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.6028
+ENTRY_TRIGGER_REASON: Support at swing low (SL) with pin bar and leaning bear ribbon confluence would offer improved risk-reward if MTF alignment improves.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**Rationale:**
+
+1. **MTF Rule Violation (Hard Stop):** Weekly and daily are both NEUTRAL; monthly shows SELL but does not override. Confidence requirement is W:SELL + D:SELL (conf ≥2/3). This trade fails the MTF gate immediately → **TRADE_THIS: NO

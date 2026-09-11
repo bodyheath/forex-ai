@@ -1,0 +1,23 @@
+PAIR: EUR/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 78.6% Fib + SELL signal conflicts with 4H BUY and ribbon lean; MTF disagreement (1/3 conf) blocks trade.
+RISK_FACTORS: [1. MTF conflict: D1 SELL vs 4H BUY violates dual-confirmation rule; daily trend is mixed/range, not confirmed downtrend. 2. RSI 57.4 on D1 (mixed MTF context) = neutral zone; 4H RSI 36.3 (4H BUY) contradicts daily SELL bias.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule failure — weekly and daily do not both agree on direction (conf=1/3, threshold 2/3). D1 SELL signal (T_sig=4) unsupported by weekly or 4H alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Detailed Reasoning:**
+
+1. **MTF Enforcement (HARD RULE):** W:NEUTRAL + D:SELL + 4H:BUY = conf=1/3 (only D agrees). Threshold for TRADE
