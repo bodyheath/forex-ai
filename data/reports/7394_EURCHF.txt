@@ -1,0 +1,25 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (26p/4pt) in overbought territory on D1 confirms weakness despite uptrend structure, but MTF weakness (0/3 agreement) and aligned EMA ribbon undermine conviction.
+RISK_FACTORS: [1) MTF severely conflicted — D1/W/M all NEUTRAL, 4H lone SELL; ribbon fully bullish creates continuation bias. 2) CHF positioning crowded long near 1y top with only "unconfirmed" reversal risk — CHF short unwind may support EUR/CHF rally, not cap it.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.9435
+ENTRY_TRIGGER_REASON: Sell only if price breaks above SH=0.94351 (Fibonacci resistance) to trap longs, then fades on divergence confirmation
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (4/10):**
+- D1 RSI 62.9 in confirmed UPTREND (price > SMA50 > SMA200) → standard tier 62–70 = 4–5 SELL baseline.
+- **BEARISH

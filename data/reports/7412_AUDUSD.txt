@@ -1,0 +1,16 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 RSI 67.8 in confirmed uptrend (price>SMA50>SMA200, ALIGNED_BULL ribbon) shifts overbought threshold higher—RSI 67.8 is neutral-to-mild-sell in uptrend context, pin bar at key level suggests reversal risk, but 4H trend is mixed and MTF agreement is weak (1/3), limiting conviction.
+RISK_FACTORS: [1. ALIGNED_BULL ribbon (5/5 EMA stack) and golden-cross structure favor continuation; D1 T_sig=SELL_5 conflicts with uptrend structure—reversal signal may be false. 2. MTF disagreement critical: D1=SELL, 4H=BUY, W=NEUTRAL, M=NEUTRAL—only 1/3 timeframes aligned; 4H inside_bar_neu suggests range consolidation, not breakdown.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: W and D do not both agree (W=NEUTRAL, D=SELL); 4H conflicts (BUY). Confidence 5/10 < 7/10 threshold. Up

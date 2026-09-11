@@ -1,0 +1,24 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fib 23.6% resistance + leaning bear ribbon + 4H morning star reversal pattern suggest downside bias, but weak MTF agreement (M:SELL vs W/D:NEUTRAL at 0/3) and neutral RSI/oscillators prevent high-confidence entry.
+RISK_FACTORS: (1) MTF conflict: monthly bearish but weekly and daily neutral—momentum may be exhausted; (2) RSI 45.2 D1 & 56.8 4H both neutral-zone (neither oversold nor overbought), reducing reversal probability and increasing whipsaw risk in range-bound structure.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.6065
+ENTRY_TRIGGER_REASON: Sell limit at Fib 23.6% resistance (8p above current price) to confirm rejection and catch downside from key level with pin bar confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+```
+
+**Rationale:**
+
+- **MTF Rule Breach:** Monthly SELL vs Weekly/Daily NEUTRAL (conf=0/3) fails the "both weekly AND daily agree" requirement—**TRADE_THIS forced NO** regardless of other factors.
+-
