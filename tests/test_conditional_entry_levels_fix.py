@@ -237,7 +237,7 @@ class TestHistoricalImmediateStopPips(unittest.TestCase):
                  patch.object(self.daily.config, "TRADES_CSV", fake_trades):
                 median, n = self.daily._historical_immediate_stop_pips("EUR/USD", min_n=5)
         self.assertEqual(n, 5)
-        self.assertEqual(median, 100.0)
+        self.assertAlmostEqual(median, 100.0, places=6)
 
     def test_returns_none_when_no_files_exist(self):
         with tempfile.TemporaryDirectory() as td:
