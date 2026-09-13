@@ -1595,7 +1595,9 @@ def _historical_immediate_stop_pips(pair: str, min_n: int = 5) -> "tuple[float |
             _rows = _df[_df["pair"] == pair]
             _etype = _rows.get("entry_type")
             if _etype is not None:
-                _immediate = _rows[_etype.astype(str).str.upper().isin(["", "IMMEDIATE", "NAN"])]
+                _immediate = _rows[
+                    _etype.isna() | _etype.astype(str).str.upper().isin(["", "IMMEDIATE"])
+                ]
             else:
                 _immediate = _rows
             _entry_v = _pd_hist.to_numeric(_immediate.get("entry"), errors="coerce")
