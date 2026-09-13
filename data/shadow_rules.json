@@ -13968,6 +13968,103 @@
     "pf_min_fire": null,
     "pf_min_gap": null,
     "promoted": false,
-    "evaluations": []
+    "evaluations": [
+      {
+        "timestamp": "2026-09-13T18:10:13.935866+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -9.9,
+        "context": {
+          "id": "2653",
+          "pair": "AUD/CAD",
+          "direction": "SELL",
+          "tech_score": "4"
+        }
+      },
+      {
+        "timestamp": "2026-09-13T18:10:14.113300+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 8.0,
+        "context": {
+          "id": "2657",
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-09-13T18:10:14.289157+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 0.8,
+        "context": {
+          "id": "2658",
+          "pair": "EUR/USD",
+          "direction": "BUY",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-09-13T18:10:14.587177+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -13.2,
+        "context": {
+          "id": "2668",
+          "pair": "GBP/USD",
+          "direction": "BUY",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-09-13T18:10:15.054419+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -77.3,
+        "context": {
+          "id": "2717",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-09-13T18:10:15.521955+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -90.8,
+        "context": {
+          "id": "2756",
+          "pair": "GBP/CHF",
+          "direction": "SELL",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-09-13T18:10:15.897430+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -4.1,
+        "context": {
+          "id": "2793",
+          "pair": "EUR/CAD",
+          "direction": "SELL",
+          "tech_score": "4"
+        }
+      },
+      {
+        "timestamp": "2026-09-13T18:10:16.875014+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -1.2,
+        "context": {
+          "id": "2908",
+          "pair": "NZD/CHF",
+          "direction": "SELL",
+          "tech_score": "4"
+        }
+      }
+    ]
   }
 }

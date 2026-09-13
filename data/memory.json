@@ -16,11 +16,6 @@
   },
   {
     "source": "outcome",
-    "pattern": "Never SELL into a 5/5 bullish EMA fan with adverse rate differentials \u2014 oscillator exhaustion alone cannot overcome alig",
-    "outcome": "[LOSS] USD/SEK closed 2026-06-23 09:01:41"
-  },
-  {
-    "source": "outcome",
     "pattern": "Never BUY against a 5/5 bearish EMA ribbon with <5 fundamental score and live high-impact news within 48h.",
     "outcome": "[LOSS] EUR/USD closed 2026-06-24 21:11:21"
   },
@@ -115,14 +110,19 @@
     "outcome": "[LOSS] USD/JPY closed 2026-09-08 05:31:25"
   },
   {
-    "source": "auto",
-    "pattern": "Overall track record to date (n=16)",
-    "outcome": "Win rate 38%, expectancy -0.22R."
+    "source": "outcome",
+    "pattern": "Never buy into a 5/5 bear ribbon on RSI oversold alone when 3+ analysis layers score \u22645 and a macro catalyst risk is fla",
+    "outcome": "[LOSS] CHF/JPY closed 2026-09-11 21:01:36"
   },
   {
     "source": "auto",
-    "pattern": "Setups taken at confidence >= 7 (n=11 closed trades)",
-    "outcome": "Win rate 27%, expectancy -0.28R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
+    "pattern": "Overall track record to date (n=17)",
+    "outcome": "Win rate 35%, expectancy -0.28R."
+  },
+  {
+    "source": "auto",
+    "pattern": "Setups taken at confidence >= 7 (n=12 closed trades)",
+    "outcome": "Win rate 25%, expectancy -0.36R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
   },
   {
     "source": "auto",
@@ -131,8 +131,8 @@
   },
   {
     "source": "auto",
-    "pattern": "BUY setups (n=7 closed trades)",
-    "outcome": "Win rate 29%, expectancy +0.11R. This segment has been profitable overall (positive expectancy) - a point in its favour, but still demand full confluence."
+    "pattern": "BUY setups (n=8 closed trades)",
+    "outcome": "Win rate 25%, expectancy -0.11R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
   },
   {
     "source": "auto",

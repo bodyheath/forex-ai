@@ -1,0 +1,24 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 with aligned bear ribbon conflicts with neutral weekly/daily MTF consensus and oversold stochastic, creating low-probability setup despite crowded EUR short positioning.
+RISK_FACTORS: [1. MTF weekly+daily both NEUTRAL — does not meet 2/3 confirmation threshold; monthly SELL + 4H SELL insufficient without weekly agreement. 2. EUR short positioning at 12% is crowded but not extreme; CAD short at 50% mid-range — reversal risk present but unconfirmed by price structure.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.6048
+ENTRY_TRIGGER_REASON: Break below 23.6% Fib support at 1.60648 to confirm H&S neckline break; only if weekly MTF upgrades to SELL.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**RATIONALE:**
+
+**Technical (4/10):**
+- D1 T_sig=NEUTRAL_3 is baseline; H&S bearish pattern (+bearish bias) offset by price at RSI 45.8 (neutral midpoint) and MACD near zero (no directional conviction).

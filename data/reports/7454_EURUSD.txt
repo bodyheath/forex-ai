@@ -1,0 +1,20 @@
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + leaning-bull ribbon + crowded EUR short positioning suggest bounce potential, but MTF consensus is neutral and RSI lacks conviction in either direction.
+RISK_FACTORS: [1] MTF agreement is 0/3 — weekly and daily both NEUTRAL, breaking the core entry rule (both must agree for TRADE_THIS=YES); [2] RSI=51.1 at midpoint and Stochastic=30.5 show no clear oscillator conviction, and MACD is flat (MACDh≈0) — no technical momentum to sustain upside.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.1560
+ENTRY_TRIGGER_REASON: Pullback to SMA50 (1.1528) + nearby Fib support would improve risk:reward and allow confirmation of ribbon lean.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**Rationale:**
+- **MTF Rule Violation:** Weekly=NEUTRAL, Daily=NEUTRAL, 4H=BUY. The rule requires weekly AND daily to both agree on direction. They do not (both are neutral, 4H alone disagrees). Confidence floor is broken → **TRADE_THIS=NO** regardless of other

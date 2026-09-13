@@ -1,0 +1,26 @@
+```
+PAIR: NZD/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: Pin bar at 50% Fib in oversold territory (RSI 36.9) with D1+4H agreement offers reversal setup, but death-cross structure and weak weekly confirmation limit upside potential.
+RISK_FACTORS: Death-cross (price < SMA50 < SMA200) remains intact — downtrend structure unfavorable; Weekly MTF=NEUTRAL breaks the 2/3 rule (only D+4H agree, W does not), reducing confluence to 60% confidence.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.5808
+ENTRY_TRIGGER_REASON: Bounce confirmation at 50% Fibonacci (0.58082) with RSI hold above 35 on pullback.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**MTF Failure:** Weekly=NEUTRAL fails to confirm BUY. Daily+4H agreement is only 2/3 (confidence weighting 60%), below your 2/3+ threshold for clean trades. TRADE_THIS→NO triggered by this rule violation alone.
+
+**Technical (6/10):**
+- RSI 36.9 on D1

@@ -1,0 +1,24 @@
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + bullish double bottom on 4H suggest reversal attempt, but MTF conflict (W:NEUTRAL, 4H:SELL) and mixed ribbon (3/5) limit conviction.
+RISK_FACTORS: [MTF alignment fails (only D:BUY agrees; W and 4H conflict) — no clear weekly tailwind; price remains range-bound below SMA50 (1.8829) with no strong momentum (RSI neutral 40.8, Stoch K weak 26.5, CCI bearish −59.2)]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.8740
+ENTRY_TRIGGER_REASON: Retest of pin bar base and lower Fibonacci level (SL 1.8607 + 2×ATR buffer) to confirm double-bottom reversal before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Explanation:**
+
+**MTF Rule Veto:**  
+Your MTF shows W:NEUTRAL, D:BUY, 4H:SELL — agreement is 1/3. The rule demands **both weekly AND daily agree**; they do not (W is neutral, not BU

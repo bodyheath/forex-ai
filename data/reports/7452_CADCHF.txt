@@ -1,0 +1,25 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Bearish RSI divergence + overbought stochastic in uptrend conflict with fully aligned bull ribbon, creating high-risk mixed signal; MTF disagreement (M:BUY vs W/D/4H:NEUTRAL) blocks entry confidence.
+RISK_FACTORS: [1] MTF fragmentation (0/3 agreement) — monthly bullish diverges from weekly/daily neutrality, no directional consensus; [2] Ribbon fully aligned bullish (5/5) contradicts technical bearish setup, risking false signal reversal into continuation.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily both NEUTRAL (not both SELL), confidence <2/3. No trade qualified.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Analysis Summary:**
+
+**Technical (5/10):**
+- D1 T_sig=SELL_3 baseline, but context weakens it
+- RSI 64.7 is overbought-zone normal in uptrend (45–65 = neutral/3–4 in confirmed uptrend; 65–77 = mild SELL /4–5);

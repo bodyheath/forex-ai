@@ -1,0 +1,31 @@
+PAIR: GBP/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level on D1 with bullish bias and ribbon leaning bull provide weak confluence, but MTF neutrality and RSI midpoint lack directional conviction.
+RISK_FACTORS: [MTF completely neutral (M/W/D/4H all NEUTRAL) — no timeframe agreement, violating core MTF rule] [D1 uptrend vs 4H downtrend conflict — price structure contradicts between frames]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do not both agree on direction (0/3 agreement); confidence cannot meet 7+ threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**ANALYSIS:**
+
+**MTF Verdict (CRITICAL):**
+- Monthly: NEUTRAL
+- Weekly: NEUTRAL
+- Daily: NEUTRAL (uptrend structure, but T_sig=3=NEUTRAL)
+- 4H: NEUTRAL (downtrend structure, but T_sig=3)
+- **Confidence = 0/3** — no timeframe pair agreement. **MTF rule fails.** TRADE_THIS = NO regardless of other factors.
+
+**Technical Scoring:**
+-
