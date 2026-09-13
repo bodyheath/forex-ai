@@ -193,5 +193,175 @@ class TestConditionalEntryShadowGate(unittest.TestCase):
                 self.fail(f"_record_conditional_entry_shadow raised {exc!r} -- must never break the caller")
 
 
+class TestHistoricalImmediateStopPips(unittest.TestCase):
+
+    def setUp(self):
+        import daily
+        self.daily = daily
+
+    def _write_research_csv(self, path, rows):
+        import pandas as pd
+        pd.DataFrame(rows).to_csv(path, index=False)
+
+    def test_returns_none_below_min_n(self):
+        with tempfile.TemporaryDirectory() as td:
+            td = Path(td)
+            self._write_research_csv(td / "research_trades.csv", [
+                {"pair": "EUR/USD", "entry_type": "IMMEDIATE", "entry": 1.10, "stop_loss": 1.09},
+                {"pair": "EUR/USD", "entry_type": "", "entry": 1.11, "stop_loss": 1.095},
+            ])
+            fake_trades = td / "no_trades.csv"  # doesn't exist
+            with patch.object(self.daily.config, "DATA_DIR", td), \
+                 patch.object(self.daily.config, "TRADES_CSV", fake_trades):
+                median, n = self.daily._historical_immediate_stop_pips("EUR/USD", min_n=5)
+        self.assertIsNone(median)
+        self.assertEqual(n, 2)
+
+    def test_returns_median_when_enough_comparables(self):
+        with tempfile.TemporaryDirectory() as td:
+            td = Path(td)
+            rows = [
+                {"pair": "EUR/USD", "entry_type": "IMMEDIATE", "entry": 1.1000, "stop_loss": 1.0900},  # 100p
+                {"pair": "EUR/USD", "entry_type": "IMMEDIATE", "entry": 1.1000, "stop_loss": 1.0900},  # 100p
+                {"pair": "EUR/USD", "entry_type": "",          "entry": 1.1000, "stop_loss": 1.0900},  # 100p
+                {"pair": "EUR/USD", "entry_type": "IMMEDIATE", "entry": 1.1000, "stop_loss": 1.0800},  # 200p
+                {"pair": "EUR/USD", "entry_type": "IMMEDIATE", "entry": 1.1000, "stop_loss": 1.0800},  # 200p
+                # Different pair, must not pollute EUR/USD's stats
+                {"pair": "GBP/USD", "entry_type": "IMMEDIATE", "entry": 1.25, "stop_loss": 1.20},
+                # Conditional entry_type must be excluded from the "IMMEDIATE" baseline
+                {"pair": "EUR/USD", "entry_type": "LIMIT_BUY", "entry": 1.10, "stop_loss": 1.05},
+            ]
+            self._write_research_csv(td / "research_trades.csv", rows)
+            fake_trades = td / "no_trades.csv"
+            with patch.object(self.daily.config, "DATA_DIR", td), \
+                 patch.object(self.daily.config, "TRADES_CSV", fake_trades):
+                median, n = self.daily._historical_immediate_stop_pips("EUR/USD", min_n=5)
+        self.assertEqual(n, 5)
+        self.assertEqual(median, 100.0)
+
+    def test_returns_none_when_no_files_exist(self):
+        with tempfile.TemporaryDirectory() as td:
+            td = Path(td)
+            with patch.object(self.daily.config, "DATA_DIR", td), \
+                 patch.object(self.daily.config, "TRADES_CSV", td / "missing.csv"):
+                median, n = self.daily._historical_immediate_stop_pips("EUR/USD")
+        self.assertIsNone(median)
+        self.assertEqual(n, 0)
+
+
+class TestConditionalEntryPlausibilityCheck(unittest.TestCase):
+
+    def setUp(self):
+        import daily
+        self.daily = daily
+        # Deterministic distance baseline for every test in this class,
+        # unless a specific test overrides it -- isolates sign/rr checks
+        # from real trades.csv/research_trades.csv on this machine.
+        self._hist_patcher = patch.object(
+            self.daily, "_historical_immediate_stop_pips", return_value=(100.0, 10)
+        )
+        self._hist_patcher.start()
+        self.addCleanup(self._hist_patcher.stop)
+
+    def test_buy_correct_sign_and_consistent_rr_passes(self):
+        # stop=100p, target=200p -> real R:R=2.0, matches stated
+        result = self.daily._check_conditional_entry_plausibility(
+            "EUR/USD", "BUY", entry=1.1000, stop_loss=1.0900, target=1.1200,
+            reward_risk_stated=2.0,
+        )
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["failed"], [])
+        self.assertTrue(result["checks"]["sign_direction"])
+        self.assertTrue(result["checks"]["distance_plausible"])
+        self.assertTrue(result["checks"]["rr_consistent"])
+
+    def test_buy_backwards_stop_fails_sign_check(self):
+        # stop ABOVE entry on a BUY -- unusable regardless of anything else
+        result = self.daily._check_conditional_entry_plausibility(
+            "EUR/USD", "BUY", entry=1.1000, stop_loss=1.1100, target=1.1200,
+            reward_risk_stated=2.0,
+        )
+        self.assertFalse(result["passed"])
+        self.assertIn("sign_direction", result["failed"])
+
+    def test_sell_correct_sign_passes(self):
+        result = self.daily._check_conditional_entry_plausibility(
+            "EUR/USD", "SELL", entry=1.1000, stop_loss=1.1100, target=1.0800,
+            reward_risk_stated=2.0,
+        )
+        self.assertTrue(result["checks"]["sign_direction"])
+
+    def test_sell_backwards_target_fails_sign_check(self):
+        # target ABOVE entry on a SELL -- backwards
+        result = self.daily._check_conditional_entry_plausibility(
+            "EUR/USD", "SELL", entry=1.1000, stop_loss=1.1100, target=1.1200,
+            reward_risk_stated=2.0,
+        )
+        self.assertFalse(result["passed"])
+        self.assertIn("sign_direction", result["failed"])
+
+    def test_rr_inconsistent_with_stated_fails(self):
+        # stop=100p, target=200p -> real R:R=2.0, but model claims 5:1
+        result = self.daily._check_conditional_entry_plausibility(
+            "EUR/USD", "BUY", entry=1.1000, stop_loss=1.0900, target=1.1200,
+            reward_risk_stated=5.0,
+        )
+        self.assertFalse(result["passed"])
+        self.assertIn("rr_consistent", result["failed"])
+        self.assertEqual(result["checks"]["rr_real"], 2.0)
+        self.assertEqual(result["checks"]["rr_stated"], 5.0)
+
+    def test_rr_within_tolerance_passes(self):
+        # real R:R = 210/100 = 2.1, stated 2.0 -- within 20% relative tolerance
+        result = self.daily._check_conditional_entry_plausibility(
+            "EUR/USD", "BUY", entry=1.1000, stop_loss=1.0900, target=1.1210,
+            reward_risk_stated=2.0,
+        )
+        self.assertTrue(result["checks"]["rr_consistent"])
+
+    def test_distance_far_outside_historical_range_fails(self):
+        # Baseline median stop = 100p; this candidate's stop = 1000p (10x)
+        result = self.daily._check_conditional_entry_plausibility(
+            "EUR/USD", "BUY", entry=1.1000, stop_loss=1.0000, target=1.3000,
+            reward_risk_stated=2.0,
+        )
+        self.assertFalse(result["passed"])
+        self.assertIn("distance_plausible", result["failed"])
+
+    def test_distance_within_historical_range_passes(self):
+        # 150p stop is within 0.3x-3x of a 100p median baseline
+        result = self.daily._check_conditional_entry_plausibility(
+            "EUR/USD", "BUY", entry=1.1000, stop_loss=1.0850, target=1.1300,
+            reward_risk_stated=2.0,
+        )
+        self.assertTrue(result["checks"]["distance_plausible"])
+
+    def test_insufficient_historical_data_is_none_not_a_failure(self):
+        self._hist_patcher.stop()
+        with patch.object(self.daily, "_historical_immediate_stop_pips", return_value=(None, 2)):
+            result = self.daily._check_conditional_entry_plausibility(
+                "EUR/USD", "BUY", entry=1.1000, stop_loss=1.0900, target=1.1200,
+                reward_risk_stated=2.0,
+            )
+        self._hist_patcher.start()
+        self.assertIsNone(result["checks"]["distance_plausible"])
+        self.assertTrue(result["passed"])  # insufficient data must not fail the overall verdict
+
+    def test_unparseable_levels_fails_cleanly(self):
+        result = self.daily._check_conditional_entry_plausibility(
+            "EUR/USD", "BUY", entry="not a number", stop_loss=1.09, target=1.12,
+            reward_risk_stated=2.0,
+        )
+        self.assertFalse(result["passed"])
+
+    def test_missing_stated_rr_skips_that_check_without_failing(self):
+        result = self.daily._check_conditional_entry_plausibility(
+            "EUR/USD", "BUY", entry=1.1000, stop_loss=1.0900, target=1.1200,
+            reward_risk_stated=None,
+        )
+        self.assertIsNone(result["checks"]["rr_consistent"])
+        self.assertTrue(result["passed"])
+
+
 if __name__ == "__main__":
     unittest.main()
