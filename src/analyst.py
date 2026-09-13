@@ -554,7 +554,17 @@ def _build_sonnet_message(pair: str, bundle: dict, haiku_report: str) -> str:
         "requires judgement (e.g. a ribbon-vs-MTF conflict), resolve it silently and "
         "reflect the result directly in the relevant field's value.\n"
         "Output PAIR: through TRADE_THIS: only. "
-        "Include ENTRY TARGET STOP_LOSS REWARD_RISK_RATIO BEST_ENTRY_TIME(Auckland time) NEWS_WARNING."
+        "Include ENTRY TARGET STOP_LOSS REWARD_RISK_RATIO BEST_ENTRY_TIME(Auckland time) NEWS_WARNING.\n"
+        "2026-09-13: ENTRY/TARGET/STOP_LOSS/REWARD_RISK_RATIO are REQUIRED numeric fields "
+        "for every TRADE_THIS: YES candidate, with NO exception for a conditional "
+        "ENTRY_TYPE (BREAKOUT_BUY/BREAKOUT_SELL/LIMIT_BUY/LIMIT_SELL/PULLBACK). For a "
+        "conditional setup, ENTRY is the price the position will actually open at once "
+        "ENTRY_TRIGGER_PRICE is reached (usually the same value), and STOP_LOSS/TARGET "
+        "are the real levels that apply from that point -- NOT the trigger mechanics "
+        "themselves, which belong in ENTRY_TRIGGER_PRICE/ENTRY_TRIGGER_REASON instead. "
+        "Never omit ENTRY/STOP_LOSS/TARGET just because entry hasn't happened yet: a "
+        "conditional trade candidate without them cannot be executed if the trigger "
+        "fires and is discarded outright, regardless of how strong the setup otherwise is."
     )
     return "\n".join(parts)
 
