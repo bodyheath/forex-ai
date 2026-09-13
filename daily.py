@@ -7454,6 +7454,15 @@ def _send_telegram_summary(
                     # would have used, touch nothing real. status/discord alert
                     # below are the ONLY real side effects this branch has ever
                     # had -- both skipped here.
+                    _plaus_stop = _yt_parsed.get("stop_loss") or _yt_parsed.get("stop")
+                    try:
+                        _plausibility = _check_conditional_entry_plausibility(
+                            _yt_pair, _yt_dir, _yt_parsed.get("entry"), _plaus_stop,
+                            _yt_parsed.get("target"), _yt_parsed.get("reward_risk"),
+                        )
+                    except Exception as _plaus_exc:
+                        _log_line(log, f"[entry] plausibility check failed: {_plaus_exc}")
+                        _plausibility = {"passed": None, "checks": {}, "failed": ["check_errored"]}
                     _record_conditional_entry_shadow({
                         "id": _yt_id, "pair": _yt_pair, "direction": _yt_dir,
                         "entry_type": _entry_info["entry_type"],
@@ -7461,18 +7470,21 @@ def _send_telegram_summary(
                         "trigger_reason": _entry_info["trigger_reason"] or "",
                         "expiry_hours": _expiry_h,
                         "entry": _yt_parsed.get("entry"),
-                        "stop_loss": _yt_parsed.get("stop_loss") or _yt_parsed.get("stop"),
+                        "stop_loss": _plaus_stop,
                         "target": _yt_parsed.get("target"),
                         "reward_risk": _yt_parsed.get("reward_risk"),
                         "confidence": _yt_parsed.get("confidence"),
+                        "plausibility": _plausibility,
                         "recorded_at_utc": _dt_et.now(_tz_et.utc).strftime("%Y-%m-%d %H:%M:%S"),
                     })
                     _log_line(log, (
                         f"[entry] #{_yt_id} {_yt_pair} would be -> PENDING "
                         f"({_entry_info['entry_type']} at {_entry_info['trigger_price']}, "
-                        f"entry={_yt_parsed.get('entry')} stop={_yt_parsed.get('stop_loss')} "
+                        f"entry={_yt_parsed.get('entry')} stop={_plaus_stop} "
                         f"target={_yt_parsed.get('target')}) -- CONDITIONAL_ENTRY_LIVE off, "
-                        f"logged to shadow file only, real status unchanged"
+                        f"logged to shadow file only, real status unchanged "
+                        f"[plausibility: passed={_plausibility.get('passed')} "
+                        f"failed={_plausibility.get('failed')}]"
                     ))
                     _trk_et.update_fields(int(_yt_id), **_entry_kwargs)
                     continue
