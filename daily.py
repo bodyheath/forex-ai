@@ -1589,7 +1589,7 @@ def _historical_immediate_stop_pips(pair: str, min_n: int = 5) -> "tuple[float |
     pips_out: list = []
     for _path in (config.DATA_DIR / "research_trades.csv", config.TRADES_CSV):
         try:
-            if not Path(_path).exists():
+            if not _path.exists():
                 continue
             _df = _pd_hist.read_csv(_path, low_memory=False)
             _rows = _df[_df["pair"] == pair]
