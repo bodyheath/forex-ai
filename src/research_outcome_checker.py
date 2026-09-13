@@ -584,6 +584,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                 _record_loss_classification(updated)
                 _record_sentiment_evaluation(updated)
                 _record_ribbon_carveout_evaluation(updated)
+                _record_divergence_evaluation(updated)
                 _closed_this = True
 
             elif _casc.stop_hit(row, price):
