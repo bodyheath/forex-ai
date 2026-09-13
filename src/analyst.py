@@ -635,6 +635,84 @@ def analyse(pair: str, bundle: dict, haiku_report: str = "",
                         report = report.rstrip() + "\n" + line.strip()
                         break
 
+    # 2026-09-13: conditional-entry ENTRY/STOP_LOSS/TARGET retry backstop.
+    #
+    # Real incident: 17 of 229 real fund YES candidates (7%) were discarded
+    # as SKIPPED because the AI's own conditional-entry response (BREAKOUT_*/
+    # LIMIT_*/PULLBACK) omitted ENTRY/STOP_LOSS/TARGET entirely -- confirmed
+    # directly against the raw saved reports (data/reports/1709_EURUSD.txt
+    # and others): the fields are genuinely absent, not malformed or
+    # differently-named, and the omission tracked exactly with a conditional
+    # ENTRY_TYPE -- every IMMEDIATE-type candidate in the same population
+    # reliably includes them. Root cause was the prompt (_build_sonnet_
+    # message above), not parsing: its closing instruction never said these
+    # fields are still required when the entry itself is conditional, and
+    # "Output PAIR: through TRADE_THIS: only" read as license to omit
+    # anything not obviously needed before that point. The prompt is now
+    # explicit above; this is the backstop for whenever it still isn't
+    # complied with, mirroring the CONFIDENCE retry above -- one extra
+    # attempt with an explicit, targeted reminder, not a blind resend.
+    #
+    # This never overrides a compliant first response, only rescues one that
+    # would otherwise be an unusable, thrown-away conditional setup, and it
+    # changes nothing about whether that setup is ever allowed to open a
+    # real position -- daily.py's own conditional-entry -> PENDING pathway
+    # is separately gated behind CONDITIONAL_ENTRY_LIVE (see that file) and
+    # currently defaults to shadow/logging-only regardless of how complete
+    # this report is.
+    try:
+        from src import recparse as _rp_retry
+        _parsed_check = _rp_retry.parse(report)
+        _needs_retry = (
+            _parsed_check.get("trade_this") == "YES"
+            and (_parsed_check.get("entry_type") or "IMMEDIATE") != "IMMEDIATE"
+            and (not _parsed_check.get("entry") or not _parsed_check.get("stop_loss")
+                 or not _parsed_check.get("target"))
+        )
+    except Exception:
+        _needs_retry = False
+
+    if _needs_retry:
+        log(
+            f"Sonnet: {pair} — conditional {_parsed_check.get('entry_type')} candidate "
+            f"missing ENTRY/STOP_LOSS/TARGET — retrying once with an explicit reminder"
+        )
+        _retry_message = (
+            user_message
+            + "\n\nYour previous response chose a conditional ENTRY_TYPE but omitted "
+              "ENTRY/STOP_LOSS/TARGET. These are still required: ENTRY is the price the "
+              "position opens at once the trigger is hit (usually equal to "
+              "ENTRY_TRIGGER_PRICE), and STOP_LOSS/TARGET are the real levels from that "
+              "point. Respond again with the complete field set, including all three."
+        )
+
+        def _retry_call(client):
+            return client.messages.create(
+                model=config.CLAUDE_MODEL,
+                max_tokens=1500,
+                system=[{"type": "text", "text": system_prompt, "cache_control": {"type": "ephemeral"}}],
+                messages=[{"role": "user", "content": _retry_message}],
+            )
+
+        try:
+            _retry_resp = _call_api(_retry_call)
+            _cost["sonnet_input"]  += getattr(_retry_resp.usage, "input_tokens",  0)
+            _cost["sonnet_output"] += getattr(_retry_resp.usage, "output_tokens", 0)
+            _retry_report = "".join(
+                block.text for block in _retry_resp.content if block.type == "text"
+            )
+            _retry_parsed = _rp_retry.parse(_retry_report)
+            if (_retry_parsed.get("entry") and _retry_parsed.get("stop_loss")
+                    and _retry_parsed.get("target")):
+                report = _retry_report
+                log(f"Sonnet: {pair} — retry supplied ENTRY/STOP_LOSS/TARGET, using it")
+            else:
+                log(f"Sonnet: {pair} — retry still missing ENTRY/STOP_LOSS/TARGET, "
+                    f"keeping original response (will be logged SKIPPED as before)")
+        except Exception as _retry_exc:
+            log(f"Sonnet: {pair} — conditional-entry retry failed ({_retry_exc}), "
+                f"keeping original response")
+
     _store_skip_cache(pair, bundle, report)
     return report
 
