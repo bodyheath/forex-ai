@@ -19,6 +19,15 @@ Fixes covered here:
      PENDING orders as a side effect of a data fix. Default OFF: records
      what would have been used to data/conditional_entry_shadow.json,
      touches no real trade row.
+  3. daily.py: _check_conditional_entry_plausibility(). Requiring ENTRY/
+     STOP_LOSS/TARGET gives the model a new reason to pad a plausible-
+     looking number just to satisfy the requirement even when it isn't
+     actually confident in a level. Three independent checks recorded on
+     every shadow row -- sign/direction, distance vs. this pair's own real
+     IMMEDIATE-trade history (None when there isn't enough of it yet, not a
+     fail), and internal entry/stop/target vs. stated REWARD_RISK_RATIO
+     consistency -- so a genuinely usable setup can be told apart from a
+     padded one without re-deriving it from the raw numbers later.
 
 No real API calls anywhere in this file: _call_api() is mocked directly.
 """
