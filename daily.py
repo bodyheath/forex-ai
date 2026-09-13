@@ -7239,6 +7239,29 @@ def _send_telegram_summary(
         pass
 
     # ── Entry type detection for YES fund trades ──────────────────────────────
+    #
+    # 2026-09-13: CONDITIONAL_ENTRY_LIVE safety gate. This block is the
+    # single real place that converts a fund candidate into a real PENDING
+    # order (status="PENDING" below) -- it has never fired for real in the
+    # fund's history because the 5-line "if not _yt_dir or not _yt_entry:
+    # continue" guard bails first: conditional (BREAKOUT_*/LIMIT_*/PULLBACK)
+    # candidates never had a non-zero `entry` to check, since the AI's own
+    # response omitted ENTRY/STOP_LOSS/TARGET whenever it chose a
+    # conditional ENTRY_TYPE (confirmed against 17 real historical cases;
+    # root-caused and fixed in src/analyst.py's prompt + retry backstop).
+    # Fixing that data gap makes this block reachable for the first time --
+    # which means it would start creating real PENDING orders for the first
+    # time too, as an automatic side effect of a fix that was only supposed
+    # to close a data gap. Real order creation from a never-before-exercised
+    # pathway is a separate decision, not something to bundle into the data
+    # fix silently. Default OFF (shadow/logging-only): records exactly what
+    # entry_type/trigger/entry/stop/target this candidate would have used to
+    # data/conditional_entry_shadow.json, but leaves the row's real status
+    # untouched (whatever tracker.log_recommendation() already gave it).
+    # Set CONDITIONAL_ENTRY_LIVE=YES (never in a local .env) to let this
+    # path actually create real PENDING orders -- a deliberate, later,
+    # explicit decision once shadow data has been reviewed.
+    _conditional_entry_live = _os.environ.get("CONDITIONAL_ENTRY_LIVE", "").upper() == "YES"
     try:
         from src import tracker as _trk_et
         from datetime import datetime as _dt_et, timezone as _tz_et, timedelta as _td_et
