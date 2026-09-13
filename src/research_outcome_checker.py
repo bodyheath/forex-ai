@@ -247,6 +247,76 @@ def _record_ribbon_carveout_evaluation(updated: dict) -> None:
         print(f"[research_outcome_checker] ribbon carveout shadow_mode recording error "
               f"(research trade {updated.get('id')}): {exc}", file=sys.stderr)
 
+
+# 2026-09-13: technical_carries_divergence, pre-registered in shadow_mode.py
+# (Phase 16/17 of the same investigation this file's other rules came from
+# -- see PROMOTION_DISCIPLINE.md). Registration alone doesn't accumulate
+# evidence -- same missing-feed class of bug _record_sentiment_evaluation's
+# own comment describes for sentiment_agent_supports -- so this is that
+# feed. Mirrors _record_ribbon_carveout_evaluation()'s shape exactly: would_
+# fire is a pure function of fields already persisted on the row at
+# creation time, this never influences the trade's own status/fields, and
+# it never feeds a grading/gating decision.
+_DIVERGENCE_RULE = "technical_carries_divergence"
+_DIVERGENCE_RULE_DESCRIPTION = (
+    "Candidates where technical_score meaningfully outpaces the mean of "
+    "fundamental/sentiment/positioning/macro (divergence = tech_score - "
+    "mean(fund_score, sent_score, pos_score, macro_score) >= 3.0), i.e. a "
+    "technically-strong setup carried mostly by one dimension while the "
+    "other four are mediocre-to-weak -- the CHF/JPY #7325 postmortem shape "
+    "(8 vs mean 4.5, divergence 3.5). Phase 16 discovery sample (strict/v2/"
+    "decisive research_trades.csv, n=41): WR=17.1% vs 26.2% broadly-agreeing "
+    "(divergence<=1, n=909), PF=0.243 vs 0.754. Real, consistent, "
+    "economically large gap, but WR difference alone did not reach p<0.05 "
+    "(p=0.096) and was non-monotonic at the extreme tail (n=18 bucket at "
+    "divergence>=3.5 bounced back to WR=33.3%) -- exactly the kind of "
+    "suggestive-but-unconfirmed pattern this discipline exists for. "
+    "Registered on the discovery sample; requires fresh out-of-sample "
+    "evidence, not a re-test of the same 41 trades, before ever informing "
+    "a real decision."
+)
+
+
+def _divergence_would_fire(updated: dict):
+    """Returns True/False for would_fire, or None if this candidate is
+    missing any of the 5 scores needed to compute divergence at all."""
+    try:
+        tech = float(updated.get("tech_score"))
+        fund = float(updated.get("fund_score"))
+        sent = float(updated.get("sent_score"))
+        pos = float(updated.get("pos_score"))
+        macro = float(updated.get("macro_score"))
+    except (TypeError, ValueError):
+        return None
+    other4_mean = (fund + sent + pos + macro) / 4.0
+    return (tech - other4_mean) >= 3.0
+
+
+def _record_divergence_evaluation(updated: dict) -> None:
+    """Best-effort: record this closed research trade against the
+    technical_carries_divergence shadow rule. Pure observability -- never
+    raises, never affects the trade's own fields, never feeds a
+    grading/gating decision."""
+    try:
+        would_fire = _divergence_would_fire(updated)
+        if would_fire is None:
+            return  # missing a score -- not part of this rule's population
+        from src import shadow_mode as _sm
+        _sm.register_rule(
+            _DIVERGENCE_RULE, description=_DIVERGENCE_RULE_DESCRIPTION,
+            min_n_fire=100, min_n_no_fire=100, alpha=0.05,
+        )
+        _sm.record_evaluation(
+            _DIVERGENCE_RULE, would_fire=would_fire,
+            outcome=updated.get("status"), net_pips=updated.get("net_pips"),
+            context={"id": updated.get("id"), "pair": updated.get("pair"),
+                     "direction": updated.get("direction"),
+                     "tech_score": updated.get("tech_score")},
+        )
+    except Exception as exc:
+        print(f"[research_outcome_checker] divergence shadow_mode recording error "
+              f"(research trade {updated.get('id')}): {exc}", file=sys.stderr)
+
 _PRICE_URL         = "https://api.twelvedata.com/price"
 _EXPIRY_DAYS       = 7      # fallback; actual expiry is computed from R:R
 _STALE_EXIT_DAYS   = 21     # hard maximum — close without T1 hit after this many days
