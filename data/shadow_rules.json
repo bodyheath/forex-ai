@@ -13955,5 +13955,19 @@
         }
       }
     ]
+  },
+  "technical_carries_divergence": {
+    "description": "Candidates where technical_score meaningfully outpaces the mean of fundamental/sentiment/positioning/macro (divergence = tech_score - mean(fund_score, sent_score, pos_score, macro_score) >= 3.0), i.e. a technically-strong setup carried mostly by one dimension while the other four are mediocre-to-weak -- the CHF/JPY #7325 postmortem shape (8 vs mean 4.5, divergence 3.5). Phase 16 discovery sample (strict/v2/decisive research_trades.csv, n=41): WR=17.1% vs 26.2% broadly-agreeing (divergence<=1, n=909), PF=0.243 vs 0.754. Real, consistent, economically large gap, but WR difference alone did not reach p<0.05 (p=0.096) and was non-monotonic at the extreme tail (n=18 bucket at divergence>=3.5 bounced back to WR=33.3%) -- exactly the kind of suggestive-but-unconfirmed pattern this discipline exists for. Registered here on the discovery sample; requires fresh out-of-sample evidence, not a re-test of the same 41 trades, before ever informing a real decision.",
+    "registered_at": "2026-09-13T05:18:27.710217+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 100,
+    "min_n_no_fire": 100,
+    "alpha": 0.05,
+    "pf_max_fire": null,
+    "pf_min_fire": null,
+    "pf_min_gap": null,
+    "promoted": false,
+    "evaluations": []
   }
 }
