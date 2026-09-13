@@ -701,6 +701,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
             _record_loss_classification(updated)
             _record_sentiment_evaluation(updated)
             _record_ribbon_carveout_evaluation(updated)
+            _record_divergence_evaluation(updated)
 
         except Exception as exc:
             log(f"  Research #{rec_id} {pair}: outcome check error — {exc}")
