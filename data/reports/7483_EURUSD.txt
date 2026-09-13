@@ -1,0 +1,20 @@
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with 4H BUY signal and ribbon leaning bull suggests early upside setup, but weak MTF agreement (4H only) and neutral RSI/MACD limit conviction.
+RISK_FACTORS: [1. MTF conflict: M/W/D all neutral, only 4H BUY (0/3 conf) — no weekly or daily confirmation for directional trade. 2. RSI 52.7 + MACD -0.0007 flat — no momentum conviction; price stuck between SMA50 (1.1528) and SMA200 (1.1633), classic indecision range.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.1528
+ENTRY_TRIGGER_REASON: Confluence of SMA50 support + 4H BUY signal + ribbon lean; wait for daily confirmation (RSI bounce + MACD cross above 0).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE:**
+- **MTF Rule Failure:** Weekly and Daily are both NEUTRAL, 4H is BUY. Conf=0/3 — hard rule enforced: TRADE_THIS=NO unless W+D both confirm

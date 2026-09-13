@@ -1,0 +1,22 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar rejection at key level with D1+4H aligned SELL in uptrend signals local top, but ribbon fully bullish and RSI 57 limit reversal conviction.
+RISK_FACTORS: [1. Ribbon ALIGNED_BULL strongly favors continuation — pin bar may be minor pullback within larger uptrend, not reversal. 2. MTF conf=2/3 (D+4H agree SELL, but W+M NEUTRAL) — weekly invalidates strong reversal case; USD strength (diff +3.67%, rate flat but structural support) may override daily sell signal.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8150
+ENTRY_TRIGGER_REASON: Sell break below pin bar low if price extends higher first; better risk/reward if shorting pullback to SMA50 (0.8093) fails.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE:**
+
+**Technical (6/10):**
+- T_sig=SELL_4 is baseline, justified by: pin bar at key level (rejection pattern) + D1 RSI 57.3 (neutral-to-slight-resistance) + MACD positive but fading (0.

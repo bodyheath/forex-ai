@@ -1,0 +1,25 @@
+PAIR: GBP/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level on D1 uptrend structure conflicts with 4H downtrend and mixed MTF signals, creating neutral-to-slight-bullish setup with low conviction.
+RISK_FACTORS: [1. MTF disagreement (D1 uptrend vs 4H downtrend) violates MTF alignment rule — no directional consensus across timeframes. 2. OSC shows no oscillator confluence (Stochastic 19.2 oversold but CCI -93.8 diverges), weakening reversal reliability.]
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.3477
+ENTRY_TRIGGER_REASON: Pullback to SMA50 (D1 trend support) with RSI mean-reversion confluence would require MTF alignment confirmation first.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**Technical (5/10 → Hold at 5):**
+- D1 T_sig=NEUTRAL_3, RSI=47.7 (middle zone), price above SMA50/SMA200 (uptrend), golden cross confirmed.
+- 4H breaks D1 structure: price < SMA50 < SMA

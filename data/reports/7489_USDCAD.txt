@@ -1,0 +1,27 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H bearish pressure with ribbon leaning bear and CAD rate falling, but D1 is neutral with mixed MA alignment and no oscillator confluence—low-conviction setup.
+RISK_FACTORS: [MTF confidence 0/3 (all timeframes neutral or conflicting, no aligned directional agreement); price locked in 515p range with pin bar at key level suggesting potential reversal rather than trend continuation]
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.3750
+ENTRY_TRIGGER_REASON: Pullback to lower Fibonacci support (SL=1.37326) with RSI oversold confirmation would increase confluence for short entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**Rationale:**
+
+1. **MTF Alignment Failure (HARD RULE)**: W:NEUTRAL, D:NEUTRAL, 4H:SELL = 0/3 agreement. MTF confidence = 0%, fails the ≥2/3 threshold. **TRADE_THIS = NO** (mandatory).
+
+2. **Technical Score = 4**:
+   - D1 RSI=45.3 (neutral zone, standard tier = 3–4)
+   - MACD histogram near zero
