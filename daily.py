@@ -1560,6 +1560,33 @@ def _fmt_pips_between(pair: str, price_a, price_b) -> str:
         return "—"
 
 
+def _conditional_entry_live_enabled() -> bool:
+    """CONDITIONAL_ENTRY_LIVE safety gate -- see the real call site's own
+    comment (the "Entry type detection for YES fund trades" block) for the
+    full incident this closes. Default OFF (shadow/logging-only); set
+    CONDITIONAL_ENTRY_LIVE=YES (never in a local .env) to let a fixed
+    conditional-entry candidate actually create a real PENDING order."""
+    return os.environ.get("CONDITIONAL_ENTRY_LIVE", "").upper() == "YES"
+
+
+def _record_conditional_entry_shadow(entry: dict) -> None:
+    """Append one shadow record of what a conditional-entry candidate would
+    have used to open a real PENDING order, without creating one. Pure
+    observability -- never raises, never touches any real trade row."""
+    try:
+        path = config.DATA_DIR / "conditional_entry_shadow.json"
+        log_data = []
+        if path.exists():
+            try:
+                log_data = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                log_data = []
+        log_data.append(entry)
+        path.write_text(json.dumps(log_data, indent=2), encoding="utf-8")
+    except Exception as exc:
+        print(f"[entry] conditional-entry shadow log write failed: {exc}", file=sys.stderr)
+
+
 def _parse_entry_type(
     analysis_text: str,
     current_price: float,
