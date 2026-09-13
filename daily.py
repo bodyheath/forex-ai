@@ -1569,10 +1569,142 @@ def _conditional_entry_live_enabled() -> bool:
     return os.environ.get("CONDITIONAL_ENTRY_LIVE", "").upper() == "YES"
 
 
+def _historical_immediate_stop_pips(pair: str, min_n: int = 5) -> "tuple[float | None, int]":
+    """Median stop-loss distance (in pips) for real IMMEDIATE-type trades on
+    this exact pair, pooled from research_trades.csv and trades.csv. Returns
+    (None, n) when fewer than min_n real comparables exist -- an
+    insufficient-data verdict, not a pass or a fail, since there's nothing
+    real to compare against yet for a thinly-traded pair.
+
+    2026-09-13: feeds the conditional-entry plausibility check's distance
+    test (see _check_conditional_entry_plausibility) -- now that the AI is
+    *required* to supply ENTRY/STOP_LOSS/TARGET for conditional setups
+    (src/analyst.py fix, same incident), it has a real incentive to pad a
+    plausible-looking number just to satisfy that requirement even when it
+    isn't actually confident in a level. A distance wildly smaller or larger
+    than what this exact pair's own real trades typically use is the
+    cheapest real signal that happened.
+    """
+    import pandas as _pd_hist
+    pips_out: list = []
+    for _path in (config.DATA_DIR / "research_trades.csv", config.TRADES_CSV):
+        try:
+            if not Path(_path).exists():
+                continue
+            _df = _pd_hist.read_csv(_path, low_memory=False)
+            _rows = _df[_df["pair"] == pair]
+            _etype = _rows.get("entry_type")
+            if _etype is not None:
+                _immediate = _rows[_etype.astype(str).str.upper().isin(["", "IMMEDIATE", "NAN"])]
+            else:
+                _immediate = _rows
+            _entry_v = _pd_hist.to_numeric(_immediate.get("entry"), errors="coerce")
+            _stop_v  = _pd_hist.to_numeric(_immediate.get("stop_loss"), errors="coerce")
+            _valid = _immediate[_entry_v.notna() & _stop_v.notna() & (_entry_v != 0) & (_stop_v != 0)]
+            if _valid.empty:
+                continue
+            _ps = _pip_size(pair)
+            _pips = (_pd_hist.to_numeric(_valid["entry"]) - _pd_hist.to_numeric(_valid["stop_loss"])).abs() / _ps
+            pips_out.extend(_pips.tolist())
+        except Exception:
+            continue
+    if len(pips_out) < min_n:
+        return None, len(pips_out)
+    import statistics as _stats_hist
+    return _stats_hist.median(pips_out), len(pips_out)
+
+
+def _check_conditional_entry_plausibility(
+    pair: str, direction: str, entry, stop_loss, target, reward_risk_stated,
+) -> dict:
+    """Real sanity check on a conditional candidate's ENTRY/STOP_LOSS/TARGET,
+    run once the AI has actually supplied them (original response or after
+    the retry backstop) -- distinct from just checking they're present and
+    non-zero. Three checks, each independently reportable:
+
+      sign_direction   -- BUY: stop < entry < target (reverse for SELL).
+                          A backwards level is unusable regardless of
+                          anything else, and cheap to catch outright.
+      distance_plausible -- this pair's own real IMMEDIATE-trade stop
+                          distances (median, n>=5 required) as the
+                          comparison baseline; flags anything outside
+                          0.3x-3x of that median. None (not False) when
+                          there isn't yet enough real history for this pair
+                          to compare against -- insufficient data is not
+                          the same claim as implausible.
+      rr_consistent    -- recomputes real reward:risk from the actual
+                          entry/stop/target and compares it against the
+                          model's own separately-stated REWARD_RISK_RATIO
+                          (20% relative tolerance). Tests whether the
+                          model's own numbers hang together internally --
+                          a padded, not-actually-considered level is a
+                          likely source of this kind of self-contradiction.
+
+    Returns {"passed": bool, "checks": {name: True/False/None}, "failed":
+    [names]}. "passed" is True only when every check that actually ran
+    (excludes None/insufficient-data) came back True.
+    """
+    checks: dict = {}
+    failed: list = []
+
+    try:
+        e, s, t = float(entry), float(stop_loss), float(target)
+    except (TypeError, ValueError):
+        return {"passed": False, "checks": {"sign_direction": False}, "failed": ["unparseable_levels"]}
+
+    d = (direction or "").upper()
+    if d == "BUY":
+        sign_ok = s < e < t
+    elif d == "SELL":
+        sign_ok = t < e < s
+    else:
+        sign_ok = False
+    checks["sign_direction"] = sign_ok
+    if not sign_ok:
+        failed.append("sign_direction")
+
+    ps = _pip_size(pair)
+    stop_pips   = abs(e - s) / ps
+    target_pips = abs(t - e) / ps
+
+    median_pips, n_comparables = _historical_immediate_stop_pips(pair)
+    if median_pips is None:
+        checks["distance_plausible"] = None
+    else:
+        distance_ok = (0.3 * median_pips) <= stop_pips <= (3.0 * median_pips)
+        checks["distance_plausible"] = distance_ok
+        if not distance_ok:
+            failed.append("distance_plausible")
+    checks["distance_plausible_n_comparables"] = n_comparables
+
+    try:
+        stated_rr = float(reward_risk_stated)
+    except (TypeError, ValueError):
+        stated_rr = None
+    if stated_rr and stop_pips > 0:
+        real_rr = target_pips / stop_pips
+        rr_ok = abs(real_rr - stated_rr) <= (0.2 * max(stated_rr, real_rr))
+        checks["rr_consistent"] = rr_ok
+        checks["rr_real"] = round(real_rr, 2)
+        checks["rr_stated"] = stated_rr
+        if not rr_ok:
+            failed.append("rr_consistent")
+    else:
+        checks["rr_consistent"] = None
+
+    passed = all(v is not False for k, v in checks.items() if k in
+                 ("sign_direction", "distance_plausible", "rr_consistent"))
+    return {"passed": passed, "checks": checks, "failed": failed}
+
+
 def _record_conditional_entry_shadow(entry: dict) -> None:
     """Append one shadow record of what a conditional-entry candidate would
-    have used to open a real PENDING order, without creating one. Pure
-    observability -- never raises, never touches any real trade row."""
+    have used to open a real PENDING order, without creating one. Includes
+    the real plausibility-check verdict (see
+    _check_conditional_entry_plausibility) so accumulated shadow rows can be
+    told apart -- a genuinely usable setup vs. a level the model padded in
+    just to satisfy the new requirement -- without re-deriving it later.
+    Pure observability -- never raises, never touches any real trade row."""
     try:
         path = config.DATA_DIR / "conditional_entry_shadow.json"
         log_data = []
