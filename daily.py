@@ -7261,7 +7261,7 @@ def _send_telegram_summary(
     # Set CONDITIONAL_ENTRY_LIVE=YES (never in a local .env) to let this
     # path actually create real PENDING orders -- a deliberate, later,
     # explicit decision once shadow data has been reviewed.
-    _conditional_entry_live = _os.environ.get("CONDITIONAL_ENTRY_LIVE", "").upper() == "YES"
+    _conditional_entry_live = os.environ.get("CONDITIONAL_ENTRY_LIVE", "").upper() == "YES"
     try:
         from src import tracker as _trk_et
         from datetime import datetime as _dt_et, timezone as _tz_et, timedelta as _td_et
