@@ -1560,6 +1560,167 @@ def _fmt_pips_between(pair: str, price_a, price_b) -> str:
         return "—"
 
 
+def _conditional_entry_live_enabled() -> bool:
+    """CONDITIONAL_ENTRY_LIVE safety gate -- see the real call site's own
+    comment (the "Entry type detection for YES fund trades" block) for the
+    full incident this closes. Default OFF (shadow/logging-only); set
+    CONDITIONAL_ENTRY_LIVE=YES (never in a local .env) to let a fixed
+    conditional-entry candidate actually create a real PENDING order."""
+    return os.environ.get("CONDITIONAL_ENTRY_LIVE", "").upper() == "YES"
+
+
+def _historical_immediate_stop_pips(pair: str, min_n: int = 5) -> "tuple[float | None, int]":
+    """Median stop-loss distance (in pips) for real IMMEDIATE-type trades on
+    this exact pair, pooled from research_trades.csv and trades.csv. Returns
+    (None, n) when fewer than min_n real comparables exist -- an
+    insufficient-data verdict, not a pass or a fail, since there's nothing
+    real to compare against yet for a thinly-traded pair.
+
+    2026-09-13: feeds the conditional-entry plausibility check's distance
+    test (see _check_conditional_entry_plausibility) -- now that the AI is
+    *required* to supply ENTRY/STOP_LOSS/TARGET for conditional setups
+    (src/analyst.py fix, same incident), it has a real incentive to pad a
+    plausible-looking number just to satisfy that requirement even when it
+    isn't actually confident in a level. A distance wildly smaller or larger
+    than what this exact pair's own real trades typically use is the
+    cheapest real signal that happened.
+    """
+    import pandas as _pd_hist
+    pips_out: list = []
+    for _path in (config.DATA_DIR / "research_trades.csv", config.TRADES_CSV):
+        try:
+            if not _path.exists():
+                continue
+            _df = _pd_hist.read_csv(_path, low_memory=False)
+            _rows = _df[_df["pair"] == pair]
+            _etype = _rows.get("entry_type")
+            if _etype is not None:
+                _immediate = _rows[
+                    _etype.isna() | _etype.astype(str).str.upper().isin(["", "IMMEDIATE"])
+                ]
+            else:
+                _immediate = _rows
+            _entry_v = _pd_hist.to_numeric(_immediate.get("entry"), errors="coerce")
+            _stop_v  = _pd_hist.to_numeric(_immediate.get("stop_loss"), errors="coerce")
+            _valid = _immediate[_entry_v.notna() & _stop_v.notna() & (_entry_v != 0) & (_stop_v != 0)]
+            if _valid.empty:
+                continue
+            _ps = _pip_size(pair)
+            _pips = (_pd_hist.to_numeric(_valid["entry"]) - _pd_hist.to_numeric(_valid["stop_loss"])).abs() / _ps
+            pips_out.extend(_pips.tolist())
+        except Exception:
+            continue
+    if len(pips_out) < min_n:
+        return None, len(pips_out)
+    import statistics as _stats_hist
+    return _stats_hist.median(pips_out), len(pips_out)
+
+
+def _check_conditional_entry_plausibility(
+    pair: str, direction: str, entry, stop_loss, target, reward_risk_stated,
+) -> dict:
+    """Real sanity check on a conditional candidate's ENTRY/STOP_LOSS/TARGET,
+    run once the AI has actually supplied them (original response or after
+    the retry backstop) -- distinct from just checking they're present and
+    non-zero. Three checks, each independently reportable:
+
+      sign_direction   -- BUY: stop < entry < target (reverse for SELL).
+                          A backwards level is unusable regardless of
+                          anything else, and cheap to catch outright.
+      distance_plausible -- this pair's own real IMMEDIATE-trade stop
+                          distances (median, n>=5 required) as the
+                          comparison baseline; flags anything outside
+                          0.3x-3x of that median. None (not False) when
+                          there isn't yet enough real history for this pair
+                          to compare against -- insufficient data is not
+                          the same claim as implausible.
+      rr_consistent    -- recomputes real reward:risk from the actual
+                          entry/stop/target and compares it against the
+                          model's own separately-stated REWARD_RISK_RATIO
+                          (20% relative tolerance). Tests whether the
+                          model's own numbers hang together internally --
+                          a padded, not-actually-considered level is a
+                          likely source of this kind of self-contradiction.
+
+    Returns {"passed": bool, "checks": {name: True/False/None}, "failed":
+    [names]}. "passed" is True only when every check that actually ran
+    (excludes None/insufficient-data) came back True.
+    """
+    checks: dict = {}
+    failed: list = []
+
+    try:
+        e, s, t = float(entry), float(stop_loss), float(target)
+    except (TypeError, ValueError):
+        return {"passed": False, "checks": {"sign_direction": False}, "failed": ["unparseable_levels"]}
+
+    d = (direction or "").upper()
+    if d == "BUY":
+        sign_ok = s < e < t
+    elif d == "SELL":
+        sign_ok = t < e < s
+    else:
+        sign_ok = False
+    checks["sign_direction"] = sign_ok
+    if not sign_ok:
+        failed.append("sign_direction")
+
+    ps = _pip_size(pair)
+    stop_pips   = abs(e - s) / ps
+    target_pips = abs(t - e) / ps
+
+    median_pips, n_comparables = _historical_immediate_stop_pips(pair)
+    if median_pips is None:
+        checks["distance_plausible"] = None
+    else:
+        distance_ok = (0.3 * median_pips) <= stop_pips <= (3.0 * median_pips)
+        checks["distance_plausible"] = distance_ok
+        if not distance_ok:
+            failed.append("distance_plausible")
+    checks["distance_plausible_n_comparables"] = n_comparables
+
+    try:
+        stated_rr = float(reward_risk_stated)
+    except (TypeError, ValueError):
+        stated_rr = None
+    if stated_rr and stop_pips > 0:
+        real_rr = target_pips / stop_pips
+        rr_ok = abs(real_rr - stated_rr) <= (0.2 * max(stated_rr, real_rr))
+        checks["rr_consistent"] = rr_ok
+        checks["rr_real"] = round(real_rr, 2)
+        checks["rr_stated"] = stated_rr
+        if not rr_ok:
+            failed.append("rr_consistent")
+    else:
+        checks["rr_consistent"] = None
+
+    passed = all(v is not False for k, v in checks.items() if k in
+                 ("sign_direction", "distance_plausible", "rr_consistent"))
+    return {"passed": passed, "checks": checks, "failed": failed}
+
+
+def _record_conditional_entry_shadow(entry: dict) -> None:
+    """Append one shadow record of what a conditional-entry candidate would
+    have used to open a real PENDING order, without creating one. Includes
+    the real plausibility-check verdict (see
+    _check_conditional_entry_plausibility) so accumulated shadow rows can be
+    told apart -- a genuinely usable setup vs. a level the model padded in
+    just to satisfy the new requirement -- without re-deriving it later.
+    Pure observability -- never raises, never touches any real trade row."""
+    try:
+        path = config.DATA_DIR / "conditional_entry_shadow.json"
+        log_data = []
+        if path.exists():
+            try:
+                log_data = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                log_data = []
+        log_data.append(entry)
+        path.write_text(json.dumps(log_data, indent=2), encoding="utf-8")
+    except Exception as exc:
+        print(f"[entry] conditional-entry shadow log write failed: {exc}", file=sys.stderr)
+
+
 def _parse_entry_type(
     analysis_text: str,
     current_price: float,
@@ -7239,6 +7400,29 @@ def _send_telegram_summary(
         pass
 
     # ── Entry type detection for YES fund trades ──────────────────────────────
+    #
+    # 2026-09-13: CONDITIONAL_ENTRY_LIVE safety gate. This block is the
+    # single real place that converts a fund candidate into a real PENDING
+    # order (status="PENDING" below) -- it has never fired for real in the
+    # fund's history because the 5-line "if not _yt_dir or not _yt_entry:
+    # continue" guard bails first: conditional (BREAKOUT_*/LIMIT_*/PULLBACK)
+    # candidates never had a non-zero `entry` to check, since the AI's own
+    # response omitted ENTRY/STOP_LOSS/TARGET whenever it chose a
+    # conditional ENTRY_TYPE (confirmed against 17 real historical cases;
+    # root-caused and fixed in src/analyst.py's prompt + retry backstop).
+    # Fixing that data gap makes this block reachable for the first time --
+    # which means it would start creating real PENDING orders for the first
+    # time too, as an automatic side effect of a fix that was only supposed
+    # to close a data gap. Real order creation from a never-before-exercised
+    # pathway is a separate decision, not something to bundle into the data
+    # fix silently. Default OFF (shadow/logging-only): records exactly what
+    # entry_type/trigger/entry/stop/target this candidate would have used to
+    # data/conditional_entry_shadow.json, but leaves the row's real status
+    # untouched (whatever tracker.log_recommendation() already gave it).
+    # Set CONDITIONAL_ENTRY_LIVE=YES (never in a local .env) to let this
+    # path actually create real PENDING orders -- a deliberate, later,
+    # explicit decision once shadow data has been reviewed.
+    _conditional_entry_live = _conditional_entry_live_enabled()
     try:
         from src import tracker as _trk_et
         from datetime import datetime as _dt_et, timezone as _tz_et, timedelta as _td_et
@@ -7266,6 +7450,47 @@ def _send_telegram_summary(
             if _entry_info["entry_type"] != "IMMEDIATE":
                 _expiry_h  = _entry_info["expiry_hours"] or 48
                 _expiry_dt = _dt_et.now(_tz_et.utc) + _td_et(hours=_expiry_h)
+
+                if not _conditional_entry_live:
+                    # Shadow/logging-only (default): record what this candidate
+                    # would have used, touch nothing real. status/discord alert
+                    # below are the ONLY real side effects this branch has ever
+                    # had -- both skipped here.
+                    _plaus_stop = _yt_parsed.get("stop_loss") or _yt_parsed.get("stop")
+                    try:
+                        _plausibility = _check_conditional_entry_plausibility(
+                            _yt_pair, _yt_dir, _yt_parsed.get("entry"), _plaus_stop,
+                            _yt_parsed.get("target"), _yt_parsed.get("reward_risk"),
+                        )
+                    except Exception as _plaus_exc:
+                        _log_line(log, f"[entry] plausibility check failed: {_plaus_exc}")
+                        _plausibility = {"passed": None, "checks": {}, "failed": ["check_errored"]}
+                    _record_conditional_entry_shadow({
+                        "id": _yt_id, "pair": _yt_pair, "direction": _yt_dir,
+                        "entry_type": _entry_info["entry_type"],
+                        "trigger_price": _entry_info["trigger_price"],
+                        "trigger_reason": _entry_info["trigger_reason"] or "",
+                        "expiry_hours": _expiry_h,
+                        "entry": _yt_parsed.get("entry"),
+                        "stop_loss": _plaus_stop,
+                        "target": _yt_parsed.get("target"),
+                        "reward_risk": _yt_parsed.get("reward_risk"),
+                        "confidence": _yt_parsed.get("confidence"),
+                        "plausibility": _plausibility,
+                        "recorded_at_utc": _dt_et.now(_tz_et.utc).strftime("%Y-%m-%d %H:%M:%S"),
+                    })
+                    _log_line(log, (
+                        f"[entry] #{_yt_id} {_yt_pair} would be -> PENDING "
+                        f"({_entry_info['entry_type']} at {_entry_info['trigger_price']}, "
+                        f"entry={_yt_parsed.get('entry')} stop={_plaus_stop} "
+                        f"target={_yt_parsed.get('target')}) -- CONDITIONAL_ENTRY_LIVE off, "
+                        f"logged to shadow file only, real status unchanged "
+                        f"[plausibility: passed={_plausibility.get('passed')} "
+                        f"failed={_plausibility.get('failed')}]"
+                    ))
+                    _trk_et.update_fields(int(_yt_id), **_entry_kwargs)
+                    continue
+
                 _entry_kwargs.update({
                     "status":                "PENDING",
                     "entry_trigger_direction": _entry_info["trigger_direction"] or "",
