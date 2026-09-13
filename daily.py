@@ -7289,6 +7289,47 @@ def _send_telegram_summary(
             if _entry_info["entry_type"] != "IMMEDIATE":
                 _expiry_h  = _entry_info["expiry_hours"] or 48
                 _expiry_dt = _dt_et.now(_tz_et.utc) + _td_et(hours=_expiry_h)
+
+                if not _conditional_entry_live:
+                    # Shadow/logging-only (default): record what this candidate
+                    # would have used, touch nothing real. status/discord alert
+                    # below are the ONLY real side effects this branch has ever
+                    # had -- both skipped here.
+                    try:
+                        _shadow_entry = {
+                            "id": _yt_id, "pair": _yt_pair, "direction": _yt_dir,
+                            "entry_type": _entry_info["entry_type"],
+                            "trigger_price": _entry_info["trigger_price"],
+                            "trigger_reason": _entry_info["trigger_reason"] or "",
+                            "expiry_hours": _expiry_h,
+                            "entry": _yt_parsed.get("entry"),
+                            "stop_loss": _yt_parsed.get("stop_loss") or _yt_parsed.get("stop"),
+                            "target": _yt_parsed.get("target"),
+                            "reward_risk": _yt_parsed.get("reward_risk"),
+                            "confidence": _yt_parsed.get("confidence"),
+                            "recorded_at_utc": _dt_et.now(_tz_et.utc).strftime("%Y-%m-%d %H:%M:%S"),
+                        }
+                        _sf = config.DATA_DIR / "conditional_entry_shadow.json"
+                        _shadow_log = []
+                        if _sf.exists():
+                            try:
+                                _shadow_log = json.loads(_sf.read_text(encoding="utf-8"))
+                            except Exception:
+                                _shadow_log = []
+                        _shadow_log.append(_shadow_entry)
+                        _sf.write_text(json.dumps(_shadow_log, indent=2), encoding="utf-8")
+                    except Exception as _shadow_exc:
+                        _log_line(log, f"[entry] conditional-entry shadow log write failed: {_shadow_exc}")
+                    _log_line(log, (
+                        f"[entry] #{_yt_id} {_yt_pair} would be -> PENDING "
+                        f"({_entry_info['entry_type']} at {_entry_info['trigger_price']}, "
+                        f"entry={_yt_parsed.get('entry')} stop={_yt_parsed.get('stop_loss')} "
+                        f"target={_yt_parsed.get('target')}) -- CONDITIONAL_ENTRY_LIVE off, "
+                        f"logged to shadow file only, real status unchanged"
+                    ))
+                    _trk_et.update_fields(int(_yt_id), **_entry_kwargs)
+                    continue
+
                 _entry_kwargs.update({
                     "status":                "PENDING",
                     "entry_trigger_direction": _entry_info["trigger_direction"] or "",
