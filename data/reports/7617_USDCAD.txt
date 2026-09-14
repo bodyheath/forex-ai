@@ -1,0 +1,23 @@
+```
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H bearish pressure with LEANING_BEAR ribbon and pin bar at key level, but D1 NEUTRAL and weak MTF consensus (0/3) prevent high-confidence trade.
+RISK_FACTORS: [1. MTF analysis shows no agreement across timeframes (M/W/D all NEUTRAL, only 4H SELL at 80% weight) — trend clarity absent; 2. OSC shows no oscillator confluence (stoch_k=41.9, CCI=24.3 neutral) and D1 RSI=45.3 is squarely neutral — no reversal confirmation.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violation — W:NEUTRAL and D:NEUTRAL do not both confirm SELL direction; 4H SELL signal alone (conf=0/3) fails MTF consensus threshold. Confidence 4/10 < 7 minimum.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF FAILURE**: Weekly, Daily, and Monthly all NEUTRAL. Only 4H shows SELL (conf=0/3 = 0% agreement). MTF rule
