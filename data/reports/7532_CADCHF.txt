@@ -1,0 +1,23 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Bearish RSI divergence (38p/4pt) + partial oscillator SELL confluence (2/3) conflict with bullish ribbon alignment and neutral MTF; uptrend structure intact but showing weakening momentum.
+RISK_FACTORS: [1. MTF shows 0/3 agreement (M:BUY vs W/D:NEUTRAL) — no multi-timeframe confirmation of SELL direction; reversal risk if weekly/daily remain above key moving averages. 2. ALIGNED_BULL ribbon (5/5 EMA fan) typically signals trend continuation, contradicting the SELL bias — likelihood of false signal if ribbon sustains.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W and D do not both agree on direction (both NEUTRAL, M:BUY) — confidence <2/3 required for TRADE_THIS threshold. Bearish divergence is valid, but insufficient confluence without weekly+daily alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+1. **MTF Rejection (CRITICAL):** W:NEUTRAL + D:NEUTRAL + M:BUY = 0

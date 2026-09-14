@@ -1,0 +1,21 @@
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both confirm downtrend (MTF conf 2/3); D1 pin_bar_at_key_level:bea + T_sig=SELL_6 + 4H head_and_shoulders:bea provide confluence for corrective sell, despite intraday uptrend structure and aligned ribbon creating friction.
+RISK_FACTORS: [1. Ribbon fully aligned bullish (5/5) contradicts SELL thesis — trend continuation risk if price holds above SMA50 at 1.0905. 2. Intraday oscillators (Stoch K=62.9, CCI=151.6) show no directional confluence — entry timing unclear; false breakdowns common in conflicted technicals.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.0905
+ENTRY_TRIGGER_REASON: Break and close below D1 SMA50 (1.0905) to confirm downtrend rejection and align ribbon with MTF bias.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**REASONING:**
+
+**MTF rule check:** W:SELL + D:SELL = 2/3 agreement (4H:NEUTRAL does not veto). Conf=

@@ -1,0 +1,24 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + SMD=-5 institutional bearish bias suggests downside, but MTF neutral (0/3 agreement) and RSI 60 in range invalidate high-confidence SELL — conflicting signals limit trade quality.
+RISK_FACTORS: (1) MTF conf=0/3 — Weekly, Daily, Monthly all NEUTRAL; 4H BUY alone does not meet 2/3 threshold, eliminating MTF validation. (2) RSI 60 in mixed/range environment is neither overbought nor part of a confirmed downtrend; pin bar is bullish-signaled but T_sig=SELL_3 is low-conviction (baseline 3-range); EUR rate flat and GBP rate flat remove rate-diff tailwind.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Daily and Weekly do not both agree on direction (conf=0/3 < 2/3 threshold). Trade blocked regardless of technical or fundamental signals.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED RATIONALE:**
+
+1. **MTF Validation (HARD RULE FAIL):**
+   - W:

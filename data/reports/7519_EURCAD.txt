@@ -1,0 +1,25 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish price structure (H&S, pin bar at key level, aligned bear ribbon) conflicts with neutral MTF (W/D neutral, 4H bullish oversold bounce) — trade lacks directional conviction.
+RISK_FACTORS: [1] MTF disagreement (M:SELL vs W/D:NEUTRAL vs 4H:BUY, conf=0/3) violates MTF agreement rule — TRADE_THIS blocked. [2] EUR crowded short at 12% extreme risks sharp reversal if momentum stalls; CAD unwinding adds whipsaw risk.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly AND daily do not both agree on direction (W:NEUTRAL, D:NEUTRAL, 4H:BUY contradicts M:SELL). Confidence <2/3 agreement. Trade blocked regardless of technical setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Analysis Summary:**
+
+**Why NO:**
+
+1. **MTF Rule Violation (HARD STOP):** Weekly and daily are both NEUTRAL; 4H is BUY (oversold bounce at RSI 33.9); monthly is SELL
