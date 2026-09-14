@@ -1,0 +1,24 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Bearish RSI divergence (26p/4pt) + SELL confluence across W/D/4H MTF overrides bullish ribbon alignment; EUR rate stability vs CHF rate falling supports downside, but crowded EUR short positioning creates reversal risk.
+RISK_FACTORS: (1) Bullish ribbon ALIGNED_BULL (5/5 EMAs stacked) contradicts SELL signal — trend continuation threat if price holds above SMA50. (2) EUR net short positioning at 12.0% near 1y bottom crowded — sharp EUR rally on risk-on reversal would squeeze shorts and abort trade.
+TRADE_THIS: YES
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.94100
+ENTRY_TRIGGER_REASON: Break below 4H inside_bar structure and D1 Fibonacci 100.0% pivot at 0.94351 to confirm bearish divergence + SELL MTF alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Scoring Rationale:**
+
+**TECHNICAL (6/10):**  
+D1 T_sig=SELL_5 (baseline). RSI 66.0 in **confirmed uptrend** (W:

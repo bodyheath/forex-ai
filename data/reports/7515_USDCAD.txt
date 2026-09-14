@@ -1,0 +1,22 @@
+```
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H SELL signal + LEANING_BEAR ribbon (4/5 aligned) + pin bar at key level provide structure, but D1 NEUTRAL and MTF conf=0/3 block trade entry.
+RISK_FACTORS: MTF weekly and daily both NEUTRAL — no directional agreement for multi-timeframe confluence; D1 T_sig=NEUTRAL_3 with price trapped between SMA50 (1.3974) and SMA200 (1.3834), indicating low conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily both NEUTRAL; only 4H shows SELL. Requires at least 2 of 3 (weekly+daily) to agree. Confidence=4 < 7 threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Summary:**  
+USD/CAD fails the **MTF gate**: W:NEUTRAL + D:NEUTRAL = 0/3 agreement (need ≥2). Although 4H leans SELL and ribbon is LEANING_BEAR (4/5), the **D1 T_sig=NEUTRAL_3

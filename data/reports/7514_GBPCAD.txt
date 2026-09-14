@@ -1,0 +1,25 @@
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + RSI 40.8 (mid-range) with GBP rate premium (+1.46%) suggests tactical bounce, but MTF disagreement (M:SELL vs D:BUY) and weak oscillator confluence limit conviction.
+RISK_FACTORS: MTF conflict (monthly sell vs daily buy) creates directional uncertainty; CAD rate falling supports GBP strength but CAD short unwinding may trap longs if repositioning reverses.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.8650
+ENTRY_TRIGGER_REASON: Retest of SL/FIB support (1.8607) with RSI <30 would confirm oversold bounce; pin bar setup requires lower entry confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+1. **MTF RULE VIOLATION**: Monthly=SELL, Weekly=NEUTRAL, Daily=BUY, 4H=NEUTRAL → conf=1/3 (only 1 of 3 higher timeframes agrees with daily BUY). This **fails the MTF filter** (requires weekly AND daily both agree). Output **TRADE_THIS: NO**.
+
+2. **
