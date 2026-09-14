@@ -1,0 +1,23 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Bearish RSI divergence (26p/4pt) + SELL signal in weekly+daily MTF (2/3 agreement) + partial oscillator confluence (Stochastic+CCI) confirm downside, despite bullish ribbon alignment suggesting uptrend resilience.
+RISK_FACTORS: [1] Bullish ribbon (5/5 aligned) and price holding above SMA50/200 (golden cross intact) create uptrend structure conflict — reversal signal contradicts macro trend strength. [2] EUR net SHORT positioning is crowded (12% net, near 1y bottom); CHF SHORT building (59%) — EUR reversal-long could trigger crowded-short squeeze, invalidating bear thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.94351
+ENTRY_TRIGGER_REASON: Sell limit at 100.0% Fibonacci (prior swing high), where bearish divergence + SELL MTF confluence + Stochastic overbought (73.3) converge; only if price rejects from current level and reverses.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Rationale:**
+
+- **MTF rule check:** Weekly=SELL, Daily

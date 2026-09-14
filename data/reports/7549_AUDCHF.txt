@@ -1,0 +1,24 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both confirm SELL with price at resistance (pin bar at key level) and RSI overbought on D1, though 4H bullish divergence and aligned ribbon create pullback risk.
+RISK_FACTORS: [1) Ribbon ALIGNED_BULL fan (5/5 EMAs bullish) signals continuation strength — uptrend structure intact despite overbought RSI; 2) 4H RSI deeply oversold at 35.7 + double_top pattern may trigger 4H-D1 reversal/bounce before selling resumes]
+TRADE_THIS: YES
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5830
+ENTRY_TRIGGER_REASON: Sell limit 12p above current price at resistance extension; allows confirmation of pin bar rejection before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**RATIONALE:**
+
+**MTF Alignment (conf=2/3, wt=80%)**  
+Weekly=SELL + Daily=SELL = **2/3 agreement confirmed.** 4H=BUY (oversold RSI 35.7 + double_top bearish candle = range/recovery setup), creating minor MTF friction. Confidence floor is 6
