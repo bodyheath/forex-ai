@@ -1,13 +1,13 @@
 {
   "last_flags": [
-    "\u2139\ufe0f GBP-cross exclusion may be decaying \u2014 most recent 30 decisive trades WR=63.3% vs the prior 176 decisive trades WR=27.8%, p=0.0001. Worth revisiting whether this exclusion is still warranted.",
+    "\u2139\ufe0f GBP-cross exclusion may be decaying \u2014 most recent 30 decisive trades WR=60.0% vs the prior 177 decisive trades WR=28.2%, p=0.0003. Worth revisiting whether this exclusion is still warranted.",
+    "\u26a0\ufe0f Gate silent \u2014 'session' has left zero trace in the log across the last 20 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
     "\ud83d\udcca consensus_adj has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md \u2014 filter to consensus_eligible==True, compare within grade)",
     "\ud83d\udcca da_downgraded has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_da_downgrade_tracking.md \u2014 compare within da_grade_before, n undercounts (da_fired=True only))",
     "\ud83d\udcca memory_hash has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md's before/after natural-experiment design)",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=727, WR=20.1%) significantly outperforms grade C (n=102, WR=10.8%), p=0.0124",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=346, WR=43.9%) significantly outperforms grade D (n=727, WR=20.1%), p=0.0000",
-    "\ud83d\udea8 currency-consensus 'agrees' edge drifting \u2014 most recent 40 decisive trades WR=2.5% vs the prior 142 decisive trades WR=11.3%, p=0.0462.",
-    "\ud83d\udea8 rib_strongly_against (non-GBP) edge drifting \u2014 most recent 40 decisive trades WR=5.0% vs the prior 406 decisive trades WR=47.8%, p=0.0000. See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=742, WR=20.1%) significantly outperforms grade C (n=103, WR=10.7%), p=0.0112",
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=347, WR=43.8%) significantly outperforms grade D (n=742, WR=20.1%), p=0.0000",
+    "\ud83d\udea8 rib_strongly_against (non-GBP) edge drifting \u2014 most recent 40 decisive trades WR=10.0% vs the prior 412 decisive trades WR=47.1%, p=0.0000. See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
   ],
-  "last_alert_sent_at": "2026-09-14T04:59:13.670669"
+  "last_alert_sent_at": "2026-09-14T12:51:26.480152"
 }
