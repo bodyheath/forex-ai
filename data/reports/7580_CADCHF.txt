@@ -1,0 +1,19 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 RSI 64.7 overbought with bearish moderate divergence and MACD rolling over in uptrend structure conflicts sharply with fully aligned bullish ribbon and 4H BUY bias, creating a high-uncertainty reversal probe.
+RISK_FACTORS: [1. MTF disagreement (M:BUY, W:NEUTRAL, D:NEUTRAL, 4H:BUY) at 0/3 confirms — no multi-timeframe consensus; reversal signal may fail if weekly/daily remain neutral. 2. Ribbon ALIGNED_BULL (5/5) is a powerful trend-continuation signal that contradicts the SELL_3 technical score and bearish divergence — if price holds above SMA50 (0.5791), uptrend likely resumes and divergence becomes trap.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5905
+ENTRY_TRIGGER_REASON: Confluence of RSI 64.7 overbought, bearish divergence (38p/4pt), and MACD histogram rolling negative; limit placed above current price to catch potential pullback into resistance before confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---

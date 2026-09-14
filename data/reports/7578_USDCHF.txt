@@ -1,0 +1,25 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both confirm SELL with pin bar at key level and overbought RSI in an uptrend context, supported by positive USD rate differential and CHF net short positioning, but ribbon remains aligned bullish and 4H is neutral, creating mixed-signal environment.
+RISK_FACTORS: [1] Ribbon fully aligned bullish (5/5 EMA stack) contradicts the MTF SELL signal — strong uptrend structure remains intact and price may continue higher despite bearish technicals. [2] 4H trend is NEUTRAL — downside lacks 4H confirmation, reducing conviction and increasing pullback risk before target is reached.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8147
+ENTRY_TRIGGER_REASON: Limit sell above current price to confirm resistance rejection at upper Fibonacci level (nearest_above from SH=0.82047 swing); entry only if price reverses cleanly below this level with fresh D1 bearish confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF Analysis (Critical Gate):**
+- W:SELL + D:SELL = 2/3 agreement → confidence threshold met (≥2/3).
+- 4H
