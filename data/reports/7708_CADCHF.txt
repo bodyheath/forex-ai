@@ -1,0 +1,19 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: Bearish RSI divergence (38p/4pt) + triple oscillator SELL confluence (RSI 67.6, Stochastic 88.7, CCI 122.0) override aligned ribbon; D1 in confirmed uptrend but overbought conditions + divergence signal pullback/correction within structure.
+RISK_FACTORS: [1. MTF disagreement (M:BUY vs D:SELL, conf=1/3) violates MTF rule — weekly neutral weakens conviction; uptrend structural (price > SMA50 > SMA200, ribbon aligned 5/5) creates strong continuation bias against short entry. 2. T_sig=SELL_5 is only moderately bearish; CAD rate falling + CHF rate falling (neutral fund differential) lacks strong directional conviction.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5910
+ENTRY_TRIGGER_REASON: Sell limit 22p above current price at resistance near SH (0.58604) to wait for confirmation pullback; divergence + oscillators suggest correction but uptrend structure + ribbon alignment demand price rejection confirmation before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**
