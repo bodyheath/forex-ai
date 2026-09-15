@@ -1,0 +1,25 @@
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and monthly both signal SELL; D1 pin bar at key level offers reversal structure, but Daily remains NEUTRAL and ribbon is CONVERGING—confluence weak, setup marginal.
+RISK_FACTORS: MTF agreement only 1/3 (D1 and 4H both NEUTRAL—uptrend structure and SMA alignment contradict downtrend thesis); Ribbon converging signals trend exhaustion risk, not confirmation of directional move.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF conf=1/3 fails minimum 2/3 rule; D1 T_sig=NEUTRAL_3 with no directional oscillator confluence (OSC=NONE); ribbon convergence + NEUTRAL daily override weekly/monthly minority signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+### **RATIONALE:**
+
+**MTF Failure (Hard Rule):**
+- M:SELL, W:SELL vs. D:NEUTRAL, 4H:NEUTRAL = **1/3 agreement** (only monthly+weekly aligned, but daily+4H disagree)
+- Rule: "MTF weekly+daily both agree" → Weekly=SELL but Daily=

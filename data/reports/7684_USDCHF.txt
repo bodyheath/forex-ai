@@ -1,0 +1,22 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at key level + RSI overbought in uptrend + MACD divergence + W:SELL + D:SELL MTF agreement signal reversal, but ALIGNED_BULL ribbon and bullish 4H pattern create headwind.
+RISK_FACTORS: [1. Ribbon fully aligned bullish (5/5) and price above all SMAs — strong uptrend structure contradicts sell signal; 2. 4H bullish engulfing conflicts with D1 pin bar bearish setup — MTF disagreement reduces conviction (only 2/3 weekly+daily agreement)]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8180
+ENTRY_TRIGGER_REASON: Sell on break below pin bar low (0.8180 area) only if 4H trend shifts to confirm reversal; otherwise wait for pullback to SMA50 (0.8095) as lower-risk entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE:**
+
+**Technical (6/10):**
+- D1 T_sig=SELL_5 is baseline; RSI=61.5 in confirmed uptrend (W:SELL + D:SELL doesn

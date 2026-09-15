@@ -1,0 +1,25 @@
+PAIR: NZD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: Pin bar at Fib 23.6% with RSI 35.6 (oversold) and partial oscillator buy signal offers limited confluence in mixed MTF context where only daily agrees.
+RISK_FACTORS: [MTF agreement insufficient (1/3 = 40% conf; weekly/monthly/4H neutral or bearish undermines directional conviction), 4H shows head-and-shoulders bearish pattern contradicting D1 bullish pin bar]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.8061
+ENTRY_TRIGGER_REASON: Bounce from Fib 23.6% confluence (5p distance) with RSI oversold confirmation
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 T_sig=BUY_6 anchors baseline at 6, but MTF agreement rule is critical: W:NEUTRAL + D:BUY + 4H:NEUTRAL = only 1/3 timeframes aligned (40% confidence threshold). This fails the mandatory MTF both-agree rule (need weekly AND daily both BUY/SELL).
+- RSI

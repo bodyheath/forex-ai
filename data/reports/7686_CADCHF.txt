@@ -1,0 +1,24 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: D1 overbought (RSI 67.6) with bearish RSI divergence and triple-oscillator SELL confluence conflicts with bullish ribbon alignment, creating high-probability mean-reversion SHORT into resistance.
+RISK_FACTORS: MTF disagreement (D1:SELL vs W:NEUTRAL vs M:BUY) weakens conviction and creates whipsaw risk; ribbon fully bull-aligned suggests uptrend continuation, contradicting sell signal and risking immediate reversal if price holds above SMA50.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5905
+ENTRY_TRIGGER_REASON: Break above recent swing high (FIB SH=0.58604 + buffer) confirms overbought rejection into structural resistance.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 6/10**
+- D1 T_sig baseline = SELL_5; T_sig = 6 (RSI 67.6 in uptrend = overbought but not extreme per adjusted tier; standard 60–70 = 4–5 SELL, uptrend shift to 65–77

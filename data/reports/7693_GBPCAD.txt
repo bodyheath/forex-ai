@@ -1,0 +1,23 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weak bearish setup with 4H head-and-shoulders and monthly SELL, but D1+W NEUTRAL MTF conflict prevents high-conviction trade; pin bar at resistance offers modest reversal probability.
+RISK_FACTORS: MTF disagreement (D1+W neutral vs 4H/M bearish) reduces directional conviction below 7-threshold; RSI 49 D1 + 60.3 4H both neutral-to-overbought, lacking oversold confirmation for entry.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.8707
+ENTRY_TRIGGER_REASON: Pullback to SMA50 (1.8824) rejection zone; breach below pin bar low at ~1.8707 confirms head-and-shoulders neckline invalidation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**MTF Rule Violation:** W:NEUTRAL + D:NEUTRAL = 0/3 agreement. Although M:SELL and 4H:SELL exist, the primary daily and weekly anchors do not align on direction. This alone triggers TRADE_THIS=NO per MTF hard rule ("if weekly AND daily don't both agree on direction (

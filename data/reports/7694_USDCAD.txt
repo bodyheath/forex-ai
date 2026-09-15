@@ -1,0 +1,23 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H overbought (RSI 71.1) with bearish ribbon alignment conflicts D1 neutral mixed setup; pin bar at key level offers limited confluence on weak MTF agreement.
+RISK_FACTORS: [1] MTF fragmentation — only 4H shows SELL conviction (conf=0/3, wt=80%), while D1/W/M all NEUTRAL, reducing directional reliability. [2] D1 T_sig=3 (neutral floor) + price 100p below SMA50 in mixed range = low technical commitment; RSI 49 is indecisive midpoint.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF weekly and daily do not both agree on direction (W:NEUTRAL, D:NEUTRAL) — SELL signal isolated to 4H overbought only. R:R and fundamental confluence insufficient to override weak MTF consensus.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+- **MTF Rule Enforcement:** Weekly=NEUTRAL, Daily=NEUTRAL, 4H=SELL → conf=0/3 (only 1 of 3 timeframes agree). HARD STOP
