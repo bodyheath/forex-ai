@@ -1,0 +1,23 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H overbought (RSI 69.3) with bearish ribbon alignment conflicts D1 neutrality; mixed MTF signals and range-bound price structure limit conviction.
+RISK_FACTORS: [1. D1 T_sig=NEUTRAL_3 and W/D both NEUTRAL fail MTF agreement rule — no directional consensus across timeframes. 2. Price trapped in 515p range between FIB SL (1.3733) and SH (1.4248); pin bar + engulfing patterns suggest indecision at key levels, not confirmed breakout.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.3733
+ENTRY_TRIGGER_REASON: Break below FIB swing low (SL 1.3733) with RSI divergence confirmation would validate downside; currently insufficient MTF alignment to execute.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**RATIONALE:**
+
+1. **MTF CONFLICT (Hard Fail):** W=NEUTRAL, D=NEUTRAL, 4H=SELL (conf=0/3, wt=80%). The rule requires weekly AND daily to agree on direction. Neither does. 4H overbought (RSI

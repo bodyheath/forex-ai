@@ -1,0 +1,26 @@
+PAIR: GBP/AUD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 27.2% Fib support (1.8905) in confirmed downtrend with weekly buy signal offers reversal setup, but daily neutral stance and converging ribbon limit conviction.
+RISK_FACTORS: Daily RSI 47.2 lacks reversal confirmation (not oversold); 4H sells while weekly buys (MTF conflict, only 1/3 agreement), creating whipsaw risk.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.8900
+ENTRY_TRIGGER_REASON: Fib 27.2% support (1.89046) + pin bar pattern + break above 1.8905 to confirm reversal intent from weekly buy structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Reasoning:**
+
+**MTF conflict (critical gate):** Weekly = BUY, Daily = NEUTRAL, 4H = SELL → only 1/3 directional agreement (conf < 2/3). **MTF rule violation**: TRADE_THIS must be NO regardless of other factors.
+
+**Technical (5/10):**
+- T_sig baseline = 3 (NEUTRAL), adjusted to 5 for pattern + Fib confluence:
