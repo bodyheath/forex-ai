@@ -1,0 +1,26 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H uptrend conflicts with D1 mixed range and aligned bearish ribbon, creating divergence risk; pin bar at key level suggests rejection but insufficient MTF agreement to execute.
+RISK_FACTORS: [1. MTF disagreement: 4H uptrend (T=4) vs D1 neutral (T=3) and ribbon ALIGNED_BEAR (5/5 stacked bearish) — no consensus direction. 2. Oscillator void: RSI, Stochastic, CCI show no confluence (conf=NONE) — reversal entry weak without oscillator support.]
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.3750
+ENTRY_TRIGGER_REASON: Wait for pullback to FIB SL (1.37326) or D1 SMA200 (1.3833) to confirm bearish ribbon alignment before shorting.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF RULE VIOLATION (Critical):**
+- D1 = NEUTRAL (T_sig=3, mixed range, price/MA unaligned)
+- 4H = SELL (T=4, uptrend structure)
+- W/M =

@@ -1,0 +1,25 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly SELL context with pin bar at key level offers weak confluence, but D1/W neutrality and lack of oscillator agreement prevent conviction.
+RISK_FACTORS: [1. MTF alignment failing—D/W both NEUTRAL contradicts SELL direction; reversal to BUY if price reclaims 1.8824 SMA50. 2. OSC conf=NONE—Stoch/CCI/RSI all neutral (49–51 RSI mid-range, CCI −21.9 non-extreme)—no oscillator edge.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.8700
+ENTRY_TRIGGER_REASON: Limit sell at psychological support near SL swing (1.8607) if price confirms lower without reclaiming 1.8824 SMA50.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Scoring Breakdown:**
+
+**TECHNICAL: 3/10**
+- D1 RSI 49.0 = mid-range NEUTRAL (3–4 tier). T_sig=NEUTRAL_3 is baseline.
+- MACD histogram negative on both D1 (−0.0005) and 4H
