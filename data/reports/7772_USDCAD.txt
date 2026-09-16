@@ -1,0 +1,23 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with converging ribbon and 4H overbought RSI suggest potential mean reversion, but weak MTF agreement and mixed D1 trend prevent conviction.
+RISK_FACTORS: [1. MTF alignment failure — W/D/M all NEUTRAL, only 4H shows directional bias (0/3 conf threshold); reversals on misaligned timeframes frequently whipsaw. 2. Ribbon CONVERGING signals trend weakening/reversal risk — momentum may collapse before SELL reaches target, leaving trader whipsawed in choppy range.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.3870
+ENTRY_TRIGGER_REASON: Break below D1 pin bar low at key support level, confirming rejection and overbought 4H exhaustion.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**MTF Rule Enforcement:** W:NEUTRAL, D:NEUTRAL, 4H:SELL, M:NEUTRAL → confidence = 0/3 (only 1 of 3 MTF pair agrees). This **fails the MTF rule hard-stop** — no trade unless confidence ≥7 AND MTF agreement is ≥

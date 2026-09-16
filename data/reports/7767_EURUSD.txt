@@ -1,0 +1,16 @@
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + RSI oversold in D1 BUY signal with Fib support confluence, but MTF agreement is 2/3 (W:NEUTRAL breaks full confirmation) and oscillators are non-confluent; position structure (crowded EUR short, UNWINDING) creates reversal risk but does not confirm direction.
+RISK_FACTORS: (1) Weekly MTF neutral prevents full 3/3 MTF alignment—daily BUY + 4H BUY only = 2/3 confidence threshold met but not exceeded; reversal in weekly could invalidate trade. (2) Oscillator vacuum (Stoch 18.0 extreme + CCI -183 extreme but no OSC confluence output) and SMD neutral leave sentiment/retail positioning unconfirmed; crowded EUR short UNWINDING is context-only (per rules) but increases slippage risk on entry.
+TRADE_THIS: YES
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.1520
+ENTRY_TRIGGER_REASON: Pullback into lower Fibonacci support level (SL=1.13254, range midpoint ≈1.1519) and D1 SMA50 (1.1533); wait for price to kiss support, confirm pin bar structure
