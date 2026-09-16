@@ -1,0 +1,17 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (38p/4pt) in a structurally bullish uptrend creates a reversal tension that SELL confirms, but weak MTF alignment (0/3 weekly+daily agreement) and overbought conditions in a golden-cross structure severely limit conviction.
+RISK_FACTORS: [1] MTF rule violation — weekly and daily both NEUTRAL (not aligned SELL) means TRADE_THIS = NO regardless of technicals; uptrend structure (price > SMA50 > SMA200, ribbon ALIGNED_BULL 5/5) will likely continue until confirmed pullback. [2] Overbought RSI 63.8 in confirmed uptrend (D:uptrend golden-cross) is normal — not an early reversal signal; D1 inside_bar (neutral) + T_sig=SELL_3 conflict with 4H pin_bar_at_key_level (bullish) — pattern disagreement weakens technical conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule fails — weekly NEUTRAL and daily NEUTRAL do not both agree on SELL direction (conf 0/3 < 2/3 threshold). System

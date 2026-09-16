@@ -1,0 +1,17 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both signal SELL in confirmed downtrend context, but D1 price remains above SMA50 in golden-cross uptrend structure with aligned bull ribbon, creating directional conflict that suppresses confidence.
+RISK_FACTORS: [1. ALIGNED_BULL ribbon (5/5 EMAs stacked bullish) and price>SMA50>SMA200 contradict MTF SELL signal — trend continuation risk if breakout holds above 0.5856 (FIB SH). 2. RSI 63.7 is elevated but not yet overbought (>76), and 4H RSI 52.7 is neutral — weak confirmation of D1 SELL; MACD histogram flat (0.0000 D1, 0.0001 4H) shows no directional momentum.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5856
+ENTRY_TRIGGER_REASON: Sell only if price breaks above FIB SH at 0.5856 into resistance, then reverses below SMA50 (0.5725) with RSI >76; otherwise, stay aside due to structural uptrend.
+ENTRY_TRIGGER_EXPIRY_HOURS:

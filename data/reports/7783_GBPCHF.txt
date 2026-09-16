@@ -1,0 +1,24 @@
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 RSI 64.5 in confirmed uptrend (W:SELL + D:SELL MTF) signals overbought reversal; pin bar at key level + PARTIAL_SELL oscillator confluence + rising CHF rate provide confluence, but ALIGNED_BULL ribbon and golden-cross structure create uptrend persistence risk.
+RISK_FACTORS: [1. Ribbon fully aligned bullish (5/5 EMA fan) conflicts with SELL thesis — trend continuation likely overrides reversal signal. 2. GBP rate flat while CHF rising supports SELL fundamentally, but diff at only +3.78% is modest — limited carry edge to sustain downside.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.1065
+ENTRY_TRIGGER_REASON: Sell only on pullback to SMA50 resistance (1.0916 + buffer) or on break below pin bar low; current RSI overbought in uptrend is not sufficient given ribbon alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**Technical (6/10):**
+- D1 RSI 64.5 in *confirmed uptrend*
