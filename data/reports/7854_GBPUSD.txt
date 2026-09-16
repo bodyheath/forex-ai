@@ -1,0 +1,24 @@
+PAIR: GBP/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level with bullish bias conflicts with 4H double-top bearish pattern; MTF agrees neutrally (0/3), blocking trade signal despite bullish ribbon lean.
+RISK_FACTORS: MTF directional agreement 0/3 (W:NEUTRAL, D:NEUTRAL) fails the 2/3 threshold—trade confidence insufficient even with pin bar setup. 4H death cross (price < SMA50 < SMA200) contradicts D1 uptrend structure, creating intra-timeframe conflict that raises reversal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree on direction (both NEUTRAL, 4H BUY alone = 1/3 conf <2/3 threshold). Pin bar + LEANING_BULL ribbon insufficient to overcome MTF neutrality and 4H death-cross conflict.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+1. **Technical (5/10):**
+   - D1 T_sig=NEUTRAL_3 baseline; pin_bar_at_key_level:bul (+

@@ -1,0 +1,26 @@
+PAIR: AUD/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fibonacci support (161.8% @ 0.71299) with bullish candlestick pattern conflicts with bearish RSI divergence and 4H oversold reading, creating low-conviction mean-reversion setup in consolidating trend.
+RISK_FACTORS: Bearish RSI divergence (32p/2pt) undermines bullish pin bar signal; MTF neutral (0/3 agreement) with converging ribbon signals trend exhaustion risk, not continuation.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.7130
+ENTRY_TRIGGER_REASON: Bounce from Fibonacci 161.8% support near 0.71299 with RSI recovery above 40 on D1 to confirm divergence resolution.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**REASONING:**
+
+**Technical (5/10):**
+- T_sig baseline = NEUTRAL_3, anchored here
+- D1: RSI 49.4 = neutral (standard tier 45–62), price above SMA50 > SMA200 (uptrend structure) → +1 bonus for SMA confirmation
+- 4H: RSI 24.5 = oversold in

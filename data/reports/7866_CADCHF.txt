@@ -1,0 +1,24 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (38p/4pt) in confirmed uptrend with RSI overbought in neutral MTF context signals reversal risk; fundamental CAD weakness (falling rates) and CHF strength (rising rates) provide tailwind for SELL.
+RISK_FACTORS: [1. MTF conf=0/3 (M:BUY vs W/D:NEUTRAL) — weekly and daily do not agree on direction, failing primary MTF confirmation rule. 2. ALIGNED_BULL ribbon (5/5 EMAs fanned) strongly contradicts SELL thesis and supports trend continuation — high whipsaw risk if uptrend resumes.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5850
+ENTRY_TRIGGER_REASON: SELL only if price pulls back below SMA50 (0.5800) and RSI resets below 60 to confirm divergence completion; enter on limit at 0.5850 if rejection occurs.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**RATIONALE:**
+
+**Why NO despite bearish signals:**
+MTF rule is absolute: weekly and daily both show NEUTRAL (only monthly shows BUY), failing the requirement that
