@@ -1,0 +1,23 @@
+PAIR: USD/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both confirm BUY with pin bar at key level and RSI oversold (35.3), but ribbon is bearish-aligned and 4H is neutral, creating conflicting intermediate signals.
+RISK_FACTORS: (1) Ribbon fully aligned bearish (5/5 EMA stack) contradicts BUY signal and suggests downtrend continuation risk. (2) 4H neutral trend and Stochastic deeply oversold (19.9) indicate imminent pullback or consolidation before sustained move; premature entry risks immediate fakeout.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 153.50
+ENTRY_TRIGGER_REASON: Wait for price to pull back to lower Fibonacci support (SL=152.897 zone) or consolidate above 153.50 on 4H confirmation before entering BUY.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+1. **MTF Alignment (Critical):** W:BUY + D:BUY = 2/3 agreement (meets minimum), but 4H is NEUTRAL. Confidence threshold is marginal at 80% weight; system requires ≥7 confidence for TRADE_THIS=YES,
