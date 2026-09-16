@@ -1,0 +1,18 @@
+```
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Confirmed downtrend (W:SELL + D:SELL + 4H:SELL) with RSI 62 at bearish inflection + pin bar at key level + CHF net SHORT positioning building; ALIGNED_BULL ribbon conflicts but overbought RSI in uptrend context justifies SELL bias.
+RISK_FACTORS: [1] ALIGNED_BULL EMA ribbon (5/5) signals trend continuation bullish, contradicting SELL thesis — if price holds above SMA50 (0.8097), reversal to upside high-probability. [2] D1 T_sig=SELL_5 is pre-computed baseline, not independent confirmation — actual RSI 62 in uptrend zone (45–65 NEUTRAL per uptrend rules) = modest bearish case only; breakout above 0.8205 (SH) invalidates setup.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8155
+ENTRY_TRIGGER_REASON: Limit sell at resistance just below RSI inflection zone; confirms rejection of overbought RSI 62 in uptrend context before committing capital.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24

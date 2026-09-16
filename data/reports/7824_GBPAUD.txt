@@ -1,0 +1,25 @@
+PAIR: GBP/AUD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly uptrend structure conflicts with active D1 downtrend and converging ribbon — confluence is weak, setup lacks directional conviction.
+RISK_FACTORS: (1) MTF fail: weekly and daily don't both confirm (W:BUY vs D:NEUTRAL) — only 1/3 agreement violates multi-timeframe rule; (2) Ribbon converging (trend weakening/reversal risk imminent) while RSI neutral 47.6 and price 153p below SMA50 in active downtrend.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.8905
+ENTRY_TRIGGER_REASON: Confluence of -27.2% Fibonacci support at 1.89046 (9p away) + RSI oversold reversal zone (43–52 neutral-to-lower range in downtrend context) if ribbon stabilizes.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**DETAIL RATIONALE:**
+
+**TECHNICAL_SCORE: 4/10**
+- **T_sig baseline:** D1 T_sig=NEUTRAL_3 is pre-computed; apply MTF override.
+- **MTF check (CRITICAL):**

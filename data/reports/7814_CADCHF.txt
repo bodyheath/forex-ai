@@ -1,0 +1,30 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Bearish RSI divergence (38p/4pt moderate) on daily + fundamental CAD weakness (rate falling vs CHF rising, +2.33% diff favors CHF) conflicts with aligned bullish ribbon and uptrend structure, creating a reversal-setup setup risk rather than conviction signal.
+
+RISK_FACTORS: 
+1. MTF disagreement: W:NEUTRAL + D:NEUTRAL = conf 0/3, fails MTF buy rule entirely; 4H:BUY isolated signal lacks weekly/daily confirmation.
+2. Price remains above SMA50 (0.5879 > 0.5800) in established uptrend with ALIGNED_BULL ribbon (5/5 EMAs fanned); bearish divergence is warning, not trigger — reversal not yet confirmed by price action.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.5850
+ENTRY_TRIGGER_REASON: Break below SMA50 (0.5800) + close below 21-EMA (approx 0.5850) on D1 to invalidate uptrend structure and confirm divergence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical

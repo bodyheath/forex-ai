@@ -1,0 +1,23 @@
+```
+PAIR: GBP/USD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level in uptrend conflicts sharply with 4H double top in downtrend; MTF disagreement (D1 NEUTRAL, 4H BUY) and oscillators offline block entry.
+RISK_FACTORS: [1] MTF conflict — D1 uptrend structure vs 4H downtrend with double-top; no MTF consensus (conf=0/3, wt=80%) violates MTF rule, TRADE_THIS auto-NO. [2] RSI 46.7 (D1) and 32.7 (4H) both neutral-to-weak without MACD or stochastic confirmation (OSC=NONE); pin bar is supporting evidence but insufficient alone in disagreement.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly, Daily, and 4H do not achieve 2/3 directional agreement required for entry. D1 uptrend + 4H downtrend = conflict. CONFIDENCE 4/10 < 7 threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+1. **MTF
