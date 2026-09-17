@@ -1,0 +1,25 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-bottom bullish pattern on D1 conflicts with 4H double-top bearish pattern and downtrending 4H structure; mixed MTF alignment (M:SELL only) provides weak directional bias toward short, but technical conviction is low.
+RISK_FACTORS: [1. D1 pattern (double_bottom:bul) directly contradicts 4H bearish signal and downtrend — risk of reversal invalidating short entry. 2. RSI 49.1 on D1 and 43.7 on 4H both neutral, no oscillator confluence — insufficient momentum confirmation for conviction entry.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF alignment failed (0/3 directional agreement); W and D both NEUTRAL, blocking trade rule. D1 bullish candle pattern (double_bottom) contradicts 4H downtrend — no valid setup until MTF resolves.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+1. **MTF Rule Violation (Hard Block):**  
+   - Weekly = NEUTRAL, Daily = NEUTRAL, 4H = NEUTRAL  
+   - Confidence =

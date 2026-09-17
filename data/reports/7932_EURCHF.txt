@@ -1,0 +1,23 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (price 9p higher, RSI 4pt lower) + weekly SELL signal conflict the bullish D1 structure; EUR net short positioning is crowded at range bottom, creating reversal risk that undermines the sell setup.
+RISK_FACTORS: [1. MTF confluence broken—Weekly SELL contradicts Daily NEUTRAL; only 1/3 timeframes aligned (40% threshold missed). 2. D1 ribbon fully aligned bull (5/5 EMA stack fanning) + price >SMA50>SMA200 golden cross = trend-continuation structure that contradicts SELL bias; moderate bearish divergence alone insufficient to override.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule failed (Weekly SELL + Daily NEUTRAL = disagreement; conf 1/3 << 2/3 threshold). Bullish ribbon alignment + golden cross + EUR crowded short at range bottom = reversal trap risk. Do not trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF HARD FAIL:** Weekly=SELL, Daily=NEUTRAL, 4H=NEUTRAL, Monthly=
