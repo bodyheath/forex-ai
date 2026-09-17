@@ -544,9 +544,30 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
             running_bal = running_bal + dollars
             peak_bal    = max(peak_bal, running_bal)
 
+            # 2026-09-17: data_quality_flag exclusion. A flagged row (e.g.
+            # #6987 -- confirmed via two independent price sources that its
+            # recorded entry/exit were never real tradeable prices, a stale
+            # Yahoo daily bar) still moved the real account, so
+            # running_bal/peak_bal/daily_pnl_d/worst_daily_pnl_pct above are
+            # deliberately left unconditional -- this does not rewrite
+            # historical balance or dollar figures. But it carries zero real
+            # information about the strategy's skill, so it must not count
+            # toward the consecutive-loss streak the circuit breaker gates
+            # on, nor toward win/loss/profit-factor statistics -- exactly
+            # the same "streak unchanged" treatment already given to a
+            # genuinely neutral (pips_v==0, non-win-status) row below.
+            # pandas reads a blank CSV cell as NaN (a float), not "" -- and
+            # `nan or ""` evaluates to nan itself (nan is truthy), so the
+            # naive `str(x or "").strip()` form silently treats every
+            # unflagged row as flagged. Guard explicitly instead.
+            _dqf_val = row.get("data_quality_flag")
+            _flagged = bool(str(_dqf_val).strip()) if pd.notna(_dqf_val) else False
+
             _status_v = str(row.get("status", "")).upper()
             _win_statuses = {"WIN", "FULL_WIN", "PARTIAL_WIN", "PROTECTED"}
-            if pips_v > 0:
+            if _flagged:
+                pass  # excluded from streak/win-loss stats; balance above already updated
+            elif pips_v > 0:
                 _win_pips_list.append(pips_v)
                 _win_dollars_list.append(dollars)
                 if pips_v > _best_pips:
@@ -601,15 +622,28 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         unrealised_d    = sum(safe_float(t.get("dollars_unrealised")) for t in _ot_summaries)
         unrealised_pips = sum(safe_float(t.get("pips_unrealised"))    for t in _ot_summaries)
 
+        # data_quality_flag exclusion (see the per-row loop above for the
+        # full rationale) -- applied identically here so this gross-pips
+        # win_rate/decisive-count block can't silently disagree with the
+        # net_pips-based _profit_factor/_avg_*_pips figures just below,
+        # which already exclude flagged rows via _win_pips_list/_loss_pips_list.
+        if "data_quality_flag" in closed.columns:
+            # Same NaN-vs-empty-string guard as the per-row loop above -- a
+            # blank CSV cell reads as NaN, not "", and must count as unflagged.
+            _dqf_col = closed["data_quality_flag"]
+            _unflagged = closed[_dqf_col.isna() | (_dqf_col.astype(str).str.strip() == "")]
+        else:
+            _unflagged = closed
+
         # Win rate: pips > 0 = win, pips < 0 = loss, pips == 0 = neutral (not counted)
-        _all_pips     = pd.to_numeric(closed["pips"], errors="coerce").fillna(0)
+        _all_pips     = pd.to_numeric(_unflagged["pips"], errors="coerce").fillna(0)
         _total_wins   = int((_all_pips > 0).sum())
         _loss_count   = int((_all_pips < 0).sum())
         _decisive     = _total_wins + _loss_count
         win_rate      = round(_total_wins / _decisive * 100.0, 1) if _decisive > 0 else 0.0
 
         # Split wins: full vs cascade-protected (PARTIAL_WIN / PROTECTED status)
-        _status_upper    = closed["status"].str.upper()
+        _status_upper    = _unflagged["status"].str.upper()
         _cascade_mask    = _status_upper.isin(["PARTIAL_WIN", "PROTECTED"])
         _protected_count = int(((_all_pips > 0) & _cascade_mask).sum())
         _win_count       = _total_wins - _protected_count  # full wins (non-cascade)
@@ -632,7 +666,13 @@ def calculate_fund_state(df: pd.DataFrame = None, prices: dict = None) -> dict:
         # _v2_net_pips was mislabeled: it was gross, not net. Same fix
         # pattern -- prefer net_pips (real costs already applied), fall back
         # to that row's gross pips only when net_pips is missing/unparseable.
-        _v2_closed = closed
+        #
+        # 2026-09-17: excludes data_quality_flag rows (see the per-row loop
+        # above) -- a single point of exclusion here covers v2_wins/losses/
+        # decisive/win_rate/net_pips/protected_count/full_wins/breakeven_
+        # count/decisive_strict all at once, since every one of them derives
+        # from _v2_closed below.
+        _v2_closed = _unflagged
         if len(_v2_closed) > 0:
             _v2_gross_col = pd.to_numeric(_v2_closed["pips"], errors="coerce").fillna(0)
             if "net_pips" in _v2_closed.columns:
