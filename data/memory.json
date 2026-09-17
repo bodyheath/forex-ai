@@ -116,13 +116,13 @@
   },
   {
     "source": "auto",
-    "pattern": "Overall track record to date (n=17)",
-    "outcome": "Win rate 35%, expectancy -0.28R."
+    "pattern": "Overall track record to date (n=18)",
+    "outcome": "Win rate 33%, expectancy -0.33R."
   },
   {
     "source": "auto",
-    "pattern": "Setups taken at confidence >= 7 (n=12 closed trades)",
-    "outcome": "Win rate 25%, expectancy -0.36R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
+    "pattern": "Setups taken at confidence >= 7 (n=13 closed trades)",
+    "outcome": "Win rate 23%, expectancy -0.41R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
   },
   {
     "source": "auto",
@@ -136,7 +136,12 @@
   },
   {
     "source": "auto",
-    "pattern": "SELL setups (n=9 closed trades)",
-    "outcome": "Win rate 44%, expectancy -0.37R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
+    "pattern": "SELL setups (n=10 closed trades)",
+    "outcome": "Win rate 40%, expectancy -0.43R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
+  },
+  {
+    "source": "auto",
+    "pattern": "Setups where technical AND fundamental both scored >= 6 (n=4 closed trades)",
+    "outcome": "Win rate 25%, expectancy -0.46R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
   }
 ]

@@ -1,0 +1,23 @@
+```
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-bottom bullish pattern at swing low with RSI neutral and GBP rate differential favoring longs, but MTF disagreement (M:SELL, W/D:NEUTRAL, 4H:BUY conf=0/3) and ribbon partial alignment (3/5) restrict conviction.
+RISK_FACTORS: [1] MTF conflict — Monthly selling pressure contradicts 4H buy signal; Weekly/Daily neutral provides no directional anchor, creating whipsaw risk. [2] 4H death-cross (price<SMA50<SMA200) unresolved; 4H RSI=39.5 approaching oversold but MACD already negative suggests momentum exhaustion, not reversal strength.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF weekly AND daily do not both agree on direction (conf=0/3 << 2/3 threshold); Monthly contradicts 4H. Hard rule violation: TRADE_THIS NO regardless of other factors.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+• **MTF Rule Breach (HARD):** Weekly:NEUTRAL + Daily:NEUTRAL + Monthly:

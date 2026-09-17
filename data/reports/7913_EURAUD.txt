@@ -1,0 +1,23 @@
+PAIR: EUR/AUD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly uptrend + converging ribbon + dual UNWINDING positioning create reversal-risk setup, but daily neutral RSI and mixed MTF (1/3 agreement) limit conviction; entry only on confirmed breakout above 1.6304 SMA50.
+RISK_FACTORS: MTF disagreement (M:BUY vs D/4H:NEUTRAL, conf=1/3 <67%) violates multi-timeframe rule; Death-cross structure (price < SMA50 < SMA200) remains intact and RSI 45.2 offers no oversold tailwind.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 1.6304
+ENTRY_TRIGGER_REASON: Break above D1 SMA50 at 1.6304 with 4H close above it would confirm M:BUY alignment and converging ribbon reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**Scoring Rationale:**
+
+**TECHNICAL (4/10):** D1 T_sig = NEUTRAL_3 is baseline. RSI 45.2 = 3–4 NEUTRAL (standard tier, no trend-context shift applies since D:NEUTRAL). MAC
