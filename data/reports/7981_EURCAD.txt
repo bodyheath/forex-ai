@@ -1,0 +1,29 @@
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at 23.6% Fib support (1.6061) + converging ribbon + EUR short-crowding (reversal risk) suggest tactical long bounce, but mixed MTF and neutral RSI/MACD prevent high-conviction entry.
+
+RISK_FACTORS: [1] MTF conf=0/3 (M:SELL conflicts with W/D:NEUTRAL) — no clear directional alignment; mean-reversion setup is fragile if monthly downtrend resumes. [2] 4H downtrend structure (price < SMA50 < SMA200) remains intact; CAD short positioning at 50% creates volatility risk if unwind accelerates.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.60450
+ENTRY_TRIGGER_REASON: Break above 23.6% Fib + pin bar body (1.6061–1.6045 zone); confirm ribbon convergence is reversing to bull alignment and RSI crosses above 50 on 4H.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):** T_sig=NEUTRAL_3 baseline holds. RSI 46.6
