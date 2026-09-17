@@ -3,10 +3,10 @@
     "\ud83d\udcca consensus_adj has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md \u2014 filter to consensus_eligible==True, compare within grade)",
     "\ud83d\udcca da_downgraded has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_da_downgrade_tracking.md \u2014 compare within da_grade_before, n undercounts (da_fired=True only))",
     "\ud83d\udcca memory_hash has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md's before/after natural-experiment design)",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=847, WR=20.9%) significantly outperforms grade C (n=110, WR=10.0%), p=0.0034",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=360, WR=42.5%) significantly outperforms grade D (n=847, WR=20.9%), p=0.0000",
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=859, WR=20.7%) significantly outperforms grade C (n=111, WR=9.9%), p=0.0034",
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=362, WR=42.3%) significantly outperforms grade D (n=859, WR=20.7%), p=0.0000",
     "\ud83d\udea8 Outcome-analysis gap \u2014 1 closed fund trade(s) missing from win/loss analysis despite self-healing reconciliation: ['7615'] \u2014 the reconciliation itself may be failing, investigate directly rather than waiting",
-    "\ud83d\udea8 rib_strongly_against (non-GBP) edge drifting \u2014 most recent 40 decisive trades WR=17.5% vs the prior 443 decisive trades WR=44.2%, p=0.0005. See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
+    "\ud83d\udea8 rib_strongly_against (non-GBP) edge drifting \u2014 most recent 40 decisive trades WR=17.5% vs the prior 444 decisive trades WR=44.1%, p=0.0005. See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
   ],
-  "last_alert_sent_at": "2026-09-17T11:44:51.668602"
+  "last_alert_sent_at": "2026-09-17T17:01:17.747100"
 }
