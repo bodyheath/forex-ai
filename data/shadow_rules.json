@@ -16754,5 +16754,19 @@
         }
       }
     ]
+  },
+  "confidence_floor_underperforms_conf6": {
+    "description": "Candidates at the current real entry-gate floor (confidence>=7) vs. confidence==6 (below the floor, never reaches a real fund trade under current gating, but evaluated here on research closes). Phase 22 discovery sample (research_trades.csv, strict v2/post-cutoff, EXPIRY-inclusive net-pips-sign accounting): confidence==6: n=492, WR=41.9%, PF=1.175 (best of any substantial tier). confidence==7: n=484, WR=40.3%, PF=0.792. confidence==8: n=117, WR=34.2%, PF=0.469 (worst). A monotonic-looking DEGRADATION from 6->7->8, the opposite of what a confidence score should predict, and directionally consistent with this codebase's own already-documented grade-ordering-inversion pattern (health_check.py::check_grade_ordering). None of the pairwise WR comparisons clear conventional significance yet (conf6 vs conf7 p=0.31; conf7 vs conf8 p=0.11; conf6 vs conf8 p=0.064) -- real, large, consistently-directional PF/pnl gaps, but not yet confirmed. would_fire=True means confidence>=7 (the population that can currently become a real trade); would_fire=False means confidence==6 (currently excluded by the real gate, evaluated here only from research closes) -- direct test of whether the current floor is excluding the better tier.",
+    "registered_at": "2026-09-17T23:44:26.486162+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 100,
+    "min_n_no_fire": 100,
+    "alpha": 0.05,
+    "pf_max_fire": null,
+    "pf_min_fire": null,
+    "pf_min_gap": null,
+    "promoted": false,
+    "evaluations": []
   }
 }
