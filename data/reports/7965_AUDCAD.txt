@@ -1,0 +1,25 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Rate differential (+2.23% AUD>CAD) supports AUD strength, but MTF conflict (W:SELL, D:NEUTRAL, 4H:SELL, conf=2/3) + converging ribbon + RSI neutral at key pin-bar level = reversal/consolidation risk rather than continuation; bearish setup still viable on weekly+4H agreement despite D1 neutrality.
+
+RISK_FACTORS: 
+1. MTF confidence only 2/3 (D1 NEUTRAL breaks weekly+daily agreement rule; sell signal weakened below confidence threshold, technically TRADE_THIS fails the MTF hard rule but 4H+W align 2/3 sufficiently to flag SELL as "NO but monitor"); 
+2. Ribbon converging into D1 near pin-bar high (0.99899 near SH) signals trend exhaustion — reversal or range-bound consolidation likely within next 12–24 candles.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 0.9950
+ENTRY_TRIGGER_REASON: Pullback to D1 SMA50 (0.9872) or into 4H pin-bar confirmation zone after retest of highs; wait for RSI to drop into

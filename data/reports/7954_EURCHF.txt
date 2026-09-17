@@ -1,0 +1,19 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (26p/4pt) + 4H pin bar at key level conflict with daily uptrend structure; MTF weak (W:SELL vs D:NEUTRAL) fails 2/3 threshold; EUR crowded-short reversal risk undermines directional conviction.
+RISK_FACTORS: [1. MTF agreement insufficient (W:SELL + D:NEUTRAL = 2/3 only, <threshold); daily price still >SMA50>SMA200 with ALIGNED_BULL ribbon = trend continuation risk. 2. EUR positioning at 1y short crowded near reversal tipping point; UNWINDING momentum may snap lower longs into fresh longs, cutting SELL bias.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly(SELL) + Daily(NEUTRAL) do not both agree on direction; confidence 2/3 < required 2/3 for trade. Additionally, D1 uptrend structure (price > SMA50 > SMA200, aligned ribbon 5/5 bull) contradicts SELL signal despite bearish divergence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---

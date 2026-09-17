@@ -1,0 +1,24 @@
+PAIR: AUD/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: D1 pin bar at key level + golden-cross uptrend structure + AUD rate rising clash with 4H death-cross downtrend and bearish RSI divergence, creating a mixed-timeframe reversal setup with moderate edge.
+RISK_FACTORS: MTF disagreement (D1 uptrend vs 4H downtrend) breaks rule threshold — 4H RSI 41 + inside bar neutral limits immediate upside momentum. Bearish RSI divergence (32p/2pt) conflicts with BUY direction, reducing edge.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.7155
+ENTRY_TRIGGER_REASON: Break above D1 pin bar high and 4H resistance confluence at 0.7155 to confirm D1 uptrend dominance over 4H downtrend.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Violation:**  
+Weekly and Daily both return NEUTRAL in MTF line (conf=0/3, wt=80%). This fails the mandatory "both agree" requirement for TRADE_THIS=YES. 4H is BUY but does not override the weekly+
