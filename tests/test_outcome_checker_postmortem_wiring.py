@@ -68,7 +68,7 @@ class TestTargetHitRecordsPostmortem(_BaseOutcomeCheckerTest):
         self.assertEqual(len(closed), 1)
         self.assertEqual(closed[0]["status"], "WIN")
         mock_pm.assert_called_once()
-        self.assertEqual(mock_pm.call_args[0][0]["id"], str(row["id"]) if isinstance(closed[0]["id"], str) else row["id"])
+        self.assertEqual(mock_pm.call_args[0][0]["id"], closed[0]["id"])
         self.assertEqual(mock_pm.call_args[0][0]["status"], "WIN")
 
 
