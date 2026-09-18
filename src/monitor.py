@@ -1500,6 +1500,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 pass
             closed_rows.append(updated)
             _online_learn_closure("main", updated)
+            _record_postmortem_closure("main", updated, log=log)
             break   # trade WIN — no further milestones
 
         elif level == "STOP":
