@@ -16,6 +16,7 @@ from unittest.mock import patch
 
 import config
 from src import outcome_checker
+from src import telegram_alert
 from src import tracker
 
 
