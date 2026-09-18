@@ -170,6 +170,9 @@ def log_recommendation(pair: str, parsed: dict, data_sources, report: str,
     If a YES trade for this pair is already OPEN, returns the existing id and
     overwrites the report file — prevents duplicate OPEN rows on re-analysis.
 
+    Returns 0 when a YES trade is rejected because entry or stop_loss is
+    missing or zero — caller should treat 0 as "trade not written".
+
     2026-09-19: bundle is optional and purely additive -- when given (the
     real call site, src/service.py, already has it in hand for the MTF/
     validation checks just before this call), persists ribbon_state_at_entry
@@ -191,9 +194,6 @@ def log_recommendation(pair: str, parsed: dict, data_sources, report: str,
         except Exception:
             _ribbon_state_at_entry = ""
 
-    Returns 0 when a YES trade is rejected because entry or stop_loss is
-    missing or zero — caller should treat 0 as "trade not written".
-    """
     rows = load()
 
     # Guard: YES trades MUST have valid (non-zero, non-None) entry and stop_loss.
