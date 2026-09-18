@@ -146,7 +146,14 @@ def reconstruct_grade_best_effort(row: dict) -> str:
     2.0 target R:R means every real v2 trade's reward_risk is ~2.0 --
     structurally too low to ever earn this reconstruction's "A" tier
     (needs >2.5), which the live grade can reach via other inputs this
-    function can't see. Treat this field as indicative, not authoritative.
+    function can't see. Also: weekly_trend_at_entry/monthly_trend_at_entry
+    are real trades.csv columns that are declared but never actually
+    written on any real fund trade today (the same "schema exists, never
+    wired" pattern as patience_score_at_entry/cot_momentum) -- so the
+    weekly/monthly conflict check below is always False in practice for
+    real trades, not because trades never conflict but because the data to
+    check it was never populated. Treat this field as indicative, not
+    authoritative.
     """
     try:
         conf = float(row.get("confidence") or 0)
