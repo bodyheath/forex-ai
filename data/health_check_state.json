@@ -3,11 +3,10 @@
     "\ud83d\udcca consensus_adj has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md \u2014 filter to consensus_eligible==True, compare within grade)",
     "\ud83d\udcca da_downgraded has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_da_downgrade_tracking.md \u2014 compare within da_grade_before, n undercounts (da_fired=True only))",
     "\ud83d\udcca memory_hash has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md's before/after natural-experiment design)",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=878, WR=20.3%) significantly outperforms grade C (n=115, WR=11.3%), p=0.0109",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=362, WR=42.3%) significantly outperforms grade D (n=878, WR=20.3%), p=0.0000",
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=883, WR=20.6%) significantly outperforms grade C (n=118, WR=12.7%), p=0.0213",
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=363, WR=42.4%) significantly outperforms grade D (n=883, WR=20.6%), p=0.0000",
     "\ud83d\udea8 Outcome-analysis gap \u2014 1 closed fund trade(s) missing from win/loss analysis despite self-healing reconciliation: ['7615'] \u2014 the reconciliation itself may be failing, investigate directly rather than waiting",
-    "\ud83d\udea8 fund_state.json staleness \u2014 disk state disagrees with a fresh recompute from trades.csv: consecutive_losses: fresh=4 vs disk=5",
-    "\ud83d\udea8 rib_strongly_against (non-GBP) edge drifting \u2014 most recent 40 decisive trades WR=17.5% vs the prior 451 decisive trades WR=43.7%, p=0.0006. See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
+    "\ud83d\udea8 rib_strongly_against (non-GBP) edge drifting \u2014 most recent 40 decisive trades WR=22.5% vs the prior 456 decisive trades WR=43.9%, p=0.0044. See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
   ],
-  "last_alert_sent_at": "2026-09-18T04:46:09.892318"
+  "last_alert_sent_at": "2026-09-18T11:18:15.107323"
 }
