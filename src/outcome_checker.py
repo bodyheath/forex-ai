@@ -388,6 +388,7 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                 log(f"  #{rec_id} {pair} {direction}: LOSS at {_cp}{r_txt} | latest_conf={updated.get('latest_conf') or '—'}")
                 closed.append(updated)
                 _online_learn(updated)
+                _record_postmortem(updated)
                 _closed_this = True
 
             if _closed_this:
