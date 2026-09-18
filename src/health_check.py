@@ -1229,6 +1229,7 @@ def run_all_checks() -> dict:
     flags += check_ribbon_exclusion_continued_validity()
     flags += check_weekly_signal_edge_health()
     flags += check_learning_signal_readiness()
+    flags += check_shadow_hypothesis_promotions()
     flags += check_audit_fixes_present()
     flags += check_warning_fire_rate(records)
     digest = build_opened_trade_digest(records)
