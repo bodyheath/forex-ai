@@ -274,13 +274,15 @@ def record_postmortem(record: dict) -> None:
 
 def record_trade_postmortem(row: dict) -> dict:
     """Convenience: build + record in one call, for close-path call sites.
-    Returns the built record (even if the write itself failed) so a caller
-    can log/inspect it without a second call. Never raises."""
+    Returns the built record, or {} if anything failed. The whole body is
+    one try/except -- deliberately not relying on record_postmortem()'s own
+    internal safety net, so this stays safe for the real close path even if
+    that internal net is ever changed. Never raises."""
     try:
         rec = build_postmortem_record(row)
+        record_postmortem(rec)
+        return rec
     except Exception as exc:
         import sys
-        print(f"[trade_postmortem] build_postmortem_record failed (non-fatal): {exc}", file=sys.stderr)
+        print(f"[trade_postmortem] record_trade_postmortem failed (non-fatal): {exc}", file=sys.stderr)
         return {}
-    record_postmortem(rec)
-    return rec
