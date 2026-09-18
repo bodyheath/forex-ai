@@ -251,52 +251,58 @@ class TestRecordPostmortem(unittest.TestCase):
     """All file I/O mocked -- per the explicit instruction that this
     always-running infrastructure must never touch real disk in tests."""
 
+    def _fake_log_path(self, exists=False, read_text=None, read_side_effect=None,
+                        exists_side_effect=None):
+        fake = MagicMock()
+        if exists_side_effect is not None:
+            fake.exists.side_effect = exists_side_effect
+        else:
+            fake.exists.return_value = exists
+        if read_side_effect is not None:
+            fake.read_text.side_effect = read_side_effect
+        else:
+            fake.read_text.return_value = read_text
+        return fake
+
     def test_writes_new_log_when_file_absent(self):
         record = {"id": "42", "pair": "EUR/USD"}
-        m = mock_open()
-        with patch.object(pm.POSTMORTEM_LOG, "exists", return_value=False), \
-             patch.object(pm.POSTMORTEM_LOG, "write_text") as mock_write, \
-             patch.object(pm.POSTMORTEM_LOG.parent, "mkdir"):
+        fake = self._fake_log_path(exists=False)
+        with patch.object(pm, "POSTMORTEM_LOG", fake):
             pm.record_postmortem(record)
-        mock_write.assert_called_once()
-        written = json.loads(mock_write.call_args[0][0])
+        fake.write_text.assert_called_once()
+        written = json.loads(fake.write_text.call_args[0][0])
         self.assertEqual(written["42"], record)
 
     def test_merges_into_existing_log(self):
         record = {"id": "2", "pair": "GBP/USD"}
         existing = json.dumps({"1": {"id": "1", "pair": "EUR/USD"}})
-        with patch.object(pm.POSTMORTEM_LOG, "exists", return_value=True), \
-             patch.object(pm.POSTMORTEM_LOG, "read_text", return_value=existing), \
-             patch.object(pm.POSTMORTEM_LOG, "write_text") as mock_write, \
-             patch.object(pm.POSTMORTEM_LOG.parent, "mkdir"):
+        fake = self._fake_log_path(exists=True, read_text=existing)
+        with patch.object(pm, "POSTMORTEM_LOG", fake):
             pm.record_postmortem(record)
-        written = json.loads(mock_write.call_args[0][0])
+        written = json.loads(fake.write_text.call_args[0][0])
         self.assertIn("1", written)
         self.assertIn("2", written)
 
     def test_idempotent_replaces_same_id(self):
         record_v2 = {"id": "1", "pair": "EUR/USD", "status": "WIN"}
         existing = json.dumps({"1": {"id": "1", "pair": "EUR/USD", "status": "OPEN"}})
-        with patch.object(pm.POSTMORTEM_LOG, "exists", return_value=True), \
-             patch.object(pm.POSTMORTEM_LOG, "read_text", return_value=existing), \
-             patch.object(pm.POSTMORTEM_LOG, "write_text") as mock_write, \
-             patch.object(pm.POSTMORTEM_LOG.parent, "mkdir"):
+        fake = self._fake_log_path(exists=True, read_text=existing)
+        with patch.object(pm, "POSTMORTEM_LOG", fake):
             pm.record_postmortem(record_v2)
-        written = json.loads(mock_write.call_args[0][0])
+        written = json.loads(fake.write_text.call_args[0][0])
         self.assertEqual(len(written), 1)
         self.assertEqual(written["1"]["status"], "WIN")
 
     def test_corrupt_existing_log_does_not_raise_and_resets(self):
-        with patch.object(pm.POSTMORTEM_LOG, "exists", return_value=True), \
-             patch.object(pm.POSTMORTEM_LOG, "read_text", return_value="not json"), \
-             patch.object(pm.POSTMORTEM_LOG, "write_text") as mock_write, \
-             patch.object(pm.POSTMORTEM_LOG.parent, "mkdir"):
+        fake = self._fake_log_path(exists=True, read_text="not json")
+        with patch.object(pm, "POSTMORTEM_LOG", fake):
             pm.record_postmortem({"id": "1", "pair": "EUR/USD"})
-        written = json.loads(mock_write.call_args[0][0])
+        written = json.loads(fake.write_text.call_args[0][0])
         self.assertEqual(list(written.keys()), ["1"])
 
     def test_never_raises_when_write_fails(self):
-        with patch.object(pm.POSTMORTEM_LOG, "exists", side_effect=RuntimeError("disk full")):
+        fake = self._fake_log_path(exists_side_effect=RuntimeError("disk full"))
+        with patch.object(pm, "POSTMORTEM_LOG", fake):
             try:
                 pm.record_postmortem({"id": "1", "pair": "EUR/USD"})
             except Exception as exc:
