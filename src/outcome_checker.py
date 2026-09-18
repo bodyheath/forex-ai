@@ -374,6 +374,7 @@ def check_open_trades(log=print, price_cache: dict | None = None) -> list:
                         pass
                 closed.append(updated)
                 _online_learn(updated)
+                _record_postmortem(updated)
                 _closed_this = True
 
             elif _casc.stop_hit(row, price):
