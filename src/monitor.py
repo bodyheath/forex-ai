@@ -1611,6 +1611,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 log(f"  Monitor: safety-net check failed for #{rec_id}: {_sn_exc}")
             closed_rows.append(updated)
             _online_learn_closure("main", updated)
+            _record_postmortem_closure("main", updated, log=log)
             # Loss autopsy — analyse why this trade failed.
             # 2026-09-08: this used to read `if casc_oc == "LOSS":`, referencing
             # a variable that is never defined anywhere in this function --
