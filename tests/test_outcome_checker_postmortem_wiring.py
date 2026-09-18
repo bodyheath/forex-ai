@@ -48,6 +48,11 @@ class _BaseOutcomeCheckerTest(unittest.TestCase):
         self._patchers = [
             patch.object(config, "TRADES_CSV", self._trades_csv),
             patch.object(config, "TWELVE_DATA_KEY", "fake-key-for-test"),
+            # outcome_checker.check_open_trades() sends a real Telegram
+            # message on every WIN close (target hit) -- must always be
+            # mocked here, never left live, per the standing "mock any live
+            # send in tests" discipline.
+            patch.object(telegram_alert, "send"),
         ]
         for p in self._patchers:
             p.start()
