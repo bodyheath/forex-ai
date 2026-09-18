@@ -27,7 +27,7 @@
   "fund_total_trades": 245,
   "current_sizing_pct": 0.75,
   "sizing_mode": "drawdown_caution",
-  "daily_trades_date": "2026-09-18",
+  "daily_trades_date": "2026-09-19",
   "unrealised_dollars": 0,
   "unrealised_pips": 0,
   "total_equity": 9933.24,
@@ -88,6 +88,14 @@
       "checklist_score": 4.0,
       "blocked_reason": "pause",
       "timestamp": "2026-09-18T23:19:38"
+    },
+    {
+      "pair": "AUD/NZD",
+      "direction": "SELL",
+      "confidence": 8.0,
+      "checklist_score": 5.0,
+      "blocked_reason": "pause",
+      "timestamp": "2026-09-19T00:25:47"
     }
   ],
   "sizing_reason": "Drawdown caution \u2014 fund 3.7% from peak (0.75% risk)",

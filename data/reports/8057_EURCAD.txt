@@ -1,0 +1,23 @@
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + D1 BUY signal + EUR rate rising vs CAD falling provide directional confluence, but weak MTF alignment (1/3) and converging ribbon signal trend exhaustion — entry only on pullback confirmation.
+RISK_FACTORS: [1. MTF conflict: M:SELL vs D:BUY with only 40% confidence severely weakens conviction; 2. Converging ribbon + RSI 43.4 (neutral midzone) + price below SMA50 on 4H indicate trend weakness and reversal risk before extension.]
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.5998
+ENTRY_TRIGGER_REASON: Pullback to SL/FIB lower bound (1.5998) for confirmation of support; only enter if 4H RSI holds >35 and ribbon shows re-alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 T_sig=BUY_6 is baseline, pin bar at key level is constructive.
+- **CRITICAL MTF FAILURE:** M:SELL + D:BUY = **HARD RULE VIOLATION**. Only
