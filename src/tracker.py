@@ -255,6 +255,8 @@ def log_recommendation(pair: str, parsed: dict, data_sources, report: str,
                     "entry_trigger_price":  _trig_p,
                     "entry_trigger_reason": _trig_r,
                     "system_version":       config.SYSTEM_VERSION,
+                    "risk_factors":         parsed.get("risk_factors") or "",
+                    "ribbon_state_at_entry": _ribbon_state_at_entry,
                 })
                 _write_all(rows)
                 return rec_id
