@@ -163,11 +163,33 @@ def _save_report_file(rec_id: int, pair: str, report: str) -> str:
     return path.name
 
 
-def log_recommendation(pair: str, parsed: dict, data_sources, report: str) -> int:
+def log_recommendation(pair: str, parsed: dict, data_sources, report: str,
+                        bundle: dict = None) -> int:
     """Append one recommendation; return its assigned id.
 
     If a YES trade for this pair is already OPEN, returns the existing id and
     overwrites the report file — prevents duplicate OPEN rows on re-analysis.
+
+    2026-09-19: bundle is optional and purely additive -- when given (the
+    real call site, src/service.py, already has it in hand for the MTF/
+    validation checks just before this call), persists ribbon_state_at_entry
+    so a later postmortem (src/trade_postmortem.py) doesn't have to re-parse
+    report text or depend on the live `bundle` dict, which never survives
+    past the scan that created it. risk_factors was already a real key on
+    `parsed` (src/recparse.py's own output) but was never written to its own
+    column -- every investigation this month had to re-open the saved report
+    .txt file by hand to read it. Every existing caller that omits `bundle`
+    (tests, any other call site) behaves exactly as before.
+    """
+    _ribbon_state_at_entry = ""
+    if bundle:
+        try:
+            _ribbon_state_at_entry = str(
+                ((bundle.get("technical", {}) or {}).get("daily", {}) or {})
+                .get("ribbon", {}).get("status") or ""
+            )
+        except Exception:
+            _ribbon_state_at_entry = ""
 
     Returns 0 when a YES trade is rejected because entry or stop_loss is
     missing or zero — caller should treat 0 as "trade not written".
