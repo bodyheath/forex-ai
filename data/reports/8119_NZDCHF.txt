@@ -1,0 +1,31 @@
+PAIR: NZD/CHF
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key support (SL=0.47323) + bullish RSI divergence + D1 BUY signal form a reversal setup, but mixed MTF (W:NEUTRAL) and weak oscillator confluence limit edge to moderate conviction.
+
+RISK_FACTORS: 
+1. Weekly trend is NEUTRAL — only 2/3 MTF agreement (D1+4H+M align, W does not) reduces MTF confidence below high-probability threshold; reversals into neutral weekly often fade.
+2. 4H remains in downtrend structure (price < SMA50 < SMA200 death-cross) — upside must break 4H SMA50 (~0.474) to confirm momentum; failure to sustain above kills the setup.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.47323
+ENTRY_TRIGGER_REASON: Pin bar at exact SL (support) + bullish divergence (7p/11pt) creates reversal confluence; wait for price to touch the level before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Detailed Scoring Rationale:**
+
+**TECHNICAL (6/10):**
+- D1 T_sig

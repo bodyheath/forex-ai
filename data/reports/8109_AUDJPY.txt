@@ -1,0 +1,23 @@
+PAIR: AUD/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + W:BUY + D:BUY + rising AUD rate provide confluence for pullback entry, but 4H:SELL conflict and crowded JPY long positioning limit confidence to medium.
+RISK_FACTORS: [1. MTF conflict: 4H:SELL disagrees with W:BUY + D:BUY (2/3 agreement, not >67%), creating whipsaw risk on intraday mean reversion. 2. JPY positioning near 1y crowded long with REVERSING momentum — institutional unwinding into rally could trigger sudden reversal, especially if AUD fails to break above SMA50=112.6730.]
+TRADE_THIS: YES
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 110.50
+ENTRY_TRIGGER_REASON: Pullback to Fibonacci support (SL=109.237 swing low zone, nearest retest ~110.5) confirms pin bar pattern and allows entry with RSI <35 for higher-probability reversal confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE:**
+
+**TECHNICAL_SCORE = 6:**
+- T_sig baseline = BUY_4 (pre-computed).
+- RSI 42

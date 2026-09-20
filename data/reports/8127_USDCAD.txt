@@ -1,0 +1,17 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought at 61.1 in uptrend with T_sig=SELL_3 and Stochastic+CCI partial sell signal, but MTF agreement is absent (D1/W neutral) — conflicting technicals prevent high conviction.
+RISK_FACTORS: [1. MTF disagreement (D1/W both NEUTRAL while 4H=SELL at 80% weight) fails MTF dual-confirmation rule — removes directional reliability. 2. Price above SMA50 in golden-cross uptrend structure; RSI 61.1 is mid-zone neutral (not extreme overbought) in an uptrend context — no pattern reversal confirmation.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — D1 and W both NEUTRAL; 4H SELL alone does not meet dual-timeframe agreement threshold (conf=0/3). T_sig=SELL_3 is baseline, but oscillator confluence (2/3) is only partial and price structure remains bullish (golden cross, BB upper-band hold). Fundamental (USD rate rising, CAD rate falling) supports USD strength, contradicting SELL bias.
+ENTRY_
