@@ -1,5 +1,22 @@
 {
-  "timestamp": "2026-09-17T18:23:49.067029+00:00",
-  "monthly_trends": {},
-  "trend_structures": {}
+  "timestamp": "2026-09-20T18:21:09.238548+00:00",
+  "monthly_trends": {
+    "GBP/AUD": {
+      "trend": "SELL",
+      "strength": "moderate",
+      "n_months": 3
+    }
+  },
+  "trend_structures": {
+    "GBP/AUD": {
+      "status": "ok",
+      "buy_valid": false,
+      "sell_valid": true,
+      "hh": false,
+      "hl": false,
+      "lh": true,
+      "ll": true,
+      "detail": "lower highs and lower lows"
+    }
+  }
 }

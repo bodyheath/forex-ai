@@ -1,0 +1,22 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Bearish RSI divergence and Stochastic overbought (89) conflict with bullish ribbon alignment and D1 uptrend structure, creating no high-conviction edge; MTF conf 1/3 violates BUY rule.
+RISK_FACTORS: [1. D1 in confirmed uptrend (price > SMA50 > SMA200, golden cross) with ALIGNED_BULL ribbon (5/5 fan)—T_sig=SELL_5 contradicts structural bullish momentum and risks immediate reversal if price reclaims 0.5820.] [2. MTF conf=1/3 fails ≥2/3 threshold; W:NEUTRAL + D:SELL disagree, triggering mandatory NO trade rule regardless of other signals.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule: weekly and daily do not both agree (W:NEUTRAL, D:SELL = conf 1/3 < 2/3 threshold). Trade blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**ANALYSIS:**
+
+**MTF Veto (Hard Rule):**
+Weekly=NEUTRAL, Daily

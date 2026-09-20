@@ -16,11 +16,6 @@
   },
   {
     "source": "outcome",
-    "pattern": "Never BUY against a 5/5 bearish EMA ribbon with <5 fundamental score and live high-impact news within 48h.",
-    "outcome": "[LOSS] EUR/USD closed 2026-06-24 21:11:21"
-  },
-  {
-    "source": "outcome",
     "pattern": "Never BUY against a 5/5 bearish EMA ribbon + net SHORT positioning \u2014 oversold RSI in a downtrend signals trend strength,",
     "outcome": "[LOSS] CAD/HKD closed 2026-06-24 20:57:46"
   },
@@ -113,6 +108,11 @@
     "source": "outcome",
     "pattern": "Never buy into a 5/5 bear ribbon on RSI oversold alone when 3+ analysis layers score \u22645 and a macro catalyst risk is fla",
     "outcome": "[LOSS] CHF/JPY closed 2026-09-11 21:01:36"
+  },
+  {
+    "source": "outcome",
+    "pattern": "Never sell into a 5/5 bullish EMA fan when rate differential also favors longs \u2014 oscillator confluence cannot override t",
+    "outcome": "[LOSS] AUD/NZD closed 2026-09-17 06:01:32"
   },
   {
     "source": "auto",

@@ -1,0 +1,25 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: RSI overbought in uptrend at upper BB with bearish pin bar on 4H provides near-term pullback setup despite uptrend structure.
+RISK_FACTORS: [MTF weekly/daily neutral—no multi-timeframe agreement limits conviction; uptrend (price > SMA50 > SMA200) remains structurally intact and may extend further despite overbought RSI.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.3948
+ENTRY_TRIGGER_REASON: Pullback to SMA50 (daily support in uptrend) where RSI would reset from overbought, confirming lower-timeframe bearish pin bar.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (6/10):**
+- D1 RSI=61.1 in confirmed uptrend (price > SMA50 > SMA200): standard tier applies. RSI 62–70 = 4–5 SELL, but uptrend context shifts zone: 65–77 = 4–5 SELL. At 61.1, just below, = 4 SELL baseline.
+- T_sig

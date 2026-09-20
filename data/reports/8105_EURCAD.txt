@@ -1,0 +1,18 @@
+```
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish ribbon alignment (5/5 EMA stack) and monthly SELL context conflict sharply with neutral daily/weekly MTF signals, creating low-conviction setup trapped between deteriorating 4H technicals and inconclusive oscillators.
+RISK_FACTORS: [1. MTF conf=0/3 — D:NEUTRAL + W:NEUTRAL override M:SELL, violating core MTF rule (weekly+daily must both agree for TRADE_THIS=YES); no directional consensus across the timeframe ensemble. 2. OSC=NONE (Stoch+CCI+RSI disagreement: RSI neutral 45.1, Stoch oversold 37.7, CCI negative -45.5) — lack of oscillator confluence weakens entry conviction and increases false-signal risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly (NEUTRAL) and daily (NEUTRAL) do not both agree on direction; monthly SELL and 4H NEUTRAL insufficient to override consensus requirement. Pin bar at key level + ALIGNED_BEAR ribbon provide structural bear bias, but oscillator silence (conf=NONE) and RTF disagreement prevent high-confidence entry.
+ENTRY

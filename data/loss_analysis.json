@@ -133,5 +133,14 @@
     "analysis": "## What Went Wrong\n\nThe most critical error was underweighting the **fully aligned bearish ribbon (5/5)** against an oversold bounce signal \u2014 extreme RSI readings in a dominant downtrend far more often represent momentum continuation than genuine reversal, and the technical score of 8 masked this structural conflict. The **BOJ surprise risk flagged explicitly in the news warning** almost certainly materialized, as the trade closed within roughly 27 hours, consistent with a sharp JPY-strengthening event overriding any technical bounce entirely. The **fundamental and positioning scores (both 4/10)** should have been disqualifying: CHF net short positioning at the 88th percentile meant the \"crowded reversal\" risk was extreme, with institutional flow directly opposing the trade direction. The warning sign was hiding in plain sight \u2014 a confidence of 7/10 with three of five layers scoring \u22645 and an explicit BOJ risk flag should have reduced confidence below the trade threshold or triggered a \"NO\" recommendation.\n\nPATTERN: Never buy into a 5/5 bear ribbon on RSI oversold alone when 3+ analysis layers score \u22645 and a macro catalyst risk is flagged.",
     "pattern_rule": "Never buy into a 5/5 bear ribbon on RSI oversold alone when 3+ analysis layers score \u22645 and a macro catalyst risk is fla",
     "analysed_at": "2026-09-13 18:10:13"
+  },
+  {
+    "id": "7615",
+    "pair": "AUD/NZD",
+    "status": "LOSS",
+    "r_multiple": "-1.0",
+    "analysis": "## What Went Wrong\n\nThe trade was fundamentally undermined by the very risks explicitly flagged in the original analysis: the fully bullish EMA ribbon (5/5 fan alignment) overwhelmed the mean-reversion oscillator signal, which is a classic trap where overbought readings in a strong trend simply reset higher rather than reverse. The +1.78% rate differential favoring AUD was a persistent structural tailwind that reasserted itself within the 48-hour holding window, providing fundamental fuel for continued AUD/NZD upside. The 4H head-and-shoulders pattern likely failed to break down convincingly, and with a Macro score of only 5/10, there was insufficient macro confirmation to justify fading such a strong multi-timeframe trend. Critically, the trade should have been filtered out entirely: a SELL signal against a 5/5 bullish EMA fan with a conflicting rate differential and only a 5/10 macro score represents a low-conviction counter-trend fade dressed up with oscillator noise.\n\nPATTERN: Never sell into a 5/5 bullish EMA fan when rate differential also favors longs \u2014 oscillator confluence cannot override trend + fundamental alignment.",
+    "pattern_rule": "Never sell into a 5/5 bullish EMA fan when rate differential also favors longs \u2014 oscillator confluence cannot override t",
+    "analysed_at": "2026-09-20 18:11:03"
   }
 ]
