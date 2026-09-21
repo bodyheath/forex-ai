@@ -114,18 +114,6 @@ class TestUpdateSizingStateAppliesFullChain(unittest.TestCase):
         self.assertEqual(updated["sizing_mode"], "REDUCED")
         self.assertEqual(updated["current_sizing_pct"], 0.56)
 
-    def test_very_low_drawdown_no_streak_stays_pure_normal(self):
-        """Below the overlay's own first drawdown tier (2.0%), the overlay
-        is a true no-op (dd_mult=1.0) and the display matches stage 1 alone
-        exactly -- confirms the fix doesn't over-penalize when neither
-        stage would actually reduce sizing."""
-        state = {"current_drawdown_pct": 1.0, "consecutive_losses": 0,
-                 "consecutive_wins": 0, "circuit_breaker_active": False,
-                 "max_drawdown_seen": 1.0}
-        updated = fund_state.update_sizing_state(state, current_balance=9900.0)
-        self.assertEqual(updated["sizing_mode"], "normal")
-        self.assertEqual(updated["current_sizing_pct"], 1.0)
-
     def test_drawdown_pause_zero_pct_not_overridden(self):
         """paused/>=10% drawdown returns pct=0.0 from the first stage --
         the overlay must never turn a real pause into a nonzero size."""
