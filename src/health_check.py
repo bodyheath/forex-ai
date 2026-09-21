@@ -28,6 +28,7 @@ check_currency_consensus_edge_health() -> list[str]
 check_ribbon_exclusion_continued_validity() -> list[str]
 check_weekly_signal_edge_health()      -> list[str]
 check_learning_signal_readiness()      -> list[str]
+check_shadow_hypothesis_promotions()   -> list[str]
 check_audit_fixes_present()            -> list[str]
 check_warning_fire_rate(records)       -> list[str]
 build_opened_trade_digest(records, n=5) -> list[str]
@@ -1075,6 +1076,67 @@ def _check_vix_regime_edge_readiness(csv_path=None) -> list:
     return flags
 
 
+def check_shadow_hypothesis_promotions() -> list:
+    """Standing tripwire surfacing the moment any registered shadow_mode
+    hypothesis (src/shadow_mode.py, governed by PROMOTION_DISCIPLINE.md)
+    crosses its own pre-registered promotable bar -- so this is caught by a
+    standing check on this file's normal (GHA-scheduled) cadence, not only
+    when a human happens to re-run check_promotion_readiness() by hand.
+
+    2026-09-19: added off the back of the auto-learning-infrastructure
+    request -- shadow_mode already tracked every registered hypothesis
+    (ribbon_carveout_exclude_trending_risk_on, technical_carries_divergence,
+    confidence_floor_underperforms_conf6, the vbook_* rules, etc.), but
+    nothing ran the check on a schedule; PROMOTION_DISCIPLINE.md's own table
+    already notes it "will go stale the moment new trades close" without
+    someone re-checking. This closes that gap the same way
+    check_learning_signal_readiness() closed the equivalent gap for
+    memory_hash/consensus_adj/da_fired.
+
+    Read-only, same as every other check in this file: only ever calls
+    shadow_mode.list_rules() and check_promotion_readiness(), which read
+    data/shadow_rules.json and never write to it. Never calls
+    assert_promotion_authorized() or mark_promoted() -- crossing the bar is
+    surfaced for a human promotion conversation, never applied
+    automatically, exactly as PROMOTION_DISCIPLINE.md requires. A rule
+    already marked promoted is skipped: promotion already happened as a
+    human, reviewed decision, and this check has nothing new to say about
+    it.
+
+    Flag text is a static string per rule (no live n/p/PF baked in) for the
+    same reason check_learning_signal_readiness()'s flags are static: it
+    lets the existing flag-set dedup in scripts/health_check.py fire
+    exactly once when a rule newly crosses the bar, stay silent on every
+    later run where it remains promotable, and correctly re-fire if it
+    later drops back below the bar and then crosses again -- a real state
+    change either way. The live numbers are one check_promotion_readiness()
+    call away and deliberately not duplicated into alert text that would
+    otherwise jitter on every single trade close.
+    """
+    flags = []
+    try:
+        from src import shadow_mode
+        state = shadow_mode.list_rules()
+        for rule_name in sorted(state.keys()):
+            rule = state[rule_name]
+            if rule.get("promoted"):
+                continue
+            status = shadow_mode.check_promotion_readiness(rule_name)
+            if status.get("promotable"):
+                flags.append(
+                    f"🎯 shadow hypothesis '{rule_name}' has crossed its own "
+                    f"pre-registered promotion bar — ready for a promotion "
+                    f"conversation (see PROMOTION_DISCIPLINE.md). NOT applied "
+                    f"automatically: nothing in this system changes real trade "
+                    f"selection, sizing, or gating on its own. For current "
+                    f"n/p/PF numbers, run "
+                    f"shadow_mode.check_promotion_readiness({rule_name!r})."
+                )
+    except Exception as e:
+        flags.append(f"⚠️ shadow-hypothesis promotion check itself failed to run: {e}")
+    return flags
+
+
 # Lightweight, static presence checks mirroring the session's 16-item final
 # verification pass. Each is (label, file, pattern) — file content only,
 # no execution. Kept intentionally small: this is a regression tripwire for
@@ -1168,6 +1230,7 @@ def run_all_checks() -> dict:
     flags += check_ribbon_exclusion_continued_validity()
     flags += check_weekly_signal_edge_health()
     flags += check_learning_signal_readiness()
+    flags += check_shadow_hypothesis_promotions()
     flags += check_audit_fixes_present()
     flags += check_warning_fire_rate(records)
     digest = build_opened_trade_digest(records)

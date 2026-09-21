@@ -38,6 +38,7 @@ from unittest.mock import patch
 import config
 from src import monitor
 from src import tracker
+from src import trade_postmortem
 from src.trading import financials
 
 
@@ -71,6 +72,7 @@ class TestFundStopLossCascOcFix(unittest.TestCase):
         self._trades_csv = tmp_root / "trades.csv"
         self._fund_state_json = tmp_root / "fund_state.json"
         self._milestone_log = tmp_root / "milestone_log.json"
+        self._postmortem_log = tmp_root / "trade_postmortems.json"
 
         self._patchers = [
             patch.object(config, "TRADES_CSV", self._trades_csv),
@@ -78,6 +80,13 @@ class TestFundStopLossCascOcFix(unittest.TestCase):
             patch.object(financials, "FUND_STATE_JSON", self._fund_state_json),
             patch.object(monitor, "_MILESTONE_LOG", self._milestone_log),
             patch.object(monitor, "_dn", None),
+            # 2026-09-19: _apply_fund_milestones() now also calls
+            # trade_postmortem.record_trade_postmortem() on every real
+            # close (see src/trade_postmortem.py) -- redirect its companion
+            # log the same way every other real file this test touches is
+            # redirected, so this test never writes to the real
+            # data/trade_postmortems.json.
+            patch.object(trade_postmortem, "POSTMORTEM_LOG", self._postmortem_log),
         ]
         for p in self._patchers:
             p.start()

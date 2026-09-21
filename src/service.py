@@ -272,7 +272,8 @@ def analyse_and_log(
             log(f"[service] concentration-check error: {_e}")
 
     rec_id = tracker.log_recommendation(
-        result["pair"], parsed, result["availability"]["count"], result["report"]
+        result["pair"], parsed, result["availability"]["count"], result["report"],
+        bundle=result.get("bundle", {}),
     )
     result["id"]     = rec_id
     result["parsed"] = parsed

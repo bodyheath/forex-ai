@@ -62,6 +62,21 @@ def _online_learn_closure(source_table: str, updated: dict, log=print) -> None:
     # richer 80-feature scheme. See project_full_audit_sep2026.md.
 
 
+def _record_postmortem_closure(source_table: str, updated: dict, log=print) -> None:
+    """Best-effort: build and store a structured postmortem for a real fund
+    trade closed here between scans (see src/trade_postmortem.py). Real-fund
+    trades only ("main") -- research trades aren't in scope for this. Pure
+    observability -- never raises, never affects the trade's own row, never
+    feeds a grading/gating decision."""
+    if source_table != "main":
+        return
+    try:
+        from src import trade_postmortem
+        trade_postmortem.record_trade_postmortem(updated)
+    except Exception as exc:
+        log(f"[monitor] postmortem error (main trade {updated.get('id')}): {exc}")
+
+
 def _analyse_loss(trade: dict, log_fn=None) -> dict:
     """Use Claude Haiku to analyse why a trade lost and what to learn from it."""
     _log = log_fn or print
@@ -1485,6 +1500,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 pass
             closed_rows.append(updated)
             _online_learn_closure("main", updated)
+            _record_postmortem_closure("main", updated, log=log)
             break   # trade WIN — no further milestones
 
         elif level == "STOP":
@@ -1595,6 +1611,7 @@ def _apply_fund_milestones(row: dict, milestones: list, row_state: dict,
                 log(f"  Monitor: safety-net check failed for #{rec_id}: {_sn_exc}")
             closed_rows.append(updated)
             _online_learn_closure("main", updated)
+            _record_postmortem_closure("main", updated, log=log)
             # Loss autopsy — analyse why this trade failed.
             # 2026-09-08: this used to read `if casc_oc == "LOSS":`, referencing
             # a variable that is never defined anywhere in this function --
