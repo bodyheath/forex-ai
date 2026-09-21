@@ -25,7 +25,7 @@ import pandas as pd
 from src import health_check as hc
 
 
-def _row(pair, direction, status, closed_at, ribbon="ALIGNED_BEAR" if False else None):
+def _row(pair, direction, status, closed_at):
     return {
         "pair": pair, "direction": direction, "status": status,
         "closed_at": closed_at.strftime("%Y-%m-%d %H:%M:%S"),
