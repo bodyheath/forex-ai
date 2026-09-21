@@ -638,6 +638,18 @@ def check_rib_strongly_against_edge_health(csv_path=None) -> list:
     the recent window, which would compare a subset against a superset
     containing itself) -- flags only if recent performance has fallen
     significantly below that baseline.
+
+    2026-09-2X hardening (see _RIB_EDGE_HEALTH_CHECK_FAMILY_SIZE's comment
+    above for the full rationale): deduplicates to one evaluation per
+    pair+direction+calendar-day before computing anything, on both the
+    recent window and the older baseline, since research_trades.csv
+    re-evaluates the same real market move many times a day and a raw row
+    count materially overstates independent evidence. Also Bonferroni-
+    corrects the significance bar by this file's count of same-shape decay
+    checks, the same style of correction shadow_mode.py's registered rules
+    already get -- a real recent drift must clear a stricter bar than the
+    naive p<0.05 this check used before, so it doesn't cry wolf on the next
+    autocorrelated cluster from one real multi-day move.
     """
     flags = []
     try:
@@ -661,11 +673,22 @@ def check_rib_strongly_against_edge_health(csv_path=None) -> list:
             pop["_closed_dt"] = pd.to_datetime(pop["closed_at"], errors="coerce")
             pop = pop.sort_values("_closed_dt")
 
+        # Independence proxy: many raw rows on the same pair+direction+day
+        # are almost certainly re-samples of the same real underlying move,
+        # not independent trials -- collapse each such cluster to its last
+        # (most complete/final) evaluation before comparing anything.
+        if "_closed_dt" in pop.columns and "pair" in pop.columns:
+            pop["_combo_day"] = (
+                pop["pair"].astype(str) + "_" + direction.reindex(pop.index).astype(str)
+                + "_" + pop["_closed_dt"].dt.date.astype(str)
+            )
+            pop = pop.drop_duplicates(subset="_combo_day", keep="last")
+
         n_total = len(pop)
         recent = pop.tail(_RIB_EDGE_WINDOW)
         older  = pop.iloc[: max(0, n_total - _RIB_EDGE_WINDOW)]
         if len(recent) < _RIB_EDGE_MIN_N or len(older) < _RIB_EDGE_MIN_N:
-            return flags  # too little data on one side for a meaningful comparison
+            return flags  # too little independent data on one side for a meaningful comparison
 
         def _wins(d):
             return int(d["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN"]).sum())
@@ -677,11 +700,15 @@ def check_rib_strongly_against_edge_health(csv_path=None) -> list:
         if result is None:
             return flags
         p_value, recent_wr, older_wr = result
-        if recent_wr < older_wr and p_value < 0.05:
+        corrected_alpha = _RIB_EDGE_ALPHA / _RIB_EDGE_HEALTH_CHECK_FAMILY_SIZE
+        if recent_wr < older_wr and p_value < corrected_alpha:
             flags.append(
                 f"🚨 rib_strongly_against (non-GBP) edge drifting — most recent "
-                f"{recent_n} decisive trades WR={recent_wr*100:.1f}% vs the prior "
-                f"{older_n} decisive trades WR={older_wr*100:.1f}%, p={p_value:.4f}. "
+                f"{recent_n} independent (deduplicated) decisive evaluations "
+                f"WR={recent_wr*100:.1f}% vs the prior {older_n} independent "
+                f"evaluations WR={older_wr*100:.1f}%, p={p_value:.4f} "
+                f"(corrected bar <{corrected_alpha:.4f} for "
+                f"{_RIB_EDGE_HEALTH_CHECK_FAMILY_SIZE} same-shape decay checks). "
                 f"See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
             )
     except Exception as e:
