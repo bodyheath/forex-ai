@@ -538,12 +538,26 @@ def check_grade_ordering(csv_path=None) -> list:
 
     Stays silent for any bucket below _GRADE_MIN_N — a thin/unstable sample
     is not evidence of anything, and must never be reported as a false flag.
+
+    Further filtered to entries on/after _GRADE_ORDERING_ENTRY_FIX_DATE (see
+    that constant's comment) — a row's grade is frozen at entry time, so
+    the closed_at-based cutoff in get_strict_decisive_grade_population()
+    alone isn't enough to guarantee every row was graded under the current
+    logic; this entry-date filter is.
     """
     flags = []
     try:
         decisive = get_strict_decisive_grade_population(csv_path)
         if decisive.empty:
             return flags
+
+        if "date" in decisive.columns:
+            import pandas as pd
+            entry_dt = pd.to_datetime(decisive["date"], errors="coerce", utc=True)
+            fix_date = pd.Timestamp(_GRADE_ORDERING_ENTRY_FIX_DATE, tz="UTC")
+            decisive = decisive[entry_dt >= fix_date]
+            if decisive.empty:
+                return flags
 
         buckets = {}
         for grade in _GRADE_ORDER:
