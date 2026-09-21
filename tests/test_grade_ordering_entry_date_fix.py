@@ -96,8 +96,8 @@ class TestGradeOrderingEntryDateFilter(unittest.TestCase):
         path = self._write_csv(rows)
         flags = hc.check_grade_ordering(csv_path=path)
         self.assertEqual(len(flags), 1)
-        self.assertIn("grade D", flags[0])
-        self.assertIn("outperforms grade F", flags[0])
+        self.assertIn("grade F", flags[0])
+        self.assertIn("outperforms grade D", flags[0])
 
     def test_exactly_on_fix_date_is_included(self):
         """>= comparison -- an entry dated exactly on the fix date counts
