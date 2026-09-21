@@ -187,31 +187,19 @@ def _fmt_time_exact(h: int, m: int = 0) -> str:
 # ── Trading filter constants ───────────────────────────────────────────────────
 
 MAX_CORRELATED_EXPOSURE = 2
-BASE_RISK_PCT           = 0.75  # conservative until edge is proven (was 1.0%)
 
-SIZING_RULES = {
-    "RANGING_LOW_VOL":    0.5,
-    "RANGING_HIGH_VOL":   0.5,
-    "RISK_OFF":           0.5,
-    "TRENDING_RISK_ON":   1.0,
-    "TRENDING_RISK_OFF":  0.7,
-}
-
-LOSS_STREAK_SIZING = {
-    0: 1.0,
-    1: 1.0,
-    2: 0.75,
-    3: 0.5,
-    4: 0.25,
-}
-
-DRAWDOWN_SIZING = {
-    2.0:  1.0,
-    4.0:  0.75,
-    6.0:  0.5,
-    8.0:  0.25,
-    10.0: 0.0,
-}
+# 2026-09-2X: BASE_RISK_PCT/SIZING_RULES/LOSS_STREAK_SIZING/DRAWDOWN_SIZING and
+# the function that combines them moved to src/position_sizing.py, so
+# fund_state.py's display-facing update_sizing_state() can run the exact same
+# chained calculation this module's own real trade-creation call site uses
+# (see that module's docstring) -- daily.py can't be imported from fund_state.py
+# for this (it exits the process on import outside GitHub Actions/
+# ALLOW_LOCAL_RUN=YES, see the guard at the top of this file). Re-exported
+# under their original names here so every other reference in this file, and
+# the verify_all.py/verify_system.py presence checks, keep working unchanged.
+from src.position_sizing import (
+    BASE_RISK_PCT, SIZING_RULES, LOSS_STREAK_SIZING, DRAWDOWN_SIZING,
+)
 
 # ── Fund pair universe — explicit banlist ─────────────────────────────────────
 # The selector now uses a curated 28-pair G8-only universe so most exotic bans
