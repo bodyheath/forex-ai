@@ -1,0 +1,26 @@
+PAIR: AUD/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: Pin bar at key level with partial oscillator confluence and leaning-bull ribbon structure, but bearish RSI divergence and neutral MTF alignment severely constrain conviction.
+RISK_FACTORS: [Bearish RSI divergence (32p/2pt) conflicts with BUY signal; MTF conf=0/3 (all timeframes neutral) violates MTF buy rule — no directional agreement across weekly/daily.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.7082
+ENTRY_TRIGGER_REASON: SMA50 support confluence; wait for pullback to MA and RSI oversold confirmation (RSI <40) to raise conviction above 7.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**MTF Breach (Critical):** MTF conf=0/3 means Weekly, Daily, and Monthly are ALL NEUTRAL — no agreement on direction. Per hard rule: *"If weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless."* This alone disqualifies the trade.
+
+**TECHNICAL_SCORE = 5:**
+- D1 T_sig=NEUTRAL_3 is baseline.

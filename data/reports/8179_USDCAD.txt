@@ -1,0 +1,25 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 RSI 61 + MACD flat + BB upper band + double-bottom pattern conflict with overbought oscillators (Stoch 90.7, CCI 195) in uptrend structure; MTF alignment weak (M:SELL vs W/D:NEUTRAL), but partial oscillator SELL confluence and rate divergence (USD rising, CAD falling) support mean-reversion off upper band.
+RISK_FACTORS: (1) MTF disagreement: weekly and daily both neutral — only monthly and 4H lean SELL, reducing conviction; (2) Price in uptrend structure (golden cross, price > SMA50 > SMA200) — reversals need strong confirmation, and 4H inside bar is consolidation not bearish reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.4020
+ENTRY_TRIGGER_REASON: Sell limit above current BB upper band; price rejection here + RSI failure below 65 would confirm reversal intent.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (6/10):**
+- T_sig=SELL_3 is baseline, but adjusted for context:
+- RS
