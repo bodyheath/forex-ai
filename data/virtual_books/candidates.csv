@@ -10,9 +10,9 @@ id,date,scan_mode,pair,direction,entry,stop_loss,t2_price,confidence,eff_conf,gr
 9,2026-09-07,morning,USD/JPY,BUY,155.66,154.08,158.82,8,8,D,C,2.0,2,,,WIN,2026-09-06 21:18:18,2026-09-07 00:08:25,158.82,316.0,313.9,
 10,2026-09-07,morning,CAD/JPY,BUY,112.88,111.75,115.14,7,7,D,C,2.0,2,,,LOSS,2026-09-06 21:18:18,2026-09-07 08:31:15,111.75,-113.0,-116.7,
 11,2026-09-07,morning,GBP/CAD,BUY,1.8654,1.8573,1.8816,7,6,D,C,2.0,2,,,WIN,2026-09-06 21:18:18,2026-09-20 21:31:17,1.8736399412155151,82.4,87.7,"2026-09-09 backfill: da_grade_before/confidence corrected from the pre-fix frozen creation-time values (D/6) to the LATEST real analysis (C/7), cross-referenced against data/research_trades.csv. grade itself (D) was already correct -- it never changed between analyses. This is what admitted D_no_da at 05:19. eff_conf and mtf_agreeing_count are UNCHANGED and UNVERIFIED -- no independent source exists for either. See project_virtual_books_stale_grade_fix_sep2026.md."
-12,2026-09-07,prelondon,AUD/CHF,SELL,0.5814,0.5888,0.5666,7,6,F,F,2.0,3,normal,5.5,OPEN,2026-09-07 05:19:39,,,,,
+12,2026-09-07,prelondon,AUD/CHF,SELL,0.5814,0.5888,0.5666,7,6,F,F,2.0,3,normal,5.5,LOSS,2026-09-07 05:19:39,2026-09-21 05:31:22,0.5863199830055237,-49.2,-63.2,
 13,2026-09-07,prelondon,EUR/JPY,BUY,181.005,179.5728,183.8694,8,8,C,B,2.0,3,normal,5.5,LOSS,2026-09-07 05:19:39,2026-09-07 08:31:15,179.5728,-143.2,-147.0,
-14,2026-09-07,prelondon,EUR/AUD,BUY,1.6147,1.6068,1.6305,8,7,C,B,2.0,3,normal,5.5,OPEN,2026-09-07 05:19:39,,,,,
+14,2026-09-07,prelondon,EUR/AUD,BUY,1.6147,1.6068,1.6305,8,7,C,B,2.0,3,normal,5.5,LOSS,2026-09-07 05:19:39,2026-09-21 05:31:22,1.6107800006866455,-39.2,-47.4,
 15,2026-09-07,preny,NZD/JPY,BUY,91.601,90.501,93.801,8,8,D,C,2.0,2,normal,6.0,LOSS,2026-09-07 11:18:36,2026-09-07 21:01:36,90.501,-110.0,-113.7,
 16,2026-09-07,preny,GBP/AUD,BUY,1.8785,1.8685,1.8985,7,6,F,F,2.0,3,normal,6.0,OPEN,2026-09-07 11:18:37,,,,,
 17,2026-09-08,london,EUR/JPY,BUY,181.005,179.577,183.861,8,8,C,B,2.0,3,normal,6.5,LOSS,2026-09-07 13:42:05,2026-09-07 14:31:33,179.577,-142.8,-146.8,
