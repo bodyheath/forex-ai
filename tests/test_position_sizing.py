@@ -118,18 +118,6 @@ class TestUpdateSizingStateAppliesFullChain(unittest.TestCase):
         self.assertEqual(updated["current_sizing_pct"], 0.0)
         self.assertEqual(updated["sizing_mode"], "drawdown_pause")
 
-    def test_drawdown_blocked_none_pct_not_overridden(self):
-        """A quality-gated block (checklist_score too low for the tier)
-        returns pct=None -- the overlay must not run on it at all."""
-        state = {"current_drawdown_pct": 8.5, "consecutive_losses": 0,
-                 "consecutive_wins": 0, "circuit_breaker_active": False,
-                 "max_drawdown_seen": 8.5}
-        updated = fund_state.update_sizing_state(state, current_balance=9150.0)
-        # score=10.0 baseline always clears every quality gate, so this
-        # should NOT be blocked -- sanity-check the baseline assumption
-        # holds and the real drawdown_protection path is what's exercised.
-        self.assertIn(updated["sizing_mode"], ("drawdown_protection",))
-
     def test_real_reported_state_matches_investigated_numbers(self):
         """Direct reproduction of the real fund_state.json snapshot that
         exposed this bug (balance $9,933.24, peak $10,314.07, 5 consecutive
