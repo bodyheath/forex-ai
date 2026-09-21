@@ -84,6 +84,32 @@ _GRADE_ORDERING_ENTRY_FIX_DATE = "2026-09-06"
 _RIB_EDGE_WINDOW      = 40   # trailing decisive-trade window checked against the older baseline
 _RIB_EDGE_MIN_N       = 15   # minimum size for EITHER the trailing window or the older baseline
 
+# 2026-09-2X: hardening found necessary investigating a real recent alert --
+# the raw "last 40 decisive rows" population was NOT 40 independent trials:
+# research_trades.csv re-evaluates the same real underlying market move many
+# times a day, so a single real multi-day move (e.g. one real AUD/NZD
+# decline) can produce 5-9 near-duplicate "decisive" rows on the same
+# pair+direction within one window, each counted as independent evidence.
+# The flagged instance had only 12 unique pair+direction combos across the
+# 40 raw rows, and deduplicating to one evaluation per pair+direction+
+# calendar-day shrank the effective n from 40 to 20. Deduplication below
+# applies this same independence proxy to BOTH the recent window and the
+# older baseline, consistently, before any statistics are computed.
+#
+# Separately: this check re-runs a fresh p<0.05 test every 6-hourly
+# health_check.yml cycle, indefinitely, with no correction for how many
+# times it's already been tested -- unlike shadow_mode.py's registered
+# rules, which Bonferroni-correct alpha by the count of currently-active
+# rules. This file has 4 checks of the same "decay tripwire" shape, run
+# together every cycle (this one, check_currency_consensus_edge_health,
+# check_ribbon_exclusion_continued_validity, check_weekly_signal_edge_
+# health) -- treated as the relevant "family" for the same kind of
+# correction, analogous to shadow_mode's n_active_rules divisor. Scoped to
+# this one check only, per instruction -- the sibling checks are a real,
+# separate follow-up, not applied here.
+_RIB_EDGE_HEALTH_CHECK_FAMILY_SIZE = 4
+_RIB_EDGE_ALPHA = 0.05
+
 # 2026-09-02: three new decay/continued-validity tripwires added off the back
 # of the quant-judgment assessment, which found only two of the many signals
 # _trade_quality_grade()/the fund gate rely on had any standing decay monitor
