@@ -1,0 +1,23 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: USD fundamentals (rising rates, +1.60% diff) support higher, but daily and weekly MTF both NEUTRAL breaks the core multi-timeframe confirmation rule, and RSI 61.1 in uptrend is mid-range neutral despite T_sig=SELL_3.
+RISK_FACTORS: MTF disagreement (W and D both NEUTRAL, only M and 4H lean SELL) fails the ≥2/3 agreement threshold; price is above both SMA50 and SMA200 in confirmed uptrend, opposing bearish signal.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (conf=0/3). Uptrend structure (price > SMA50 > SMA200) contradicts SELL thesis. Fundamental layer (USD +1.60%, rising rates, CAD falling, net SHORT unwinding) = 1 layer only, <4 required.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**EXPLANATION:**
+
+1. **MTF RULE VIOLATION (CRITICAL):** W=NEUTRAL, D=NEUTRAL, M=SELL,

@@ -1844,6 +1844,19 @@
           "market_regime": "trending_risk_on",
           "closed_at": "2026-09-20 18:11:05"
         }
+      },
+      {
+        "timestamp": "2026-09-21T18:11:00.627243+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 235.3,
+        "context": {
+          "id": "3315",
+          "pair": "CHF/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-21 18:11:00"
+        }
       }
     ]
   },
@@ -18968,6 +18981,18 @@
           "pair": "AUD/CHF",
           "direction": "SELL",
           "tech_score": "7"
+        }
+      },
+      {
+        "timestamp": "2026-09-21T18:11:00.697323+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 235.3,
+        "context": {
+          "id": "3315",
+          "pair": "CHF/JPY",
+          "direction": "BUY",
+          "tech_score": "5"
         }
       }
     ]
