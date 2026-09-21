@@ -61,6 +61,26 @@ _GRADE_ORDER          = ["A", "B", "C", "D", "F"]  # best to worst
 # signal, it removes a stale one from re-triggering every run.
 _GRADE_ORDERING_CUTOFF = "2026-07-14 13:46:31"
 
+# 2026-09-2X: a second, independent discontinuity in this same population,
+# found investigating why the standing F-vs-D alert kept firing even after
+# the general-population ribbon-opposition F-trigger was removed
+# (ribbon_general_population_demotion_removed, promoted 2026-09-06,
+# see PROMOTION_DISCIPLINE.md) -- the closed_at-based cutoff above filters
+# by when a trade CLOSED, but a row's grade is frozen at ENTRY time, and
+# doesn't get recomputed when it later closes. 90.4% of the population this
+# check was flagging as "Grade F" (329 of 364) was actually ENTERED before
+# the fix, still carrying a grade computed under the old, broader F
+# condition -- not the current one. The one genuinely clean slice available
+# (entered on/after this date) showed the OPPOSITE direction (D beating F),
+# though far too thin (n=35 fire-side) to confirm that as a new finding
+# either -- see the 2026-09-21 investigation. This filters entries (not
+# closes) to that clean slice so the comparison reads real, uncontaminated,
+# post-fix grading going forward, and lets it re-accumulate rather than
+# keep alerting on a stale blend. Deliberately NOT applied to
+# get_strict_decisive_grade_population() itself (used elsewhere, e.g.
+# dashboard.py's grade panel) -- scoped to this one check, per instruction.
+_GRADE_ORDERING_ENTRY_FIX_DATE = "2026-09-06"
+
 _RIB_EDGE_WINDOW      = 40   # trailing decisive-trade window checked against the older baseline
 _RIB_EDGE_MIN_N       = 15   # minimum size for EITHER the trailing window or the older baseline
 
