@@ -95,18 +95,36 @@ class TestUpdateSizingStateAppliesFullChain(unittest.TestCase):
         self.assertEqual(updated["sizing_mode"], "MINIMAL")
         self.assertEqual(updated["current_sizing_pct"], 0.25)
 
-    def test_no_loss_streak_keeps_pure_drawdown_tier_display(self):
-        """When the loss-streak overlay wouldn't reduce sizing further
-        (0-1 consecutive losses), the display must still show the plain
-        drawdown-tier result unchanged -- confirms the fix only overrides
-        when the real chain would actually be more conservative, not
-        unconditionally."""
+    def test_zero_streak_still_gets_overlays_own_drawdown_penalty(self):
+        """Real, verified behavior of the actual production chain (not
+        specific to this fix): src/position_sizing.py's own DRAWDOWN_SIZING
+        table (2/4/6/8/10% tiers) is a SEPARATE, coarser table from fund_
+        state.py's own drawdown-tier thresholds (0/3/5/7%) -- daily.py's
+        real call site feeds the SAME current_drawdown_pct into both, so
+        the overlay re-penalizes on drawdown independently of loss streak.
+        At 3.69% drawdown even with 0 consecutive losses, stage 1 gives
+        drawdown_caution/0.75%, but the overlay's own dd_mult=0.75 at this
+        level still pulls it down further to 0.75*0.75=0.56%/REDUCED. This
+        is exactly what a real new trade would receive right now -- the
+        display fix must show it too, not just the loss-streak case."""
         state = {"current_drawdown_pct": 3.69, "consecutive_losses": 0,
                  "consecutive_wins": 0, "circuit_breaker_active": False,
                  "max_drawdown_seen": 3.69}
         updated = fund_state.update_sizing_state(state, current_balance=9933.24)
-        self.assertEqual(updated["sizing_mode"], "drawdown_caution")
-        self.assertEqual(updated["current_sizing_pct"], 0.75)
+        self.assertEqual(updated["sizing_mode"], "REDUCED")
+        self.assertEqual(updated["current_sizing_pct"], 0.56)
+
+    def test_very_low_drawdown_no_streak_stays_pure_normal(self):
+        """Below the overlay's own first drawdown tier (2.0%), the overlay
+        is a true no-op (dd_mult=1.0) and the display matches stage 1 alone
+        exactly -- confirms the fix doesn't over-penalize when neither
+        stage would actually reduce sizing."""
+        state = {"current_drawdown_pct": 1.0, "consecutive_losses": 0,
+                 "consecutive_wins": 0, "circuit_breaker_active": False,
+                 "max_drawdown_seen": 1.0}
+        updated = fund_state.update_sizing_state(state, current_balance=9900.0)
+        self.assertEqual(updated["sizing_mode"], "normal")
+        self.assertEqual(updated["current_sizing_pct"], 1.0)
 
     def test_drawdown_pause_zero_pct_not_overridden(self):
         """paused/>=10% drawdown returns pct=0.0 from the first stage --
