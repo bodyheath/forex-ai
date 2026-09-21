@@ -1,0 +1,23 @@
+PAIR: AUD/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: Pin bar at key level with partial oscillator buy setup conflicts with bearish RSI divergence and 4H downtrend; D1 uptrend structure + leaning-bull ribbon provide weak directional bias, but MTF neutral consensus limits conviction.
+RISK_FACTORS: Bearish RSI divergence (32p, 2pt) conflicts with buy signal; 4H death-cross structure contradicts D1 golden cross, creating intra-timeframe friction that could resolve as a reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.7082
+ENTRY_TRIGGER_REASON: Pullback to D1 SMA50 (golden cross anchor) with confluence of pin bar pattern + leaning-bull ribbon would invalidate 4H downtrend and re-confirm D1 uptrend.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Failure:** W/M/D/4H all NEUTRAL (0/3 conf) — no directional agreement across timeframes. This alone triggers TRADE_THIS: NO, regardless of technical confluence. The system requires ≥2/3 MTF agreement; you have 0/

@@ -1,0 +1,24 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: TRIPLE_SELL
+KEY_THESIS: D1 overbought RSI (65.8) in uptrend with confirmed bearish divergence and triple oscillator sell confluence suggest pullback within bull structure; MTF weak (1/3) prevents high-confidence trade.
+RISK_FACTORS: [MTF disagreement (W/M neutral vs D sell) limits directional conviction below 7; Ribbon fully aligned bull contradicts sell signal and may support price continuation above SMA50 at 0.9352]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.9510
+ENTRY_TRIGGER_REASON: Rejection at D1 RSI 70+ threshold with price pullback to SMA50 (0.9352) to confirm reversal structure within intact uptrend.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**DETAILED REASONING:**
+
+**Technical (6/10):**
+- D1 RSI 65.8 in confirmed uptrend (price > SMA50 > SMA200, golden cross). Standard tier would score 4–5 SELL, but **uptrend context shifts SELL zones higher**: RSI 65–77 = 4–5 SELL in uptrend (overb

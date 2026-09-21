@@ -1,0 +1,18 @@
+```
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key resistance (0.9954) in uptrend context with RSI 57.6 (neutral-overbought) + converging ribbon signals trend exhaustion, but MTF conflict (W:NEUTRAL, D:SELL, 4H:NEUTRAL) + uptrend structure prevent high-confidence SHORT.
+RISK_FACTORS: [1. MTF conf=1/3 (only D agrees) violates MTF rule — weekly and daily do NOT both agree on direction, hence TRADE_THIS fails regardless of R:R. 2. Price >SMA50>SMA200 golden-cross + uptrend context means pin bar at resistance is early pullback warning, not reversal confirmation — RSI 57.6 is neutral-to-slightly-overbought in uptrend (not extreme), ribbon converging is weakness but not flip.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W=NEUTRAL + D=SELL + 4H=NEUTRAL does not satisfy both weekly AND daily agreement. Confidence locked at 5/10 (neutral); TRADE_THIS NO.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
