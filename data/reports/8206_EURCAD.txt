@@ -1,0 +1,23 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly downtrend (SELL) with aligned bearish ribbon creates directional bias, but D1/W/4H neutrality, price above SMA50, and weak oscillator agreement contradict conviction — low-probability setup.
+RISK_FACTORS: MTF disagreement (M:SELL vs W/D/4H:NEUTRAL) creates conflicting signals and high whipsaw risk; pin bar at key level is ambiguous without RSI extremes or divergence to confirm direction.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not both agree on direction (conf=0/3 < 2/3 threshold). CONFIDENCE=4 < 7 minimum. R:R and fundamental layers cannot overcome structural MTF conflict.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+1. **MTF Enforcement (CRITICAL):** W:NEUTRAL + D:NEUTRAL + 4H:NEUTRAL vs. M:SELL = conf=0/3. The rule mandates: *"if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless."* ✗
