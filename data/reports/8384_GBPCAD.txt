@@ -1,0 +1,23 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Price trapped in 434p range with mixed MTF signals (M:SELL vs W/D:NEUTRAL) and conflicting patterns (pin_bar_bear + IHS_bull); GBP positive rate differential (+1.45%) and CAD unwinding provide weak sell pressure but insufficient confluence for high-confidence trade.
+RISK_FACTORS: [1. MTF disagreement (0/3 confluence) — no clear directional alignment across weekly, daily, 4H; breakout in either direction equally probable. 2. Conflicting candle patterns (pin_bar_bearish + inverse_head_and_shoulders_bullish) create mechanical ambiguity — IHS typically signals breakout UP, contradicting monthly SELL bias.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade does not meet MTF agreement threshold (requires weekly AND daily both BUY or both SELL); current 0/3 confluence breaches hard rule. Confidence 4/10 < 7 threshold. No valid entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF FATAL FLAW**: Monthly = SELL, Weekly = NEUTRAL, Daily
