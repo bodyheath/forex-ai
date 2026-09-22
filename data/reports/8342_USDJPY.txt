@@ -1,0 +1,16 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Converging ribbon + JPY crowded long positioning + SMD institutional bearish bias suggest downside risk, but weak technicals (neutral RSI, no oscillator confluence, MTF disagreement) and rising USD rates limit conviction.
+RISK_FACTORS: [1) MTF conflict: 4H SELL vs D1/W/M NEUTRAL (0/3 agreement) violates MTF buy rule — no directional consensus across timeframes. 2) USD rate rising + positive rate differential (+2.90%) supports JPY weakness structurally — contrarian to SELL bias.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule: Weekly AND Daily must both agree on direction. W:NEUTRAL + D:NEUTRAL fail the 2/3 MTF threshold (4H:SELL alone is 1/3). Confidence 4/10 < 7 minimum. Oscillator confluence absent (stoch_k=55.4 neutral, CCI=10.6 flat). Positioning score only 4: JPY net LONG @100% with MOM=REVERSING flags crowding, but USD neutral @50% and STABLE (permanently stale data) provide no counterweight. Fundamental rate differential
