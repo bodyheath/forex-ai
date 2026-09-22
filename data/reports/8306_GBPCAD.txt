@@ -1,0 +1,23 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish setup weakened by MTF disagreement — monthly SELL vs weekly/daily NEUTRAL creates low conviction; pin bar at key level offers limited entry confidence without confluence.
+RISK_FACTORS: [1. MTF conflict (M:SELL vs W/D:NEUTRAL) → no agreement across critical timeframes; reversal risk if weekly breaks above 1.88. 2. Oscillator NONE (Stoch/CCI/RSI neutral) and MACD flat → no reversal signal; risk of chop in range 1.8607–1.8850.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violated — weekly AND daily must both agree on direction; monthly SELL alone is insufficient. Confidence=5 < 7 threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+1. **MTF Rule Failure (Hard Stop):** Monthly shows SELL (conf=0/3), but weekly and daily both NEUTRAL. MTF rule requires **both weekly AND daily to agree** on direction for ANY trade. 0/3 confidence means only 1 of 3 timeframes has a signal —

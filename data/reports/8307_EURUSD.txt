@@ -1,0 +1,24 @@
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: RSI 35 at support in confirmed downtrend triggers mean-reversion BUY, but MTF neutrality and death-cross structure severely limit conviction.
+RISK_FACTORS: [1. MTF all-neutral (0/3 agreement) violates core MTF trading rule — weekly and daily both NEUTRAL negates multi-timeframe confirmation required for TRADE_THIS=YES], [2. Price deeply below SMA50 (1.1480 vs 1.1539) and SMA200 (1.1629) in active downtrend — dead-cat-bounce risk if macro headwinds (USD strength, curve flat) resume.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.1400
+ENTRY_TRIGGER_REASON: Test of SL swing at 1.13545 (FIB floor) with RSI <20 in downtrend = highest-probability reversal confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL_SCORE: 5/10**
+- D1 RSI=35 in *confirmed downtrend* (W:NEUTRAL + D:NEUTRAL = not downtrend per
