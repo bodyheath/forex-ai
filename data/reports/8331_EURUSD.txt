@@ -1,0 +1,23 @@
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: RSI(35) oversold in confirmed downtrend with partial oscillator confluence (2/3), but MTF neutral and SMD -6 (institutional short bias) conflict the setup; price >13.8% below SMA200 suggests structural weakness.
+RISK_FACTORS: [1. MTF neutral (0/3 agreement) — no weekly or daily directional confirmation, reducing edge; 2. SMD -6 (institutional bearish) contradicts BUY signal — retail long trap risk if institutions unwind shorts at expense of new longs]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.1420
+ENTRY_TRIGGER_REASON: RSI confirmation near 25–28 zone (deeper oversold) + tighter Stochastic confluence (K<10) to increase probability before entering long in downtrend structure
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+- **TECHNICAL_SCORE = 5**: T_sig=BUY_3 anchors baseline. RSI=35 in **confirmed downtrend** (D1: price < SMA50 < SMA200, death-cross) — applies downtrend tier: 30

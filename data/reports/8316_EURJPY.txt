@@ -1,0 +1,25 @@
+PAIR: EUR/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both confirm BUY despite downtrend structure; pin bar at key level + converging ribbon + RSI oversold in corrective context = reversal setup, but JPY crowded long positioning and ribbon tightening create reversal risk.
+RISK_FACTORS: [1. JPY net long positioning at 100% near 1-year top with REVERSING momentum = institutional exit risk that could trigger sharp retracement.] [2. EMA ribbon converging signals trend weakness and impending direction change — entry may precede violent liquidation rather than sustained rally.]
+TRADE_THIS: YES
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 182.0
+ENTRY_TRIGGER_REASON: Break above daily resistance at SMA50 (183.4967) confluence with EMA ribbon inflection, confirming buy signal with reduced reversal risk once price clears key supply zone.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**MTF Rule Check:** W:BUY + D:BUY = 2/3 agreement (both major timeframes aligned). 4H:NEUTRAL does not contradict. **MTF confidence 2/3 ≥ threshold → TRADE_THIS eligible.**
+
+**

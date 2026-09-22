@@ -1,0 +1,23 @@
+```
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Converging ribbon + crowded JPY long positioning + 4H SELL signal create reversal risk, but weak MTF agreement (0/3) and neutral technicals prevent high-conviction entry.
+RISK_FACTORS: [1] MTF conflict: all three primary timeframes (M/W/D) NEUTRAL with only 4H SELL at 80% weighting leaves directional bias unreliable — reversal could fail. [2] Price pinned at 38.2% Fib (157.13, only 8p away) with pin_bar_bea pattern: extremes often attract stops; move either direction plausible; no clear breakout direction yet.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violated: W:NEUTRAL + D:NEUTRAL fail the requirement for weekly AND daily agreement. 4H SELL alone (conf=0/3) does not override lack of higher-timeframe confluence. Confidence 4/10 < 7/10 threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+1. **MTF Rule (CRITICAL):** Weekly and Daily are both NEUTRAL—neither confirm
