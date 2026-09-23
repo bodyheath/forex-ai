@@ -1,0 +1,25 @@
+PAIR: GBP/NZD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Three-timeframe sell alignment (M/W/D all SELL) with overbought RSI (68.9) in uptrend context and +0.75% rate diff headwind on GBP, but ribbon remains fully bullish—conflicting signals lower conviction.
+RISK_FACTORS: [1) Ribbon ALIGNED_BULL with 5/5 EMA fan contradicts three-timeframe sell signal—trend continuation risk if price holds SMA50 at 2.3030; 2) D1 T_sig=5 (ambiguous sell) combined with double_bottom pattern (bullish) suggests indecision—premature entry risk in range-bound environment]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**REASONING:**
+
+**MTF Agreement Check (HARD RULE):**
+- Weekly: SELL | Daily: SELL | 4H: NEUTRAL → 2/3 agreement (67%), confidence weight 85%
+- **MTF rule satisfied** (both W and D agree on SELL direction), so TRADE_THIS is not automatically NO on
