@@ -1,0 +1,23 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with T_sig=SELL_3 and 4H oversold RSI(28.2) pin bar; MTF agreement is weak (1/3), and ribbon is bullish — high directional uncertainty.
+RISK_FACTORS: [1. MTF disagreement (W:SELL vs D:NEUTRAL vs 4H:BUY) + conf=1/3 fails MTF rule — reversal risk if daily breaks back above SMA50(0.5749). 2. ALIGNED_BULL ribbon(5/5) contradicts SELL signal; if price holds above SMA50, uptrend continuation likely invalidates T_sig and forces exit.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**RATIONALE:**
+
+1. **MTF FAILURE (hard block):** W:SELL + D:NEUTRAL + 4H:BUY = conf=1/3 (only weekly agrees). Rule states "MTF weekly+daily both agree" — they do NOT. This alone vetos TRADE_THIS:YES.
+
+2. **TECHNICAL_
