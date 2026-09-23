@@ -1,0 +1,26 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with W:SELL signal and 4H oversold RSI(21.3); T_sig=SELL_3 is overridden by aligned bullish ribbon and golden-cross — entry only on confirmed breakdown below SMA50(0.5749).
+RISK_FACTORS: [1. MTF disagreement (W:SELL vs D:NEUTRAL vs 4H:BUY) with conf=1/3 fails MTF rule — no directional consensus; 2. Aligned bullish ribbon (5/5 EMA stack) contradicts T_sig=SELL_3, creating whipsaw risk if price holds SMA50 support.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.5749
+ENTRY_TRIGGER_REASON: Break and close below SMA50 with Daily trend reversal confirmation (RSI below 50 + MACD cross).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+---
+
+### **Analysis Summary**
+
+**Technical Conflict (Score 5):**
+- **D1 T_sig=SELL_3** is contradicted by price structure: **golden cross (SMA50 > SMA
