@@ -1,0 +1,24 @@
+```
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double bottom + pin bar at key level on 4H suggest minor upside bounce, but mixed MTF (M:SELL + W/D:NEUTRAL) and leaning-bear ribbon block conviction.
+RISK_FACTORS: [1. Monthly timeframe in SELL — macro bearish bias overrides intraday pattern; reversal will likely fail above SMA50 1.8797. 2. Oscillator confluence absent (Stoch overbought at 84.2 on 4H, CCI neutral, RSI neutral on D1) — no triple/partial confluence to confirm entry.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**Rationale:**
+
+**MTF Conflict (Critical):**  
+MTF line shows M:SELL, W:NEUTRAL, D:NEUTRAL, 4H:BUY with **conf=0/3** (only 1 of 3 major timeframes agree on direction). MTF rule: *if weekly AND daily don't both agree, TRADE_THIS=NO regardless*. Weekly and Daily are neutral, Monthly is bearish
