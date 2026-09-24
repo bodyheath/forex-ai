@@ -1,0 +1,26 @@
+```
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at resistance with RSI 62 in mixed trend + falling NZD rate provides downside structure, but MTF weekly-daily disagreement (W:NEUTRAL, D:SELL) and 4H uptrend undermine conviction.
+RISK_FACTORS: [1) MTF conf=1/3 (W/D do not both agree on SELL direction — weekly neutral breaks the sell thesis); 2) Ribbon LEANING_BULL (4/5 aligned) contradicts bearish signal — trend still has bullish structure].
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF alignment rule violated — weekly must confirm daily for TRADE_THIS=YES. Weekly is NEUTRAL, daily is SELL; confidence only 1/3 (45% weight = below 2/3 threshold). Do not enter.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**Scoring Breakdown:**
+
+**TECHNICAL_SCORE: 5/10**
+- D1 RSI=62.1 in mixed trend (not confirmed uptrend, not confirmed downtrend) → standard tier: 62–70 = 4–

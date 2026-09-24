@@ -1,0 +1,22 @@
+```
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H double-top bearish pattern + leaning-bear ribbon + JPY crowded long (reversal risk) suggest downside, but D1 neutral trend and RSI 50.1 mid-range prevent high conviction.
+RISK_FACTORS: [1. MTF all-neutral (0/3 agreement) → no directional consensus; price at 111.99 near SMA200 (111.14) support, any break upward to SMA50 (112.63) invalidates sell case. 2. AUD rate rising + positive differential (+3.53%) supports AUD strength, conflicting with SELL thesis; JPY reversing (not fully unwound) leaves crowded-long risk unconfirmed.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 111.50
+ENTRY_TRIGGER_REASON: Break below SMA200 (111.14) and test SL (109.24) support zone after 4H double-top confirms bearish structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Rationale:**
+- **MTF failure:** All timeframes NEUTRAL (W/D/4H = 0/3 agreement, conf=0%) → hard

@@ -1,0 +1,25 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly SELL + converging ribbon + CHF rate rise + GBP rate flat suggest weakening uptrend; pin bar at D1 key level is ambiguous in mixed MTF context.
+RISK_FACTORS: MTF conf=1/3 (W:SELL vs D:NEUTRAL vs 4H:BUY) — no decisive agreement; D1 pin bar bullish pattern conflicts with SELL direction.
+TRADE_THIS: NO
+ENTRY_TYPE: AVOID
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF agreement insufficient (conf 1/3 << 2/3 threshold); D1 T_sig=NEUTRAL_3 lacks conviction; converging ribbon + mixed 4H/D suggest range/reversal risk, not directional trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF RULE VIOLATION (HARD STOP):** Weekly=SELL, Daily=NEUTRAL, 4H=BUY → conf=1/3 (only W agrees). Rule requires ≥2/3 agreement; this fails. TRADE_THIS=NO regardless of other layers.
+
+2. **TECHNICAL_SCORE=4:**
