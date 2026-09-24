@@ -1,0 +1,21 @@
+PAIR: NZD/CHF
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 61.8% Fib support + bullish RSI divergence + D1 BUY signal support reversal attempt, but weak MTF alignment (M:BUY + D:BUY vs W:NEUTRAL) and neutral ribbon limit conviction.
+RISK_FACTORS: MTF weekly neutrality breaks buy confirmation rule (only 2/3 agree; need both weekly AND daily for trade-eligible setup); OSC shows no oscillator confluence (Stoch=25.5 oversold but CCI=-126.6 severely bearish, opposing signal).
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.4694
+ENTRY_TRIGGER_REASON: Price bounce confirmation at 61.8% Fib level (0.46894) with RSI divergence bullish continuation; wait for candle close above this level before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**Rationale:**
+
+- **MTF Rule Fail**: Weekly is NEUTRAL, not BUY. Monthly BUY + Daily BUY = 2/3 agreement. Hard rule requires **both weekly AND daily to agree**. This setup does not meet threshold for TRADE_THIS: YES.
