@@ -1,0 +1,28 @@
+```
+PAIR: EUR/CHF
+DIRECTION: NEUTRAL
+CONFIDENCE: 3/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Ribbon converging into rising rates on both sides signals trend exhaustion; RSI neutral across all timeframes with inside bars blocking directional conviction.
+RISK_FACTORS: [MTF alignment 0/3 (all NEUTRAL) removes directional bias; converging EMA ribbon indicates imminent reversal or consolidation, not continuation]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: No valid directional setup; multiple timeframes in consensus NEUTRAL state with ribbon convergence and no oscillator confluence. Await ribbon realignment and RSI directional break (below 35 for BUY, above 65 for SELL with MTF agreement).
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF CONSENSUS = NEUTRAL (0/3 agreement):**
+   - W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL, M:NEUTRAL
+   - Zero directional MTF alignment violates TRADE_THIS gating rule (requires weekly + daily both agree)
+   - CONFIDENCE hard-capped at 3 due to complete lack of directional consensus across timeframes
+
+2. **TECHNICAL_SCORE = 3/10
