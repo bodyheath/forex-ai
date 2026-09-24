@@ -1,0 +1,23 @@
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: Pin bar at key support (1.14389, 9p confluence) + oversold RSI(31.4) in confirmed downtrend + D1/4H agreement on BUY signal, but weekly neutral blocks higher-confidence entry.
+RISK_FACTORS: [1. Weekly remains neutral—no uptrend confirmation, reversal may be corrective bounce within downtrend; 2. Ribbon leaning bear (4/5 aligned) contradicts BUY setup, suggesting structural bearish momentum remains dominant]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.1438
+ENTRY_TRIGGER_REASON: Bounce confirmation at Fibonacci 23.6% support + RSI recovery above 35 on daily would signal transition from oversold reversal to genuine uptrend entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**REASONING:**
+
+**MTF Rule Check:** Weekly=NEUTRAL, Daily=BUY, 4H=BUY. Confidence = 2/3 (only D1+4H agree; M1 neutral). **MTF alignment is 66% (meets 2/3 threshold), but weekly's absence blocks TRADE_THIS YES** (rule

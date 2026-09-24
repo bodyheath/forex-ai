@@ -1,0 +1,25 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key resistance (0.5856) + converging ribbon signals weakening uptrend, but MTF conflict (W:SELL vs D:NEUTRAL) and RSI 59.3 (neutral-zone) undermine conviction.
+RISK_FACTORS: [1] MTF agreement failure — D1 is NEUTRAL, only weekly aligns SELL; conf=1/3 violates MTF rule (need 2/3 agreement minimum). [2] Price in uptrend structure (price > SMA50 > SMA200) — converging ribbon suggests pause, not reversal; risk of bounce to 0.5880+ before any downside continuation.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5856
+ENTRY_TRIGGER_REASON: Confirmation of pin-bar rejection at SH swing high; wait for daily close below 0.5840 to confirm loss of uptrend momentum.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**Rationale:**
+
+**Technical (4/10):**
+- T_sig=SELL_3 is baseline, but multiple factors degrade it:
+  - RSI 59.3 is neutral-zone (45–62

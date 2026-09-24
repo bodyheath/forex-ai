@@ -1,0 +1,26 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H bearish engulfing + ribbon leaning bear + JPY crowded long (reversal risk) suggest downside, but D1 neutrality and lack of confluence limit conviction.
+RISK_FACTORS: [1) All MTF timeframes NEUTRAL (conf=0/3) — no directional agreement; entry lacks multi-timeframe confirmation. 2) D1 RSI=50.1 (midpoint) + MACD near zero + price/SMA misalignment = no technical trigger; reversal in JPY positioning is unconfirmed.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 111.50
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (112.6324) with 4H bearish confirmation
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+1. **MTF Rule Violation:** W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL → conf=0/3. TRADE_THIS=NO is mandatory (rule: "MTF weekly+daily both agree" — neither agrees here).
+
+2. **Technical (4/10):**
+   - D1 T_sig=NEUTRAL_3

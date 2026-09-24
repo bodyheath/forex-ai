@@ -1,0 +1,24 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 78.6% Fib + bearish RSI divergence suggest rejection, but MTF W/D neutral and 4H overbought RSI 72.2 weakens conviction.
+RISK_FACTORS: [1] MTF consensus neutral (W=NEUTRAL, D=NEUTRAL) — only 4H confirms SELL direction; signal lacks multi-timeframe agreement, violating core rule. [2] D1 T_sig baseline=NEUTRAL_3 with no strong technical driver (MACD near-zero, OSC=NONE, RSI 52.5 mid-range); bearish DIV conflicts with 4H uptrend structure (golden cross) and T=7.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated — weekly and daily do not both agree on direction (both NEUTRAL). 4H SELL signal alone insufficient; R:R and fundamental layers unconfirmed.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+1. **MTF FAILURE** (Core rule breaker):  
+   W=NEUTRAL + D=NEUTRAL + 4H=SELL
