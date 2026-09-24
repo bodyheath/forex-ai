@@ -1,0 +1,17 @@
+PAIR: GBP/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with monthly/weekly SELL signals; RSI 60.2 neutral-to-overbought in uptrend context; inside bars suggest consolidation before directional break.
+RISK_FACTORS: [MTF disagreement (M:SELL + W:SELL vs D:NEUTRAL + 4H:NEUTRAL) creates low-confidence setup; RIBBON ALIGNED_BULL contradicts SELL direction and props uptrend continuation.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence = 1/3 (only 1 of 3 timeframes agree on SELL). Hard rule: MTF weekly+daily must both agree for TRADE_THIS=YES. D1 is NEUTRAL (not SELL), W is SELL but D is NEUTRAL = failure. Ribbon fully aligned bullish directly contradicts SELL thesis. Inside bar + mixed RSI + no oscillator confluence = no edge. Wait for either D1 to confirm SELL or W/M confluence to break ribbon support.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0

@@ -1,0 +1,22 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: JPY positioning crowded long near 1y range top with ribbon leaning bearish and 4H showing weakness, but D1 neutral RSI and mixed MTF (0/3 conf) prevent conviction.
+RISK_FACTORS: [1] MTF alignment 0/3 and D1 trend=mixed — no directional consensus across timeframes; [2] JPY MOM=REVERSING is unconfirmed speculative signal and net-long crowding may be pricing in further USD strength rather than ready to unwind.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violated: W:NEUTRAL + D:NEUTRAL (not both BUY or both SELL). Confidence 4/10 < 7 threshold. R:R and entry type undefined until directional MTF agreement exists.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**Rationale:**
+
+**MTF Rejection (Critical):**
+- W:NEUTRAL + D:NEUTRAL = 0/3 agreement (neither weekly nor daily confirm). Even though 4H:SELL leans down, the rule is strict: *both weekly AND daily must agree on direction for TRADE_THIS=YES*
