@@ -5916,6 +5916,17 @@
           "pair": "CHF/JPY",
           "direction": "BUY"
         }
+      },
+      {
+        "timestamp": "2026-09-24T13:31:26.209411+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -121.1,
+        "context": {
+          "candidate_id": 109,
+          "pair": "USD/CHF",
+          "direction": "SELL"
+        }
       }
     ]
   },
@@ -7257,6 +7268,17 @@
           "direction": "BUY",
           "reject_reason": "eligibility"
         }
+      },
+      {
+        "timestamp": "2026-09-24T13:31:26.236538+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -121.1,
+        "context": {
+          "candidate_id": 109,
+          "pair": "USD/CHF",
+          "direction": "SELL"
+        }
       }
     ]
   },
@@ -8561,6 +8583,17 @@
           "candidate_id": 57,
           "pair": "CHF/JPY",
           "direction": "BUY"
+        }
+      },
+      {
+        "timestamp": "2026-09-24T13:31:26.264105+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -121.1,
+        "context": {
+          "candidate_id": 109,
+          "pair": "USD/CHF",
+          "direction": "SELL"
         }
       }
     ]
@@ -9888,6 +9921,17 @@
           "direction": "BUY",
           "reject_reason": "sizing"
         }
+      },
+      {
+        "timestamp": "2026-09-24T13:31:26.291581+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -121.1,
+        "context": {
+          "candidate_id": 109,
+          "pair": "USD/CHF",
+          "direction": "SELL"
+        }
       }
     ]
   },
@@ -11174,6 +11218,17 @@
           "pair": "CHF/JPY",
           "direction": "BUY",
           "reject_reason": "sizing"
+        }
+      },
+      {
+        "timestamp": "2026-09-24T13:31:26.319204+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -121.1,
+        "context": {
+          "candidate_id": 109,
+          "pair": "USD/CHF",
+          "direction": "SELL"
         }
       }
     ]
@@ -20302,6 +20357,18 @@
           "candidate_id": 57,
           "pair": "CHF/JPY",
           "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-24T13:31:26.401623+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -121.1,
+        "context": {
+          "candidate_id": 109,
+          "pair": "USD/CHF",
+          "direction": "SELL",
           "reject_reason": "eligibility"
         }
       }
