@@ -4,8 +4,8 @@
     "\ud83d\udcca consensus_adj has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md \u2014 filter to consensus_eligible==True, compare within grade)",
     "\ud83d\udcca da_downgraded has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_da_downgrade_tracking.md \u2014 compare within da_grade_before, n undercounts (da_fired=True only))",
     "\ud83d\udcca memory_hash has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md's before/after natural-experiment design)",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=349, WR=16.6%) significantly outperforms grade C (n=70, WR=7.1%), p=0.0215",
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=365, WR=16.2%) significantly outperforms grade C (n=71, WR=7.0%), p=0.0234",
     "\ud83d\udea8 fund_state.json staleness \u2014 disk state disagrees with a fresh recompute from trades.csv: consecutive_losses: fresh=4 vs disk=5"
   ],
-  "last_alert_sent_at": "2026-09-25T11:53:26.246439"
+  "last_alert_sent_at": "2026-09-25T17:14:03.041354"
 }
