@@ -1,15 +1,11 @@
 {
   "last_flags": [
-    "\u26a0\ufe0f Gate silent \u2014 'capacity' has left zero trace in the log across the last 20 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
-    "\u26a0\ufe0f Gate silent \u2014 'concentration' has left zero trace in the log across the last 20 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
-    "\u26a0\ufe0f Gate silent \u2014 'dd_tier' has left zero trace in the log across the last 20 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
     "\u26a0\ufe0f Gate silent \u2014 'session' has left zero trace in the log across the last 20 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
-    "\u26a0\ufe0f Gate silent \u2014 'trend_hard' has left zero trace in the log across the last 20 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
     "\ud83d\udcca consensus_adj has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md \u2014 filter to consensus_eligible==True, compare within grade)",
     "\ud83d\udcca da_downgraded has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_da_downgrade_tracking.md \u2014 compare within da_grade_before, n undercounts (da_fired=True only))",
     "\ud83d\udcca memory_hash has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md's before/after natural-experiment design)",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=347, WR=16.7%) significantly outperforms grade C (n=70, WR=7.1%), p=0.0207",
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=349, WR=16.6%) significantly outperforms grade C (n=70, WR=7.1%), p=0.0215",
     "\ud83d\udea8 fund_state.json staleness \u2014 disk state disagrees with a fresh recompute from trades.csv: consecutive_losses: fresh=4 vs disk=5"
   ],
-  "last_alert_sent_at": "2026-09-25T05:00:00.914022"
+  "last_alert_sent_at": "2026-09-25T11:53:26.246439"
 }
