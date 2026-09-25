@@ -736,8 +736,44 @@ def compute_sizing(state: dict, current_balance: float,
 
 
 def update_sizing_state(state: dict, current_balance: float) -> dict:
-    """Refresh current_sizing_pct and sizing_mode for display (uses score=10 as baseline)."""
+    """Refresh current_sizing_pct and sizing_mode for display (uses score=10
+    as baseline).
+
+    2026-09-2X: now applies the SAME two-stage chain real trade-creation
+    uses (daily.py's real call site, ~line 6967: this module's own
+    drawdown-tier compute_sizing() first, then src/position_sizing.py's
+    regime+loss-streak+drawdown overlay on top, keeping whichever result is
+    LOWER) -- previously this only ever ran the first stage, so the
+    displayed sizing_mode/current_sizing_pct could read a LESS conservative
+    number than what an actual new trade would receive right now (e.g. a
+    real 4+ loss streak pushes real sizing to MINIMAL/0.25% regardless of
+    drawdown, while this display kept showing drawdown_caution/0.75%).
+
+    Regime is intentionally NOT modelled here: unlike drawdown/loss-streak,
+    "market regime" is a per-candidate, per-scan value (computed fresh for
+    whatever pair is being evaluated), not a single fund-wide state this
+    function has access to -- there is no correct single "current regime"
+    to plug in. Passing a neutral regime (empty string, regime_mult=1.0) is
+    the same kind of intentional, documented display simplification this
+    function already makes for checklist_score=10.0 above: it shows the
+    real drawdown+streak floor, which a real candidate's regime can only
+    push down further, never up -- so this display value is always a
+    correct lower bound, never an overstated one.
+    """
     pct, mode, reason = compute_sizing(state, current_balance, checklist_score=10.0)
+    if pct is not None and pct > 0:
+        from src import position_sizing as _psz
+        overlay = _psz.calculate_position_size(
+            regime="",
+            consecutive_losses=int(state.get("consecutive_losses") or 0),
+            drawdown_pct=float(state.get("current_drawdown_pct") or 0.0),
+            base_pct=pct,
+            log_fn=lambda m: None,
+        )
+        if overlay["risk_pct"] < pct:
+            pct    = overlay["risk_pct"]
+            mode   = overlay["sizing_mode"]
+            reason = overlay["reason"]
     state = dict(state)
     state["current_sizing_pct"] = float(pct) if pct is not None else 0.0
     state["sizing_mode"]        = mode

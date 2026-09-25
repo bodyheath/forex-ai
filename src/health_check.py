@@ -61,8 +61,54 @@ _GRADE_ORDER          = ["A", "B", "C", "D", "F"]  # best to worst
 # signal, it removes a stale one from re-triggering every run.
 _GRADE_ORDERING_CUTOFF = "2026-07-14 13:46:31"
 
+# 2026-09-2X: a second, independent discontinuity in this same population,
+# found investigating why the standing F-vs-D alert kept firing even after
+# the general-population ribbon-opposition F-trigger was removed
+# (ribbon_general_population_demotion_removed, promoted 2026-09-06,
+# see PROMOTION_DISCIPLINE.md) -- the closed_at-based cutoff above filters
+# by when a trade CLOSED, but a row's grade is frozen at ENTRY time, and
+# doesn't get recomputed when it later closes. 90.4% of the population this
+# check was flagging as "Grade F" (329 of 364) was actually ENTERED before
+# the fix, still carrying a grade computed under the old, broader F
+# condition -- not the current one. The one genuinely clean slice available
+# (entered on/after this date) showed the OPPOSITE direction (D beating F),
+# though far too thin (n=35 fire-side) to confirm that as a new finding
+# either -- see the 2026-09-21 investigation. This filters entries (not
+# closes) to that clean slice so the comparison reads real, uncontaminated,
+# post-fix grading going forward, and lets it re-accumulate rather than
+# keep alerting on a stale blend. Deliberately NOT applied to
+# get_strict_decisive_grade_population() itself (used elsewhere, e.g.
+# dashboard.py's grade panel) -- scoped to this one check, per instruction.
+_GRADE_ORDERING_ENTRY_FIX_DATE = "2026-09-06"
+
 _RIB_EDGE_WINDOW      = 40   # trailing decisive-trade window checked against the older baseline
 _RIB_EDGE_MIN_N       = 15   # minimum size for EITHER the trailing window or the older baseline
+
+# 2026-09-2X: hardening found necessary investigating a real recent alert --
+# the raw "last 40 decisive rows" population was NOT 40 independent trials:
+# research_trades.csv re-evaluates the same real underlying market move many
+# times a day, so a single real multi-day move (e.g. one real AUD/NZD
+# decline) can produce 5-9 near-duplicate "decisive" rows on the same
+# pair+direction within one window, each counted as independent evidence.
+# The flagged instance had only 12 unique pair+direction combos across the
+# 40 raw rows, and deduplicating to one evaluation per pair+direction+
+# calendar-day shrank the effective n from 40 to 20. Deduplication below
+# applies this same independence proxy to BOTH the recent window and the
+# older baseline, consistently, before any statistics are computed.
+#
+# Separately: this check re-runs a fresh p<0.05 test every 6-hourly
+# health_check.yml cycle, indefinitely, with no correction for how many
+# times it's already been tested -- unlike shadow_mode.py's registered
+# rules, which Bonferroni-correct alpha by the count of currently-active
+# rules. This file has 4 checks of the same "decay tripwire" shape, run
+# together every cycle (this one, check_currency_consensus_edge_health,
+# check_ribbon_exclusion_continued_validity, check_weekly_signal_edge_
+# health) -- treated as the relevant "family" for the same kind of
+# correction, analogous to shadow_mode's n_active_rules divisor. Scoped to
+# this one check only, per instruction -- the sibling checks are a real,
+# separate follow-up, not applied here.
+_RIB_EDGE_HEALTH_CHECK_FAMILY_SIZE = 4
+_RIB_EDGE_ALPHA = 0.05
 
 # 2026-09-02: three new decay/continued-validity tripwires added off the back
 # of the quant-judgment assessment, which found only two of the many signals
@@ -518,12 +564,26 @@ def check_grade_ordering(csv_path=None) -> list:
 
     Stays silent for any bucket below _GRADE_MIN_N — a thin/unstable sample
     is not evidence of anything, and must never be reported as a false flag.
+
+    Further filtered to entries on/after _GRADE_ORDERING_ENTRY_FIX_DATE (see
+    that constant's comment) — a row's grade is frozen at entry time, so
+    the closed_at-based cutoff in get_strict_decisive_grade_population()
+    alone isn't enough to guarantee every row was graded under the current
+    logic; this entry-date filter is.
     """
     flags = []
     try:
         decisive = get_strict_decisive_grade_population(csv_path)
         if decisive.empty:
             return flags
+
+        if "date" in decisive.columns:
+            import pandas as pd
+            entry_dt = pd.to_datetime(decisive["date"], errors="coerce", utc=True)
+            fix_date = pd.Timestamp(_GRADE_ORDERING_ENTRY_FIX_DATE, tz="UTC")
+            decisive = decisive[entry_dt >= fix_date]
+            if decisive.empty:
+                return flags
 
         buckets = {}
         for grade in _GRADE_ORDER:
@@ -578,6 +638,18 @@ def check_rib_strongly_against_edge_health(csv_path=None) -> list:
     the recent window, which would compare a subset against a superset
     containing itself) -- flags only if recent performance has fallen
     significantly below that baseline.
+
+    2026-09-2X hardening (see _RIB_EDGE_HEALTH_CHECK_FAMILY_SIZE's comment
+    above for the full rationale): deduplicates to one evaluation per
+    pair+direction+calendar-day before computing anything, on both the
+    recent window and the older baseline, since research_trades.csv
+    re-evaluates the same real market move many times a day and a raw row
+    count materially overstates independent evidence. Also Bonferroni-
+    corrects the significance bar by this file's count of same-shape decay
+    checks, the same style of correction shadow_mode.py's registered rules
+    already get -- a real recent drift must clear a stricter bar than the
+    naive p<0.05 this check used before, so it doesn't cry wolf on the next
+    autocorrelated cluster from one real multi-day move.
     """
     flags = []
     try:
@@ -601,11 +673,22 @@ def check_rib_strongly_against_edge_health(csv_path=None) -> list:
             pop["_closed_dt"] = pd.to_datetime(pop["closed_at"], errors="coerce")
             pop = pop.sort_values("_closed_dt")
 
+        # Independence proxy: many raw rows on the same pair+direction+day
+        # are almost certainly re-samples of the same real underlying move,
+        # not independent trials -- collapse each such cluster to its last
+        # (most complete/final) evaluation before comparing anything.
+        if "_closed_dt" in pop.columns and "pair" in pop.columns:
+            pop["_combo_day"] = (
+                pop["pair"].astype(str) + "_" + direction.reindex(pop.index).astype(str)
+                + "_" + pop["_closed_dt"].dt.date.astype(str)
+            )
+            pop = pop.drop_duplicates(subset="_combo_day", keep="last")
+
         n_total = len(pop)
         recent = pop.tail(_RIB_EDGE_WINDOW)
         older  = pop.iloc[: max(0, n_total - _RIB_EDGE_WINDOW)]
         if len(recent) < _RIB_EDGE_MIN_N or len(older) < _RIB_EDGE_MIN_N:
-            return flags  # too little data on one side for a meaningful comparison
+            return flags  # too little independent data on one side for a meaningful comparison
 
         def _wins(d):
             return int(d["status"].astype(str).str.upper().isin(["WIN", "FULL_WIN"]).sum())
@@ -617,11 +700,15 @@ def check_rib_strongly_against_edge_health(csv_path=None) -> list:
         if result is None:
             return flags
         p_value, recent_wr, older_wr = result
-        if recent_wr < older_wr and p_value < 0.05:
+        corrected_alpha = _RIB_EDGE_ALPHA / _RIB_EDGE_HEALTH_CHECK_FAMILY_SIZE
+        if recent_wr < older_wr and p_value < corrected_alpha:
             flags.append(
                 f"🚨 rib_strongly_against (non-GBP) edge drifting — most recent "
-                f"{recent_n} decisive trades WR={recent_wr*100:.1f}% vs the prior "
-                f"{older_n} decisive trades WR={older_wr*100:.1f}%, p={p_value:.4f}. "
+                f"{recent_n} independent (deduplicated) decisive evaluations "
+                f"WR={recent_wr*100:.1f}% vs the prior {older_n} independent "
+                f"evaluations WR={older_wr*100:.1f}%, p={p_value:.4f} "
+                f"(corrected bar <{corrected_alpha:.4f} for "
+                f"{_RIB_EDGE_HEALTH_CHECK_FAMILY_SIZE} same-shape decay checks). "
                 f"See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
             )
     except Exception as e:

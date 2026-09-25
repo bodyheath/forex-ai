@@ -93,6 +93,24 @@ FIELDS = [
                        # all" without depending on _yt_pass containing trades
                        # older than the current scan, which it structurally
                        # never will.
+    # ── Data quality (2026-09-17, fixed for real persistence 2026-09-2X) ─────
+    "data_quality_flag",  # non-empty = confirmed-fictitious close (e.g. a stale
+                           # price-source entry/exit), excluded from consecutive_
+                           # losses/wins and all win-rate/PF stats in financials.py
+                           # (see calculate_fund_state()). MUST live in this list —
+                           # every routine trades.csv rewrite (_write_all(), i.e.
+                           # every update_fields()/update_outcome() call) writes
+                           # out only the columns named here, so a column added to
+                           # a live row but never added here is silently dropped
+                           # on the very next routine write. That happened to this
+                           # exact field once already: added directly to the CSV
+                           # on 2026-09-17, silently wiped by a routine automated
+                           # commit on 2026-09-18 (confirmed via git history), so
+                           # #6987's flag was gone within 9 days and the exclusion
+                           # was a real no-op in production ever since. See the
+                           # regression test in tests/test_data_quality_flag_
+                           # persistence.py, which exists specifically to catch a
+                           # repeat of this.
 ]
 
 # status values: NO_TRADE | PENDING | OPEN | WIN | LOSS | BREAKEVEN | SKIPPED | EXPIRED | CANCELLED | PARTIAL_WIN | FULL_WIN
