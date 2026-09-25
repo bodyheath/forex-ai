@@ -254,3 +254,8 @@ subset again without changing the interface.
 - PARAMETER: _elig_f_sentiment_only.conf_threshold (src/virtual_books.py)
 - PARAMETER: _elig_f_sentiment_only.eff_conf_fn (src/virtual_books.py)
 - PARAMETER: _elig_f_sentiment_only.dd_allows_fn (src/virtual_books.py)
+- PARAMETER: _elig_g_mechanical_reversion.quality_grades (src/virtual_books.py)
+- PARAMETER: _elig_g_mechanical_reversion.dd_mode (src/virtual_books.py)
+- PARAMETER: _elig_g_mechanical_reversion.conf_threshold (src/virtual_books.py)
+- PARAMETER: _elig_g_mechanical_reversion.eff_conf_fn (src/virtual_books.py)
+- PARAMETER: _elig_g_mechanical_reversion.dd_allows_fn (src/virtual_books.py)
