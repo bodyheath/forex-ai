@@ -19,6 +19,41 @@ Format (parsed by `load_allowlist()` in check_orphans.py):
 
 ---
 
+## Sentiment Agent (src/sentiment_agent.py) -- retired, not broken
+
+Retired 2026-09-2X (see project_sentiment_agent_retirement_sep2026.md).
+Root-caused directly, not assumed: a live test call to NewsAPI's
+`/v2/everything` (the exact query `_recent_headlines_for()` makes) returned
+`status=200, totalResults=0` for `from=today`, while the same query with no
+date filter returned 3,526 real results whose newest article was already
+over 24 hours stale at call time. This is NewsAPI's well-known free/
+Developer-tier restriction -- `/v2/everything` structurally withholds the
+most recent ~24 hours of articles regardless of query -- which makes this
+module's own "published today (UTC) or later ONLY" requirement (a
+deliberate design choice, see the module's own SOURCE/TIMESTAMP DISCIPLINE
+docstring section) structurally unsatisfiable on this API tier. Confirmed:
+514/514 real evaluations since 2026-09-06 came back `UNAVAILABLE`, 100% of
+the time, always for this same reason -- not a code bug, not a timezone
+bug, an API-tier ceiling. Would need a paid, real-time-capable NewsAPI plan
+to ever fire again.
+
+`evaluate()` now short-circuits to `UNAVAILABLE` before making any real
+NewsAPI/LLM call (see `_RETIRED` at the top of that function) -- every real
+call site (research-trade logging in daily.py, `virtual_books.py`'s Book F)
+already handles an `UNAVAILABLE` verdict correctly, so nothing downstream
+needed to change. Confirmed nothing else depends on this module actually
+firing: `shadow_mode.py`'s `sentiment_agent_supports` rule and virtual
+book `F_sentiment_only` both already had zero real fires ever (checked
+directly), and both remain registered for historical reference, not
+removed. The module's own code, tests, and LLM-prompt logic are left
+intact (not deleted) below the retirement guard, so re-enabling it later
+(flip `_RETIRED = False`, confirm a real-time-capable API key) needs no
+rebuild. No allowlist entry needed below -- `evaluate()` and its internal
+helpers remain referenced code (just behind the `_RETIRED` guard at
+runtime), not orphaned in the sense this file tracks.
+
+---
+
 ## shadow_mode.py -- two functions deliberately still unwired
 
 Built 2026-09-01, extended 2026-09-04 (see PROMOTION_DISCIPLINE.md and

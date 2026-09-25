@@ -215,11 +215,43 @@ def _parse_response(text: str) -> dict:
     return out
 
 
+# 2026-09-2X: RETIRED, not broken -- see config/known_dormant.md and
+# project_sentiment_agent_retirement_sep2026.md. Root-caused directly: a live
+# test call to NewsAPI's /v2/everything (the exact query this module makes)
+# returned status=200/totalResults=0 for from=today, while the SAME query
+# with no date filter returned 3,526 real results whose newest article was
+# already >24h stale at call time. This is the well-known NewsAPI free/
+# Developer-tier restriction -- /v2/everything structurally withholds the
+# most recent ~24h of articles regardless of query -- which makes this
+# module's own "published today (UTC) or later ONLY" requirement (see the
+# module docstring's SOURCE/TIMESTAMP DISCIPLINE section -- deliberately
+# strict by design) structurally unsatisfiable on this API tier. Confirmed:
+# 514/514 real evaluations since 2026-09-06 came back UNAVAILABLE, 100% of
+# the time, always for this reason. Not a code bug, not a timezone bug --
+# an API-tier ceiling. Short-circuited here (not deleted) so every real
+# call site (research-trade logging, virtual_books.py's Book F) keeps
+# working against the exact same UNAVAILABLE contract they already handle
+# correctly, with zero real NewsAPI/LLM cost paid for a guaranteed-empty
+# result. Flip back to False (and confirm NEWS_API_KEY is on a real-time-
+# capable paid tier) to reactivate.
+_RETIRED = True
+
+
 def evaluate(pair: str, direction: str) -> dict:
     """Raw evaluation -- always makes an LLM call (if headlines exist).
     Prefer get_or_evaluate() from call sites so a candidate is never scored
     twice in the same scan."""
     evaluated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    if _RETIRED:
+        return {
+            "verdict": "UNAVAILABLE", "confidence": 0,
+            "reason": "sentiment agent retired -- see config/known_dormant.md "
+                      "(NewsAPI free-tier ~24h publishing delay makes same-day "
+                      "news structurally unavailable, not a bug)",
+            "evaluated_at": evaluated_at,
+            "oldest_headline_published": "", "newest_headline_published": "",
+            "n_headlines": 0,
+        }
     try:
         base, quote = pair.split("/")
     except ValueError:
