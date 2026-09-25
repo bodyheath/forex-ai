@@ -25,8 +25,8 @@
   "best_pair": "EUR/NZD",
   "best_pips": 237.7,
   "fund_total_trades": 245,
-  "current_sizing_pct": 0.75,
-  "sizing_mode": "drawdown_caution",
+  "current_sizing_pct": 0.25,
+  "sizing_mode": "MINIMAL",
   "daily_trades_date": "2026-09-25",
   "unrealised_dollars": 0,
   "unrealised_pips": 0,
@@ -98,7 +98,7 @@
       "timestamp": "2026-09-19T00:25:47"
     }
   ],
-  "sizing_reason": "Drawdown caution \u2014 fund 3.7% from peak (0.75% risk)",
+  "sizing_reason": "losses=5, drawdown=3.7%",
   "weekend_alert_sent_date": null,
   "drawdown_paused": false,
   "max_drawdown_seen": 3.69
