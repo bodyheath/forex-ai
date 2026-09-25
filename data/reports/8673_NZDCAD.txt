@@ -1,0 +1,21 @@
+PAIR: NZD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level with RSI 36 (mid-BUY zone) and T_sig=BUY_6 provide technical confluence, but MTF alignment is weak (1/3 only—D1 alone), ribbon is bearish-aligned, and both rate environments are falling, creating conflicting signals.
+RISK_FACTORS: MTF confidence is only 40% (D:BUY vs W/M/4H NEUTRAL); bearish ribbon alignment (5/5 EMA fan) contradicts D1 BUY signal and undermines trend continuation thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.8121
+ENTRY_TRIGGER_REASON: Bounce from SL (0.8121 Fib support) with RSI confirmation above 40 would align multiple confluences.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**Rationale:**
+
+1. **MTF Rule Violation (Confidence <2/3):** Weekly, Monthly, and 4H all show NEUTRAL; only D1 shows BUY. MTF conf = 1/3 (33%) — fails the ≥2/3 threshold for multi-frame agreement

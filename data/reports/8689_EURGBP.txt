@@ -1,0 +1,23 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + bearish RSI divergence + D1 SELL signal confirm short bias, but 4H uptrend and neutral weekly prevent high conviction.
+RISK_FACTORS: 4H in strong uptrend (RSI 70.4) creates immediate pullback risk if price holds above SMA50; GBP net SHORT positioning at 45% + BUILDING momentum could reverse on news, negating EUR weakness advantage.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8580
+ENTRY_TRIGGER_REASON: Pin bar confirmation below 0.8597 resistance; bearish divergence + D1 T_sig=SELL_5 warrant entry on pullback to EMA key zone.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF Assessment:** W:NEUTRAL + D:SELL + 4H:SELL = 2/3 agree (D+4H) at 60% confidence. This clears the "both agree" rule but is not strong; monthly is neutral, creating structural conflict. The 4H uptrend (price > SMA50 > SMA200, golden cross) contradicts the daily SELL signal — this is a

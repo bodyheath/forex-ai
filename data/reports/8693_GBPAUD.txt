@@ -1,0 +1,17 @@
+```
+PAIR: GBP/AUD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily align BUY in confirmed uptrend structure (M:BUY), but D1 is in price-below-SMA50 downtrend; double-top bearish pattern on D1 conflicts with multi-timeframe BUY consensus, creating a mean-reversion setup at Fibonacci support (1.8732) rather than continuation.
+RISK_FACTORS: [1] D1 death-cross (price < SMA50 < SMA200) contradicts MTF consensus — if price fails to hold above SMA50 (1.9001), downtrend resumes and confidence drops below 4. [2] Double-top bearish pattern on D1 (T_sig=BUY_7 pre-computed but PAT=bearish) suggests exhaustion; oscillators (OSC=NONE, stoch_k=40.5, CCI=-7.8) show no confluence — reversal signal lacks confirmation.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 1.9001
+ENTRY_TRIGGER_REASON: Break and hold above D1 SMA50 (1.9001) with RSI >50 would invalidate death-cross and confirm MTF weekly/daily
