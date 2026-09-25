@@ -1,0 +1,25 @@
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Daily pin bar at key level with RSI 62.1 (neutral-overbought) + D1 SELL signal provides technical confluencein mixed trend, but 4H uptrend and MTF disagreement (D:SELL vs 4H:NEUTRAL, conf=1/3) limit conviction.
+RISK_FACTORS: [MTF conflict—4H uptrend contradicts D1 SELL signal, reducing probability; ribbon LEANING_BULL (4/5 aligned) suggests continuation momentum may override daily reversal]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence 1/3 (D and 4H disagree) fails the mandatory rule: weekly+daily must both agree for trade. 4H is uptrend (T=3), daily is SELL—insufficient MTF alignment. Confidence 6/10 < 7 threshold, and MTF rule veto applies regardless.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Detailed Scoring Rationale:**
+
+**TECHNICAL (6/10):**
+- D1 T_sig=SELL_5 is baseline (5).
+- RSI 62.

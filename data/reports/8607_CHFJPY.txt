@@ -1,0 +1,23 @@
+PAIR: CHF/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both BUY with RSI 44.7 (neutral in downtrend context) and price 340p above SL support; converging ribbon signals weakening downtrend, but extreme JPY long positioning and 4H bearish divergence create reversal risk.
+RISK_FACTORS: [JPY positioning at ~1y crowded long with REVERSING momentum — institutional unwind could trigger sharp yen strength; 4H trend SELL conflicts with daily BUY (only 2/3 MTF agreement), limiting conviction]
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 189.50
+ENTRY_TRIGGER_REASON: Pullback to FIB midpoint (near 189.5) would add confluence with daily uptrend and reduce 4H/daily conflict risk
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+1. **MTF Agreement Check (HARD RULE):** W:BUY + D:BUY = agreement; 4H:SELL conflicts. Confidence is 2/3 (66.7%), which is just below the 80% threshold. TRADE_THIS requires ≥80% agreement — this setup falls short at 67%.

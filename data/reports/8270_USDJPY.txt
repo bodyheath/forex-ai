@@ -1,0 +1,23 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H overbought (RSI 70.3) with converging ribbon and crowded JPY long positioning creates reversal risk, but D1 neutral trend and lack of MTF agreement prevent high-conviction trade.
+RISK_FACTORS: [1) MTF disagrees (M/W/D all NEUTRAL; only 4H is SELL at 80% weight) — insufficient confluence for directional confidence; 2) JPY positioning reversal is unconfirmed and POS momentum data is stale (1694d) — crowding risk may not translate to immediate reversal.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 157.13
+ENTRY_TRIGGER_REASON: Sell at 38.2% Fibonacci resistance (8p away) if 4H RSI fails to hold above 70 and D1 confirms weakness.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**Rationale:**
+
+- **Technical (4/10):** D1 T_sig=NEUTRAL_3 is baseline. 4H RSI=70.3 (overbought) and MACD=-0.0142 (weakening) support a sell bias, but D1 RSI=50.

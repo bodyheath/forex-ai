@@ -1,0 +1,30 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: 4H downtrend (death-cross) + double-top pattern conflict with D1 pin bar bullish signal; MTF disagreement (M:SELL vs D/W:NEUTRAL vs 4H:BUY) kills trade confidence.
+
+RISK_FACTORS: 
+1. MTF conflict: monthly bearish but weekly and daily both neutral — no alignment on direction; 4H contradicts at BUY.
+2. D1 neutral (RSI 51.2 mid-range, price between SMA50/200, T_sig=3) — no technical conviction; pin bar bullish + double-top bearish create conflicting pattern signals.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**Rationale:**
+
+- **MTF Rule Failure:** Weekly (NEUTRAL) + Daily (NEUTRAL) do not both agree. Monthly is SELL, 4H is BUY. Confidence across timeframes = 0/3 (only M agrees on SELL direction). MTF rule requires weekly AND daily agreement; they do not — **TRADE_THIS = NO**, regardless

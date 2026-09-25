@@ -1,0 +1,16 @@
+PAIR: USD/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 6/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: USD strength (rising rates, +1.60% diff, 8art sentiment) and CAD weakness (falling rates, net short positioning) support a sell, but MTF weakness (Weekly+Daily both NEUTRAL, not confirming downtrend) and RSI overbought in uptrend context undermine conviction.
+RISK_FACTORS: [1] MTF rule violation: Weekly and Daily both NEUTRAL — no downtrend confirmation despite D1 T_sig=SELL_3; this breaks the 2/3 agreement threshold (0/3 = no MTF consensus), significantly reducing edge. [2] RSI 61.1 in confirmed uptrend (D1+4H price > SMA50 > SMA200, golden cross) = normal mid-range, not overbought — RSI 66.6 on 4H is approaching overbought but 4H T=7 suggests momentum may still run; pullback risk if ribbon turns bullish.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule: Weekly and Daily must both agree for confidence ≥7. Here W:NEUTRAL + D:NEUTRAL = 0/3 oscillator agreement at MTF level.

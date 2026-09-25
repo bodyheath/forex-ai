@@ -1,0 +1,22 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar bearish at 100% Fibonacci (key resistance) + D1 RSI 61.4 (neutral-to-overbought in uptrend) + D1 SELL signal conflict with aligned bull ribbon suggests pullback within uptrend, not trend reversal.
+RISK_FACTORS: [1] ALIGNED_BULL ribbon (5/5 EMA stack) supports uptrend continuation — pin bar rejection may be minor correction only; [2] MTF conf=2/3 (D+4H agree SELL but Weekly=NEUTRAL) — lacks full multi-timeframe confirmation, reducing conviction to 6 from 7+.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8215
+ENTRY_TRIGGER_REASON: Break below pin bar low (bearish confirmation) at resistance rejection zone near 100% Fib; if price reclaims 0.8215 on close, short setup strengthens.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE:**
+
+**Technical (6/10):**
+- D1 RSI=61.4 in confirmed uptrend (W+D both show price > SMA50 > SMA200) → apply uptr

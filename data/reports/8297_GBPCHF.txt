@@ -1,0 +1,25 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 pin bar at key level + bullish ribbon conflict with 4H double-top bearish pattern and MTF weekly SELL; RSI 59 neutral in uptrend context; divergence in direction across timeframes creates ambiguity.
+
+RISK_FACTORS: 
+1. MTF disagreement (W:SELL, D:NEUTRAL, 4H:BUY, M:NEUTRAL = 1/3 confluence; MTF confidence <67% triggers TRADE_THIS NO per rule).
+2. D1 uptrend + ALIGNED_BULL ribbon fundamentally contradict SELL direction; T_sig=SELL_3 pre-computed but pattern (pin_bar_at_key_level:bul) is bullish bias.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction; W=SELL, D=NEUTRAL, 4H=BUY (1/3 agreement, <67% threshold). Pin bar is bullish-patterned and price is within 6p of Fib 100% support; D1 uptrend structure + ALIGNED_BULL ribbon favour continuation B

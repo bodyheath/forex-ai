@@ -1,0 +1,41 @@
+PAIR: GBP/NZD
+
+DIRECTION: SELL
+
+CONFIDENCE: 5/10
+
+TECHNICAL_SCORE: 4/10
+
+FUNDAMENTAL_SCORE: 6/10
+
+SENTIMENT_SCORE: 5/10
+
+POSITIONING_SCORE: 5/10
+
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: GBP uptrend on D1 conflicts with weekly SELL signal and neutral daily MTF, creating ambiguous directional setup despite aligned ribbon.
+
+RISK_FACTORS: 
+1. MTF disagreement (W:SELL vs D:NEUTRAL) fails the 2/3 threshold (conf=1/3) — MTF rule triggers NO-TRADE gate regardless of technicals
+2. D1 T_sig=SELL_3 contradicts strong bullish ribbon (5/5 aligned) and price above SMA50>SMA200, creating unresolved technical conflict
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: NONE
+
+ENTRY_TRIGGER_PRICE: N/A
+
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (only 1 of 3 timeframes align on SELL). Confidence 5/10 < 7 threshold. Ribbon alignment cannot override conflicting MTF structure.
+
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+• **MTF GATE FAIL:** W:SELL + D:NEUTRAL = only 1/3 weighting agree on a direction; 4H:NEUTRAL adds no confirmation. conf=1/3 <

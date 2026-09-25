@@ -1,0 +1,23 @@
+```
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with D1 BUY signal and rate differential support GBP, but weakened by bearish ribbon lean, MTF disagreement (D:BUY vs 4H:SELL), and absence of oscillator confluence.
+RISK_FACTORS: [MTF conflict — Weekly SELL + Daily BUY create directional ambiguity, reducing setup reliability below 7/10 threshold] [Bearish 4H engulfing + 4H RSI 57.5 (neutral-overbought) + LEANING_BEAR ribbon suggest near-term pullback risk before upside continuation]
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.8607
+ENTRY_TRIGGER_REASON: Support at swing low (FIB SL) confirmation of pin bar reversal structure; wait for price to pull back and hold support before BUY.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Scoring Rationale:**
+
+**TECHNICAL [5/10]:** D1 T_sig=BUY_7 sets baseline at 7, but MTF validation fails: Daily BUY + 4H SELL = conf=1/3 (only Daily

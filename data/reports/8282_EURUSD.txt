@@ -1,0 +1,18 @@
+```
+PAIR: EUR/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: RSI(35) oversold in confirmed downtrend with partial oscillator buy signal, but MTF alignment fails (D/W/M all NEUTRAL) and head-and-shoulders bearish pattern contradict; price well below SMA50/SMA200 suggests continuation risk.
+RISK_FACTORS: [1. MTF rule VIOLATION — Weekly and Daily both NEUTRAL (not BUY+BUY), eliminating multi-timeframe confluence required for high-confidence trades; D1 T_sig=BUY_3 isolated without weekly confirmation] [2. Head-and-shoulders bearish pattern on 4H conflicts with BUY direction and suggests potential trend continuation lower, not reversal]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily timeframes do not both confirm BUY direction (both NEUTRAL). Per rules, TRADE_THIS must be NO regardless of other signals when MTF does not achieve 2/3 agreement on same direction. Oscillator PARTIAL_BUY (2/3) and D1 T_sig=BUY_3 are insufficient without W/D confluence.
+ENTRY_TRIGGER_EXPIRY

@@ -1,0 +1,27 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Ribbon leaning bearish with CAD rate falling and GBP flat supports mild downside bias, but weak MTF alignment (M:SELL vs W/D:NEUTRAL) and neutral RSI (47.8) prevent high conviction.
+RISK_FACTORS: MTF disagreement (monthly-only conviction, weekly and daily neutral) significantly reduces edge; pin bar at key level suggests indecision/reversal risk despite bearish lean.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.8700
+ENTRY_TRIGGER_REASON: Break below pin bar low and daily support cluster near SMA50 (1.8799), confirming rejection of key level.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI 47.8 = neutral zone (45–62), no directional bias per standard tiers.
+- MTF fails hard rule: M:SELL, but W:NEUTRAL + D:NEUTRAL = conf 1/3, well below 2/3 agreement threshold.
+- Per MTF rule, this bars TRADE_THIS: YES **regardless of other factors**.
+- T_sig

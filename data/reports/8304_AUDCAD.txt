@@ -1,0 +1,23 @@
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Multi-timeframe sell alignment (M/W/D all SELL) with pin bar at key level and rising AUD rates offset by converging ribbon and neutral 4H, creating mid-conviction short setup.
+RISK_FACTORS: (1) Converging EMA ribbon signals trend weakening/reversal risk — if ribbon fully aligns bullish, uptrend acceleration likely. (2) RSI=59.2 in uptrend context is neutral-to-bullish (not overbought), reducing strength of SELL signal; 4H neutral conflicts with daily/weekly directional conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.9935
+ENTRY_TRIGGER_REASON: Break below pin bar low at 0.9935 to confirm bearish rejection at key level with MTF confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Confidence Check:** M:SELL + W:SELL + D:SELL = 3/3 agree on direction (conf=2/3 wt=85% = 2 of 3 timeframes = meets directional agreement). However, 4H:NEUTRAL breaks the daily+4H agreement rule

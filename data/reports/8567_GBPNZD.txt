@@ -1,0 +1,23 @@
+PAIR: GBP/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and monthly both signal SELL, but daily is NEUTRAL and ribbon shows bullish alignment—conflicting signals create ambiguity despite GBP rate differential favoring NZD weakness.
+RISK_FACTORS: [1) MTF alignment failure: Daily does not confirm weekly/monthly SELL (conf=1/3 < 2/3 threshold), violating MTF rule—trade reliability severely compromised. 2) Ribbon contradiction: ALIGNED_BULL (5/5 EMAs fanning bullish) directly contradicts T_sig=SELL_3 and monthly/weekly bearish bias—reversal or trend continuation risk unclear.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily do not both agree (W:SELL, D:NEUTRAL). Confidence=5/10 fails minimum threshold of 7. Ribbon ALIGNED_BULL also conflicts with bearish T_sig, creating unacceptable signal contradiction. Wait for daily to either confirm weekly SELL or pivot to BUY before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**MTF Failure (Disqualifying):**

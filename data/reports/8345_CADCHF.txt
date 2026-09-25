@@ -1,0 +1,18 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence and pin bar at key level conflict with D1 uptrend structure; fundamental CAD weakness supports SELL but MTF disagreement (W:NEUTRAL, D:NEUTRAL vs 4H:BUY) blocks high-confidence entry.
+RISK_FACTORS: [1. MTF coordination failure — weekly and daily both neutral while 4H bullish = unclear directional consensus, increasing reversal risk. 2. D1 price at 0.5878 sits in overbought zone (RSI 59.5 near 62-70 threshold) within an uptrend; pin_bar_at_key_level:bul suggests bullish rejection rather than bearish reversal — T_sig=SELL_3 may be a lagging mean-reversion signal, not a confirmed reversal.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do not both agree on direction (both NEUTRAL, 4H BUY = 1/3 agreement, <66%). CONFIDENCE capped at 5; TRADE_THIS rejected per MTF rule override.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0

@@ -1,0 +1,25 @@
+```
+PAIR: EUR/CHF
+DIRECTION: NEUTRAL
+CONFIDENCE: 3/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Ribbon converging after uptrend, all timeframes neutral with no directional consensus — insufficient conviction to trade.
+RISK_FACTORS: [1. Stochastic deep in oversold (12.5) but inside_bar pattern + mixed 4H trend suggests reversal risk either direction. 2. CCI=-66.5 (strong bearish) conflicts with D1 uptrend structure (price > SMA50 > SMA200), creating false-signal risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF alignment 0/3 (M/W/D all NEUTRAL) violates weekly+daily agreement rule; ribbon convergence signals trend deceleration; OSC conf=NONE eliminates oscillator edge; T_sig=3 (baseline neutral) + no confirming bonus factors.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**Rationale:**
+
+1. **MTF Failure**: Weekly, Daily, and Monthly all NEUTRAL → conf=0/3. Hard rule: *both* W and D must agree on direction. TRADE_THIS=NO regardless of other factors.
+
+2. **TECHNICAL_SCORE = 3**:

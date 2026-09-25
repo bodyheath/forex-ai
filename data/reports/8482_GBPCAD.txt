@@ -1,0 +1,16 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H downtrend structure (price < SMA50 < SMA200) with D1 double-bottom recovery attempt conflicts with ribbon bear-lean and monthly sell signal; mixed MTF agreement (0/3 = M:SELL but W/D neutral) blocks high-confidence trade.
+RISK_FACTORS: [1. MTF rejection: weekly and daily both neutral—do not both align with monthly SELL; MTF agreement is 0/3 (< 2/3 threshold), triggering automatic TRADE_THIS=NO per MTF hard rule. 2. D1 price (1.8757) is below SMA50 (1.8797) but above SL (1.8607)—trapped between support and MA compression; D1 T_sig=NEUTRAL_3 with double-bottom pattern suggests mean reversion upside, directly conflicting with 4H downtrend and ribbon bear-lean.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF agreement fail: M:SELL + W:NEUTRAL + D:NEUTRAL = 1/3 agreement (< 2/3 required). Weekly and daily do not both confirm direction; hard rule blocks trade regardless of

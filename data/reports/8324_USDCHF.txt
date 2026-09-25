@@ -1,0 +1,16 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 overbought RSI(65) in confirmed uptrend conflicts with 4H oversold(36.6) and pin_bar_at_key_level_bearish; ribbon fully aligned bullish but T_sig=SELL_3 signals distribution risk at resistance.
+RISK_FACTORS: (1) MTF consensus is NEUTRAL across M/W/D (0/3 conf) — no directional agreement above D1, invalidates TRADE_THIS threshold. (2) Ribbon ALIGNED_BULL with price > SMA50 > SMA200 golden-cross = strong uptrend structure; SELL at this setup has high stop-loss risk if 4H:BUY breaks above pin bar.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily MTF lines both show NEUTRAL (not both BUY or both SELL); confidence 0/3 fails >=2/3 threshold. Even though D1 T_sig=SELL_3 and OSC=PARTIAL_SELL, lack of multi-timeframe agreement disqualifies entry. System requires weekly + daily agreement; monthly/4H are context only.

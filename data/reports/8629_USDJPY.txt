@@ -1,0 +1,21 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H overbought (RSI 74.9) into LEANING_BEAR ribbon structure conflicts with D1 neutrality and rising USD rates; JPY crowded long positioning adds reversal risk but lacks MTF agreement.
+RISK_FACTORS: [1. MTF weekly+daily both NEUTRAL (conf 0/3) — no cross-timeframe confirmation, violates TRADE_THIS rule. 2. D1 RSI 52.4 NEUTRAL and price trapped between SMA50/SMA200 with mixed trend — no directional bias despite 4H overbought signal.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 156.8500
+ENTRY_TRIGGER_REASON: Break below D1 support at confluence of lower Bollinger Band and SMA50 (158.85), targeting Fibonacci SL at 152.897
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**Rationale:**
+- **MTF rejection (critical):** W:NEUTRAL + D:NEUTRAL = 0/3 agreement. Conf threshold for trade is 2/3 (both weekly AND daily must agree). This is an automatic NO regardless of other scores.
+- **Technical conflict:** D1

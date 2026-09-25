@@ -1,0 +1,25 @@
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-top bearish pattern on 4H with converging ribbon warns of trend exhaustion, but D1 uptrend structure and neutral RSI (51.4) lack conviction for immediate short entry.
+RISK_FACTORS: (1) D1 price above SMA50 in confirmed uptrend — golden-cross structure intact, invalidates SELL until break below 0.9359; (2) MTF all-neutral (W/D/M neutral, 4H BUY isolated) = no multi-timeframe confirmation — short signals lack institutional backing.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.9359
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (0.9359) + 4H double-top completion would confirm SELL and align with converging ribbon warning.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL (4/10):**
+- D1 RSI 51.4 = neutral zone (45–62), score 3 → baseline T_sig=3 (pre-computed NEUTRAL).
+- 4H RSI 26.4 = oversold (<30), normally score 9-

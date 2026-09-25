@@ -1,0 +1,21 @@
+PAIR: NZD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: D1 RSI 32.9 (oversold) + PARTIAL oscillator confluence (2/3) align with T_sig=6 baseline, but MTF structure is broken (D:BUY vs 4H:SELL conflict, conf=1/3), ribbon leaning bear, and price below SMA50 — no multi-timeframe agreement required for TRADE_THIS=NO.
+RISK_FACTORS: [1. MTF conflict (D1 BUY, 4H SELL, conf=1/3 <2/3 threshold) violates core entry rule; 2. Price 0.8011 trades 156p below SMA50 0.8167 in mixed/range mode — no trend confirmation despite oversold RSI signal.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.8019
+ENTRY_TRIGGER_REASON: Fib -61.8% support at 0.80187 (7p below current) + RSI 32.9 oversold confluence; wait for MTF alignment (4H must confirm BUY direction).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**

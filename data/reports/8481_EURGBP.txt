@@ -1,0 +1,23 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at resistance (78.6% Fib) with bearish RSI divergence on D1 conflicts with 4H overbought state; MTF alignment absent (M/W/D all NEUTRAL, 4H isolated SELL at 80% weight); no clear directional consensus.
+RISK_FACTORS: MTF conf=0/3 violates trade rule (requires weekly+daily agreement — both are NEUTRAL, 4H contradicts at 72.3 RSI overbought); bearish DIV conflicts with 4H uptrend structure (golden cross SMA50>SMA200), creating whipsaw risk.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule failed — weekly and daily do not both agree on direction (both NEUTRAL); 4H isolated SELL signal at 80% weight does not substitute for multi-timeframe consensus. Confidence 5/10 < required 7/10 minimum.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF VIOLATION (HARD STOP):** The rule requires **both weekly AND daily to agree on direction**. Here, M:

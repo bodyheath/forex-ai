@@ -1,0 +1,25 @@
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both confirm downtrend; pin bar at key level (0.99899) with converging ribbon signals trend exhaustion and reversal risk into resistance.
+RISK_FACTORS: [1. RSI 57.6 on D1 within neutral zone (45–62) despite SELL signal from MTF alignment — late-stage reversal may lack momentum confirmation. 2. 4H shows NEUTRAL trend and bullish double-bottom pattern — intraday conflict with daily/weekly SELL reduces conviction below 7/10 threshold.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.99899
+ENTRY_TRIGGER_REASON: Pin bar rejection at swing high (SH=0.99899) combined with converging ribbon and weekly+daily SELL alignment; entry at resistance rejection zone maximises risk:reward on reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL [6/10]:**
+- T_sig baseline = SELL_6 on D1 confirms downtrend structure (M:SELL + W:SELL + D:SELL = 3/3 agreement).
+- RSI 57.6 = neutral (45–

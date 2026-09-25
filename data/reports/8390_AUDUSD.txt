@@ -1,0 +1,23 @@
+PAIR: AUD/USD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence (price higher, RSI lower) + 4H death-cross downtrend conflict with D1 uptrend structure and pin bar, creating conflicted setup with no MTF confirmation.
+RISK_FACTORS: [1) MTF conf=0/3 — no timeframe agreement; all four levels (M/W/D/4H) neutral means no directional bias and high whipsaw risk. 2) D1 uptrend (price > SMA50 > SMA200, golden cross) contradicts 4H downtrend (death cross) — conflicting structural signals reduce reliability to coin-flip territory.]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Insufficient MTF confluence (conf=0/3 required ≥2/3); bearish DIV conflicts with D1 uptrend structure and pin bar pattern. Do not enter.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+1. **MTF Rule Violation:** W:NEUTRAL + D:NEUTRAL + 4H:NEUTRAL + M:NEUTRAL → conf=0/3. This fails the requirement that weekly AND daily both agree on direction

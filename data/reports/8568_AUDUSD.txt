@@ -1,0 +1,25 @@
+PAIR: AUD/USD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 61.8% Fib with bullish pattern setup conflicts with bearish RSI divergence and 4H death-cross; D1 uptrend structure offers limited edge while 4H downtrend dominates MTF weightage.
+RISK_FACTORS: MTF agreement is 0/3 (all timeframes neutral); bearish divergence (32p magnitude) conflicts with BUY direction and suggests downside momentum risk. 4H death-cross with double-top pattern and RSI=22.2 creates near-term sell pressure that contradicts D1 uptrend structure.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF confidence <2/3 (0/3 agreement) and divergence conflict override pin-bar setup; no valid entry condition met.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**MTF Conflict (Critical Rule Violation):**
+- M=NEUTRAL, W=NEUTRAL, D=NEUTRAL, 4H=BUY → conf=0/3 (0% agreement)
+- Hard rule: "if weekly AND daily don't both agree on direction (conf<2/

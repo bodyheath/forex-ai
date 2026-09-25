@@ -1,12 +1,16 @@
 {
   "last_flags": [
+    "\u26a0\ufe0f Gate silent \u2014 'capacity' has left zero trace in the log across the last 20 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
+    "\u26a0\ufe0f Gate silent \u2014 'concentration' has left zero trace in the log across the last 20 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
+    "\u26a0\ufe0f Gate silent \u2014 'dd_tier' has left zero trace in the log across the last 20 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
     "\u26a0\ufe0f Gate silent \u2014 'session' has left zero trace in the log across the last 20 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
+    "\u26a0\ufe0f Gate silent \u2014 'trend_hard' has left zero trace in the log across the last 20 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
     "\ud83d\udcca consensus_adj has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md \u2014 filter to consensus_eligible==True, compare within grade)",
     "\ud83d\udcca da_downgraded has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_da_downgrade_tracking.md \u2014 compare within da_grade_before, n undercounts (da_fired=True only))",
     "\ud83d\udcca memory_hash has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md's before/after natural-experiment design)",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=887, WR=21.0%) significantly outperforms grade C (n=120, WR=12.5%), p=0.0147",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=364, WR=42.6%) significantly outperforms grade D (n=887, WR=21.0%), p=0.0000",
-    "\ud83d\udea8 rib_strongly_against (non-GBP) edge drifting \u2014 most recent 40 decisive trades WR=27.5% vs the prior 459 decisive trades WR=43.6%, p=0.0242. See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=995, WR=20.1%) significantly outperforms grade C (n=139, WR=11.5%), p=0.0079",
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=379, WR=43.3%) significantly outperforms grade D (n=995, WR=20.1%), p=0.0000",
+    "\ud83d\udea8 currency-consensus 'agrees' edge drifting \u2014 most recent 40 decisive trades WR=5.0% vs the prior 311 decisive trades WR=15.4%, p=0.0378."
   ],
-  "last_alert_sent_at": "2026-09-21T04:58:26.277960"
+  "last_alert_sent_at": "2026-09-24T21:32:48.270702"
 }

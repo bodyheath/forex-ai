@@ -1,0 +1,26 @@
+```
+PAIR: EUR/GBP
+DIRECTION: NEUTRAL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 78.6% Fibonacci resistance with neutral RSI and mixed technicals suggests range consolidation; no directional edge.
+RISK_FACTORS: [1. MTF all neutral (M/W/D/4H) — no timeframe agreement; conf=0/3 disqualifies any directional trade. 2. Ribbon only 3/5 aligned and price trapped between SMA50/200 — range-bound structure with reversal risk in either direction.]
+TRADE_THIS: NO
+ENTRY_TYPE: NEUTRAL
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violation — no weekly or daily directional agreement; insufficient confluence for entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Rationale:**
+
+1. **MTF Veto**: W=NEUTRAL, D=NEUTRAL, 4H=NEUTRAL, M=NEUTRAL. Confidence = 0/3 across all timeframes. **Hard MTF rule triggers**: "if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless." Zero directional agreement = automatic TRADE_THIS: NO.
+
+2. **Technical (4/10)**:
+   - D1 RSI=50
