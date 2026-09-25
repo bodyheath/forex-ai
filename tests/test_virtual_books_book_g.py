@@ -1,0 +1,227 @@
+"""Tests for Book G (mechanical reversion pilot) and the regime-aware
+promotion-count dedup mechanism added alongside it in src/virtual_books.py.
+
+See PROPOSAL_mechanical_reversion_engine.md and src/mechanical_reversion.py
+for the validated signal this book trades live (rib_against AND
+osc_agrees), and PROMOTION_DISCIPLINE.md's vbook_G_mechanical_reversion
+entry for why its shadow_mode n floor counts regimes, not raw trades.
+"""
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+
+from src import virtual_books as vb
+
+
+def _deep_result(pair="EUR/USD", direction="BUY", ribbon_status="NEUTRAL",
+                  osc_direction="NONE", entry=1.1000, stop=1.0950, target=1.1100):
+    return {
+        "pair": pair,
+        "parsed": {"direction": direction, "entry": entry, "stop_loss": stop, "target": target},
+        "bundle": {
+            "mtf": {"agreeing_count": 2},
+            "technical": {"daily": {
+                "ribbon": {"status": ribbon_status},
+                "oscillator_confluence": {"direction": osc_direction},
+            }},
+        },
+    }
+
+
+class TestBookGRegisteredCorrectly(unittest.TestCase):
+
+    def test_book_g_in_registry(self):
+        self.assertIn("G_mechanical_reversion", vb.BOOKS)
+
+    def test_book_g_is_regime_aware(self):
+        self.assertTrue(vb.BOOKS["G_mechanical_reversion"].regime_aware_promotion)
+
+    def test_other_books_are_not_regime_aware_by_default(self):
+        for book_id in ("A_control", "B_conf6_rr15", "C_grade_based",
+                         "D_no_da", "E_no_dd_gate", "F_sentiment_only"):
+            self.assertFalse(vb.BOOKS[book_id].regime_aware_promotion,
+                              f"{book_id} must not be regime-aware unless deliberately opted in")
+
+
+class TestBookGEligibility(unittest.TestCase):
+
+    def _dummy(self, *a, **kw):
+        return True
+
+    def test_fires_when_ribbon_against_and_osc_agrees(self):
+        r = _deep_result(direction="BUY", ribbon_status="ALIGNED_BEAR", osc_direction="BUY")
+        self.assertTrue(vb._elig_g_mechanical_reversion(r, {}, "normal", 7, self._dummy, self._dummy))
+
+    def test_does_not_fire_when_ribbon_not_against(self):
+        r = _deep_result(direction="BUY", ribbon_status="ALIGNED_BULL", osc_direction="BUY")
+        self.assertFalse(vb._elig_g_mechanical_reversion(r, {}, "normal", 7, self._dummy, self._dummy))
+
+    def test_does_not_fire_when_osc_disagrees(self):
+        r = _deep_result(direction="BUY", ribbon_status="ALIGNED_BEAR", osc_direction="NONE")
+        self.assertFalse(vb._elig_g_mechanical_reversion(r, {}, "normal", 7, self._dummy, self._dummy))
+
+    def test_fires_regardless_of_dd_mode(self):
+        """Fully isolated like Book F -- no dd_mode gate at all."""
+        r = _deep_result(direction="SELL", ribbon_status="ALIGNED_BULL", osc_direction="SELL")
+        for dd_mode in ("normal", "caution", "defensive", "preservation", "halt"):
+            self.assertTrue(
+                vb._elig_g_mechanical_reversion(r, {}, dd_mode, 7, self._dummy, self._dummy),
+                f"must fire regardless of dd_mode={dd_mode}")
+
+    def test_no_confidence_floor(self):
+        """No confidence check anywhere in the eligibility function -- confirm
+        a very low/absent confidence doesn't block it."""
+        r = _deep_result(direction="BUY", ribbon_status="ALIGNED_BEAR", osc_direction="BUY")
+        r["parsed"]["confidence"] = 0
+        self.assertTrue(vb._elig_g_mechanical_reversion(r, {}, "normal", 7, self._dummy, self._dummy))
+
+    def test_sell_direction_fires_correctly(self):
+        r = _deep_result(direction="SELL", ribbon_status="ALIGNED_BULL", osc_direction="SELL")
+        self.assertTrue(vb._elig_g_mechanical_reversion(r, {}, "normal", 7, self._dummy, self._dummy))
+
+    def test_missing_bundle_fields_do_not_crash(self):
+        r = {"pair": "EUR/USD", "parsed": {"direction": "BUY"}, "bundle": {}}
+        try:
+            result = vb._elig_g_mechanical_reversion(r, {}, "normal", 7, self._dummy, self._dummy)
+        except Exception as exc:
+            self.fail(f"eligibility raised on missing bundle fields: {exc!r}")
+        self.assertFalse(result)
+
+
+class TestRegimeDedup(unittest.TestCase):
+
+    def setUp(self):
+        self._tmpdir = tempfile.TemporaryDirectory()
+        self._patcher = patch.object(vb, "VBOOKS_DIR", Path(self._tmpdir.name))
+        self._patcher.start()
+
+    def tearDown(self):
+        self._patcher.stop()
+        self._tmpdir.cleanup()
+
+    def test_first_occurrence_is_a_new_regime(self):
+        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
+        self.assertTrue(allowed)
+
+    def test_immediate_continuation_is_not_a_new_regime(self):
+        vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
+        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-02")
+        self.assertFalse(allowed)
+
+    def test_gap_within_tolerance_is_not_a_new_regime(self):
+        """A normal weekend (up to _REGIME_GAP_DAYS) still counts as ongoing."""
+        vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-04")  # Friday
+        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-07")  # Monday, 3-day gap
+        self.assertFalse(allowed)
+
+    def test_gap_beyond_tolerance_is_a_new_regime(self):
+        vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
+        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-10")
+        self.assertTrue(allowed)
+
+    def test_long_regime_keeps_extending_without_resetting(self):
+        """10 consecutive days should be ONE regime -- confirms a long real
+        regime doesn't fragment into several just because it's long."""
+        results = []
+        for day in range(1, 11):
+            date_str = f"2026-09-{day:02d}"
+            results.append(vb._regime_dedup_allows_recording(
+                "G_mechanical_reversion", "EUR/USD", "BUY", True, date_str))
+        self.assertEqual(results, [True] + [False] * 9)
+
+    def test_different_pair_direction_is_independent(self):
+        vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
+        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "GBP/USD", "SELL", True, "2026-09-01")
+        self.assertTrue(allowed)
+
+    def test_fire_and_no_fire_are_tracked_independently(self):
+        vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
+        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", False, "2026-09-01")
+        self.assertTrue(allowed, "would_fire=True and would_fire=False must track separate regimes")
+
+    def test_unparseable_date_fails_open(self):
+        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "not-a-date")
+        self.assertTrue(allowed)
+
+    def test_different_books_are_isolated(self):
+        vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
+        allowed = vb._regime_dedup_allows_recording("OTHER_BOOK", "EUR/USD", "BUY", True, "2026-09-02")
+        self.assertTrue(allowed)
+
+
+class TestRegimeDedupWiredIntoSettlement(unittest.TestCase):
+    """Confirms the book's OWN balance/positions reflect every real trade
+    regardless of dedup, while shadow_mode recording is deduplicated."""
+
+    def setUp(self):
+        self._tmpdir = tempfile.TemporaryDirectory()
+        tmp_root = Path(self._tmpdir.name)
+        self._regime_book = vb.BookConfig(
+            "REGIME_TEST", "test book", lambda *a, **kw: True, regime_aware_promotion=True,
+        )
+        self._patchers = [
+            patch.object(vb, "VBOOKS_DIR", tmp_root),
+            patch.object(vb, "CANDIDATES_CSV", tmp_root / "candidates.csv"),
+            patch.object(vb, "REJECTIONS_CSV", tmp_root / "rejections.csv"),
+            patch.object(vb, "BOOKS", {"REGIME_TEST": self._regime_book}),
+        ]
+        for p in self._patchers:
+            p.start()
+
+    def tearDown(self):
+        for p in self._patchers:
+            p.stop()
+        self._tmpdir.cleanup()
+
+    def _make_position(self, candidate_id, pair, direction, opened_at):
+        positions = vb._load_csv(vb._positions_path("REGIME_TEST"))
+        positions.append({
+            "id": vb._next_id(positions), "candidate_id": candidate_id, "pair": pair,
+            "direction": direction, "opened_at": opened_at, "position_size_pct": 1.0,
+            "sizing_mode": "normal", "balance_at_entry": 10000.0, "stop_pips": 50,
+            "status": "OPEN", "closed_at": "", "net_pips": "", "dollars": "", "balance_after": "",
+        })
+        vb._write_csv(vb._positions_path("REGIME_TEST"), positions, vb.POSITION_FIELDS)
+
+    def test_book_balance_updates_for_every_trade_even_when_regime_deduped(self):
+        self._make_position(1, "EUR/USD", "BUY", "2026-09-01 00:00:00")
+        self._make_position(2, "EUR/USD", "BUY", "2026-09-02 00:00:00")  # same regime as #1
+
+        with patch("src.shadow_mode.register_rule"), \
+             patch("src.shadow_mode.record_evaluation") as mock_record:
+            vb._settle_book_positions(1, 50.0, "WIN", log_fn=lambda m: None)
+            vb._settle_book_positions(2, 30.0, "WIN", log_fn=lambda m: None)
+
+        state = vb.load_book_state("REGIME_TEST")
+        self.assertEqual(state["wins"], 2, "both real trades must count toward the book's own WR")
+
+        # shadow_mode.record_evaluation should have been called only ONCE
+        # (candidate #1, the new regime) -- #2 is a same-regime continuation.
+        self.assertEqual(mock_record.call_count, 1)
+
+    def test_non_regime_aware_book_records_every_trade(self):
+        plain_book = vb.BookConfig("PLAIN", "test", lambda *a, **kw: True)
+        with patch.object(vb, "BOOKS", {"PLAIN": plain_book}):
+            self._make_position_for("PLAIN", 1, "EUR/USD", "BUY", "2026-09-01 00:00:00")
+            self._make_position_for("PLAIN", 2, "EUR/USD", "BUY", "2026-09-02 00:00:00")
+            with patch("src.shadow_mode.register_rule"), \
+                 patch("src.shadow_mode.record_evaluation") as mock_record:
+                vb._settle_book_positions(1, 50.0, "WIN", log_fn=lambda m: None)
+                vb._settle_book_positions(2, 30.0, "WIN", log_fn=lambda m: None)
+            self.assertEqual(mock_record.call_count, 2,
+                              "a non-regime-aware book must record every trade, unchanged behavior")
+
+    def _make_position_for(self, book_id, candidate_id, pair, direction, opened_at):
+        positions = vb._load_csv(vb._positions_path(book_id))
+        positions.append({
+            "id": vb._next_id(positions), "candidate_id": candidate_id, "pair": pair,
+            "direction": direction, "opened_at": opened_at, "position_size_pct": 1.0,
+            "sizing_mode": "normal", "balance_at_entry": 10000.0, "stop_pips": 50,
+            "status": "OPEN", "closed_at": "", "net_pips": "", "dollars": "", "balance_after": "",
+        })
+        vb._write_csv(vb._positions_path(book_id), positions, vb.POSITION_FIELDS)
+
+
+if __name__ == "__main__":
+    unittest.main()
