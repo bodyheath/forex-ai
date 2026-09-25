@@ -401,8 +401,18 @@ BOOKS: dict[str, BookConfig] = {
         "F_sentiment_only",
         "Trades purely on the Sentiment Agent's verdict (2026-09-06) -- "
         "fully isolated from grade/dd_mode/confidence, no backtest behind it, "
-        "live-only evidence (see shadow_mode.py's sentiment_agent_supports registration)",
+        "live-only evidence (see shadow_mode.py's sentiment_agent_supports registration). "
+        "RETIRED 2026-09-2X -- see config/known_dormant.md.",
         _elig_f_sentiment_only,
+    ),
+    "G_mechanical_reversion": BookConfig(
+        "G_mechanical_reversion",
+        "Mechanical reversion pilot: rib_against AND osc_agrees, no confidence "
+        "floor, no dd_mode gate, no LLM call -- live implementation of the "
+        "signal validated in the 2026-09-2X edge-mining research loop "
+        "(see PROPOSAL_mechanical_reversion_engine.md)",
+        _elig_g_mechanical_reversion,
+        regime_aware_promotion=True,
     ),
 }
 
