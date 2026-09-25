@@ -6948,10 +6948,13 @@ def _send_telegram_summary(
                         pass
                     continue
                 # ── Volatility-adjusted position sizing ───────────────────────────
+                # 2026-09-2X: drawdown_pct removed from this call (CONSOLIDATED --
+                # see src/position_sizing.py's docstring). fund_state.py's
+                # compute_sizing() (which already produced _szg_pct above) is now
+                # the sole drawdown-based sizing authority.
                 _add_sizing = _calculate_position_size(
                     regime=_regime_str,
                     consecutive_losses=_consec_losses_fs,
-                    drawdown_pct=float(_fund_st.get("current_drawdown_pct") or 0),
                     base_pct=float(_szg_pct) if _szg_pct else BASE_RISK_PCT,
                     log_fn=lambda m: _log_line(log, m),
                 )
