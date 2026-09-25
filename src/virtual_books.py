@@ -300,6 +300,36 @@ def _elig_e_no_dd_gate(r, quality_grades, dd_mode, conf_threshold, eff_conf_fn, 
     return dd_allows_fn(r, "normal", quality_grades, conf_threshold, log_fn=lambda m: None)
 
 
+def _elig_g_mechanical_reversion(r, quality_grades, dd_mode, conf_threshold, eff_conf_fn, dd_allows_fn) -> bool:
+    """Book G (2026-09-2X): live pilot of the mechanical-reversion signal
+    validated in the edge-mining research loop (see
+    PROPOSAL_mechanical_reversion_engine.md, and src/mechanical_reversion.py
+    for the exact, already-tested pure logic reused here unchanged) --
+    rib_against AND osc_agrees. No confidence floor, no grade check, no
+    dd_mode gate, no LLM call required to evaluate: this is a faithful live
+    implementation of exactly what was backtested, not a redesign, so it
+    deliberately does NOT restrict to BUY-only -- the discovery-vs-holdout
+    currency-attribution instability found for that restriction (see the
+    stress-test conversation) is not resolved, and baking an unresolved
+    refinement into the live rule would bias exactly the forward evidence
+    meant to resolve it. Fully isolated like Book F, for the same reason:
+    there is no dd_mode/grade concept in the backtest this reproduces.
+
+    Entry/stop/target are NOT computed here -- every book shares the same
+    candidates.csv row (the real mechanical 2:1 R:R construction already
+    applied to every candidate, identical to what cascade.py uses for real
+    trades and to scripts/mechanical_edge_mining_dataset.py's backtest
+    construction). This function only decides whether Book G takes it.
+    """
+    from src import mechanical_reversion as _mr
+    direction = (r.get("parsed") or {}).get("direction", "")
+    bundle = r.get("bundle") or {}
+    daily = ((bundle.get("technical") or {}).get("daily") or {})
+    ribbon_status = (daily.get("ribbon") or {}).get("status", "")
+    osc_direction = (daily.get("oscillator_confluence") or {}).get("direction", "")
+    return _mr.mechanical_reversion_fires(direction, ribbon_status, osc_direction)
+
+
 def _elig_f_sentiment_only(r, quality_grades, dd_mode, conf_threshold, eff_conf_fn, dd_allows_fn) -> bool:
     """Book F: trades purely on the Sentiment Agent's verdict (2026-09-06,
     Phase 01B specialist #3) -- ignores grade/dd_mode/conf_threshold/eff_conf
