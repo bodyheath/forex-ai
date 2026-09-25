@@ -472,6 +472,81 @@ def save_book_state(state: dict) -> None:
     financials.atomic_write_json(_state_path(state["book_id"]), state)
 
 
+# ─── Regime-aware promotion-count dedup (2026-09-2X) ─────────────────────────
+#
+# Why this exists: a real cluster-bootstrap re-analysis of the mechanical
+# edge-mining backtest found that ribbon/oscillator signals move in slow
+# regimes -- one real underlying trend can keep a (pair, direction)'s
+# rib_against reading True for weeks (confirmed: up to 232 consecutive
+# calendar days in the backtest data). A naive per-trade n floor in
+# shadow_mode.check_promotion_readiness() would let ONE such regime
+# masquerade as dozens of independent pieces of evidence, exactly the trap
+# that made the naive per-row test on rib_against look far more significant
+# than a regime-correct one. This applies ONLY to what counts toward a
+# book's shadow_mode promotion n floor -- the book's own balance/positions/
+# WR/PF in <book_id>_positions.csv and <book_id>_state.json always reflect
+# every real trade it took, regardless of this dedup.
+
+_REGIME_GAP_DAYS = 3  # a normal weekend gap still counts as the same regime
+
+
+def _regime_tracker_path(book_id: str) -> Path:
+    return VBOOKS_DIR / f"{book_id}_regime_tracker.json"
+
+
+def _load_regime_tracker(book_id: str) -> dict:
+    path = _regime_tracker_path(book_id)
+    if not path.exists():
+        return {}
+    try:
+        import json
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _save_regime_tracker(book_id: str, tracker: dict) -> None:
+    financials.atomic_write_json(_regime_tracker_path(book_id), tracker)
+
+
+def _regime_dedup_allows_recording(book_id: str, pair: str, direction: str,
+                                    would_fire: bool, event_date_str: str) -> bool:
+    """True the first time a NEW regime is seen for this (pair, direction,
+    would_fire) combination -- i.e. this event should count toward the
+    promotion n floor. False for a continuation of an already-counted
+    regime. Always extends the tracked regime's "last seen" date regardless
+    of the return value, so a long-running regime keeps being recognised as
+    ongoing rather than spawning a "new" regime on every call.
+
+    Known limitation, disclosed rather than hidden: this assumes candidates
+    settle in roughly chronological order (true in practice under the
+    normal monitor cadence) -- it is not a hard guarantee against
+    out-of-order settlement. Fails OPEN (returns True, i.e. records it) on
+    any unparseable date, since silently dropping real evidence is worse
+    than occasionally over-counting one edge case.
+    """
+    try:
+        event_date = datetime.strptime(event_date_str[:10], "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        return True
+
+    tracker = _load_regime_tracker(book_id)
+    key = f"{pair}_{direction}_{would_fire}"
+    entry = tracker.get(key)
+    is_new_regime = True
+    if entry and entry.get("last_date"):
+        try:
+            last_date = datetime.strptime(entry["last_date"], "%Y-%m-%d").date()
+            if (event_date - last_date).days <= _REGIME_GAP_DAYS:
+                is_new_regime = False
+        except (ValueError, TypeError):
+            pass
+
+    tracker[key] = {"last_date": event_date_str[:10]}
+    _save_regime_tracker(book_id, tracker)
+    return is_new_regime
+
+
 # ─── Candidate registration + per-book position opening ─────────────────────
 
 def _find_today_candidate(rows: list, pair: str, direction: str, date_str: str) -> Optional[dict]:
