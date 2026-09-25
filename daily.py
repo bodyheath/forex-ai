@@ -188,17 +188,21 @@ def _fmt_time_exact(h: int, m: int = 0) -> str:
 
 MAX_CORRELATED_EXPOSURE = 2
 
-# 2026-09-2X: BASE_RISK_PCT/SIZING_RULES/LOSS_STREAK_SIZING/DRAWDOWN_SIZING and
-# the function that combines them moved to src/position_sizing.py, so
-# fund_state.py's display-facing update_sizing_state() can run the exact same
-# chained calculation this module's own real trade-creation call site uses
-# (see that module's docstring) -- daily.py can't be imported from fund_state.py
-# for this (it exits the process on import outside GitHub Actions/
+# 2026-09-2X: BASE_RISK_PCT/SIZING_RULES/LOSS_STREAK_SIZING and the function
+# that combines them moved to src/position_sizing.py, so fund_state.py's
+# display-facing update_sizing_state() can run the exact same chained
+# calculation this module's own real trade-creation call site uses (see that
+# module's docstring) -- daily.py can't be imported from fund_state.py for
+# this (it exits the process on import outside GitHub Actions/
 # ALLOW_LOCAL_RUN=YES, see the guard at the top of this file). Re-exported
 # under their original names here so every other reference in this file, and
 # the verify_all.py/verify_system.py presence checks, keep working unchanged.
+# DRAWDOWN_SIZING was removed here 2026-09-2X (CONSOLIDATED, see
+# src/position_sizing.py's own docstring and PROPOSAL_consolidate_drawdown_
+# sizing.md) -- fund_state.py's compute_sizing() is now the sole drawdown-
+# based sizing authority, no longer double-penalized by a second table here.
 from src.position_sizing import (
-    BASE_RISK_PCT, SIZING_RULES, LOSS_STREAK_SIZING, DRAWDOWN_SIZING,
+    BASE_RISK_PCT, SIZING_RULES, LOSS_STREAK_SIZING,
 )
 
 # ── Fund pair universe — explicit banlist ─────────────────────────────────────
