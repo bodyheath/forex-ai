@@ -984,11 +984,18 @@ def _settle_book_rejections(candidate_id: int, net_pips: float, status: str, log
                 f"vbook_{book_id}",
                 description=f"Virtual book {book_id}: {BOOKS[book_id].description}",
             )
-            _sm.record_evaluation(
-                f"vbook_{book_id}", would_fire=False, outcome=status, net_pips=net_pips,
-                context={"candidate_id": candidate_id, "pair": rej.get("pair"),
-                         "direction": rej.get("direction"), "reject_reason": rej.get("reason")},
-            )
+            _should_record = True
+            if BOOKS[book_id].regime_aware_promotion:
+                _should_record = _regime_dedup_allows_recording(
+                    book_id, rej.get("pair", ""), rej.get("direction", ""),
+                    False, rej.get("recorded_at", ""),
+                )
+            if _should_record:
+                _sm.record_evaluation(
+                    f"vbook_{book_id}", would_fire=False, outcome=status, net_pips=net_pips,
+                    context={"candidate_id": candidate_id, "pair": rej.get("pair"),
+                             "direction": rej.get("direction"), "reject_reason": rej.get("reason")},
+                )
             log_fn(f"[vbook:{book_id}] rejection of candidate #{candidate_id} settled {status} "
                    f"({net_pips:+.1f}p net, reason={rej.get('reason')})")
         except Exception as _sm_exc:
