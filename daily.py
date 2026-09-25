@@ -709,16 +709,19 @@ def _send_weekly_learning_summary(log_fn=None) -> None:
 
 
 def _calculate_position_size(regime: str, consecutive_losses: int,
-                              drawdown_pct: float, base_pct: float = None,
-                              log_fn=None) -> dict:
-    """Calculate position size based on regime, loss streak, and drawdown.
+                              base_pct: float = None, log_fn=None) -> dict:
+    """Calculate position size based on regime and loss streak.
 
     Thin wrapper -- the real implementation lives in src/position_sizing.py
     now (see that module's docstring for why), kept here under its original
-    name so every real call site in this file is unchanged."""
+    name so every real call site in this file is unchanged. drawdown_pct
+    was removed 2026-09-2X (CONSOLIDATED -- see src/position_sizing.py's
+    docstring and PROPOSAL_consolidate_drawdown_sizing.md): fund_state.py's
+    compute_sizing() is now the sole drawdown-based sizing authority, no
+    longer double-penalized by a second, uncoordinated table here."""
     from src import position_sizing as _psz
     return _psz.calculate_position_size(
-        regime, consecutive_losses, drawdown_pct, base_pct=base_pct, log_fn=log_fn,
+        regime, consecutive_losses, base_pct=base_pct, log_fn=log_fn,
     )
 
 
