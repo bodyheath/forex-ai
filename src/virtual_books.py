@@ -475,7 +475,7 @@ def save_book_state(state: dict) -> None:
     financials.atomic_write_json(_state_path(state["book_id"]), state)
 
 
-# ─── Regime-aware promotion-count dedup (2026-09-2X) ─────────────────────────
+# ─── Regime-aware promotion-count tagging (2026-09-2X) ────────────────────────
 #
 # Why this exists: a real cluster-bootstrap re-analysis of the mechanical
 # edge-mining backtest found that ribbon/oscillator signals move in slow
@@ -485,10 +485,22 @@ def save_book_state(state: dict) -> None:
 # shadow_mode.check_promotion_readiness() would let ONE such regime
 # masquerade as dozens of independent pieces of evidence, exactly the trap
 # that made the naive per-row test on rib_against look far more significant
-# than a regime-correct one. This applies ONLY to what counts toward a
-# book's shadow_mode promotion n floor -- the book's own balance/positions/
+# than a regime-correct one.
+#
+# 2026-09-2X CORRECTION: this originally worked by SKIPPING shadow_mode
+# recording for every day but the first of a regime -- which fixed the n
+# floor's sample-size inflation but fed shadow_mode's significance test a
+# biased "first day of every regime" sample (never the calmer/messier later
+# days a regime settles into), and threw away real settled-trade evidence
+# permanently. The correct fix, and what this now does instead: ALWAYS
+# record every real evaluation, but TAG it with a regime_cluster identifier
+# so shadow_mode.check_promotion_readiness()'s cluster_aware bootstrap (see
+# src/shadow_mode.py) can count distinct regimes toward the n floor AND
+# account for within-regime correlation in the p-value itself, using every
+# real data point rather than one biased row per regime. This applies ONLY
+# to shadow_mode's promotion bookkeeping -- the book's own balance/positions/
 # WR/PF in <book_id>_positions.csv and <book_id>_state.json always reflect
-# every real trade it took, regardless of this dedup.
+# every real trade it took, regardless of this tagging.
 
 _REGIME_GAP_DAYS = 3  # a normal weekend gap still counts as the same regime
 
@@ -512,42 +524,53 @@ def _save_regime_tracker(book_id: str, tracker: dict) -> None:
     financials.atomic_write_json(_regime_tracker_path(book_id), tracker)
 
 
-def _regime_dedup_allows_recording(book_id: str, pair: str, direction: str,
-                                    would_fire: bool, event_date_str: str) -> bool:
-    """True the first time a NEW regime is seen for this (pair, direction,
-    would_fire) combination -- i.e. this event should count toward the
-    promotion n floor. False for a continuation of an already-counted
-    regime. Always extends the tracked regime's "last seen" date regardless
-    of the return value, so a long-running regime keeps being recognised as
-    ongoing rather than spawning a "new" regime on every call.
+def _regime_cluster_tag(book_id: str, pair: str, direction: str,
+                         would_fire: bool, event_date_str: str) -> str:
+    """Returns a stable identifier shared by every evaluation belonging to
+    the SAME underlying regime for this (pair, direction, would_fire)
+    combination -- i.e. no gap larger than _REGIME_GAP_DAYS calendar days
+    since the last one seen. Callers ALWAYS record the evaluation
+    regardless of this tag (see module note above) -- this only tells
+    shadow_mode's cluster bootstrap which evaluations are NOT independent
+    of each other, so its significance test can account for that honestly
+    instead of a naive per-row test over-counting one long regime as many
+    independent samples.
+
+    Always advances the tracked regime's "last seen" date. Fails safe on
+    an unparseable date by returning a tag unique to this single call --
+    never collides with a real regime, and shadow_mode treats an
+    unrecognised/unique tag as its own singleton cluster, degrading to,
+    never below, per-row rigor for that one entry.
 
     Known limitation, disclosed rather than hidden: this assumes candidates
     settle in roughly chronological order (true in practice under the
     normal monitor cadence) -- it is not a hard guarantee against
-    out-of-order settlement. Fails OPEN (returns True, i.e. records it) on
-    any unparseable date, since silently dropping real evidence is worse
-    than occasionally over-counting one edge case.
+    out-of-order settlement.
     """
+    key = f"{pair}_{direction}_{would_fire}"
     try:
         event_date = datetime.strptime(event_date_str[:10], "%Y-%m-%d").date()
     except (ValueError, TypeError):
-        return True
+        return f"{key}_unparseable_{event_date_str}"
 
     tracker = _load_regime_tracker(book_id)
-    key = f"{pair}_{direction}_{would_fire}"
     entry = tracker.get(key)
-    is_new_regime = True
+    gap_ok = False
     if entry and entry.get("last_date"):
         try:
             last_date = datetime.strptime(entry["last_date"], "%Y-%m-%d").date()
-            if (event_date - last_date).days <= _REGIME_GAP_DAYS:
-                is_new_regime = False
+            gap_ok = (event_date - last_date).days <= _REGIME_GAP_DAYS
         except (ValueError, TypeError):
-            pass
+            gap_ok = False
 
-    tracker[key] = {"last_date": event_date_str[:10]}
+    if gap_ok:
+        regime_num = entry.get("regime_num", 1)
+    else:
+        regime_num = int(entry.get("regime_num", 0)) + 1 if entry else 1
+
+    tracker[key] = {"last_date": event_date_str[:10], "regime_num": regime_num}
     _save_regime_tracker(book_id, tracker)
-    return is_new_regime
+    return f"{key}_r{regime_num}"
 
 
 # ─── Candidate registration + per-book position opening ─────────────────────
