@@ -134,7 +134,7 @@ def register_rule(rule_name: str, description: str,
                    min_n_fire: int = None, min_n_no_fire: int = None,
                    alpha: float = DEFAULT_ALPHA,
                    pf_max_fire: float = None, pf_min_fire: float = None,
-                   pf_min_gap: float = None) -> dict:
+                   pf_min_gap: float = None, cluster_aware: bool = False) -> dict:
     """Register a new candidate rule, virtual-book configuration, or
     specialist-agent signal for shadow-mode evaluation.
 
