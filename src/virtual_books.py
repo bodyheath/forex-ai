@@ -460,6 +460,29 @@ BOOKS: dict[str, BookConfig] = {
         _elig_g_mechanical_reversion,
         regime_aware_promotion=True,
     ),
+    "H_oscillator_extremity": BookConfig(
+        "H_oscillator_extremity",
+        "Oscillator-extremity pilot: osc_agrees ALONE (no ribbon check), no "
+        "confidence floor, no dd_mode gate, no LLM call -- Book G's own "
+        "population is a strict subset of this broader signal (round 4 of "
+        "the edge-mining research loop, 2026-09-26). Runs head-to-head "
+        "against Book G on the same real candidates to test whether "
+        "ribbon-against adds real value on top of oscillator extremity.",
+        _elig_h_oscillator_extremity,
+        regime_aware_promotion=True,
+    ),
+    "I_bollinger_extremity": BookConfig(
+        "I_bollinger_extremity",
+        "Bollinger-Band-extremity pilot: bollinger_extreme_agrees, no "
+        "confidence floor, no dd_mode gate, no LLM call -- a genuinely "
+        "different indicator family from Books G/H's oscillators, "
+        "independently validated through discovery/holdout/cluster-"
+        "bootstrap in round 4 of the edge-mining research loop "
+        "(2026-09-26), with materially lower population overlap against "
+        "every other validated signal so far.",
+        _elig_i_bollinger_extremity,
+        regime_aware_promotion=True,
+    ),
 }
 
 
