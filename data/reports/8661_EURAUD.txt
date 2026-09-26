@@ -1,0 +1,24 @@
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Downtrend structure (price < SMA50 < SMA200) with ALIGNED_BEAR ribbon and pin bar at key level provides weak directional bias, but MTF conflict (W:BUY vs D:NEUTRAL vs 4H:SELL, conf=1/3) and neutral RSI=47.7 in downtrend context prevent high-confidence entry.
+RISK_FACTORS: MTF disagreement (weekly uptrend vs 4-hour sell signal) creates directional ambiguity; RSI=47.7 neutral in downtrend offers no oscillator confluence confirmation (stoch/CCI both mid-range, no triple or partial buy/sell signal).
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly BUY + daily NEUTRAL + 4H SELL fails the requirement that weekly AND daily both agree (conf <2/3). No trade setup valid under multi-timeframe consensus rule.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI=47.7 in confirmed downtrend (price < SMA50

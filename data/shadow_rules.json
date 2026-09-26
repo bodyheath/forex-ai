@@ -1922,6 +1922,32 @@
           "market_regime": "trending_risk_on",
           "closed_at": "2026-09-23 05:10:59"
         }
+      },
+      {
+        "timestamp": "2026-09-25T05:10:34.868032+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 66.2,
+        "context": {
+          "id": "3177",
+          "pair": "AUD/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-25 05:10:34"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T05:10:36.136106+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 79.3,
+        "context": {
+          "id": "3211",
+          "pair": "NZD/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-25 05:10:36"
+        }
       }
     ]
   },
@@ -6011,6 +6037,54 @@
           "direction": "BUY",
           "reject_reason": "eligibility"
         }
+      },
+      {
+        "timestamp": "2026-09-25T12:31:34.012255+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 8.1,
+        "context": {
+          "candidate_id": 63,
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T12:31:34.197244+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 79.7,
+        "context": {
+          "candidate_id": 65,
+          "pair": "CHF/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T13:31:15.832177+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -96.9,
+        "context": {
+          "candidate_id": 180,
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T13:31:15.993543+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -96.9,
+        "context": {
+          "candidate_id": 183,
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -7447,6 +7521,54 @@
           "direction": "BUY",
           "reject_reason": "eligibility"
         }
+      },
+      {
+        "timestamp": "2026-09-25T12:31:34.033897+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 8.1,
+        "context": {
+          "candidate_id": 63,
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T12:31:34.219070+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 79.7,
+        "context": {
+          "candidate_id": 65,
+          "pair": "CHF/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T13:31:15.851489+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -96.9,
+        "context": {
+          "candidate_id": 180,
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T13:31:16.012862+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -96.9,
+        "context": {
+          "candidate_id": 183,
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -8844,6 +8966,54 @@
         "context": {
           "candidate_id": 173,
           "pair": "NZD/USD",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T12:31:34.056530+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 8.1,
+        "context": {
+          "candidate_id": 63,
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T12:31:34.240668+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 79.7,
+        "context": {
+          "candidate_id": 65,
+          "pair": "CHF/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T13:31:15.870906+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -96.9,
+        "context": {
+          "candidate_id": 180,
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T13:31:16.032123+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -96.9,
+        "context": {
+          "candidate_id": 183,
+          "pair": "CAD/JPY",
           "direction": "BUY",
           "reject_reason": "eligibility"
         }
@@ -10266,6 +10436,52 @@
           "direction": "BUY",
           "reject_reason": "eligibility"
         }
+      },
+      {
+        "timestamp": "2026-09-25T12:31:34.077996+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 8.1,
+        "context": {
+          "candidate_id": 63,
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T12:31:34.262806+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 79.7,
+        "context": {
+          "candidate_id": 65,
+          "pair": "CHF/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T13:31:15.789912+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -96.9,
+        "context": {
+          "candidate_id": 180,
+          "pair": "CAD/JPY",
+          "direction": "BUY"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T13:31:15.950453+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -96.9,
+        "context": {
+          "candidate_id": 183,
+          "pair": "CAD/JPY",
+          "direction": "BUY"
+        }
       }
     ]
   },
@@ -11644,6 +11860,52 @@
           "pair": "NZD/USD",
           "direction": "BUY",
           "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T12:31:34.099463+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 8.1,
+        "context": {
+          "candidate_id": 63,
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T12:31:34.296873+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 79.7,
+        "context": {
+          "candidate_id": 65,
+          "pair": "CHF/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T13:31:15.810410+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -96.9,
+        "context": {
+          "candidate_id": 180,
+          "pair": "CAD/JPY",
+          "direction": "BUY"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T13:31:15.971649+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -96.9,
+        "context": {
+          "candidate_id": 183,
+          "pair": "CAD/JPY",
+          "direction": "BUY"
         }
       }
     ]
@@ -20870,6 +21132,54 @@
           "direction": "BUY",
           "reject_reason": "eligibility"
         }
+      },
+      {
+        "timestamp": "2026-09-25T12:31:34.120684+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 8.1,
+        "context": {
+          "candidate_id": 63,
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T12:31:34.444817+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 79.7,
+        "context": {
+          "candidate_id": 65,
+          "pair": "CHF/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T13:31:15.890086+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -96.9,
+        "context": {
+          "candidate_id": 180,
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T13:31:16.051521+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -96.9,
+        "context": {
+          "candidate_id": 183,
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -22336,6 +22646,114 @@
           "pair": "AUD/USD",
           "direction": "SELL",
           "tech_score": "4"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T05:10:34.424624+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 1.4,
+        "context": {
+          "id": "3136",
+          "pair": "GBP/CAD",
+          "direction": "BUY",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T05:10:34.644907+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 70.5,
+        "context": {
+          "id": "3140",
+          "pair": "GBP/AUD",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T05:10:34.890265+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 66.2,
+        "context": {
+          "id": "3177",
+          "pair": "AUD/JPY",
+          "direction": "BUY",
+          "tech_score": "8"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T05:10:35.109729+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 77.3,
+        "context": {
+          "id": "3182",
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "tech_score": "8"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T05:10:35.329182+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 23.4,
+        "context": {
+          "id": "3192",
+          "pair": "AUD/CAD",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T05:10:35.551911+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 12.2,
+        "context": {
+          "id": "3195",
+          "pair": "GBP/CAD",
+          "direction": "BUY",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T05:10:35.915856+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -35.6,
+        "context": {
+          "id": "3200",
+          "pair": "EUR/CAD",
+          "direction": "SELL",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T05:10:36.159044+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 79.3,
+        "context": {
+          "id": "3211",
+          "pair": "NZD/JPY",
+          "direction": "BUY",
+          "tech_score": "8"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T05:10:37.124146+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -14.8,
+        "context": {
+          "id": "3290",
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "tech_score": "9"
         }
       }
     ]

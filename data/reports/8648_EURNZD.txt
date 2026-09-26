@@ -1,0 +1,25 @@
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar rejection at key level + RSI 65.6 overbought + D1 SELL signal conflict with 4H uptrend; ALIGNED_BULL ribbon suggests continuation risk, limiting conviction.
+RISK_FACTORS: (1) Ribbon fully bullish (5/5 aligned) and 4H uptrend structure contradicts D1 SELL — MTF conf only 1/3; (2) NZD data stale (1697d) and neutral, reducing fundamental weight; price may extend higher before reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 2.0110
+ENTRY_TRIGGER_REASON: Break above intraday resistance (4H inside bar rejection zone) to confirm 4H momentum exhaustion before shorting.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**Rationale:**
+
+**MTF Conflict (Critical):** D1:SELL and 4H:NEUTRAL do not form the required "both agree" condition — MTF confidence is only 1/3 (45% weight = fail). Per MTF rule, this alone triggers **TRADE_THIS: NO** regardless of other confluence.
+
+**Technical (7/10, adjusted down from

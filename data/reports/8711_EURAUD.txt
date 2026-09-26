@@ -1,0 +1,25 @@
+PAIR: EUR/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Confirmed bearish structure (death cross, ALIGNED_BEAR ribbon, 4H:SELL) conflicts with weekly uptrend and pin bar at key level; MTF disagreement (conf 1/3) and neutral D1 RSI reduce conviction—sell setup lacks threshold-crossing confidence.
+RISK_FACTORS: [MTF disagreement (W:BUY vs 4H:SELL) creates directional ambiguity; pin bar at 23.6% Fib near price suggests reversal risk if weekly uptrend reasserts]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF conf=1/3 (only 4H agrees with SELL); weekly uptrend contradicts. TRADE_THIS threshold requires ≥2/3 MTF agreement + confidence ≥7. Current confidence 5/10 fails both gates.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**MTF Conflict (Critical):**
+- Monthly: BUY | Weekly: BUY | Daily: NEUTRAL | 4H: SELL
+- Only 4H agrees with SELL direction → conf = 1/3 = **

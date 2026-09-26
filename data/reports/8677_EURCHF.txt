@@ -1,0 +1,23 @@
+PAIR: EUR/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: EUR/CHF shows D1 uptrend structure (price > SMA50 > SMA200) with 4H double-bottom reversal, but MTF alignment fails—4H sells while D1/Weekly/Monthly neutral, blocking high-confidence trade.
+RISK_FACTORS: [1: MTF conflict (4H:SELL vs D1:NEUTRAL) violates core MTF rule—trade lacks directional unanimity across timeframes. 2: Oscillator silence (OSC=NONE; Stoch 16.6 oversold but CCI −54.4 bearish) leaves no technical confluence to confirm reversal; RSI 47.3 is neutral, not bullish.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule enforced—4H and D1 do not both agree (4H:SELL, D1:NEUTRAL). Confidence = 0/3 MTF agreement weight 80% disqualifies entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+1. **TECHNICAL_SCORE = 5**: D1 T_sig baseline is NEUTRAL_3; 4H

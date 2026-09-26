@@ -402,7 +402,10 @@ BOOKS: dict[str, BookConfig] = {
         "Trades purely on the Sentiment Agent's verdict (2026-09-06) -- "
         "fully isolated from grade/dd_mode/confidence, no backtest behind it, "
         "live-only evidence (see shadow_mode.py's sentiment_agent_supports registration). "
-        "RETIRED 2026-09-2X -- see config/known_dormant.md.",
+        "RETIRED 2026-09-2X -- see config/known_dormant.md. Left registered "
+        "(not removed) for historical reference; will now permanently show "
+        "zero fires at zero real API cost, since sentiment_agent.evaluate() "
+        "itself short-circuits to UNAVAILABLE.",
         _elig_f_sentiment_only,
     ),
     "G_mechanical_reversion": BookConfig(

@@ -1,0 +1,29 @@
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: Pin bar at key level with RSI neutral and GBP rate differential support offers limited directional conviction in a confused MTF structure where monthly sell and 4H neutral override daily buy.
+
+RISK_FACTORS: (1) MTF disagreement — only daily agrees with BUY; monthly is SELL and 4H/weekly are NEUTRAL (conf=1/3, 40% weight), violating the ≥2/3 rule. (2) Ribbon LEANING_BEAR (4/5 aligned downward) contradicts BUY direction; 4H is in downtrend structure (price < SMA50 < SMA200 death-cross), signalling continuation risk.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**Rationale:**
+
+1. **MTF VETO**: MTF rule requires *both* weekly AND daily to agree on direction for TRADE_THIS=YES. Here, W:NEUTRAL + D:BUY = disagreement (conf=1/3 << 2/3 threshold). Monthly SELL adds downside friction. **This alone blocks trading

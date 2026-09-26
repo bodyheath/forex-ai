@@ -1,0 +1,24 @@
+```
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with D1 BUY signal and bullish 4H double bottom offer confluence despite mixed MTF and leaning-bear ribbon weakening momentum.
+RISK_FACTORS: [MTF conf=1/3 (only D:BUY aligns; W:NEUTRAL, M:SELL conflict → trend uncertainty); Ribbon LEANING_BEAR and price below SMA50 (1.8670 < 1.8789) signal short-term structural weakness]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.8607
+ENTRY_TRIGGER_REASON: Bounce from FIB SL (1.8607) with RSI oversold (41.5) and pin bar confirmation would constitute triple-confluence entry as risk recedes
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**REASONING:**
+
+**MTF GATE FAIL (CRITICAL):**  
+MTF conf = 1/3 only (D:BUY vs W:NEUTRAL + M:SELL). Rules state: *"if weekly AND daily don't both agree on direction, TRADE_THIS NO regardless."* M:SELL conflicts directly. This alone blocks immediate trade execution
