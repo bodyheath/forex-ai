@@ -201,11 +201,11 @@ class TestRegimeTaggingWiredIntoSettlement(unittest.TestCase):
         })
         vb._write_csv(vb._positions_path("REGIME_TEST"), positions, vb.POSITION_FIELDS)
 
-    def test_book_balance_updates_for_every_trade_even_when_regime_deduped(self):
+    def test_book_records_every_trade_tagged_with_shared_regime_cluster(self):
         self._make_position(1, "EUR/USD", "BUY", "2026-09-01 00:00:00")
         self._make_position(2, "EUR/USD", "BUY", "2026-09-02 00:00:00")  # same regime as #1
 
-        with patch("src.shadow_mode.register_rule"), \
+        with patch("src.shadow_mode.register_rule") as mock_register, \
              patch("src.shadow_mode.record_evaluation") as mock_record:
             vb._settle_book_positions(1, 50.0, "WIN", log_fn=lambda m: None)
             vb._settle_book_positions(2, 30.0, "WIN", log_fn=lambda m: None)
@@ -213,9 +213,19 @@ class TestRegimeTaggingWiredIntoSettlement(unittest.TestCase):
         state = vb.load_book_state("REGIME_TEST")
         self.assertEqual(state["wins"], 2, "both real trades must count toward the book's own WR")
 
-        # shadow_mode.record_evaluation should have been called only ONCE
-        # (candidate #1, the new regime) -- #2 is a same-regime continuation.
-        self.assertEqual(mock_record.call_count, 1)
+        # Both real trades must be recorded now (no more skip-recording) --
+        # the ONLY difference for a regime-aware book is the shared tag.
+        self.assertEqual(mock_record.call_count, 2,
+                          "every real trade must be recorded, never skipped, even within one regime")
+        ctx1 = mock_record.call_args_list[0].kwargs["context"]
+        ctx2 = mock_record.call_args_list[1].kwargs["context"]
+        self.assertIn("regime_cluster", ctx1)
+        self.assertEqual(ctx1["regime_cluster"], ctx2["regime_cluster"],
+                          "same-regime continuations must share one cluster tag")
+
+        # register_rule must be called with cluster_aware=True for a
+        # regime_aware_promotion book.
+        self.assertTrue(mock_register.call_args_list[0].kwargs.get("cluster_aware"))
 
     def test_non_regime_aware_book_records_every_trade(self):
         plain_book = vb.BookConfig("PLAIN", "test", lambda *a, **kw: True)
