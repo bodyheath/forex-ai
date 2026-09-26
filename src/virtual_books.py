@@ -359,11 +359,12 @@ class BookConfig:
     book_id: str
     description: str
     eligibility: Callable
-    # 2026-09-2X: opt-in, default-off. When True, this book's shadow_mode
-    # promotion-count recording (NOT its own balance/positions/WR/PF, which
-    # always reflect every real trade regardless) is deduplicated to once
-    # per REGIME rather than once per trade -- see
-    # _regime_dedup_allows_recording()'s docstring for the full reasoning.
+    # 2026-09-2X: opt-in, default-off. When True, every real evaluation is
+    # still recorded (this book's own balance/positions/WR/PF always reflect
+    # every real trade regardless), but shadow_mode registers this rule as
+    # cluster_aware=True and each evaluation is tagged with a regime_cluster
+    # identifier -- see _regime_cluster_tag()'s docstring and
+    # shadow_mode.py's cluster_aware docstring for the full mechanism.
     # Exists because a naive per-row n floor let one slow-moving ribbon/
     # oscillator regime (confirmed: up to 232 consecutive calendar days in
     # the real backtest data) masquerade as many independent pieces of
