@@ -480,11 +480,17 @@ def check_promotion_readiness(rule_name: str) -> dict:
         )
 
     promotable = all(criteria.values())
-    ready_for_review = (n_decisive >= rule.get("min_n", DEFAULT_MIN_N)) or (days_elapsed >= rule["max_days"])
+    # For a cluster-aware rule, n_fire+n_no_fire already IS the distinct-
+    # cluster count -- use that for ready_for_review too, so this "worth a
+    # look" signal doesn't fire early on inflated raw-evaluation counts
+    # while promotable correctly requires cluster-level evidence.
+    review_n = (n_fire + n_no_fire) if rule.get("cluster_aware") else n_decisive
+    ready_for_review = (review_n >= rule.get("min_n", DEFAULT_MIN_N)) or (days_elapsed >= rule["max_days"])
 
     return {
         "registered":         True,
         "description":        rule["description"],
+        "cluster_aware":      bool(rule.get("cluster_aware")),
         "n_decisive":         n_decisive,
         "n_fire":             n_fire,
         "n_no_fire":          n_no_fire,
