@@ -429,7 +429,6 @@ def check_promotion_readiness(rule_name: str) -> dict:
 
     fires    = [e for e in decisive if e["would_fire"]]
     no_fires = [e for e in decisive if not e["would_fire"]]
-    n_fire, n_no_fire = len(fires), len(no_fires)
 
     min_n_fire    = rule.get("min_n_fire", rule.get("min_n", DEFAULT_MIN_N))
     min_n_no_fire = rule.get("min_n_no_fire", rule.get("min_n", DEFAULT_MIN_N))
@@ -438,13 +437,29 @@ def check_promotion_readiness(rule_name: str) -> dict:
     n_active = _active_rule_count(state)
     corrected_alpha = alpha / n_active
 
-    wr_fire, wr_no_fire = _wr(fires), _wr(no_fires)
     pf_fire, pf_no_fire = _profit_factor(fires), _profit_factor(no_fires)
 
-    wins_fire    = sum(1 for e in fires if _is_win(e))
-    wins_no_fire = sum(1 for e in no_fires if _is_win(e))
-    z_result = _ztest(wins_fire, n_fire, wins_no_fire, n_no_fire)
-    p_value = z_result[0] if z_result else None
+    if rule.get("cluster_aware"):
+        # See register_rule()'s cluster_aware docstring and
+        # _cluster_bootstrap_stats() -- n_fire/n_no_fire here are DISTINCT
+        # REGIME CLUSTER counts, and p_value comes from a cluster bootstrap,
+        # not a plain z-test on raw (regime-correlated) counts.
+        cluster_result = _cluster_bootstrap_stats(fires, no_fires)
+        if cluster_result is not None:
+            p_value, n_fire, n_no_fire, wr_fire_raw, wr_no_fire_raw = cluster_result
+            wr_fire = round(wr_fire_raw, 4)
+            wr_no_fire = round(wr_no_fire_raw, 4)
+        else:
+            p_value = None
+            n_fire, n_no_fire = 0, 0
+            wr_fire, wr_no_fire = _wr(fires), _wr(no_fires)
+    else:
+        n_fire, n_no_fire = len(fires), len(no_fires)
+        wr_fire, wr_no_fire = _wr(fires), _wr(no_fires)
+        wins_fire    = sum(1 for e in fires if _is_win(e))
+        wins_no_fire = sum(1 for e in no_fires if _is_win(e))
+        z_result = _ztest(wins_fire, n_fire, wins_no_fire, n_no_fire)
+        p_value = z_result[0] if z_result else None
 
     criteria = {
         "n_fire_ok":    n_fire >= min_n_fire,
