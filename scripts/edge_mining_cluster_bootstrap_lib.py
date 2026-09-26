@@ -80,10 +80,15 @@ def cluster_bootstrap_p_value(fire_df: pd.DataFrame, nofire_df: pd.DataFrame,
     plain pandas Series instead of shadow_mode evaluation-dict lists.
     Resamples CLUSTER IDS (not rows) with replacement, preserving each
     cluster's real internal size, computing an empirical two-sided p-value
-    for the fire-vs-nofire win-rate difference.
+    AND a 95% percentile CI for the fire-vs-nofire win-rate difference,
+    both from the SAME bootstrap draws (never a separate re-run with a
+    different seed, so the reported p-value and CI are always mutually
+    consistent).
 
-    Returns (p_value, n_clusters_fire, n_clusters_nofire, wr_fire, wr_nofire)
-    or None if either side has no clusters.
+    Returns a dict: p_value, ci_low, ci_high (in WR-fraction units, e.g.
+    0.062 = +6.2pp), n_clusters_fire, n_clusters_nofire, n_rows_fire,
+    n_rows_nofire, wr_fire, wr_nofire -- or None if either side has no
+    clusters.
     """
     def _cluster_map(clusters, wins):
         out = {}
@@ -127,7 +132,15 @@ def cluster_bootstrap_p_value(fire_df: pd.DataFrame, nofire_df: pd.DataFrame,
     frac_le_0 = sum(1 for d in diffs if d <= 0) / n_valid
     frac_ge_0 = sum(1 for d in diffs if d >= 0) / n_valid
     p_value = min(2 * min(frac_le_0, frac_ge_0), 1.0)
-    return p_value, len(fire_ids), len(nofire_ids), wr_fire, wr_nofire
+    diffs_sorted = sorted(diffs)
+    ci_low = diffs_sorted[int(0.025 * n_valid)]
+    ci_high = diffs_sorted[min(int(0.975 * n_valid), n_valid - 1)]
+    return {
+        "p_value": p_value, "ci_low": ci_low, "ci_high": ci_high,
+        "n_clusters_fire": len(fire_ids), "n_clusters_nofire": len(nofire_ids),
+        "n_rows_fire": total_fire_n, "n_rows_nofire": total_nofire_n,
+        "wr_fire": wr_fire, "wr_nofire": wr_nofire,
+    }
 
 
 def cluster_bootstrap_for_condition(df: pd.DataFrame, condition: pd.Series,
@@ -136,7 +149,7 @@ def cluster_bootstrap_for_condition(df: pd.DataFrame, condition: pd.Series,
                                      n_boot: int = 2000, seed: int = 42):
     """Convenience wrapper: given a full (decisive-only, WIN/LOSS) dataframe
     and a boolean condition Series aligned to it, assigns regime clusters
-    and runs the cluster bootstrap. Returns the same tuple as
+    and runs the cluster bootstrap. Returns the same dict as
     cluster_bootstrap_p_value(), or None."""
     condition = condition.reindex(df.index).fillna(False)
     clusters = assign_regime_clusters(df, condition, group_cols=group_cols, gap_days=gap_days)
