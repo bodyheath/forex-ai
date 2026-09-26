@@ -60,14 +60,19 @@ def run_one(label, df, condition):
     if result is None:
         print(f"[{label}] insufficient clustered data -- skipped")
         return None
-    p, n_fire, n_nofire, wr_fire, wr_nofire = result
+    effect_pp = (result["wr_fire"] - result["wr_nofire"]) * 100
+    ci_low_pp = result["ci_low"] * 100
+    ci_high_pp = result["ci_high"] * 100
     print(f"[{label}]")
     print(f"    regime stats (fire side): n_clusters={stats['n_clusters']} "
           f"n_rows={stats['n_rows']} max_cluster={stats['max_cluster_size']} "
           f"mean_cluster={stats['mean_cluster_size']:.1f} median={stats['median_cluster_size']:.1f}")
-    print(f"    n_fire_clusters={n_fire} n_nofire_clusters={n_nofire} "
-          f"WR_fire={wr_fire*100:.1f}% WR_nofire={wr_nofire*100:.1f}%  p={p:.5f}")
-    return p, n_fire, n_nofire, wr_fire, wr_nofire
+    print(f"    n_fire: {result['n_rows_fire']} raw trades / {result['n_clusters_fire']} clusters   "
+          f"n_nofire: {result['n_rows_nofire']} raw trades / {result['n_clusters_nofire']} clusters")
+    print(f"    WR_fire={result['wr_fire']*100:.1f}% WR_nofire={result['wr_nofire']*100:.1f}%  "
+          f"effect={effect_pp:+.1f}pp  CI(cluster-boot)=[{ci_low_pp:+.1f}, {ci_high_pp:+.1f}]pp  "
+          f"p={result['p_value']:.5f}")
+    return result
 
 
 def main():
