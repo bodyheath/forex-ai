@@ -308,6 +308,79 @@ def _ztest(wins_a: int, n_a: int, wins_b: int, n_b: int):
     return p_value, p1, p2
 
 
+def _cluster_key(evaluation: dict, index: int) -> str:
+    """The evaluation's real independence unit. Falls back to a per-
+    evaluation singleton key when context carries no "regime_cluster" --
+    never silently drops an evaluation, never pretends independence it
+    can't demonstrate either way."""
+    key = (evaluation.get("context") or {}).get("regime_cluster")
+    return key if key else f"__singleton_{index}"
+
+
+def _cluster_bootstrap_stats(fires: list, no_fires: list, n_boot: int = 2000,
+                              seed: int = 42):
+    """Cluster bootstrap over regime clusters -- resamples whole clusters
+    WITH REPLACEMENT, preserving each cluster's real internal size, so a
+    232-day regime is weighted by its real 232 observations in every
+    resample, not collapsed to one vote the way a naive "one record per
+    regime" dedup would. This is what makes the resulting p-value honest
+    about within-regime correlation, unlike a plain z-test run on
+    already-deduplicated counts (which fixes sample SIZE but not the test
+    itself -- exactly the gap this function closes).
+
+    Returns (p_value, n_clusters_fire, n_clusters_no_fire, wr_fire,
+    wr_no_fire) or None if either side has no decisive clusters at all.
+    """
+    def _cluster_map(evals):
+        clusters: dict = {}
+        for i, e in enumerate(evals):
+            clusters.setdefault(_cluster_key(e, i), []).append(e)
+        return clusters
+
+    fire_clusters = _cluster_map(fires)
+    no_fire_clusters = _cluster_map(no_fires)
+    fire_ids = list(fire_clusters.keys())
+    no_fire_ids = list(no_fire_clusters.keys())
+    if not fire_ids or not no_fire_ids:
+        return None
+
+    def _wins_n(evals):
+        return sum(1 for e in evals if _is_win(e)), len(evals)
+
+    fire_wn = {k: _wins_n(v) for k, v in fire_clusters.items()}
+    no_fire_wn = {k: _wins_n(v) for k, v in no_fire_clusters.items()}
+
+    total_fire_w = sum(w for w, n in fire_wn.values())
+    total_fire_n = sum(n for w, n in fire_wn.values())
+    total_no_fire_w = sum(w for w, n in no_fire_wn.values())
+    total_no_fire_n = sum(n for w, n in no_fire_wn.values())
+    if total_fire_n == 0 or total_no_fire_n == 0:
+        return None
+    wr_fire = total_fire_w / total_fire_n
+    wr_no_fire = total_no_fire_w / total_no_fire_n
+
+    rng = random.Random(seed)
+    diffs = []
+    for _ in range(n_boot):
+        f_sample = [rng.choice(fire_ids) for _ in range(len(fire_ids))]
+        nf_sample = [rng.choice(no_fire_ids) for _ in range(len(no_fire_ids))]
+        fw = sum(fire_wn[k][0] for k in f_sample)
+        fn = sum(fire_wn[k][1] for k in f_sample)
+        nfw = sum(no_fire_wn[k][0] for k in nf_sample)
+        nfn = sum(no_fire_wn[k][1] for k in nf_sample)
+        if fn == 0 or nfn == 0:
+            continue
+        diffs.append(fw / fn - nfw / nfn)
+    if not diffs:
+        return None
+    n_valid = len(diffs)
+    frac_le_0 = sum(1 for d in diffs if d <= 0) / n_valid
+    frac_ge_0 = sum(1 for d in diffs if d >= 0) / n_valid
+    p_value = min(2 * min(frac_le_0, frac_ge_0), 1.0)
+
+    return p_value, len(fire_ids), len(no_fire_ids), wr_fire, wr_no_fire
+
+
 def _active_rule_count(state: dict) -> int:
     """How many rules are currently 'in flight' -- registered and not yet
     promoted. This is the Bonferroni divisor: the more of these exist at
