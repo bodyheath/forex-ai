@@ -300,6 +300,36 @@ def _elig_e_no_dd_gate(r, quality_grades, dd_mode, conf_threshold, eff_conf_fn, 
     return dd_allows_fn(r, "normal", quality_grades, conf_threshold, log_fn=lambda m: None)
 
 
+def _elig_g_mechanical_reversion(r, quality_grades, dd_mode, conf_threshold, eff_conf_fn, dd_allows_fn) -> bool:
+    """Book G (2026-09-2X): live pilot of the mechanical-reversion signal
+    validated in the edge-mining research loop (see
+    PROPOSAL_mechanical_reversion_engine.md, and src/mechanical_reversion.py
+    for the exact, already-tested pure logic reused here unchanged) --
+    rib_against AND osc_agrees. No confidence floor, no grade check, no
+    dd_mode gate, no LLM call required to evaluate: this is a faithful live
+    implementation of exactly what was backtested, not a redesign, so it
+    deliberately does NOT restrict to BUY-only -- the discovery-vs-holdout
+    currency-attribution instability found for that restriction (see the
+    stress-test conversation) is not resolved, and baking an unresolved
+    refinement into the live rule would bias exactly the forward evidence
+    meant to resolve it. Fully isolated like Book F, for the same reason:
+    there is no dd_mode/grade concept in the backtest this reproduces.
+
+    Entry/stop/target are NOT computed here -- every book shares the same
+    candidates.csv row (the real mechanical 2:1 R:R construction already
+    applied to every candidate, identical to what cascade.py uses for real
+    trades and to scripts/mechanical_edge_mining_dataset.py's backtest
+    construction). This function only decides whether Book G takes it.
+    """
+    from src import mechanical_reversion as _mr
+    direction = (r.get("parsed") or {}).get("direction", "")
+    bundle = r.get("bundle") or {}
+    daily = ((bundle.get("technical") or {}).get("daily") or {})
+    ribbon_status = (daily.get("ribbon") or {}).get("status", "")
+    osc_direction = (daily.get("oscillator_confluence") or {}).get("direction", "")
+    return _mr.mechanical_reversion_fires(direction, ribbon_status, osc_direction)
+
+
 def _elig_f_sentiment_only(r, quality_grades, dd_mode, conf_threshold, eff_conf_fn, dd_allows_fn) -> bool:
     """Book F: trades purely on the Sentiment Agent's verdict (2026-09-06,
     Phase 01B specialist #3) -- ignores grade/dd_mode/conf_threshold/eff_conf
@@ -329,6 +359,17 @@ class BookConfig:
     book_id: str
     description: str
     eligibility: Callable
+    # 2026-09-2X: opt-in, default-off. When True, every real evaluation is
+    # still recorded (this book's own balance/positions/WR/PF always reflect
+    # every real trade regardless), but shadow_mode registers this rule as
+    # cluster_aware=True and each evaluation is tagged with a regime_cluster
+    # identifier -- see _regime_cluster_tag()'s docstring and
+    # shadow_mode.py's cluster_aware docstring for the full mechanism.
+    # Exists because a naive per-row n floor let one slow-moving ribbon/
+    # oscillator regime (confirmed: up to 232 consecutive calendar days in
+    # the real backtest data) masquerade as many independent pieces of
+    # evidence, exactly the trap a cluster-bootstrap re-analysis caught.
+    regime_aware_promotion: bool = False
 
 
 BOOKS: dict[str, BookConfig] = {
@@ -367,6 +408,15 @@ BOOKS: dict[str, BookConfig] = {
         "zero fires at zero real API cost, since sentiment_agent.evaluate() "
         "itself short-circuits to UNAVAILABLE.",
         _elig_f_sentiment_only,
+    ),
+    "G_mechanical_reversion": BookConfig(
+        "G_mechanical_reversion",
+        "Mechanical reversion pilot: rib_against AND osc_agrees, no confidence "
+        "floor, no dd_mode gate, no LLM call -- live implementation of the "
+        "signal validated in the 2026-09-2X edge-mining research loop "
+        "(see PROPOSAL_mechanical_reversion_engine.md)",
+        _elig_g_mechanical_reversion,
+        regime_aware_promotion=True,
     ),
 }
 
@@ -424,6 +474,104 @@ def load_book_state(book_id: str) -> dict:
 def save_book_state(state: dict) -> None:
     state["last_updated"] = _now_str()
     financials.atomic_write_json(_state_path(state["book_id"]), state)
+
+
+# ─── Regime-aware promotion-count tagging (2026-09-2X) ────────────────────────
+#
+# Why this exists: a real cluster-bootstrap re-analysis of the mechanical
+# edge-mining backtest found that ribbon/oscillator signals move in slow
+# regimes -- one real underlying trend can keep a (pair, direction)'s
+# rib_against reading True for weeks (confirmed: up to 232 consecutive
+# calendar days in the backtest data). A naive per-trade n floor in
+# shadow_mode.check_promotion_readiness() would let ONE such regime
+# masquerade as dozens of independent pieces of evidence, exactly the trap
+# that made the naive per-row test on rib_against look far more significant
+# than a regime-correct one.
+#
+# 2026-09-2X CORRECTION: this originally worked by SKIPPING shadow_mode
+# recording for every day but the first of a regime -- which fixed the n
+# floor's sample-size inflation but fed shadow_mode's significance test a
+# biased "first day of every regime" sample (never the calmer/messier later
+# days a regime settles into), and threw away real settled-trade evidence
+# permanently. The correct fix, and what this now does instead: ALWAYS
+# record every real evaluation, but TAG it with a regime_cluster identifier
+# so shadow_mode.check_promotion_readiness()'s cluster_aware bootstrap (see
+# src/shadow_mode.py) can count distinct regimes toward the n floor AND
+# account for within-regime correlation in the p-value itself, using every
+# real data point rather than one biased row per regime. This applies ONLY
+# to shadow_mode's promotion bookkeeping -- the book's own balance/positions/
+# WR/PF in <book_id>_positions.csv and <book_id>_state.json always reflect
+# every real trade it took, regardless of this tagging.
+
+_REGIME_GAP_DAYS = 3  # a normal weekend gap still counts as the same regime
+
+
+def _regime_tracker_path(book_id: str) -> Path:
+    return VBOOKS_DIR / f"{book_id}_regime_tracker.json"
+
+
+def _load_regime_tracker(book_id: str) -> dict:
+    path = _regime_tracker_path(book_id)
+    if not path.exists():
+        return {}
+    try:
+        import json
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _save_regime_tracker(book_id: str, tracker: dict) -> None:
+    financials.atomic_write_json(_regime_tracker_path(book_id), tracker)
+
+
+def _regime_cluster_tag(book_id: str, pair: str, direction: str,
+                         would_fire: bool, event_date_str: str) -> str:
+    """Returns a stable identifier shared by every evaluation belonging to
+    the SAME underlying regime for this (pair, direction, would_fire)
+    combination -- i.e. no gap larger than _REGIME_GAP_DAYS calendar days
+    since the last one seen. Callers ALWAYS record the evaluation
+    regardless of this tag (see module note above) -- this only tells
+    shadow_mode's cluster bootstrap which evaluations are NOT independent
+    of each other, so its significance test can account for that honestly
+    instead of a naive per-row test over-counting one long regime as many
+    independent samples.
+
+    Always advances the tracked regime's "last seen" date. Fails safe on
+    an unparseable date by returning a tag unique to this single call --
+    never collides with a real regime, and shadow_mode treats an
+    unrecognised/unique tag as its own singleton cluster, degrading to,
+    never below, per-row rigor for that one entry.
+
+    Known limitation, disclosed rather than hidden: this assumes candidates
+    settle in roughly chronological order (true in practice under the
+    normal monitor cadence) -- it is not a hard guarantee against
+    out-of-order settlement.
+    """
+    key = f"{pair}_{direction}_{would_fire}"
+    try:
+        event_date = datetime.strptime(event_date_str[:10], "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        return f"{key}_unparseable_{event_date_str}"
+
+    tracker = _load_regime_tracker(book_id)
+    entry = tracker.get(key)
+    gap_ok = False
+    if entry and entry.get("last_date"):
+        try:
+            last_date = datetime.strptime(entry["last_date"], "%Y-%m-%d").date()
+            gap_ok = (event_date - last_date).days <= _REGIME_GAP_DAYS
+        except (ValueError, TypeError):
+            gap_ok = False
+
+    if gap_ok:
+        regime_num = entry.get("regime_num", 1)
+    else:
+        regime_num = int(entry.get("regime_num", 0)) + 1 if entry else 1
+
+    tracker[key] = {"last_date": event_date_str[:10], "regime_num": regime_num}
+    _save_regime_tracker(book_id, tracker)
+    return f"{key}_r{regime_num}"
 
 
 # ─── Candidate registration + per-book position opening ─────────────────────
@@ -820,11 +968,18 @@ def _settle_book_positions(candidate_id: int, net_pips: float, status: str, log_
                 _sm.register_rule(
                     f"vbook_{book_id}",
                     description=f"Virtual book {book_id}: {BOOKS[book_id].description}",
+                    cluster_aware=BOOKS[book_id].regime_aware_promotion,
                 )
+                _context = {"candidate_id": candidate_id, "pair": pos.get("pair"),
+                            "direction": pos.get("direction")}
+                if BOOKS[book_id].regime_aware_promotion:
+                    _context["regime_cluster"] = _regime_cluster_tag(
+                        book_id, pos.get("pair", ""), pos.get("direction", ""),
+                        True, pos.get("opened_at", ""),
+                    )
                 _sm.record_evaluation(
                     f"vbook_{book_id}", would_fire=True, outcome=status, net_pips=net_pips,
-                    context={"candidate_id": candidate_id, "pair": pos.get("pair"),
-                             "direction": pos.get("direction")},
+                    context=_context,
                 )
             except Exception as _sm_exc:
                 log_fn(f"[vbook:{book_id}] shadow_mode logging failed (non-fatal): {_sm_exc}")
@@ -855,11 +1010,18 @@ def _settle_book_rejections(candidate_id: int, net_pips: float, status: str, log
             _sm.register_rule(
                 f"vbook_{book_id}",
                 description=f"Virtual book {book_id}: {BOOKS[book_id].description}",
+                cluster_aware=BOOKS[book_id].regime_aware_promotion,
             )
+            _context = {"candidate_id": candidate_id, "pair": rej.get("pair"),
+                        "direction": rej.get("direction"), "reject_reason": rej.get("reason")}
+            if BOOKS[book_id].regime_aware_promotion:
+                _context["regime_cluster"] = _regime_cluster_tag(
+                    book_id, rej.get("pair", ""), rej.get("direction", ""),
+                    False, rej.get("recorded_at", ""),
+                )
             _sm.record_evaluation(
                 f"vbook_{book_id}", would_fire=False, outcome=status, net_pips=net_pips,
-                context={"candidate_id": candidate_id, "pair": rej.get("pair"),
-                         "direction": rej.get("direction"), "reject_reason": rej.get("reason")},
+                context=_context,
             )
             log_fn(f"[vbook:{book_id}] rejection of candidate #{candidate_id} settled {status} "
                    f"({net_pips:+.1f}p net, reason={rej.get('reason')})")

@@ -85,6 +85,7 @@ rebuilding when the first agent book is ready to be evaluated.
 """
 
 import math
+import random
 import sys
 from datetime import datetime, timezone
 
@@ -133,7 +134,7 @@ def register_rule(rule_name: str, description: str,
                    min_n_fire: int = None, min_n_no_fire: int = None,
                    alpha: float = DEFAULT_ALPHA,
                    pf_max_fire: float = None, pf_min_fire: float = None,
-                   pf_min_gap: float = None) -> dict:
+                   pf_min_gap: float = None, cluster_aware: bool = False) -> dict:
     """Register a new candidate rule, virtual-book configuration, or
     specialist-agent signal for shadow-mode evaluation.
 
@@ -162,6 +163,24 @@ def register_rule(rule_name: str, description: str,
     Leave PF params None to skip that check entirely (the general/default
     case -- most rules, including a first specialist-agent book, won't need
     one until there's a specific reason to require it).
+
+    cluster_aware: when True, check_promotion_readiness() treats each
+    evaluation's context["regime_cluster"] (if present) as its real
+    independence unit -- n_fire/n_no_fire count DISTINCT CLUSTERS, not raw
+    evaluations, and significance is a cluster bootstrap (resampling whole
+    clusters with replacement, preserving their real internal size) instead
+    of a plain two-proportion z-test on raw counts. Added 2026-09-2X after
+    a cluster-bootstrap re-analysis of the mechanical edge-mining backtest
+    found the naive per-row z-test on a slow-moving ribbon/oscillator signal
+    (regimes ran up to 232 consecutive calendar days) looked far more
+    significant than it really was -- counting distinct regimes toward the
+    n floor fixes "how many independent samples exist," but a plain
+    significance test on regime-deduplicated data would still be the same
+    trap in a new shape if it didn't ALSO account for within-regime
+    correlation and unequal regime sizes when computing the p-value itself.
+    Evaluations with no "regime_cluster" in context are each treated as
+    their own singleton cluster (fails safe -- degrades toward, never below,
+    the standard per-row rigor for those specific evaluations).
     """
     state = _load()
     if rule_name in state:
@@ -177,6 +196,7 @@ def register_rule(rule_name: str, description: str,
         "pf_max_fire":     pf_max_fire,
         "pf_min_fire":     pf_min_fire,
         "pf_min_gap":      pf_min_gap,
+        "cluster_aware":   cluster_aware,
         "promoted":        False,
         "evaluations":     [],
     }
@@ -288,6 +308,79 @@ def _ztest(wins_a: int, n_a: int, wins_b: int, n_b: int):
     return p_value, p1, p2
 
 
+def _cluster_key(evaluation: dict, index: int) -> str:
+    """The evaluation's real independence unit. Falls back to a per-
+    evaluation singleton key when context carries no "regime_cluster" --
+    never silently drops an evaluation, never pretends independence it
+    can't demonstrate either way."""
+    key = (evaluation.get("context") or {}).get("regime_cluster")
+    return key if key else f"__singleton_{index}"
+
+
+def _cluster_bootstrap_stats(fires: list, no_fires: list, n_boot: int = 2000,
+                              seed: int = 42):
+    """Cluster bootstrap over regime clusters -- resamples whole clusters
+    WITH REPLACEMENT, preserving each cluster's real internal size, so a
+    232-day regime is weighted by its real 232 observations in every
+    resample, not collapsed to one vote the way a naive "one record per
+    regime" dedup would. This is what makes the resulting p-value honest
+    about within-regime correlation, unlike a plain z-test run on
+    already-deduplicated counts (which fixes sample SIZE but not the test
+    itself -- exactly the gap this function closes).
+
+    Returns (p_value, n_clusters_fire, n_clusters_no_fire, wr_fire,
+    wr_no_fire) or None if either side has no decisive clusters at all.
+    """
+    def _cluster_map(evals):
+        clusters: dict = {}
+        for i, e in enumerate(evals):
+            clusters.setdefault(_cluster_key(e, i), []).append(e)
+        return clusters
+
+    fire_clusters = _cluster_map(fires)
+    no_fire_clusters = _cluster_map(no_fires)
+    fire_ids = list(fire_clusters.keys())
+    no_fire_ids = list(no_fire_clusters.keys())
+    if not fire_ids or not no_fire_ids:
+        return None
+
+    def _wins_n(evals):
+        return sum(1 for e in evals if _is_win(e)), len(evals)
+
+    fire_wn = {k: _wins_n(v) for k, v in fire_clusters.items()}
+    no_fire_wn = {k: _wins_n(v) for k, v in no_fire_clusters.items()}
+
+    total_fire_w = sum(w for w, n in fire_wn.values())
+    total_fire_n = sum(n for w, n in fire_wn.values())
+    total_no_fire_w = sum(w for w, n in no_fire_wn.values())
+    total_no_fire_n = sum(n for w, n in no_fire_wn.values())
+    if total_fire_n == 0 or total_no_fire_n == 0:
+        return None
+    wr_fire = total_fire_w / total_fire_n
+    wr_no_fire = total_no_fire_w / total_no_fire_n
+
+    rng = random.Random(seed)
+    diffs = []
+    for _ in range(n_boot):
+        f_sample = [rng.choice(fire_ids) for _ in range(len(fire_ids))]
+        nf_sample = [rng.choice(no_fire_ids) for _ in range(len(no_fire_ids))]
+        fw = sum(fire_wn[k][0] for k in f_sample)
+        fn = sum(fire_wn[k][1] for k in f_sample)
+        nfw = sum(no_fire_wn[k][0] for k in nf_sample)
+        nfn = sum(no_fire_wn[k][1] for k in nf_sample)
+        if fn == 0 or nfn == 0:
+            continue
+        diffs.append(fw / fn - nfw / nfn)
+    if not diffs:
+        return None
+    n_valid = len(diffs)
+    frac_le_0 = sum(1 for d in diffs if d <= 0) / n_valid
+    frac_ge_0 = sum(1 for d in diffs if d >= 0) / n_valid
+    p_value = min(2 * min(frac_le_0, frac_ge_0), 1.0)
+
+    return p_value, len(fire_ids), len(no_fire_ids), wr_fire, wr_no_fire
+
+
 def _active_rule_count(state: dict) -> int:
     """How many rules are currently 'in flight' -- registered and not yet
     promoted. This is the Bonferroni divisor: the more of these exist at
@@ -336,7 +429,6 @@ def check_promotion_readiness(rule_name: str) -> dict:
 
     fires    = [e for e in decisive if e["would_fire"]]
     no_fires = [e for e in decisive if not e["would_fire"]]
-    n_fire, n_no_fire = len(fires), len(no_fires)
 
     min_n_fire    = rule.get("min_n_fire", rule.get("min_n", DEFAULT_MIN_N))
     min_n_no_fire = rule.get("min_n_no_fire", rule.get("min_n", DEFAULT_MIN_N))
@@ -345,13 +437,29 @@ def check_promotion_readiness(rule_name: str) -> dict:
     n_active = _active_rule_count(state)
     corrected_alpha = alpha / n_active
 
-    wr_fire, wr_no_fire = _wr(fires), _wr(no_fires)
     pf_fire, pf_no_fire = _profit_factor(fires), _profit_factor(no_fires)
 
-    wins_fire    = sum(1 for e in fires if _is_win(e))
-    wins_no_fire = sum(1 for e in no_fires if _is_win(e))
-    z_result = _ztest(wins_fire, n_fire, wins_no_fire, n_no_fire)
-    p_value = z_result[0] if z_result else None
+    if rule.get("cluster_aware"):
+        # See register_rule()'s cluster_aware docstring and
+        # _cluster_bootstrap_stats() -- n_fire/n_no_fire here are DISTINCT
+        # REGIME CLUSTER counts, and p_value comes from a cluster bootstrap,
+        # not a plain z-test on raw (regime-correlated) counts.
+        cluster_result = _cluster_bootstrap_stats(fires, no_fires)
+        if cluster_result is not None:
+            p_value, n_fire, n_no_fire, wr_fire_raw, wr_no_fire_raw = cluster_result
+            wr_fire = round(wr_fire_raw, 4)
+            wr_no_fire = round(wr_no_fire_raw, 4)
+        else:
+            p_value = None
+            n_fire, n_no_fire = 0, 0
+            wr_fire, wr_no_fire = _wr(fires), _wr(no_fires)
+    else:
+        n_fire, n_no_fire = len(fires), len(no_fires)
+        wr_fire, wr_no_fire = _wr(fires), _wr(no_fires)
+        wins_fire    = sum(1 for e in fires if _is_win(e))
+        wins_no_fire = sum(1 for e in no_fires if _is_win(e))
+        z_result = _ztest(wins_fire, n_fire, wins_no_fire, n_no_fire)
+        p_value = z_result[0] if z_result else None
 
     criteria = {
         "n_fire_ok":    n_fire >= min_n_fire,
@@ -372,11 +480,17 @@ def check_promotion_readiness(rule_name: str) -> dict:
         )
 
     promotable = all(criteria.values())
-    ready_for_review = (n_decisive >= rule.get("min_n", DEFAULT_MIN_N)) or (days_elapsed >= rule["max_days"])
+    # For a cluster-aware rule, n_fire+n_no_fire already IS the distinct-
+    # cluster count -- use that for ready_for_review too, so this "worth a
+    # look" signal doesn't fire early on inflated raw-evaluation counts
+    # while promotable correctly requires cluster-level evidence.
+    review_n = (n_fire + n_no_fire) if rule.get("cluster_aware") else n_decisive
+    ready_for_review = (review_n >= rule.get("min_n", DEFAULT_MIN_N)) or (days_elapsed >= rule["max_days"])
 
     return {
         "registered":         True,
         "description":        rule["description"],
+        "cluster_aware":      bool(rule.get("cluster_aware")),
         "n_decisive":         n_decisive,
         "n_fire":             n_fire,
         "n_no_fire":          n_no_fire,

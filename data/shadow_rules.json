@@ -22785,5 +22785,20 @@
     "pf_min_gap": null,
     "promoted": false,
     "evaluations": []
+  },
+  "vbook_G_mechanical_reversion": {
+    "description": "Virtual book G: mechanical reversion (rib_against AND osc_agrees), no confidence floor, no dd_mode gate, no LLM call -- live pilot of the signal validated in the 2026-09-2X edge-mining research loop. IMPORTANT: n_fire/n_no_fire here count REGIMES, not raw trades -- see BookConfig.regime_aware_promotion in src/virtual_books.py. A raw per-trade count would badly overstate independent evidence: ribbon/ oscillator regimes ran up to 232 consecutive calendar days in the backtest, and a cluster-bootstrap re-analysis found the naive per-row test on rib_against alone (p=0.00015) was not actually significant once regime-clustering was honestly accounted for (p=0.052) -- while the combined rib_against+osc_agrees signal this book trades survived (cluster-bootstrap p=0.0060, effect +6.2pp WR). Discovery/holdout currency attribution for a BUY-only refinement was unstable, so this book deliberately trades both directions -- let real forward regime count answer that question rather than pre-baking an unresolved refinement into the rule.",
+    "registered_at": "2026-09-25T03:36:41.684110+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 30,
+    "min_n_no_fire": 30,
+    "alpha": 0.05,
+    "pf_max_fire": null,
+    "pf_min_fire": null,
+    "pf_min_gap": null,
+    "promoted": false,
+    "evaluations": [],
+    "cluster_aware": true
   }
 }
