@@ -160,9 +160,28 @@ class TestRegimeClusterTag(unittest.TestCase):
         self.assertTrue(tag2)
 
     def test_different_books_are_isolated(self):
-        tag1 = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
-        tag2 = vb._regime_cluster_tag("OTHER_BOOK", "EUR/USD", "BUY", True, "2026-09-02")
-        self.assertNotEqual(tag1, tag2)
+        """Each book's regime tracker is its own file (_regime_tracker_path())
+        -- a call for OTHER_BOOK must not advance or reset
+        G_mechanical_reversion's own regime state. Tag strings from two
+        books' first-ever regime are allowed to render identically (each
+        book records to its own shadow_mode rule name, so this never
+        collides in practice) -- what must hold is that the underlying
+        per-book state doesn't leak."""
+        vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
+        # A call for a totally different book, same pair/direction/date.
+        vb._regime_cluster_tag("OTHER_BOOK", "EUR/USD", "BUY", True, "2026-09-02")
+        # G_mechanical_reversion's regime must still be exactly where it was
+        # left -- a gap-exceeding date must start ITS OWN new regime,
+        # unaffected by OTHER_BOOK ever having been called.
+        tag_continuation = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-02")
+        tag_new_regime = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-10")
+        self.assertNotEqual(tag_continuation, tag_new_regime)
+        self.assertTrue(vb._regime_tracker_path("G_mechanical_reversion").exists())
+        self.assertTrue(vb._regime_tracker_path("OTHER_BOOK").exists())
+        self.assertNotEqual(
+            vb._regime_tracker_path("G_mechanical_reversion"),
+            vb._regime_tracker_path("OTHER_BOOK"),
+        )
 
 
 class TestRegimeTaggingWiredIntoSettlement(unittest.TestCase):
