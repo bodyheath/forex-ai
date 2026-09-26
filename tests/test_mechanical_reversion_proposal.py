@@ -57,6 +57,46 @@ class TestOscillatorAgrees(unittest.TestCase):
         self.assertFalse(mr.oscillator_agrees("", "BUY"))
 
 
+class TestBollingerExtremeAgrees(unittest.TestCase):
+
+    def test_buy_agrees_at_lower_band(self):
+        self.assertTrue(mr.bollinger_extreme_agrees("BUY", 0.1))
+
+    def test_buy_agrees_at_threshold(self):
+        self.assertTrue(mr.bollinger_extreme_agrees("BUY", 0.2))
+
+    def test_buy_does_not_agree_mid_band(self):
+        self.assertFalse(mr.bollinger_extreme_agrees("BUY", 0.5))
+
+    def test_buy_agrees_when_price_pierces_lower_band(self):
+        """bb_position can go negative when price pierces the band --
+        that's MORE extreme, not out of range."""
+        self.assertTrue(mr.bollinger_extreme_agrees("BUY", -0.3))
+
+    def test_sell_agrees_at_upper_band(self):
+        self.assertTrue(mr.bollinger_extreme_agrees("SELL", 0.9))
+
+    def test_sell_agrees_at_threshold(self):
+        self.assertTrue(mr.bollinger_extreme_agrees("SELL", 0.8))
+
+    def test_sell_does_not_agree_mid_band(self):
+        self.assertFalse(mr.bollinger_extreme_agrees("SELL", 0.5))
+
+    def test_sell_agrees_when_price_pierces_upper_band(self):
+        self.assertTrue(mr.bollinger_extreme_agrees("SELL", 1.4))
+
+    def test_buy_does_not_agree_at_upper_band(self):
+        self.assertFalse(mr.bollinger_extreme_agrees("BUY", 0.9))
+
+    def test_invalid_direction_returns_false(self):
+        self.assertFalse(mr.bollinger_extreme_agrees("", 0.1))
+        self.assertFalse(mr.bollinger_extreme_agrees(None, 0.1))
+
+    def test_missing_bb_position_returns_false(self):
+        self.assertFalse(mr.bollinger_extreme_agrees("BUY", None))
+        self.assertFalse(mr.bollinger_extreme_agrees("BUY", "n/a"))
+
+
 class TestMechanicalReversionFires(unittest.TestCase):
 
     def test_fires_when_both_conditions_met(self):

@@ -330,6 +330,48 @@ def _elig_g_mechanical_reversion(r, quality_grades, dd_mode, conf_threshold, eff
     return _mr.mechanical_reversion_fires(direction, ribbon_status, osc_direction)
 
 
+def _elig_h_oscillator_extremity(r, quality_grades, dd_mode, conf_threshold, eff_conf_fn, dd_allows_fn) -> bool:
+    """Book H (2026-09-26): oscillator_agrees ALONE -- no ribbon check.
+    Round 4 of the edge-mining research loop found Book G's own population
+    (rib_against AND osc_agrees) is a STRICT SUBSET of this broader
+    condition, and the broader condition independently survives discovery,
+    holdout, AND a cluster bootstrap on holdout (see
+    scripts/edge_mining_sweep_round4.py,
+    edge_mining_holdout_check_round4.py,
+    edge_mining_cluster_bootstrap_stress_test.py). Exists to answer with
+    real forward evidence, side by side with Book G on the same real
+    candidate stream, whether requiring ribbon-against on top of
+    oscillator extremity actually improves WR/PF or just shrinks the
+    sample for no benefit. Fully isolated like Books F/G: no confidence
+    floor, no grade check, no dd_mode gate, no LLM call.
+    """
+    from src import mechanical_reversion as _mr
+    direction = (r.get("parsed") or {}).get("direction", "")
+    bundle = r.get("bundle") or {}
+    daily = ((bundle.get("technical") or {}).get("daily") or {})
+    osc_direction = (daily.get("oscillator_confluence") or {}).get("direction", "")
+    return _mr.oscillator_agrees(direction, osc_direction)
+
+
+def _elig_i_bollinger_extremity(r, quality_grades, dd_mode, conf_threshold, eff_conf_fn, dd_allows_fn) -> bool:
+    """Book I (2026-09-26): bollinger_extreme_agrees -- price at a
+    Bollinger Band extreme confirming the trade's own direction. A
+    genuinely different indicator family from Books G/H's RSI/Stochastic/
+    CCI oscillators (volatility-band position, not momentum), with
+    materially lower population overlap against every other validated
+    signal from this research loop (Jaccard <=0.59) -- see round 4's
+    report for why this one earned its own book while the phenomenon2+osc
+    combination (94.7% overlapping with Book G) did not. No confidence
+    floor, no grade check, no dd_mode gate, no LLM call.
+    """
+    from src import mechanical_reversion as _mr
+    direction = (r.get("parsed") or {}).get("direction", "")
+    bundle = r.get("bundle") or {}
+    daily = ((bundle.get("technical") or {}).get("daily") or {})
+    bb_position = daily.get("bb_position")
+    return _mr.bollinger_extreme_agrees(direction, bb_position)
+
+
 def _elig_f_sentiment_only(r, quality_grades, dd_mode, conf_threshold, eff_conf_fn, dd_allows_fn) -> bool:
     """Book F: trades purely on the Sentiment Agent's verdict (2026-09-06,
     Phase 01B specialist #3) -- ignores grade/dd_mode/conf_threshold/eff_conf
@@ -416,6 +458,29 @@ BOOKS: dict[str, BookConfig] = {
         "signal validated in the 2026-09-2X edge-mining research loop "
         "(see PROPOSAL_mechanical_reversion_engine.md)",
         _elig_g_mechanical_reversion,
+        regime_aware_promotion=True,
+    ),
+    "H_oscillator_extremity": BookConfig(
+        "H_oscillator_extremity",
+        "Oscillator-extremity pilot: osc_agrees ALONE (no ribbon check), no "
+        "confidence floor, no dd_mode gate, no LLM call -- Book G's own "
+        "population is a strict subset of this broader signal (round 4 of "
+        "the edge-mining research loop, 2026-09-26). Runs head-to-head "
+        "against Book G on the same real candidates to test whether "
+        "ribbon-against adds real value on top of oscillator extremity.",
+        _elig_h_oscillator_extremity,
+        regime_aware_promotion=True,
+    ),
+    "I_bollinger_extremity": BookConfig(
+        "I_bollinger_extremity",
+        "Bollinger-Band-extremity pilot: bollinger_extreme_agrees, no "
+        "confidence floor, no dd_mode gate, no LLM call -- a genuinely "
+        "different indicator family from Books G/H's oscillators, "
+        "independently validated through discovery/holdout/cluster-"
+        "bootstrap in round 4 of the edge-mining research loop "
+        "(2026-09-26), with materially lower population overlap against "
+        "every other validated signal so far.",
+        _elig_i_bollinger_extremity,
         regime_aware_promotion=True,
     ),
 }
