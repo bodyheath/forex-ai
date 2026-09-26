@@ -165,9 +165,11 @@ class TestRegimeClusterTag(unittest.TestCase):
         self.assertNotEqual(tag1, tag2)
 
 
-class TestRegimeDedupWiredIntoSettlement(unittest.TestCase):
-    """Confirms the book's OWN balance/positions reflect every real trade
-    regardless of dedup, while shadow_mode recording is deduplicated."""
+class TestRegimeTaggingWiredIntoSettlement(unittest.TestCase):
+    """Confirms the book's OWN balance/positions reflect every real trade,
+    AND that shadow_mode now records every real trade too (no more
+    skip-recording) -- tagged with a shared regime_cluster for same-regime
+    continuations, so shadow_mode's cluster bootstrap sees full data."""
 
     def setUp(self):
         self._tmpdir = tempfile.TemporaryDirectory()
