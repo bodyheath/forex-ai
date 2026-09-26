@@ -76,6 +76,41 @@ def oscillator_agrees(direction: str, osc_direction: str) -> bool:
     return d in ("BUY", "SELL") and osc == d
 
 
+_BB_EXTREME_LOW = 0.2
+_BB_EXTREME_HIGH = 0.8
+
+
+def bollinger_extreme_agrees(direction: str, bb_position) -> bool:
+    """True when price sits at a Bollinger Band extreme confirming the
+    trade's own direction: bb_position <= 0.2 (near or below the lower
+    band) on a BUY, or bb_position >= 0.8 (near or above the upper band)
+    on a SELL. bb_position is technical.py::_summarise()'s existing
+    fraction-of-band-width field (0=lower band, 1=upper band; can go
+    negative or above 1 when price pierces a band entirely during a strong
+    move -- the >=/<= thresholds here correctly treat that as MORE
+    extreme, not out of range). Round 4 of the edge-mining research loop
+    validated this exact threshold pair on both the discovery slice
+    (n_fire=6369, p=0.00025) and holdout (n_fire=2773, p=0.00003), and it
+    survived a cluster bootstrap on holdout (p=0.006) -- see
+    scripts/edge_mining_sweep_round4.py and
+    edge_mining_cluster_bootstrap_stress_test.py.
+
+    Returns False (never fires) if bb_position is missing/non-numeric --
+    fails closed, matching this module's other functions' convention of
+    never fabricating a signal from absent data.
+    """
+    d = (direction or "").upper()
+    if d not in ("BUY", "SELL"):
+        return False
+    try:
+        pos = float(bb_position)
+    except (TypeError, ValueError):
+        return False
+    if d == "BUY":
+        return pos <= _BB_EXTREME_LOW
+    return pos >= _BB_EXTREME_HIGH
+
+
 def mechanical_reversion_fires(direction: str, ribbon_status: str, osc_direction: str) -> bool:
     """The validated signal itself: ribbon against the trade direction AND
     oscillators confirming a reversal in the trade's own direction.
