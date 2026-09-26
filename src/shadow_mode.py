@@ -85,6 +85,7 @@ rebuilding when the first agent book is ready to be evaluated.
 """
 
 import math
+import random
 import sys
 from datetime import datetime, timezone
 
