@@ -188,17 +188,21 @@ def _fmt_time_exact(h: int, m: int = 0) -> str:
 
 MAX_CORRELATED_EXPOSURE = 2
 
-# 2026-09-2X: BASE_RISK_PCT/SIZING_RULES/LOSS_STREAK_SIZING/DRAWDOWN_SIZING and
-# the function that combines them moved to src/position_sizing.py, so
-# fund_state.py's display-facing update_sizing_state() can run the exact same
-# chained calculation this module's own real trade-creation call site uses
-# (see that module's docstring) -- daily.py can't be imported from fund_state.py
-# for this (it exits the process on import outside GitHub Actions/
+# 2026-09-2X: BASE_RISK_PCT/SIZING_RULES/LOSS_STREAK_SIZING and the function
+# that combines them moved to src/position_sizing.py, so fund_state.py's
+# display-facing update_sizing_state() can run the exact same chained
+# calculation this module's own real trade-creation call site uses (see that
+# module's docstring) -- daily.py can't be imported from fund_state.py for
+# this (it exits the process on import outside GitHub Actions/
 # ALLOW_LOCAL_RUN=YES, see the guard at the top of this file). Re-exported
 # under their original names here so every other reference in this file, and
 # the verify_all.py/verify_system.py presence checks, keep working unchanged.
+# DRAWDOWN_SIZING was removed here 2026-09-2X (CONSOLIDATED, see
+# src/position_sizing.py's own docstring and PROPOSAL_consolidate_drawdown_
+# sizing.md) -- fund_state.py's compute_sizing() is now the sole drawdown-
+# based sizing authority, no longer double-penalized by a second table here.
 from src.position_sizing import (
-    BASE_RISK_PCT, SIZING_RULES, LOSS_STREAK_SIZING, DRAWDOWN_SIZING,
+    BASE_RISK_PCT, SIZING_RULES, LOSS_STREAK_SIZING,
 )
 
 # ── Fund pair universe — explicit banlist ─────────────────────────────────────
@@ -705,16 +709,19 @@ def _send_weekly_learning_summary(log_fn=None) -> None:
 
 
 def _calculate_position_size(regime: str, consecutive_losses: int,
-                              drawdown_pct: float, base_pct: float = None,
-                              log_fn=None) -> dict:
-    """Calculate position size based on regime, loss streak, and drawdown.
+                              base_pct: float = None, log_fn=None) -> dict:
+    """Calculate position size based on regime and loss streak.
 
     Thin wrapper -- the real implementation lives in src/position_sizing.py
     now (see that module's docstring for why), kept here under its original
-    name so every real call site in this file is unchanged."""
+    name so every real call site in this file is unchanged. drawdown_pct
+    was removed 2026-09-2X (CONSOLIDATED -- see src/position_sizing.py's
+    docstring and PROPOSAL_consolidate_drawdown_sizing.md): fund_state.py's
+    compute_sizing() is now the sole drawdown-based sizing authority, no
+    longer double-penalized by a second, uncoordinated table here."""
     from src import position_sizing as _psz
     return _psz.calculate_position_size(
-        regime, consecutive_losses, drawdown_pct, base_pct=base_pct, log_fn=log_fn,
+        regime, consecutive_losses, base_pct=base_pct, log_fn=log_fn,
     )
 
 
@@ -6941,10 +6948,13 @@ def _send_telegram_summary(
                         pass
                     continue
                 # ── Volatility-adjusted position sizing ───────────────────────────
+                # 2026-09-2X: drawdown_pct removed from this call (CONSOLIDATED --
+                # see src/position_sizing.py's docstring). fund_state.py's
+                # compute_sizing() (which already produced _szg_pct above) is now
+                # the sole drawdown-based sizing authority.
                 _add_sizing = _calculate_position_size(
                     regime=_regime_str,
                     consecutive_losses=_consec_losses_fs,
-                    drawdown_pct=float(_fund_st.get("current_drawdown_pct") or 0),
                     base_pct=float(_szg_pct) if _szg_pct else BASE_RISK_PCT,
                     log_fn=lambda m: _log_line(log, m),
                 )
