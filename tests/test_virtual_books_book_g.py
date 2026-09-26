@@ -89,7 +89,15 @@ class TestBookGEligibility(unittest.TestCase):
         self.assertFalse(result)
 
 
-class TestRegimeDedup(unittest.TestCase):
+class TestRegimeClusterTag(unittest.TestCase):
+    """_regime_cluster_tag() no longer gates whether an evaluation is
+    recorded (see the module note in src/virtual_books.py dated 2026-09-2X
+    for why the original skip-recording design was itself a bias trap) --
+    it only returns the cluster identifier shadow_mode's cluster bootstrap
+    uses to tell correlated evaluations apart from independent ones. Same
+    day/gap/independence semantics as before, verified via "does a
+    continuation get the SAME tag" and "does a new regime get a DIFFERENT
+    tag" rather than True/False."""
 
     def setUp(self):
         self._tmpdir = tempfile.TemporaryDirectory()
@@ -100,54 +108,61 @@ class TestRegimeDedup(unittest.TestCase):
         self._patcher.stop()
         self._tmpdir.cleanup()
 
-    def test_first_occurrence_is_a_new_regime(self):
-        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
-        self.assertTrue(allowed)
+    def test_first_occurrence_returns_a_tag(self):
+        tag = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
+        self.assertTrue(tag)
 
-    def test_immediate_continuation_is_not_a_new_regime(self):
-        vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
-        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-02")
-        self.assertFalse(allowed)
+    def test_immediate_continuation_gets_same_tag(self):
+        tag1 = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
+        tag2 = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-02")
+        self.assertEqual(tag1, tag2)
 
-    def test_gap_within_tolerance_is_not_a_new_regime(self):
+    def test_gap_within_tolerance_gets_same_tag(self):
         """A normal weekend (up to _REGIME_GAP_DAYS) still counts as ongoing."""
-        vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-04")  # Friday
-        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-07")  # Monday, 3-day gap
-        self.assertFalse(allowed)
+        tag1 = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-04")  # Friday
+        tag2 = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-07")  # Monday, 3-day gap
+        self.assertEqual(tag1, tag2)
 
-    def test_gap_beyond_tolerance_is_a_new_regime(self):
-        vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
-        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-10")
-        self.assertTrue(allowed)
+    def test_gap_beyond_tolerance_gets_a_new_tag(self):
+        tag1 = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
+        tag2 = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-10")
+        self.assertNotEqual(tag1, tag2)
 
     def test_long_regime_keeps_extending_without_resetting(self):
-        """10 consecutive days should be ONE regime -- confirms a long real
-        regime doesn't fragment into several just because it's long."""
-        results = []
+        """10 consecutive days should be ONE regime (one tag) -- confirms a
+        long real regime doesn't fragment into several just because it's
+        long."""
+        tags = []
         for day in range(1, 11):
             date_str = f"2026-09-{day:02d}"
-            results.append(vb._regime_dedup_allows_recording(
+            tags.append(vb._regime_cluster_tag(
                 "G_mechanical_reversion", "EUR/USD", "BUY", True, date_str))
-        self.assertEqual(results, [True] + [False] * 9)
+        self.assertEqual(len(set(tags)), 1, f"expected one shared tag, got {set(tags)}")
 
     def test_different_pair_direction_is_independent(self):
-        vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
-        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "GBP/USD", "SELL", True, "2026-09-01")
-        self.assertTrue(allowed)
+        tag1 = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
+        tag2 = vb._regime_cluster_tag("G_mechanical_reversion", "GBP/USD", "SELL", True, "2026-09-01")
+        self.assertNotEqual(tag1, tag2)
 
     def test_fire_and_no_fire_are_tracked_independently(self):
-        vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
-        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", False, "2026-09-01")
-        self.assertTrue(allowed, "would_fire=True and would_fire=False must track separate regimes")
+        tag1 = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
+        tag2 = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", False, "2026-09-01")
+        self.assertNotEqual(tag1, tag2, "would_fire=True and would_fire=False must track separate regimes")
 
-    def test_unparseable_date_fails_open(self):
-        allowed = vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "not-a-date")
-        self.assertTrue(allowed)
+    def test_unparseable_date_gets_a_unique_tag_each_call(self):
+        """Fails safe: never crashes, never collides with a real regime --
+        each unparseable-date call gets its own singleton-like tag so
+        shadow_mode treats it as independent rather than silently merging
+        it into an unrelated cluster."""
+        tag1 = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "not-a-date")
+        tag2 = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "not-a-date")
+        self.assertTrue(tag1)
+        self.assertTrue(tag2)
 
     def test_different_books_are_isolated(self):
-        vb._regime_dedup_allows_recording("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
-        allowed = vb._regime_dedup_allows_recording("OTHER_BOOK", "EUR/USD", "BUY", True, "2026-09-02")
-        self.assertTrue(allowed)
+        tag1 = vb._regime_cluster_tag("G_mechanical_reversion", "EUR/USD", "BUY", True, "2026-09-01")
+        tag2 = vb._regime_cluster_tag("OTHER_BOOK", "EUR/USD", "BUY", True, "2026-09-02")
+        self.assertNotEqual(tag1, tag2)
 
 
 class TestRegimeDedupWiredIntoSettlement(unittest.TestCase):
