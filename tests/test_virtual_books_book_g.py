@@ -232,10 +232,12 @@ class TestRegimeTaggingWiredIntoSettlement(unittest.TestCase):
         with patch.object(vb, "BOOKS", {"PLAIN": plain_book}):
             self._make_position_for("PLAIN", 1, "EUR/USD", "BUY", "2026-09-01 00:00:00")
             self._make_position_for("PLAIN", 2, "EUR/USD", "BUY", "2026-09-02 00:00:00")
-            with patch("src.shadow_mode.register_rule"), \
+            with patch("src.shadow_mode.register_rule") as mock_register, \
                  patch("src.shadow_mode.record_evaluation") as mock_record:
                 vb._settle_book_positions(1, 50.0, "WIN", log_fn=lambda m: None)
                 vb._settle_book_positions(2, 30.0, "WIN", log_fn=lambda m: None)
+            self.assertFalse(mock_register.call_args_list[0].kwargs.get("cluster_aware"))
+            self.assertNotIn("regime_cluster", mock_record.call_args_list[0].kwargs["context"])
             self.assertEqual(mock_record.call_count, 2,
                               "a non-regime-aware book must record every trade, unchanged behavior")
 
