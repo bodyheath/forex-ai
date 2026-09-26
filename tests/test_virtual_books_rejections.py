@@ -180,6 +180,7 @@ class TestRejectionSettlement(VirtualBooksRejectionTestCase):
         self._open_and_settle(price_hits_target=True)
         mock_register.assert_any_call(
             "vbook_REJECT", description="Virtual book REJECT: never eligible",
+            cluster_aware=False,
         )
         reject_calls = [c for c in mock_record.call_args_list if c.args[0] == "vbook_REJECT"]
         self.assertEqual(len(reject_calls), 1)
