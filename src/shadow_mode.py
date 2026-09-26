@@ -163,6 +163,24 @@ def register_rule(rule_name: str, description: str,
     Leave PF params None to skip that check entirely (the general/default
     case -- most rules, including a first specialist-agent book, won't need
     one until there's a specific reason to require it).
+
+    cluster_aware: when True, check_promotion_readiness() treats each
+    evaluation's context["regime_cluster"] (if present) as its real
+    independence unit -- n_fire/n_no_fire count DISTINCT CLUSTERS, not raw
+    evaluations, and significance is a cluster bootstrap (resampling whole
+    clusters with replacement, preserving their real internal size) instead
+    of a plain two-proportion z-test on raw counts. Added 2026-09-2X after
+    a cluster-bootstrap re-analysis of the mechanical edge-mining backtest
+    found the naive per-row z-test on a slow-moving ribbon/oscillator signal
+    (regimes ran up to 232 consecutive calendar days) looked far more
+    significant than it really was -- counting distinct regimes toward the
+    n floor fixes "how many independent samples exist," but a plain
+    significance test on regime-deduplicated data would still be the same
+    trap in a new shape if it didn't ALSO account for within-regime
+    correlation and unequal regime sizes when computing the p-value itself.
+    Evaluations with no "regime_cluster" in context are each treated as
+    their own singleton cluster (fails safe -- degrades toward, never below,
+    the standard per-row rigor for those specific evaluations).
     """
     state = _load()
     if rule_name in state:
@@ -178,6 +196,7 @@ def register_rule(rule_name: str, description: str,
         "pf_max_fire":     pf_max_fire,
         "pf_min_fire":     pf_min_fire,
         "pf_min_gap":      pf_min_gap,
+        "cluster_aware":   cluster_aware,
         "promoted":        False,
         "evaluations":     [],
     }
