@@ -1,0 +1,23 @@
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + RSI neutral (43.4) on D1 BUY signal conflicts with 4H downtrend and ribbon lean-bear; GBP interest premium (+1.45%) supports BUY but MTF agreement only 1/3 (D:BUY vs M:SELL + W:NEUTRAL + 4H:NEUTRAL) blocks execution.
+RISK_FACTORS: MTF misalignment (only D1 agrees, 40% weight confidence floor); 4H head-and-shoulders bearish pattern contradicts D1 pin bar setup.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.8607
+ENTRY_TRIGGER_REASON: Retest of FIB SL (swing low) with RSI <30 would confirm oversold reversal and align 4H recovery with D1 BUY signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+- **MTF Rule Enforcement**: M:SELL + W:NEUTRAL + D:BUY + 4H:NEUTRAL = only 1 timeframe agrees (D1). Confidence = 1/3 < 2/3 threshold → **

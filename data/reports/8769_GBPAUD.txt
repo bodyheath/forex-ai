@@ -1,0 +1,23 @@
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 double-top bearish pattern + ALIGNED_BEAR ribbon + AUD rate rising support downside, but RSI neutral and MTF weekly/4H conflict prevents conviction entry.
+RISK_FACTORS: [1. MTF disagreement (W:BUY vs 4H:SELL vs D:NEUTRAL) = only 1/3 agreement; TRADE_THIS gate requires both weekly AND daily to agree on direction — they don't.] [2. D1 RSI=47.2 is mid-neutral zone; no divergence; OSC=NONE confluence; price at 23.6% Fib (near support not resistance) suggests limited downside momentum — bounce risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly (BUY) and Daily (NEUTRAL) do not both agree on SELL direction. Confidence=5 < 7 threshold and MTF alignment <2/3 fails mandatory gate.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+1. **MTF Rule (MANDATORY):** Weekly=BUY, Daily=NEUTRAL, 4H=SELL
