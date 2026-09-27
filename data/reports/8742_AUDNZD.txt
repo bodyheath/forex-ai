@@ -1,0 +1,16 @@
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Strong fundamental AUD strength (rising rates, +1.53% diff) and aligned ribbon support uptrend, but D1 T_sig=SELL_3 conflicts with price structure; MTF agreement weak (only M+W aligned), RSI overbought in mixed 4H context, and MACD exhaustion creates reversal risk.
+RISK_FACTORS: [1] D1 RSI=64.5 in confirmed uptrend (W:SELL + D:NEUTRAL fails full confirmation, but monthly is SELL) — overbought not yet extreme, but T_sig=SELL_3 + MACD near-zero suggests momentum fade into resistance. [2] MTF conflict: Weekly+Daily do NOT both agree on direction (W:SELL, D:NEUTRAL = only 1/3 agreement, 45% threshold failed) — per MTF rule, TRADE_THIS must be NO regardless of other scores.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule veto — Weekly and Daily timeframes do not both agree on direction (W:SELL, D:NEUTRAL). Confidence in directional alignment = 1/3 (45% wt) < required

@@ -1,0 +1,17 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at Fibonacci support (61.8% @ 0.5792, 9p away) in a converging ribbon environment signals potential reversal, but weekly MTF rejection and weak oscillator confluence leave high uncertainty; CHF short-building and AUD rate rising create mild fundamental headwind.
+RISK_FACTORS: [1] MTF weekly already SELL while daily is NEUTRAL — agreement weak (1/3 conf) and MTF rule penalizes low multi-timeframe alignment; uptrend structure (price > SMA50 > SMA200) is still intact. [2] Oscillator confluence is NONE (Stochastic=13.4 oversold, CCI=-77 extreme), yet both RSI=48.7 and price=0.5801 are only 9p from support — reversal *may* be priced in, leaving limited downside margin if CHF continues short-building.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5792
+ENTRY_TRIGGER_REASON: Pin bar at 61.8% Fibonacci confluence level; if price retests support without holding, break below 0.5792 confirms reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48

@@ -1,0 +1,25 @@
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly SELL + pin bar at 50% Fib + CHF rate rising support downside, but D1 uptrend structure and mixed 4H offset conviction.
+RISK_FACTORS: [1. D1 golden-cross structure (price > SMA50 > SMA200) conflicts with SELL signal—reversal risk if price holds above 1.0939 SMA50. 2. MTF agreement is weak (W:SELL vs D:NEUTRAL vs 4H:NEUTRAL = 1/3 conf)—insufficient MTF confluence for high-probability entry.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.0920
+ENTRY_TRIGGER_REASON: Limit entry near pin bar confirmation zone below SMA50, waiting for weekly SELL to assert control over intraday structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+**MTF ANALYSIS (CRITICAL):**
+- Weekly: SELL | Daily: NEUTRAL | 4H: NEUTRAL | Monthly: NEUTRAL → **conf=1/3 (40% threshold)**
+- Only 1 of 3 time frames align on direction. Weekly alone is insufficient; D1 explicitly
