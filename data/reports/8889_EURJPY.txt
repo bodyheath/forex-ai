@@ -1,0 +1,25 @@
+PAIR: EUR/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level in downtrend with weekly BUY signal and crowded short positioning suggests potential mean-reversion bounce, but MTF disagreement (M:SELL vs W:BUY) and converging ribbon limit conviction.
+RISK_FACTORS: [1. MTF conflict (conf=1/3 <2/3 threshold) — monthly sell-bias overrides weekly buy signal; reversal unconfirmed by price structure. 2. Converging EMA ribbon indicates trend exhaustion but not confirmed reversal — breakout of SMA50 (183.09) required to validate bounce.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 183.0900
+ENTRY_TRIGGER_REASON: Break above SMA50 resistance at 183.09 would confirm ribbon reversal and invalidate death-cross structure
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**Rationale:**
+
+1. **MTF Rule Override**: Weekly=BUY, Daily=NEUTRAL, Monthly=SELL → conf=1/3. **Does NOT meet ≥2/3 threshold** (must be weekly AND daily both agree). **TRADE_THIS forced to NO** per hard rule.
+
+2. **Technical

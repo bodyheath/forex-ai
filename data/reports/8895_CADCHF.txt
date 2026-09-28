@@ -1,0 +1,23 @@
+```
+PAIR: CAD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level in D1 uptrend with +2.33% CAD carry advantage, but MTF alignment broken (M:BUY isolated; W/D/4H neutral) prevents high-conviction entry.
+RISK_FACTORS: 1) MTF conf=0/3 (weekly and daily both NEUTRAL) violates core MTF rule — no dual agreement on direction; 2) OSC stochastic oversold at 29.7 but CCI neutral at −27.9 = conflicting oscillator signals, no confluence.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.5822
+ENTRY_TRIGGER_REASON: Retest of SMA50 (golden-cross support) with pin bar confirmation at D1 key level, awaiting MTF weekly alignment or oscillator triple-confluence
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**Rationale:**
+
+**MTF Rejection:** Weekly = NEUTRAL, Daily = NEUTRAL, 4H = NEUTRAL. Monthly alone (BUY) does not satisfy the rule: *"TRADE_THIS: YES only if... MTF weekly+daily both agree."* Confidence floor hit at 0/3

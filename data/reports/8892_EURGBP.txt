@@ -1,0 +1,24 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Bearish RSI divergence + SELL oscillator confluence (2/3) support downside, but MTF fragmentation (D:SELL vs 4H:BUY, conf=1/3) and mixed ribbon block high-confidence trade.
+RISK_FACTORS: (1) MTF disagreement prevents TRADE_THIS threshold — weekly and daily must both align; 4H breakout bullish contradicts daily. (2) Price at exact 100% Fibonacci swing high (0.86075) creates two-way breakout risk; double-bottom pattern conflicts with bearish technicals, suggesting false breakdown.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8575
+ENTRY_TRIGGER_REASON: Break below SMA50 (0.8564) + daily close below 200p swing low, confirming bearish divergence + oscillator sell signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 RSI=61.9 is neutral-to-overbought in mixed trend (not confirmed uptrend, so standard tier applies: 62–70 = 4–5 SELL).

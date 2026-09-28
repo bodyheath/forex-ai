@@ -1,0 +1,25 @@
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level with RSI 43.4 (neutral zone) supports a bounce attempt, but MTF conflict (W:NEUTRAL, D:BUY vs M:SELL, 4H:SELL) and LEANING_BEAR ribbon prevent high conviction.
+RISK_FACTORS: MTF disagreement (only 1/3 timeframes aligned BUY) blocks confidence above 5; price below SMA50 (1.8685 vs 1.8784) and ribbon leaning bearish signal weak upside commitment.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.8650
+ENTRY_TRIGGER_REASON: Support confluence at SL=1.8607 + pin bar low; reversal confirmation if RSI holds above 40 on Daily close.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Failure (Critical):**
+- W:NEUTRAL + D:BUY vs M:SELL + 4H:SELL = **1/3 agreement** → **conf=1/3 < 2/3 threshold**
+- This **alone blocks TRADE_THIS: YES**
