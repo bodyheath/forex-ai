@@ -1,0 +1,23 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level with bearish ribbon lean conflicts with uptrend structure and neutral MTF; mixed directional signals fail confidence threshold.
+RISK_FACTORS: [1. MTF conf=0/3 — all timeframes neutral, no directional consensus; TRADE_THIS rule requires weekly AND daily both agree, condition not met.] [2. D1 trend=uptrend (price > SMA50 > SMA200, golden cross) contradicts T_sig=SELL_3 and DIRECTION recommendation — structural conflict reduces conviction.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL + D:NEUTRAL fails agreement threshold (conf=0/3 < 2/3). Uptrend structure intact despite bearish candle pattern — no high-probability entry. CONFIDENCE 4/10 < 7/10 minimum. HOLD for weekly and daily alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+- **MTF RULE HARD STOP**: W:NEUTRAL + D:NEUTRAL = conf 0/3, far below the required 2/3 (weekly AND daily

@@ -1,0 +1,26 @@
+PAIR: AUD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 61.8% Fib support + uptrend structure conflicts with weekly sell signal and converging ribbon; low-conviction entry on golden-cross confirmation but elevated reversal risk.
+RISK_FACTORS: Weekly in SELL conflicts MTF agreement (1/3 confidence, 40% wt) — trend continuation not confirmed across timeframes; Ribbon CONVERGING signals trend weakening despite price > SMA50 > SMA200 structure.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.5792
+ENTRY_TRIGGER_REASON: Price touches 61.8% Fibonacci support level (9p below current) where pin bar pattern formed, confirming D1 uptrend intent.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF VETO (Critical):** W:SELL + D:NEUTRAL = only 1/3 agree on BUY direction. **Confidence = 1/3 × 40% = 13% → mtf_conf < 2/3 threshold. TRADE_THIS triggers NO per hard rule**, regardless of other factors.
+
+**Technical (5/10):**
+- D1

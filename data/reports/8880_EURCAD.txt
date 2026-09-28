@@ -1,0 +1,23 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly SELL structure conflicts with D1/W neutral trend; crowded EUR short positioning near range bottom creates unconfirmed reversal risk, while CAD weakness supports downside but lacks confirmation.
+RISK_FACTORS: [1. MTF disagreement (M:SELL vs D/W:NEUTRAL, conf=0/3) violates core entry rule — no confluent direction across timeframes; 2. EUR net short at 8% and crowded positioning near 1-year bottom signals potential squeeze/reversal despite technical bearish setup]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily both neutral, do not agree with monthly sell. Confidence below 7 threshold; R:R undefined (no target set). Positioning reversal risk unconfirmed but present — wait for D1 breakout confirmation or M1-D1 alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF Rule Failure (HARD STOP):** W=NEUTRAL and D=NEUTRAL means conf=0/3 directional agreement. Monthly SELL is unsupported by weekly/daily — the system rule requires both W
