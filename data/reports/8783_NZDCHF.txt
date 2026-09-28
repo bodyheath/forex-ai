@@ -1,0 +1,24 @@
+PAIR: NZD/CHF
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: PARTIAL_BUY
+KEY_THESIS: D1 BUY_4 + bullish divergence + double-bottom pattern + RSI oversold (35.9) in mixed trend setup confluence, but MTF misalignment (4H:SELL vs D:BUY) and ribbon neutral weaken conviction.
+RISK_FACTORS: MTF conflict — 4H sells while D1 buys (conf=1/3, below 2/3 threshold); ribbon neutral (only 3/5 pairs aligned) signals trend weakness, reversal risk on ribbon flip to bearish.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.46894
+ENTRY_TRIGGER_REASON: Fib -61.8% + RSI oversold + bullish div + double-bottom pattern = triple confluence, but requires D1 close confirmation above SMA50 (0.4746) to override MTF 4H sell signal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Violation (HARD STOP for TRADE_THIS: YES):**
+- W:NEUTRAL + D:BUY + 4H:SELL = conf=1/3 (<2

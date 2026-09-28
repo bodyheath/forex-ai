@@ -1,0 +1,26 @@
+PAIR: CAD/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key support (110.577) in confirmed weekly+daily uptrend with CAD rate decline supporting strength; converging ribbon signals trend weakness but reversal risk is acceptable given pattern confluence.
+RISK_FACTORS: [1. Ribbon CONVERGING indicates momentum exhaustion—uptrend may stall or reverse before reaching nearest_above target. 2. Oscillator confluence absent (Stochastic overbought at 73 while CCI neutral)—RSI+MACD alone insufficient to confirm triple-reversal signal; higher false-signal risk.]
+TRADE_THIS: YES
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 110.65
+ENTRY_TRIGGER_REASON: Limit buy at pin-bar low confirmation zone, 8 pips above FIB SL (110.577) to confirm bounce rejection of support before entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**MTF validation:** Weekly BUY + Daily BUY = 2/3 agreement (4H neutral is acceptable). Passes MTF rule (≥2/3 confirm direction).
+
+**Technical scoring (downtrend context applied):**
+- D1 RSI=44.8 in confirmed down

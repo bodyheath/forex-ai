@@ -1987,6 +1987,32 @@
           "market_regime": "trending_risk_on",
           "closed_at": "2026-09-27 18:10:43"
         }
+      },
+      {
+        "timestamp": "2026-09-28T05:11:05.414421+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 69.9,
+        "context": {
+          "id": "3314",
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-28 05:11:05"
+        }
+      },
+      {
+        "timestamp": "2026-09-28T05:11:05.688494+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 3.8,
+        "context": {
+          "id": "3318",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-28 05:11:05"
+        }
       }
     ]
   },
@@ -23127,6 +23153,126 @@
           "pair": "CAD/JPY",
           "direction": "BUY",
           "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-09-28T05:11:04.256186+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 47.8,
+        "context": {
+          "id": "3299",
+          "pair": "EUR/CAD",
+          "direction": "BUY",
+          "tech_score": "4"
+        }
+      },
+      {
+        "timestamp": "2026-09-28T05:11:04.565711+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 65.3,
+        "context": {
+          "id": "3304",
+          "pair": "EUR/JPY",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-09-28T05:11:04.815243+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 0.5,
+        "context": {
+          "id": "3305",
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-09-28T05:11:05.168534+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 22.0,
+        "context": {
+          "id": "3313",
+          "pair": "AUD/CAD",
+          "direction": "BUY",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-09-28T05:11:05.442822+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 69.9,
+        "context": {
+          "id": "3314",
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-09-28T05:11:05.717195+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 3.8,
+        "context": {
+          "id": "3318",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "tech_score": "8"
+        }
+      },
+      {
+        "timestamp": "2026-09-28T05:11:05.966152+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 20.6,
+        "context": {
+          "id": "3322",
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "tech_score": "9"
+        }
+      },
+      {
+        "timestamp": "2026-09-28T05:11:06.215910+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 16.7,
+        "context": {
+          "id": "3324",
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "tech_score": "7"
+        }
+      },
+      {
+        "timestamp": "2026-09-28T05:11:06.463170+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 1.2,
+        "context": {
+          "id": "3331",
+          "pair": "GBP/CAD",
+          "direction": "SELL",
+          "tech_score": "3"
+        }
+      },
+      {
+        "timestamp": "2026-09-28T05:11:06.872100+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -21.1,
+        "context": {
+          "id": "3341",
+          "pair": "EUR/NZD",
+          "direction": "SELL",
+          "tech_score": "8"
         }
       }
     ]

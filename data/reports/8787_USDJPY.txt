@@ -1,0 +1,21 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + leaning-bear ribbon + 4H SELL alignment conflict with D1 uptrend structure and rising USD rates, creating low-probability mixed signal.
+RISK_FACTORS: [MTF conflict: 4H SELL vs D1/W/M NEUTRAL undermines setup confidence; USD rates rising while JPY also rising narrows rate-differential support for SELL]
+TRADE_THIS: NO
+
+**DETAILED SCORING:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 RSI=59.0 in uptrend context (price > SMA50 > SMA200, golden-cross): standard tier applies → RSI 45–65 in uptrend = NEUTRAL(3–4). Base = 3.
+- T_sig baseline = SELL_3 (pre-computed): this conflicts with the uptrend structure and RSI neutral position. D1 uptrend + neutral RSI = no SELL confirmation from price action.
+- MACD D1 positive (0.5483), 4H weakening (0.0390) = MACD does NOT confirm SELL direction.
+- Bonus: pin_bar_at_key_level:bul (bullish pin) + SMA50 confirmation (price > SMA50) = +1
