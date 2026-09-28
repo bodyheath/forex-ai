@@ -1,0 +1,26 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Ribbon converging signals trend weakening; weekly SELL conflicts with daily/4H neutrality and pin bar bullish bias; multiple timeframes disagree.
+RISK_FACTORS: [MTF conf 1/3 (W:SELL vs D+4H:NEUTRAL) breaks trading rule; R:R uncomputable with no clear target—risk management failure]
+TRADE_THIS: NO
+
+ENTRY_TYPE: WAIT
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF agreement insufficient (1/3 < 2/3 threshold). Weekly SELL contradicts daily NEUTRAL and 4H NEUTRAL. Pin bar bullish + RSI 48.7 (neutral zone) + Fib support at 0.5792 (9p away) favors upside bounce over downside commitment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**DETAILED SCORING RATIONALE:**
+
+**TECHNICAL (3/10):**
+- **D1 RSI 48.7** in neutral zone (45–62) = neutral score (3–4). No trend-context shift applies (MTF is mixed, not confirmed downtrend/uptrend).
+- **D1 T_sig = NEUTRAL_3** (

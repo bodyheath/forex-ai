@@ -1,0 +1,23 @@
+PAIR: CAD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure (price > SMA50 > SMA200) with pin bar at key level offers bullish continuation, but MTF conflict (W:NEUTRAL, D:NEUTRAL, 4H:SELL) blocks high-confidence entry.
+RISK_FACTORS: [1. MTF disagreement — weekly and daily both neutral weakens trend conviction; 4H downward pressure conflicts with D1 bullish setup. 2. Oscillator weakness — stochastic oversold (29.7) but CCI near zero (-27.9) shows no momentum confluence; RSI50.7 is neutral-to-bullish but neither confirmed nor rejected.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.5822
+ENTRY_TRIGGER_REASON: Wait for price to hold above SMA50 (0.5822) on D1 close and confirm D1 RSI >60 alongside weekly turning BUY to satisfy MTF rule (≥2/3 timeframes agree).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Veto:** Weekly and daily are both NEUTRAL; only monthly is BUY. This fails the MT

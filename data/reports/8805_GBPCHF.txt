@@ -1,0 +1,26 @@
+```
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H overbought RSI (74.0) conflicts with D1 uptrend structure; pin bar at 50% Fib suggests rejection at key level; CHF rate rising into net-short positioning creates mean-reversion risk.
+RISK_FACTORS: D1 in confirmed uptrend (price > SMA50 > SMA200, golden cross) — selling into structural strength is high-risk contrarian play. MTF consensus neutral (0/3 agreement) — low conviction setup with no directional confirmation across weekly/daily/monthly.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.0920
+ENTRY_TRIGGER_REASON: Break below 50% Fib support at 1.09395 to confirm 4H rejection; enter on close below key level.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**TECHNICAL (4/10):**
+- D1 T_sig = NEUTRAL_3 (baseline applied)
+- **MTF failure:** W:NEUTRAL, D:NEUTRAL, 4H:SELL → confidence 0/3; rule enforces **TRADE_THIS: NO** when MTF disagree on

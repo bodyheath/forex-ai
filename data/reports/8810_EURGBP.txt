@@ -1,0 +1,22 @@
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Bearish RSI divergence (8p/7pt) and partial oscillator confluence (SELL 2/3) offer moderate downside signal, but conflicting MTF structure (D:SELL vs 4H:BUY, conf=1/3) and neutral ribbon (3/5) prevent conviction — range-bound setup with reversal risk.
+RISK_FACTORS: [1. MTF disagreement (only 1/3 timeframes aligned SELL) invalidates multi-frame confirmation rule; 2. Crowded EUR short positioning (8.0pct net, BUILDING toward reversal unconfirmed) and price touching SH Fib pivot (0.86075, +2p) create chop/whipsaw risk.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.8625
+ENTRY_TRIGGER_REASON: Rejection above 0.8625 (between SMA50 0.8564 and upper BB) with RSI remaining <70 would confirm SELL setup; currently price and oscillators lack sufficient alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**REASONING:**
+
+**Technical (5/10):**
+- D1 T_sig=

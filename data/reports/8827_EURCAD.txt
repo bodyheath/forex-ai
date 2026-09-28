@@ -1,0 +1,23 @@
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 8/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Fundamental EUR strength (rising rates, +0.22% diff) and crowded EUR short positioning (reversal risk) conflict with neutral technicals and bearish ribbon structure; MTF disagreement (M:SELL vs W/D:NEUTRAL) blocks confident entry.
+RISK_FACTORS: (1) Monthly bearish trend contradicts daily/weekly neutrality—MTF misalignment prevents high-confidence BUY. (2) Ribbon leaning bearish (4/5 aligned) and T_sig=3 indicate weak uptrend conviction; price within 10p of SMA50 offers no margin of safety.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.6050
+ENTRY_TRIGGER_REASON: Pullback to SMA200 (1.6084) with RSI <45 and W/D both BUY would confirm reversal and triple-layer confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+1. **MTF VETO:** Monthly:SELL + Weekly:NEUTRAL + Daily:NEUTRAL = conf 0/3 (majority not BUY). Rule: TRADE_THIS=NO when MTF weekly+daily don't both

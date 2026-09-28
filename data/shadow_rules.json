@@ -2013,6 +2013,19 @@
           "market_regime": "trending_risk_on",
           "closed_at": "2026-09-28 05:11:05"
         }
+      },
+      {
+        "timestamp": "2026-09-28T11:11:22.744361+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -55.8,
+        "context": {
+          "id": "3639",
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-09-28 11:11:22"
+        }
       }
     ]
   },
@@ -23486,6 +23499,18 @@
           "pair": "EUR/NZD",
           "direction": "SELL",
           "tech_score": "8"
+        }
+      },
+      {
+        "timestamp": "2026-09-28T11:11:22.775352+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -55.8,
+        "context": {
+          "id": "3639",
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "tech_score": "5"
         }
       }
     ]

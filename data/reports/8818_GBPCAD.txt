@@ -1,0 +1,23 @@
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level with RSI 43.4 (neutral zone) and BUY_5 signal, supported by GBP rate strength (+1.45% diff), but MTF agreement is weak (1/3 conf) and ribbon leans bearish — low-conviction setup.
+RISK_FACTORS: MTF conflict (M:SELL, D:BUY, 4H:SELL) creates directional ambiguity; CAD positioning remains heavily short at 58% despite unwinding, signalling late-stage crowding and reversal risk.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.8607
+ENTRY_TRIGGER_REASON: Bounce off FIB swing low (SL) with confirmation of D1 RSI oversold and pin bar pattern.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Violation (Critical):** Weekly=NEUTRAL, Daily=BUY, 4H=SELL → conf=1/3 (only 1 of 3 timeframes agree on BUY). HARD RULE requires weekly AND daily both agreeing. They do not. This fails the gating
