@@ -1,0 +1,25 @@
+PAIR: EUR/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level in confirmed downtrend offers reversal setup, but MTF misalignment (W:BUY vs M:SELL vs D:NEUTRAL) and converging ribbon signal weakening conviction—wait for confirmation before committing.
+RISK_FACTORS: (1) MTF disagreement (weekly BUY vs monthly SELL at 40% confidence) blocks high-confidence trade; (2) Converging ribbon + NEUTRAL oscillators indicate trend exhaustion but no directional thrust yet—reversal unconfirmed.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 182.25
+ENTRY_TRIGGER_REASON: Break above intraday resistance (SMA50 at 183.09) with RSI >50 and MACD histogram turning positive on D1 to confirm weekly BUY bias.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+1. **TECHNICAL_SCORE = 5** (NEUTRAL, baseline 3 + context):
+   - D1 RSI=45.8 in downtrend → standard tier 45–62=NEUTRAL(3–4); no directional lean yet.
+   - MACD histogram +0

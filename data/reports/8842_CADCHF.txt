@@ -1,0 +1,23 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + bearish engulfing on 4H + falling CAD rates create a reversal setup, but weak MTF agreement (W:NEUTRAL, D:NEUTRAL, 4H:SELL) and RSI neutral at 50.7 severely limit conviction.
+RISK_FACTORS: [1] MTF disagreement (0/3 agreement) violates core entry rule — daily and weekly both neutral, no directional consensus. [2] RSI 50.7 and OSC=NONE (Stoch 29.7 + CCI −27.9 show oscillator dispersion, not confluence) — no momentum confirmation for reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule breach: Weekly and Daily do not both agree on direction (conf=0/3 < 2/3 threshold). TRADE_THIS blocked.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**RATIONALE:**
+
+1. **MTF VETO**: W=NEUTRAL + D=NEUTRAL + 4H=SELL → conf=1/3 (only 4H directional). Mandatory MTF rule requires
