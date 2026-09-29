@@ -317,6 +317,79 @@ def _record_divergence_evaluation(updated: dict) -> None:
         print(f"[research_outcome_checker] divergence shadow_mode recording error "
               f"(research trade {updated.get('id')}): {exc}", file=sys.stderr)
 
+
+# 2026-09-29: this rule was registered by hand weeks ago (see
+# PROMOTION_DISCIPLINE.md's confidence_floor_underperforms_conf6 entry) on
+# a discovery sample that found a striking, monotonic-looking degradation
+# (conf==6 WR=41.9%/PF=1.175 best, conf==7 WR=40.3%/PF=0.792, conf==8
+# WR=34.2%/PF=0.469 worst) -- but nothing ever fed record_evaluation() for
+# it, so it sat at 0 fresh evaluations indefinitely. A 2026-09-29 fresh
+# re-check on the full current v2 population reconfirmed the same shape
+# (conf6 43.1%/1.066, conf7 40.3%/0.828, conf8 33.3%/0.532, n in the
+# hundreds each) -- real enough that leaving this rule unwired any longer
+# means never finding out whether it clears its own pre-registered bar
+# (n>=100/100, p<0.05, on FRESH data -- explicitly not a re-test of the
+# discovery sample). Mirrors _record_divergence_evaluation()'s shape
+# exactly: pure observability, never influences the trade's own fields,
+# never feeds a grading/gating decision on its own.
+_CONFIDENCE_FLOOR_RULE = "confidence_floor_underperforms_conf6"
+_CONFIDENCE_FLOOR_RULE_DESCRIPTION = (
+    "would_fire=True means confidence>=7 (the real gate's current floor); "
+    "would_fire=False means confidence==6 (below the floor, never reaches "
+    "a real trade under current gating). Discovery sample (research_trades."
+    "csv, strict v2/post-cutoff, EXPIRY-inclusive): conf==6 n=492 WR=41.9% "
+    "PF=1.175 (best); conf==7 n=484 WR=40.3% PF=0.792; conf==8 n=117 "
+    "WR=34.2% PF=0.469 (worst) -- a monotonic-looking degradation from "
+    "6->7->8, opposite of what confidence should predict, consistent with "
+    "this codebase's own known grade-ordering-inversion pattern. None of "
+    "the pairwise WR gaps cleared significance on the discovery sample "
+    "(conf6-vs-7 p=0.31; conf7-vs-8 p=0.11; conf6-vs-8 p=0.064) -- real "
+    "and large in PF/pnl terms, not yet confirmed. Requires fresh "
+    "out-of-sample evidence, not a re-test of the discovery sample."
+)
+
+
+def _confidence_floor_would_fire(updated: dict):
+    """Returns True/False for would_fire (True=confidence>=7, False=
+    confidence==6), or None for any other confidence value or missing
+    data -- this rule's pre-registered comparison is scoped exactly to
+    the conf==6 vs conf>=7 boundary, not the full confidence range."""
+    try:
+        conf = float(updated.get("confidence"))
+    except (TypeError, ValueError):
+        return None
+    if conf == 6:
+        return False
+    if conf >= 7:
+        return True
+    return None
+
+
+def _record_confidence_floor_evaluation(updated: dict) -> None:
+    """Best-effort: record this closed research trade against the
+    confidence_floor_underperforms_conf6 shadow rule. Pure observability --
+    never raises, never affects the trade's own fields, never feeds a
+    grading/gating decision."""
+    try:
+        would_fire = _confidence_floor_would_fire(updated)
+        if would_fire is None:
+            return  # confidence outside the {6} vs {>=7} comparison -- not this rule's population
+        from src import shadow_mode as _sm
+        _sm.register_rule(
+            _CONFIDENCE_FLOOR_RULE, description=_CONFIDENCE_FLOOR_RULE_DESCRIPTION,
+            min_n_fire=100, min_n_no_fire=100, alpha=0.05,
+        )
+        _sm.record_evaluation(
+            _CONFIDENCE_FLOOR_RULE, would_fire=would_fire,
+            outcome=updated.get("status"), net_pips=updated.get("net_pips"),
+            context={"id": updated.get("id"), "pair": updated.get("pair"),
+                     "direction": updated.get("direction"),
+                     "confidence": updated.get("confidence")},
+        )
+    except Exception as exc:
+        print(f"[research_outcome_checker] confidence-floor shadow_mode recording error "
+              f"(research trade {updated.get('id')}): {exc}", file=sys.stderr)
+
 _PRICE_URL         = "https://api.twelvedata.com/price"
 _EXPIRY_DAYS       = 7      # fallback; actual expiry is computed from R:R
 _STALE_EXIT_DAYS   = 21     # hard maximum — close without T1 hit after this many days
@@ -585,6 +658,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                 _record_sentiment_evaluation(updated)
                 _record_ribbon_carveout_evaluation(updated)
                 _record_divergence_evaluation(updated)
+                _record_confidence_floor_evaluation(updated)
                 _closed_this = True
 
             elif _casc.stop_hit(row, price):
@@ -648,6 +722,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                     _record_sentiment_evaluation(updated)
                     _record_ribbon_carveout_evaluation(updated)
                     _record_divergence_evaluation(updated)
+                    _record_confidence_floor_evaluation(updated)
                     _closed_this = True
 
             if _closed_this:
@@ -666,6 +741,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
                     _record_sentiment_evaluation(updated)
                     _record_ribbon_carveout_evaluation(updated)
                     _record_divergence_evaluation(updated)
+                    _record_confidence_floor_evaluation(updated)
                     continue
             except Exception:
                 pass
@@ -702,6 +778,7 @@ def check_open_research_trades(log=print, price_cache: dict | None = None) -> li
             _record_sentiment_evaluation(updated)
             _record_ribbon_carveout_evaluation(updated)
             _record_divergence_evaluation(updated)
+            _record_confidence_floor_evaluation(updated)
 
         except Exception as exc:
             log(f"  Research #{rec_id} {pair}: outcome check error — {exc}")
