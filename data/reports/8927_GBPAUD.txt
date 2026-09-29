@@ -1,0 +1,23 @@
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 double-top bearish pattern + converging ribbon signals trend exhaustion, but MTF conflict (M:BUY vs D:NEUTRAL) and mid-range positioning prevent high-conviction short.
+RISK_FACTORS: [1] MTF disagreement (weekly bullish, daily neutral) fails confidence threshold — weekly uptrend context contradicts D1 bearish setup. [2] Oscillator confluence absent (Stochastic 64.1, CCI 63.4 both neutral-overbought, RSI 48.7 mid-range) — no momentum confirmation of reversal; reversion to mean likely rather than sustained breakdown.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.8735
+ENTRY_TRIGGER_REASON: Break below double-top neckline at ~1.8735 (near SL Fibonacci level 1.87326) would confirm D1 reversal and align with weekly bias if daily recovers to test SMA50.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+1. **MTF RULE FAILURE (CRITICAL):** Weekly=BUY, Daily=NEUTRAL → only 1/3 timeframes directionally

@@ -1,0 +1,21 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly SELL + ribbon leaning bear + CAD unwinding shorts provide marginal directional bias, but weak daily/weekly agreement and neutral RSI/MACD undermine conviction.
+RISK_FACTORS: [1] MTF alignment failure — daily/weekly both NEUTRAL with only monthly SELL (conf=0/3) creates low-conviction entry risk; price trapped in 434p range with no breakout confirmation. [2] RSI 47.5 (neutral zone) + MACD near-flat + inside bar on 4H = no momentum confirmation; reversal risk if price rallies above SMA50 (1.8782) into overbought.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: NONE
+ENTRY_TRIGGER_REASON: MTF rule violation — weekly and daily do NOT both agree on direction (both NEUTRAL, only monthly SELL). Confidence 4/10 falls below 7/10 threshold. Holding pattern until clearer directional alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**Rationale:**
+- **MTF Failure:** W:NEUTRAL + D:NEUTRAL + 4H:NEUTRAL = conf 0/3. Mandatory NO despite monthly bias.
+- **Technical

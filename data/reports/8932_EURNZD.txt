@@ -1,0 +1,16 @@
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Daily RSI overbought (69.6) at key pin bar in aligned-bull ribbon context creates conflicted signal; MTF agreement weak (D:SELL + 4H:NEUTRAL = 1/3 confidence), NZD rate falling supports EUR weakness but crowded EUR shorts present reversal risk.
+RISK_FACTORS: [1. MTF alignment insufficient (only D:SELL, 4H neutral, W neutral) — no weekly+daily agreement required by rules; 2. 4H uptrend (price > SMA50 > SMA200) with 4H pin bar bullish contradicts D1 SELL; ribbon fully aligned bull (5/5) conflicts with sell thesis]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W and D do not both agree on direction (W:NEUTRAL + D:SELL ≠ dual consensus). Weekly is neutral, 4H is neutral — only daily supports sell. Confidence = 1/3, below 2/3 threshold. Additionally, RIBBON=ALIGNED_BULL (5/5 EMA stack) directly contradicts SELL signal and was already factored into T_sig baseline. Pin bar appears

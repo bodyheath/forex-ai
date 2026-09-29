@@ -2026,6 +2026,19 @@
           "market_regime": "trending_risk_on",
           "closed_at": "2026-09-28 11:11:22"
         }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:06.573552+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -12.6,
+        "context": {
+          "id": "3376",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_off",
+          "closed_at": "2026-09-29 05:11:06"
+        }
       }
     ]
   },
@@ -24082,6 +24095,138 @@
           "direction": "SELL",
           "tech_score": "5"
         }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:03.048595+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 74.9,
+        "context": {
+          "id": "3349",
+          "pair": "EUR/CAD",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:03.335446+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 24.9,
+        "context": {
+          "id": "3350",
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "tech_score": "7"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:03.787004+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -12.7,
+        "context": {
+          "id": "3354",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "tech_score": "8"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:04.077288+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 11.9,
+        "context": {
+          "id": "3355",
+          "pair": "EUR/JPY",
+          "direction": "BUY",
+          "tech_score": "7"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:04.552583+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -3.9,
+        "context": {
+          "id": "3356",
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:05.129664+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -49.0,
+        "context": {
+          "id": "3366",
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:05.414722+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 69.4,
+        "context": {
+          "id": "3369",
+          "pair": "GBP/CAD",
+          "direction": "BUY",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:05.868224+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -45.6,
+        "context": {
+          "id": "3374",
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "tech_score": "7"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:06.156023+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 44.3,
+        "context": {
+          "id": "3375",
+          "pair": "AUD/CAD",
+          "direction": "BUY",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:06.604896+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -12.6,
+        "context": {
+          "id": "3376",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "tech_score": "8"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:07.008548+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 10.4,
+        "context": {
+          "id": "3381",
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "tech_score": "5"
+        }
       }
     ]
   },
@@ -24097,7 +24242,128 @@
     "pf_min_fire": null,
     "pf_min_gap": null,
     "promoted": false,
-    "evaluations": []
+    "evaluations": [
+      {
+        "timestamp": "2026-09-29T05:11:03.079635+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 74.9,
+        "context": {
+          "id": "3349",
+          "pair": "EUR/CAD",
+          "direction": "BUY",
+          "confidence": "6"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:03.366890+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 24.9,
+        "context": {
+          "id": "3350",
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:03.818477+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -12.7,
+        "context": {
+          "id": "3354",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "confidence": "8"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:04.108256+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 11.9,
+        "context": {
+          "id": "3355",
+          "pair": "EUR/JPY",
+          "direction": "BUY",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:04.583647+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -3.9,
+        "context": {
+          "id": "3356",
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:05.160091+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -49.0,
+        "context": {
+          "id": "3366",
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:05.445959+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 69.4,
+        "context": {
+          "id": "3369",
+          "pair": "GBP/CAD",
+          "direction": "BUY",
+          "confidence": "6"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:05.899534+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -45.6,
+        "context": {
+          "id": "3374",
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "confidence": "8"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:06.635886+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -12.6,
+        "context": {
+          "id": "3376",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "confidence": "8"
+        }
+      },
+      {
+        "timestamp": "2026-09-29T05:11:07.039744+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 10.4,
+        "context": {
+          "id": "3381",
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "confidence": "7"
+        }
+      }
+    ]
   },
   "repeat_thesis_after_materialized_risk": {
     "description": "A candidate whose pair+direction matches a PREVIOUS REAL fund trade that closed as a LOSS within the prior 30 days, where that previous loss had at least one risk_factor_tag (src/trade_postmortem.py) that materialized (the flagged concern was directionally consistent with the loss). would_fire=True means this exact repeat condition is met for the new candidate; would_fire=False covers every other real fund candidate. Raised 2026-09-17 as item 2 of the confidence/ribbon streak investigation (the 5-consecutive-loss review): scoped correctly to the real fund's own decisive history (n=14 at the time, methodology first tried on the much larger, much noisier research population and produced a nonsense ~5000-repeats/326-losses result there -- research re-evaluates every pair many times a day, so 'same pair+direction within 30 days' is nearly universal and not a real filter in that population). Correctly scoped to real fund trades only, there is exactly ONE repeat in the fund's entire history to date: the two AUD/NZD SELL trades (#6895, #7615), 7 days apart, both losses, both confirmed ribbon-strongly-against. n=1 -- explicitly too thin to establish a pattern or backtest any blocking rule's real historical benefit, reported plainly as such rather than forced into a read. Registered now so this real, plausible idea is not lost track of and accumulates real evidence automatically as further real fund trades close, rather than only being revisited if a human happens to ask again. pf_max_fire=0.80 is BORROWED from ribbon_carveout_exclude_trending_risk_on's own bar for consistency -- NOT independently derived from data (n=1 cannot derive a PF bar). No live record_evaluation() feed exists yet for this rule -- wiring one (checking each new real fund candidate against data/trade_postmortems.json for a same-pair+direction loss with a materialized risk factor in the prior 30 days) is a separate, not-yet-done follow-up, exactly the same open-item shape confidence_floor_underperforms_conf6 was registered with.",
