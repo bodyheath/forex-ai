@@ -1,0 +1,23 @@
+```
+PAIR: EUR/GBP
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish divergence and double-top pattern conflict with bullish pin bar and oversold 4H RSI; mixed MTF lacks directional conviction.
+RISK_FACTORS: [1. MTF all-neutral (W:NEUTRAL, D:NEUTRAL, 4H:BUY=minority) fails 2/3 agreement threshold — no confirmed momentum vector. 2. Crowded EUR short positioning (8% net SHORT, BUILDING) creates reversal risk if price rallies past 0.8615; pin_bar_at_key_level suggests institutional rejection of sells.]
+TRADE_THIS: NO
+ENTRY_TYPE: HOLD
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: Insufficient confluence — MTF conflict (0/3), no oscillator agreement, and opposing pattern signals (pin bar BUY vs double-top SELL, bearish DIV vs oversold 4H) create undefined edge.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**REASONING:**
+
+1. **MTF Failure**: Weekly, Daily, and Monthly all NEUTRAL. Only 4H suggests BUY (conf=0/3, below 2/3 threshold). **Hard Rule: TRADE_THIS = NO** when MTF weekly
