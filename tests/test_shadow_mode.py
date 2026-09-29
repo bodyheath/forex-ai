@@ -236,5 +236,55 @@ class TestReadyForReviewUsesClusterCount(ShadowModeTestCase):
         self.assertTrue(status["ready_for_review"])  # n_decisive=6 >= min_n=5
 
 
+class TestClusterBootstrapDeterminism(ShadowModeTestCase):
+    """The reproducibility guarantee stated in _cluster_bootstrap_stats()'s
+    own docstring: seed=42 is fixed, random.Random(seed) is an independent
+    PRNG instance (not the shared global `random` module state), so the
+    same evaluations must always produce byte-for-byte identical results
+    -- not just the same order of magnitude. This closes the gap that
+    surfaced when an earlier, never-committed analysis script reported
+    "same order of magnitude, different exact numbers" against this same
+    committed implementation -- that gap was two DIFFERENT pieces of code,
+    not this code being non-deterministic; this test makes the guarantee
+    explicit and enforced going forward."""
+
+    def _register_and_populate(self, rule_name):
+        sm.register_rule(rule_name, description="test", cluster_aware=True,
+                          min_n_fire=2, min_n_no_fire=2)
+        for i in range(15):
+            for _ in range(3):
+                self._record(rule_name, True,
+                              "WIN" if i % 3 != 0 else "LOSS", net_pips=10,
+                              context={"regime_cluster": f"fire{i}"})
+        for i in range(15):
+            for _ in range(3):
+                self._record(rule_name, False,
+                              "LOSS" if i % 4 != 0 else "WIN", net_pips=-10,
+                              context={"regime_cluster": f"nofire{i}"})
+
+    def test_repeated_calls_on_same_data_are_byte_identical(self):
+        self._register_and_populate("det_rule")
+        status1 = sm.check_promotion_readiness("det_rule")
+        status2 = sm.check_promotion_readiness("det_rule")
+        status3 = sm.check_promotion_readiness("det_rule")
+        self.assertEqual(status1["p_value"], status2["p_value"])
+        self.assertEqual(status1["p_value"], status3["p_value"])
+        self.assertEqual(status1["would_fire_wr"], status2["would_fire_wr"])
+        self.assertEqual(status1["would_not_fire_wr"], status2["would_not_fire_wr"])
+
+    def test_fresh_rule_with_identical_evaluations_matches_exactly(self):
+        """Not just the same rule re-queried -- two INDEPENDENTLY built
+        rules with identical evaluation data must produce identical
+        results too, confirming determinism doesn't depend on any
+        incidental process/object state."""
+        self._register_and_populate("det_rule_a")
+        self._register_and_populate("det_rule_b")
+        status_a = sm.check_promotion_readiness("det_rule_a")
+        status_b = sm.check_promotion_readiness("det_rule_b")
+        self.assertEqual(status_a["p_value"], status_b["p_value"])
+        self.assertEqual(status_a["would_fire_wr"], status_b["would_fire_wr"])
+        self.assertEqual(status_a["would_not_fire_wr"], status_b["would_not_fire_wr"])
+
+
 if __name__ == "__main__":
     unittest.main()

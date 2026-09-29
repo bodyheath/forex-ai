@@ -330,6 +330,15 @@ def _cluster_bootstrap_stats(fires: list, no_fires: list, n_boot: int = 2000,
 
     Returns (p_value, n_clusters_fire, n_clusters_no_fire, wr_fire,
     wr_no_fire) or None if either side has no decisive clusters at all.
+
+    REPRODUCIBILITY GUARANTEE: seed=42 is fixed and every real call site
+    (check_promotion_readiness() below) uses this default -- never pass a
+    different seed for a real promotion decision. `random.Random(seed)`
+    creates an INDEPENDENT PRNG instance (not the shared global `random`
+    module state, which could be perturbed by unrelated code running
+    earlier in the same process) -- given the same evaluations, this
+    always produces byte-for-byte identical p_value/wr_fire/wr_no_fire,
+    verified by tests.test_shadow_mode.TestClusterBootstrapDeterminism.
     """
     def _cluster_map(evals):
         clusters: dict = {}

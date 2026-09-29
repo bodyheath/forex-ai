@@ -89,6 +89,16 @@ def cluster_bootstrap_p_value(fire_df: pd.DataFrame, nofire_df: pd.DataFrame,
     0.062 = +6.2pp), n_clusters_fire, n_clusters_nofire, n_rows_fire,
     n_rows_nofire, wr_fire, wr_nofire -- or None if either side has no
     clusters.
+
+    REPRODUCIBILITY GUARANTEE: seed=42 is fixed and every caller in this
+    codebase (edge_mining_cluster_bootstrap_stress_test.py included) uses
+    this default. `random.Random(seed)` is an INDEPENDENT PRNG instance,
+    not the shared global `random` module state -- given the same inputs,
+    this always produces byte-for-byte identical p_value/ci_low/ci_high,
+    verified by tests.test_edge_mining_cluster_bootstrap_lib.
+    TestDeterminism. Do not pass a different seed when reporting a result
+    that will inform a real decision (a book merge, a promotion call) --
+    only for an explicit robustness check across seeds, stated as such.
     """
     def _cluster_map(clusters, wins):
         out = {}
