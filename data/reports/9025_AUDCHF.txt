@@ -1,0 +1,23 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly SELL + institutional bearish-vs-retail bullish (SMD −5) + pin bar at resistance (SH=0.5882) create weak bearish confluence, but lack of oscillator confirmation and mixed MTF (only 1/3 agree) prevent conviction.
+RISK_FACTORS: [1. D1 uptrend structure (price>SMA50>SMA200 golden cross) is actively bullish and directly contradicts SELL direction; MTF conf=1/3 falls below the 2/3 threshold required by MTF rule. 2. OSC=NONE (no Stoch/CCI/RSI triple confluence) leaves entry vulnerable to whipsaw; pin bar is at resistance but lacks oscillator oversold confirmation for mean reversion.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**RATIONALE:**
+
+**MTF Veto:** W=SELL, D=NEUTRAL, 4H=NEUTRAL → only 1/3 timeframes agree on direction. MTF rule is strict: *if weekly AND daily don't both agree, TRADE_THIS

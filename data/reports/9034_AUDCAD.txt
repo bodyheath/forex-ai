@@ -1,0 +1,27 @@
+PAIR: AUD/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and monthly both SELL with D1 neutral and 4H bullish disagreement; fundamental AUD strength (+2.23% diff, rising rates) conflicts with technicals and positioning; pin bar at key level on D1 (bearish) suggests rejection but insufficient oscillator confirmation.
+RISK_FACTORS: MTF disagreement (4H bullish vs W/M bearish) creates whipsaw risk; AUD rate-rise support could flip D1 neutral → BUY, negating the setup.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**RATIONALE:**
+
+**MTF Conflict (Critical):**  
+Weekly: SELL, Monthly: SELL, but Daily: NEUTRAL and 4H: BUY. MTF rule requires weekly AND daily to both agree on direction (≥2/3 confidence). Here conf=1/3 (only monthly + weekly agree on SELL; daily is neutral; 4H opposes). **This alone triggers TRADE_THIS: NO**, regardless of other scores.
+
+**Technical Score = 4:**
+- D1 RSI 49.2

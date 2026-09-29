@@ -1,0 +1,25 @@
+PAIR: GBP/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with D1+4H MTF agreement and RSI oversold in mixed trend supports BUY, but converging ribbon and 4H head-and-shoulders pattern create near-term reversal risk.
+RISK_FACTORS: [1. Ribbon converging signals trend weakening; potential for fakeout above pin bar before continuation lower. 2. 4H head-and-shoulders bearish pattern contradicts D1 BUY signal — MTF conflict on intraday timeframe may cause choppy entry.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 207.101
+ENTRY_TRIGGER_REASON: Retest of swing low (SL) at Fibonacci support; pin bar base + RSI 36 in mixed trend = reversal setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Analysis:**
+- **W:BUY + D:BUY (conf=3/3)**: Weekly and daily both bullish → pass MTF rule ✓
+- **4H:BUY vs D1:BUY**: Both agree on direction, but 4H shows head-and-shoulders (bearish pattern) while
