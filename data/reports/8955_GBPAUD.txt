@@ -1,0 +1,26 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Daily downtrend structure (price < SMA50 < SMA200) conflicts with weekly/monthly bullish alignment; converging ribbon + mixed 4H signals weakening momentum and reversal risk at double-top resistance.
+RISK_FACTORS: (1) MTF disagreement: W:BUY + M:BUY conflict D:NEUTRAL + 4H:NEUTRAL — no clear directional consensus (confidence 1/3), violates MTF rule; (2) Ribbon converging with 5 of 5 pairs aligned = trend weakening despite bullish structure — reversal likely imminent.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**ANALYSIS SUMMARY:**
+
+**MTF REJECTION (HARD STOP):**
+- Weekly: BUY | Daily: NEUTRAL | 4H: NEUTRAL → **conf = 1/3 wt = 45%**
+- Rule: MTF weekly AND daily must both agree on direction. They do not (W≠D).
+- **MTF rule triggered → TRADE_THIS: NO** regardless of other factors.

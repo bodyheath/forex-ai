@@ -1,0 +1,25 @@
+PAIR: GBP/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with RSI 36 in confirmed uptrend (W+D BUY) offers pullback-entry setup, but converging ribbon and 4H head-and-shoulders pattern create near-term reversal risk.
+RISK_FACTORS: [1. Converging EMA ribbon signals trend weakening; reversal risk if price fails to hold above 207.10 support. 2. 4H head-and-shoulders pattern contradicts D1 uptrend — if price breaks below neckline (~206.50), invalidates BUY thesis.]
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 207.10
+ENTRY_TRIGGER_REASON: Retest of FIB swing low (SL=207.101) with RSI <35 would confirm oversold pullback in uptrend before continuation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL_SCORE: 6/10**
+- D1 T_sig baseline = BUY_7; apply context adjustments.
+- **MTF check:** W=BUY, D=BUY, 4H=BUY → 3/3
