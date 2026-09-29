@@ -5,7 +5,7 @@
   "daily_pnl_dollars": 0.0,
   "daily_pnl_pct": 0.0,
   "peak_balance": 10314.07,
-  "current_drawdown_pct": 4.1979,
+  "current_drawdown_pct": 4.2,
   "drawdown_pct": 4.1979,
   "worst_daily_pnl_pct": -2.4193,
   "consecutive_losses": 1,
@@ -26,7 +26,7 @@
   "best_pips": 237.7,
   "fund_total_trades": 275,
   "current_sizing_pct": 0.75,
-  "sizing_mode": "REDUCED",
+  "sizing_mode": "drawdown_caution",
   "daily_trades_date": "2026-09-30",
   "unrealised_dollars": -10.11,
   "unrealised_pips": -34.4,
@@ -57,8 +57,8 @@
   "observation_mode": false,
   "observation_mode_until": null,
   "missed_opportunities": [],
-  "sizing_reason": "standard 1% risk",
+  "sizing_reason": "Drawdown caution \u2014 fund 4.2% from peak (0.75% risk)",
   "weekend_alert_sent_date": null,
   "drawdown_paused": false,
-  "max_drawdown_seen": 0.0
+  "max_drawdown_seen": 4.2
 }
