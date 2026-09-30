@@ -1,0 +1,17 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with price structure (golden cross, price>SMA50>SMA200, uptrend label) and 4H bullish engulfing; MTF agreement fails (M:BUY vs W/D:NEUTRAL); insufficient confluence to override MTF rejection rule.
+RISK_FACTORS: [1] MTF alignment broken (0/3 agree) — primary blocker on TRADE_THIS; [2] D1 RSI=55.3 in uptrend zone (45–62 neutral, not SELL-valid) plus 4H RSI=62.7 and bullish engulfing pattern contradict T_sig=SELL_3 directional conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL and D:NEUTRAL do not both agree on SELL direction (conf=0/3, <2/3 threshold). D1 price structure is golden cross (uptrend); T_sig=SELL_3 is noise against structural bullish alignment. 4H pattern (bullish engulfing) reinforces uptrend, not downtrend.
+ENTRY_TRIGGER

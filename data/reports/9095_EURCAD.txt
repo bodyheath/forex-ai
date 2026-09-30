@@ -1,0 +1,24 @@
+PAIR: EUR/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Pin bar at 50% Fib + Stochastic/CCI SELL signal conflicts with uptrend structure and weak MTF confluence (D1 NEUTRAL breaks lower-TF alignment rule).
+RISK_FACTORS: [1] MTF disagreement (W:NEUTRAL + D:NEUTRAL; only M:SELL) violates confidence threshold — daily and weekly do not both agree, blocking high-confidence trade regardless of technicals. [2] Price above SMA50 in confirmed uptrend (golden cross D1+4H) with RSI 56.5 (mid-neutral zone) — SELL signal conflicts with trend structure; pin bar at 50% Fib is ambiguous and may be retrace-continuation rather than reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Enforcement (CRITICAL):**  
+Weekly=NEUTRAL, Daily=NEUTRAL, 4H=NEUTRAL. Only Monthly=SELL. Confidence of MTF agreement = 0/3 (only 1 of 3 lower timeframes agrees with

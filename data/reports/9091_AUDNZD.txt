@@ -1,0 +1,21 @@
+```
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 overbought RSI (63.6) in uptrend context conflicts with T_sig=SELL_3, pin bar signals reversal but MTF alignment fails (M:SELL vs W/D:NEUTRAL), and ribbon convergence warns of trend weakening.
+RISK_FACTORS: [1. MTF disagree severely (0/3 confirmation) — W and D both neutral despite M:SELL; SELL entry lacks multi-timeframe confluence required for high confidence. 2. D1 uptrend structure (price > SMA50 > SMA200) remains intact — RSI 63.6 is overbought but normal in uptrend; pin bar signal may be false if golden cross continues to push higher.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Trade fails MTF rule: M:SELL contradicted by W:NEUTRAL + D:NEUTRAL (conf=0/3, <2/3 threshold). Insufficient fundamental layers in agreement (only rate differential supports SELL; positioning, sentiment, macro neutral). Confidence 4/10 << 7 minimum.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Analysis

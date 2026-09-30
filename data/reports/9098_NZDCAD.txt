@@ -1,0 +1,23 @@
+PAIR: NZD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with D1 BUY signal conflicts with 4H downtrend and converging ribbon; MTF agreement only 1/3 (D:BUY vs W:NEUTRAL+4H:NEUTRAL) blocks trade entry despite T_sig=7.
+RISK_FACTORS: MTF confluence insufficient (only D1 agrees; W and 4H neutral/bearish) — price below SMA50 on 4H signals ongoing weakness. Ribbon converging indicates trend exhaustion; no oscillator confirmation (OSC=NONE, stoch=41, CCI=-46 flat/weak).
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — Weekly and Daily do not both agree on direction (1/3 conf < 2/3 threshold). D1 BUY conflicts with 4H downtrend and converging ribbon; pin bar + RSI 42 (neutral zone) insufficient to overcome lack of multi-timeframe alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+1. **MTF Veto (Hard Rule):** W:NEUTRAL + D:BUY +
