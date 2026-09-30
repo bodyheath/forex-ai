@@ -1,0 +1,24 @@
+PAIR: USD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H pin bar at key level + rising USD rates provide tactical upside support, but D1 neutrality and ribbon lean-bear limit conviction to a modest probe entry.
+RISK_FACTORS: [D1 remains range-bound with price below SMA50 (158.50), capping upside momentum] [JPY net long positioning (83%) + reversing momentum creates mean-reversion risk if USD momentum stalls]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 157.65
+ENTRY_TRIGGER_REASON: Break above 4H pin bar high (key reversal level) with intraday RSI confirmation >55
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**Rationale:**
+
+- **MTF conflict**: M/W/D all NEUTRAL; only 4H signals BUY (conf=0/3, wt=80%). Hard rule: TRADE_THIS requires weekly + daily agreement — both missing → NO.
+- **Technical**: D1 T_sig=3 (NEUTRAL) justified: RSI 50.5 is midpoint, MACDh positive but weak (0.42), price/MA misalignment in range. 4H pin bar at key level (+

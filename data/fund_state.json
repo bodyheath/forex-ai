@@ -5,7 +5,7 @@
   "daily_pnl_dollars": 0.0,
   "daily_pnl_pct": 0.0,
   "peak_balance": 10314.07,
-  "current_drawdown_pct": 4.4388,
+  "current_drawdown_pct": 4.44,
   "drawdown_pct": 4.4388,
   "worst_daily_pnl_pct": -2.4193,
   "consecutive_losses": 2,
@@ -25,7 +25,7 @@
   "best_pair": "EUR/NZD",
   "best_pips": 237.7,
   "fund_total_trades": 277,
-  "current_sizing_pct": 0.75,
+  "current_sizing_pct": 0.56,
   "sizing_mode": "REDUCED",
   "daily_trades_date": "2026-09-30",
   "unrealised_dollars": 0,
@@ -56,9 +56,18 @@
   "weekly_start_date": "",
   "observation_mode": false,
   "observation_mode_until": null,
-  "missed_opportunities": [],
-  "sizing_reason": "standard 1% risk",
+  "missed_opportunities": [
+    {
+      "pair": "EUR/USD",
+      "direction": "BUY",
+      "confidence": 8.0,
+      "checklist_score": 5.0,
+      "blocked_reason": "pause",
+      "timestamp": "2026-09-30T18:21:45"
+    }
+  ],
+  "sizing_reason": "losses=2",
   "weekend_alert_sent_date": null,
   "drawdown_paused": false,
-  "max_drawdown_seen": 0.0
+  "max_drawdown_seen": 4.44
 }
