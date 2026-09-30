@@ -1,0 +1,22 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both confirm SELL with price at 78.6% Fib and pin bar at key level, but 4H uptrend and converging ribbon create reversal risk; RSI 56.8 (D1) neutral in downtrend context, MACD negative supports downside.
+RISK_FACTORS: (1) 4H uptrend and converging ribbon signal potential trend exhaustion/reversal — stop must sit above 0.5882 SH; (2) CHF positioning (72% short, BUILDING) risks squeeze if risk sentiment improves; VIX 16 is stable, not supportive of risk-off CHF strength.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5850
+ENTRY_TRIGGER_REASON: Break below pin bar high at 0.5850 confirms rejection of Fib 78.6% and aligns W+D SELL with lower risk-of-reversal entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+**RATIONALE:**
+
+**MTF Conflict (Confidence Penalty):**
+- W: SELL, D: SELL, 4H: BUY → conf = 2/3 weekly+daily

@@ -1,0 +1,27 @@
+```
+PAIR: EUR/GBP
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 78.6% Fib support with oversold 4H RSI and bearish divergence conflict creates low-conviction mean-reversion setup in neutral range, invalidated by MTF disagreement.
+RISK_FACTORS: [1. MTF disagreement (4H:BUY vs D/W/M:NEUTRAL, conf=0/3 — fails MTF rule, no trade signal], [2. Bearish RSI divergence (8p/7pt) contradicts BUY direction — divergence conflict reduces conviction]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: 4H BUY does not align with D1/W/M NEUTRAL — weekly+daily must both agree. Confidence 5/10 < threshold 7/10. Divergence conflict (bearish DIV vs BUY bias) further reduces reliability.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+**Analysis:**
+
+**Technical (5/10):**
+- D1 RSI=49.9 (NEUTRAL tier, +0 in mixed MTF context)
+- 4H RSI=26.

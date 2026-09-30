@@ -1,0 +1,19 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 supported by rate divergence (CAD falling, CHF rising), but MTF weekly+daily both NEUTRAL breaks MTF agreement rule; price at 78.6% Fib resistance and RSI 55.3 neutral zone offer no directional confirmation.
+RISK_FACTORS: [1. MTF rule violated — weekly and daily both NEUTRAL, not both agreeing on direction; confidence capped below 7 regardless of other signals. 2. RSI 55.3 is mid-range neutral; MACD near zero offers no momentum confirmation; oscillators show no confluence (conf=NONE).]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule breach: W:NEUTRAL + D:NEUTRAL fails both-agree requirement (conf=0/3). T_sig=SELL_3 is pre-computed baseline but lacks technical confluence (RSI neutral, MACD flat, OSC=NONE) and MTF alignment. Fundamental factors (rate divergence) are present but insufficient without technical confirmation at ≥2/3 MTF agreement.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
