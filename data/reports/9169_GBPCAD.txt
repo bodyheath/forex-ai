@@ -1,0 +1,16 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with bullish pattern conflicts with 4H overbought RSI (77) and monthly downtrend; technical setup is ambiguous despite USD/CAD weakness, making entry high-risk.
+RISK_FACTORS: [1. MTF disagreement: 4H sell signal (RSI 77 overbought) vs. D1 neutral uptrend structure creates conflicting directional bias — conf=0/3 fails MTF rule (both weekly and daily must agree; neither does). 2. Oscillator confluence absent — Stochastic 97.3 + CCI 118.2 both extreme but show zero agreement pattern (conf=NONE), reducing signal reliability; pin bar + double bottom patterns are constructive but isolated without momentum confirmation.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly=NEUTRAL, daily=NEUTRAL, 4H=SELL — insufficient agreement across daily and weekly timeframes (conf=0/3 means no directional consensus). Although D1 T_sig=3 (NEUTRAL) and 4H T=9 (SELL) create tactical tension, the absence of both weekly AND daily alignment (mandatory for TRADE_THIS

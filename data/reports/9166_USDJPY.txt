@@ -1,0 +1,23 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Ribbon leaning bearish (4/5 aligned) and rising JPY rates favour weakness, but RSI neutral, MACD flat, and no MTF agreement prevent high-conviction entry—range-bound setup waiting for breakout direction.
+RISK_FACTORS: (1) All MTF timeframes neutral with 0/3 agreement—no directional bias confirmed; (2) Price inside both daily and 4H bars with RSI at midpoint (50.5/51.4)—lacks momentum to sustain either direction.
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 157.00
+ENTRY_TRIGGER_REASON: Break below daily support near SMA50 (158.5010) with Stochastic confirmation (>70 setup for pullback entry).
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**Rationale:**
+- **MTF Rule Violation:** W:NEUTRAL + D:NEUTRAL + 4H:NEUTRAL = conf=0/3 → MTF does not support entry; confidence capped <7 automatically.
+- **Technical:** RSI 50.5 (D1) and 51.4 (4H) both at neutral midpoint; MACD histog
