@@ -6595,6 +6595,30 @@
           "direction": "BUY",
           "reject_reason": "eligibility"
         }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:13.875335+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 140.7,
+        "context": {
+          "candidate_id": 142,
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "reject_reason": "sizing"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:14.060563+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -158.2,
+        "context": {
+          "candidate_id": 192,
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -8494,6 +8518,29 @@
           "direction": "BUY",
           "reject_reason": "eligibility"
         }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:13.458193+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 140.7,
+        "context": {
+          "candidate_id": 142,
+          "pair": "EUR/AUD",
+          "direction": "BUY"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:14.086890+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -158.2,
+        "context": {
+          "candidate_id": 192,
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -10358,6 +10405,30 @@
         "context": {
           "candidate_id": 207,
           "pair": "EUR/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:13.901677+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 140.7,
+        "context": {
+          "candidate_id": 142,
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "reject_reason": "sizing"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:14.113089+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -158.2,
+        "context": {
+          "candidate_id": 192,
+          "pair": "CAD/JPY",
           "direction": "BUY",
           "reject_reason": "eligibility"
         }
@@ -12234,6 +12305,28 @@
           "pair": "EUR/JPY",
           "direction": "BUY"
         }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:13.485478+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 140.7,
+        "context": {
+          "candidate_id": 142,
+          "pair": "EUR/AUD",
+          "direction": "BUY"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:14.001828+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -158.2,
+        "context": {
+          "candidate_id": 192,
+          "pair": "CAD/JPY",
+          "direction": "BUY"
+        }
       }
     ]
   },
@@ -14064,6 +14157,28 @@
         "context": {
           "candidate_id": 207,
           "pair": "EUR/JPY",
+          "direction": "BUY"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:13.845191+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 140.7,
+        "context": {
+          "candidate_id": 142,
+          "pair": "EUR/AUD",
+          "direction": "BUY"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:14.030340+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -158.2,
+        "context": {
+          "candidate_id": 192,
+          "pair": "CAD/JPY",
           "direction": "BUY"
         }
       }
@@ -23759,6 +23874,30 @@
           "direction": "BUY",
           "reject_reason": "eligibility"
         }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:13.927915+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 140.7,
+        "context": {
+          "candidate_id": 142,
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:14.139220+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -158.2,
+        "context": {
+          "candidate_id": 192,
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -26021,6 +26160,19 @@
           "reject_reason": "eligibility",
           "regime_cluster": "EUR/JPY_BUY_False_r1"
         }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:14.166300+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -158.2,
+        "context": {
+          "candidate_id": 192,
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility",
+          "regime_cluster": "CAD/JPY_BUY_False_r1"
+        }
       }
     ],
     "cluster_aware": true
@@ -26177,6 +26329,19 @@
           "reject_reason": "eligibility",
           "regime_cluster": "EUR/JPY_BUY_False_r1"
         }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:14.193113+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -158.2,
+        "context": {
+          "candidate_id": 192,
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility",
+          "regime_cluster": "CAD/JPY_BUY_False_r1"
+        }
       }
     ]
   },
@@ -26331,6 +26496,19 @@
           "direction": "BUY",
           "reject_reason": "eligibility",
           "regime_cluster": "EUR/JPY_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T02:31:14.219831+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -158.2,
+        "context": {
+          "candidate_id": 192,
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "reject_reason": "eligibility",
+          "regime_cluster": "CAD/JPY_BUY_False_r1"
         }
       }
     ]
