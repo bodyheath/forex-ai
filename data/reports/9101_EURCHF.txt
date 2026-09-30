@@ -1,0 +1,26 @@
+```
+PAIR: EUR/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level + converging ribbon in uptrend + D1 RSI 60.5 near overbought + D/4H alignment suggests trend exhaustion; SMD -6 confirms institutional shorts vs retail longs.
+RISK_FACTORS: [1. EUR net SHORT 8% crowded short positioning near 1y bottom creates unconfirmed reversal risk if CHF rate-hike cycle stalls; 2. Golden-cross structure (price > SMA50 > SMA200) + uptrend context may support continuation above 0.9458 if pin bar breaks above rather than below.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+**RATIONALE:**
+
+**MTF Conflict (Critical):** W:NEUTRAL + D:SELL = 2/3 agreement. Per MTF hard rule, conf<2/3 fails threshold — **TRADE_THIS must be NO** regardless of other factors. You need W:SELL + D:SELL for valid short setup; neutral weekly is a drag.
+
+**Technical Detail:**
+- **D1 RSI 60

@@ -1,0 +1,22 @@
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI overbought (63.6) in uptrend context + 4H double-top bearish pattern + ribbon CONVERGING signal trend exhaustion, but MTF weekly/daily neutral conflict blocks high-conviction trade.
+RISK_FACTORS: [1] MTF rule breach—weekly and daily both NEUTRAL means no directional agreement (conf=0/3), forcing TRADE_THIS=NO regardless of technicals; [2] D1 T_sig=SELL_3 contradicted by pin_bar_at_key_level:bul candle pattern and D1 uptrend structure (price >> SMA50 >> SMA200), creating signal conflict.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF weekly and daily both NEUTRAL—no multi-timeframe agreement. Rule requires W+D both agree on direction (≥2/3 conf). 0/3 conf fails MTF gate. Pin_bar_at_key_level:bul and golden-cross uptrend also conflict with SELL_3 baseline, raising ambiguity.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Summary:**  
+AUD/N

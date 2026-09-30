@@ -1,0 +1,23 @@
+```
+PAIR: NZD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level on D1 with BUY_7 signal conflicts with 4H downtrend and converging ribbon; mixed MTF (M:BUY, W:NEUTRAL, D:BUY, 4H:NEUTRAL) fails 2/3 agreement threshold.
+RISK_FACTORS: (1) MTF confluence only 1/3 (45% weight) — weekly and 4H neutral undermine daily buy signal. (2) Ribbon converging signals trend exhaustion and imminent reversal risk; price below SMA50 on 4H despite daily price above SMA200.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violated: weekly and 4H do not confirm daily/monthly agreement. Confidence 5/10 < 7 threshold. Converging ribbon + mixed timeframe = high false-breakout risk.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF Rule Failure (CRITICAL):** Weekly = NEUTRAL, 4H = NEUTRAL. Only D1 and M agree on BUY direction. Confidence = 1/3
