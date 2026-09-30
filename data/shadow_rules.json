@@ -6643,6 +6643,30 @@
           "direction": "BUY",
           "reject_reason": "sizing"
         }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:19.740217+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -154.5,
+        "context": {
+          "candidate_id": 120,
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:20.094396+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -141.4,
+        "context": {
+          "candidate_id": 226,
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -8587,6 +8611,30 @@
           "pair": "GBP/AUD",
           "direction": "BUY"
         }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:19.773612+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -154.5,
+        "context": {
+          "candidate_id": 120,
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:20.128266+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -141.4,
+        "context": {
+          "candidate_id": 226,
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -10501,6 +10549,30 @@
           "pair": "GBP/AUD",
           "direction": "BUY",
           "reject_reason": "sizing"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:19.807378+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -154.5,
+        "context": {
+          "candidate_id": 120,
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:20.162595+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -141.4,
+        "context": {
+          "candidate_id": 226,
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
         }
       }
     ]
@@ -12419,6 +12491,29 @@
           "pair": "GBP/AUD",
           "direction": "BUY"
         }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:19.841299+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -154.5,
+        "context": {
+          "candidate_id": 120,
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:20.018630+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -141.4,
+        "context": {
+          "candidate_id": 226,
+          "pair": "GBP/NZD",
+          "direction": "SELL"
+        }
       }
     ]
   },
@@ -14294,6 +14389,29 @@
           "candidate_id": 155,
           "pair": "GBP/AUD",
           "direction": "BUY"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:19.874829+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -154.5,
+        "context": {
+          "candidate_id": 120,
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:20.055188+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -141.4,
+        "context": {
+          "candidate_id": 226,
+          "pair": "GBP/NZD",
+          "direction": "SELL"
         }
       }
     ]
@@ -24036,6 +24154,30 @@
           "direction": "BUY",
           "reject_reason": "eligibility"
         }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:19.976886+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -154.5,
+        "context": {
+          "candidate_id": 120,
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:20.202802+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -141.4,
+        "context": {
+          "candidate_id": 226,
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -26527,6 +26669,19 @@
           "reject_reason": "eligibility",
           "regime_cluster": "CAD/JPY_BUY_False_r1"
         }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:20.239313+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -141.4,
+        "context": {
+          "candidate_id": 226,
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "reject_reason": "eligibility",
+          "regime_cluster": "GBP/NZD_SELL_False_r1"
+        }
       }
     ],
     "cluster_aware": true
@@ -26696,6 +26851,19 @@
           "reject_reason": "eligibility",
           "regime_cluster": "CAD/JPY_BUY_False_r1"
         }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:20.274466+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -141.4,
+        "context": {
+          "candidate_id": 226,
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "reject_reason": "eligibility",
+          "regime_cluster": "GBP/NZD_SELL_False_r1"
+        }
       }
     ]
   },
@@ -26863,6 +27031,19 @@
           "direction": "BUY",
           "reject_reason": "eligibility",
           "regime_cluster": "CAD/JPY_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-09-30T11:31:20.309428+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -141.4,
+        "context": {
+          "candidate_id": 226,
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "reject_reason": "eligibility",
+          "regime_cluster": "GBP/NZD_SELL_False_r1"
         }
       }
     ]
