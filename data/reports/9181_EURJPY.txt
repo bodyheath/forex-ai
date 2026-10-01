@@ -1,0 +1,17 @@
+PAIR: EUR/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both signal BUY with RSI 35.1 oversold in confirmed downtrend (shifted lower BUY zones apply) + pin bar at key support, but 4H disagrees (SELL) and fully aligned bearish ribbon + crowded short positioning create reversal-risk that prevents high-confidence entry.
+RISK_FACTORS: [1] MTF conflict: 4H trend=SELL vs W:BUY + D:BUY (conf=2/3, below 80% threshold for unambiguous multi-timeframe agreement — violates TRADE_THIS rule); [2] Positioning trap: EUR net SHORT @ crowded 8.0% with MOM=BUILDING near 1y range bottom signals institutional reversal-risk unconfirmed — retail short-squeeze potential if recovery extends.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 177.50
+ENTRY_TRIGGER_REASON: Pin bar low at support (177.845 SL zone); await break below 177.50 to confirm institutional capitulation, then tighter confluence (W:BUY + D:BUY + 4H alignment + OSC confirmation required before entry)
+ENTRY_TRIGGER_EXPIRY_HOURS:

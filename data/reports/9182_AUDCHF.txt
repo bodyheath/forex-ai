@@ -1,0 +1,17 @@
+```
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both signal SELL in a converging ribbon (trend weakening); price at 78.6% Fib resistance 2p away; D1 T_sig=SELL_4 baseline, but 4H downtrend + D1 uptrend create MTF conflict that caps confidence at 6.
+RISK_FACTORS: (1) MTF conflict: D1 uptrend (price > SMA50 > SMA200) contradicts W+D SELL signals; 4H inside bar (neutral) prevents full MTF agreement (2/3 only). (2) Oscillator indecision: OSC=NONE (Stochastic 44.1 mid-range, CCI -68.4 near neutral), no momentum confirmation for SELL direction.
+TRADE_THIS: YES
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5832
+ENTRY_TRIGGER_REASON: Sell limit at 78.6% Fibonacci resistance (0.58316, rounded 0.5832) — price already 2p below; confluence of W+D SELL + Fib resistance + converging ribbon justifies entry above current price rather than below, capturing mean-reversion from overbought D1 RSI 55

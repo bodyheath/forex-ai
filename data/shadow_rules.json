@@ -2039,6 +2039,19 @@
           "market_regime": "trending_risk_off",
           "closed_at": "2026-09-29 05:11:06"
         }
+      },
+      {
+        "timestamp": "2026-10-01T05:10:20.464639+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -54.8,
+        "context": {
+          "id": "3738",
+          "pair": "EUR/USD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-10-01 05:10:18"
+        }
       }
     ]
   },
@@ -27096,6 +27109,78 @@
           "direction": "BUY",
           "tech_score": "5"
         }
+      },
+      {
+        "timestamp": "2026-10-01T05:10:11.218609+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -1.7,
+        "context": {
+          "id": "3312",
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T05:10:11.515373+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 143.0,
+        "context": {
+          "id": "3379",
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T05:10:11.813472+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 28.9,
+        "context": {
+          "id": "3384",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "tech_score": "8"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T05:10:12.276817+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -9.1,
+        "context": {
+          "id": "3403",
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T05:10:12.619933+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 47.1,
+        "context": {
+          "id": "3405",
+          "pair": "EUR/GBP",
+          "direction": "SELL",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T05:10:20.499896+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -54.8,
+        "context": {
+          "id": "3738",
+          "pair": "EUR/USD",
+          "direction": "BUY",
+          "tech_score": "9"
+        }
       }
     ]
   },
@@ -27326,6 +27411,66 @@
           "pair": "EUR/GBP",
           "direction": "SELL",
           "confidence": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T05:10:11.253292+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -1.7,
+        "context": {
+          "id": "3312",
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "confidence": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T05:10:11.549739+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 143.0,
+        "context": {
+          "id": "3379",
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T05:10:11.847933+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 28.9,
+        "context": {
+          "id": "3384",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "confidence": "8"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T05:10:12.354869+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -9.1,
+        "context": {
+          "id": "3403",
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T05:10:20.533950+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -54.8,
+        "context": {
+          "id": "3738",
+          "pair": "EUR/USD",
+          "direction": "BUY",
+          "confidence": "9"
         }
       }
     ]

@@ -1,0 +1,24 @@
+PAIR: EUR/AUD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level on D1 with crowded EUR short positioning near bottom suggests reversal potential, but MTF disagreement (W:BUY vs D:NEUTRAL vs 4H:NEUTRAL, conf=1/3) and LEANING_BEAR ribbon alignment prevent high-confidence entry.
+RISK_FACTORS: [1] MTF structure is fragmented (only M agrees with W; D and 4H neutral) — reversal thesis lacks multi-timeframe confirmation. [2] D1 trend is confirmed downtrend (price < SMA50 < SMA200 death-cross); pin bar alone insufficient to override structure without daily close above SMA50 (1.6261).
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.6261
+ENTRY_TRIGGER_REASON: Daily close above SMA50 and broken resistance would confirm reversal thesis; current pin bar is setup only, not trigger.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**SCORING RATIONALE:**
+
+**TECHNICAL (5/10):**
+- D1 T_sig=NEUTRAL_3 is baseline; RSI=53.0 is midpoint neutral (45–62 zone in downtrend context =
