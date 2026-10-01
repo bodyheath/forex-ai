@@ -1,0 +1,23 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend with overbought RSI 58.2 conflicts 4H downtrend; ribbon converging signals trend exhaustion; T_sig=SELL_3 suggests reversal risk, but MTF disagreement (W+D both neutral) blocks confirmation.
+RISK_FACTORS: [1] MTF rule violation — weekly and daily both neutral; only 4H aligns with SELL direction (0/3 agreement, wt=80% = critical fail). [2] Price still above SMA50 (0.5878 > 0.5829) in D1 uptrend; no break of structural support to confirm reversal; converging ribbon may be early warning but not yet execution signal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5829
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (0.5829) + D1 close below SMA50 would trigger death-cross and align W+D both downtrend, meeting MTF rule.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+1. **Technical (4/10):** D1 T_sig=SELL_3 is baseline

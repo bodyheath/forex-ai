@@ -1,0 +1,23 @@
+PAIR: USD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level on D1 with RSI neutral and 4H uptrend structure offer a contrarian long setup, but D1 downtrend, MTF neutrality, and ribbon lean-bear severely constrain conviction.
+RISK_FACTORS: MTF framework shows zero directional agreement across all timeframes (M/W/D/4H all NEUTRAL), eliminating confluence required for high-probability entry; D1 death-cross (price below SMA50 and SMA200) remains active structural headwind despite pin bar pattern.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 156.50
+ENTRY_TRIGGER_REASON: Limit buy at nearest Fibonacci support (SL=152.897, range mid ~158.44; 156.50 sits within middle third) to wait for price to confirm reversal intention below D1 SMA50 before risking capital.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+1. **MTF RULE FAILURE** (HARD STOP): M/W/D/4H all NEUTRAL with conf=0/3 — no two timeframes agree on direction. Per rules, this alone triggers TRADE_THIS: NO regardless

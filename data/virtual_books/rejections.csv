@@ -1161,11 +1161,9 @@ id,candidate_id,book_id,pair,direction,reason,recorded_at,status,settled_at
 1217,232,D_no_da,USD/CHF,SELL,eligibility,2026-10-01 11:19:56,PENDING,
 1218,232,E_no_dd_gate,USD/CHF,SELL,eligibility,2026-10-01 11:19:56,PENDING,
 1219,232,F_sentiment_only,USD/CHF,SELL,eligibility,2026-10-01 11:19:56,PENDING,
-1220,232,G_mechanical_reversion,USD/CHF,SELL,sizing,2026-10-01 11:19:56,PENDING,
 1221,233,A_control,NZD/JPY,BUY,sizing,2026-10-01 11:19:56,PENDING,
 1222,233,C_grade_based,NZD/JPY,BUY,sizing,2026-10-01 11:19:56,PENDING,
 1223,233,F_sentiment_only,NZD/JPY,BUY,eligibility,2026-10-01 11:19:56,PENDING,
-1224,233,G_mechanical_reversion,NZD/JPY,BUY,sizing,2026-10-01 11:19:56,PENDING,
 1225,233,I_bollinger_extremity,NZD/JPY,BUY,eligibility,2026-10-01 11:19:56,PENDING,
 1226,234,A_control,EUR/USD,BUY,sizing,2026-10-01 11:19:56,SETTLED,2026-10-01 17:01:32
 1227,234,C_grade_based,EUR/USD,BUY,sizing,2026-10-01 11:19:56,SETTLED,2026-10-01 17:01:32
@@ -1176,13 +1174,10 @@ id,candidate_id,book_id,pair,direction,reason,recorded_at,status,settled_at
 1232,235,C_grade_based,CAD/JPY,BUY,eligibility,2026-10-01 11:19:56,PENDING,
 1233,235,D_no_da,CAD/JPY,BUY,eligibility,2026-10-01 11:19:56,PENDING,
 1234,235,F_sentiment_only,CAD/JPY,BUY,eligibility,2026-10-01 11:19:56,PENDING,
-1235,235,G_mechanical_reversion,CAD/JPY,BUY,sizing,2026-10-01 11:19:56,PENDING,
 1236,235,I_bollinger_extremity,CAD/JPY,BUY,eligibility,2026-10-01 11:19:56,PENDING,
 1237,236,A_control,USD/CAD,SELL,eligibility,2026-10-01 11:19:56,PENDING,
-1238,236,B_conf6_rr15,USD/CAD,SELL,eligibility,2026-10-01 11:19:56,PENDING,
 1239,236,C_grade_based,USD/CAD,SELL,eligibility,2026-10-01 11:19:56,PENDING,
 1240,236,F_sentiment_only,USD/CAD,SELL,eligibility,2026-10-01 11:19:56,PENDING,
-1241,236,G_mechanical_reversion,USD/CAD,SELL,sizing,2026-10-01 11:19:56,PENDING,
 1242,237,A_control,GBP/NZD,SELL,eligibility,2026-10-01 11:19:56,SETTLED,2026-10-01 11:31:14
 1243,237,B_conf6_rr15,GBP/NZD,SELL,eligibility,2026-10-01 11:19:56,SETTLED,2026-10-01 11:31:14
 1244,237,C_grade_based,GBP/NZD,SELL,eligibility,2026-10-01 11:19:56,SETTLED,2026-10-01 11:31:14
@@ -1204,7 +1199,6 @@ id,candidate_id,book_id,pair,direction,reason,recorded_at,status,settled_at
 1260,239,D_no_da,NZD/USD,BUY,eligibility,2026-10-01 11:19:56,PENDING,
 1261,239,E_no_dd_gate,NZD/USD,BUY,eligibility,2026-10-01 11:19:56,PENDING,
 1262,239,F_sentiment_only,NZD/USD,BUY,eligibility,2026-10-01 11:19:56,PENDING,
-1263,239,G_mechanical_reversion,NZD/USD,BUY,sizing,2026-10-01 11:19:56,PENDING,
 1264,240,A_control,CHF/JPY,BUY,eligibility,2026-10-01 14:38:39,PENDING,
 1265,240,B_conf6_rr15,CHF/JPY,BUY,eligibility,2026-10-01 14:38:39,PENDING,
 1266,240,C_grade_based,CHF/JPY,BUY,eligibility,2026-10-01 14:38:39,PENDING,

@@ -2052,6 +2052,19 @@
           "market_regime": "trending_risk_on",
           "closed_at": "2026-10-01 05:10:18"
         }
+      },
+      {
+        "timestamp": "2026-10-01T18:10:09.279871+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -47.3,
+        "context": {
+          "id": "3814",
+          "pair": "NZD/USD",
+          "direction": "BUY",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-10-01 18:10:09"
+        }
       }
     ]
   },
@@ -28460,6 +28473,78 @@
           "direction": "BUY",
           "tech_score": "9"
         }
+      },
+      {
+        "timestamp": "2026-10-01T18:10:04.098153+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 59.8,
+        "context": {
+          "id": "3528",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "tech_score": "4"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T18:10:06.272686+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 74.5,
+        "context": {
+          "id": "3725",
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T18:10:06.658446+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 63.5,
+        "context": {
+          "id": "3730",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T18:10:07.676698+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 75.4,
+        "context": {
+          "id": "3778",
+          "pair": "EUR/CHF",
+          "direction": "SELL",
+          "tech_score": "4"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T18:10:08.106344+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 64.1,
+        "context": {
+          "id": "3783",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T18:10:09.308519+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -47.3,
+        "context": {
+          "id": "3814",
+          "pair": "NZD/USD",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
       }
     ]
   },
@@ -28750,6 +28835,54 @@
           "pair": "EUR/USD",
           "direction": "BUY",
           "confidence": "9"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T18:10:04.126822+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 59.8,
+        "context": {
+          "id": "3528",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "confidence": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T18:10:06.687198+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 63.5,
+        "context": {
+          "id": "3730",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T18:10:08.134953+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 64.1,
+        "context": {
+          "id": "3783",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "confidence": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-01T18:10:09.337162+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -47.3,
+        "context": {
+          "id": "3814",
+          "pair": "NZD/USD",
+          "direction": "BUY",
+          "confidence": "7"
         }
       }
     ]

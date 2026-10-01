@@ -1,0 +1,24 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both confirm SELL with converging ribbon signaling weakening uptrend; D1 T_sig=SELL_4 + price near 78.6% Fib resistance (0.58316) create a mean-reversion setup, but 4H uptrend and rising both rates weaken conviction.
+RISK_FACTORS: (1) MTF conflict: 4H BUY disagrees with W+D SELL (2/3 agreement only, conf<7), reducing tradeable confidence below threshold. (2) Both AUD and CHF rates rising simultaneously contradicts typical rate-differential trade logic and removes fundamental tailwind; RIB converging = trend exhaustion risk, not confirmation.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 0.5835
+ENTRY_TRIGGER_REASON: Limit order at 78.6% Fibonacci resistance (0.58316, +2p buffer) to catch rejection if uptrend finally rolls over; only pursue if 4H breaks below SMA50 to align all three timeframes.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Scoring Detail:**
+
+**TECHNICAL (5/10):**
+- D1 T_sig baseline=
