@@ -1,0 +1,21 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 downtrend structure (price < SMA50 < SMA200) with pin bar at key level suggests reversal risk, but MTF consensus is NEUTRAL across all timeframes, eliminating directional conviction.
+RISK_FACTORS: [1) MTF conf=0/3 — no timeframe agreement; W/D both NEUTRAL blocks any scalable trade signal. 2) OSC=NONE (Stoch overbought at 72 but CCI neutral at 47.2) — no oscillator confluence; MACD positive but weak (0.1392 on 4H, 0.3660 on D1) without directional confirmation.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated — Weekly AND Daily must both agree on direction for TRADE_THIS=YES. Here both are NEUTRAL; 4H uptrend does not override. Confidence ceiling is 4/10, below 7/10 threshold. No trade.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+**RATIONALE:**
+
+- **MTF Rule Breach:** W:NEUTRAL + D:NEUTRAL + 4H:UPTREND + M:

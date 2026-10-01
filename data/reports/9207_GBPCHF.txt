@@ -1,0 +1,23 @@
+PAIR: GBP/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: T_sig SELL_3 conflicts with uptrend structure and bullish double-bottom pattern; ribbon converging signals weakening trend momentum despite price above SMA50.
+RISK_FACTORS: [1) MTF shows 0/3 agreement (all NEUTRAL) — no directional consensus across M/W/D/4H, violating weekly+daily agreement rule; 2) Double-bottom bullish pattern + price > SMA50 > SMA200 golden-cross + RSI 57.3–60.5 (neutral-to-overbought in uptrend context) directly contradict SELL_3 signal, creating high whipsaw risk]
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated (0/3 directional agreement); technical setup internally contradictory (bearish signal vs bullish structure/pattern).
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**RATIONALE:**
+
+1. **MTF Failure (HARD RULE)**: Monthly, Weekly, Daily, and 4H all score NEUTRAL (0/3 agreement). The rule requires **weekly AND daily both agree on direction** for any trade. This setup fails at

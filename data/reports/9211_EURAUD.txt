@@ -1,0 +1,20 @@
+PAIR: EUR/AUD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Intraday 4H golden-cross + double-bottom pattern vs D1 death-cross creates conflicting MTF signals; EUR short crowding at near-1y bottom offers reversal risk, but fundamental divergence (rising AUD, flat EUR) and weak technical confluence limit conviction.
+RISK_FACTORS: [1. MTF conflict: W:BUY + D:NEUTRAL = only 1/3 agreement — fails MTF buy rule (need both W and D in same direction); D1 death-cross structure + price below SMA50 remains primary downtrend context. 2. Fundamental headwind: AUD rate rising while EUR flat widens carry gap; -2.01% rate differential favors AUD shorts, opposing BUY thesis.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.6285
+ENTRY_TRIGGER_REASON: Break above D1 SMA50 (1.6261) with 4H golden-cross confirmation would signal trend alignment and trap short-crowding reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**Rationale:**
+- **Technical:** D1 T_sig=NEUTRAL_3 (pin bar at key level is pattern noise only

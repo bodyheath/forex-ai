@@ -1,0 +1,23 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with T_sig=SELL_3 and converging ribbon signal; weak MTF alignment and RSI near neutral midpoint create ambiguity; fundamental CAD weakness supports downside but technicals lack confluence.
+RISK_FACTORS: [1. MTF all-neutral except monthly (conf=0/3 weekly+daily) violates mandatory dual-timeframe agreement rule; 2. Ribbon convergence signals trend exhaustion risk, but uptrend structure (price>SMA50>SMA200) contradicts reversal timing.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly and Daily neither agree on direction (W:NEUTRAL, D:NEUTRAL) — confidence 0/3 fails mandatory >=2/3 threshold. T_sig=SELL_3 is lower-confidence signal; uptrend structure intact; no triple oscillator confluence (OSC=NONE). Setup lacks required confluence density for execution.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**Reasoning:**
+
+1. **MTF Veto (Critical):** W:NEUTRAL + D:NEUTRAL = 0/3 agreement

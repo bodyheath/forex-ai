@@ -1,0 +1,24 @@
+PAIR: NZD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: NZD fundamentals (rate falling, +3.02% carry) favour long, but 4H downtrend and weak MTF alignment (1/3 conf) create conflicting signals.
+RISK_FACTORS: [4H structure severely bearish—price below SMA50/SMA200 death-cross; MTF conf 1/3 fails weekly+daily agreement rule—trade invalid under MTF protocol] [D1 inside bar + neutral ribbon (3/5 aligned) = indecision; no oscillator confluence; RSI 44.3 neutral with no directional bias]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation—only D1:BUY and M:BUY aligned; W:NEUTRAL and 4H:NEUTRAL break required weekly+daily agreement. Confidence 1/3 (45% wt) falls far below 2/3 threshold. 4H downtrend (death-cross) contradicts D1 signal. No valid entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL (5/10):**
+- D1: RSI

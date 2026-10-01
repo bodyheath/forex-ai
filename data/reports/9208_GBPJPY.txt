@@ -1,0 +1,25 @@
+PAIR: GBP/JPY
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both BUY with RSI 36.5 (moderately oversold), but bearish ribbon alignment and monthly SELL create mixed-conviction setup requiring confluence confirmation.
+RISK_FACTORS: (1) Ribbon fully aligned bearish (5/5) contradicts MTF BUY signal — trend structure disagrees with price action direction. (2) Monthly timeframe SELL (M:SELL) conflicts with W:BUY + D:BUY — higher-timeframe headwind reduces conviction from 7+ to sub-7.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 207.50
+ENTRY_TRIGGER_REASON: Support confluence at prior swing low (SL=207.101) + RSI break above 40 in daily frame signals uptrend resumption after consolidation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**Rationale:**
+
+**MTF Conflict (Confidence Cap):**
+- Weekly AND Daily both BUY (2/3 agreement, 80% weight) → passes MTF rule technically.
+- **BUT** Monthly SELL creates directional conflict → confidence cannot exceed 6 (below 7 threshold for TRADE_THIS=YES).
