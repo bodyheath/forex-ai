@@ -1,0 +1,17 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with 4H death-cross and converging ribbon weakening, creating directional ambiguity; T_sig=SELL_3 is marginal and unsupported by oscillator confluence.
+RISK_FACTORS: [1. MTF cascade fails (M:BUY vs W/D/4H:NEUTRAL = no consensus, conf=0/3); ribbon converging signals trend exhaustion, not continuation — reversal risk high.] [2. RSI 58.2 in D1 uptrend is neutral-to-bullish, not SELL territory; 4H RSI 35.2 is BUY-biased (30-35 zone = 7-8BUY in mixed MTF) — T_sig=SELL_3 contradicts oscillator logic.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL and D:NEUTRAL do not both agree on direction (conf=0/3 << 2/3 threshold). SELL signal is not actionable without weekly + daily alignment. Ribbon converging + RSI neutral in D1 + no oscillator confluence = insufficient edge.
+ENTRY

@@ -1,0 +1,17 @@
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Fundamental AUD strength (rate rising +1.53%, NZD falling) conflicts with technical weakness (RSI 63.8 in uptrend is overbought-but-normal, D1 T_sig=SELL_3 vs price still above SMA50); pin bar at key level suggests reversal, but MTF alignment is absent (M:SELL vs W/D:NEUTRAL creates conf=0/3 — rule violation).
+RISK_FACTORS: [1] MTF rule breach: M:SELL but W and D both NEUTRAL — per rules, TRADE_THIS must be NO when weekly AND daily don't both agree on direction (conf < 2/3). [2] Ribbon CONVERGING (trend weakening) + 4H double_top:bea suggests distribution, but price structure still golden-cross on D1 — conflicting timeframe thesis increases whipsaw risk.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL + D:NEUTRAL do not agree with M:SELL (conf=0/3 < 2/3 threshold). No trade setup qualifies.
+ENTRY_TRIGGER_EXPIRY_

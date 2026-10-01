@@ -1,0 +1,23 @@
+PAIR: GBP/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 50% Fib + 4H uptrend + positive GBP rate diff support a pullback BUY, but D1 mixed trend and weak MTF alignment (0/3 conf) prevent high conviction.
+RISK_FACTORS: MTF disagreement (M:SELL vs 4H:BUY) creates conflicting signals; D1 neutral trend and price hovering just below SMA50 lack clear directional anchoring.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 1.8745
+ENTRY_TRIGGER_REASON: Pullback to SL support (1.8607 + margin) offers lower-risk entry if 4H uptrend holds.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**MTF Rule Violation:** M:SELL + 4H:BUY = only 1 agreement out of 3 (conf=0/3, wt=80%). MTF rule states "if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless." D1:NEUTRAL further breaks the tie — no two timeframes align. **This alone triggers TRADE_THIS: NO

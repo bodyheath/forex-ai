@@ -1,0 +1,24 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 downtrend (price < SMA50 < SMA200) + pin bar at resistance (Fib 38.2%) + 4H uptrend friction suggests weakening uptrend into tested supply; MTF misalignment (W:BUY vs 4H:SELL, conf=1/3) prevents high-conviction setup.
+RISK_FACTORS: [1. MTF disagreement (weekly bullish, 4H bearish) = low directional consensus; 2. Oscillator confluence absent (Stoch/CCI unaligned); neutral RSI (54.4) lacks momentum confirmation]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.8920
+ENTRY_TRIGGER_REASON: Break below pin bar low (1.8920) confirming D1 downtrend continuation and Fib 38.2% rejection (1.8934).
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+```
+
+**REASONING:**
+
+**MTF Rule Violation (CRITICAL):**  
+Weekly: BUY | Daily: NEUTRAL | 4H: SELL | Confidence: 1/3 (45% weight). Only 1 of 3
