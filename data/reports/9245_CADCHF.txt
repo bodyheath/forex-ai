@@ -1,0 +1,32 @@
+```
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+
+KEY_THESIS: D1 uptrend structure conflicts with 4H double-top reversal pattern and RSI 32.4 oversold; ribbon converging signals trend weakening, but MTF alignment (W+D both NEUTRAL) blocks high-confidence trade.
+
+RISK_FACTORS: 
+1. MTF disagreement (4H bullish, W+D neutral) creates directional ambiguity — conf=0/3 fails minimum agreement threshold.
+2. D1 shows golden cross (price > SMA50 > SMA200) with uptrend intact; 4H double-top and RSI 32.4 suggest reversal risk, but lack of oscillator confluence (OSC=NONE) weakens conviction.
+
+TRADE_THIS: NO
+
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF weekly + daily do NOT both agree on direction; conf=0/3 (M:BUY vs W:NEUTRAL vs D:NEUTRAL). MTF rule: TRADE_THIS=NO regardless of other factors.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**RATIONALE:**
+
+1. **MTF Veto**: W and D are both NEUTRAL; only M (
