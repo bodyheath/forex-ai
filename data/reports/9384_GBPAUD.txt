@@ -1,0 +1,24 @@
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 RSI 66.5 at upper BB + pin bar at key level suggests rejection, but MTF conflict (W:BUY vs D:SELL, conf 1/3) and mixed 4H (NEUTRAL, price above MA50) undermine conviction.
+RISK_FACTORS: [1. MTF disagreement (weekly bullish vs daily bearish at 45% weighting) creates directional ambiguity and high chop risk above/below 1.9096. 2. Fundamental headwind absent (AUD rate rising supports AUD strength, GBP flat); positioning neutral mid-range; sentiment weak — macro setup lacks conviction to sustain a short.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: Weekly (BUY) and Daily (SELL) disagree; conf=1/3 (<2/3 threshold). Trade blocked until MTF alignment restored (both agree on direction).
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+**MTF Filter (Hard Block):**
+- Weekly=BUY, Daily=SELL, 4H=NEUTRAL → conf = 1
