@@ -1,0 +1,23 @@
+```
+PAIR: EUR/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFIRMED
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish RSI divergence + D1 SELL_3 signal conflict with aligned bullish ribbon and MTF disagreement (M:SELL vs W/D:NEUTRAL), limiting conviction despite institutional EUR short crowding.
+RISK_FACTORS: [MTF conf=0/3 (no agreement between timeframes — W and D both NEUTRAL, M SELL isolated, 4H BUY contradicts) creates whipsaw risk; Aligned bullish ribbon (5/5 EMA fan) suggests uptrend continuation, opposing SELL signal — reversal trap likely if price breaks above SMA50 1.9778]
+TRADE_THIS: NO
+ENTRY_TYPE: CONDITIONAL_MONITOR
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule breach — weekly and daily both NEUTRAL (not agreeing on SELL direction); confidence <2/3 on directional alignment disqualifies trade trigger regardless of D1 T_sig=SELL_3.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+**RATIONALE:**
+
+1. **MTF RULE FAILURE (hard veto):** W:NEUTRAL + D:NEUTRAL = zero agreement. M:SELL is isolated. 4H:BU

@@ -1,0 +1,24 @@
+PAIR: AUD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 50% Fib with RSI 44 in mixed structure offers tactical long, but MTF disagreement (M/W SELL vs D BUY) and 4H downtrend limit conviction.
+RISK_FACTORS: MTF conflict—only 1/3 timeframes agree BUY (40% confidence threshold)—creates chop risk; 4H structure remains downtrend-biased (price < SMA50 < SMA200) and could reassert bearish pressure.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.9883
+ENTRY_TRIGGER_REASON: Confluence at 50.0% Fib level (0.9883, 2p below price) + pin bar rejection of lower level offers defined support for limit entry.
+ENTRY_TRIGGER_EXPIRY_HOURS: 24
+
+---
+
+**SCORING DETAIL:**
+
+**TECHNICAL (5/10):**
+- D1: T_sig=BUY_7 baseline, but RSI 44 in mixed trend (price/MAs misaligned) = NEUTRAL zone (3–4 standard). Pin bar at key level is bullish pattern confirmation (+1). SMA50=0.9896

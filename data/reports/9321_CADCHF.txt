@@ -1,0 +1,17 @@
+PAIR: CAD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with uptrend structure; MTF lacks agreement (W:NEUTRAL, D:NEUTRAL, 4H:BUY vs M:BUY); ribbon converging signals trend weakness but insufficient directional consensus.
+RISK_FACTORS: (1) MTF W/D both NEUTRAL = no dual-timeframe confirmation; TRADE_THIS rule requires weekly+daily both agree. (2) D1 price 0.5870 > SMA50 0.5830 > SMA200 0.5742 = confirmed uptrend structure contradicts SELL_3 signal; RSI 55.6 is neutral-to-bullish in uptrend context (45–65 = NEUTRAL, no SELL bias).
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W and D do not both agree on direction (conf=0/3, not ≥2/3). D1 uptrend structure contradicts T_sig=SELL_3. Converging ribbon indicates trend fragility, not reversal confirmation. Insufficient confluence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0

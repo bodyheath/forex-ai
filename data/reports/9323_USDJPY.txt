@@ -1,0 +1,21 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level suggests reversal from daily downtrend, but MTF conflict (M:SELL vs W/D:NEUTRAL) and mixed ribbon (3/5) prevent high-confidence entry; JPY long positioning reversing adds weak bearish context for USD/JPY.
+RISK_FACTORS: [1. MTF disagreement (weekly and daily neutral while monthly sells) creates directional ambiguity—whipsaw risk if daily pivots above SMA50 (158.27). 2. Stochastic (74.4) + CCI (79.7) both overbought but oscillator confluence fails (0/3)—momentum support for sell is weak; RSI 51.6 is pure neutral with no directional lean.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 157.2
+ENTRY_TRIGGER_REASON: Sell only if price breaks below pin bar low and closes below 157.20 (support test), confirming downtrend resumption and weekly-daily alignment.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**RATIONALE:**
+
+**MTF Rule Violation:** W:NEUTRAL + D:NEUTRAL = conf 0/3. Monthly alone cannot trigger a BUY/
