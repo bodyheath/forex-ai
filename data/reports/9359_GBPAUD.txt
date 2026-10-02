@@ -1,0 +1,27 @@
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 7/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 pin bar at resistance with RSI overbought and upper BB rejection signals pullback, but conflicting MTF (W:BUY vs D:SELL) and weak fundamentals limit conviction.
+RISK_FACTORS: [MTF disagreement (weekly bullish vs daily sellish) reduces directional confidence below 7; AUD rate rising + GBP flat provides weak fundamental support for sustained downside — AUD strength may cushion the fall]
+TRADE_THIS: NO
+
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.9150
+ENTRY_TRIGGER_REASON: Rejection candle close below SMA200 (1.9141) would confirm breakdown; limit at 1.9150 waits for pullback into upper BB after pin bar reversal
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (7/10):**
+- D1 T_sig=SELL_9 is baseline, supported by RSI=66.5 (upper zone, standard tier 62-70=7-8 SELL).
+- Pin bar at key level (resistance, bearish engulfing) + upper BB rejection = high-probability reversal setup.
+- MACD histogram

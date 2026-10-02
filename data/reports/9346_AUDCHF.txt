@@ -1,0 +1,24 @@
+PAIR: AUD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 aligns with weekly SELL signal, but intraday 4H uptrend and neutral D1 RSI (48.6) create conflicting directional signals with only 1/3 MTF agreement.
+RISK_FACTORS: [MTF conf=1/3 (D:NEUTRAL + 4H:BUY conflict with W:SELL) prevents high-conviction entry; D1 RSI 48.6 mid-neutral zone with no oscillator confluence (Stoch 47.3, CCI −229 non-confirmatory) weakens reversal conviction on head-and-shoulders alone.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 0.5760
+ENTRY_TRIGGER_REASON: Confirm neckline break below 0.5760 (H&S target ~0.5688, near SL 0.56462 support) only if 4H reverts to downtrend alignment with weekly SELL.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Detailed Scoring Breakdown:**
+
+**TECHNICAL_SCORE: 4/10**
+- D1 T_sig = NEUTRAL_

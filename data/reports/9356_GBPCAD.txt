@@ -1,0 +1,17 @@
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Price at 78.6% Fib level (1p away) with pin bar rejection and partial oscillator sell signal, but MTF conflict (W:NEUTRAL + D:SELL = 1/3 confidence) blocks high-probability entry.
+RISK_FACTORS: [1] MTF disagreement (Weekly NEUTRAL vs Daily SELL) fails MTF rule — only 1 of 3 timeframes aligned to direction, confidence capped at <7. [2] RSI 61.7 in confirmed uptrend (D:SELL skews context, but price > SMA50 > SMA200 still primary) sits in neutral zone (45–65 in uptrend = 3–4 score); not a clean reversal signal.
+TRADE_THIS: NO
+ENTRY_TYPE: [NOT APPLICABLE]
+ENTRY_TRIGGER_PRICE: [NOT APPLICABLE]
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL + D:SELL = only 1/3 agreement. Trade requires ≥2/3 MTF confirmation (weekly + daily both BUY or both SELL). Weekly neutral posture suggests lack of institutional conviction; Daily sell signal alone is insufficient to meet risk threshold.
+ENTRY_TRIGGER_EXPIRY_HOURS

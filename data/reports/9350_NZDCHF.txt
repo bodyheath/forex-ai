@@ -1,0 +1,23 @@
+PAIR: NZD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with 4H uptrend structure and NZD rate advantage offer limited confluence, but mixed MTF weekly/daily agreement and weak oscillator confluence prevent high-conviction entry.
+RISK_FACTORS: MTF conflict (W:NEUTRAL + D:NEUTRAL disagree with 4H:BUY, breaking the 2/3 MTF rule for trade approval); D1 range-bound price (0.4707 between SMA50 0.4743 and SMA200 0.4650) with RSI 45.3 in neutral zone offers no directional edge.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.47134
+ENTRY_TRIGGER_REASON: Break and hold above FIB -27.2% confluence level (6p from price) with 4H trend confirmation would retest pin bar entry structure.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+1. **MTF RULE VIOLATION (CRITICAL):** Weekly and Daily both NEUTRAL; only 4H is BUY. Confidence = 0/3 (MTF strictly requires weekly + daily both agreeing). This alone triggers TRADE_THIS:
