@@ -1,0 +1,26 @@
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 3/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders pattern on D1 with bearish MACD divergence and converging ribbon signal trend exhaustion, but MTF disagreement (W:NEUTRAL, D:SELL, 4H:NEUTRAL = 1/3 conf) and RSI 58 in uptrend context limit conviction.
+RISK_FACTORS: [1. MTF lacks cohesion (only D1 confirms SELL; weekly neutral and 4H neutral = signal noise risk), [2. Price at 78.6% Fib support (1.23638, 4p away) creates bounce reversal risk if shorts overcrowded]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.2355
+ENTRY_TRIGGER_REASON: Break below 78.6% Fib support and H&S neckline confirmation at 1.2355
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**Technical (5/10):**
+- D1 T_sig=SELL_6 + H&S bearish pattern scaffold the case
+- MACD histogram slightly negative (−0.0016) but weak; no strong directional momentum
+- RSI 58

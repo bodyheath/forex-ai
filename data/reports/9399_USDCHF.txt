@@ -1,0 +1,25 @@
+```
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 uptrend structure conflicts with T_sig=SELL_3 and evening_star candle pattern; MTF shows no directional agreement (M/W/D all NEUTRAL, 4H=BUY isolated at 0/3 conf), creating low-conviction signal.
+RISK_FACTORS: [1. MTF misalignment (0/3 weekly+daily agreement required; D=NEUTRAL fails multi-timeframe confirmation). 2. Technical contradiction: price in confirmed uptrend (SMA50>SMA200, golden cross, ALIGNED_BULL ribbon), yet T_sig and evening_star suggest reversal — RSI=61.1 is mid-range neutral in uptrend context (no overbought), weakening bearish case.]
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A (MTF rule blocks: weekly+daily must both agree on direction; both NEUTRAL = 0/3 confidence < 2/3 threshold)
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+```
+
+---
+
+**REASONING:**
+
+1. **MTF RULE (HARD BLOCK):** Weekly=NEUTRAL, Daily=NEUTRAL.
