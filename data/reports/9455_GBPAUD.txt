@@ -1,0 +1,23 @@
+```
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Stochastic-CCI partial SELL confluence at RSI 61.3 near upper MA squeeze, but mixed MTF alignment and double-bottom bullish candle create conflicting signals with reversal-risk positioning context.
+RISK_FACTORS: [1. MTF conf=0/3 (M:BUY vs W:NEUTRAL vs D:NEUTRAL) violates consensus rule — no directional agreement across timeframes, increasing false-signal risk. 2. Double-bottom bullish candle pattern contradicts SELL direction; GBP/AUD positioning crowded SHORT at ~1y bottom raises reversal unconfirmed risk — potential whipsaw if either currency reverses.] 
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.9135
+ENTRY_TRIGGER_REASON: Price rejection of SMA200 (1.9135) with confirmed breakdown below D1 SMA50 (1.8974) would validate SELL; currently price is trapped between SMA50 and SMA200 in a mixed trend.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+```
+
+**ANALYSIS NOTES:**
+
+1. **MTF CONFLICT (CRITICAL):** M:B
