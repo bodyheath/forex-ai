@@ -7294,6 +7294,18 @@
           "direction": "BUY",
           "reject_reason": "sizing"
         }
+      },
+      {
+        "timestamp": "2026-10-05T05:31:21.420019+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -31.9,
+        "context": {
+          "candidate_id": 257,
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -9830,6 +9842,18 @@
           "pair": "EUR/USD",
           "direction": "BUY"
         }
+      },
+      {
+        "timestamp": "2026-10-05T05:31:21.450107+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -31.9,
+        "context": {
+          "candidate_id": 257,
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -12344,6 +12368,18 @@
           "direction": "BUY",
           "reject_reason": "sizing"
         }
+      },
+      {
+        "timestamp": "2026-10-05T05:31:21.480183+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -31.9,
+        "context": {
+          "candidate_id": 257,
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -14845,6 +14881,18 @@
           "pair": "EUR/USD",
           "direction": "BUY"
         }
+      },
+      {
+        "timestamp": "2026-10-05T05:31:21.510031+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -31.9,
+        "context": {
+          "candidate_id": 257,
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -17300,6 +17348,18 @@
           "candidate_id": 252,
           "pair": "EUR/USD",
           "direction": "BUY"
+        }
+      },
+      {
+        "timestamp": "2026-10-05T05:31:21.540022+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -31.9,
+        "context": {
+          "candidate_id": 257,
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
         }
       }
     ]
@@ -27642,6 +27702,18 @@
           "direction": "BUY",
           "reject_reason": "eligibility"
         }
+      },
+      {
+        "timestamp": "2026-10-05T05:31:21.570560+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -31.9,
+        "context": {
+          "candidate_id": 257,
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "reject_reason": "eligibility"
+        }
       }
     ]
   },
@@ -31009,6 +31081,19 @@
           "direction": "BUY",
           "regime_cluster": "EUR/USD_BUY_True_r2"
         }
+      },
+      {
+        "timestamp": "2026-10-05T05:31:21.601123+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -31.9,
+        "context": {
+          "candidate_id": 257,
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "reject_reason": "eligibility",
+          "regime_cluster": "EUR/GBP_BUY_False_r1"
+        }
       }
     ],
     "cluster_aware": true
@@ -31496,6 +31581,19 @@
           "direction": "BUY",
           "regime_cluster": "EUR/USD_BUY_True_r1"
         }
+      },
+      {
+        "timestamp": "2026-10-05T05:31:21.631560+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -31.9,
+        "context": {
+          "candidate_id": 257,
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "reject_reason": "eligibility",
+          "regime_cluster": "EUR/GBP_BUY_False_r1"
+        }
       }
     ]
   },
@@ -31980,6 +32078,18 @@
           "pair": "EUR/USD",
           "direction": "BUY",
           "regime_cluster": "EUR/USD_BUY_True_r1"
+        }
+      },
+      {
+        "timestamp": "2026-10-05T05:31:21.386692+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -31.9,
+        "context": {
+          "candidate_id": 257,
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "regime_cluster": "EUR/GBP_BUY_True_r1"
         }
       }
     ]
