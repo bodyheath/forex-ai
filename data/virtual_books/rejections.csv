@@ -927,12 +927,12 @@ id,candidate_id,book_id,pair,direction,reason,recorded_at,status,settled_at
 967,192,G_mechanical_reversion,CAD/JPY,BUY,eligibility,2026-09-27 18:21:16,SETTLED,2026-09-30 02:31:14
 968,192,H_oscillator_extremity,CAD/JPY,BUY,eligibility,2026-09-27 18:21:16,SETTLED,2026-09-30 02:31:14
 969,192,I_bollinger_extremity,CAD/JPY,BUY,eligibility,2026-09-27 18:21:16,SETTLED,2026-09-30 02:31:14
-970,193,A_control,USD/CAD,SELL,eligibility,2026-09-27 18:21:16,PENDING,
-971,193,B_conf6_rr15,USD/CAD,SELL,eligibility,2026-09-27 18:21:16,PENDING,
-972,193,C_grade_based,USD/CAD,SELL,eligibility,2026-09-27 18:21:16,PENDING,
-973,193,D_no_da,USD/CAD,SELL,eligibility,2026-09-27 18:21:16,PENDING,
-974,193,E_no_dd_gate,USD/CAD,SELL,eligibility,2026-09-27 18:21:16,PENDING,
-975,193,F_sentiment_only,USD/CAD,SELL,eligibility,2026-09-27 18:21:16,PENDING,
+970,193,A_control,USD/CAD,SELL,eligibility,2026-09-27 18:21:16,SETTLED,2026-10-05 03:01:18
+971,193,B_conf6_rr15,USD/CAD,SELL,eligibility,2026-09-27 18:21:16,SETTLED,2026-10-05 03:01:18
+972,193,C_grade_based,USD/CAD,SELL,eligibility,2026-09-27 18:21:16,SETTLED,2026-10-05 03:01:18
+973,193,D_no_da,USD/CAD,SELL,eligibility,2026-09-27 18:21:16,SETTLED,2026-10-05 03:01:18
+974,193,E_no_dd_gate,USD/CAD,SELL,eligibility,2026-09-27 18:21:16,SETTLED,2026-10-05 03:01:18
+975,193,F_sentiment_only,USD/CAD,SELL,eligibility,2026-09-27 18:21:16,SETTLED,2026-10-05 03:01:18
 976,194,A_control,AUD/USD,BUY,eligibility,2026-09-27 18:21:16,PENDING,
 977,194,B_conf6_rr15,AUD/USD,BUY,eligibility,2026-09-27 18:21:16,PENDING,
 978,194,C_grade_based,AUD/USD,BUY,eligibility,2026-09-27 18:21:16,PENDING,
@@ -985,10 +985,10 @@ id,candidate_id,book_id,pair,direction,reason,recorded_at,status,settled_at
 1028,202,G_mechanical_reversion,CHF/JPY,BUY,eligibility,2026-09-28 11:21:23,SETTLED,2026-09-28 11:31:17
 1029,202,H_oscillator_extremity,CHF/JPY,BUY,eligibility,2026-09-28 11:21:23,SETTLED,2026-09-28 11:31:17
 1030,202,I_bollinger_extremity,CHF/JPY,BUY,eligibility,2026-09-28 11:21:23,SETTLED,2026-09-28 11:31:17
-1031,203,A_control,USD/CAD,SELL,eligibility,2026-09-28 11:21:23,PENDING,
-1032,203,B_conf6_rr15,USD/CAD,SELL,eligibility,2026-09-28 11:21:23,PENDING,
-1033,203,C_grade_based,USD/CAD,SELL,eligibility,2026-09-28 11:21:23,PENDING,
-1036,203,F_sentiment_only,USD/CAD,SELL,eligibility,2026-09-28 11:21:23,PENDING,
+1031,203,A_control,USD/CAD,SELL,eligibility,2026-09-28 11:21:23,SETTLED,2026-10-05 03:01:18
+1032,203,B_conf6_rr15,USD/CAD,SELL,eligibility,2026-09-28 11:21:23,SETTLED,2026-10-05 03:01:18
+1033,203,C_grade_based,USD/CAD,SELL,eligibility,2026-09-28 11:21:23,SETTLED,2026-10-05 03:01:18
+1036,203,F_sentiment_only,USD/CAD,SELL,eligibility,2026-09-28 11:21:23,SETTLED,2026-10-05 03:01:18
 1037,204,A_control,AUD/USD,BUY,eligibility,2026-09-28 11:21:23,SETTLED,2026-09-30 14:31:26
 1038,204,B_conf6_rr15,AUD/USD,BUY,eligibility,2026-09-28 11:21:23,SETTLED,2026-09-30 14:31:26
 1039,204,C_grade_based,AUD/USD,BUY,eligibility,2026-09-28 11:21:23,SETTLED,2026-09-30 14:31:26
@@ -1205,14 +1205,14 @@ id,candidate_id,book_id,pair,direction,reason,recorded_at,status,settled_at
 1268,240,E_no_dd_gate,CHF/JPY,BUY,eligibility,2026-10-01 14:38:39,PENDING,
 1269,240,F_sentiment_only,CHF/JPY,BUY,eligibility,2026-10-01 14:38:39,PENDING,
 1271,240,I_bollinger_extremity,CHF/JPY,BUY,eligibility,2026-10-01 14:38:39,PENDING,
-1272,241,A_control,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,PENDING,
-1273,241,B_conf6_rr15,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,PENDING,
-1274,241,C_grade_based,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,PENDING,
-1275,241,D_no_da,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,PENDING,
-1276,241,E_no_dd_gate,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,PENDING,
-1277,241,F_sentiment_only,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,PENDING,
-1278,241,G_mechanical_reversion,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,PENDING,
-1279,241,H_oscillator_extremity,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,PENDING,
+1272,241,A_control,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,SETTLED,2026-10-05 03:01:18
+1273,241,B_conf6_rr15,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,SETTLED,2026-10-05 03:01:18
+1274,241,C_grade_based,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,SETTLED,2026-10-05 03:01:18
+1275,241,D_no_da,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,SETTLED,2026-10-05 03:01:18
+1276,241,E_no_dd_gate,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,SETTLED,2026-10-05 03:01:18
+1277,241,F_sentiment_only,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,SETTLED,2026-10-05 03:01:19
+1278,241,G_mechanical_reversion,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,SETTLED,2026-10-05 03:01:19
+1279,241,H_oscillator_extremity,EUR/GBP,BUY,eligibility,2026-10-02 05:20:17,SETTLED,2026-10-05 03:01:19
 1280,242,A_control,EUR/GBP,BUY,eligibility,2026-10-02 11:18:55,SETTLED,2026-10-02 11:31:16
 1281,242,B_conf6_rr15,EUR/GBP,BUY,eligibility,2026-10-02 11:18:55,SETTLED,2026-10-02 11:31:16
 1282,242,C_grade_based,EUR/GBP,BUY,eligibility,2026-10-02 11:18:55,SETTLED,2026-10-02 11:31:16
@@ -1270,9 +1270,9 @@ id,candidate_id,book_id,pair,direction,reason,recorded_at,status,settled_at
 1334,251,E_no_dd_gate,NZD/CHF,BUY,eligibility,2026-10-04 18:18:42,PENDING,
 1335,251,F_sentiment_only,NZD/CHF,BUY,eligibility,2026-10-04 18:18:42,PENDING,
 1336,251,G_mechanical_reversion,NZD/CHF,BUY,eligibility,2026-10-04 18:18:42,PENDING,
-1337,252,A_control,EUR/USD,BUY,sizing,2026-10-04 18:18:42,PENDING,
-1338,252,C_grade_based,EUR/USD,BUY,sizing,2026-10-04 18:18:42,PENDING,
-1339,252,F_sentiment_only,EUR/USD,BUY,eligibility,2026-10-04 18:18:42,PENDING,
+1337,252,A_control,EUR/USD,BUY,sizing,2026-10-04 18:18:42,SETTLED,2026-10-05 03:01:19
+1338,252,C_grade_based,EUR/USD,BUY,sizing,2026-10-04 18:18:42,SETTLED,2026-10-05 03:01:19
+1339,252,F_sentiment_only,EUR/USD,BUY,eligibility,2026-10-04 18:18:42,SETTLED,2026-10-05 03:01:19
 1340,253,A_control,USD/CAD,SELL,eligibility,2026-10-04 18:18:42,PENDING,
 1341,253,B_conf6_rr15,USD/CAD,SELL,eligibility,2026-10-04 18:18:42,PENDING,
 1342,253,C_grade_based,USD/CAD,SELL,eligibility,2026-10-04 18:18:42,PENDING,
