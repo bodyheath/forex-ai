@@ -1,0 +1,29 @@
+[
+  {
+    "id": 9478,
+    "pair": "NZD/JPY",
+    "direction": "BUY",
+    "entry_type": "PULLBACK",
+    "trigger_price": 88.956,
+    "trigger_reason": "Immediate entry at current price",
+    "expiry_hours": 48,
+    "entry": 88.956,
+    "stop_loss": 88.125,
+    "target": 90.62,
+    "reward_risk": 2.0,
+    "confidence": 7.9,
+    "plausibility": {
+      "passed": true,
+      "checks": {
+        "sign_direction": true,
+        "distance_plausible": true,
+        "distance_plausible_n_comparables": 197,
+        "rr_consistent": true,
+        "rr_real": 2.0,
+        "rr_stated": 2.0
+      },
+      "failed": []
+    },
+    "recorded_at_utc": "2026-10-05 11:19:08"
+  }
+]

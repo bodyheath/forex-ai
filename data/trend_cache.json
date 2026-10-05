@@ -1,5 +1,22 @@
 {
-  "timestamp": "2026-10-05T05:20:41.847180+00:00",
-  "monthly_trends": {},
-  "trend_structures": {}
+  "timestamp": "2026-10-05T11:19:10.996909+00:00",
+  "monthly_trends": {
+    "EUR/USD": {
+      "trend": "NEUTRAL",
+      "strength": "weak",
+      "n_months": 3
+    }
+  },
+  "trend_structures": {
+    "EUR/USD": {
+      "status": "ok",
+      "buy_valid": false,
+      "sell_valid": false,
+      "hh": false,
+      "hl": true,
+      "lh": true,
+      "ll": false,
+      "detail": "lower highs but higher lows (converging)"
+    }
+  }
 }
