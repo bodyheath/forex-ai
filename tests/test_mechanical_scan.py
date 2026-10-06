@@ -373,11 +373,11 @@ class TestReadinessAndCli(ScanTestCase):
         self.assertTrue(any("Book G" in l for l in lines))
 
     def test_cli_scan_fails_loudly_when_nothing_could_be_fetched(self):
-        with patch.object(ms, "fetch_daily_frame", side_effect=RuntimeError("no network")):
+        with patch.object(ms, "_fetch_daily_frame", side_effect=RuntimeError("no network")):
             self.assertEqual(ms.main(["scan", "--pairs", "EUR/USD,GBP/USD"]), 1)
 
     def test_cli_scan_succeeds_with_data(self):
-        with patch.object(ms, "fetch_daily_frame", side_effect=lambda p: self.full.iloc[:361]), \
+        with patch.object(ms, "_fetch_daily_frame", side_effect=lambda p: self.full.iloc[:361]), \
              patch.object(ms, "datetime") as dt:
             dt.now.return_value = pd.Timestamp(self.today_after(361)).to_pydatetime()
             dt.strptime = __import__("datetime").datetime.strptime

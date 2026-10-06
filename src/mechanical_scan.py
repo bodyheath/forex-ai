@@ -131,7 +131,7 @@ def load_candidates() -> list:
         return list(csv.DictReader(f))
 
 
-def save_candidates(rows: list) -> None:
+def _save_candidates(rows: list) -> None:
     MECH_DIR.mkdir(parents=True, exist_ok=True)
     fd, tmp = tempfile.mkstemp(dir=str(MECH_DIR), suffix=".tmp")
     try:
@@ -186,14 +186,14 @@ def assign_cluster(tracker: dict, book: str, pair: str, direction: str,
 
 # ─── Pure logic: features, candidates, settlement ────────────────────────────
 
-def fetch_daily_frame(pair: str) -> pd.DataFrame:
+def _fetch_daily_frame(pair: str) -> pd.DataFrame:
     """Completed daily bars (OHLC, ascending), via the live data chain."""
     data = _tech._td_request(pair, "1day", 400)
     frame = _tech._frame_from_td(data)
     return _tech._drop_still_forming_daily_candle(frame)
 
 
-def summarise_bar(pair: str, frame: pd.DataFrame, i: int):
+def _summarise_bar(pair: str, frame: pd.DataFrame, i: int):
     """The daily feature dict for bar index `i`, computed on exactly the
     window the backtest used. None when there is too little history."""
     if i + 1 < MIN_BARS:
@@ -210,7 +210,7 @@ def summarise_bar(pair: str, frame: pd.DataFrame, i: int):
 
 def candidate_rows_for_bar(pair: str, frame: pd.DataFrame, i: int) -> list:
     """Both-direction candidate rows (unsaved, no id/cluster) for bar `i`."""
-    s = summarise_bar(pair, frame, i)
+    s = _summarise_bar(pair, frame, i)
     if s is None:
         return []
     try:
@@ -353,7 +353,7 @@ def run_scan(pairs=None, fetch_fn=None, log=print, today=None) -> dict:
     shadow rules. Idempotent -- safe to run repeatedly in one day.
     `fetch_fn(pair) -> completed daily frame` is injectable for tests."""
     pairs = list(pairs or UNIVERSE)
-    fetch_fn = fetch_fn or fetch_daily_frame
+    fetch_fn = fetch_fn or _fetch_daily_frame
     today = today or datetime.now(timezone.utc).date()
 
     rows = load_candidates()
@@ -424,7 +424,7 @@ def run_scan(pairs=None, fetch_fn=None, log=print, today=None) -> dict:
                 settled += 1
 
     recorded = record_settled(rows)
-    save_candidates(rows)
+    _save_candidates(rows)
     _save_tracker(tracker)
     open_n = sum(1 for r in rows if r["status"] == "OPEN")
     log(f"[mechanical] created={created} settled={settled} shadow_recorded={recorded} "
