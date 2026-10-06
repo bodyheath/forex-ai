@@ -411,8 +411,8 @@ def run_scan(pairs=None, fetch_fn=None, log=print, today=None) -> dict:
                             "settled_at": "", "shadow_recorded": "0"})
                 rows.append(new)
                 created += 1
-            if idxs:
-                last_by_pair[pair] = pd.Timestamp(frame.index[idxs[-1]]).strftime("%Y-%m-%d")
+        if idxs:
+            last_by_pair[pair] = pd.Timestamp(frame.index[idxs[-1]]).strftime("%Y-%m-%d")
 
         for r in rows:
             if r["pair"] != pair or r["status"] != "OPEN":
