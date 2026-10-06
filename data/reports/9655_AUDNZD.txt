@@ -1,0 +1,23 @@
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at key level + converging ribbon + rising AUD rates support a reversal lower, but weak MTF agreement (1/3) and neutral oscillator confluence prevent high-confidence entry.
+RISK_FACTORS: [1. MTF confusion — Monthly SELL vs Weekly NEUTRAL vs Daily SELL creates directional ambiguity; ribbon converging signals trend weakening, not confirmed reversal. 2. RSI 58.9 in established uptrend is not overbought (standard tier 45–62 = neutral 3–4); D1 T_sig=SELL_6 contradicted by uptrend structure and RSI context — contradiction lowers conviction.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.2340
+ENTRY_TRIGGER_REASON: Pullback and reversal below 4H double-bottom neckline ~1.2340 with confluence at nearest Fibonacci resistance; await D1 RSI refresh below 50 for momentum confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+1. **MTF Rule Breach**: Weekly is NEUTRAL, Daily is SELL, 4H is NEUTRAL → only 1/3 frames

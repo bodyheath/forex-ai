@@ -1,0 +1,24 @@
+PAIR: AUD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Bearish ribbon alignment and institutional short positioning override weak daily RSI oversold signal, but mixed MTF (D:BUY vs 4H:SELL; conf=1/3) and inverted rate differentials (both rates rising) block high-confidence entry.
+RISK_FACTORS: (1) MTF disagreement (D vs 4H) fails 2/3 threshold—daily BUY bias contradicts 4H SELL and ribbon bearish structure; (2) AUD rate rising (diff +3.53%) conflicts with SELL thesis—typically supportive of AUD strength, reducing downside conviction.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**RATIONALE:**
+
+**MTF VETO:** W:NEUTRAL + D:BUY vs 4H:SELL = only 1/3 agreement (D alone). Confidence=40% insufficient for TRADE_THIS. Hard rule: MTF weekly AND daily must both agree on direction. They do not.
+
+**TECHNICAL (Score=4):**
+- D1 T_sig=BUY_4 (baseline), but context
