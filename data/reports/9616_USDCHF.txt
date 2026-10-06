@@ -1,0 +1,17 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key resistance (0.82745) + bearish engulfing on 4H + RSI 60.2 at upper neutral zone in mixed MTF context suggests corrective downside, but ALIGNED_BULL ribbon and W:NEUTRAL block high-conviction SELL.
+RISK_FACTORS: (1) Ribbon is fully bullish (5/5 aligned)—strong uptrend support overrides technical reversal signals; (2) MTF agreement weak (conf=1/3, only D:SELL)—W and 4H neutral leave SELL vulnerable to continuation through resistance.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly does not agree with daily SELL (W:NEUTRAL, D:SELL, conf<2/3). ALIGNED_BULL ribbon (5/5) + golden-cross structure (price > SMA50 > SMA200) + uptrend context override pin bar and bearish engulfing as noise. No setup meets TRADE_THIS threshold (needs ≥7 confidence AND weekly+daily both directionally aligned).
+ENTRY_TRIGGER_EXPIRY_HOURS: 0

@@ -1,0 +1,17 @@
+```
+PAIR: GBP/CAD
+DIRECTION: SELL
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: Confirmed downtrend across all MTF (M/W/D/4H all SELL) with price at 78.6% Fib resistance and RSI overbought in downtrend context; pin bar at key level + partial oscillator confluence supports reversal, but ribbon leaning bull and crowded GBP short positioning create reversal risk.
+RISK_FACTORS: [1. GBP net SHORT at 14.0% with BUILDING momentum = crowded short near 1y range bottom — potential institutional stop-run or reversal trap if price holds above 1.8877 Fib resistance. 2. Ribbon LEANING_BULL (4/5 aligned) contradicts confirmed downtrend — suggests trend weakening; uptrend price structure (price > SMA50 > SMA200) and D1 T_sig=SELL_5 (pre-computed baseline, not override-grade) create ambiguity on conviction.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 1.8860
+ENTRY_TRIGGER_REASON: Break below pin bar low at 78.6% Fib resistance (1.8877) to confirm reversal in downtrend; wait for close below

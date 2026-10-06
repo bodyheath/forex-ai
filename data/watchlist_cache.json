@@ -1,34 +1,38 @@
 {
-  "timestamp": 1791264257.2620246,
+  "timestamp": 1791285678.6687675,
   "watchlist_pairs": [
     "AUD/JPY",
+    "EUR/CHF",
     "AUD/CHF",
     "GBP/CHF",
     "EUR/AUD",
     "USD/CHF",
     "AUD/CAD",
     "CAD/CHF",
+    "CHF/JPY",
     "GBP/CAD",
+    "AUD/NZD",
     "EUR/CAD"
   ],
   "near_miss": {
-    "CAD/CHF": 5,
     "EUR/CAD": 5
   },
   "near_miss_dirs": {
-    "CAD/CHF": "BUY",
     "EUR/CAD": "BUY"
   },
   "momentum_counts": {
-    "AUD/JPY": 1,
-    "AUD/CHF": 1,
-    "GBP/CHF": 1,
-    "EUR/AUD": 1,
-    "USD/CHF": 1,
-    "AUD/CAD": 1,
-    "CAD/CHF": 1,
-    "GBP/CAD": 1,
-    "EUR/CAD": 1
+    "AUD/JPY": 2,
+    "EUR/CHF": 1,
+    "AUD/CHF": 2,
+    "GBP/CHF": 2,
+    "EUR/AUD": 2,
+    "USD/CHF": 2,
+    "AUD/CAD": 2,
+    "CAD/CHF": 2,
+    "CHF/JPY": 1,
+    "GBP/CAD": 2,
+    "AUD/NZD": 1,
+    "EUR/CAD": 2
   },
   "momentum_grace": {},
   "watchlist_weekly_stats": {
@@ -37,7 +41,5 @@
     "promoted_to_deep": 4,
     "became_trade_alerts": 0
   },
-  "priority_for_next_scan": [
-    "EUR/CAD"
-  ]
+  "priority_for_next_scan": []
 }

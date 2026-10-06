@@ -1,0 +1,23 @@
+PAIR: GBP/USD
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Weekly and daily both BUY with pin bar at key level and RSI 36.4 (approaching oversold) suggest mean-reversion entry, but 4H SELL and fully bear-aligned ribbon create immediate headwind and elevated reversal risk.
+RISK_FACTORS: [1. 4H timeframe disagrees (SELL) — MTF confidence only 2/3; reversal may be incomplete or false. 2. EMA ribbon fully bear-aligned (5/5) despite weekly/daily BUY signals — suggests downtrend structure still intact; premature entry risks immediate stop-hit.]
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.3200
+ENTRY_TRIGGER_REASON: Break below recent swing low at SL 1.3273 with RSI <30 (confirmed oversold) + 4H alignment into weekly/daily BUY would validate reversal.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**MTF Rule Violation (Critical):** Weekly=BUY, Daily=BUY, **4H=SELL**. Confidence = 2/3 (66%) — below the 80% threshold required for full MTF
