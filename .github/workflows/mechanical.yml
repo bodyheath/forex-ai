@@ -1,0 +1,77 @@
+name: Mechanical Path (no LLM)
+
+# Forward test of the Book G/H/I signals with NO Anthropic spend: daily bars ->
+# the same technical._summarise() features the backtest used -> every pair x
+# both directions -> settle against subsequent daily bars. See the module
+# docstring of src/mechanical_scan.py for the full design and its limitations.
+#
+# Cost: $0. Data comes from Yahoo -> Stooq (free); Twelve Data is only a last
+# resort fallback. No Anthropic key is referenced anywhere in this workflow.
+# Repo is public, so Actions minutes are free; a run is ~1-2 minutes.
+#
+# Schedule: 01:30 UTC Tue-Sat, i.e. after Mon-Fri daily bars have closed under
+# either London time (Yahoo rolls daily bars at London midnight, 23:00 or 00:00
+# UTC). The scan is idempotent and backfills a short outage, so a missed or
+# duplicated run is harmless.
+#
+# Isolation: writes ONLY data/mechanical_path/ and commits ONLY that directory
+# (scripts/commit_mechanical_path.sh) -- it never touches trades.csv,
+# fund_state.json, the virtual books, or the shared shadow_rules.json.
+
+on:
+  schedule:
+    - cron: '30 1 * * 2-6'
+  workflow_dispatch:
+
+concurrency:
+  group: mechanical-path
+  cancel-in-progress: false
+
+jobs:
+  mechanical:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run mechanical scan
+        env:
+          TWELVE_DATA_KEY: ${{ secrets.TWELVE_DATA_KEY }}
+        run: python -m src.mechanical_scan scan
+
+      - name: Report
+        if: always()
+        env:
+          TWELVE_DATA_KEY: ${{ secrets.TWELVE_DATA_KEY }}
+        run: |
+          {
+            echo '### Mechanical path'
+            echo '```'
+            python -m src.mechanical_scan report
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit mechanical path data
+        # if: always() so a failed scan still preserves any state a partially
+        # successful earlier step wrote (all writes are atomic, so a crash can
+        # only leave the last good version).
+        if: always()
+        run: |
+          git config user.name "forex-ai[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          bash scripts/commit_mechanical_path.sh main origin
