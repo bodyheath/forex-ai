@@ -1,0 +1,24 @@
+PAIR: AUD/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level (50% Fib) with RSI 39 (bearish-context BUY zone) and D1 BUY signal, but weak MTF agreement (1/3) and conflicting MA alignment limit conviction.
+RISK_FACTORS: (1) MTF confluence only 1/3 — weekly and 4H neutral, no directional confirmation; (2) AUD net short positioning 12% is crowded but not extreme, and MOM=BUILDING lacks confirmed reversal signal per COT rule — risk of false reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.5764
+ENTRY_TRIGGER_REASON: Bounce from 50% Fibonacci at 0.57641 with pin bar confirmation would require 4H or weekly to align before committing capital.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+- **MTF rule violation**: Weekly=NEUTRAL, Daily=BUY, 4H=NEUTRAL → conf=1/3 (only daily agrees). MTF rule requires **weekly AND daily both agree**; this fails. TRADE_THIS must be **NO** despite other bullish signals.
+- **

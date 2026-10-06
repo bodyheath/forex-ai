@@ -1,0 +1,23 @@
+PAIR: AUD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 35 in mixed trend offers neutral-to-mild BUY setup, but ribbon is bearish-aligned and MTF agreement is only 1/3 (D:BUY vs 4H:SELL vs W/M:NEUTRAL), blocking trade.
+RISK_FACTORS: MTF conflict (D:BUY vs 4H:SELL) violates MTF rule; bearish ribbon alignment contradicts direction despite T_sig=BUY_4.
+TRADE_THIS: NO
+ENTRY_TYPE: NONE
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation — only D1 agrees (1/3 agreement <2/3 threshold). Confidence capped at 5 due to ribbon ALIGNED_BEAR and positioning crowded AUD short (reversal unconfirmed). OSC=NONE (no oscillator confluence). Wait for weekly and/or 4H alignment or ribbon flip.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Rationale:**
+
+1. **TECHNICAL_SCORE = 5:** T_sig=BUY_4 is the baseline. D1 RSI=35.1 sits in the standard 30–45

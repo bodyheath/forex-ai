@@ -30282,6 +30282,78 @@
           "direction": "SELL",
           "tech_score": "7"
         }
+      },
+      {
+        "timestamp": "2026-10-06T05:13:40.283676+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -16.6,
+        "context": {
+          "id": "3574",
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-06T05:13:40.457508+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 15.9,
+        "context": {
+          "id": "3575",
+          "pair": "EUR/NZD",
+          "direction": "SELL",
+          "tech_score": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-06T05:13:40.778991+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -13.5,
+        "context": {
+          "id": "3580",
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-10-06T05:13:41.024673+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -61.5,
+        "context": {
+          "id": "3595",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-10-06T05:13:41.290597+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -30.0,
+        "context": {
+          "id": "3598",
+          "pair": "GBP/USD",
+          "direction": "BUY",
+          "tech_score": "9"
+        }
+      },
+      {
+        "timestamp": "2026-10-06T05:13:41.464194+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 45.2,
+        "context": {
+          "id": "3610",
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "tech_score": "4"
+        }
       }
     ]
   },
@@ -30716,6 +30788,54 @@
           "pair": "AUD/NZD",
           "direction": "SELL",
           "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-06T05:13:40.304622+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -16.6,
+        "context": {
+          "id": "3574",
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-06T05:13:40.532867+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 15.9,
+        "context": {
+          "id": "3575",
+          "pair": "EUR/NZD",
+          "direction": "SELL",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-06T05:13:41.045526+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -61.5,
+        "context": {
+          "id": "3595",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-06T05:13:41.310786+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -30.0,
+        "context": {
+          "id": "3598",
+          "pair": "GBP/USD",
+          "direction": "BUY",
+          "confidence": "8"
         }
       }
     ]

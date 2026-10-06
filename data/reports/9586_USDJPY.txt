@@ -1,0 +1,23 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 head-and-shoulders bearish pattern with rising JPY rates and USD rate flatness creates mild downside pressure, but MTF conflict (M:SELL vs W/D/4H:NEUTRAL) and RSI neutral positioning severely limit conviction.
+RISK_FACTORS: [1] MTF agreement failure — only 1 of 3 timeframes (monthly) confirm direction; weekly and daily both neutral, violating core MTF rule. [2] D1 RSI 52.5 and MACD +0.2775 show no oversold/momentum confirmation; price already 237p below SMA50, leaving limited downside buffer before mean reversion.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule breach: W:NEUTRAL and D:NEUTRAL conflict with M:SELL. Confidence 4/10 is below 7.0 threshold and R:R uncomputable due to weak technical setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**REASONING:**
+
+1. **MTF Rule (Hard Reject):** Weekly and Daily both score NEUTRAL, while Monthly is SELL. The rule states: "if weekly AND daily don't both

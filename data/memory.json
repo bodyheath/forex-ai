@@ -16,21 +16,6 @@
   },
   {
     "source": "outcome",
-    "pattern": "Never BUY against a 5/5 bearish EMA ribbon + net SHORT positioning \u2014 oversold RSI in a downtrend signals trend strength,",
-    "outcome": "[LOSS] CAD/HKD closed 2026-06-24 20:57:46"
-  },
-  {
-    "source": "outcome",
-    "pattern": "Never long against a 5/5 bearish EMA fan on oscillator oversold alone \u2014 downtrends make oversold readings meaningless.",
-    "outcome": "[LOSS] EUR/HKD closed 2026-06-24 07:50:36"
-  },
-  {
-    "source": "outcome",
-    "pattern": "Pin bar at triple-TF resistance + CCI>100 exhaustion justifies mean-reversion SELL even against bullish ribbon, targetin",
-    "outcome": "[PARTIAL_WIN] AUD/NZD closed 2026-06-24 02:31:34"
-  },
-  {
-    "source": "outcome",
     "pattern": "Triple oscillator extremes (Stoch >90, CCI >150, RSI >70) at Bollinger upper band signal high-probability mean reversion",
     "outcome": "[PARTIAL_WIN] USD/SEK closed 2026-06-24 22:31:27"
   },
@@ -113,6 +98,21 @@
     "source": "outcome",
     "pattern": "Never sell into a 5/5 bullish EMA fan when rate differential also favors longs \u2014 oscillator confluence cannot override t",
     "outcome": "[LOSS] AUD/NZD closed 2026-09-17 06:01:32"
+  },
+  {
+    "source": "outcome",
+    "pattern": "MTF BUY alignment + pin bar at Fibonacci support + RSI <40 = high-probability bounce; trust technicals over weak fundame",
+    "outcome": "[EXPIRED] GBP/AUD closed 2026-09-28 21:11:08"
+  },
+  {
+    "source": "outcome",
+    "pattern": "Never buy oversold bounces when F+Positioning \u22644/10 AND active rate divergence AND major macro news due within 48h.",
+    "outcome": "[LOSS] NZD/JPY closed 2026-09-29 22:01:31"
+  },
+  {
+    "source": "outcome",
+    "pattern": "Never BUY counter-trend when D1 bearish candle + 5/5 bear ribbon + negative rate differential all align, regardless of o",
+    "outcome": "[LOSS] EUR/USD closed 2026-09-29 17:02:15"
   },
   {
     "source": "auto",

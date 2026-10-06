@@ -1,0 +1,23 @@
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 3/10
+SENTIMENT_SCORE: 6/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: PARTIAL_SELL
+KEY_THESIS: D1 RSI 61.4 at 61.8% Fib resistance with pin bar pattern suggests exhaustion, but weak MTF alignment (W:NEUTRAL D:NEUTRAL) and crowded short positioning undermine conviction.
+RISK_FACTORS: [1. MTF disagreement — Weekly and Daily both NEUTRAL, failing the >=2/3 agreement rule; no true trend confirmation. 2. Crowded short positioning (GBP 14%, AUD 12% both BUILDING near 1y lows) — high reversal risk if longs trigger stop-running unwind.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: W:NEUTRAL + D:NEUTRAL = conf 0/3, below 2/3 threshold. Weekly and Daily do not both agree on direction; TRADE_THIS blocked regardless of technical setup.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+
+---
+
+**Reasoning Summary:**
+
+1. **MTF Rule (HARD STOP):** W:NEUTRAL + D:NEUTRAL = 0/3 agreement. The rule is explicit: "if weekly AND daily don't both agree on direction (
