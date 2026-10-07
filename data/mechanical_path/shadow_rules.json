@@ -1,0 +1,245 @@
+{
+  "mech_G_mechanical_reversion": {
+    "description": "Mechanical-only forward test of Book G's signal (rib_against AND osc_agrees), every pair x both directions, no LLM.",
+    "registered_at": "2026-10-07T07:32:37.747101+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 30,
+    "min_n_no_fire": 30,
+    "alpha": 0.05,
+    "pf_max_fire": null,
+    "pf_min_fire": null,
+    "pf_min_gap": null,
+    "cluster_aware": true,
+    "promoted": false,
+    "evaluations": [
+      {
+        "timestamp": "2026-10-07T07:32:37.748459+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -100.6,
+        "context": {
+          "candidate_id": "23",
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "EUR/AUD_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T07:32:37.749879+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -81.7,
+        "context": {
+          "candidate_id": "30",
+          "pair": "GBP/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "GBP/CHF_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T07:32:37.751280+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -51.0,
+        "context": {
+          "candidate_id": "48",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "AUD/CHF_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T07:32:37.752815+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -80.5,
+        "context": {
+          "candidate_id": "50",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "AUD/NZD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T07:32:37.754478+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -40.9,
+        "context": {
+          "candidate_id": "56",
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "CAD/CHF_SELL_False_r1"
+        }
+      }
+    ]
+  },
+  "mech_H_oscillator_extremity": {
+    "description": "Mechanical-only forward test of Book H's signal (osc_agrees alone), every pair x both directions, no LLM.",
+    "registered_at": "2026-10-07T07:32:37.747578+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 30,
+    "min_n_no_fire": 30,
+    "alpha": 0.05,
+    "pf_max_fire": null,
+    "pf_min_fire": null,
+    "pf_min_gap": null,
+    "cluster_aware": true,
+    "promoted": false,
+    "evaluations": [
+      {
+        "timestamp": "2026-10-07T07:32:37.748917+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -100.6,
+        "context": {
+          "candidate_id": "23",
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "EUR/AUD_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T07:32:37.750335+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -81.7,
+        "context": {
+          "candidate_id": "30",
+          "pair": "GBP/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "GBP/CHF_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T07:32:37.751772+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -51.0,
+        "context": {
+          "candidate_id": "48",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "AUD/CHF_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T07:32:37.753341+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -80.5,
+        "context": {
+          "candidate_id": "50",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "AUD/NZD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T07:32:37.755045+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -40.9,
+        "context": {
+          "candidate_id": "56",
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "CAD/CHF_SELL_False_r1"
+        }
+      }
+    ]
+  },
+  "mech_I_bollinger_extremity": {
+    "description": "Mechanical-only forward test of Book I's signal (bollinger_extreme_agrees), every pair x both directions, no LLM.",
+    "registered_at": "2026-10-07T07:32:37.747965+00:00",
+    "min_n": 30,
+    "max_days": 14,
+    "min_n_fire": 30,
+    "min_n_no_fire": 30,
+    "alpha": 0.05,
+    "pf_max_fire": null,
+    "pf_min_fire": null,
+    "pf_min_gap": null,
+    "cluster_aware": true,
+    "promoted": false,
+    "evaluations": [
+      {
+        "timestamp": "2026-10-07T07:32:37.749368+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -100.6,
+        "context": {
+          "candidate_id": "23",
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "EUR/AUD_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T07:32:37.750819+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -81.7,
+        "context": {
+          "candidate_id": "30",
+          "pair": "GBP/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "GBP/CHF_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T07:32:37.752257+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -51.0,
+        "context": {
+          "candidate_id": "48",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "AUD/CHF_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T07:32:37.753898+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -80.5,
+        "context": {
+          "candidate_id": "50",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "AUD/NZD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T07:32:37.755647+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -40.9,
+        "context": {
+          "candidate_id": "56",
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-10-05",
+          "regime_cluster": "CAD/CHF_SELL_False_r1"
+        }
+      }
+    ]
+  }
+}
