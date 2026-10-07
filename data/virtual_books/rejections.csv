@@ -1325,9 +1325,9 @@ id,candidate_id,book_id,pair,direction,reason,recorded_at,status,settled_at
 1391,261,A_control,NZD/JPY,BUY,sizing,2026-10-05 11:19:04,PENDING,
 1392,261,C_grade_based,NZD/JPY,BUY,sizing,2026-10-05 11:19:04,PENDING,
 1393,261,F_sentiment_only,NZD/JPY,BUY,eligibility,2026-10-05 11:19:04,PENDING,
-1394,262,A_control,EUR/USD,BUY,sizing,2026-10-05 11:19:04,PENDING,
-1395,262,C_grade_based,EUR/USD,BUY,sizing,2026-10-05 11:19:04,PENDING,
-1396,262,F_sentiment_only,EUR/USD,BUY,eligibility,2026-10-05 11:19:04,PENDING,
+1394,262,A_control,EUR/USD,BUY,sizing,2026-10-05 11:19:04,SETTLED,2026-10-07 11:31:21
+1395,262,C_grade_based,EUR/USD,BUY,sizing,2026-10-05 11:19:04,SETTLED,2026-10-07 11:31:21
+1396,262,F_sentiment_only,EUR/USD,BUY,eligibility,2026-10-05 11:19:04,SETTLED,2026-10-07 11:31:21
 1397,263,A_control,GBP/NZD,SELL,eligibility,2026-10-05 11:19:04,PENDING,
 1398,263,B_conf6_rr15,GBP/NZD,SELL,eligibility,2026-10-05 11:19:04,PENDING,
 1399,263,C_grade_based,GBP/NZD,SELL,eligibility,2026-10-05 11:19:04,PENDING,
@@ -1488,13 +1488,13 @@ id,candidate_id,book_id,pair,direction,reason,recorded_at,status,settled_at
 1558,287,C_grade_based,EUR/JPY,BUY,eligibility,2026-10-07 11:22:14,PENDING,
 1559,287,D_no_da,EUR/JPY,BUY,eligibility,2026-10-07 11:22:14,PENDING,
 1560,287,F_sentiment_only,EUR/JPY,BUY,eligibility,2026-10-07 11:22:14,PENDING,
-1561,288,A_control,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,PENDING,
-1562,288,B_conf6_rr15,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,PENDING,
-1563,288,C_grade_based,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,PENDING,
-1564,288,D_no_da,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,PENDING,
-1565,288,F_sentiment_only,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,PENDING,
-1566,288,G_mechanical_reversion,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,PENDING,
-1567,288,H_oscillator_extremity,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,PENDING,
+1561,288,A_control,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,SETTLED,2026-10-07 11:31:22
+1562,288,B_conf6_rr15,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,SETTLED,2026-10-07 11:31:22
+1563,288,C_grade_based,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,SETTLED,2026-10-07 11:31:22
+1564,288,D_no_da,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,SETTLED,2026-10-07 11:31:22
+1565,288,F_sentiment_only,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,SETTLED,2026-10-07 11:31:22
+1566,288,G_mechanical_reversion,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,SETTLED,2026-10-07 11:31:22
+1567,288,H_oscillator_extremity,EUR/AUD,BUY,eligibility,2026-10-07 11:22:14,SETTLED,2026-10-07 11:31:22
 1568,289,A_control,EUR/GBP,BUY,eligibility,2026-10-07 11:22:14,PENDING,
 1569,289,B_conf6_rr15,EUR/GBP,BUY,eligibility,2026-10-07 11:22:14,PENDING,
 1570,289,C_grade_based,EUR/GBP,BUY,eligibility,2026-10-07 11:22:14,PENDING,
