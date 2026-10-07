@@ -30849,6 +30849,30 @@
           "direction": "SELL",
           "tech_score": "4"
         }
+      },
+      {
+        "timestamp": "2026-10-07T05:11:05.611044+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 17.0,
+        "context": {
+          "id": "3642",
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "tech_score": "4"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T05:11:06.099532+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 82.8,
+        "context": {
+          "id": "3677",
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
       }
     ]
   },
@@ -31331,6 +31355,18 @@
           "pair": "GBP/USD",
           "direction": "BUY",
           "confidence": "8"
+        }
+      },
+      {
+        "timestamp": "2026-10-07T05:11:06.141723+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 82.8,
+        "context": {
+          "id": "3677",
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "confidence": "7"
         }
       }
     ]
