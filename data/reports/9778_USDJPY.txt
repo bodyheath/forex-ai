@@ -1,0 +1,24 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 4/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Rising JPY rates + USD rate flatness favour JPY strength (SELL USD/JPY), but technicals lack directional conviction with neutral MTF alignment and mixed D1 trend vs bullish 4H divergence.
+RISK_FACTORS: [1. MTF conf=0/3 (M:SELL, W:NEUTRAL, D:NEUTRAL) fails the weekly+daily agreement rule; TRADE_THIS reversal to NO despite direction bias. 2. 4H double_bottom_bul contradicts SELL signal — price currently in uptrend microstructure; reversal risk if breakout above 158.50 SMA (resistance) triggers continuation.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_SELL
+ENTRY_TRIGGER_PRICE: 156.85
+ENTRY_TRIGGER_REASON: Break below D1 SMA50 (157.9231) with confirmation of weekly SELL + daily agreement.
+ENTRY_TRIGGER_EXPIRY_HOURS: 72
+
+---
+
+**REASONING:**
+
+**Technical (4/10):**
+- D1: T_sig=NEUTRAL_3, RSI=54.0 (neutral zone 45–62), MACD positive but weak (0.2581), inside_bar pattern (consolidation, not direct
