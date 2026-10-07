@@ -16,11 +16,6 @@
   },
   {
     "source": "outcome",
-    "pattern": "Triple oscillator extremes (Stoch >90, CCI >150, RSI >70) at Bollinger upper band signal high-probability mean reversion",
-    "outcome": "[PARTIAL_WIN] USD/SEK closed 2026-06-24 22:31:27"
-  },
-  {
-    "source": "outcome",
     "pattern": "D1 pin bar at swing high + RSI <60 topping + multi-timeframe SELL alignment = high-probability fade entry even against b",
     "outcome": "[PARTIAL_WIN] AUD/NZD closed 2026-06-24 22:01:50"
   },
@@ -115,14 +110,19 @@
     "outcome": "[LOSS] EUR/USD closed 2026-09-29 17:02:15"
   },
   {
-    "source": "auto",
-    "pattern": "Overall track record to date (n=20)",
-    "outcome": "Win rate 30%, expectancy -0.41R."
+    "source": "outcome",
+    "pattern": "Never BUY into confirmed death-cross downtrends when system's own historical BUY expectancy is negative, regardless of o",
+    "outcome": "[LOSS] EUR/USD closed 2026-10-07 08:01:37"
   },
   {
     "source": "auto",
-    "pattern": "Setups taken at confidence >= 7 (n=15 closed trades)",
-    "outcome": "Win rate 20%, expectancy -0.50R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
+    "pattern": "Overall track record to date (n=21)",
+    "outcome": "Win rate 29%, expectancy -0.44R."
+  },
+  {
+    "source": "auto",
+    "pattern": "Setups taken at confidence >= 7 (n=16 closed trades)",
+    "outcome": "Win rate 19%, expectancy -0.54R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
   },
   {
     "source": "auto",
@@ -131,8 +131,8 @@
   },
   {
     "source": "auto",
-    "pattern": "BUY setups (n=10 closed trades)",
-    "outcome": "Win rate 20%, expectancy -0.37R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
+    "pattern": "BUY setups (n=11 closed trades)",
+    "outcome": "Win rate 18%, expectancy -0.45R. This segment has been unprofitable overall (negative expectancy) - reduce confidence here."
   },
   {
     "source": "auto",

@@ -1,0 +1,23 @@
+PAIR: EUR/CHF
+DIRECTION: BUY
+CONFIDENCE: 6/10
+TECHNICAL_SCORE: 6/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at Fib 23.6% support with RSI 36.9 (oversold zone) and T_sig=BUY_7 setup, but bearish RSI divergence and 4H downtrend structure create reversal-risk conflict; CHF rate rising and SMD -7 (institutions short EUR) add headwind.
+RISK_FACTORS: [1) Bearish RSI divergence (7p/5pt) contradicts BUY signal — reversal may have already started on D1. 2) 4H remains in downtrend (price < SMA50 < SMA200 death-cross) — D1 BUY may fail if 4H doesn't confirm break above 0.9350.]
+TRADE_THIS: NO
+ENTRY_TYPE: BREAKOUT_BUY
+ENTRY_TRIGGER_PRICE: 0.9350
+ENTRY_TRIGGER_REASON: Break above 4H SMA50 and daily T_sig confirmation with RSI hold >40 to invalidate divergence.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Rationale:**
+
+**MTF Check:** Weekly=NEUTRAL, Daily=BUY, 4H=BUY → 2/3
