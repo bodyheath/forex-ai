@@ -1,0 +1,23 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 4/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Monthly SELL bias with rising JPY rates and neutral technicals creates weak bearish lean, but D1/4H/W lack directional conviction and MTF agreement is absent.
+RISK_FACTORS: [1) MTF conf=0/3 (M:SELL vs D/W/4H:NEUTRAL) violates MTF rule — no clear directional consensus across timeframes. 2) D1 T_sig=NEUTRAL_3 + inside_bar pattern + RSI=54 (mid-range) + price/MA misalignment signal indecision; R:R cannot be validated without clear entry level.]
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule failure — weekly and daily do not both agree on direction. Monthly SELL unsupported by daily/weekly alignment. Technicals neutral; fundamentals (rising JPY rate vs flat USD) provide only marginal bearish context. Insufficient conviction.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+---
+
+**Scoring Detail:**
+
+- **TECHNICAL: 4/10** — D1 T_sig baseline NEUTRAL_3 held. RSI=54 is neutral zone (45–62). MACD
