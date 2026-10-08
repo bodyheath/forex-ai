@@ -1,0 +1,23 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 64.7 in confirmed uptrend signals overbought conditions, but weak MACD momentum and neutral MTF agreement create low-conviction SELL setup with elevated whipsaw risk.
+RISK_FACTORS: [1. MTF all-neutral (M/W/D/4H disagree or lack direction) breaks core confluence rule — TRADE_THIS becomes ineligible regardless of other factors. 2. Ribbon fully aligned bull (5/5) and price above SMA50 + SMA200 contradict SELL thesis — reversal risk if uptrend accelerates.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: N/A
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**EXPLANATION:**
+
+**MTF Veto (Critical):** MTF line shows M:NEUTRAL, W:NEUTRAL, D:NEUTRAL, 4H:NEUTRAL with conf=0/3. System rule states: *"if weekly AND daily don't both agree on direction (conf<2/3), TRADE_THIS NO regardless."* At 0/3, there is zero directional consensus across the timeframe stack. This is a hard rejection.
+
+**Technical Conflict
