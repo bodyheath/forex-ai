@@ -1,0 +1,23 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 with pin bar confirmation on 4H, supported by rising JPY rates and institutional JPY longs, but weakened by RSI 56 neutral zone and MTF disagreement (W:NEUTRAL conflicts D:SELL).
+RISK_FACTORS: MTF confidence only 1/3 (Weekly neutral vs Daily sell) — trend conviction too low for high-confidence entry; RSI 56 is neither oversold nor overbought, reducing mean-reversion reliability and increasing false-break risk.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 157.50
+ENTRY_TRIGGER_REASON: Confirm breakdown below D1 SMA50 (157.8117) on close; wait for price to tag upper Fibonacci resistance near 160.0p and fail, then enter on pullback below 157.50 for improved R:R and pattern confirmation.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Reasoning:**
+
+1. **MTF Rule Breach (TRADE_THIS NO):** Weekly is NEUTRAL, Daily is SELL → only 1/3 agreement. Confidence is 20% weighted and falls short of 2/3 threshold. This alone dis

@@ -1,0 +1,23 @@
+PAIR: EUR/CHF
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: CONFLICT
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at 38.2% Fib support + D1 RSI neutral-to-BUY + fundamental EUR strength offer bounce entry, but bearish divergence and crowded EUR shorts create conflicting signals.
+RISK_FACTORS: Bearish RSI divergence (7p/5pt) conflicts with BUY thesis — price may fail to hold 0.9356 support; crowded EUR short positioning (4.0% net) combined with SMD=-5 institutional bearishness suggests downside unwind more likely than reversal.
+TRADE_THIS: NO
+ENTRY_TYPE: PULLBACK
+ENTRY_TRIGGER_PRICE: 0.93556
+ENTRY_TRIGGER_REASON: Bounce from 38.2% Fib + pin bar support; risk/reward improves only if hold confirmed above SMA50 0.9387.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**REASONING:**
+
+1. **MTF Conflict (HARD RULE FAIL):** Weekly=NEUTRAL, Daily=BUY, 4H=NEUTRAL. Only 1/3 agree → conf=40% of multi-timeframe weight. This alone triggers **TRADE_THIS: NO** per mandate (MTF weekly+daily must both agree).
