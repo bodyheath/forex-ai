@@ -1,0 +1,16 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders bearish pattern on D1 with T_sig=SELL_5 conflicts with 4H uptrend structure and pin bar reversal signal; MTF agreement insufficient (D:SELL vs 4H:NEUTRAL, W:NEUTRAL) and OSC shows no confluence.
+RISK_FACTORS: [1] MTF conflict: 4H pin_bar_at_key_level:bul contradicts D1 H&S reversal — reversal direction ambiguous, entry timing unreliable. [2] Price 158.30 is between SMA50 (157.81) and SMA200 (158.51) in a mixed range — no clear trend structure to anchor stop-loss; RSI 56.1 D1 is neutral-to-overbought on daily but only 55.2 on 4H, no oscillator confluence (stoch_k=75.7, CCI=79.3 both elevated but conf=NONE suggests disagreement).
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violation: weekly and daily do not both agree on direction (W:NEUTRAL, D:SELL vs 4H:NEUTRAL). Confidence

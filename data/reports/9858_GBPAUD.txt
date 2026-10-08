@@ -1,0 +1,17 @@
+PAIR: GBP/AUD
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with neutral MTF alignment; crowded institutional shorts near 1y bottom create reversal risk that overrides weak technicals.
+RISK_FACTORS: [1. Both GBP and AUD net SHORT positions are at ~1y lows with BUILDING momentum — reversal unconfirmed but crowding risk is material; 2. MTF all-neutral (M:BUY/W:NEUTRAL/D:NEUTRAL) means no directional agreement and conf=0/3, violating core MTF rule requiring weekly+daily both agree]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule violated (D:NEUTRAL, W:NEUTRAL, conf 0/3); no directional consensus. Positioning crowded shorts + BUILDING momentum create unconfirmed reversal risk that conflicts with T_sig=SELL_3. Inside-bar candle patterns across D1/4H suggest consolidation, not directional commitment. Confidence <7 and MTF does not support.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
