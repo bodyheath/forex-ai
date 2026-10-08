@@ -1,0 +1,24 @@
+PAIR: AUD/CAD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 4/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 pin bar at 61.8% Fib + rising AUD rates vs falling CAD rates create fundamental BUY bias, but MTF disagreement (W:SELL vs D:NEUTRAL) and 4H downtrend block high-confidence entry.
+RISK_FACTORS: [1] MTF conflict: Weekly is in SELL regime while D1 is NEUTRAL — directional agreement only 1/3, well below 2/3 threshold, so trend structure is ambiguous and reversal risk is elevated. [2] 4H pin bar is bearish and 4H is in downtrend (price < SMA50 < SMA200) — intraday technicals contradict the D1 bullish pin bar, creating noise risk near entry.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 0.9913
+ENTRY_TRIGGER_REASON: Bounce confirmation at 61.8% Fibonacci support (8p confluence) after 4H consolidates above SMA50, signalling intraday trend shift.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Veto:**  
+Weekly (SELL) + Daily (NEUTRAL
