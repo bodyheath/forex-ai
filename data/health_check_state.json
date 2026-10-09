@@ -4,8 +4,10 @@
     "\ud83d\udcca consensus_adj has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md \u2014 filter to consensus_eligible==True, compare within grade)",
     "\ud83d\udcca da_downgraded has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_da_downgrade_tracking.md \u2014 compare within da_grade_before, n undercounts (da_fired=True only))",
     "\ud83d\udcca memory_hash has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md's before/after natural-experiment design)",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=592, WR=16.4%) significantly outperforms grade C (n=116, WR=6.9%), p=0.0043",
-    "\ud83d\udea8 currency-consensus 'agrees' edge drifting \u2014 most recent 40 decisive trades WR=0.0% vs the prior 538 decisive trades WR=13.8%, p=0.0060."
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=595, WR=16.3%) significantly outperforms grade C (n=118, WR=6.8%), p=0.0038",
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=92, WR=23.9%) significantly outperforms grade D (n=595, WR=16.3%), p=0.0363",
+    "\ud83d\udea8 currency-consensus 'agrees' edge drifting \u2014 most recent 40 decisive trades WR=0.0% vs the prior 542 decisive trades WR=13.7%, p=0.0062.",
+    "\ud83d\udea8 rib_strongly_against (non-GBP) edge drifting \u2014 most recent 40 independent (deduplicated) decisive evaluations WR=20.0% vs the prior 244 independent evaluations WR=39.8%, p=0.0082 (corrected bar <0.0125 for 4 same-shape decay checks). See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
   ],
-  "last_alert_sent_at": "2026-10-08T23:22:40.082174"
+  "last_alert_sent_at": "2026-10-09T13:22:46.150176"
 }
