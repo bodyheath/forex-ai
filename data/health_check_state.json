@@ -1,5 +1,7 @@
 {
   "last_flags": [
+    "\u26a0\ufe0f Gate silent \u2014 'capacity' has left zero trace in the log across the last 18 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
+    "\u26a0\ufe0f Gate silent \u2014 'dd_tier' has left zero trace in the log across the last 18 scans, despite candidates being evaluated every time \u2014 its code path may not be executing",
     "\ud83d\udcca Ribbon-regime carve-out population has reached n>=40 trending_risk_off and n>=100 trending_risk_on \u2014 ready to run the pre-registered direct z-test and PF check (see project_ribbon_regime_carveout_threshold.md criteria 2-3)",
     "\ud83d\udcca consensus_adj has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md \u2014 filter to consensus_eligible==True, compare within grade)",
     "\ud83d\udcca da_downgraded has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_da_downgrade_tracking.md \u2014 compare within da_grade_before, n undercounts (da_fired=True only))",
@@ -9,5 +11,5 @@
     "\ud83d\udea8 currency-consensus 'agrees' edge drifting \u2014 most recent 40 decisive trades WR=0.0% vs the prior 542 decisive trades WR=13.7%, p=0.0062.",
     "\ud83d\udea8 rib_strongly_against (non-GBP) edge drifting \u2014 most recent 40 independent (deduplicated) decisive evaluations WR=20.0% vs the prior 244 independent evaluations WR=39.8%, p=0.0082 (corrected bar <0.0125 for 4 same-shape decay checks). See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
   ],
-  "last_alert_sent_at": "2026-10-09T13:22:46.150176"
+  "last_alert_sent_at": "2026-10-09T22:40:30.498064"
 }
