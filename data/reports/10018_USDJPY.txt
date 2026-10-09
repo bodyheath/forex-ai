@@ -1,0 +1,21 @@
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Head-and-shoulders pattern on D1 with rising JPY rates and 4H double-bottom structure create conflicting signals; weak MTF alignment (0/3 agreement) and neutral RSI preclude high-conviction entry.
+RISK_FACTORS: MTF disagreement—D1 and W both NEUTRAL while 4H shows SELL, violating core MTF rule requiring both W+D alignment; D1 RSI 54.2 is mid-range neutral with no oscillator confluence (Stoch 64, CCI 65.5 = neither buy nor sell), limiting reversal probability.
+TRADE_THIS: NO
+ENTRY_TYPE: UNAVAILABLE
+ENTRY_TRIGGER_PRICE: UNAVAILABLE
+ENTRY_TRIGGER_REASON: MTF rule failure: W:NEUTRAL + D:NEUTRAL do not both agree with 4H:SELL (conf=0/3). No trade initiated.
+ENTRY_TRIGGER_EXPIRY_HOURS: 0
+
+**RATIONALE:**
+
+1. **MTF Alignment (CRITICAL FAIL):** Weekly and Daily are both NEUTRAL; 4H is SELL. The core rule requires W+D to **both** agree on direction. With conf=0/3 (80% weight), this fails the alignment gate regardless of pattern or technicals
