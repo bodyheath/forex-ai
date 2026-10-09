@@ -1,0 +1,27 @@
+# USD/CHF Analysis
+
+**PAIR: USD/CHF**
+
+**DIRECTION: SELL**
+
+**CONFIDENCE: 4/10**
+
+---
+
+## Scoring Breakdown
+
+**TECHNICAL_SCORE: 5/10**
+- D1 T_sig = SELL_5 (baseline)
+- D1 RSI 65.6 in confirmed uptrend (W:NEUTRAL, D:SELL) → apply uptrend shift: RSI 65-77 = 4-5 SELL (not overbought yet) → score 4
+- 4H RSI 42.8 = neutral (3-4), inside bar = neutral pattern
+- MACD both timeframes flat/negative (no BUY confirmation)
+- Price > SMA50 > SMA200 (uptrend structure) conflicts with D1 SELL signal → no bonus
+- SMA50 distance (0.8330 vs 0.8152 = +178p) shows price extended, not pullback setup
+- RIB CONVERGING (-1) = ribbon tightening, trend weakening, reversal risk building
+- **Adjustment:** T_sig SELL_5 held, but converging ribbon and 4H neutrality prevent higher confidence. No oscillator confluence, no divergence. Score stays **5** (neutral technical, with slight SELL lean from D1 vs uptrend structure conflict).
+
+---
+
+**FUNDAMENTAL_SCORE: 6/10**
+- USD: +3.92% rate diff advantage (USD stronger vs CHF), but flat Fed rate (no fresh dovish/hawkish catalyst)
+- CHF: rising rates = CHF strength headwind for USD/CHF (sell USD/buy CH

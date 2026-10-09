@@ -1,0 +1,20 @@
+PAIR: GBP/AUD
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 7/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Double-bottom pattern on D1 with 4H reversal signal and crowded GBP/AUD short positioning create low-confidence bullish setup hampered by mixed MTF, neutral ribbon, and weak fundamental divergence.
+RISK_FACTORS: [1] MTF disagreement (M:BUY vs W:NEUTRAL vs D:NEUTRAL, conf=0/3) violates core multi-timeframe alignment rule — reversal signal is unconfirmed across core timeframes. [2] GBP rate flat + AUD rate rising = headwind to GBP strength; diff=-0.78% favors AUD, conflicting with BUY thesis.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_BUY
+ENTRY_TRIGGER_PRICE: 1.8850
+ENTRY_TRIGGER_REASON: Confluence of 4H double-top reversal, D1 double-bottom pattern, and FIB support at SL=1.8733 (±10p zone); entry at mid-range retracement offers better risk geometry if MTF alignment improves.
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+**Rationale for TRADE_THIS: NO**
+- **MTF Fail**: Monthly BUY is contradicted by

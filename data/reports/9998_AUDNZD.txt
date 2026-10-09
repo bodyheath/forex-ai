@@ -1,0 +1,25 @@
+PAIR: AUD/NZD
+DIRECTION: SELL
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 7/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 6/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: Pin bar at key level with bearish rejection in uptrend + fundamental AUD strength + crowded AUD shorts = contrarian SELL setup, but weak MTF alignment (1/3 agreement) and bullish ribbon conflict limit confidence.
+RISK_FACTORS: MTF only 45% aligned (D:SELL but 4H:NEUTRAL, W:NEUTRAL) — reversal risk if 4H confirms uptrend; Bullish aligned ribbon (5/5 EMA stack) suggests continuation higher, contradicting SELL signal.
+TRADE_THIS: NO
+ENTRY_TYPE: LIMIT_SELL
+ENTRY_TRIGGER_PRICE: 1.2460
+ENTRY_TRIGGER_REASON: Break above pin bar high (resistance rejection) to confirm bearish rejection before entry
+ENTRY_TRIGGER_EXPIRY_HOURS: 48
+
+---
+
+**Detailed Scoring Rationale:**
+
+**TECHNICAL_SCORE: 5/10**
+- D1 RSI=62.4 in an UPTREND: standard tier applies (NOT shifted). RSI 62.4 = 4-5 SELL (upper-neutral to mild sell). T_sig baseline=SELL_5 confirms.
+- MACD histogram trending negative (D1=-0.0009,
