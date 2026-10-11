@@ -1,0 +1,26 @@
+```
+PAIR: USD/JPY
+DIRECTION: BUY
+CONFIDENCE: 5/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 6/10
+SENTIMENT_SCORE: 4/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: 4H double-bottom reversal pattern and higher US rate differential (+2.90%) support a bounce into resistance, but D1 mixed trend and RSI 54.2 midpoint lack conviction; monthly SELL pressure creates conflicting timeframe signals.
+RISK_FACTORS: Monthly in confirmed SELL invalidates weekly/daily bounce thesis if price breaks below 157.50 support; oscillators neutral (Stoch 64.1, CCI 68.8) show no momentum confluence, limiting upside follow-through probability.
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: Conflicting MTF direction (M:SELL vs D:NEUTRAL; conf=0/3, <67% agreement). Weekly+ daily must both confirm same direction per MTF rule. Monthly override takes precedence.
+ENTRY_TRIGGER_EXPIRY_HOURS: N/A
+```
+
+---
+
+**RATIONALE:**
+
+**MTF Rule Violation:**  
+Monthly is in SELL while daily is NEUTRAL — this is explicit disagreement. Confidence matrix requires **W:BUY + D:BUY** (or both SELL) to meet the 2/3 minimum. You have only 1/3
