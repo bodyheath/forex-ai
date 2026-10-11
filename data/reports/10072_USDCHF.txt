@@ -1,0 +1,17 @@
+PAIR: USD/CHF
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 3/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with intact uptrend structure (price>SMA50>SMA200); 4H pin_bar_at_key_level offers reversal signal but RSI 46.1 lacks conviction, and MTF conf=0/3 (all timeframes neutral) blocks trade entry.
+RISK_FACTORS: [1. D1 uptrend still structurally intact (price 0.8300 >> SMA50 0.8157 >> SMA200 0.7967) — no bearish price break below SMA50 yet; selling into a golden cross requires confirmation]. [2. MTF agreement is 0/3 (M/W/D all NEUTRAL, 4H NEUTRAL) — lacks directional consensus across timeframes; ribbon CONVERGING signals trend exhaustion but not yet reversal].
+TRADE_THIS: NO
+ENTRY_TYPE: WAIT_NEUTRAL
+ENTRY_TRIGGER_PRICE: 0.8157 (SMA50 break below)
+ENTRY_TRIGGER_REASON: Only if D1 price closes below SMA50 (0.8157) with RSI <50 and 4H confirms downside, would SELL become actionable; current state is neutral setup, not a trade.
+ENTRY

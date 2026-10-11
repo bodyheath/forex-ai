@@ -1,0 +1,17 @@
+```
+PAIR: USD/JPY
+DIRECTION: SELL
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 4/10
+FUNDAMENTAL_SCORE: 5/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 5/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 T_sig=SELL_3 conflicts with D1 golden-cross structure and bullish patterns; MTF conf=0/3 (M:SELL vs W/D/4H:NEUTRAL) blocks trade despite technical signal.
+RISK_FACTORS: [1. MTF misalignment (M:SELL vs W:NEUTRAL + D:NEUTRAL + 4H:NEUTRAL, conf=0/3) violates weekly+daily agreement rule — no directional consensus. 2. D1 price 158.2460 sits between SMA50=157.67 (below) and SMA200=158.53 (above) in range/mixed zone; RSI=55.5 and MACD=+0.2089 are both neutral-positive, contradicting T_sig=SELL_3 bearish label.]
+TRADE_THIS: NO
+ENTRY_TYPE: N/A
+ENTRY_TRIGGER_PRICE: N/A
+ENTRY_TRIGGER_REASON: MTF rule blocks: W and D both NEUTRAL, not confirming downtrend. Conf=0/3 is below the 2/3 threshold required for either direction. D1 T_sig=SELL_3 is isolated by technical contradiction (bullish engulfing,

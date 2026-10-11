@@ -1,0 +1,20 @@
+PAIR: EUR/CAD
+DIRECTION: BUY
+CONFIDENCE: 4/10
+TECHNICAL_SCORE: 5/10
+FUNDAMENTAL_SCORE: 4/10
+SENTIMENT_SCORE: 5/10
+POSITIONING_SCORE: 3/10
+MACRO_SCORE: 5/10
+DIVERGENCE: NONE
+OSCILLATOR_CONFLUENCE: NONE
+KEY_THESIS: D1 RSI 36.7 at lower BB + double-top bearish pattern conflicts with BUY_5 signal; MTF consensus weak (1/3: M/W oppose D), ribbon fully aligned bear, and EUR crowded short creates reversal risk but lacks confirmation.
+RISK_FACTORS: [1. MTF disagreement (M:SELL + W:NEUTRAL override D:BUY; conf 1/3 <2/3 threshold violates MTF rule), [2. Double-top bearish pattern + fully aligned bear ribbon (5/5) contradicts buy thesis; no OSC confluence, no DIV support]
+TRADE_THIS: NO
+
+**RATIONALE:**
+
+**MTF FATAL FLAW:** W:NEUTRAL + M:SELL + D:BUY = only 1 of 3 timeframes agrees on BUY direction. Confidence 1/3 = 33% < 66% threshold. **MTF rule enforced: both weekly AND daily must agree.** Weekly is neutral, monthly is outright sell. This setup fails the primary gate. ✗
+
+**TECHNICAL (5/10):**
+- D1 RSI 36.7 in mixed/range environment (price 1.5948 vs SMA50 1.6082, death
