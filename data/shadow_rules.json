@@ -2182,6 +2182,19 @@
           "market_regime": "trending_risk_on",
           "closed_at": "2026-10-13 05:10:58"
         }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:52.290858+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -36.6,
+        "context": {
+          "id": "3744",
+          "pair": "USD/CAD",
+          "direction": "SELL",
+          "market_regime": "trending_risk_on",
+          "closed_at": "2026-10-14 05:10:52"
+        }
       }
     ]
   },
@@ -33440,6 +33453,138 @@
           "direction": "BUY",
           "tech_score": "5"
         }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:52.320443+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -36.6,
+        "context": {
+          "id": "3744",
+          "pair": "USD/CAD",
+          "direction": "SELL",
+          "tech_score": "8"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:53.077917+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 140.6,
+        "context": {
+          "id": "3905",
+          "pair": "AUD/JPY",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:53.345727+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 170.8,
+        "context": {
+          "id": "3906",
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:53.734692+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -26.0,
+        "context": {
+          "id": "3908",
+          "pair": "EUR/JPY",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:54.074506+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 70.7,
+        "context": {
+          "id": "3909",
+          "pair": "AUD/CHF",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:54.324861+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 88.3,
+        "context": {
+          "id": "3910",
+          "pair": "GBP/CHF",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:54.766234+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -27.4,
+        "context": {
+          "id": "3915",
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "tech_score": "4"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:54.984976+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 89.5,
+        "context": {
+          "id": "3917",
+          "pair": "AUD/CAD",
+          "direction": "BUY",
+          "tech_score": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:55.235657+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 83.7,
+        "context": {
+          "id": "3918",
+          "pair": "GBP/AUD",
+          "direction": "SELL",
+          "tech_score": "5"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:55.503999+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 36.4,
+        "context": {
+          "id": "3920",
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "tech_score": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:56.284733+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -31.9,
+        "context": {
+          "id": "3936",
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "tech_score": "4"
+        }
       }
     ]
   },
@@ -34390,6 +34535,102 @@
           "pair": "GBP/CAD",
           "direction": "BUY",
           "confidence": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:52.351401+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -36.6,
+        "context": {
+          "id": "3744",
+          "pair": "USD/CAD",
+          "direction": "SELL",
+          "confidence": "8"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:53.111649+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 140.6,
+        "context": {
+          "id": "3905",
+          "pair": "AUD/JPY",
+          "direction": "BUY",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:53.377780+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 170.8,
+        "context": {
+          "id": "3906",
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:53.766898+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -26.0,
+        "context": {
+          "id": "3908",
+          "pair": "EUR/JPY",
+          "direction": "BUY",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:54.105917+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 70.7,
+        "context": {
+          "id": "3909",
+          "pair": "AUD/CHF",
+          "direction": "BUY",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:54.357714+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 88.3,
+        "context": {
+          "id": "3910",
+          "pair": "GBP/CHF",
+          "direction": "BUY",
+          "confidence": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:55.016764+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 89.5,
+        "context": {
+          "id": "3917",
+          "pair": "AUD/CAD",
+          "direction": "BUY",
+          "confidence": "6"
+        }
+      },
+      {
+        "timestamp": "2026-10-14T05:10:55.535669+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 36.4,
+        "context": {
+          "id": "3920",
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "confidence": "7"
         }
       }
     ]
