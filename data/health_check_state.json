@@ -9,9 +9,10 @@
     "\ud83d\udcca consensus_adj has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md \u2014 filter to consensus_eligible==True, compare within grade)",
     "\ud83d\udcca da_downgraded has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_da_downgrade_tracking.md \u2014 compare within da_grade_before, n undercounts (da_fired=True only))",
     "\ud83d\udcca memory_hash has reached n>=15 decisive trades \u2014 ready for the pre-registered analysis (see project_learning_signals_analysis_plan.md's before/after natural-experiment design)",
-    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=616, WR=15.7%) significantly outperforms grade C (n=120, WR=6.7%), p=0.0046",
-    "\ud83d\udea8 currency-consensus 'agrees' edge drifting \u2014 most recent 40 decisive trades WR=0.0% vs the prior 562 decisive trades WR=13.2%, p=0.0071.",
-    "\ud83d\udea8 rib_strongly_against (non-GBP) edge drifting \u2014 most recent 40 independent (deduplicated) decisive evaluations WR=12.5% vs the prior 254 independent evaluations WR=39.4%, p=0.0005 (corrected bar <0.0125 for 4 same-shape decay checks). See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade D (n=625, WR=15.5%) significantly outperforms grade C (n=121, WR=6.6%), p=0.0050",
+    "\ud83d\udea8 Grade ordering inverted \u2014 grade F (n=99, WR=22.2%) significantly outperforms grade D (n=625, WR=15.5%), p=0.0473",
+    "\ud83d\udea8 currency-consensus 'agrees' edge drifting \u2014 most recent 40 decisive trades WR=0.0% vs the prior 565 decisive trades WR=13.1%, p=0.0073.",
+    "\ud83d\udea8 rib_strongly_against (non-GBP) edge drifting \u2014 most recent 40 independent (deduplicated) decisive evaluations WR=12.5% vs the prior 255 independent evaluations WR=39.2%, p=0.0005 (corrected bar <0.0125 for 4 same-shape decay checks). See docs/edge_hypotheses.md for the causal hypothesis this may be invalidating."
   ],
-  "last_alert_sent_at": "2026-10-14T21:42:57.623551"
+  "last_alert_sent_at": "2026-10-15T04:42:32.319319"
 }
