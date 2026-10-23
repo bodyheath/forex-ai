@@ -39597,6 +39597,42 @@
           "direction": "BUY",
           "tech_score": "6"
         }
+      },
+      {
+        "timestamp": "2026-10-23T05:06:30.773480+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 72.8,
+        "context": {
+          "id": "4055",
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "tech_score": "4"
+        }
+      },
+      {
+        "timestamp": "2026-10-23T05:06:31.020737+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": 51.6,
+        "context": {
+          "id": "4065",
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "tech_score": "8"
+        }
+      },
+      {
+        "timestamp": "2026-10-23T05:06:31.457038+00:00",
+        "would_fire": false,
+        "outcome": "EXPIRED",
+        "net_pips": -11.7,
+        "context": {
+          "id": "4072",
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "tech_score": "7"
+        }
       }
     ]
   },
@@ -41348,6 +41384,30 @@
         "net_pips": 11.7,
         "context": {
           "id": "4100",
+          "pair": "NZD/CAD",
+          "direction": "BUY",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-23T05:06:31.064663+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": 51.6,
+        "context": {
+          "id": "4065",
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "confidence": "7"
+        }
+      },
+      {
+        "timestamp": "2026-10-23T05:06:31.500292+00:00",
+        "would_fire": true,
+        "outcome": "EXPIRED",
+        "net_pips": -11.7,
+        "context": {
+          "id": "4072",
           "pair": "NZD/CAD",
           "direction": "BUY",
           "confidence": "7"
