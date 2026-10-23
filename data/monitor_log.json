@@ -1,29 +1,26 @@
 {
-  "timestamp": "2026-10-23T11:31:22Z",
+  "timestamp": "2026-10-23T12:01:30Z",
   "trades_checked_fund": 0,
   "trades_checked_research": 2,
   "hot_zone_count": 0,
   "warm_zone_count": 0,
   "cold_zone_count": 2,
   "api_calls_used": 0,
-  "yf_price_pairs": 5,
-  "yf_ohlcv_pairs": 5,
+  "yf_price_pairs": 2,
+  "yf_ohlcv_pairs": 2,
   "approaching_alerts": 0,
   "milestones_hit": [],
   "mfe_mae_updated": 2,
   "last_prices": {
-    "CHF/JPY": 190.3730010986328,
-    "EUR/JPY": 175.65499877929688,
-    "EUR/USD": 1.1195701360702515,
-    "GBP/JPY": 209.85699462890625,
-    "GBP/NZD": 2.3524599075317383
+    "CHF/JPY": 190.25399780273438,
+    "GBP/NZD": 2.351670026779175
   },
   "previously_hot": [],
   "skipped_reason": "",
   "watchlist_prices": {},
   "watchlist_alerts_sent": [],
   "data_tiers_used": {
-    "t1_yf_ohlcv": 5,
+    "t1_yf_ohlcv": 2,
     "t1_td_backup": 0,
     "t1_sq_backup": 0,
     "t2_synthetic": 0,
@@ -32,7 +29,7 @@
     "t0_no_data": 0
   },
   "source_stats": {
-    "yahoo_finance": 5,
+    "yahoo_finance": 2,
     "twelve_data": 0,
     "stooq": 0,
     "synthetic": 0,
@@ -3416,11 +3413,6 @@
     ],
     "CHF/JPY": [
       {
-        "price": 191.52099609375,
-        "timestamp": "2026-10-21T12:01:35Z",
-        "source": "yahoo"
-      },
-      {
         "price": 191.6219940185547,
         "timestamp": "2026-10-21T12:31:19Z",
         "source": "yahoo"
@@ -3893,6 +3885,11 @@
       {
         "price": 190.3730010986328,
         "timestamp": "2026-10-23T11:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 190.25399780273438,
+        "timestamp": "2026-10-23T12:01:30Z",
         "source": "yahoo"
       }
     ],
@@ -9200,11 +9197,6 @@
     ],
     "GBP/NZD": [
       {
-        "price": 2.353260040283203,
-        "timestamp": "2026-10-21T11:31:21Z",
-        "source": "yahoo"
-      },
-      {
         "price": 2.3541300296783447,
         "timestamp": "2026-10-21T12:01:35Z",
         "source": "yahoo"
@@ -9677,6 +9669,11 @@
       {
         "price": 2.3524599075317383,
         "timestamp": "2026-10-23T11:31:22Z",
+        "source": "yahoo"
+      },
+      {
+        "price": 2.351670026779175,
+        "timestamp": "2026-10-23T12:01:30Z",
         "source": "yahoo"
       }
     ],
