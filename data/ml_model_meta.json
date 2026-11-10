@@ -1,5 +1,5 @@
 {
-  "trained_at": "2026-11-03T00:29:31.945065",
+  "trained_at": "2026-11-10T01:10:22.142246",
   "model_ready": true,
   "n_trades": 4659,
   "win_rate": 0.333,
@@ -195,11 +195,6 @@
   "period_stable": false,
   "accuracy_history": [
     {
-      "trained_at": "2026-08-31",
-      "roc_auc": 0.617,
-      "n_trades": 2677
-    },
-    {
       "trained_at": "2026-09-08",
       "roc_auc": 0.657,
       "n_trades": 3036
@@ -243,6 +238,11 @@
       "trained_at": "2026-11-03",
       "roc_auc": 0.681,
       "n_trades": 4659
+    },
+    {
+      "trained_at": "2026-11-10",
+      "roc_auc": 0.681,
+      "n_trades": 4659
     }
   ],
   "cv_fold_scores": [
@@ -252,5 +252,5 @@
     0.812,
     0.732
   ],
-  "n_consecutive_reliable": 11
+  "n_consecutive_reliable": 12
 }
