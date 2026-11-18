@@ -9,19 +9,6 @@
     "data_quality_pct": 100,
     "data_quality_adjustment": 0.0,
     "final_threshold": 6.5,
-    "scan_mode": "full",
-    "timestamp": "2026-10-23T05:13:03.282727"
-  },
-  {
-    "regime": "TRENDING_RISK_ON",
-    "regime_base": 5.5,
-    "decisive_trades_sample": 50,
-    "win_rate_recent": 0.12,
-    "win_rate_adjustment": 1.0,
-    "win_rate_source": "sonnet_only",
-    "data_quality_pct": 100,
-    "data_quality_adjustment": 0.0,
-    "final_threshold": 6.5,
     "scan_mode": "morning",
     "timestamp": "2026-10-23T11:10:03.368487"
   },
@@ -1168,5 +1155,18 @@
     "final_threshold": 7.0,
     "scan_mode": "morning",
     "timestamp": "2026-11-17T21:11:00.412301"
+  },
+  {
+    "regime": "RANGING_LOW_VOL",
+    "regime_base": 7.0,
+    "decisive_trades_sample": 50,
+    "win_rate_recent": 0.18,
+    "win_rate_adjustment": 1.0,
+    "win_rate_source": "blended_stale",
+    "data_quality_pct": 100,
+    "data_quality_adjustment": 0.0,
+    "final_threshold": 8.0,
+    "scan_mode": "full",
+    "timestamp": "2026-11-18T05:12:31.957033"
   }
 ]
