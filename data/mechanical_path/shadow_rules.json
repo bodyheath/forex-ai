@@ -26181,6 +26181,513 @@
           "signal_date": "2026-11-25",
           "regime_cluster": "GBP/CAD_BUY_False_r1"
         }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:30.487679+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -0.7,
+        "context": {
+          "candidate_id": "1962",
+          "pair": "EUR/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/USD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:30.730445+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 9.4,
+        "context": {
+          "candidate_id": "1963",
+          "pair": "GBP/USD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/USD_BUY_True_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:30.970994+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -13.7,
+        "context": {
+          "candidate_id": "1964",
+          "pair": "GBP/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/USD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:31.210929+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 41.1,
+        "context": {
+          "candidate_id": "1965",
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "USD/JPY_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:31.453111+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -45.7,
+        "context": {
+          "candidate_id": "1966",
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "USD/JPY_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:31.691912+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 57.4,
+        "context": {
+          "candidate_id": "1968",
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "USD/CHF_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:31.933539+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 87.6,
+        "context": {
+          "candidate_id": "1970",
+          "pair": "USD/CAD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "USD/CAD_SELL_True_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:32.175292+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 3.7,
+        "context": {
+          "candidate_id": "1972",
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "AUD/USD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:32.419276+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -8.6,
+        "context": {
+          "candidate_id": "1973",
+          "pair": "NZD/USD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/USD_BUY_True_r4"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:32.661179+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 4.3,
+        "context": {
+          "candidate_id": "1974",
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/USD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:32.904787+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 37.0,
+        "context": {
+          "candidate_id": "1975",
+          "pair": "EUR/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/JPY_BUY_True_r5"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:33.149622+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -45.1,
+        "context": {
+          "candidate_id": "1976",
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:33.390956+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -29.7,
+        "context": {
+          "candidate_id": "1977",
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/GBP_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:33.633905+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 6.5,
+        "context": {
+          "candidate_id": "1978",
+          "pair": "EUR/GBP",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/GBP_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:33.876453+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 4.3,
+        "context": {
+          "candidate_id": "1983",
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/AUD_BUY_False_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:34.120921+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 11.6,
+        "context": {
+          "candidate_id": "1985",
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/NZD_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:34.361557+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -22.4,
+        "context": {
+          "candidate_id": "1986",
+          "pair": "EUR/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/NZD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:34.605503+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 70.9,
+        "context": {
+          "candidate_id": "1987",
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/JPY_BUY_True_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:34.850311+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -78.9,
+        "context": {
+          "candidate_id": "1988",
+          "pair": "GBP/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:35.093102+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 30.0,
+        "context": {
+          "candidate_id": "1993",
+          "pair": "GBP/AUD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/AUD_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:35.339426+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 43.4,
+        "context": {
+          "candidate_id": "1995",
+          "pair": "GBP/NZD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/NZD_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:35.583489+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -54.2,
+        "context": {
+          "candidate_id": "1996",
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/NZD_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:35.832096+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 94.7,
+        "context": {
+          "candidate_id": "1997",
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "CAD/JPY_BUY_True_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:36.078994+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 15.4,
+        "context": {
+          "candidate_id": "1999",
+          "pair": "AUD/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "AUD/JPY_BUY_True_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:36.330220+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -23.5,
+        "context": {
+          "candidate_id": "2000",
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "AUD/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:36.576838+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 9.3,
+        "context": {
+          "candidate_id": "2001",
+          "pair": "NZD/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/JPY_BUY_True_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:36.821809+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -17.3,
+        "context": {
+          "candidate_id": "2002",
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:37.068258+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -9.0,
+        "context": {
+          "candidate_id": "2010",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "AUD/NZD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:37.320026+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 52.6,
+        "context": {
+          "candidate_id": "2012",
+          "pair": "NZD/CAD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/CAD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:37.570258+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -1.0,
+        "context": {
+          "candidate_id": "2016",
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "CAD/CHF_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:37.816602+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -91.3,
+        "context": {
+          "candidate_id": "2020",
+          "pair": "GBP/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-24",
+          "regime_cluster": "GBP/USD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:38.065404+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -51.4,
+        "context": {
+          "candidate_id": "2030",
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-24",
+          "regime_cluster": "NZD/USD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:38.313072+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -117.1,
+        "context": {
+          "candidate_id": "2056",
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-24",
+          "regime_cluster": "AUD/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:38.594347+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -91.3,
+        "context": {
+          "candidate_id": "2058",
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-24",
+          "regime_cluster": "NZD/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:38.842963+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -130.6,
+        "context": {
+          "candidate_id": "2151",
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "EUR/AUD_BUY_False_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:39.094780+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -71.7,
+        "context": {
+          "candidate_id": "2158",
+          "pair": "GBP/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "GBP/CHF_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:39.342494+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -80.7,
+        "context": {
+          "candidate_id": "2174",
+          "pair": "AUD/CAD",
+          "direction": "SELL",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "AUD/CAD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:39.592424+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -66.0,
+        "context": {
+          "candidate_id": "2176",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "AUD/CHF_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:39.842097+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -90.5,
+        "context": {
+          "candidate_id": "2178",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "AUD/NZD_SELL_False_r1"
+        }
       }
     ]
   },
@@ -52366,6 +52873,513 @@
           "signal_date": "2026-11-25",
           "regime_cluster": "GBP/CAD_BUY_False_r1"
         }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:30.570364+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -0.7,
+        "context": {
+          "candidate_id": "1962",
+          "pair": "EUR/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/USD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:30.811218+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 9.4,
+        "context": {
+          "candidate_id": "1963",
+          "pair": "GBP/USD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/USD_BUY_True_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:31.050639+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -13.7,
+        "context": {
+          "candidate_id": "1964",
+          "pair": "GBP/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/USD_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:31.291437+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 41.1,
+        "context": {
+          "candidate_id": "1965",
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "USD/JPY_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:31.532772+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -45.7,
+        "context": {
+          "candidate_id": "1966",
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "USD/JPY_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:31.772347+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 57.4,
+        "context": {
+          "candidate_id": "1968",
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "USD/CHF_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:32.014193+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 87.6,
+        "context": {
+          "candidate_id": "1970",
+          "pair": "USD/CAD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "USD/CAD_SELL_True_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:32.256386+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 3.7,
+        "context": {
+          "candidate_id": "1972",
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "AUD/USD_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:32.500206+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -8.6,
+        "context": {
+          "candidate_id": "1973",
+          "pair": "NZD/USD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/USD_BUY_True_r4"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:32.742703+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 4.3,
+        "context": {
+          "candidate_id": "1974",
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/USD_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:32.985777+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 37.0,
+        "context": {
+          "candidate_id": "1975",
+          "pair": "EUR/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/JPY_BUY_True_r5"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:33.230017+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -45.1,
+        "context": {
+          "candidate_id": "1976",
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:33.471401+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -29.7,
+        "context": {
+          "candidate_id": "1977",
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/GBP_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:33.715497+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 6.5,
+        "context": {
+          "candidate_id": "1978",
+          "pair": "EUR/GBP",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/GBP_SELL_True_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:33.958299+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 4.3,
+        "context": {
+          "candidate_id": "1983",
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/AUD_BUY_False_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:34.201198+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 11.6,
+        "context": {
+          "candidate_id": "1985",
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/NZD_BUY_False_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:34.444500+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -22.4,
+        "context": {
+          "candidate_id": "1986",
+          "pair": "EUR/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/NZD_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:34.687680+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 70.9,
+        "context": {
+          "candidate_id": "1987",
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/JPY_BUY_True_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:34.930415+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -78.9,
+        "context": {
+          "candidate_id": "1988",
+          "pair": "GBP/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/JPY_SELL_False_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:35.175530+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 30.0,
+        "context": {
+          "candidate_id": "1993",
+          "pair": "GBP/AUD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/AUD_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:35.420867+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 43.4,
+        "context": {
+          "candidate_id": "1995",
+          "pair": "GBP/NZD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/NZD_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:35.665700+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -54.2,
+        "context": {
+          "candidate_id": "1996",
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/NZD_SELL_False_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:35.914133+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 94.7,
+        "context": {
+          "candidate_id": "1997",
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "CAD/JPY_BUY_True_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:36.165237+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 15.4,
+        "context": {
+          "candidate_id": "1999",
+          "pair": "AUD/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "AUD/JPY_BUY_True_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:36.412201+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -23.5,
+        "context": {
+          "candidate_id": "2000",
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "AUD/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:36.659164+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 9.3,
+        "context": {
+          "candidate_id": "2001",
+          "pair": "NZD/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/JPY_BUY_True_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:36.903784+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -17.3,
+        "context": {
+          "candidate_id": "2002",
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:37.152451+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -9.0,
+        "context": {
+          "candidate_id": "2010",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "AUD/NZD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:37.403207+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 52.6,
+        "context": {
+          "candidate_id": "2012",
+          "pair": "NZD/CAD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/CAD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:37.652590+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -1.0,
+        "context": {
+          "candidate_id": "2016",
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "CAD/CHF_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:37.899436+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -91.3,
+        "context": {
+          "candidate_id": "2020",
+          "pair": "GBP/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-24",
+          "regime_cluster": "GBP/USD_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:38.147720+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -51.4,
+        "context": {
+          "candidate_id": "2030",
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-24",
+          "regime_cluster": "NZD/USD_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:38.397034+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -117.1,
+        "context": {
+          "candidate_id": "2056",
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-24",
+          "regime_cluster": "AUD/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:38.676616+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -91.3,
+        "context": {
+          "candidate_id": "2058",
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-24",
+          "regime_cluster": "NZD/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:38.927701+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -130.6,
+        "context": {
+          "candidate_id": "2151",
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "EUR/AUD_BUY_False_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:39.177617+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -71.7,
+        "context": {
+          "candidate_id": "2158",
+          "pair": "GBP/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "GBP/CHF_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:39.425426+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -80.7,
+        "context": {
+          "candidate_id": "2174",
+          "pair": "AUD/CAD",
+          "direction": "SELL",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "AUD/CAD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:39.676193+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -66.0,
+        "context": {
+          "candidate_id": "2176",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "AUD/CHF_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:39.924218+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -90.5,
+        "context": {
+          "candidate_id": "2178",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "AUD/NZD_SELL_False_r1"
+        }
       }
     ]
   },
@@ -78550,6 +79564,513 @@
           "direction": "BUY",
           "signal_date": "2026-11-25",
           "regime_cluster": "GBP/CAD_BUY_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:30.650678+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -0.7,
+        "context": {
+          "candidate_id": "1962",
+          "pair": "EUR/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/USD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:30.891204+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 9.4,
+        "context": {
+          "candidate_id": "1963",
+          "pair": "GBP/USD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/USD_BUY_True_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:31.131170+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -13.7,
+        "context": {
+          "candidate_id": "1964",
+          "pair": "GBP/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/USD_SELL_False_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:31.372627+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 41.1,
+        "context": {
+          "candidate_id": "1965",
+          "pair": "USD/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "USD/JPY_BUY_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:31.611852+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -45.7,
+        "context": {
+          "candidate_id": "1966",
+          "pair": "USD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "USD/JPY_SELL_False_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:31.852988+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 57.4,
+        "context": {
+          "candidate_id": "1968",
+          "pair": "USD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "USD/CHF_SELL_True_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:32.093654+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 87.6,
+        "context": {
+          "candidate_id": "1970",
+          "pair": "USD/CAD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "USD/CAD_SELL_True_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:32.337592+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 3.7,
+        "context": {
+          "candidate_id": "1972",
+          "pair": "AUD/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "AUD/USD_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:32.579952+00:00",
+        "would_fire": true,
+        "outcome": "LOSS",
+        "net_pips": -8.6,
+        "context": {
+          "candidate_id": "1973",
+          "pair": "NZD/USD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/USD_BUY_True_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:32.823841+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 4.3,
+        "context": {
+          "candidate_id": "1974",
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/USD_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:33.067405+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 37.0,
+        "context": {
+          "candidate_id": "1975",
+          "pair": "EUR/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/JPY_BUY_True_r4"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:33.310810+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -45.1,
+        "context": {
+          "candidate_id": "1976",
+          "pair": "EUR/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:33.551889+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -29.7,
+        "context": {
+          "candidate_id": "1977",
+          "pair": "EUR/GBP",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/GBP_BUY_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:33.796215+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 6.5,
+        "context": {
+          "candidate_id": "1978",
+          "pair": "EUR/GBP",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/GBP_SELL_True_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:34.039815+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 4.3,
+        "context": {
+          "candidate_id": "1983",
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/AUD_BUY_False_r4"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:34.281621+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 11.6,
+        "context": {
+          "candidate_id": "1985",
+          "pair": "EUR/NZD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/NZD_BUY_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:34.524872+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -22.4,
+        "context": {
+          "candidate_id": "1986",
+          "pair": "EUR/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "EUR/NZD_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:34.768476+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 70.9,
+        "context": {
+          "candidate_id": "1987",
+          "pair": "GBP/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/JPY_BUY_True_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:35.012184+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -78.9,
+        "context": {
+          "candidate_id": "1988",
+          "pair": "GBP/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/JPY_SELL_False_r4"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:35.257121+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 30.0,
+        "context": {
+          "candidate_id": "1993",
+          "pair": "GBP/AUD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/AUD_BUY_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:35.501602+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 43.4,
+        "context": {
+          "candidate_id": "1995",
+          "pair": "GBP/NZD",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/NZD_BUY_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:35.747746+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -54.2,
+        "context": {
+          "candidate_id": "1996",
+          "pair": "GBP/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "GBP/NZD_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:35.996407+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 94.7,
+        "context": {
+          "candidate_id": "1997",
+          "pair": "CAD/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "CAD/JPY_BUY_True_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:36.248458+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 15.4,
+        "context": {
+          "candidate_id": "1999",
+          "pair": "AUD/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "AUD/JPY_BUY_True_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:36.495188+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -23.5,
+        "context": {
+          "candidate_id": "2000",
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "AUD/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:36.740099+00:00",
+        "would_fire": true,
+        "outcome": "WIN",
+        "net_pips": 9.3,
+        "context": {
+          "candidate_id": "2001",
+          "pair": "NZD/JPY",
+          "direction": "BUY",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/JPY_BUY_True_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:36.985759+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -17.3,
+        "context": {
+          "candidate_id": "2002",
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/JPY_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:37.236273+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -9.0,
+        "context": {
+          "candidate_id": "2010",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "AUD/NZD_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:37.486579+00:00",
+        "would_fire": false,
+        "outcome": "WIN",
+        "net_pips": 52.6,
+        "context": {
+          "candidate_id": "2012",
+          "pair": "NZD/CAD",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "NZD/CAD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:37.733878+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -1.0,
+        "context": {
+          "candidate_id": "2016",
+          "pair": "CAD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-11-23",
+          "regime_cluster": "CAD/CHF_SELL_False_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:37.982120+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -91.3,
+        "context": {
+          "candidate_id": "2020",
+          "pair": "GBP/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-24",
+          "regime_cluster": "GBP/USD_SELL_False_r3"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:38.229960+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -51.4,
+        "context": {
+          "candidate_id": "2030",
+          "pair": "NZD/USD",
+          "direction": "SELL",
+          "signal_date": "2026-11-24",
+          "regime_cluster": "NZD/USD_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:38.480291+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -117.1,
+        "context": {
+          "candidate_id": "2056",
+          "pair": "AUD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-24",
+          "regime_cluster": "AUD/JPY_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:38.759168+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -91.3,
+        "context": {
+          "candidate_id": "2058",
+          "pair": "NZD/JPY",
+          "direction": "SELL",
+          "signal_date": "2026-11-24",
+          "regime_cluster": "NZD/JPY_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:39.010303+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -130.6,
+        "context": {
+          "candidate_id": "2151",
+          "pair": "EUR/AUD",
+          "direction": "BUY",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "EUR/AUD_BUY_False_r4"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:39.259434+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -71.7,
+        "context": {
+          "candidate_id": "2158",
+          "pair": "GBP/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "GBP/CHF_SELL_False_r2"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:39.508967+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -80.7,
+        "context": {
+          "candidate_id": "2174",
+          "pair": "AUD/CAD",
+          "direction": "SELL",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "AUD/CAD_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:39.759266+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -66.0,
+        "context": {
+          "candidate_id": "2176",
+          "pair": "AUD/CHF",
+          "direction": "SELL",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "AUD/CHF_SELL_False_r1"
+        }
+      },
+      {
+        "timestamp": "2026-11-28T09:12:40.007036+00:00",
+        "would_fire": false,
+        "outcome": "LOSS",
+        "net_pips": -90.5,
+        "context": {
+          "candidate_id": "2178",
+          "pair": "AUD/NZD",
+          "direction": "SELL",
+          "signal_date": "2026-11-26",
+          "regime_cluster": "AUD/NZD_SELL_False_r2"
         }
       }
     ]
